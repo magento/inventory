@@ -241,6 +241,11 @@ class Address extends \Magento\Customer\Model\Address\AbstractAddress implements
     private $serializer;
 
     /**
+     * @var \Magento\Inventory\Model\SourceSelectionInterface
+     */
+    private $sourceSelection;
+
+    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -307,6 +312,7 @@ class Address extends \Magento\Customer\Model\Address\AbstractAddress implements
         Address\CustomAttributeListInterface $attributeList,
         \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector,
         \Magento\Quote\Model\Quote\TotalsReader $totalsReader,
+        \Magento\Inventory\Model\SourceSelectionInterface $sourceSelection,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
@@ -329,6 +335,7 @@ class Address extends \Magento\Customer\Model\Address\AbstractAddress implements
         $this->attributeList = $attributeList;
         $this->totalsCollector = $totalsCollector;
         $this->totalsReader = $totalsReader;
+        $this->sourceSelection = $sourceSelection;
         $this->serializer = $serializer ?: ObjectManager::getInstance()->get(Json::class);
         parent::__construct(
             $context,
@@ -962,47 +969,74 @@ class Address extends \Magento\Customer\Model\Address\AbstractAddress implements
      */
     public function requestShippingRates(\Magento\Quote\Model\Quote\Item\AbstractItem $item = null)
     {
-        /** @var $request \Magento\Quote\Model\Quote\Address\RateRequest */
-        $request = $this->_rateRequestFactory->create();
-        $request->setAllItems($item ? [$item] : $this->getAllItems());
-        $request->setDestCountryId($this->getCountryId());
-        $request->setDestRegionId($this->getRegionId());
-        $request->setDestRegionCode($this->getRegionCode());
-        $request->setDestStreet($this->getStreetFull());
-        $request->setDestCity($this->getCity());
-        $request->setDestPostcode($this->getPostcode());
-        $request->setPackageValue($item ? $item->getBaseRowTotal() : $this->getBaseSubtotal());
-        $packageWithDiscount = $item ? $item->getBaseRowTotal() -
-            $item->getBaseDiscountAmount() : $this->getBaseSubtotalWithDiscount();
-        $request->setPackageValueWithDiscount($packageWithDiscount);
-        $request->setPackageWeight($item ? $item->getRowWeight() : $this->getWeight());
-        $request->setPackageQty($item ? $item->getQty() : $this->getItemQty());
+        $packages = $this->sourceSelection
+            ->getPackages(
+                $this->getQuote()->getStoreId(),
+                $item ? [$item] : $this->getAllItems(),
+                $this
+            );
 
-        /**
-         * Need for shipping methods that use insurance based on price of physical products
-         */
-        $packagePhysicalValue = $item ? $item->getBaseRowTotal() : $this->getBaseSubtotal() -
-            $this->getBaseVirtualAmount();
-        $request->setPackagePhysicalValue($packagePhysicalValue);
+        foreach ($packages as $package) {
+            /** @var $request \Magento\Quote\Model\Quote\Address\RateRequest */
+            $request = $this->_rateRequestFactory->create();
+            $request->setAllItems($package->getItems());
 
-        $request->setFreeMethodWeight($item ? 0 : $this->getFreeMethodWeight());
+            // disable auto-setting of origin in \Magento\Shipping\Model\Shipping::collectRates
+            $request->setOrig(true);
 
-        /**
-         * Store and website identifiers need specify from quote
-         */
-        $request->setStoreId($this->getQuote()->getStore()->getId());
-        $request->setWebsiteId($this->getQuote()->getStore()->getWebsiteId());
-        $request->setFreeShipping($this->getFreeShipping());
-        /**
-         * Currencies need to convert in free shipping
-         */
-        $request->setBaseCurrency($this->getQuote()->getStore()->getBaseCurrency());
-        $request->setPackageCurrency($this->getQuote()->getStore()->getCurrentCurrency());
-        $request->setLimitCarrier($this->getLimitCarrier());
-        $baseSubtotalInclTax = $this->getBaseSubtotalTotalInclTax();
-        $request->setBaseSubtotalInclTax($baseSubtotalInclTax);
+            // read origin address from the Source assigned to the Package
+            $request->setCountryId($package->getSource()->getCountryId());
+            $request->setRegionId($package->getSource()->getRegionId());
+            $request->setCity($package->getSource()->getCity());
+            $request->setPostcode($package->getSource()->getPostcode());
 
-        $result = $this->_rateCollector->create()->collectRates($request)->getResult();
+            $request->setDestCountryId($this->getCountryId());
+            $request->setDestRegionId($this->getRegionId());
+            $request->setDestRegionCode($this->getRegionCode());
+            $request->setDestStreet($this->getStreetFull());
+            $request->setDestCity($this->getCity());
+            $request->setDestPostcode($this->getPostcode());
+
+            //$item ? $item->getBaseRowTotal() : $this->getBaseSubtotal()
+            $request->setPackageValue($package->getBaseSubtotal());
+            //$packageWithDiscount = $item ? $item->getBaseRowTotal() -
+            //$item->getBaseDiscountAmount() : $this->getBaseSubtotalWithDiscount();
+            $packageWithDiscount = $package->getBaseSubtotalWithDiscount();
+            $request->setPackageValueWithDiscount($packageWithDiscount);
+            //$item ? $item->getRowWeight() : $this->getWeight()
+            $request->setPackageWeight($package->getWeight());
+            //$item ? $item->getQty() : $this->getItemQty()
+            $request->setPackageQty($package->getItemQty());
+
+            /**
+             * Need for shipping methods that use insurance based on price of physical products
+             */
+//            $packagePhysicalValue = $item ? $item->getBaseRowTotal() : $this->getBaseSubtotal() -
+//                $this->getBaseVirtualAmount();
+//            $request->setPackagePhysicalValue($packagePhysicalValue);
+            $request->setPackagePhysicalValue($package->getPhysicalValue());
+
+            $request->setFreeMethodWeight($item ? 0 : $this->getFreeMethodWeight());
+
+            /**
+             * Store and website identifiers need specify from quote
+             */
+            $request->setStoreId($this->getQuote()->getStore()->getId());
+            $request->setWebsiteId($this->getQuote()->getStore()->getWebsiteId());
+            $request->setFreeShipping($this->getFreeShipping());
+            /**
+             * Currencies need to convert in free shipping
+             */
+            $request->setBaseCurrency($this->getQuote()->getStore()->getBaseCurrency());
+            $request->setPackageCurrency($this->getQuote()->getStore()->getCurrentCurrency());
+
+            //get carriers from source
+            $request->setLimitCarrier($this->getLimitCarrier());
+            $baseSubtotalInclTax = $this->getBaseSubtotalTotalInclTax();
+            $request->setBaseSubtotalInclTax($baseSubtotalInclTax);
+
+            $result = $this->_rateCollector->create()->collectRates($request)->getResult();
+        }
 
         $found = false;
         if ($result) {

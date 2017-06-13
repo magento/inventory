@@ -11,4 +11,5 @@
     <preference for="Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface" type="Magento\Inventory\Model\SourceCarrierLink" />
     <preference for="Magento\InventoryApi\Api\Data\SourceSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="Magento\Inventory\Model\SourceCarrierLinkManagementInterface" type="Magento\Inventory\Model\SourceCarrierLinkManagement" />
+    <preference for="Magento\Inventory\Model\SourceSelectionInterface" type="Magento\Inventory\Model\SourceSelection" />
 </config>

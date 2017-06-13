@@ -50,7 +50,7 @@ class Shipping extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         \Magento\Quote\Model\Quote\Address\Total $total
     ) {
         parent::collect($quote, $shippingAssignment, $total);
-
+        /** @var \Magento\Quote\Model\Quote\Address $address */
         $address = $shippingAssignment->getShipping()->getAddress();
         $method = $shippingAssignment->getShipping()->getMethod();
 
