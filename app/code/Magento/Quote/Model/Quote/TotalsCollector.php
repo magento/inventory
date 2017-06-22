@@ -69,6 +69,11 @@ class TotalsCollector
     protected $shippingAssignmentFactory;
 
     /**
+     * @var \Magento\Inventory\Model\SourceSelectionInterface
+     */
+    private $sourceSelection;
+
+    /**
      * @param Collector $totalCollector
      * @param CollectorFactory $totalCollectorFactory
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
@@ -78,6 +83,7 @@ class TotalsCollector
      * @param \Magento\Quote\Model\ShippingFactory $shippingFactory
      * @param \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory
      * @param \Magento\Quote\Model\QuoteValidator $quoteValidator
+     * @param \Magento\Inventory\Model\SourceSelectionInterface $sourceSelection
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -89,7 +95,8 @@ class TotalsCollector
         \Magento\Quote\Model\Quote\TotalsCollectorList $collectorList,
         \Magento\Quote\Model\ShippingFactory $shippingFactory,
         \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory,
-        \Magento\Quote\Model\QuoteValidator $quoteValidator
+        \Magento\Quote\Model\QuoteValidator $quoteValidator,
+        \Magento\Inventory\Model\SourceSelectionInterface $sourceSelection
     ) {
         $this->totalCollector = $totalCollector;
         $this->totalCollectorFactory = $totalCollectorFactory;
@@ -100,6 +107,7 @@ class TotalsCollector
         $this->shippingFactory = $shippingFactory;
         $this->shippingAssignmentFactory = $shippingAssignmentFactory;
         $this->quoteValidator = $quoteValidator;
+        $this->sourceSelection = $sourceSelection;
     }
 
     /**
@@ -248,6 +256,13 @@ class TotalsCollector
         $shipping->setAddress($address);
         $shippingAssignment->setShipping($shipping);
         $shippingAssignment->setItems($address->getAllItems());
+        $packages = $this->sourceSelection
+            ->getPackages(
+                $quote->getStoreId(),
+                $shippingAssignment->getItems(),
+                $address
+            );
+        $shippingAssignment->setPackages($packages);
 
         /** @var \Magento\Quote\Model\Quote\Address\Total $total */
         $total = $this->totalFactory->create(\Magento\Quote\Model\Quote\Address\Total::class);
@@ -259,6 +274,12 @@ class TotalsCollector
                 'total' => $total
             ]
         );
+
+        $list = [];
+        foreach ($this->collectorList->getCollectors($quote->getStoreId()) as $collector) {
+            $list[] = get_class($collector);
+        }
+
 
         foreach ($this->collectorList->getCollectors($quote->getStoreId()) as $collector) {
             /** @var CollectorInterface $collector */
