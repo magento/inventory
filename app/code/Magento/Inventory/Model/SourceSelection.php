@@ -78,7 +78,8 @@ class SourceSelection implements SourceSelectionInterface
                 [
                     'data' => [
                         'items' => $items,
-                        'source' => $source
+                        'source' => $source,
+                        'address' => $destinationAddress
                      ]
                 ]
             )

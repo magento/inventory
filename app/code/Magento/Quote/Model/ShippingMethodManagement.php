@@ -242,6 +242,17 @@ class ShippingMethodManagement implements
     }
 
     /**
+     * @param \Magento\Inventory\Model\PackageInterface[] $packages
+     * @param \Magento\Customer\Api\Data\AddressInterface[] $addresses
+     */
+    public function estimate(array $packages, array $addresses)
+    {
+        foreach ($packages as $package) {
+
+        }
+    }
+
+    /**
      * Get estimated rates
      *
      * @param Quote $quote

@@ -11,7 +11,7 @@ interface SourceSelectionInterface
     /**
      * @param $store
      * @param $items
-     * @param $destinationAddress
+     * @param \Magento\Quote\Model\Quote\Address $destinationAddress
      * @return Package[]
      */
     public function getPackages($store, $items, $destinationAddress);

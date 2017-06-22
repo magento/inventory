@@ -10,6 +10,9 @@ class Package extends \Magento\Framework\Api\AbstractExtensibleObject
     implements PackageInterface
 {
 
+    /**
+     * @inheritdoc
+     */
     public function getSource()
     {
         return $this->_get('source');
@@ -20,6 +23,19 @@ class Package extends \Magento\Framework\Api\AbstractExtensibleObject
         return $this->_get('qty');
     }
 
+    public function setAddress($address)
+    {
+        return $this->_set('address', $address);
+    }
+
+    public function getAddress()
+    {
+        return $this->_get('address');
+    }
+
+    /**
+     * @return \Magento\Quote\Model\Quote\Item[]
+     */
     public function getItems()
     {
         return $this->_get('items');

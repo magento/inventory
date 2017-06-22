@@ -34,6 +34,18 @@ interface ShippingAssignmentInterface extends \Magento\Framework\Api\ExtensibleD
      */
     public function setItems($value);
 
+
+    /**
+     * @param \Magento\Inventory\Model\PackageInterface[]
+     * @return $this
+     */
+    public function setPackages($packages);
+
+    /**
+     * @return \Magento\Inventory\Model\PackageInterface[]
+     */
+    public function getPackages();
+
     /**
      * Retrieve existing extension attributes object or create a new one.
      *

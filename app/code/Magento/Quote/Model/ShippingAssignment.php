@@ -12,6 +12,7 @@ class ShippingAssignment extends \Magento\Framework\Model\AbstractExtensibleMode
 {
     const SHIPPING = 'shipping';
     const ITEMS = 'items';
+    const PACKAGES = 'packages';
 
     /**
      * @inheritDoc
@@ -45,6 +46,24 @@ class ShippingAssignment extends \Magento\Framework\Model\AbstractExtensibleMode
     {
         $this->setData(self::ITEMS, $value);
         return $this;
+    }
+
+    /**
+     * @param \Magento\Inventory\Model\PackageInterface[]
+     * @return $this
+     */
+    public function setPackages($packages)
+    {
+        $this->setData(self::PACKAGES, $packages);
+        return $this;
+    }
+
+    /**
+     * @return \Magento\Inventory\Model\PackageInterface[]
+     */
+    public function getPackages()
+    {
+        return $this->getData(self::PACKAGES);
     }
 
     /**
