@@ -110,7 +110,7 @@ class CreateReservationTable
             [
                 ReservationInterface::STOCK_ID,
                 ReservationInterface::SKU,
-                ReservationInterface::QTY,
+                ReservationInterface::QUANTITY,
             ],
             ['type' => AdapterInterface::INDEX_TYPE_INDEX]
         );
