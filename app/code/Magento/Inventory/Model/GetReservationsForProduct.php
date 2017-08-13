@@ -5,12 +5,9 @@
  */
 namespace Magento\Inventory\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryApi\Api\Data\ReservationInterface;
+use Magento\Inventory\Model\ResourceModel\Reservation\GetReservationsForProduct as GetReservationsForProductResourceModel;
 use Magento\InventoryApi\Api\GetReservationsForProductInterface;
-use Magento\InventoryApi\Api\ReservationRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,14 +16,9 @@ use Psr\Log\LoggerInterface;
 class GetReservationsForProduct implements GetReservationsForProductInterface
 {
     /**
-     * @var SearchCriteriaBuilder
+     * @var GetReservationsForProductResourceModel
      */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var ReservationRepositoryInterface
-     */
-    private $reservationRepository;
+    private $getReservationsForProduct;
 
     /**
      * @var LoggerInterface
@@ -34,30 +26,21 @@ class GetReservationsForProduct implements GetReservationsForProductInterface
     private $logger;
 
     public function __construct(
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        ReservationRepositoryInterface $reservationRepository,
+        GetReservationsForProductResourceModel $getReservationsForProduct,
         LoggerInterface $logger
     ) {
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->reservationRepository = $reservationRepository;
+        $this->getReservationsForProduct = $getReservationsForProduct;
         $this->logger = $logger;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute($sku, $stockId)
+    public function execute(string $sku, int $stockId): array
     {
-        if (!is_numeric($stockId)) {
-            throw new InputException(__('Input data is invalid'));
-        }
         try {
-            $searchCriteria = $this->searchCriteriaBuilder
-                ->addFilter(ReservationInterface::SKU, $sku)
-                ->addFilter(ReservationInterface::STOCK_ID, $stockId)
-                ->create();
-            $searchResult = $this->reservationRepository->getList($searchCriteria);
-            return $searchResult->getItems();
+            $reservations = $this->getReservationsForProduct->execute($sku, $stockId);
+            return $reservations;
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new LocalizedException(__('Could not load Reservations for given Product and Stock'), $e);

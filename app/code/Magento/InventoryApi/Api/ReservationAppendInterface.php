@@ -8,14 +8,21 @@ namespace Magento\InventoryApi\Api;
 use Magento\InventoryApi\Api\Data\ReservationInterface;
 
 /**
- * Domain service used to appends reservations when order is placed or canceled
+ * Domain service used to append Reservations to keep track of quantity deductions before the related SourceItems
+ * are updated.
+ *
+ * Some use cases are:
+ *
+ * - an Order is placed, completed or canceled
+ * - an Order is split or partially refunded
+ * - an RMA is placed or canceled
  *
  * @api
  */
 interface ReservationAppendInterface
 {
     /**
-     * Append reservations when Order Placed (or Cancelled)
+     * Append reservations
      *
      * @param ReservationInterface[] $reservations
      * @return void

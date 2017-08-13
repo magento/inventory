@@ -29,10 +29,10 @@ interface ReservationInterface extends ExtensibleDataInterface
      * Reservation possible statuses. Maybe make sense to introduce extension point for Reservation Open-Close statuses
      */
     const STATUS_ORDER_CREATED = 1; // For Order Placed
-    const STATUS_RETURN_CREATED = 2; // For RMA Placed
+    const STATUS_RMA_CREATED = 2; // For RMA Placed
 
-    const STATUS_OREDER_COMPLETE = 101; // For Order Complete
-    const STATUS_OREDER_CANCELED = 102; // For Order Canceled
+    const STATUS_ORDER_COMPLETE = 101; // For Order Complete
+    const STATUS_ORDER_CANCELED = 102; // For Order Canceled
     const STATUS_RMA_COMPLETE = 103; // For RMA Canceled
     /**#@-*/
 
@@ -71,7 +71,7 @@ interface ReservationInterface extends ExtensibleDataInterface
     /**
      * Get Product SKU
      *
-     * @return string|null
+     * @return string
      */
     public function getSku();
 
@@ -86,7 +86,14 @@ interface ReservationInterface extends ExtensibleDataInterface
     /**
      * Get Product Qty
      *
-     * @return float|null
+     * This value can be positive (>0) or negative (<0) depending on the Reservation Status.
+     *
+     * For example, when an Order is placed, a Reservation with negative quantity (and STATUS_ORDER_CREATED status) is
+     * appended.
+     * When that Order is processed and the SourceItems related to ordered products are updated, a Reservation with
+     * positive quantity (and STATUS_ORDER_COMPLETE status) is appended to neglect the first one.
+     *
+     * @return float
      */
     public function getQuantity();
 

@@ -35,10 +35,7 @@
     <preference for="Magento\InventoryApi\Api\GetAssignedSourcesForStockInterface" type="Magento\Inventory\Model\GetAssignedSourcesForStock"/>
     <preference for="Magento\InventoryApi\Api\UnassignSourceFromStockInterface" type="Magento\Inventory\Model\UnassignSourceFromStock"/>
     <!-- Reservation -->
-    <preference for="Magento\InventoryApi\Api\ReservationRepositoryInterface" type="Magento\Inventory\Model\ReservationRepository"/>
     <preference for="Magento\InventoryApi\Api\GetReservationsForProductInterface" type="Magento\Inventory\Model\GetReservationsForProduct"/>
     <preference for="Magento\InventoryApi\Api\ReservationAppendInterface" type="Magento\Inventory\Model\ReservationAppend"/>
     <preference for="Magento\InventoryApi\Api\Data\ReservationInterface" type="Magento\Inventory\Model\Reservation"/>
-    <preference for="Magento\InventoryApi\Api\Data\ReservationSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
-    <preference for="Magento\Inventory\Model\Reservation\Command\GetListInterface" type="Magento\Inventory\Model\Reservation\Command\GetList"/>
 </config>

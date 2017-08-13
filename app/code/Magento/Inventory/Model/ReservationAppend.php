@@ -18,6 +18,16 @@ use Psr\Log\LoggerInterface;
 class ReservationAppend implements ReservationAppendInterface
 {
     /**
+     * @var SaveMultiple
+     */
+    private $saveMultiple;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param SaveMultiple $saveMultiple
      * @param LoggerInterface $logger
      */
@@ -36,7 +46,7 @@ class ReservationAppend implements ReservationAppendInterface
     {
         /** @var ReservationInterface $reservation */
         foreach ($reservations as $reservation) {
-            if (!is_null($reservation->getReservationId())) {
+            if (null !== $reservation->getReservationId()) {
                 throw new InputException(__('Cannot update Reservation %1', $reservation->getReservationId()));
             }
         }

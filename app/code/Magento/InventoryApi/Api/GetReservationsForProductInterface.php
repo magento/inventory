@@ -21,5 +21,5 @@ interface GetReservationsForProductInterface
      * @param int $stockId
      * @return ReservationInterface[]
      */
-    public function execute($sku, $stockId);
+    public function execute(string $sku, int $stockId): array;
 }

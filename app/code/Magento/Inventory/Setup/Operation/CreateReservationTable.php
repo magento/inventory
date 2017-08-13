@@ -79,7 +79,7 @@ class CreateReservationTable
             'Quantity'
         )->addColumn(
             ReservationInterface::STATUS,
-            Table::TYPE_INTEGER,
+            Table::TYPE_SMALLINT,
             null,
             [
                 Table::OPTION_NULLABLE => false,
@@ -97,29 +97,20 @@ class CreateReservationTable
             $stockTable,
             StockInterface::STOCK_ID,
             AdapterInterface::FK_ACTION_CASCADE
-        )->addForeignKey(
-            $setup->getFkName(
-                $reservationTable,
-                ReservationInterface::SKU,
-                'catalog_product_entity',
-                'sku'
-            ),
-            ReservationInterface::SKU,
-            'catalog_product_entity',
-            'sku',
-            AdapterInterface::FK_ACTION_CASCADE
         )->addIndex(
             $setup->getIdxName(
                 $reservationTable,
                 [
                     ReservationInterface::STOCK_ID,
                     ReservationInterface::SKU,
+                    ReservationInterface::QUANTITY,
                 ],
                 AdapterInterface::INDEX_TYPE_INDEX
             ),
             [
                 ReservationInterface::STOCK_ID,
                 ReservationInterface::SKU,
+                ReservationInterface::QTY,
             ],
             ['type' => AdapterInterface::INDEX_TYPE_INDEX]
         );
