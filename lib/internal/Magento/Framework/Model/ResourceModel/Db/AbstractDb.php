@@ -444,15 +444,11 @@ abstract class AbstractDb extends AbstractResource
         try {
             $object->beforeDelete();
             $this->_beforeDelete($object);
-            $entityId = null === $object->getId()
-                ? $object->getData($this->getIdFieldName())
-                : $object->getId();
-
             $this->objectRelationProcessor->delete(
                 $this->transactionManager,
                 $connection,
                 $this->getMainTable(),
-                $this->getConnection()->quoteInto($this->getIdFieldName() . '=?', $entityId),
+                $this->getConnection()->quoteInto($this->getIdFieldName() . '=?', $object->getId()),
                 $object->getData()
             );
             $this->_afterDelete($object);
@@ -875,6 +871,7 @@ abstract class AbstractDb extends AbstractResource
      *
      * @param \Magento\Framework\DataObject $object
      * @return void
+     * @since 100.1.0
      */
     public function beforeSave(\Magento\Framework\DataObject $object)
     {
@@ -886,6 +883,7 @@ abstract class AbstractDb extends AbstractResource
      *
      * @param \Magento\Framework\DataObject $object
      * @return void
+     * @since 100.1.0
      */
     public function afterSave(\Magento\Framework\DataObject $object)
     {
@@ -897,6 +895,7 @@ abstract class AbstractDb extends AbstractResource
      *
      * @param \Magento\Framework\DataObject $object
      * @return void
+     * @since 100.1.0
      */
     public function beforeDelete(\Magento\Framework\DataObject $object)
     {
@@ -908,6 +907,7 @@ abstract class AbstractDb extends AbstractResource
      *
      * @param \Magento\Framework\DataObject $object
      * @return void
+     * @since 100.1.0
      */
     public function afterDelete(\Magento\Framework\DataObject $object)
     {
@@ -919,6 +919,7 @@ abstract class AbstractDb extends AbstractResource
      *
      * @param \Magento\Framework\Model\AbstractModel $object
      * @return \Magento\Framework\Model\AbstractModel|void
+     * @since 100.1.0
      */
     public function serializeFields(\Magento\Framework\Model\AbstractModel $object)
     {

@@ -16,6 +16,7 @@ use Magento\Weee\Model\Tax as WeeeDisplayConfig;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @api
+ * @since 100.0.2
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -40,9 +41,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**#@-*/
 
-    /**
-     * @var array
-     */
+    /**#@-*/
     protected $_storeDisplayConfig = [];
 
     /**
@@ -725,6 +724,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param  \Magento\Quote\Model\Quote\Item\AbstractItem[] $items
      * @param  null|string|bool|int|Store $store
      * @return float
+     * @since 100.1.0
      */
     public function getBaseTotalAmounts($items, $store = null)
     {

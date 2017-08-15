@@ -82,7 +82,6 @@ class Save extends Action
 
                 $this->messageManager->addSuccessMessage(__('The Stock has been saved.'));
                 $this->processRedirectAfterSuccessSave($resultRedirect, $stockId);
-
             } catch (NoSuchEntityException $e) {
                 $this->messageManager->addErrorMessage(__('The Stock does not exist.'));
                 $this->processRedirectAfterFailureSave($resultRedirect);
@@ -93,7 +92,6 @@ class Save extends Action
                 $this->messageManager->addErrorMessage($e->getMessage());
                 $this->processRedirectAfterFailureSave($resultRedirect, $stockId);
             } catch (Exception $e) {
-                // TODO: wrong message if links has not loaded
                 $this->messageManager->addErrorMessage(__('Could not save stock.'));
                 $this->processRedirectAfterFailureSave($resultRedirect, $stockId);
             }
