@@ -40,7 +40,7 @@ class SaveMultiple
             ReservationInterface::STOCK_ID,
             ReservationInterface::SKU,
             ReservationInterface::QUANTITY,
-            ReservationInterface::STATUS,
+            ReservationInterface::METADATA,
         ];
 
         $data = [];
@@ -50,7 +50,7 @@ class SaveMultiple
                 $reservation->getStockId(),
                 $reservation->getSku(),
                 $reservation->getQuantity(),
-                $reservation->getStatus(),
+                $reservation->getMetadata(),
             ];
         }
         $connection->insertArray($tableName, $columns, $data);

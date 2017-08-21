@@ -102,9 +102,9 @@ interface SourceInterface extends ExtensibleDataInterface
     public function setContactName($contactName);
 
     /**
-     * Check if source is enabled
+     * Check if source is enabled. For new entity can be null
      *
-     * @return bool
+     * @return bool|null
      */
     public function isEnabled();
 
@@ -112,7 +112,7 @@ interface SourceInterface extends ExtensibleDataInterface
      * Enable or disable source
      *
      * @param bool $enabled
-     * @return void
+     * @return void|null
      */
     public function setEnabled($enabled);
 
@@ -284,41 +284,43 @@ interface SourceInterface extends ExtensibleDataInterface
     /**
      * Get source priority
      *
-     * @return int
+     * @return int|null
      */
     public function getPriority();
 
     /**
      * Set source priority
      *
-     * @param int $priority
+     * @param int|null $priority
      * @return void
      */
     public function setPriority($priority);
 
     /**
-     * Check is need to use default config
+     * Check is need to use default config. For new entity can be null
      *
-     * @return bool
+     * @return bool|null
      */
     public function isUseDefaultCarrierConfig();
 
     /**
-     * @param bool $useDefaultCarrierConfig
+     * @param bool|null $useDefaultCarrierConfig
      * @return $this
      */
     public function setUseDefaultCarrierConfig($useDefaultCarrierConfig);
 
     /**
-     * @return \Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface[]
+     * For new entity can be null
+     *
+     * @return \Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface[]|null
      */
     public function getCarrierLinks();
 
     /**
-     * @param \Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface[] $carrierLinks
+     * @param \Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface[]|null $carrierLinks
      * @return void
      */
-    public function setCarrierLinks($carrierLinks);
+    public function setCarrierLinks(array $carrierLinks);
 
     /**
      * Retrieve existing extension attributes object

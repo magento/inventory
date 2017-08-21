@@ -6,7 +6,9 @@
 namespace Magento\Inventory\Model\Source\Command;
 
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
+use Magento\Inventory\Model\Source\Validator\SourceValidatorInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Psr\Log\LoggerInterface;
 
@@ -15,6 +17,11 @@ use Psr\Log\LoggerInterface;
  */
 class Save implements SaveInterface
 {
+    /**
+     * @var SourceValidatorInterface
+     */
+    private $sourceValidator;
+
     /**
      * @var SourceResourceModel
      */
@@ -26,13 +33,16 @@ class Save implements SaveInterface
     private $logger;
 
     /**
+     * @param SourceValidatorInterface $sourceValidator
      * @param SourceResourceModel $sourceResource
      * @param LoggerInterface $logger
      */
     public function __construct(
+        SourceValidatorInterface $sourceValidator,
         SourceResourceModel $sourceResource,
         LoggerInterface $logger
     ) {
+        $this->sourceValidator = $sourceValidator;
         $this->sourceResource = $sourceResource;
         $this->logger = $logger;
     }
@@ -42,6 +52,13 @@ class Save implements SaveInterface
      */
     public function execute(SourceInterface $source)
     {
+        $validationResult = $this->sourceValidator->validate($source);
+
+        if (!$validationResult->isValid()) {
+            throw new ValidationException($validationResult->getErrors());
+        }
+
+        // TODO: check if exists?
         try {
             $this->sourceResource->save($source);
             return $source->getSourceId();

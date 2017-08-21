@@ -5,9 +5,8 @@
  */
 namespace Magento\Inventory\Model\ResourceModel\Reservation;
 
-use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Inventory\Model\ReservationFactory;
+use Magento\Inventory\Model\ReservationBuilderInterface;
 use Magento\Inventory\Model\ResourceModel\Reservation as ReservationResourceModel;
 use Magento\InventoryApi\Api\Data\ReservationInterface;
 
@@ -19,15 +18,8 @@ class GetReservationsForProduct
      */
     private $resource;
 
-    /**
-     * @var DataObjectHelper
-     */
-    protected $dataObjectHelper;
-
-    /**
-     * @var ReservationFactory
-     */
-    protected $reservationFactory;
+    /** @var ReservationBuilder */
+    private $reservationBuilder;
 
     /**
      * GetReservationsForProduct constructor
@@ -36,12 +28,10 @@ class GetReservationsForProduct
      */
     public function __construct(
         ResourceConnection $resource,
-        DataObjectHelper $dataObjectHelper,
-        ReservationFactory $reservationFactory
+        ReservationBuilderInterface $reservationBuilder
     ) {
         $this->resource = $resource;
-        $this->dataObjectHelper = $dataObjectHelper;
-        $this->reservationFactory = $reservationFactory;
+        $this->reservationBuilder = $reservationBuilder;
     }
 
     /**
@@ -64,13 +54,13 @@ class GetReservationsForProduct
 
         $reservations = [];
         foreach ($connection->fetchAll($select) as $row) {
-            $reservation = $this->reservationFactory->create();
-            $this->dataObjectHelper->populateWithArray(
-                $reservation,
-                $row,
-                ReservationInterface::class
-            );
-            $reservations[] = $reservation;
+            $reservations[] = $this->reservationBuilder
+                ->setReservationId($row[ReservationInterface::RESERVATION_ID])
+                ->setStockId($row[ReservationInterface::STOCK_ID])
+                ->setSku($row[ReservationInterface::SKU])
+                ->setQuantity($row[ReservationInterface::QUANTITY])
+                ->setMetadata($row[ReservationInterface::METADATA])
+                ->build();
         }
 
         return $reservations;

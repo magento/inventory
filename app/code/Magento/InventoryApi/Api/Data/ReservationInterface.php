@@ -10,7 +10,9 @@ use Magento\InventoryApi\Api\Data\ReservationExtensionInterface;
 
 /**
  * The entity responsible for reservations, created to keep inventory amount (product quantity) up-to-date.
- * It is created to have a state between order creation and inventory deduction (deduction of specific SourceItems)
+ * It is created to have a state between order creation and inventory deduction (deduction of specific SourceItems).
+ *
+ * Reservations are designed to be immutable entities.
  *
  * @api
  */
@@ -23,115 +25,48 @@ interface ReservationInterface extends ExtensibleDataInterface
     const STOCK_ID = 'stock_id';
     const SKU = 'sku';
     const QUANTITY = 'quantity';
-    const STATUS = 'status';
-
-    /**#@+
-     * Reservation possible statuses. Maybe make sense to introduce extension point for Reservation Open-Close statuses
-     */
-    const STATUS_ORDER_CREATED = 1; // For Order Placed
-    const STATUS_RMA_CREATED = 2; // For RMA Placed
-
-    const STATUS_ORDER_COMPLETE = 101; // For Order Complete
-    const STATUS_ORDER_CANCELED = 102; // For Order Canceled
-    const STATUS_RMA_COMPLETE = 103; // For RMA Canceled
-    /**#@-*/
+    const METADATA = 'metadata';
 
     /**
-     * Get Reservation id
+     * Get Reservation Id
      *
      * @return int|null
      */
     public function getReservationId();
 
     /**
-     * Set Reservation Id
+     * Get Stock Id
      *
-     * @param int $reservationId
-     * @return void
+     * @return int
      */
-    public function setReservationId($reservationId);
-
-    /**
-     * Get stock id
-     *
-     * @param int $stockId
-     * @return void
-     */
-    public function getStockId();
-
-    /**
-     * Set stock id
-     *
-     * @param int $stockId
-     * @return void
-     */
-    public function setStockId($stockId);
-
+    public function getStockId(): int;
 
     /**
      * Get Product SKU
      *
      * @return string
      */
-    public function getSku();
-
-    /**
-     * Set product SKU
-     *
-     * @param string $sku
-     * @return void
-     */
-    public function setSku($sku);
+    public function getSku(): string;
 
     /**
      * Get Product Qty
      *
-     * This value can be positive (>0) or negative (<0) depending on the Reservation Status.
+     * This value can be positive (>0) or negative (<0) depending on the Reservation semantic.
      *
-     * For example, when an Order is placed, a Reservation with negative quantity (and STATUS_ORDER_CREATED status) is
-     * appended.
+     * For example, when an Order is placed, a Reservation with negative quantity is appended.
      * When that Order is processed and the SourceItems related to ordered products are updated, a Reservation with
-     * positive quantity (and STATUS_ORDER_COMPLETE status) is appended to neglect the first one.
+     * positive quantity is appended to neglect the first one.
      *
      * @return float
      */
-    public function getQuantity();
+    public function getQuantity(): float;
 
     /**
-     * Set Reservation quantity
+     * Get Reservation Metadata
      *
-     * @param float $quantity
-     * @return void
-     */
-    public function setQuantity($quantity);
-
-    /**
-     * Get Reservation Status
+     * Metadata is used to store serialized data that encapsulates the semantic of a Reservation.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getStatus();
-
-    /**
-     * Set Reservation status (One of self::STATUS_*)
-     *
-     * @param int $status
-     * @return void
-     */
-    public function setStatus($status);
-
-    /**
-     * Retrieve existing extension attributes object
-     *
-     * @return \Magento\InventoryApi\Api\Data\ReservationExtensionInterface|null
-     */
-    public function getExtensionAttributes();
-
-    /**
-     * Set an extension attributes object
-     *
-     * @param \Magento\InventoryApi\Api\Data\ReservationExtensionInterface $extensionAttributes
-     * @return void
-     */
-    public function setExtensionAttributes(ReservationExtensionInterface $extensionAttributes);
+    public function getMetadata();
 }

@@ -13,9 +13,11 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
+ * @api
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @codeCoverageIgnore
+ * @since 100.0.2
  */
 class EavSetup
 {
@@ -556,6 +558,7 @@ class EavSetup
     /**
      * @param string $groupName
      * @return string
+     * @since 100.1.0
      */
     public function convertToAttributeGroupCode($groupName)
     {
@@ -628,6 +631,7 @@ class EavSetup
      * @param string $code
      * @param string $field
      * @return mixed
+     * @since 100.1.0
      */
     public function getAttributeGroupByCode($entityTypeId, $setId, $code, $field = null)
     {

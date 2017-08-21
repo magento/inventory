@@ -78,14 +78,11 @@ class CreateReservationTable
             ],
             'Quantity'
         )->addColumn(
-            ReservationInterface::STATUS,
-            Table::TYPE_SMALLINT,
-            null,
-            [
-                Table::OPTION_NULLABLE => false,
-                Table::OPTION_UNSIGNED => true,
-            ],
-            'Status'
+            ReservationInterface::METADATA,
+            Table::TYPE_TEXT,
+            '64k',
+            [],
+            'Metadata'
         )->addForeignKey(
             $setup->getFkName(
                 $reservationTable,
