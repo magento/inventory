@@ -31,7 +31,12 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     public function getSku()
     {
         return $this->getData(self::SKU);
+
+
     }
+
+    // broken Code Style
+
 
     /**
      * @inheritdoc

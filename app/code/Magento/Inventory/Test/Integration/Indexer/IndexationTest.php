@@ -86,6 +86,7 @@ class IndexationTest extends TestCase
      */
     public function testReindexRow()
     {
+        $this->fail('Integration tests fail');
         $this->indexer->reindexRow(1);
 
         self::assertEquals(8.5, $this->indexerChecker->execute(1, 'SKU-1'));
