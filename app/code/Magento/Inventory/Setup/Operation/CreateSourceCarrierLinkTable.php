@@ -76,17 +76,6 @@ class CreateSourceCarrierLinkTable
                 Table::OPTION_UNSIGNED => true,
             ],
             'Position'
-        )->addForeignKey(
-            $setup->getFkName(
-                $sourceCarrierLinkTable,
-                SourceInterface::SOURCE_ID,
-                $sourceTable,
-                SourceInterface::SOURCE_ID
-            ),
-            SourceInterface::SOURCE_ID,
-            $sourceTable,
-            SourceInterface::SOURCE_ID,
-            AdapterInterface::FK_ACTION_CASCADE
         );
     }
 }
