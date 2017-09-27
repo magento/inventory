@@ -50,32 +50,6 @@ class CreateSourceCarrierLinkTable
                 Table::OPTION_PRIMARY => true,
             ],
             'Source Carrier Link ID'
-        )->addColumn(
-            SourceInterface::SOURCE_ID,
-            Table::TYPE_INTEGER,
-            null,
-            [
-                Table::OPTION_NULLABLE => false,
-                Table::OPTION_UNSIGNED => true,
-            ],
-            'Source ID'
-        )->addColumn(
-            SourceCarrierLinkInterface::CARRIER_CODE,
-            Table::TYPE_TEXT,
-            255,
-            [
-                Table::OPTION_NULLABLE => false,
-            ],
-            'Carrier Code'
-        )->addColumn(
-            'position',
-            Table::TYPE_SMALLINT,
-            null,
-            [
-                Table::OPTION_NULLABLE => true,
-                Table::OPTION_UNSIGNED => true,
-            ],
-            'Position'
         );
     }
 }
