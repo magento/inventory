@@ -9,6 +9,7 @@ namespace Magento\Inventory\Setup;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Inventory\Model\ResourceModel\SourceCarrierLink;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Framework\Api\DataObjectHelper;
@@ -53,6 +54,8 @@ class InstallData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
+        $setup->getConnection()->query('SELECT * FROM ' . SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
+
         $this->addDefaultSource();
     }
 

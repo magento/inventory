@@ -42,14 +42,7 @@ class CreateSourceCarrierLinkTable
         )->addColumn(
             SourceCarrierLink::ID_FIELD_NAME,
             Table::TYPE_INTEGER,
-            null,
-            [
-                Table::OPTION_IDENTITY => true,
-                Table::OPTION_UNSIGNED => true,
-                Table::OPTION_NULLABLE => false,
-                Table::OPTION_PRIMARY => true,
-            ],
-            'Source Carrier Link ID'
+            null
         );
     }
 }
