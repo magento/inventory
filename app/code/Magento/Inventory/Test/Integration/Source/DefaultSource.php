@@ -27,7 +27,7 @@ class DefaultSource extends TestCase
      */
     protected function setUp()
     {
-        $this->source = Bootstrap::getObjectManager()->create(SourceRepositoryInterface::class);
+        $this->source = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);
         $this->source = $this->source->get(1);
     }
 
