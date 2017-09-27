@@ -20,64 +20,14 @@ use Magento\Framework\Api\DataObjectHelper;
 class InstallData implements InstallDataInterface
 {
     /**
-     * @var SourceRepositoryInterface $stockRepository
-     */
-    private $sourceRepository;
-
-    /**
-     * @var SourceInterface
-     */
-    private $source;
-
-    /**
-     * @var DataObjectHelper
-     */
-    private $dataObjectHelper;
-
-    /**
-     * @param SourceRepositoryInterface $sourceRepository
-     * @param SourceInterface $source
-     * @param DataObjectHelper $dataObjectHelper
-     */
-    public function __construct(
-        SourceRepositoryInterface $sourceRepository,
-        SourceInterface $source,
-        DataObjectHelper $dataObjectHelper
-    ) {
-        $this->sourceRepository = $sourceRepository;
-        $this->source = $source;
-        $this->dataObjectHelper = $dataObjectHelper;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        $setup->getConnection()->query('SELECT * FROM ' . SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
+        $sourceCarrierLinkTable = $setup->getTable(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
+        $setup->getConnection()->query('SELECT * FROM ' . $sourceCarrierLinkTable);
 
-        $this->addDefaultSource();
-    }
-
-    /**
-     * Add default source
-     *
-     * @return void
-     */
-    private function addDefaultSource()
-    {
-        $data = [
-            SourceInterface::SOURCE_ID => 1,
-            SourceInterface::NAME => 'Default Source',
-            SourceInterface::ENABLED => 1,
-            SourceInterface::DESCRIPTION => 'Default Source',
-            SourceInterface::LATITUDE => 0,
-            SourceInterface::LONGITUDE => 0,
-            SourceInterface::PRIORITY => 0,
-            SourceInterface::COUNTRY_ID => 'PL',
-            SourceInterface::POSTCODE => '00-000'
-        ];
-        $this->dataObjectHelper->populateWithArray($this->source, $data, SourceInterface::class);
-        $this->sourceRepository->save($this->source);
+        var_dump($sourceCarrierLinkTable);
+        var_dump(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
     }
 }
