@@ -59,6 +59,7 @@ class InstallData implements InstallDataInterface
 
         var_dump($sourceCarrierLinkTable);
         var_dump(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
+        $this->addDefaultSource();
     }
 
     /**
