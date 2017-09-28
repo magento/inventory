@@ -86,8 +86,9 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     private function deleteCurrentCarrierLinks(SourceInterface $source)
     {
         $connection = $this->connection->getConnection();
+
         $connection->delete(
-            $connection->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK),
+            $this->connection->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK),
             $connection->quoteInto('source_id = ?', $source->getSourceId())
         );
     }
