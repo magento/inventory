@@ -57,8 +57,10 @@ class InstallData implements InstallDataInterface
         $sourceCarrierLinkTable = $setup->getTable(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
         $setup->getConnection()->query('SELECT * FROM ' . $sourceCarrierLinkTable);
 
-        var_dump($sourceCarrierLinkTable);
-        var_dump(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK);
+        var_dump($setup->getTable(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK));
+        var_dump($setup->getConnection()->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK));
+
+
         $this->addDefaultSource();
     }
 
