@@ -89,9 +89,8 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     {
         $connection = $this->connection->getConnection();
 
-        var_dump($connection->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK));
         $connection->delete(
-            $connection->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK),
+            $this->connection->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK),
             $connection->quoteInto('source_id = ?', $source->getSourceId())
         );
     }
