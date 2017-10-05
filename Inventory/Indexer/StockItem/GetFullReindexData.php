@@ -12,7 +12,7 @@ use Magento\Inventory\Model\StockSourceLink;
 /**
  * Returns all assigned stock ids by given sources ids
  */
-class GetAssignedStockIds
+class GetFullReindexData
 {
     /**
      * @var ResourceConnection
@@ -28,22 +28,18 @@ class GetAssignedStockIds
     }
 
     /**
-     * Returns all assigned stock ids by given sources ids
+     * Returns all assigned stock ids
      *
-     * @param array $sourceIds
      * @return int[] List of stock ids
      */
-    public function execute(array $sourceIds): array
+    public function execute(): array
     {
         $connection = $this->resourceConnection->getConnection();
         $select = $connection->select()->from(
-            $connection->getTableName(StockSourceLinkResourceModel::TABLE_NAME_STOCK_SOURCE_LINK),
+            $this->resourceConnection->getTableName(StockSourceLinkResourceModel::TABLE_NAME_STOCK_SOURCE_LINK),
             [StockSourceLink::STOCK_ID]
         );
 
-        if (count($sourceIds)) {
-            $select->where(StockSourceLink::SOURCE_ID . ' IN (?)', $sourceIds);
-        }
         $select->group(StockSourceLink::STOCK_ID);
         return $connection->fetchCol($select);
     }
