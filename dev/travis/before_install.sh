@@ -34,7 +34,7 @@ if [ test $TEST_SUITE == "js" ]; then
     yarn global add grunt-cli
 fi
 
-if [ $TEST_SUITE = "functional" ]; then
+if [ $TEST_SUITE = "functional" or $TEST_SUITE = "api" ]; then
     # Install apache
     sudo apt-get update
     sudo apt-get install apache2 libapache2-mod-fastcgi
