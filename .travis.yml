@@ -30,6 +30,7 @@ env:
     - TEST_SUITE=integration INTEGRATION_INDEX=2
     - TEST_SUITE=integration INTEGRATION_INDEX=3
     - TEST_SUITE=functional
+    - TEST_SUITE=api
 matrix:
   exclude:
     - php: 7.0
