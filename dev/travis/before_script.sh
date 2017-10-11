@@ -158,7 +158,6 @@ case $TEST_SUITE in
 
         cp ./phpunit.xml.dist ./phpunit.xml
         sed -e "s?magento.url?${MAGENTO_HOST_NAME}?g" --in-place ./phpunit.xml
-        cp ./.htaccess.sample ./.htaccess
 
         cd ../../..
         ;;
