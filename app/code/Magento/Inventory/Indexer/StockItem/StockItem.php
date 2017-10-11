@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Inventory\Indexer\StockItem;
 
 use Magento\Framework\App\ResourceConnection;
@@ -146,11 +145,17 @@ class StockItem implements StockItemIndexerInterface
                 ->setAlias(Alias::ALIAS_MAIN)
                 ->build();
 
-            $this->indexHandler->cleanIndex(
-                $mainIndexName,
-                new \ArrayIterator($skuList),
-                ResourceConnection::DEFAULT_CONNECTION
-            );
+            if ($this->indexStructure->isExist($mainIndexName, ResourceConnection::DEFAULT_CONNECTION)) {
+                $this->indexHandler->cleanIndex(
+                    $mainIndexName,
+                    new \ArrayIterator($skuList),
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
+            } else {
+                // TODO: need to remove after creating separate indexes
+                $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
+            }
+
             $this->indexHandler->saveIndex(
                 $mainIndexName,
                 $this->indexDataProvider->getData($stockId, $skuList),
