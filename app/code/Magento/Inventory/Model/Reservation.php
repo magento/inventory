@@ -5,6 +5,9 @@
  */
 declare(strict_types=1);
 
+
+// Example of failed static test
+
 namespace Magento\Inventory\Model;
 
 use Magento\InventoryApi\Api\Data\ReservationInterface;
