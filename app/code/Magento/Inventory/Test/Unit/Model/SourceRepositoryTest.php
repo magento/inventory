@@ -69,6 +69,7 @@ class SourceRepositoryTest extends TestCase
 
     public function testSave()
     {
+        self::fail('Example of failed unit test');
         $sourceId = 42;
 
         $this->commandSave

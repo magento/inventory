@@ -81,8 +81,7 @@ class Reservation implements ReservationInterface
     /**
      * @inheritdoc
      */
-    public function getSku(): string
-    {
+    public function getSku(): string { // Example of failed static test
         return $this->sku;
     }
 
