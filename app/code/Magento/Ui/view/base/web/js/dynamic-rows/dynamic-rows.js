@@ -923,9 +923,10 @@ define([
 
         /**
          * Compare two objects by the sortOrder property.
+         *
          * @param {Object} $object1
          * @param {Object} $object2
-         * @returns {number}
+         * @returns {Number}
          * @private
          */
         _compare: function ($object1, $object2) {
