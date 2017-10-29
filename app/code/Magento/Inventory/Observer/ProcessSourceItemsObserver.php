@@ -110,25 +110,30 @@ class ProcessSourceItemsObserver implements ObserverInterface
 
     /**
      * @param array $assignedSources
+     * @return int
+     */
+    private function retrieveKeyOfDefaultSourceAssignment(array $assignedSources)
+    {
+        foreach ($assignedSources as $key => $assignedSource) {
+            if ((int)$assignedSource['source_id'] === $this->defaultSourceProvider->getId()) {
+                return $key;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param array $assignedSources
      * @param ProductInterface $product
      * @return array
      */
     private function extendWithDefaultSource(array $assignedSources, ProductInterface $product): array
     {
         $defaultSourceId = $this->defaultSourceProvider->getId();
+        $defaultSourceAssignmentKey = $this->retrieveKeyOfDefaultSourceAssignment($assignedSources);
 
-        foreach ($assignedSources as $key => $assignedSource) {
-            if ((int)$assignedSource['source_id'] === $defaultSourceId) {
-                $assignedSource = array_merge(
-                    $assignedSource,
-                    $this->retrieveStockDataFromProduct($product)
-                );
-                $assignedSources[$key] = $assignedSource;
-                return $assignedSources;
-            }
-        }
-
-        $assignedSources[] = array_merge(
+        $assignedSources[$defaultSourceAssignmentKey] = array_merge(
+            $assignedSources[$defaultSourceAssignmentKey] ?? [],
             ['source_id' => $defaultSourceId],
             $this->retrieveStockDataFromProduct($product)
         );
