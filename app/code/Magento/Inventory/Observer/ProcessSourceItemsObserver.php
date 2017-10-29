@@ -81,38 +81,57 @@ class ProcessSourceItemsObserver implements ObserverInterface
     }
 
     /**
+     * @param ProductInterface $product
+     * @return array
+     */
+    private function retrieveStockDataFromProduct(ProductInterface $product): array
+    {
+        $extendedAttributes = $product->getExtensionAttributes();
+        if ($extendedAttributes) {
+            $stockItem = $extendedAttributes->getStockItem();
+            if ($stockItem) {
+                return [
+                    'quantity' => (float)$stockItem->getQty(),
+                    'status' => (int)$stockItem->getIsInStock(),
+                ];
+            }
+        }
+
+        if ($product->hasData('stock_data')) {
+            $stockData = $product->getData('stock_data');
+            return [
+                'quantity' => (float)$stockData['qty'],
+                'status' => (int)$stockData['is_in_stock'],
+            ];
+        }
+
+        return [];
+    }
+
+    /**
      * @param array $assignedSources
      * @param ProductInterface $product
      * @return array
      */
     private function extendWithDefaultSource(array $assignedSources, ProductInterface $product): array
     {
-        $extendedAttributes = $product->getExtensionAttributes();
-        if (!$extendedAttributes) {
-            return $assignedSources;
-        }
-
-        $stockItem = $extendedAttributes->getStockItem();
-        if (!$stockItem) {
-            return $assignedSources;
-        }
-
         $defaultSourceId = $this->defaultSourceProvider->getId();
 
         foreach ($assignedSources as $key => $assignedSource) {
             if ((int)$assignedSource['source_id'] === $defaultSourceId) {
-                $assignedSource['quantity'] =  (float)$stockItem->getQty();
-                $assignedSource['status'] =  (int)$stockItem->getIsInStock();
+                $assignedSource = array_merge(
+                    $assignedSource,
+                    $this->retrieveStockDataFromProduct($product)
+                );
                 $assignedSources[$key] = $assignedSource;
                 return $assignedSources;
             }
         }
 
-        $assignedSources[] = [
-            'source_id' => $this->defaultSourceProvider->getId(),
-            'quantity' => (float)$stockItem->getQty(),
-            'status' => (int)$stockItem->getIsInStock(),
-        ];
+        $assignedSources[] = array_merge(
+            ['source_id' => $defaultSourceId],
+            $this->retrieveStockDataFromProduct($product)
+        );
 
         return $assignedSources;
     }
