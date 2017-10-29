@@ -10,7 +10,6 @@ use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Exception\InputException;
-use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
 
 /**
  * Save source product relations during product persistence via controller
@@ -26,20 +25,12 @@ class ProcessSourceItemsObserver implements ObserverInterface
     private $sourceItemsProcessor;
 
     /**
-     * @var DefaultSourceProviderInterface
-     */
-    private $defaultSourceProvider;
-
-    /**
      * @param SourceItemsProcessor $sourceItemsProcessor
-     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
-        SourceItemsProcessor $sourceItemsProcessor,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        SourceItemsProcessor $sourceItemsProcessor
     ) {
         $this->sourceItemsProcessor = $sourceItemsProcessor;
-        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -59,7 +50,6 @@ class ProcessSourceItemsObserver implements ObserverInterface
 
         $sources = $controller->getRequest()->getParam('sources', []);
         $assignedSources = $this->retrieveAssignedSources($sources);
-        $assignedSources = $this->extendWithDefaultSource($assignedSources, $product);
 
         $this->sourceItemsProcessor->process(
             $product->getSku(),
@@ -76,67 +66,6 @@ class ProcessSourceItemsObserver implements ObserverInterface
         $assignedSources = isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])
             ? $sources['assigned_sources']
             : [];
-
-        return $assignedSources;
-    }
-
-    /**
-     * @param ProductInterface $product
-     * @return array
-     */
-    private function retrieveStockDataFromProduct(ProductInterface $product): array
-    {
-        $extendedAttributes = $product->getExtensionAttributes();
-        if ($extendedAttributes) {
-            $stockItem = $extendedAttributes->getStockItem();
-            if ($stockItem) {
-                return [
-                    'quantity' => (float)$stockItem->getQty(),
-                    'status' => (int)$stockItem->getIsInStock(),
-                ];
-            }
-        }
-
-        if ($product->hasData('stock_data')) {
-            $stockData = $product->getData('stock_data');
-            return [
-                'quantity' => (float)$stockData['qty'],
-                'status' => (int)$stockData['is_in_stock'],
-            ];
-        }
-
-        return [];
-    }
-
-    /**
-     * @param array $assignedSources
-     * @return int
-     */
-    private function retrieveKeyOfDefaultSourceAssignment(array $assignedSources)
-    {
-        foreach ($assignedSources as $key => $assignedSource) {
-            if ((int)$assignedSource['source_id'] === $this->defaultSourceProvider->getId()) {
-                return $key;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param array $assignedSources
-     * @param ProductInterface $product
-     * @return array
-     */
-    private function extendWithDefaultSource(array $assignedSources, ProductInterface $product): array
-    {
-        $defaultSourceId = $this->defaultSourceProvider->getId();
-        $defaultSourceAssignmentKey = $this->retrieveKeyOfDefaultSourceAssignment($assignedSources);
-
-        $assignedSources[$defaultSourceAssignmentKey] = array_merge(
-            $assignedSources[$defaultSourceAssignmentKey] ?? [],
-            ['source_id' => $defaultSourceId],
-            $this->retrieveStockDataFromProduct($product)
-        );
 
         return $assignedSources;
     }

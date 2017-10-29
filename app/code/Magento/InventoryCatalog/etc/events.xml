@@ -6,7 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="catalog_product_save_after">
-        <observer name="msi_inventory" instance="Magento\Inventory\Observer\SaveInventoryDataObserver"/>
+    <event name="cataloginventory_stock_item_save_after">
+        <observer name="stock_sources_update" instance="Magento\InventoryCatalog\Observer\SaveInventoryDataObserver"/>
     </event>
 </config>
