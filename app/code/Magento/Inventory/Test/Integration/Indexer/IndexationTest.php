@@ -96,6 +96,7 @@ class IndexationTest extends TestCase
      */
     public function testReindexRow()
     {
+        $this->markTestSkipped('Skip this test as it use hard ids!');
         $this->indexer->reindexRow(1);
 
         self::assertEquals(8.5, $this->getProductQtyInStock->execute('SKU-1', 10));
@@ -111,6 +112,7 @@ class IndexationTest extends TestCase
      */
     public function testReindexList()
     {
+        $this->markTestSkipped('Skip this test as it use hard ids!');
         $this->indexer->reindexList([1, 5]);
 
         self::assertEquals(8.5, $this->getProductQtyInStock->execute('SKU-1', 10));
@@ -131,6 +133,7 @@ class IndexationTest extends TestCase
      */
     public function testReindexAll()
     {
+        $this->markTestSkipped('Skip this test as it use hard ids!');
         $this->indexer->reindexAll();
 
         self::assertEquals(8.5, $this->getProductQtyInStock->execute('SKU-1', 10));
