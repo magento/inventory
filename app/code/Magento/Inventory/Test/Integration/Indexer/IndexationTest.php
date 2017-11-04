@@ -87,7 +87,7 @@ class IndexationTest extends TestCase
      */
     public function testReindexRow()
     {
-        $this->indexer->reindexRow(1);
+        $this->indexer->reindexRow(3);
 
         self::assertEquals(8.5, $this->indexerChecker->execute(10, 'SKU-1'));
         self::assertEquals(0, $this->indexerChecker->execute(20, 'SKU-1'));
@@ -103,7 +103,7 @@ class IndexationTest extends TestCase
      */
     public function testReindexList()
     {
-        $this->indexer->reindexList([1, 5]);
+        $this->indexer->reindexList([3, 7]);
 
         self::assertEquals(8.5, $this->indexerChecker->execute(10, 'SKU-1'));
         self::assertEquals(0, $this->indexerChecker->execute(20, 'SKU-1'));
