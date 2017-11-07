@@ -15,6 +15,7 @@ use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
  * Return Quantity of product available to be sold by Product SKU and Stock Id
  *
  * @see \Magento\InventoryApi\Api\GetProductQuantityInStockInterface
+ * @api
  */
 class GetProductQuantityInStock implements GetProductQuantityInStockInterface
 {

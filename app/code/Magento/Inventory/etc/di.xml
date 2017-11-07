@@ -51,6 +51,7 @@
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="name" xsi:type="object">Magento\Inventory\Model\Stock\Validator\NameValidator</item>
+                <item name="sales_channel" xsi:type="object">Magento\Inventory\Model\Stock\Validator\SalesChannelsValidator</item>
             </argument>
         </arguments>
     </type>
@@ -77,6 +78,16 @@
     <type name="Magento\Inventory\Indexer\StockItem\IndexNameResolver">
         <arguments>
             <argument name="indexScopeResolver" xsi:type="object">Magento\Framework\Indexer\ScopeResolver\IndexScopeResolver</argument>
+        </arguments>
+    </type>
+    <type name="\Magento\Inventory\Indexer\StockItem\GetPartialReindexData">
+        <arguments>
+            <argument name="groupConcatMaxLen" xsi:type="number">2000</argument>
+        </arguments>
+    </type>
+    <type name="\Magento\Inventory\Model\ResourceModel\Reservation\ReservationCleanup">
+        <arguments>
+            <argument name="groupConcatMaxLen" xsi:type="number">2000</argument>
         </arguments>
     </type>
     <!-- Reservation -->

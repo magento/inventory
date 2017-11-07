@@ -35,18 +35,16 @@ class ReplaceSalesChannelsDataForStock implements ReplaceSalesChannelsForStockIn
     }
 
     /**
-     * Replace Sales Channels for Stock
+     * Create Sales Channels for Stock
      *
      * @param SalesChannelInterface[] $salesChannels
      * @param int $stockId
      * @return void
      */
-    public function execute(array $salesChannels, int $stockId)
+    public function create(array $salesChannels, int $stockId)
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName(CreateSalesChannelTable::TABLE_NAME_SALES_CHANNEL);
-
-        $connection->delete($tableName, [CreateSalesChannelTable::STOCK_ID . ' = ?' => $stockId]);
 
         if (count($salesChannels)) {
             $salesChannelsToInsert = [];
@@ -59,5 +57,23 @@ class ReplaceSalesChannelsDataForStock implements ReplaceSalesChannelsForStockIn
             }
             $connection->insertMultiple($tableName, $salesChannelsToInsert);
         }
+    }
+
+    /**
+     * Delete Sales Channels for Stock
+     *
+     * @param SalesChannelInterface[] $salesChannels
+     * @param int $stockId
+     * @return void
+     */
+    public function delete(array $salesChannels, int $stockId)
+    {
+        $channelsCode = [];
+        foreach ($salesChannels as $salesChannel) {
+            $channelsCode[] = $salesChannel->getCode();
+        }
+        $connection = $this->resourceConnection->getConnection();
+        $tableName = $this->resourceConnection->getTableName(CreateSalesChannelTable::TABLE_NAME_SALES_CHANNEL);
+        $connection->delete($tableName, [SalesChannelInterface::CODE . ' IN (?)' => $channelsCode]);
     }
 }
