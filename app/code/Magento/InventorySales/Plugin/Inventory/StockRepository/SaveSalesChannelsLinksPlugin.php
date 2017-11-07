@@ -60,7 +60,8 @@ class SaveSalesChannelsLinksPlugin
         $stockId = $proceed($stock);
         if (null !== $salesChannels) {
             try {
-                $this->replaceSalesChannelsOnStock->execute($salesChannels, $stockId);
+                $this->replaceSalesChannelsOnStock->delete($salesChannels, $stockId);
+                $this->replaceSalesChannelsOnStock->create($salesChannels, $stockId);
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
                 throw new CouldNotSaveException(__('Could not replace Sales Channels for Stock'), $e);
