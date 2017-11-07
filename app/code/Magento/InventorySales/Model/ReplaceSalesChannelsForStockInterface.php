@@ -16,11 +16,20 @@ namespace Magento\InventorySales\Model;
 interface ReplaceSalesChannelsForStockInterface
 {
     /**
-     * Replace Sales Channels for Stock
+     * Create Sales Channels for Stock
      *
      * @param array $salesChannels
      * @param int $stockId
      * @return void
      */
-    public function execute(array $salesChannels, int $stockId);
+    public function create(array $salesChannels, int $stockId);
+
+    /**
+     * Delete Sales Channels for Stock
+     *
+     * @param array $salesChannels
+     * @param int $stockId
+     * @return void
+     */
+    public function delete(array $salesChannels, int $stockId);
 }

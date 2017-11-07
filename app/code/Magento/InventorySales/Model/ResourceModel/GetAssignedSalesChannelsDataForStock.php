@@ -13,7 +13,7 @@ use Magento\InventorySales\Setup\Operation\CreateSalesChannelTable;
 /**
  * Provides linked sales channels by given stock id
  */
-class GetAssignedSalesChannelsDataForStock
+class GetAssignedSalesChannelsDataForStock implements GetAssignedSalesChannelsDataForStockInterface
 {
     /**
      * @var ResourceConnection
