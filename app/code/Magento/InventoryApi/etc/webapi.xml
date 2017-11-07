@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Source -->
+    <route url="/V1/inventory/source" method="GET">
+        <service class="Magento\InventoryApi\Api\SourceRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/source/:sourceId" method="GET">
+        <service class="Magento\InventoryApi\Api\SourceRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/source" method="POST">
+        <service class="Magento\InventoryApi\Api\SourceRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source_edit"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/source/:sourceId" method="PUT">
+        <service class="Magento\InventoryApi\Api\SourceRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source_edit"/>
+        </resources>
+    </route>
+    <!-- Stock -->
+    <route url="/V1/inventory/stock" method="GET">
+        <service class="Magento\InventoryApi\Api\StockRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/:stockId" method="GET">
+        <service class="Magento\InventoryApi\Api\StockRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock" method="POST">
+        <service class="Magento\InventoryApi\Api\StockRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock_edit"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/:stockId" method="PUT">
+        <service class="Magento\InventoryApi\Api\StockRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock_edit"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/:stockId" method="DELETE">
+        <service class="Magento\InventoryApi\Api\StockRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock_delete"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/get-product-quantity/:sku/:stockId" method="GET">
+        <service class="Magento\InventoryApi\Api\GetProductQuantityInStockInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/is-product-in-stock/:sku/:stockId" method="GET">
+        <service class="Magento\InventoryApi\Api\IsProductInStockInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::stock"/>
+        </resources>
+    </route>
+    <!-- StockSourceLink -->
+    <route url="/V1/inventory/stock/get-assigned-sources/:stockId" method="GET">
+        <service class="Magento\InventoryApi\Api\GetAssignedSourcesForStockInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source_stock_link"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/assign-sources/:stockId" method="POST">
+        <service class="Magento\InventoryApi\Api\AssignSourcesToStockInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source_stock_link"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/stock/unassign-source/:stockId/:sourceId" method="DELETE">
+        <service class="Magento\InventoryApi\Api\UnassignSourceFromStockInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source_stock_link"/>
+        </resources>
+    </route>
+</routes>
