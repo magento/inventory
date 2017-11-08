@@ -11,10 +11,8 @@ use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySales\Model\ResourceModel\GetAssignedSalesChannelsDataForStockInterface;
 use Magento\InventorySales\Model\ResourceModel\GetAssignedSalesChannelsForOtherStocksInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\TestFramework\Event\Magento;
+
 
 
 /**
@@ -38,35 +36,21 @@ class SalesChannelsValidator implements StockValidatorInterface
     private $assignedSalesChannelsForOtherStocks;
 
     /**
-     * @var \Magento\Framework\App\RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * SalesChannelsValidator constructor.
      *
      * @param ValidationResultFactory                         $validationResultFactory
      * @param GetAssignedSalesChannelsDataForStockInterface   $assignedSalesChannelsForStock
      * @param GetAssignedSalesChannelsForOtherStocksInterface $assignedSalesChannelsForOtherStocks
-     * @param RequestInterface                                $request
-     * @param StoreManagerInterface                           $storeManager
      */
-    public function __construct(ValidationResultFactory $validationResultFactory,
-                                GetAssignedSalesChannelsDataForStockInterface $assignedSalesChannelsForStock,
-                                GetAssignedSalesChannelsForOtherStocksInterface $assignedSalesChannelsForOtherStocks,
-                                RequestInterface $request,
-                                StoreManagerInterface $storeManager)
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        GetAssignedSalesChannelsDataForStockInterface $assignedSalesChannelsForStock,
+        GetAssignedSalesChannelsForOtherStocksInterface $assignedSalesChannelsForOtherStocks
+    )
     {
         $this->validationResultFactory             = $validationResultFactory;
         $this->assignedSalesChannelsForStock       = $assignedSalesChannelsForStock;
         $this->assignedSalesChannelsForOtherStocks = $assignedSalesChannelsForOtherStocks;
-        $this->request                             = $request;
-        $this->storeManager                  = $storeManager;
     }
 
     /**
@@ -75,15 +59,17 @@ class SalesChannelsValidator implements StockValidatorInterface
     public function validate(StockInterface $stock): ValidationResult
     {
         $errors = [];
-        if (!$stock->isObjectNew()) {
+        if ($stock->getStockId()) {
+            $channelsLinksData     = [];
             $assignedSalesChannels = $this->assignedSalesChannelsForStock->execute($stock->getStockId());
-            $params                = $this->request->getParam('sales_channels', []);
-            $channelsLinksData     = isset($params['websites']) && is_array($params['websites']) ? $params['websites'] : [];
             $assignedChannelsCodes = array_flip(array_column($assignedSalesChannels, SalesChannelInterface::CODE));
+            foreach ($stock->getExtensionAttributes()->getSalesChannels() as $salesChannel) {
+                $channelsLinksData[$salesChannel->getCode()] = $salesChannel->getType();
+            }
 
             $channelsForDelete = [];
             foreach ($assignedChannelsCodes as $code => $value) {
-                if (!array_key_exists($code, array_flip($channelsLinksData))) {
+                if (!array_key_exists($code, $channelsLinksData)) {
                     $channelsForDelete[] = $code;
                 }
             }
@@ -91,11 +77,8 @@ class SalesChannelsValidator implements StockValidatorInterface
             foreach ($channelsForDelete as $code) {
                 $assignedSourceIds = $this->assignedSalesChannelsForOtherStocks->execute($stock->getStockId(), $code);
                 if (!count($assignedSourceIds)) {
-                    $errors[] = __('Sales channel "%source" can not be unrelated not to one stock.',
-                                   ['source' => $this->storeManager->getWebsite($code)->getName()]
-                    );
+                    $errors[] = __('Sales channel "%source" can not be unrelated not to one stock.', ['source' => $code]);
                 }
-
             }
         }
 

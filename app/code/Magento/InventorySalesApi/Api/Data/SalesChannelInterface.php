@@ -22,7 +22,6 @@ interface SalesChannelInterface extends ExtensibleDataInterface
      */
     const TYPE = 'type';
     const CODE = 'code';
-    const STOCK_ID = 'stock_id';
     /**#@-*/
 
     /**

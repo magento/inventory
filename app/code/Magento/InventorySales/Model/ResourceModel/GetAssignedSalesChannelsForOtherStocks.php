@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model\ResourceModel;
 
 use Magento\InventorySales\Setup\Operation\CreateSalesChannelTable;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Framework\App\ResourceConnection;
 
 /**
@@ -47,8 +46,8 @@ class GetAssignedSalesChannelsForOtherStocks implements GetAssignedSalesChannels
 
         $select = $connection->select()
                              ->from($tableName)
-                             ->where(SalesChannelInterface::CODE . ' = ?', $channelCode)
-                             ->where(SalesChannelInterface::STOCK_ID . ' != ?', $stockId);
+                             ->where(CreateSalesChannelTable::STOCK_ID . ' = ?', $channelCode)
+                             ->where(CreateSalesChannelTable::STOCK_ID . ' != ?', $stockId);
 
         $stockIds = $connection->fetchAll($select);
         return $stockIds;

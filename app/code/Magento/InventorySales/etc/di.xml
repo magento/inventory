@@ -12,6 +12,7 @@
     <preference for="Magento\InventorySales\Model\ReplaceSalesChannelsForStockInterface" type="Magento\InventorySales\Model\ResourceModel\ReplaceSalesChannelsDataForStock"/>
     <preference for="Magento\InventorySales\Model\ResourceModel\GetAssignedSalesChannelsDataForStockInterface" type="Magento\InventorySales\Model\ResourceModel\GetAssignedSalesChannelsDataForStock"/>
     <preference for="Magento\InventorySales\Model\ResourceModel\GetAssignedSalesChannelsForOtherStocksInterface" type="Magento\InventorySales\Model\ResourceModel\GetAssignedSalesChannelsForOtherStocks"/>
+    <preference for="Magento\InventorySales\Ui\SalesChannelNameResolverInterface" type="Magento\InventorySales\Ui\WebsiteNameResolver"/>
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
         <plugin name="load_sales_channels_on_get_list" type="Magento\InventorySales\Plugin\Inventory\StockRepository\LoadSalesChannelsOnGetListPlugin"/>
         <plugin name="load_sales_channels_on_get" type="Magento\InventorySales\Plugin\Inventory\StockRepository\LoadSalesChannelsOnGetPlugin"/>

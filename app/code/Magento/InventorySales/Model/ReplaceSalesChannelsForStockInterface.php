@@ -22,14 +22,5 @@ interface ReplaceSalesChannelsForStockInterface
      * @param int $stockId
      * @return void
      */
-    public function create(array $salesChannels, int $stockId);
-
-    /**
-     * Delete Sales Channels for Stock
-     *
-     * @param array $salesChannels
-     * @param int $stockId
-     * @return void
-     */
-    public function delete(array $salesChannels, int $stockId);
+    public function execute(array $salesChannels, int $stockId);
 }
