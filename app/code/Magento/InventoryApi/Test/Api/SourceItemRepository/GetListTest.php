@@ -3,13 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
-namespace Magento\InventoryApi\Test\Api\SourceRepository;
+namespace Magento\InventoryApi\Test\Api\SourceItemRepository;
 
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Webapi\Rest\Request;
-use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\TestFramework\Assert\AssertArrayContains;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
@@ -18,12 +19,14 @@ class GetListTest extends WebapiAbstract
     /**#@+
      * Service constants
      */
-    const RESOURCE_PATH = '/V1/inventory/source';
-    const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
+    const RESOURCE_PATH = '/V1/inventory/source-item';
+    const SERVICE_NAME = 'inventoryApiSourceItemRepositoryV1';
     /**#@-*/
 
     /**
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      */
     public function testGetList()
     {
@@ -33,8 +36,8 @@ class GetListTest extends WebapiAbstract
                     [
                         'filters' => [
                             [
-                                'field' => SourceInterface::ENABLED,
-                                'value' => 1,
+                                'field' => SourceItemInterface::SKU,
+                                'value' => 'SKU-1',
                                 'condition_type' => 'eq',
                             ],
                         ],
@@ -42,11 +45,7 @@ class GetListTest extends WebapiAbstract
                 ],
                 SearchCriteria::SORT_ORDERS => [
                     [
-                        'field' => SourceInterface::PRIORITY,
-                        'direction' => SortOrder::SORT_DESC,
-                    ],
-                    [
-                        'field' => SourceInterface::NAME,
+                        'field' => SourceItemInterface::QUANTITY,
                         'direction' => SortOrder::SORT_DESC,
                     ],
                 ],
@@ -57,14 +56,16 @@ class GetListTest extends WebapiAbstract
         $expectedTotalCount = 4;
         $expectedItemsData = [
             [
-                SourceInterface::ENABLED => true,
-                SourceInterface::PRIORITY => 100,
-                SourceInterface::NAME => 'US-source-1',
+                SourceItemInterface::SOURCE_ID => 10,
+                SourceItemInterface::SKU => 'SKU-1',
+                SourceItemInterface::QUANTITY => 5.5,
+                SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
             ],
             [
-                SourceInterface::ENABLED => true,
-                SourceInterface::PRIORITY => 100,
-                SourceInterface::NAME => 'EU-source-1',
+                SourceItemInterface::SOURCE_ID => 20,
+                SourceItemInterface::SKU => 'SKU-1',
+                SourceItemInterface::QUANTITY => 3,
+                SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
             ],
         ];
 
@@ -78,12 +79,12 @@ class GetListTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'GetList',
             ],
         ];
-        $response = (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST)
+        $response = (TESTS_WEB_API_ADAPTER === self::ADAPTER_REST)
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo, $requestData);
 
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
-        self::assertGreaterThanOrEqual($expectedTotalCount, $response['total_count']);
+        self::assertEquals($expectedTotalCount, $response['total_count']);
         AssertArrayContains::assert($expectedItemsData, $response['items']);
     }
 }
