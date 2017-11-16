@@ -28,15 +28,23 @@ class GetPartialReindexData
     private $skuListInStockToUpdateFactory;
 
     /**
+     * @var int
+     */
+    private $groupConcatMaxLen;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param SkuListInStockToUpdateFactory $skuListInStockToUpdateFactory
+     * @param int $groupConcatMaxLen
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        SkuListInStockToUpdateFactory $skuListInStockToUpdateFactory
+        SkuListInStockToUpdateFactory $skuListInStockToUpdateFactory,
+        int $groupConcatMaxLen
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->skuListInStockToUpdateFactory = $skuListInStockToUpdateFactory;
+        $this->groupConcatMaxLen = $groupConcatMaxLen;
     }
 
     /**
@@ -70,6 +78,7 @@ class GetPartialReindexData
             )->where('source_item.source_item_id IN (?)', $sourceItemIds)
             ->group(['stock_source_link.' . StockSourceLink::STOCK_ID]);
 
+        $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
         $items = $connection->fetchAll($select);
         return $this->getStockIdToSkuList($items);
     }
