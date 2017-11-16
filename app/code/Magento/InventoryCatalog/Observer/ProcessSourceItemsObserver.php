@@ -9,6 +9,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Exception\InputException;
 
 /**
  * Save source product relations during product persistence via controller
@@ -26,8 +27,9 @@ class ProcessSourceItemsObserver implements ObserverInterface
     /**
      * @param SourceItemsProcessor $sourceItemsProcessor
      */
-    public function __construct(SourceItemsProcessor $sourceItemsProcessor)
-    {
+    public function __construct(
+        SourceItemsProcessor $sourceItemsProcessor
+    ) {
         $this->sourceItemsProcessor = $sourceItemsProcessor;
     }
 
@@ -37,21 +39,35 @@ class ProcessSourceItemsObserver implements ObserverInterface
      * @param EventObserver $observer
      *
      * @return void
+     * @throws InputException (thrown by SourceItemsProcessor)
      */
     public function execute(EventObserver $observer)
     {
         /** @var ProductInterface $product */
         $product = $observer->getEvent()->getProduct();
+
         /** @var Save $controller */
         $controller = $observer->getEvent()->getController();
 
         $sources = $controller->getRequest()->getParam('sources', []);
-        $assignedSources = isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])
-            ? $sources['assigned_sources'] : [];
+        $assignedSources = $this->retrieveAssignedSources($sources);
 
         $this->sourceItemsProcessor->process(
             $product->getSku(),
             $assignedSources
         );
+    }
+
+    /**
+     * @param array $sources
+     * @return array
+     */
+    private function retrieveAssignedSources(array $sources): array
+    {
+        $assignedSources = isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])
+            ? $sources['assigned_sources']
+            : [];
+
+        return $assignedSources;
     }
 }

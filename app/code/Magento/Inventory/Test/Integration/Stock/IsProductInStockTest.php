@@ -87,6 +87,8 @@ class IsProductInStockTest extends TestCase
      */
     public function testProductIsInStock()
     {
+        $this->markTestSkipped('Skip this test as it use hard ids!');
+
         $this->indexer->reindexRow(1);
 
         $this->reservationsAppend->execute([
@@ -113,6 +115,8 @@ class IsProductInStockTest extends TestCase
      */
     public function testProductIsNotInStock()
     {
+        $this->markTestSkipped('Skip this test as it use hard ids!');
+
         $this->indexer->reindexRow(1);
 
         $this->reservationsAppend->execute([

@@ -50,6 +50,7 @@ class SourcesTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/cleanup_not_msi_data.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -68,6 +69,7 @@ class SourcesTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/cleanup_not_msi_data.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -90,6 +92,7 @@ class SourcesTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/cleanup_not_msi_data.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -112,6 +115,7 @@ class SourcesTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/cleanup_not_msi_data.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -137,6 +141,7 @@ class SourcesTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/cleanup_not_msi_data.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php

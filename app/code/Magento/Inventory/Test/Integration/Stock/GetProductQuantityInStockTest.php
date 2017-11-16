@@ -89,6 +89,8 @@ class GetProductQuantityInStockTest extends TestCase
      */
     public function testGetProductQuantity()
     {
+        $this->markTestSkipped('Skip this test as it use hard ids!');
+
         $this->indexer->reindexRow(1);
 
         $this->reservationsAppend->execute([
