@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\CatalogInventory\Observer;
 
 use Magento\Catalog\Model\Product;
@@ -111,11 +112,11 @@ class SaveInventoryDataObserver implements ObserverInterface
     }
 
     /**
- * Return the stock item that needs to be updated
- *
- * @param Product $product
- * @return Item
- */
+     * Return the stock item that needs to be updated
+     *
+     * @param Product $product
+     * @return Item
+     */
     private function getStockItemToBeUpdated(Product $product)
     {
         $extendedAttributes = $product->getExtensionAttributes();
