@@ -89,7 +89,7 @@ class SaveInventoryDataObserver implements ObserverInterface
         $sourceItem->setSourceId($this->defaultSourceProvider->getId());
         $sourceItem->setSku($product->getSku());
         $sourceItem->setQuantity((float)$stockItem->getQty());
-        $sourceItem->setStatus((bool)$stockItem->getIsInStock());
+        $sourceItem->setStatus((int)$stockItem->getIsInStock());
 
         $this->sourceItemsSave->execute([$sourceItem]);
     }
