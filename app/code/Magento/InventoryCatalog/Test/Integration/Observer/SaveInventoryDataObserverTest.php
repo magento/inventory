@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
-
 /**
  * TODO: fixture via composer
  */
