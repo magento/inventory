@@ -5,7 +5,6 @@
  */
 namespace Magento\Inventory\Model;
 
-
 /**
  * Supposed to have static test fail
  */
