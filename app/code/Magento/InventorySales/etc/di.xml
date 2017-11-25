@@ -16,10 +16,10 @@
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
         <plugin name="enrich_stock_item_list_data_by_sale_channels_data" type="Magento\InventorySales\Plugins\Inventory\Stock\EnrichStockItemListDataBySalesChannelsDataPlugin"/>
         <plugin name="enrich_stock_item_data_by_sale_channels_data" type="Magento\InventorySales\Plugins\Inventory\Stock\EnrichStockItemDataBySalesChannelsDataPlugin"/>
-        <plugin name="save_sales_channels_related_to_stock" type="Magento\InventorySales\Plugins\Inventory\Stock\SaveSalesChannelListRelatedToStockPlugin"/>
+        <plugin name="save_sales_channels_related_to_stock" type="Magento\InventorySales\Plugins\Inventory\Stock\SaveSalesChannelListRelatedToStockItemPlugin"/>
     </type>
     <type name="Magento\Inventory\Ui\DataProvider\StockDataProvider">
-        <plugin name="enrich_stock_data_provider_by_sale_channel_data" type="Magento\InventorySales\Plugins\Inventory\Stock\EnrichStockDataProviderBySalesChannelDataPlugin" />
+        <plugin name="enrich_stock_data_provider_by_sale_channel_data" type="Magento\InventorySales\Plugins\Inventory\Stock\EnrichStockItemDataProviderBySalesChannelDataPlugin" />
     </type>
     <type name="Magento\InventoryApi\Api\IsProductInStockInterface">
         <plugin name="check_ability_to_backorder_stock_items" type="Magento\InventorySales\Plugins\Inventory\Stock\CheckAbilityToBackorderStockItemPlugin"/>
