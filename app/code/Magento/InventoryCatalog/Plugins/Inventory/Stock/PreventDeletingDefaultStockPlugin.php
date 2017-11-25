@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\InventoryApi\StockRepository\PreventDeleting;
+namespace Magento\InventoryCatalog\Plugins\Inventory\Stock;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
@@ -14,7 +14,7 @@ use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 /**
  * Prevent deleting of Default Stock
  */
-class DefaultStockPlugin
+class PreventDeletingDefaultStockPlugin
 {
     /**
      * @var DefaultStockProviderInterface
@@ -35,8 +35,11 @@ class DefaultStockPlugin
      *
      * @param StockRepositoryInterface $subject
      * @param int $stockId
+     *
      * @return void
+     *
      * @throws CouldNotDeleteException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId)

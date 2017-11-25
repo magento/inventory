@@ -4,21 +4,20 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\InventoryCatalog\Plugin\Model;
+namespace Magento\InventoryCatalog\Plugins\Reservation;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\ReservationInterface;
 use Magento\InventoryApi\Api\ReservationsAppendInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\CatalogInventory\Api\StockRegistryInterface;
 
 /**
- * Plugin help to fill the legacy catalog inventory tables cataloginventory_stock_status and
+ * Plugin fills the legacy catalog inventory tables cataloginventory_stock_status and
  * cataloginventory_stock_item to don't break the backward compatible.
  */
 class UpdateLegacyCatalogInventoryPlugin
 {
-
     /**
      * @var ResourceConnection
      */
@@ -30,11 +29,13 @@ class UpdateLegacyCatalogInventoryPlugin
     private $productRepository;
 
     /**
-     * @var \Magento\CatalogInventory\Api\StockRegistryInterface
+     * @var StockRegistryInterface
      */
     private $stockRegistry;
 
     /**
+     * UpdateLegacyCatalogInventoryPlugin constructor.
+     *
      * @param ResourceConnection $resourceConnection
      * @param ProductRepositoryInterface $productRepository
      * @param StockRegistryInterface $stockRegistry
@@ -56,13 +57,15 @@ class UpdateLegacyCatalogInventoryPlugin
      * @param void $result
      * @param ReservationInterface[] $reservations
      *
+     * @return void
+     *
      * @see ReservationsAppendInterface::execute
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @return void
      */
     public function afterExecute(ReservationsAppendInterface $subject, $result, array $reservations)
     {
         $this->updateStockItemAndStatusTable($reservations);
+
         return $result;
     }
 
@@ -70,6 +73,7 @@ class UpdateLegacyCatalogInventoryPlugin
      * Updates cataloginventory_stock_item and cataloginventory_stock_status qty with reservation information.
      *
      * @param ReservationInterface[] $reservations
+     *
      * @return void
      */
     private function updateStockItemAndStatusTable(array $reservations)
