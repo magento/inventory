@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\Inventory\StockRepository;
+namespace Magento\InventorySales\Plugins\Inventory\Stock;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryApi\Api\Data\StockInterface;
@@ -14,9 +14,9 @@ use Magento\InventorySales\Model\GetAssignedSalesChannelsForStockInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Load Sales Channels for Stock on Get method of StockRepositoryInterface
+ *  Enriches Stock Data by Sale Channels Data on StockRepositoryInterface::get()
  */
-class LoadSalesChannelsOnGetPlugin
+class EnrichStockItemDataBySalesChannelsDataPlugin
 {
     /**
      * @var GetAssignedSalesChannelsForStockInterface
@@ -29,6 +29,8 @@ class LoadSalesChannelsOnGetPlugin
     private $logger;
 
     /**
+     * EnrichStockItemDataBySaleChannelsDataPlugin constructor.
+     *
      * @param GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock
      * @param LoggerInterface $logger
      */
@@ -45,22 +47,38 @@ class LoadSalesChannelsOnGetPlugin
      *
      * @param StockRepositoryInterface $subject
      * @param StockInterface $stock
+     *
      * @return StockInterface
+     *
      * @throws StateException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGet(StockRepositoryInterface $subject, StockInterface $stock): StockInterface
     {
         try {
-            $salesChannels = $this->getAssignedSalesChannelsForStock->execute((int)$stock->getStockId());
-
-            $extensionAttributes = $stock->getExtensionAttributes();
-            $extensionAttributes->setSalesChannels($salesChannels);
-            $stock->setExtensionAttributes($extensionAttributes);
-            return $stock;
+            return $this->enrichStockItemDataBySaleChannelsData($stock);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new StateException(__('Could not load Sales Channels for Stock'), $e);
         }
+    }
+
+    /**
+     * Enriches Stock Item data by Sale Channels information
+     *
+     * @param StockInterface $stock
+     *
+     * @return StockInterface
+     */
+    private function enrichStockItemDataBySaleChannelsData(StockInterface $stock): StockInterface
+    {
+        $salesChannels = $this->getAssignedSalesChannelsForStock->execute((int)$stock->getStockId());
+
+        $extensionAttributes = $stock->getExtensionAttributes();
+        $extensionAttributes->setSalesChannels($salesChannels);
+        $stock->setExtensionAttributes($extensionAttributes);
+
+        return $stock;
     }
 }

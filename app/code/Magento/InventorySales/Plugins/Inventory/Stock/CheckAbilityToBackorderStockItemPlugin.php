@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\InventoryApi;
+namespace Magento\InventorySales\Plugins\Inventory\Stock;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
@@ -14,9 +14,9 @@ use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\InventoryApi\Api\IsProductInStockInterface;
 
 /**
- * Adapt backorders to IsProductInStockInterface
+ * Checks if the backorder is available for StockItem
  */
-class BackorderStockStatusPlugin
+class CheckAbilityToBackorderStockItemPlugin
 {
     /**
      * @var StockItemRepositoryInterface
@@ -34,6 +34,8 @@ class BackorderStockStatusPlugin
     private $productRepository;
 
     /**
+     * CheckAbilityToBackorderStockItemPlugin constructor.
+     *
      * @param StockItemRepositoryInterface $stockItemRepository
      * @param StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
      * @param ProductRepositoryInterface $productRepository
@@ -49,13 +51,15 @@ class BackorderStockStatusPlugin
     }
 
     /**
-     * Return true status if backorders is enabled for the item
+     * Returns true status if backorders is enabled for StockItem
      *
      * @param IsProductInStockInterface $subject
      * @param callable $proceed
      * @param string $sku
      * @param int $stockId
+     *
      * @return bool
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
@@ -77,6 +81,7 @@ class BackorderStockStatusPlugin
         if ($legacyStockItem->getBackorders() > 0) {
             return true;
         }
+
         return $proceed($sku, $stockId);
     }
 }
