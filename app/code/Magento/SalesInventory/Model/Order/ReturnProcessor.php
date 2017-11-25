@@ -19,7 +19,7 @@ class ReturnProcessor
     private $stockManagement;
 
     /**
-     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor
+     * @deprecated
      */
     private $stockIndexerProcessor;
 
@@ -41,14 +41,14 @@ class ReturnProcessor
     /**
      * ReturnProcessor constructor.
      * @param \Magento\CatalogInventory\Api\StockManagementInterface $stockManagement
-     * @param \Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockIndexer
+     * @param $stockIndexer
      * @param \Magento\Catalog\Model\Indexer\Product\Price\Processor $priceIndexer
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Sales\Api\OrderItemRepositoryInterface $orderItemRepository
      */
     public function __construct(
         \Magento\CatalogInventory\Api\StockManagementInterface $stockManagement,
-        \Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockIndexer,
+        $stockIndexer,
         \Magento\Catalog\Model\Indexer\Product\Price\Processor $priceIndexer,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Sales\Api\OrderItemRepositoryInterface $orderItemRepository
@@ -99,7 +99,6 @@ class ReturnProcessor
             }
 
             $updatedItemIds = array_keys($itemsToUpdate);
-            $this->stockIndexerProcessor->reindexList($updatedItemIds);
             $this->priceIndexer->reindexList($updatedItemIds);
         }
     }

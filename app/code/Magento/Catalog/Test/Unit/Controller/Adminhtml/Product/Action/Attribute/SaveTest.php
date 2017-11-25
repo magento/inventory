@@ -21,9 +21,6 @@ class SaveTest extends \PHPUnit\Framework\TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     protected $dataObjectHelperMock;
 
-    /** @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor|\PHPUnit_Framework_MockObject_MockObject */
-    protected $stockIndexerProcessor;
-
     /** @var \Magento\Backend\App\Action\Context|\PHPUnit_Framework_MockObject_MockObject */
     protected $context;
 
@@ -106,11 +103,6 @@ class SaveTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->stockIndexerProcessor = $this->createPartialMock(
-            \Magento\CatalogInventory\Model\Indexer\Stock\Processor::class,
-            ['reindexList']
-        );
-
         $resultRedirect = $this->getMockBuilder(\Magento\Backend\Model\View\Result\Redirect::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -130,7 +122,7 @@ class SaveTest extends \PHPUnit\Framework\TestCase
             [
                 'context' => $this->context,
                 'attributeHelper' => $this->attributeHelper,
-                'stockIndexerProcessor' => $this->stockIndexerProcessor,
+                'stockIndexerProcessor' => null,
                 'dataObjectHelper' => $this->dataObjectHelperMock,
             ]
         );
@@ -244,7 +236,6 @@ class SaveTest extends \PHPUnit\Framework\TestCase
         $this->product->expects($this->any())->method('isProductsHasSku')->with([5])->will($this->returnValue(true));
         $this->stockItemService->expects($this->any())->method('getStockItem')->with(5, 1)
             ->will($this->returnValue($this->stockItem));
-        $this->stockIndexerProcessor->expects($this->any())->method('reindexList')->with([5]);
 
         $this->request->expects($this->any())->method('getParam')->will($this->returnValueMap([
             ['inventory', [], [7]],

@@ -5,17 +5,20 @@
  */
 namespace Magento\CatalogImportExport\Model\Indexer\Stock\Plugin;
 
+/**
+ * @deprecated
+ */
 class Import
 {
     /**
-     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor
+     * @deprecated
      */
     protected $_stockndexerProcessor;
 
     /**
-     * @param \Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockndexerProcessor
+     * @param $stockndexerProcessor
      */
-    public function __construct(\Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockndexerProcessor)
+    public function __construct($stockndexerProcessor)
     {
         $this->_stockndexerProcessor = $stockndexerProcessor;
     }
@@ -31,9 +34,6 @@ class Import
      */
     public function afterImportSource(\Magento\ImportExport\Model\Import $subject, $import)
     {
-        if (!$this->_stockndexerProcessor->isIndexerScheduled()) {
-            $this->_stockndexerProcessor->markIndexerAsInvalid();
-        }
         return $import;
     }
 }

@@ -10,7 +10,6 @@ use Magento\Catalog\Model\ResourceModel\Product\Indexer\AbstractIndexer;
 use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\CatalogInventory\Model\Indexer\Stock\Action\Full;
 use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 
 /**
@@ -118,12 +117,6 @@ class DefaultStock extends AbstractIndexer implements StockInterface
      */
     public function reindexEntity($entityIds)
     {
-        if ($this->getActionType() === Full::ACTION_TYPE) {
-            $this->tableStrategy->setUseIdxTable(false);
-            $this->_prepareIndexTable($entityIds);
-            return $this;
-        }
-
         $this->_updateIndex($entityIds);
         return $this;
     }

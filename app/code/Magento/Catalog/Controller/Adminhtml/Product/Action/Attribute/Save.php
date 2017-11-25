@@ -37,9 +37,7 @@ class Save extends \Magento\Catalog\Controller\Adminhtml\Product\Action\Attribut
     protected $stockItemFactory;
 
     /**
-     * Stock Indexer
-     *
-     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor
+     * @deprecated
      */
     protected $_stockIndexerProcessor;
 
@@ -53,7 +51,7 @@ class Save extends \Magento\Catalog\Controller\Adminhtml\Product\Action\Attribut
      * @param \Magento\Catalog\Helper\Product\Edit\Action\Attribute $attributeHelper
      * @param \Magento\Catalog\Model\Indexer\Product\Flat\Processor $productFlatIndexerProcessor
      * @param \Magento\Catalog\Model\Indexer\Product\Price\Processor $productPriceIndexerProcessor
-     * @param \Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockIndexerProcessor
+     * @param $stockIndexerProcessor
      * @param \Magento\Catalog\Helper\Product $catalogProduct
      * @param \Magento\CatalogInventory\Api\Data\StockItemInterfaceFactory $stockItemFactory
      * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
@@ -63,7 +61,7 @@ class Save extends \Magento\Catalog\Controller\Adminhtml\Product\Action\Attribut
         \Magento\Catalog\Helper\Product\Edit\Action\Attribute $attributeHelper,
         \Magento\Catalog\Model\Indexer\Product\Flat\Processor $productFlatIndexerProcessor,
         \Magento\Catalog\Model\Indexer\Product\Price\Processor $productPriceIndexerProcessor,
-        \Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockIndexerProcessor,
+        $stockIndexerProcessor,
         \Magento\Catalog\Helper\Product $catalogProduct,
         \Magento\CatalogInventory\Api\Data\StockItemInterfaceFactory $stockItemFactory,
         \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
@@ -174,7 +172,6 @@ class Save extends \Magento\Catalog\Controller\Adminhtml\Product\Action\Attribut
                     $stockItemDo->setItemId($stockItemId);
                     $stockItemRepository->save($stockItemDo);
                 }
-                $this->_stockIndexerProcessor->reindexList($this->attributeHelper->getProductIds());
             }
 
             if ($websiteAddData || $websiteRemoveData) {

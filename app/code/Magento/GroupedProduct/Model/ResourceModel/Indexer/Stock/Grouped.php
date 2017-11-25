@@ -12,7 +12,6 @@
 namespace Magento\GroupedProduct\Model\ResourceModel\Indexer\Stock;
 
 use Magento\Framework\App\ObjectManager;
-use Magento\CatalogInventory\Model\Indexer\Stock\Action\Full;
 
 /**
  * Stock indexer for grouped product.
@@ -59,9 +58,7 @@ class Grouped extends \Magento\CatalogInventory\Model\ResourceModel\Indexer\Stoc
     protected function _getStockStatusSelect($entityIds = null, $usePrimaryTable = false)
     {
         $connection = $this->getConnection();
-        $table = $this->getActionType() === Full::ACTION_TYPE
-            ? $this->activeTableSwitcher->getAdditionalTableName($this->getMainTable())
-            : $this->getMainTable();
+        $table = $this->getMainTable();
         $idxTable = $usePrimaryTable ? $table : $this->getIdxTable();
         $metadata = $this->getMetadataPool()->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class);
         $select = parent::_getStockStatusSelect($entityIds, $usePrimaryTable);

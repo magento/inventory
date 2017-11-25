@@ -171,13 +171,6 @@
             <argument name="connectionName" xsi:type="string">indexer</argument>
         </arguments>
     </type>
-    <type name="Magento\CatalogInventory\Model\Indexer\Stock\Action\Full">
-        <arguments>
-            <argument name="batchRowsCount" xsi:type="array">
-                <item name="bundle" xsi:type="number">136</item>
-            </argument>
-        </arguments>
-    </type>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">

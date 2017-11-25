@@ -5,7 +5,6 @@
  */
 namespace Magento\Bundle\Model\ResourceModel\Indexer;
 
-use Magento\CatalogInventory\Model\Indexer\Stock\Action\Full;
 use Magento\Framework\App\ObjectManager;
 
 /**
@@ -85,9 +84,7 @@ class Stock extends \Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\
     {
         $this->_cleanBundleOptionStockData();
         $connection = $this->getConnection();
-        $table = $this->getActionType() === Full::ACTION_TYPE
-            ? $this->activeTableSwitcher->getAdditionalTableName($this->getMainTable())
-            : $this->getMainTable();
+        $table = $this->getMainTable();
         $idxTable = $usePrimaryTable ? $table : $this->getIdxTable();
         $select = $this->bundleOptionStockDataSelectBuilder->buildSelect($idxTable);
 
