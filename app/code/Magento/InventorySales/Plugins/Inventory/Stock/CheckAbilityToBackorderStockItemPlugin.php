@@ -59,7 +59,6 @@ class CheckAbilityToBackorderStockItemPlugin
      * @param int $stockId
      *
      * @return bool
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(

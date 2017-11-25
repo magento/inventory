@@ -49,9 +49,7 @@ class EnrichStockItemDataBySalesChannelsDataPlugin
      * @param StockInterface $stock
      *
      * @return StockInterface
-     *
      * @throws StateException
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGet(StockRepositoryInterface $subject, StockInterface $stock): StockInterface

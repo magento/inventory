@@ -58,7 +58,6 @@ class UpdateLegacyCatalogInventoryPlugin
      * @param ReservationInterface[] $reservations
      *
      * @return void
-     *
      * @see ReservationsAppendInterface::execute
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

@@ -37,9 +37,7 @@ class PreventDeletingDefaultStockPlugin
      * @param int $stockId
      *
      * @return void
-     *
      * @throws CouldNotDeleteException
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId)

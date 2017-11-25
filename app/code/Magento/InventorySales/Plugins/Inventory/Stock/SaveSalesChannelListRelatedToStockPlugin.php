@@ -50,9 +50,7 @@ class SaveSalesChannelListRelatedToStockPlugin
      * @param StockInterface $stock
      *
      * @return int
-     *
      * @throws CouldNotSaveException
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundSave(

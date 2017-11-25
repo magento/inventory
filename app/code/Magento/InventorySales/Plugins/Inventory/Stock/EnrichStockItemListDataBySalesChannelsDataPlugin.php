@@ -49,9 +49,7 @@ class EnrichStockItemListDataBySalesChannelsDataPlugin
      * @param StockSearchResultsInterface $stockSearchResults
      *
      * @return StockSearchResultsInterface
-     *
      * @throws StateException
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetList(
