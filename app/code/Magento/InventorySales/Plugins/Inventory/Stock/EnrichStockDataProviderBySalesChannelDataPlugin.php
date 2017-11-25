@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugins\Inventory\Ui\StockDataProvider;
+namespace Magento\InventorySales\Plugins\Inventory\Stock;
 
 use Magento\CatalogInventory\Model\Stock\StockRepository;
 use Magento\Inventory\Ui\DataProvider\StockDataProvider;

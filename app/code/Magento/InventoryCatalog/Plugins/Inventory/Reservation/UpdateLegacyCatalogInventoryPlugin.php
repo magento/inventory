@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\InventoryCatalog\Plugins\Reservation;
+namespace Magento\InventoryCatalog\Plugins\Inventory\Reservation;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
