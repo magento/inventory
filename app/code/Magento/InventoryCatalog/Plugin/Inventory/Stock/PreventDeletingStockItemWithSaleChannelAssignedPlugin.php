@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugins\Inventory\Stock;
+namespace Magento\InventoryCatalog\Plugin\Inventory\Stock;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
