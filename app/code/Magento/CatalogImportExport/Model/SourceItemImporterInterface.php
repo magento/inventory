@@ -12,7 +12,7 @@ namespace Magento\CatalogImportExport\Model;
  *
  * @api
  */
-interface StockItemImporterInterface
+interface SourceItemImporterInterface
 {
     /**
      * Handle Import of Stock Item Data
