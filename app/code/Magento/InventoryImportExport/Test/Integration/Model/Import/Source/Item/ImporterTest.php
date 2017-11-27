@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Test\Integration\Model;
+namespace Magento\Inventory\Test\Integration\Model\Source\Item;
 
-use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\CatalogImportExport\Model\SourceItemImporterInterface;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -17,15 +17,15 @@ use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class StockItemImporterTest extends TestCase
+class ImporterTest extends TestCase
 {
     /**
      * @var DefaultSourceProviderInterface
      */
     private $defaultSourceProviderInterface;
-    
+
     /**
-     * @var StockItemImporterInterface
+     * @var SourceItemImporterInterface
      */
     private $importerInterface;
 
@@ -48,7 +48,7 @@ class StockItemImporterTest extends TestCase
             DefaultSourceProviderInterface::class
         );
         $this->importerInterface = Bootstrap::getObjectManager()->get(
-            StockItemImporterInterface::class
+            SourceItemImporterInterface::class
         );
         $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
             SearchCriteriaBuilderFactory::class
