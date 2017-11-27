@@ -10,11 +10,9 @@ namespace Magento\InventoryCatalog\Test\Integration;
 use Magento\Catalog\Api\Data\ProductInterfaceFactory;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\Catalog\Model\Product;
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\SearchCriteria;
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteria;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Api\Filter;
 use Magento\Framework\Event;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
@@ -43,10 +41,6 @@ class ProcessSourceItemsObserverTest extends TestCase
      */
     private $sourceItemRepository;
     /**
-     * @var FilterBuilder
-     */
-    private $filterBuilder;
-    /**
      * @var \Magento\Framework\ObjectManagerInterface
      */
     private $objectManager;
@@ -74,7 +68,6 @@ class ProcessSourceItemsObserverTest extends TestCase
         $this->productFactory = $this->objectManager->get(ProductInterfaceFactory::class);
         $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
         $this->sourceItemRepository = $this->objectManager->get(SourceItemRepositoryInterface::class);
-        $this->filterBuilder = $this->objectManager->get(FilterBuilder::class);
         $this->request = $this->objectManager->get(RequestInterface::class);
         $this->eventObserver = $this->objectManager->get(EventObserver::class);
         $this->event = $this->objectManager->get(Event::class);
@@ -113,14 +106,10 @@ class ProcessSourceItemsObserverTest extends TestCase
 
         $this->observer->execute($this->eventObserver);
 
-        /** @var Filter $filter */
-        $filter = $this->filterBuilder
-            ->setField(Product::SKU)
-            ->setValue($sku)
-            ->setConditionType('DESC')
-            ->create();
         /** @var SearchCriteria $searchCriteria */
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter($filter)->create();
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(Product::SKU, $sku, 'eq')
+            ->create();
         /** @var SourceItemSearchResultsInterface $result */
         $result = $this->sourceItemRepository->getList($searchCriteria);
         /** @var SourceItemInterface[] $sourceItems */
