@@ -80,6 +80,9 @@ class ProcessSourceItemsObserverTest extends TestCase
             ->willReturn($this->request);
     }
 
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     */
     public function testIsQuantityAndStockStatusSavingToDefaultSource()
     {
         $sku = 'SKU-1';
