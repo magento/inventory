@@ -12,9 +12,9 @@ use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ResourceItem;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Inventory\Model\SourceItem\Command\SourceItemsDelete;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 
 /**
  * Class provides around Plugin on Magento\CatalogInventory\Model\ResourceModel\Stock\Item::delete
@@ -43,7 +43,7 @@ class DeleteSourceItemsAtLegacyStockItemDelete
     private $searchCriteriaBuilder;
 
     /**
-     * @var SourceItemsDelete
+     * @var SourceItemsDeleteInterface
      */
     private $sourceItemsDelete;
 
@@ -51,14 +51,14 @@ class DeleteSourceItemsAtLegacyStockItemDelete
      * @param ProductRepositoryInterface $productRepository
      * @param ResourceConnection $resourceConnection
      * @param SourceItemRepositoryInterface $sourceItemRepository
-     * @param SourceItemsDelete $sourceItemsDelete
+     * @param SourceItemsDeleteInterface $sourceItemsDelete
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         ResourceConnection $resourceConnection,
         SourceItemRepositoryInterface $sourceItemRepository,
-        SourceItemsDelete $sourceItemsDelete,
+        SourceItemsDeleteInterface $sourceItemsDelete,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->productRepository = $productRepository;
