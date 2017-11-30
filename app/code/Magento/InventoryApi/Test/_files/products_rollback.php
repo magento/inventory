@@ -24,7 +24,12 @@ $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 
 for ($i = 1; $i <= 3; $i++) {
-    $product = $productRepository->get('SKU-' . $i);
+    try {
+        $product = $productRepository->get('SKU-' . $i);
+    } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+        /* Product already deleted during testing */
+        continue;
+    }
     /** @var \Magento\CatalogInventory\Api\StockStatusCriteriaInterfaceFactory $stockStatusCriteriaFactory **/
     $criteria = $stockStatusCriteriaFactory->create();
     $criteria->setProductsFilter($product->getId());
