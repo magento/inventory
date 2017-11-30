@@ -12,7 +12,7 @@ use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ResourceItem;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple;
+use Magento\Inventory\Model\SourceItem\Command\SourceItemsDelete;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 
@@ -38,33 +38,33 @@ class DeleteSourceItemsAtLegacyStockItemDelete
     private $sourceItemRepository;
 
     /**
-     * @var DeleteMultiple
-     */
-    private $sourceItemDeleteMultiple;
-
-    /**
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
 
     /**
+     * @var SourceItemsDelete
+     */
+    private $sourceItemsDelete;
+
+    /**
      * @param ProductRepositoryInterface $productRepository
      * @param ResourceConnection $resourceConnection
      * @param SourceItemRepositoryInterface $sourceItemRepository
-     * @param DeleteMultiple $sourceItemDeleteMultiple
+     * @param SourceItemsDelete $sourceItemsDelete
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         ResourceConnection $resourceConnection,
         SourceItemRepositoryInterface $sourceItemRepository,
-        DeleteMultiple $sourceItemDeleteMultiple,
+        SourceItemsDelete $sourceItemsDelete,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->productRepository = $productRepository;
         $this->resourceConnection = $resourceConnection;
         $this->sourceItemRepository = $sourceItemRepository;
-        $this->sourceItemDeleteMultiple = $sourceItemDeleteMultiple;
+        $this->sourceItemsDelete = $sourceItemsDelete;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
@@ -90,7 +90,8 @@ class DeleteSourceItemsAtLegacyStockItemDelete
                 ->addFilter('sku', $product->getSku())
                 ->create();
             $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-            $this->sourceItemDeleteMultiple->execute($sourceItems);
+
+            $this->sourceItemsDelete->execute($sourceItems);
 
             $connection->commit();
         } catch (\Exception $e) {
