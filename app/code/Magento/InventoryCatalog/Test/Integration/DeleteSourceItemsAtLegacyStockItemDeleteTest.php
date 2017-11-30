@@ -66,19 +66,15 @@ class DeleteLegacyCatalogInventoryAtSourceItemDeletionTest extends TestCase
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('sku', $testProductSku)
             ->create();
-        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
 
-        $this->assertNotCount(0, $sourceItems);
+        $sourceItemsBeforeDelete = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+        $this->assertNotCount(0, $sourceItemsBeforeDelete);
 
         $stockItem = $this->stockRegistry->getStockItemBySku($testProductSku);
         $this->stockItemRepository->delete($stockItem);
 
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('sku', $testProductSku)
-            ->create();
-        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-
-        $this->assertCount(0, $sourceItems);
+        $sourceItemsAfterDelete = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+        $this->assertCount(0, $sourceItemsAfterDelete);
 
         $this->registry->unregister('isSecureArea');
     }
