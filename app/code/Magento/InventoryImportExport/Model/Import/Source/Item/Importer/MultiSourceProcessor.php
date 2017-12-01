@@ -86,6 +86,7 @@ class MultiSourceProcessor
      * Return Source Data foreach qty value
      *
      * @param $qty
+     * @param string|int $rowNumber
      * @return array|bool
      */
     public function getSplitSourceData($qty, $rowNumber)
@@ -128,7 +129,8 @@ class MultiSourceProcessor
             return $source;
         } catch (NoSuchEntityException $e) {
             throw new ValidationException(
-                __('Source with Id %sourceId does not exist for column qty, row number %rowNumber',
+                __(
+                    'Source with Id %sourceId does not exist for column qty, row number %rowNumber',
                     [
                         'sourceId' => $sourceId,
                         'rowNumber' => $rowNumber
