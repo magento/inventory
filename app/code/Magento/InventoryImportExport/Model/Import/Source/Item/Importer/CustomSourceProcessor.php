@@ -46,17 +46,20 @@ class CustomSourceProcessor
     }
 
     /**
+     * Execute method for Custom Source Import Processor, creates source item using factory
+     *
      * @param array $data
+     * @param string|int $rowNumber
      * @return SourceItemInterface|bool
      */
-    public function execute(array $data)
+    public function execute(array $data, $rowNumber)
     {
         /** @var SourceInterface $source */
-        if ($source = $this->getSource($data)) {
+        if ($source = $this->getSource($data['qty'], $rowNumber)) {
             $inStock = (isset($data['is_in_stock'])) ? $data['is_in_stock'] : 0;
             $sourceItem = $this->sourceItemFactory->create();
             $sourceItem->setSku($data[Product::COL_SKU]);
-            $sourceItem->setSourceId($this->getSource($data['qty']));
+            $sourceItem->setSourceId($source->getSourceId());
             $sourceItem->setQuantity($this->getQty($data['qty']));
             $sourceItem->setStatus($inStock);
             return $sourceItem;
@@ -68,23 +71,24 @@ class CustomSourceProcessor
      * Return Source ID if source exists with given id
      *
      * @param $qty
+     * @param string|int $rowNumber
      * @return bool|SourceInterface
      * @throws ValidationException
      */
-    private function getSource($qty)
+    private function getSource($qty, $rowNumber)
     {
         $parts = explode('=', $qty);
-        $sourceId = $parts[0];
+        $sourceId = (int)$parts[0];
         try {
             /** @var SourceInterface $source */
             $source = $this->sourceRepositoryInterface->get($sourceId);
-            if ($source->getSourceId()) {
-                return $source;
-            }
+            return $source;
         } catch (NoSuchEntityException $e) {
-            throw new ValidationException(__('Source with Id %d does not exist for column qty, some row number', $sourceId));
+            throw new ValidationException(__('Source with Id %sourceId does not exist for column qty, row number %rowNumber', [
+                'sourceId' => $sourceId,
+                'rowNumber' => $rowNumber
+            ]));
         }
-        return false;
     }
 
     /**

@@ -66,16 +66,18 @@ class ImporterTest extends TestCase
     public function testSourceItemImportWithDefaultSource()
     {
         $stockData = [
-            'sku' => 'SKU-1',
-            'qty' => 1,
-            'is_in_stock' => SourceItemInterface::STATUS_IN_STOCK
+            '1' => [
+                'sku' => 'SKU-1',
+                'qty' => 1,
+                'is_in_stock' => SourceItemInterface::STATUS_IN_STOCK
+            ]
         ];
 
-        $this->importerInterface->import([$stockData]);
+        $this->importerInterface->import($stockData);
 
         $compareData = $this->buildDataArray($this->getSourceItemList()->getItems());
         $expectedData = [
-            SourceItemInterface::SKU => $stockData['sku'],
+            SourceItemInterface::SKU => $stockData['1']['sku'],
             SourceItemInterface::QUANTITY => '1.0000',
             SourceItemInterface::SOURCE_ID => (string) $this->defaultSourceProviderInterface->getId(),
             SourceItemInterface::STATUS => (string) SourceItemInterface::STATUS_IN_STOCK

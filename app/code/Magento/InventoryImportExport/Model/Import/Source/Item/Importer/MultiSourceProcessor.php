@@ -59,11 +59,12 @@ class MultiSourceProcessor
 
     /**
      * @param array $data
+     * @param string|int $rowNumber
      * @return SourceItemInterface[]|bool
      */
-    public function execute(array $data)
+    public function execute(array $data, $rowNumber)
     {
-        if ($splitSourceData = $this->getSplitSourceData($data['qty'])) {
+        if ($splitSourceData = $this->getSplitSourceData($data['qty'], $rowNumber)) {
             $sourceItems = [];
             /** @var array $splitSourceDatum */
             foreach ($splitSourceData as $splitSourceDatum) {
@@ -74,6 +75,7 @@ class MultiSourceProcessor
                 $sourceItem->setSourceId($splitSourceDatum['source']);
                 $sourceItem->setQuantity($splitSourceDatum['qty']);
                 $sourceItem->setStatus($inStock);
+                $sourceItems[] = $sourceItem;
             }
             return $sourceItems;
         }
@@ -86,7 +88,7 @@ class MultiSourceProcessor
      * @param $qty
      * @return array|bool
      */
-    public function getSplitSourceData($qty)
+    public function getSplitSourceData($qty, $rowNumber)
     {
         if (strpos($qty, '|') !== false) {
             $sourceData = [];
@@ -96,7 +98,7 @@ class MultiSourceProcessor
                 if ($individualSourceData[0] == 'default') {
                     $sourceId = $this->defaultSourceProvider->getId();
                 } else {
-                    $sourceId = $this->getSource($individualSourceData[0])->getSourceId();
+                    $sourceId = $this->getSource($individualSourceData[0], $rowNumber)->getSourceId();
                 }
                 $sourceData[] = [
                     'source' => $sourceId,
@@ -112,22 +114,23 @@ class MultiSourceProcessor
      * Return Source ID if source exists with given id
      *
      * @param $qty
+     * @param string|int $rowNumber
      * @return bool|SourceInterface
      * @throws ValidationException
      */
-    private function getSource($qty)
+    private function getSource($qty, $rowNumber)
     {
         $parts = explode('=', $qty);
-        $sourceId = $parts[0];
+        $sourceId = (int)$parts[0];
         try {
             /** @var SourceInterface $source */
             $source = $this->sourceRepositoryInterface->get($sourceId);
-            if ($source->getSourceId()) {
-                return $source;
-            }
+            return $source;
         } catch (NoSuchEntityException $e) {
-            throw new ValidationException(__('Source with Id %d does not exist for column qty, some row number', $sourceId));
+            throw new ValidationException(__('Source with Id %sourceId does not exist for column qty, row number %rowNumber', [
+                'sourceId' => $sourceId,
+                'rowNumber' => $rowNumber
+            ]));
         }
-        return false;
     }
 }
