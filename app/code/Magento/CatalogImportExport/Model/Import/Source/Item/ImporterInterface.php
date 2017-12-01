@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\CatalogImportExport\Model;
+namespace Magento\CatalogImportExport\Model\Import\Source\Item;
 
 /**
- * Interface StockItemImporterInterface
+ * Interface SourceItemImporterInterface
  *
  * @api
  */
-interface SourceItemImporterInterface
+interface ImporterInterface
 {
     /**
      * Handle Import of Stock Item Data

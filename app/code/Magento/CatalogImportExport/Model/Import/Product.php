@@ -6,7 +6,7 @@
 namespace Magento\CatalogImportExport\Model\Import;
 
 use Magento\Catalog\Model\Product\Visibility;
-use Magento\CatalogImportExport\Model\SourceItemImporterInterface;
+use Magento\CatalogImportExport\Model\Import\Source\Item\ImporterInterface;
 use Magento\CatalogImportExport\Model\Import\Product\RowValidatorInterface as ValidatorInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ObjectManager;
@@ -700,9 +700,9 @@ class Product extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
     private $catalogConfig;
 
     /**
-     * Stock Item Importer
+     * Source Item Importer
      *
-     * @var SourceItemImporterInterface $sourceItemImporter
+     * @var ImporterInterface $sourceItemImporter
      */
     private $sourceItemImporter;
 
@@ -745,7 +745,7 @@ class Product extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
      * @param array $data
      * @param array $dateAttrCodes
      * @param CatalogConfig $catalogConfig
-     * @param SourceItemImporterInterface $sourceItemImporter
+     * @param ImporterInterface $sourceItemImporter
      * @throws \Magento\Framework\Exception\LocalizedException
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -790,7 +790,7 @@ class Product extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         array $data = [],
         array $dateAttrCodes = [],
         CatalogConfig $catalogConfig = null,
-        SourceItemImporterInterface $sourceItemImporter = null
+        ImporterInterface $sourceItemImporter = null
     ) {
         $this->_eventManager = $eventManager;
         $this->stockRegistry = $stockRegistry;
@@ -824,7 +824,7 @@ class Product extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         $this->catalogConfig = $catalogConfig ?: \Magento\Framework\App\ObjectManager::getInstance()
             ->get(CatalogConfig::class);
         $this->sourceItemImporter = $sourceItemImporter ?: \Magento\Framework\App\ObjectManager::getInstance()
-            ->get(SourceItemImporterInterface::class);
+            ->get(ImporterInterface::class);
 
         parent::__construct(
             $jsonHelper,

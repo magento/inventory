@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import\Source\Item;
 
-use Magento\CatalogImportExport\Model\SourceItemImporterInterface;
+use Magento\CatalogImportExport\Model\Import\Source\Item\ImporterInterface;
 use Magento\CatalogImportExport\Model\Import\Product;
 use Magento\Inventory\Model\SourceItemFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -17,7 +17,7 @@ use Magento\InventoryImportExport\Model\Import\Source\Item\Importer\CustomSource
 use Magento\InventoryImportExport\Model\Import\Source\Item\Importer\DefaultSourceProcessor;
 use Magento\InventoryImportExport\Model\Import\Source\Item\Importer\MultiSourceProcessor;
 
-class Importer implements SourceItemImporterInterface
+class Importer implements ImporterInterface
 {
     /**
      * Source Items Save Interface for saving multiple source items
