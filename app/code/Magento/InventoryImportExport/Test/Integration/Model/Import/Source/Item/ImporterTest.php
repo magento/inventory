@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Test\Integration\Model\Source\Item;
 
-use Magento\CatalogImportExport\Model\SourceItemImporterInterface;
+use Magento\CatalogImportExport\Model\Import\Source\Item\ImporterInterface;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -25,7 +25,7 @@ class ImporterTest extends TestCase
     private $defaultSourceProviderInterface;
 
     /**
-     * @var SourceItemImporterInterface
+     * @var ImporterInterface
      */
     private $importerInterface;
 
@@ -48,7 +48,7 @@ class ImporterTest extends TestCase
             DefaultSourceProviderInterface::class
         );
         $this->importerInterface = Bootstrap::getObjectManager()->get(
-            SourceItemImporterInterface::class
+            ImporterInterface::class
         );
         $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
             SearchCriteriaBuilderFactory::class
