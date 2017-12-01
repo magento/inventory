@@ -85,7 +85,8 @@ class CustomSourceProcessor
             return $source;
         } catch (NoSuchEntityException $e) {
             throw new ValidationException(
-                __('Source with Id %sourceId does not exist for column qty, row number %rowNumber',
+                __(
+                    'Source with Id %sourceId does not exist for column qty, row number %rowNumber',
                     [
                         'sourceId' => $sourceId,
                         'rowNumber' => $rowNumber
