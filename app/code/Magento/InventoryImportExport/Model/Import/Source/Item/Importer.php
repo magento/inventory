@@ -62,6 +62,13 @@ class Importer implements ImporterInterface
     private $multiSourceProcessor;
 
     /**
+     * Array of Source Items to import
+     *
+     * @var array $sourceItemsToImport
+     */
+    private $sourceItemsToImport;
+
+    /**
      * StockItemImporter constructor
      *
      * @param SourceItemsSaveInterface $sourceItemsSave
@@ -85,6 +92,7 @@ class Importer implements ImporterInterface
         $this->customSourceProcessor = $customSourceProcessor;
         $this->defaultSourceProcessor = $defaultSourceProcessor;
         $this->multiSourceProcessor = $multiSourceProcessor;
+        $this->sourceItemsToImport = [];
     }
 
     /**
@@ -95,18 +103,24 @@ class Importer implements ImporterInterface
      */
     public function import(array $stockData)
     {
-        $sourceItems = [];
         foreach ($stockData as $rowNumber => $stockDatum) {
             if (isset($stockDatum[Product::COL_SKU])) {
                 if ($sourceItem = $this->processSourceItem($stockDatum, $rowNumber)) {
-                    /** @var SourceItemInterface $sourceItem */
-                    $sourceItems[] = $sourceItem;
+                    if (is_array($sourceItem)) {
+                        foreach ($sourceItem as $item) {
+                            /** @var SourceItemInterface $item */
+                            $this->_addItemToImport($item);
+                        }
+                    }else {
+                        /** @var SourceItemInterface $sourceItem */
+                        $this->_addItemToImport($sourceItem);
+                    }
                 }
             }
         }
-        if (count($sourceItems) > 0) {
-            /** Magento\Inventory\Model\SourceItem[] $sourceItems */
-            $this->sourceItemsSave->execute($sourceItems);
+        if (count($this->sourceItemsToImport) > 0) {
+            /** Magento\Inventory\Model\SourceItem[] $sourceItemsToImport */
+            $this->sourceItemsSave->execute($this->sourceItemsToImport);
         }
     }
 
@@ -170,5 +184,15 @@ class Importer implements ImporterInterface
             }
         }
         return $flag;
+    }
+
+    /**
+     * Add Item to Source Items array for import
+     *
+     * @param SourceItemInterface $item
+     */
+    private function _addItemToImport($item)
+    {
+        $this->sourceItemsToImport[] = $item;
     }
 }
