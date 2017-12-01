@@ -96,9 +96,9 @@ class Importer implements SourceItemImporterInterface
     public function import(array $stockData)
     {
         $sourceItems = [];
-        foreach ($stockData as $stockDatum) {
+        foreach ($stockData as $rowNumber => $stockDatum) {
             if (isset($stockDatum[Product::COL_SKU])) {
-                if ($sourceItem = $this->processSourceItem($stockDatum)) {
+                if ($sourceItem = $this->processSourceItem($stockDatum, $rowNumber)) {
                     /** @var SourceItemInterface $sourceItem */
                     $sourceItems[] = $sourceItem;
                 }
@@ -114,16 +114,17 @@ class Importer implements SourceItemImporterInterface
      * Process Source Item Import for either default source only or multi sources
      *
      * @param $stockDatum
+     * @param $rowNumber
      * @return \Magento\InventoryApi\Api\Data\SourceItemInterface|bool
      */
-    public function processSourceItem($stockDatum)
+    public function processSourceItem($stockDatum, $rowNumber)
     {
         if ($this->isDefaultOnly($stockDatum['qty'])) {
             return $this->defaultSourceProcessor->execute($stockDatum);
         } elseif ($this->isCustomOnly($stockDatum['qty'])) {
-            return $this->customSourceProcessor->execute($stockDatum);
+            return $this->customSourceProcessor->execute($stockDatum, $rowNumber);
         }
-        return $this->multiSourceProcessor->execute($stockDatum);
+        return $this->multiSourceProcessor->execute($stockDatum, $rowNumber);
     }
 
     /**

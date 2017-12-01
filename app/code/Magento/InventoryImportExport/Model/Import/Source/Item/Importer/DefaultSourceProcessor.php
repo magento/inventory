@@ -72,7 +72,7 @@ class DefaultSourceProcessor
             // Explode at the "="
             $parts = explode('=', $qty);
             // Return the number after the "="
-            return $parts[1];
+            return (int)$parts[1];
         }
         return $qty;
     }
