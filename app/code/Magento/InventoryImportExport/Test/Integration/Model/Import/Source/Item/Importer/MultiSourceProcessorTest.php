@@ -87,18 +87,14 @@ class MultiSourceProcessorTest extends TestCase
             DataObjectHelper::class
         );
 
-
         $this->defaultSourceProviderInterface = Bootstrap::getObjectManager()->get(
             DefaultSourceProviderInterface::class
         );
 
         try {
-
             // Try loading a Custom Source with SourceID 2
             $this->customSource = $this->sourceRepositoryInterface->get(2);
-
         } catch (NoSuchEntityException $e) {
-
             // If we get a NoSuchEntity Exception lets create a new one to use in the tests
             $data = [
                 SourceInterface::SOURCE_ID => 2,
@@ -116,7 +112,6 @@ class MultiSourceProcessorTest extends TestCase
             // Save it then set it as $customSource on the class so we can use it in the tests
             $this->sourceRepositoryInterface->save($customSource);
             $this->customSource = $this->sourceRepositoryInterface->get(2);
-
         }
 
         // Array of stock data to import with valid data
@@ -132,7 +127,6 @@ class MultiSourceProcessorTest extends TestCase
             'qty' => '1=10|1234567890=20',
             'is_in_stock' => SourceItemInterface::STATUS_IN_STOCK
         ];
-
     }
 
     /**
