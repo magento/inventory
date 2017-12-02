@@ -23,4 +23,6 @@ $searchCriteria = $searchCriteriaBuilder
     ->create();
 $sourceItems = $sourceItemRepository->getList($searchCriteria)->getItems();
 
-$sourceItemDelete->execute($sourceItems);
+if ($sourceItems) {
+    $sourceItemDelete->execute($sourceItems);
+}
