@@ -104,7 +104,7 @@ class Importer implements ImporterInterface
     public function import(array $stockData)
     {
         foreach ($stockData as $rowNumber => $stockDatum) {
-            if (isset($stockDatum[Product::COL_SKU])) {
+            if ($this->_isImportDataValid($stockDatum)) {
                 if ($sourceItem = $this->processSourceItem($stockDatum, $rowNumber)) {
                     if (is_array($sourceItem)) {
                         foreach ($sourceItem as $item) {
@@ -184,6 +184,17 @@ class Importer implements ImporterInterface
             }
         }
         return $flag;
+    }
+
+    /**
+     * Check import array has some required data before we attempt to import it
+     *
+     * @param array $data
+     * @return bool
+     */
+    private function _isImportDataValid($data)
+    {
+        return isset($data[Product::COL_SKU]) && isset($data['qty']);
     }
 
     /**
