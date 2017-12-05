@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\Inventory\StockRepository;
+namespace Magento\InventorySales\Plugin\Inventory\Stock;
 
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\InventoryApi\Api\Data\StockInterface;
@@ -14,9 +14,9 @@ use Magento\InventorySales\Model\ReplaceSalesChannelsForStockInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Save Sales Channels Links for Stock on Save method of StockRepositoryInterface
+ * Save SalesChannel List Related to StockItem on StockRepositoryInterface::save()
  */
-class SaveSalesChannelsLinksPlugin
+class SaveSalesChannelListRelatedToStockItemPlugin
 {
     /**
      * @var ReplaceSalesChannelsForStockInterface
@@ -29,6 +29,8 @@ class SaveSalesChannelsLinksPlugin
     private $logger;
 
     /**
+     * SaveSalesChannelsLinksPlugin constructor.
+     *
      * @param ReplaceSalesChannelsForStockInterface $replaceSalesChannelsOnStock
      * @param LoggerInterface $logger
      */
@@ -46,6 +48,7 @@ class SaveSalesChannelsLinksPlugin
      * @param StockRepositoryInterface $subject
      * @param callable $proceed
      * @param StockInterface $stock
+     *
      * @return int
      * @throws CouldNotSaveException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -56,16 +59,32 @@ class SaveSalesChannelsLinksPlugin
         StockInterface $stock
     ): int {
         $extensionAttributes = $stock->getExtensionAttributes();
-        $salesChannels = $extensionAttributes->getSalesChannels();
+        $salesChannelList = $extensionAttributes->getSalesChannels();
+
         $stockId = $proceed($stock);
-        if (null !== $salesChannels) {
-            try {
-                $this->replaceSalesChannelsOnStock->execute($salesChannels, $stockId);
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
-                throw new CouldNotSaveException(__('Could not replace Sales Channels for Stock'), $e);
-            }
+
+        if (null !== $salesChannelList) {
+            $this->saveSalesChannelListRelatedToStockId($salesChannelList, $stockId);
         }
+
         return $stockId;
+    }
+
+    /**
+     * Save SalesChannel List Related to StockItem
+     *
+     * @param array $salesChannelList
+     * @param int $stockId
+     *
+     * @throws CouldNotSaveException
+     */
+    private function saveSalesChannelListRelatedToStockId(array $salesChannelList, int $stockId)
+    {
+        try {
+            $this->replaceSalesChannelsOnStock->execute($salesChannelList, $stockId);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new CouldNotSaveException(__('Could not replace Sales Channels for Stock'), $e);
+        }
     }
 }

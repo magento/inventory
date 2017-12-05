@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\InventoryApi\StockRepository\PreventDeleting;
+namespace Magento\InventoryCatalog\Plugin\Inventory\Stock;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
@@ -14,7 +14,7 @@ use Magento\InventorySales\Model\GetAssignedSalesChannelsForStockInterface;
 /**
  * Prevent deleting of Stock which assigned at least one Sales Channel
  */
-class AssignedToSalesChannelsStockPlugin
+class PreventDeletingStockItemWithSaleChannelAssignedPlugin
 {
     /**
      * @var GetAssignedSalesChannelsForStockInterface
@@ -35,6 +35,7 @@ class AssignedToSalesChannelsStockPlugin
      *
      * @param StockRepositoryInterface $subject
      * @param int $stockId
+     *
      * @return void
      * @throws CouldNotDeleteException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -42,6 +43,7 @@ class AssignedToSalesChannelsStockPlugin
     public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId)
     {
         $assignSalesChannels = $this->assignedSalesChannelsForStock->execute($stockId);
+
         if (count($assignSalesChannels)) {
             throw new CouldNotDeleteException(__('Stock has at least one sale channel and could not be deleted.'));
         }

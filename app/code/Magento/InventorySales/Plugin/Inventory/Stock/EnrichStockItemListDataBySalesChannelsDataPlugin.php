@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\Inventory\StockRepository;
+namespace Magento\InventorySales\Plugin\Inventory\Stock;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryApi\Api\Data\StockSearchResultsInterface;
@@ -14,9 +14,9 @@ use Magento\InventorySales\Model\GetAssignedSalesChannelsForStockInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Load Sales Channels for Stock on GetList method of StockRepositoryInterface
+ * Enriches Stock Item List Data by Sale Channels Data on StockRepositoryInterface::getList()
  */
-class LoadSalesChannelsOnGetListPlugin
+class EnrichStockItemListDataBySalesChannelsDataPlugin
 {
     /**
      * @var GetAssignedSalesChannelsForStockInterface
@@ -29,6 +29,8 @@ class LoadSalesChannelsOnGetListPlugin
     private $logger;
 
     /**
+     * LoadSalesChannelsOnGetListPlugin constructor.
+     *
      * @param GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock
      * @param LoggerInterface $logger
      */
@@ -45,6 +47,7 @@ class LoadSalesChannelsOnGetListPlugin
      *
      * @param StockRepositoryInterface $subject
      * @param StockSearchResultsInterface $stockSearchResults
+     *
      * @return StockSearchResultsInterface
      * @throws StateException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -54,7 +57,7 @@ class LoadSalesChannelsOnGetListPlugin
         StockSearchResultsInterface $stockSearchResults
     ): StockSearchResultsInterface {
         try {
-            return $this->doAfterGetList($stockSearchResults);
+            return $this->enrichStockItemListDataBySaleChannelsData($stockSearchResults);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new StateException(__('Could not load Sales Channels for Stock'), $e);
@@ -62,12 +65,17 @@ class LoadSalesChannelsOnGetListPlugin
     }
 
     /**
+     * Enriches Stock Item List data by Sale Channels information
+     *
      * @param StockSearchResultsInterface $stockSearchResults
+     *
      * @return StockSearchResultsInterface
      */
-    private function doAfterGetList(StockSearchResultsInterface $stockSearchResults): StockSearchResultsInterface
-    {
+    private function enrichStockItemListDataBySaleChannelsData(
+        StockSearchResultsInterface $stockSearchResults
+    ): StockSearchResultsInterface {
         $stocks = [];
+
         foreach ($stockSearchResults->getItems() as $stock) {
             $salesChannels = $this->getAssignedSalesChannelsForStock->execute((int)$stock->getStockId());
 
@@ -76,7 +84,9 @@ class LoadSalesChannelsOnGetListPlugin
             $stock->setExtensionAttributes($extensionAttributes);
             $stocks[] = $stock;
         }
+
         $stockSearchResults->setItems($stocks);
+
         return $stockSearchResults;
     }
 }

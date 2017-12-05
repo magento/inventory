@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\Inventory\Ui\StockDataProvider;
+namespace Magento\InventorySales\Plugin\Inventory\Stock;
 
 use Magento\CatalogInventory\Model\Stock\StockRepository;
 use Magento\Inventory\Ui\DataProvider\StockDataProvider;
 use Magento\InventorySales\Model\GetAssignedSalesChannelsForStockInterface;
 
 /**
- * Customize stock form. Add sales channels data
+ * Enriches StockDataProvider by Stock Channel information
  */
-class SalesChannels
+class EnrichStockItemDataProviderBySalesChannelDataPlugin
 {
     /**
      * @var GetAssignedSalesChannelsForStockInterface
@@ -27,6 +27,8 @@ class SalesChannels
     private $stockRepository;
 
     /**
+     * EnrichStockDataProviderBySaleChannelDataPlugin constructor.
+     *
      * @param GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock
      * @param StockRepository $stockRepository
      */
@@ -39,8 +41,11 @@ class SalesChannels
     }
 
     /**
+     * Enriches StockDataProvider by Stock Channel information
+     *
      * @param StockDataProvider $subject
      * @param array $data
+     *
      * @return array
      */
     public function afterGetData(StockDataProvider $subject, array $data): array
@@ -62,21 +67,27 @@ class SalesChannels
             }
             unset($stockData);
         }
+
         return $data;
     }
 
     /**
+     * Retrieves Sale Channel information by Stock data
+     *
      * @param array $stock
+     *
      * @return array
      */
     private function getSalesChannelsDataForStock(array $stock): array
     {
         $salesChannelsData = [];
+
         foreach ($stock['extension_attributes'] as $salesChannels) {
             foreach ($salesChannels as $salesChannel) {
                 $salesChannelsData[$salesChannel['type']][] = $salesChannel['code'];
             }
         }
+
         return $salesChannelsData;
     }
 }
