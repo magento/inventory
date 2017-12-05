@@ -60,7 +60,6 @@ class DeleteLegacyCatalogInventoryAtSourceItemDeletionTest extends TestCase
      */
     public function testIfSourceItemIsDeletedAfterLegacyStockItemIsDeleted()
     {
-        $this->registry->register('isSecureArea', true);
         $testProductSku = 'SKU-1';
 
         $searchCriteria = $this->searchCriteriaBuilder
@@ -75,7 +74,5 @@ class DeleteLegacyCatalogInventoryAtSourceItemDeletionTest extends TestCase
 
         $sourceItemsAfterDelete = $this->sourceItemRepository->getList($searchCriteria)->getItems();
         $this->assertCount(0, $sourceItemsAfterDelete);
-
-        $this->registry->unregister('isSecureArea');
     }
 }
