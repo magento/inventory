@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\Model;
 
@@ -11,6 +12,7 @@ use Magento\InventoryApi\Api\Data\ReservationInterface;
 use Magento\InventoryApi\Api\ReservationsAppendInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\InventoryCatalog\Helper\Config;
 
 /**
  * Plugin help to fill the legacy catalog inventory tables cataloginventory_stock_status and
@@ -35,18 +37,26 @@ class UpdateLegacyCatalogInventoryPlugin
     private $stockRegistry;
 
     /**
+     * @var Config
+     */
+    private $inventoryCatalogConfig;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param ProductRepositoryInterface $productRepository
      * @param StockRegistryInterface $stockRegistry
+     * @param Config $inventoryCatalogConfig
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         ProductRepositoryInterface $productRepository,
-        StockRegistryInterface $stockRegistry
+        StockRegistryInterface $stockRegistry,
+        Config $inventoryCatalogConfig
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->productRepository = $productRepository;
         $this->stockRegistry = $stockRegistry;
+        $this->inventoryCatalogConfig = $inventoryCatalogConfig;
     }
 
     /**
@@ -62,7 +72,10 @@ class UpdateLegacyCatalogInventoryPlugin
      */
     public function afterExecute(ReservationsAppendInterface $subject, $result, array $reservations)
     {
-        $this->updateStockItemAndStatusTable($reservations);
+        if ($this->inventoryCatalogConfig->isLegacyInventorySynchronizedOnCheckout()) {
+            $this->updateStockItemAndStatusTable($reservations);
+        }
+
         return $result;
     }
 
