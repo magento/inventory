@@ -17,4 +17,7 @@
     <type name="Magento\InventoryApi\Api\ReservationsAppendInterface">
         <plugin name="update_legacy_catalog_inventory_plugin" type="Magento\InventoryCatalog\Plugin\Model\UpdateLegacyCatalogInventoryPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
+        <plugin name="delete_source_items_when_legacy_stock_item_deleted" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\Stock\DeleteSourceItemsAtLegacyStockItemDelete" sortOrder="1"/>
+    </type>
 </config>
