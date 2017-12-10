@@ -30,6 +30,13 @@
 
     <!-- Source Item Import -->
     <preference for="\Magento\CatalogImportExport\Model\Import\Source\Item\ImporterInterface" type="\Magento\InventoryImportExport\Model\Import\Source\Item\Importer" />
+    <type name="Magento\CatalogImportExport\Model\Import\Product\Validator">
+        <arguments>
+            <argument>
+                <item name="quantity" xsi:type="object">Magento\InventoryImportExport\Model\Import\Product\Validator\Quantity</item>
+            </argument>
+        </arguments>
+    </type>
 
     <!-- Export -->
     <preference for="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface" type="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactory"/>
