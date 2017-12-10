@@ -50,12 +50,11 @@ class DefaultSourceProcessor
      */
     public function execute(array $data)
     {
-        $inStock = (isset($data['is_in_stock'])) ? $data['is_in_stock'] : 0;
         $sourceItem = $this->sourceItemFactory->create();
         $sourceItem->setSku($data[Product::COL_SKU]);
         $sourceItem->setSourceId($this->defaultSourceProvider->getId());
         $sourceItem->setQuantity($this->getQty($data['qty']));
-        $sourceItem->setStatus($inStock);
+        $sourceItem->setStatus($this->getIsInStockValue($data));
         return $sourceItem;
     }
 
@@ -75,5 +74,26 @@ class DefaultSourceProcessor
             return (int)$parts[1];
         }
         return $qty;
+    }
+
+    /**
+     * Work out is_in_stock value it can be in different formats, with an '=' between source id and value
+     *
+     * @param $data
+     * @return int
+     */
+    private function getIsInStockValue($data)
+    {
+        $inStock = 0;
+        if (isset($data['is_in_stock'])) {
+            $stockValue = $data['is_in_stock'];
+            if (strpos($stockValue, '=')) {
+                $parts = explode('=', $stockValue);
+                $inStock = $parts[1];
+            } else {
+                $inStock = $stockValue;
+            }
+        }
+        return $inStock;
     }
 }
