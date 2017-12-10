@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryImportExport\Test\Integration\Model;
+namespace Magento\Inventory\Test\Integration\Model\Source\Item;
 
-use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\CatalogImportExport\Model\Import\Source\Item\ImporterInterface;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -17,15 +17,15 @@ use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class StockItemImporterTest extends TestCase
+class ImporterTest extends TestCase
 {
     /**
      * @var DefaultSourceProviderInterface
      */
     private $defaultSourceProviderInterface;
-    
+
     /**
-     * @var StockItemImporterInterface
+     * @var ImporterInterface
      */
     private $importerInterface;
 
@@ -48,7 +48,7 @@ class StockItemImporterTest extends TestCase
             DefaultSourceProviderInterface::class
         );
         $this->importerInterface = Bootstrap::getObjectManager()->get(
-            StockItemImporterInterface::class
+            ImporterInterface::class
         );
         $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
             SearchCriteriaBuilderFactory::class
@@ -66,16 +66,18 @@ class StockItemImporterTest extends TestCase
     public function testSourceItemImportWithDefaultSource()
     {
         $stockData = [
-            'sku' => 'SKU-1',
-            'qty' => 1,
-            'is_in_stock' => SourceItemInterface::STATUS_IN_STOCK
+            '1' => [
+                'sku' => 'SKU-1',
+                'qty' => 1,
+                'is_in_stock' => SourceItemInterface::STATUS_IN_STOCK
+            ]
         ];
 
-        $this->importerInterface->import([$stockData]);
+        $this->importerInterface->import($stockData);
 
         $compareData = $this->buildDataArray($this->getSourceItemList()->getItems());
         $expectedData = [
-            SourceItemInterface::SKU => $stockData['sku'],
+            SourceItemInterface::SKU => $stockData['1']['sku'],
             SourceItemInterface::QUANTITY => '1.0000',
             SourceItemInterface::SOURCE_ID => (string) $this->defaultSourceProviderInterface->getId(),
             SourceItemInterface::STATUS => (string) SourceItemInterface::STATUS_IN_STOCK
