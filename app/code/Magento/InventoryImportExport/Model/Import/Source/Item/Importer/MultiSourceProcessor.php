@@ -64,11 +64,11 @@ class MultiSourceProcessor
      */
     public function execute(array $data, $rowNumber)
     {
-        if ($splitSourceData = $this->getSplitSourceData($data['qty'], $rowNumber)) {
+        if ($splitSourceData = $this->getSplitSourceData($data, $rowNumber)) {
             $sourceItems = [];
             /** @var array $splitSourceDatum */
             foreach ($splitSourceData as $splitSourceDatum) {
-                $inStock = (isset($data['is_in_stock'])) ? $data['is_in_stock'] : 0;
+                $inStock = $splitSourceDatum['is_in_stock'];
                 /** @var SourceItem $sourceItem */
                 $sourceItem = $this->sourceItemFactory->create();
                 $sourceItem->setSku($data[Product::COL_SKU]);
@@ -85,15 +85,16 @@ class MultiSourceProcessor
     /**
      * Return Source Data foreach qty value
      *
-     * @param $qty
+     * @param array $data
      * @param string|int $rowNumber
      * @return array|bool
      */
-    public function getSplitSourceData($qty, $rowNumber)
+    public function getSplitSourceData(array $data, $rowNumber)
     {
-        if (strpos($qty, '|') !== false) {
+        if (strpos($data['qty'], '|') !== false) {
             $sourceData = [];
-            $sources = explode('|', $qty);
+            $sources = explode('|', $data['qty']);
+            $inStock = explode('|', $data['is_in_stock']);
             foreach ($sources as $source) {
                 $individualSourceData = explode('=', $source);
                 if ($individualSourceData[0] == 'default') {
@@ -101,9 +102,25 @@ class MultiSourceProcessor
                 } else {
                     $sourceId = $this->getSource($individualSourceData[0], $rowNumber)->getSourceId();
                 }
+                $sourceInStock = 0;
+                if (count($inStock)) {
+                    foreach ($inStock as $value) {
+                        if (strpos($value, '=') !== false) {
+                            $inStockVal = explode('=', $value);
+                            if ($inStockVal[0] == $sourceId) {
+                                $sourceInStock = $inStockVal[1];
+                                continue;
+                            }
+                        } else {
+                            $sourceInStock = $value;
+                            continue;
+                        }
+                    }
+                }
                 $sourceData[] = [
                     'source' => $sourceId,
-                    'qty' => $individualSourceData[1]
+                    'qty' => $individualSourceData[1],
+                    'is_in_stock' => $sourceInStock
                 ];
             }
             return $sourceData;
@@ -114,7 +131,7 @@ class MultiSourceProcessor
     /**
      * Return Source ID if source exists with given id
      *
-     * @param $qty
+     * @param string|int $qty
      * @param string|int $rowNumber
      * @return bool|SourceInterface
      * @throws ValidationException
