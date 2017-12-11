@@ -111,7 +111,7 @@ class Importer implements ImporterInterface
                             /** @var SourceItemInterface $item */
                             $this->_addItemToImport($item);
                         }
-                    }else {
+                    } else {
                         /** @var SourceItemInterface $sourceItem */
                         $this->_addItemToImport($sourceItem);
                     }
