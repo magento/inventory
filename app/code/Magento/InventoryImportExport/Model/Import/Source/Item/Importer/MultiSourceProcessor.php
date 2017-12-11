@@ -94,13 +94,6 @@ class MultiSourceProcessor
         if (strpos($data['qty'], '|') !== false) {
             $sourceData = [];
             $sources = explode('|', $data['qty']);
-            if (isset($data['is_in_stock'])) {
-                if (!is_numeric($data['is_in_stock'])) {
-                    $inStock = explode('|', $data['is_in_stock']);
-                } else {
-                    $inStock = $data['is_in_stock'];
-                }
-            }
             foreach ($sources as $source) {
                 $individualSourceData = explode('=', $source);
                 if ($individualSourceData[0] == 'default') {
@@ -108,25 +101,10 @@ class MultiSourceProcessor
                 } else {
                     $sourceId = $this->getSource($individualSourceData[0], $rowNumber)->getSourceId();
                 }
-                $sourceInStock = 0;
-                if (!empty($inStock)) {
-                    foreach ($inStock as $value) {
-                        if (!is_numeric($value) && strpos($value, '=') !== false) {
-                            $inStockVal = explode('=', $value);
-                            if ($inStockVal[0] == $sourceId) {
-                                $sourceInStock = $inStockVal[1];
-                                continue;
-                            }
-                        } else {
-                            $sourceInStock = $value;
-                            continue;
-                        }
-                    }
-                }
                 $sourceData[] = [
                     'source' => $sourceId,
                     'qty' => $individualSourceData[1],
-                    'is_in_stock' => $sourceInStock
+                    'is_in_stock' => $this->getInStockValueForSource($data, $sourceId)
                 ];
             }
             return $sourceData;
@@ -161,5 +139,37 @@ class MultiSourceProcessor
                 )
             );
         }
+    }
+
+    /**
+     * Return correct value for is_in_stock for specific source id if specified
+     *
+     * @param array $data
+     * @param int|string $sourceId
+     * @return int|string
+     */
+    private function getInStockValueForSource(array $data, $sourceId)
+    {
+        $sourceInStock = 0;
+        if (isset($data['is_in_stock'])) {
+            if (!is_numeric($data['is_in_stock'])) {
+                $inStock = explode('|', $data['is_in_stock']);
+                foreach ($inStock as $value) {
+                    if (!is_numeric($value) && strpos($value, '=') !== false) {
+                        $inStockVal = explode('=', $value);
+                        if ($inStockVal[0] == $sourceId) {
+                            $sourceInStock = $inStockVal[1];
+                            continue;
+                        }
+                    } else {
+                        $sourceInStock = $value;
+                        continue;
+                    }
+                }
+            } else {
+                $sourceInStock = $data['is_in_stock'];
+            }
+        }
+        return $sourceInStock;
     }
 }
