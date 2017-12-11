@@ -37,10 +37,11 @@ class Quantity extends AbstractImportValidator implements RowValidatorInterface
     {
         if (!is_numeric($value)) {
             // If the value isn't numeric there has to be an '=' somewhere
-            if (strpos($value, '=') === false)  {
+            if (strpos($value, '=') === false) {
                 return false;
             }
-            // If we get here, we have an '=' somewhere in the value, but if there is multiple sources in value we have to check each one is either numeric or has an '='
+            // If we get here, we have an '=' somewhere in the value,
+            // but if there is multiple sources in value we have to check each one is either numeric or has an '='
             if (strpos($value, '|') !== false) {
                 $parts = explode('|', $value);
                 foreach ($parts as $part) {
@@ -51,8 +52,8 @@ class Quantity extends AbstractImportValidator implements RowValidatorInterface
                     }
                 }
             }
-
-         }
+        }
         return true;
     }
+
 }
