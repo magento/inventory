@@ -55,5 +55,4 @@ class Quantity extends AbstractImportValidator implements RowValidatorInterface
         }
         return true;
     }
-
 }
