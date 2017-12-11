@@ -94,8 +94,12 @@ class MultiSourceProcessor
         if (strpos($data['qty'], '|') !== false) {
             $sourceData = [];
             $sources = explode('|', $data['qty']);
-            if (isset($data['is_in_stock']) && !is_numeric($data['is_in_stock'])) {
-                $inStock = explode('|', $data['is_in_stock']);
+            if (isset($data['is_in_stock'])) {
+                if (!is_numeric($data['is_in_stock'])) {
+                    $inStock = explode('|', $data['is_in_stock']);
+                } else {
+                    $inStock = $data['is_in_stock'];
+                }
             }
             foreach ($sources as $source) {
                 $individualSourceData = explode('=', $source);
@@ -105,7 +109,7 @@ class MultiSourceProcessor
                     $sourceId = $this->getSource($individualSourceData[0], $rowNumber)->getSourceId();
                 }
                 $sourceInStock = 0;
-                if (isset($inStock) && !empty($inStock)) {
+                if (!empty($inStock)) {
                     foreach ($inStock as $value) {
                         if (!is_numeric($value) && strpos($value, '=') !== false) {
                             $inStockVal = explode('=', $value);
