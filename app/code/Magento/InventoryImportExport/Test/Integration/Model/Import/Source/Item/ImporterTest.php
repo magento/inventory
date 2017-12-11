@@ -22,12 +22,12 @@ class ImporterTest extends TestCase
     /**
      * @var DefaultSourceProviderInterface
      */
-    private $defaultSourceProviderInterface;
+    private $defaultSourceProvider;
 
     /**
      * @var ImporterInterface
      */
-    private $importerInterface;
+    private $importer;
 
     /**
      * @var SearchCriteriaBuilderFactory
@@ -37,23 +37,23 @@ class ImporterTest extends TestCase
     /**
      * @var SourceItemRepositoryInterface
      */
-    private $sourceItemRepositoryInterface;
+    private $sourceItemRepository;
 
     /**
      * Setup Test for Stock Item Importer
      */
     public function setUp()
     {
-        $this->defaultSourceProviderInterface = Bootstrap::getObjectManager()->get(
+        $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(
             DefaultSourceProviderInterface::class
         );
-        $this->importerInterface = Bootstrap::getObjectManager()->get(
+        $this->importer = Bootstrap::getObjectManager()->get(
             ImporterInterface::class
         );
         $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
             SearchCriteriaBuilderFactory::class
         );
-        $this->sourceItemRepositoryInterface = Bootstrap::getObjectManager()->get(
+        $this->sourceItemRepository = Bootstrap::getObjectManager()->get(
             SourceItemRepositoryInterface::class
         );
     }
@@ -73,13 +73,13 @@ class ImporterTest extends TestCase
             ]
         ];
 
-        $this->importerInterface->import($stockData);
+        $this->importer->import($stockData);
 
         $compareData = $this->buildDataArray($this->getSourceItemList()->getItems());
         $expectedData = [
             SourceItemInterface::SKU => $stockData['1']['sku'],
             SourceItemInterface::QUANTITY => '1.0000',
-            SourceItemInterface::SOURCE_ID => (string) $this->defaultSourceProviderInterface->getId(),
+            SourceItemInterface::SOURCE_ID => (string) $this->defaultSourceProvider->getId(),
             SourceItemInterface::STATUS => (string) SourceItemInterface::STATUS_IN_STOCK
         ];
 
@@ -104,12 +104,12 @@ class ImporterTest extends TestCase
 
         $searchCriteriaBuilder->addFilter(
             SourceItemInterface::SOURCE_ID,
-            $this->defaultSourceProviderInterface->getId()
+            $this->defaultSourceProvider->getId()
         );
 
         /** @var SearchCriteria $searchCriteria */
         $searchCriteria = $searchCriteriaBuilder->create();
-        return $this->sourceItemRepositoryInterface->getList($searchCriteria);
+        return $this->sourceItemRepository->getList($searchCriteria);
     }
 
     /**

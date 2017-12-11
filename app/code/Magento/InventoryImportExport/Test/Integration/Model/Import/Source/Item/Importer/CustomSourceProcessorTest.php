@@ -30,14 +30,14 @@ class CustomSourceProcessorTest extends TestCase
     private $dataObjectHelper;
 
     /**
-     * @var SourceInterfaceFactory $sourceInterfaceFactory
+     * @var SourceInterfaceFactory $sourceFactory
      */
-    private $sourceInterfaceFactory;
+    private $sourceFactory;
 
     /**
-     * @var SourceRepositoryInterface $sourceRepositoryInterface
+     * @var SourceRepositoryInterface $sourceRepository
      */
-    private $sourceRepositoryInterface;
+    private $sourceRepository;
 
     /**
      * @var SourceInterface $customSource
@@ -62,11 +62,11 @@ class CustomSourceProcessorTest extends TestCase
             CustomSourceProcessor::class
         );
 
-        $this->sourceInterfaceFactory = Bootstrap::getObjectManager()->get(
+        $this->sourceFactory = Bootstrap::getObjectManager()->get(
             SourceInterfaceFactory::class
         );
 
-        $this->sourceRepositoryInterface = Bootstrap::getObjectManager()->get(
+        $this->sourceRepository = Bootstrap::getObjectManager()->get(
             SourceRepositoryInterface::class
         );
 
@@ -76,7 +76,7 @@ class CustomSourceProcessorTest extends TestCase
 
         try {
             // Try loading a Source with SourceID 2
-            $this->customSource = $this->sourceRepositoryInterface->get(2);
+            $this->customSource = $this->sourceRepository->get(2);
         } catch (NoSuchEntityException $e) {
             // If we get a NoSuchEntity Exception lets create a new one to use in the tests
             $data = [
@@ -90,11 +90,11 @@ class CustomSourceProcessorTest extends TestCase
                 SourceInterface::COUNTRY_ID => 'US',
                 SourceInterface::POSTCODE => '00000'
             ];
-            $customSource = $this->sourceInterfaceFactory->create();
+            $customSource = $this->sourceFactory->create();
             $this->dataObjectHelper->populateWithArray($customSource, $data, SourceInterface::class);
             // Save it then set it as $customSource on the class so we can use it in the tests
-            $this->sourceRepositoryInterface->save($customSource);
-            $this->customSource = $this->sourceRepositoryInterface->get(2);
+            $this->sourceRepository->save($customSource);
+            $this->customSource = $this->sourceRepository->get(2);
         }
 
         $this->stockData = [

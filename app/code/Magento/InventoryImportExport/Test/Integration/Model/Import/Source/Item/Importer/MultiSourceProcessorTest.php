@@ -31,9 +31,9 @@ class MultiSourceProcessorTest extends TestCase
     private $dataObjectHelper;
 
     /**
-     * @var SourceInterfaceFactory $sourceInterfaceFactory
+     * @var SourceInterfaceFactory $sourceFactory
      */
-    private $sourceInterfaceFactory;
+    private $sourceFactory;
 
     /**
      * @var SourceRepositoryInterface $sourceRepositoryInterface
@@ -75,7 +75,7 @@ class MultiSourceProcessorTest extends TestCase
             MultiSourceProcessor::class
         );
 
-        $this->sourceInterfaceFactory = Bootstrap::getObjectManager()->get(
+        $this->sourceFactory = Bootstrap::getObjectManager()->get(
             SourceInterfaceFactory::class
         );
 
@@ -107,7 +107,7 @@ class MultiSourceProcessorTest extends TestCase
                 SourceInterface::COUNTRY_ID => 'US',
                 SourceInterface::POSTCODE => '00000'
             ];
-            $customSource = $this->sourceInterfaceFactory->create();
+            $customSource = $this->sourceFactory->create();
             $this->dataObjectHelper->populateWithArray($customSource, $data, SourceInterface::class);
             // Save it then set it as $customSource on the class so we can use it in the tests
             $this->sourceRepositoryInterface->save($customSource);
