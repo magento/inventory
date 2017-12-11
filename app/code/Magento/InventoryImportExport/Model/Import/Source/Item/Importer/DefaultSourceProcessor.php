@@ -87,7 +87,7 @@ class DefaultSourceProcessor
         $inStock = 0;
         if (isset($data['is_in_stock'])) {
             $stockValue = $data['is_in_stock'];
-            if (strpos($stockValue, '=')) {
+            if (!is_numeric($stockValue) && strpos($stockValue, '=')) {
                 $parts = explode('=', $stockValue);
                 $inStock = $parts[1];
             } else {

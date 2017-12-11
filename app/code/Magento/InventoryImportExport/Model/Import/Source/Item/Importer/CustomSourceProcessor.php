@@ -60,7 +60,7 @@ class CustomSourceProcessor
             $sourceItem->setSku($data[Product::COL_SKU]);
             $sourceItem->setSourceId($source->getSourceId());
             $sourceItem->setQuantity($this->getQty($data['qty']));
-            $sourceItem->setStatus($this->getIsInStockValue($data, $rowNumber));
+            $sourceItem->setStatus($this->getIsInStockValue($data));
             return $sourceItem;
         }
         return false;
@@ -114,15 +114,14 @@ class CustomSourceProcessor
      * Work out is_in_stock value it can be in different formats, with an '=' between source id and value
      *
      * @param array $data
-     * @param int|string $rowNumber
      * @return int
      */
-    private function getIsInStockValue(array $data, $rowNumber)
+    private function getIsInStockValue(array $data)
     {
         $inStock = 0;
         if (isset($data['is_in_stock'])) {
             $stockValue = $data['is_in_stock'];
-            if (strpos($stockValue, '=') !== false) {
+            if (!is_numeric($stockValue) && strpos($stockValue, '=') !== false) {
                 $parts = explode('=', $stockValue);
                 $inStock = $parts[1];
             } else {

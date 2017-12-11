@@ -105,7 +105,7 @@ class MultiSourceProcessor
                 $sourceInStock = 0;
                 if (count($inStock)) {
                     foreach ($inStock as $value) {
-                        if (strpos($value, '=') !== false) {
+                        if (!is_numeric($value) && strpos($value, '=') !== false) {
                             $inStockVal = explode('=', $value);
                             if ($inStockVal[0] == $sourceId) {
                                 $sourceInStock = $inStockVal[1];
