@@ -87,6 +87,60 @@ class StockManagement implements StockManagementInterface
         //if (!$websiteId) {
             $websiteId = $this->stockConfiguration->getDefaultScopeId();
         //}
+
+        // start prototype code
+        /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
+//        $searchCriteriaBuilder = \Magento\Framework\App\ObjectManager::getInstance()
+//            ->get(\Magento\Framework\Api\SearchCriteriaBuilder::class);
+//        /** @var \Magento\InventoryApi\Api\ReservationBuilderInterface $reservationBuilder */
+//        $reservationBuilder = \Magento\Framework\App\ObjectManager::getInstance()
+//            ->get(\Magento\InventoryApi\Api\ReservationBuilderInterface::class);
+//        /** @var \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository */
+//        $websiteRepository = \Magento\Framework\App\ObjectManager::getInstance()
+//            ->get(\Magento\Store\Api\WebsiteRepositoryInterface::class);
+//        /** @var \Magento\InventorySalesApi\Api\StockResolverInterface $stockResolver */
+//        $stockResolver = \Magento\Framework\App\ObjectManager::getInstance()
+//            ->get(\Magento\InventorySalesApi\Api\StockResolverInterface::class);
+//        /** @var \Magento\InventoryApi\Api\ReservationsAppendInterface $reservationsAppend */
+//        $reservationsAppend = \Magento\Framework\App\ObjectManager::getInstance()
+//            ->get(\Magento\InventoryApi\Api\ReservationsAppendInterface::class);
+//
+//        try {
+//            $this->getResource()->beginTransaction();
+//
+//            $searchCriteria = $searchCriteriaBuilder
+//                ->addFilter('entity_id', array_keys($items), 'in')
+//                ->create();
+//            $products = $this->productRepository->getList($searchCriteria)->getItems();
+//            $productQuantitiesBySku = [];
+//            foreach ($products as $product) {
+//                $productQuantitiesBySku[$product->getSku()] = $items[$product->getId()];
+//            }
+//
+//            $websiteCode = $websiteRepository->getById($websiteId)->getCode();
+//
+//            $reservations = [];
+//            foreach ($productQuantitiesBySku as $sku => $qty) {
+//                $stock = $stockResolver->get(
+//                    \Magento\InventorySalesApi\Api\Data\SalesChannelInterface::TYPE_WEBSITE,
+//                    $websiteCode
+//                );
+//                $reservations[] = $reservationBuilder
+//                    ->setSku($sku)
+//                    ->setQuantity($qty)
+//                    ->setStockId($stock->getStockId())
+//                    ->build();
+//            }
+//            $reservationsAppend->execute($reservations);
+//
+//            $this->getResource()->commit();
+//            return [];
+//        } catch (\Exception $e) {
+//            $this->getResource()->rollBack();
+//            throw $e;
+//        }
+        // end prototype code
+
         $this->getResource()->beginTransaction();
         $lockedItems = $this->getResource()->lockProductsStock(array_keys($items), $websiteId);
         $fullSaveItems = $registeredItems = [];
