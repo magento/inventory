@@ -23,4 +23,9 @@
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
         <plugin name="update_source_item_at_legacy_stock_setting" type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockSettingPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\StockManagement">
+        <plugin name="stock_management_register_products_sale_legacy" type="Magento\InventoryCatalog\Plugin\CatalogInventory\StockManagementRegisterProductsSaleLegacyPlugin"/>
+        <plugin name="stock_management_back_item_qty_legacy" type="Magento\InventoryCatalog\Plugin\CatalogInventory\StockManagementBackItemQtyLegacyPlugin"/>
+        <plugin name="stock_management_revert_products_sale_legacy" type="Magento\InventoryCatalog\Plugin\CatalogInventory\StockManagementRevertProductsSaleLegacyPlugin"/>
+    </type>
 </config>
