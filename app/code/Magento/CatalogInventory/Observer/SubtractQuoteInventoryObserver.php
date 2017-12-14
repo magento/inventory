@@ -67,14 +67,10 @@ class SubtractQuoteInventoryObserver implements ObserverInterface
         }
         $items = $this->productQty->getProductQty($quote->getAllItems());
 
-        /**
-         * Remember items
-         */
-        $itemsForReindex = $this->stockManagement->registerProductsSale(
+        $this->stockManagement->registerProductsSale(
             $items,
             $quote->getStore()->getWebsiteId()
         );
-        $this->itemsForReindex->setItems($itemsForReindex);
 
         $quote->setInventoryProcessed(true);
         return $this;
