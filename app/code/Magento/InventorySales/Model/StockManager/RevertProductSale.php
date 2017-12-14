@@ -63,7 +63,7 @@ class RevertProductSale implements RevertProductSaleInterface
 
         $stock = $this->stockResolverByWebsiteId->get((int)$websiteId);
 
-        $this->reservationsRegister->execute($productsQtyBySku, $stock->getStockId());
+        $this->reservationsRegister->execute($productsQtyBySku, (int)$stock->getStockId());
 
         return [];
     }

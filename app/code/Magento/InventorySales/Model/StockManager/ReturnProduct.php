@@ -63,7 +63,7 @@ class ReturnProduct implements StockManagementInterface
 
         $stock = $this->stockResolverByWebsiteId->get((int)$scopeId);
 
-        $this->reservationsRegister->execute($productsQtyBySku, $stock->getStockId());
+        $this->reservationsRegister->execute($productsQtyBySku, (int)$stock->getStockId());
 
         return true;
     }
