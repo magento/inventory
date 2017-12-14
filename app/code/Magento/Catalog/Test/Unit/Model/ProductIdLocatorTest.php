@@ -12,9 +12,9 @@ namespace Magento\Catalog\Test\Unit\Model;
 class ProductIdLocatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Catalog\Model\LocatorService|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\EntityManager\MetadataPool|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $locatorService;
+    private $metadataPool;
 
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
@@ -33,10 +33,9 @@ class ProductIdLocatorTest extends \PHPUnit\Framework\TestCase
      */
     protected function setUp()
     {
-        $this->locatorService = $this->getMockBuilder(\Magento\Catalog\Model\LocatorService::class)
-            ->setMethods(['getProductLinkField', 'truncateToLimit', 'skuProcess'])
+        $this->metadataPool = $this->getMockBuilder(\Magento\Framework\EntityManager\MetadataPool::class)
+            ->setMethods(['getMetadata'])
             ->disableOriginalConstructor()->getMock();
-
         $this->collectionFactory = $this
             ->getMockBuilder(\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class)
             ->setMethods(['create'])
@@ -46,8 +45,8 @@ class ProductIdLocatorTest extends \PHPUnit\Framework\TestCase
         $this->model = $objectManager->getObject(
             \Magento\Catalog\Model\ProductIdLocator::class,
             [
+                'metadataPool' => $this->metadataPool,
                 'collectionFactory' => $this->collectionFactory,
-                'locatorService' => $this->locatorService
             ]
         );
     }
@@ -64,26 +63,19 @@ class ProductIdLocatorTest extends \PHPUnit\Framework\TestCase
         $product = $this->getMockBuilder(\Magento\Catalog\Api\Data\ProductInterface::class)
             ->setMethods(['getSku', 'getData', 'getTypeId'])
             ->disableOriginalConstructor()->getMockForAbstractClass();
+        $metaDataInterface = $this->getMockBuilder(\Magento\Framework\EntityManager\EntityMetadataInterface::class)
+            ->setMethods(['getLinkField'])
+            ->disableOriginalConstructor()->getMockForAbstractClass();
         $this->collectionFactory->expects($this->once())->method('create')->willReturn($collection);
         $collection->expects($this->once())->method('addFieldToFilter')
             ->with(\Magento\Catalog\Api\Data\ProductInterface::SKU, ['in' => $skus])->willReturnSelf();
         $collection->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator([$product]));
-        $this->locatorService
+        $this->metadataPool
             ->expects($this->once())
-            ->method('getProductLinkField')
-            ->with()
-            ->willReturn('entity_id');
-
-        $this->locatorService
-            ->method('skuProcess')
-            ->withConsecutive(['sku_1'], ['sku_1'], ['sku_2'])
-            ->willReturnOnConsecutiveCalls('sku_1', 'sku_1', 'sku_2');
-
-        $this->locatorService
-            ->expects($this->once())
-            ->method('truncateToLimit')
-            ->with(['sku_1' => [1 => 'simple']])
-            ->willReturn(['sku_1' => [1 => 'simple']]);
+            ->method('getMetadata')
+            ->with(\Magento\Catalog\Api\Data\ProductInterface::class)
+            ->willReturn($metaDataInterface);
+        $metaDataInterface->expects($this->once())->method('getLinkField')->willReturn('entity_id');
         $product->expects($this->once())->method('getSku')->willReturn('sku_1');
         $product->expects($this->once())->method('getData')->with('entity_id')->willReturn(1);
         $product->expects($this->once())->method('getTypeId')->willReturn('simple');
