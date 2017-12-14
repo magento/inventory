@@ -5,9 +5,6 @@
  */
 
 namespace Magento\Catalog\Model;
-use Magento\Catalog\Model\LocatorService;
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-use Magento\Framework\App\ObjectManager;
 
 /**
  * Product ID locator provides all product IDs by SKUs.
@@ -22,7 +19,14 @@ class ProductIdLocator implements \Magento\Catalog\Model\ProductIdLocatorInterfa
     private $idsLimit;
 
     /**
-     * @var CollectionFactory
+     * Metadata pool.
+     *
+     * @var \Magento\Framework\EntityManager\MetadataPool
+     */
+    private $metadataPool;
+
+    /**
+     * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
      */
     private $collectionFactory;
 
@@ -34,26 +38,18 @@ class ProductIdLocator implements \Magento\Catalog\Model\ProductIdLocatorInterfa
     private $idsBySku = [];
 
     /**
-     * @var LocatorService
-     */
-    private $locatorService;
-
-    /**
-     * ProductIdLocator constructor.
-     *
-     * @param CollectionFactory                          $collectionFactory
-     * @param                                            $idsLimit
-     * @param \Magento\Catalog\Model\LocatorService|null $locatorService
+     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
+     * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory
+     * @param string $limitIdsBySkuValues
      */
     public function __construct(
-        CollectionFactory $collectionFactory,
-        $idsLimit,
-        LocatorService $locatorService = null
+        \Magento\Framework\EntityManager\MetadataPool $metadataPool,
+        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory,
+        $idsLimit
     ) {
+        $this->metadataPool = $metadataPool;
         $this->collectionFactory = $collectionFactory;
         $this->idsLimit = (int)$idsLimit;
-        $this->locatorService = $locatorService
-            ?: ObjectManager::getInstance()->get(LocatorService::class);
     }
 
     /**
@@ -73,24 +69,34 @@ class ProductIdLocator implements \Magento\Catalog\Model\ProductIdLocatorInterfa
             /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
             $collection = $this->collectionFactory->create();
             $collection->addFieldToFilter(\Magento\Catalog\Api\Data\ProductInterface::SKU, ['in' => $neededSkus]);
-            $linkField = $this->locatorService->getProductLinkField();
+            $linkField = $this->metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class)
+                ->getLinkField();
 
             foreach ($collection as $item) {
-                $this->idsBySku[$this->locatorService->skuProcess($item->getSku())][$item->getData($linkField)]
-                    = $item->getTypeId();
+                $this->idsBySku[strtolower(trim($item->getSku()))][$item->getData($linkField)] = $item->getTypeId();
             }
         }
 
         $productIds = [];
         foreach ($skus as $sku) {
-            $unifiedSku = $this->locatorService->skuProcess($sku);
+            $unifiedSku = strtolower(trim($sku));
             if (isset($this->idsBySku[$unifiedSku])) {
                 $productIds[$sku] = $this->idsBySku[$unifiedSku];
             }
         }
-
-        $this->idsBySku = $this->locatorService->truncateToLimit($this->idsBySku, $this->idsLimit);
-
+        $this->truncateToLimit();
         return $productIds;
+    }
+
+    /**
+     * Cleanup IDs by SKU cache more than some limit.
+     *
+     * @return void
+     */
+    private function truncateToLimit()
+    {
+        if (count($this->idsBySku) > $this->idsLimit) {
+            $this->idsBySku = array_slice($this->idsBySku, round($this->idsLimit / -2));
+        }
     }
 }
