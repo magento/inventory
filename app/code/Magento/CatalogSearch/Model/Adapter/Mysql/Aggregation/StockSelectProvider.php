@@ -12,6 +12,10 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\DB\Select;
 
+
+/**
+ * @inheritdoc
+ */
 class StockSelectProvider implements StockSelectProviderInterface
 {
 
