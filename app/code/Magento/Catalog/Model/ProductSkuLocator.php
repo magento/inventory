@@ -56,12 +56,11 @@ class ProductSkuLocator implements \Magento\Catalog\Model\ProductSkuLocatorInter
     ) {
         $this->productResource = $productResource;
         $this->skusLimit = (int)$skusLimit;
-        $this->locatorService = $locatorService
-            ?: ObjectManager::getInstance()->get(LocatorService::class);;
+        $this->locatorService = $locatorService ?: ObjectManager::getInstance()->get(LocatorService::class);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function retrieveSkusByProductIds(array $productIds): array
     {
@@ -99,4 +98,3 @@ class ProductSkuLocator implements \Magento\Catalog\Model\ProductSkuLocatorInter
         return $this;
     }
 }
-

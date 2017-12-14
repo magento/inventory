@@ -70,7 +70,7 @@ class GetProductSkuByProductIdLocatorTest extends TestCase
     /**
      * @return array
      */
-    private function getProductSkusToCompare()
+    private function getProductSkusToCompare(): array
     {
         $productsSkus = [];
         foreach ($this->productSkus as $sku)  {
@@ -84,7 +84,7 @@ class GetProductSkuByProductIdLocatorTest extends TestCase
     /**
      * @return array
      */
-    private function getProductIdsToCompare()
+    private function getProductIdsToCompare(): array
     {
         $productsIds = [];
         foreach ($this->productSkus as $sku)  {

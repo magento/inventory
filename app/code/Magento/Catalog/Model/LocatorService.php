@@ -7,20 +7,23 @@ declare(strict_types=1);
 
 namespace Magento\Catalog\Model;
 
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Catalog\Api\Data\ProductInterface;
+
 class LocatorService
 {
     /**
-     * @var \Magento\Framework\EntityManager\MetadataPool
+     * @var MetadataPool
      */
     private $metadataPool;
 
     /**
      * LocatorService constructor.
      *
-     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
-        \Magento\Framework\EntityManager\MetadataPool $metadataPool
+        MetadataPool $metadataPool
     ) {
         $this->metadataPool = $metadataPool;
     }
@@ -28,9 +31,9 @@ class LocatorService
     /**
      * @return string
      */
-    public function getProductLinkField() : string
+    public function getProductLinkField(): string
     {
-        return $this->metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class)
+        return $this->metadataPool->getMetadata(ProductInterface::class)
             ->getLinkField();
     }
 
@@ -40,7 +43,7 @@ class LocatorService
      *
      * @return array
      */
-    public function truncateToLimit(array $compareArray, int $limit) : array
+    public function truncateToLimit(array $compareArray, int $limit): array
     {
         if (count($compareArray) > $limit) {
             $compareArray = array_slice($compareArray, round($limit / -2));
@@ -54,7 +57,7 @@ class LocatorService
      *
      * @return string
      */
-    public function skuProcess(string  $sku) : string
+    public function skuProcess(string  $sku): string
     {
         return strtolower(trim($sku));
     }

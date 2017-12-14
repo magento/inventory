@@ -21,5 +21,5 @@ interface ProductSkuLocatorInterface
      * @return array
      * @since 101.1.0
      */
-    public function retrieveSkusByProductIds(array $productIds) : array;
+    public function retrieveSkusByProductIds(array $productIds): array;
 }
