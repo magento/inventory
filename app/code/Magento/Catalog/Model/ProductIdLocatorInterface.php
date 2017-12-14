@@ -13,7 +13,7 @@ namespace Magento\Catalog\Model;
 interface ProductIdLocatorInterface
 {
     /**
-     * Will return associative array of product ids as key and type as value grouped by SKUs.
+     * Returns associative array of product ids as key and type as value grouped by SKUs.
      *
      * @param array $skus
      * @return array

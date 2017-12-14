@@ -38,25 +38,17 @@ class ProductSkuLocator implements \Magento\Catalog\Model\ProductSkuLocatorInter
     private $productResource;
 
     /**
-     * @var LocatorService
-     */
-    private $locatorService;
-
-    /**
      * SkuLocator constructor.
      *
-     * @param Product             $productResource
-     * @param                     $skusLimit
-     * @param LocatorService|null $locatorService
+     * @param Product $productResource
+     * @param $skusLimit
      */
     public function __construct(
         Product $productResource,
-        $skusLimit,
-        LocatorService $locatorService = null
+        $skusLimit
     ) {
         $this->productResource = $productResource;
         $this->skusLimit = (int)$skusLimit;
-        $this->locatorService = $locatorService ?: ObjectManager::getInstance()->get(LocatorService::class);
     }
 
     /**
@@ -84,7 +76,20 @@ class ProductSkuLocator implements \Magento\Catalog\Model\ProductSkuLocatorInter
             $resultProductIds += $items;
         }
 
-        return $this->locatorService->truncateToLimit($resultProductIds, $this->skusLimit);
+        return $this->truncateToLimit($resultProductIds);
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    private function truncateToLimit(array $array): array
+    {
+        if (count($array) > $this->skusLimit) {
+            $array = array_slice($array, round($this->skusLimit / -2));
+        }
+
+        return $array;
     }
 
     /**
