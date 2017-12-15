@@ -144,7 +144,8 @@ class SourcesTest extends TestCase
      */
     public function testExportFilteredWithoutStatusColumn()
     {
-        $this->exporter->setParameters([
+        $this->exporter->setParameters(
+            [
             Export::FILTER_ELEMENT_GROUP => [
                 'sku' => 'SKU-1',
                 'status' => 1
@@ -152,7 +153,8 @@ class SourcesTest extends TestCase
             Export::FILTER_ELEMENT_SKIP => [
                 'status'
             ]
-        ]);
+            ]
+        );
         $this->exporter->export();
 
         $this->assertEquals(
