@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
+use Magento\Catalog\Model\ProductIdLocatorInterface;
 
 /**
  * Update Legacy catalocinventory_stock_item database data
@@ -23,28 +23,28 @@ class UpdateLegacyStockItemByPlainQuery
     private $resourceConnection;
 
     /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
-    /**
      * @var DefaultSourceProviderInterface
      */
     private $defaultSourceProvider;
 
     /**
+     * @var ProductIdLocatorInterface
+     */
+    private $productIdLocator;
+
+    /**
      * @param ResourceConnection $resourceConnection
-     * @param ProductRepositoryInterface $productRepository
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param ProductIdLocatorInterface $productIdLocator
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        ProductRepositoryInterface $productRepository,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        ProductIdLocatorInterface $productIdLocator
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->productRepository = $productRepository;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->productIdLocator = $productIdLocator;
     }
 
     /**
@@ -56,7 +56,8 @@ class UpdateLegacyStockItemByPlainQuery
      */
     public function execute(string $sku, float $quantity)
     {
-        $product = $this->productRepository->get($sku);
+        $productId = array_keys($this->productIdLocator->retrieveProductIdsBySkus([$sku])[$sku]);
+        $productId = array_pop($productId);
         $connection = $this->resourceConnection->getConnection();
         $connection->update(
             $this->resourceConnection->getTableName('cataloginventory_stock_item'),
@@ -65,7 +66,7 @@ class UpdateLegacyStockItemByPlainQuery
             ],
             [
                 StockItemInterface::STOCK_ID . ' = ?' => $this->defaultSourceProvider->getId(),
-                StockItemInterface::PRODUCT_ID . ' = ?' => $product->getId(),
+                StockItemInterface::PRODUCT_ID . ' = ?' => $productId,
                 'website_id = ?' => 0,
             ]
         );
