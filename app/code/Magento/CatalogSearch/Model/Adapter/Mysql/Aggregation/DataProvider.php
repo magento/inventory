@@ -105,7 +105,7 @@ class DataProvider implements DataProviderInterface
                 ->where('main_table.customer_group_id = ?', $this->customerSession->getCustomerGroupId())
                 ->where('main_table.website_id = ?', $store->getWebsiteId());
         } else {
-            $select = $this->selectProvider->getSelect($currentScope, $attribute, $select);
+            $select = $this->selectProvider->get($currentScope, $attribute, $select);
         }
 
         return $select;

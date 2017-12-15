@@ -21,5 +21,5 @@ interface StockSelectProviderInterface
      * @param Select $select
      * @return Select
      */
-    public function getSelect(int $currentScope, AbstractAttribute $attribute, Select $select): Select;
+    public function get(int $currentScope, AbstractAttribute $attribute, Select $select): Select;
 }
