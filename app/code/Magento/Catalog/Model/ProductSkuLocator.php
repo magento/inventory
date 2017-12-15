@@ -9,7 +9,6 @@ namespace Magento\Catalog\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product;
-use Magento\Framework\App\ObjectManager;
 
 /**
  * Product SKU locator provides all product SKUs by IDs.
@@ -41,14 +40,14 @@ class ProductSkuLocator implements \Magento\Catalog\Model\ProductSkuLocatorInter
      * SkuLocator constructor.
      *
      * @param Product $productResource
-     * @param $skusLimit
+     * @param int $skusLimit
      */
     public function __construct(
         Product $productResource,
-        $skusLimit
+        int $skusLimit
     ) {
         $this->productResource = $productResource;
-        $this->skusLimit = (int)$skusLimit;
+        $this->skusLimit = $skusLimit;
     }
 
     /**
@@ -69,7 +68,8 @@ class ProductSkuLocator implements \Magento\Catalog\Model\ProductSkuLocatorInter
         if (!empty($neededIds)) {
             $items = array_column(
                 $this->productResource->getProductsSku($neededIds),
-                ProductInterface::SKU, 'entity_id'
+                ProductInterface::SKU,
+                'entity_id'
             );
 
             $this->updateSkusCache($items);

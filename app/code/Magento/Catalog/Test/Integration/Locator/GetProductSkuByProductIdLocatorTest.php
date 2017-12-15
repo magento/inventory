@@ -73,7 +73,7 @@ class GetProductSkuByProductIdLocatorTest extends TestCase
     private function getProductSkusToCompare(): array
     {
         $productsSkus = [];
-        foreach ($this->productSkus as $sku)  {
+        foreach ($this->productSkus as $sku) {
             $product = $this->productRepository->get($sku);
             $productsSkus[$product->getId()] = $sku;
         }
@@ -87,7 +87,7 @@ class GetProductSkuByProductIdLocatorTest extends TestCase
     private function getProductIdsToCompare(): array
     {
         $productsIds = [];
-        foreach ($this->productSkus as $sku)  {
+        foreach ($this->productSkus as $sku) {
             $product = $this->productRepository->get($sku);
             $productsIds[$sku] = [$product->getId() => 'simple'];
         }

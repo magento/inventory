@@ -87,7 +87,7 @@ class UpdateLegacyCatalogInventoryDuringReservationPlacingTest extends TestCase
         $reservationQuantity = -5;
 
         /** @var Product $product */
-        $product = $this->productRepository->get('SKU-1');
+        $product = $this->productRepository->get('SKU-2');
 
         /** @var StockItemCriteriaInterface  $criteria */
         $criteria = $this->stockItemCriteriaFactory->create();
@@ -100,7 +100,7 @@ class UpdateLegacyCatalogInventoryDuringReservationPlacingTest extends TestCase
         $initialQuantity = $oldStockItem->getQty();
 
         $this->reservationsAppend->execute([
-            $this->reservationBuilder->setStockId(1)->setSku('SKU-1')->setQuantity($reservationQuantity)->build()
+            $this->reservationBuilder->setStockId(1)->setSku('SKU-2')->setQuantity($reservationQuantity)->build()
         ]);
 
         /** @var StockItemCollectionInterface $collectionAfterChange */
