@@ -465,4 +465,3 @@ class Observer
         return $this;
     }
 }
-
