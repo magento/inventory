@@ -44,7 +44,7 @@ class StockSelectProvider implements StockSelectProviderInterface
     /**
      * @inheritdoc
      */
-    public function getSelect(int $currentScope, AbstractAttribute $attribute, Select $select): Select
+    public function get(int $currentScope, AbstractAttribute $attribute, Select $select): Select
     {
         $connection = $this->resource->getConnection();
         $currentScopeId = $this->scopeResolver->getScope($currentScope)
