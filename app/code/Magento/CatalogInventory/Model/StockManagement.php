@@ -87,6 +87,7 @@ class StockManagement implements StockManagementInterface
         //if (!$websiteId) {
             $websiteId = $this->stockConfiguration->getDefaultScopeId();
         //}
+
         $this->getResource()->beginTransaction();
         $lockedItems = $this->getResource()->lockProductsStock(array_keys($items), $websiteId);
         $fullSaveItems = $registeredItems = [];
