@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalogSearch\Plugin;
+namespace Magento\InventoryCatalogSearch\Plugin\Search\FilterMapper;
 
 use Magento\Framework\DB\Select;
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter as OriginStockStatusFilter;
@@ -75,7 +75,6 @@ class StockStatusFilter
         $this->addInventoryStockJoin($select, $showOutOfStockFlag);
 
         return $select;
-
     }
 
     /**
