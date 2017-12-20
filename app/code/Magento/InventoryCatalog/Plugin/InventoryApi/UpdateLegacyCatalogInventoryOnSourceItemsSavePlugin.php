@@ -50,7 +50,6 @@ class UpdateLegacyCatalogInventoryOnSourceItemsSavePlugin
      * @see SourceItemsSaveInterface::execute
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return void
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems)
     {
