@@ -9,26 +9,27 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Backend\Block\Context;
 use Magento\InventorySales\Model\StockResolver;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\Store\Api\Data\WebsiteInterface;
+use Magento\InventoryApi\Api\Data\StockInterface;
 
 class Stock extends AbstractRenderer
 {
     /**
      * @var StoreManagerInterface
      */
-    protected $_storeManager;
+    private $_storeManager;
 
     /**
      * @var StockResolver
      */
-    protected $_stockResolver;
+    private $stockResolver;
 
     /**
      * @var ManagerInterface
      */
-    protected $_messageManager;
+    private $_messageManager;
 
     /**
-     * Stock constructor.
      * @param Context $context
      * @param StoreManagerInterface $storeManager
      * @param StockResolver $stockResolver
@@ -45,7 +46,7 @@ class Stock extends AbstractRenderer
     {
         parent::__construct($context, $data);
         $this->_storeManager = $storeManager;
-        $this->_stockResolver = $stockResolver;
+        $this->stockResolver = $stockResolver;
         $this->_messageManager = $messageManager;
     }
 
@@ -54,76 +55,64 @@ class Stock extends AbstractRenderer
      *
      * @param DataObject $row
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function render(DataObject $row)
+    public function render(DataObject $row): string
     {
-        try {
-            $value = $this->getColumnData($row);
-            return $value;
-        } catch (\Exception $exception) {
-            $this->_messageManager->addErrorMessage($exception);
+        $columnHtml = $this->getColumnHtml($row);
+        if ($columnHtml) {
+            return $columnHtml;
         }
         return parent::render($row);
     }
 
     /**
-     * @param $row
+     * @param $row DataObject
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getColumnData($row)
+    private function getColumnHtml(DataObject $row): string
     {
-        /** @var \Magento\Store\Api\Data\WebsiteInterface $website */
+        /** @var WebsiteInterface $website */
         $website = $this->_storeManager->getWebsite($row->getWebsiteId());
 
         if (!$website) {
             return '';
         }
-        $websiteStr = $this->getWebsiteStr($website);
-        $stockName = $this->getStockStr($website);
-        $resultStr = $websiteStr . '<br/>' . $stockName;
-        return $resultStr;
+        $html = __('Website ID: %1', $website->getId()) ;
+        if ($stockName = $this->getStockName($website)) {
+            $html .= '<br/>';
+            $html .= __('Stock: %1', $stockName);
+        }
+        return $html;
     }
 
     /**
-     * @param $website \Magento\Store\Api\Data\WebsiteInterface
+     * @param $website WebsiteInterface
      * @return string
      */
-    public function getWebsiteStr($website)
+    private function getStockName(WebsiteInterface $website): string
     {
-        if (!$website) {
-            return '';
-        }
-        return __('Website ID: %1', $website->getId()) . '<br/>';
-    }
-
-    /**
-     * @param $website \Magento\Store\Api\Data\WebsiteInterface
-     * @return string
-     */
-    public function getStockStr($website)
-    {
-        if (!$website) {
-            return '';
-        }
         try {
-            $salesChannel = $this->getSalesChannelByCode($website->getCode());
+            $stockData = $this->getStockByCode($website->getCode());
         } catch (\Exception $e) {
             $this->_messageManager->addErrorMessage($e->getMessage());
             return '';
         }
-        return __('Stock: %1', $salesChannel->getName());
+        return $stockData->getName();
     }
 
     /**
      * @param $websiteCode
-     * @return \Magento\InventoryApi\Api\Data\StockInterface
+     * @return StockInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getSalesChannelByCode($websiteCode)
+    private function getStockByCode(string $websiteCode): StockInterface
     {
-        $stockResolver = $this->_stockResolver;
-        return $stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+        return $this->stockResolver->get(
+            SalesChannelInterface::TYPE_WEBSITE,
+            $websiteCode
+        );
     }
 
 }

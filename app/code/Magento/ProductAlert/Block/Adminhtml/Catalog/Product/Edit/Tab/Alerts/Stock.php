@@ -3,6 +3,7 @@
 namespace Magento\ProductAlert\Block\Adminhtml\Catalog\Product\Edit\Tab\Alerts;
 
 use Magento\Backend\Block\Widget\Grid\Extended;
+use Magento\ProductAlert\Block\Adminhtml\Catalog\Product\Edit\Tab\Alerts\Renderer\Stock as StockRenderer;
 
 class Stock extends \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Alerts\Stock
 {
@@ -32,7 +33,7 @@ class Stock extends \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Alerts\Sto
             [
                 'header' => __('Stock'),
                 'index' => 'stock_data',
-                'renderer' => \Magento\ProductAlert\Block\Adminhtml\Catalog\Product\Edit\Tab\Alerts\Renderer\Stock::class
+                'renderer' => StockRenderer::class
             ]
         );
 
