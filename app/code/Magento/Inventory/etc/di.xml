@@ -86,4 +86,26 @@
             <argument name="stockSourceLinkValidator" xsi:type="object">Magento\Inventory\Model\StockSourceLink\Validator\ValidatorChain</argument>
         </arguments>
     </type>
+    <!-- Fulltext Search -->
+    <virtualType name="Magento\Inventory\Api\SearchCriteria\FulltextFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="name" xsi:type="object">Magento\Inventory\Model\Api\SearchCriteria\CollectionProcessor\FulltextFilterProcessor\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\Inventory\Api\SearchCriteria\CollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Magento\Inventory\Api\SearchCriteria\FulltextFilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Inventory\Model\Stock\Command\GetList">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Magento\Inventory\Api\SearchCriteria\CollectionProcessor</argument>
+        </arguments>
+    </type>
 </config>
