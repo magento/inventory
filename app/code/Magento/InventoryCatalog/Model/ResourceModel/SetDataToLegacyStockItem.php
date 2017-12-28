@@ -42,11 +42,15 @@ class SetDataToLegacyStockItem
      * @param string $sku
      * @param float $quantity
      * @param int $status
+     *
      * @return void
      */
     public function execute(string $sku, float $quantity, int $status)
     {
-        $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
+        $productIds = $this->getProductIdsBySkus->execute([$sku]);
+        if (!array_key_exists($sku, $productIds)) {
+            return;
+        }
 
         $connection = $this->resourceConnection->getConnection();
         $connection->update(
@@ -56,7 +60,7 @@ class SetDataToLegacyStockItem
                 StockItemInterface::QTY => $quantity,
             ],
             [
-                StockItemInterface::PRODUCT_ID . ' = ?' => $productId,
+                StockItemInterface::PRODUCT_ID . ' = ?' => $productIds[$sku],
                 'website_id = ?' => 0,
             ]
         );
