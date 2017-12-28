@@ -31,7 +31,8 @@ foreach ($selectOptions as $option) {
     $product = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
         \Magento\Catalog\Model\Product::class
     );
-    $productRepository = $objectManager->get(Magento\Catalog\Model\ProductRepository::class);
+    $productRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
+        ->get(Magento\Catalog\Model\ProductRepository::class);
     $product = $product->loadByAttribute('sku', 'simple_product_' . $option->getId());
     if ($product->getId()) {
         $productRepository->delete($product);
