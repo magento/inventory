@@ -50,8 +50,7 @@ class DeleteSourceItemsAfterProductDeletingPlugin
         SourceItemsDeleteCommand $sourceItemsDeleteCommand,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ResourceConnection $resourceConnection
-    )
-    {
+    ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->sourceItemsDeleteCommand = $sourceItemsDeleteCommand;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -64,6 +63,7 @@ class DeleteSourceItemsAfterProductDeletingPlugin
      * @param ProductInterface $product
      * @return void
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundDelete($subject, callable $proceed, ProductInterface $product)
     {
@@ -80,7 +80,6 @@ class DeleteSourceItemsAfterProductDeletingPlugin
             $connection->rollBack();
             throw $e;
         }
-
     }
 
     /**
