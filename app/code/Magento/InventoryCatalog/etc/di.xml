@@ -37,4 +37,8 @@
         <plugin name="update_source_item_at_legacy_stock_item_save"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\ProductRepository">
+        <plugin name="delete_source_items_after_product_deleting"
+                type="Magento\InventoryCatalog\Plugin\Catalog\DeleteSourceItemsAfterProductDeletingPlugin"/>
+    </type>
 </config>
