@@ -10,11 +10,13 @@ $registry = $objectManager->get(\Magento\Framework\Registry::class);
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 
+$productRepository = $objectManager->get(Magento\Catalog\Model\ProductRepository::class);
+
 /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
 $collection = $objectManager->create(\Magento\Catalog\Model\ResourceModel\Product\Collection::class);
-$collection->addAttributeToSelect('id')->load();
-if ($collection->count() > 0) {
-    $collection->delete();
+$collection->addAttributeToSelect('id');
+foreach ($collection->getItems() as $product) {
+    $productRepository->delete($product);
 }
 
 $registry->unregister('isSecureArea');

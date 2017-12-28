@@ -17,8 +17,10 @@ $registry->register('isSecureArea', true);
 $productCollection = Bootstrap::getObjectManager()
     ->create(Product::class)
     ->getCollection();
+
+$productRepository = $objectManager->get(Magento\Catalog\Model\ProductRepository::class);
 foreach ($productCollection as $product) {
-    $product->delete();
+    $productRepository->delete($product);
 }
 /** @var $attribute Attribute */
 $attribute = Bootstrap::getObjectManager()->create(

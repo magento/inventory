@@ -17,9 +17,10 @@ $registry->register('isSecureArea', true);
 
 /** @var $product \Magento\Catalog\Model\Product */
 $product = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Product::class);
+$productRepository = $objectManager->get(Magento\Catalog\Model\ProductRepository::class);
 $product = $product->loadByAttribute('sku', 'simple_product_with_date_attribute');
 if ($product->getId()) {
-    $product->delete();
+    $productRepository->delete($product);
 }
 
 /** @var $attribute \Magento\Catalog\Model\ResourceModel\Eav\Attribute */
