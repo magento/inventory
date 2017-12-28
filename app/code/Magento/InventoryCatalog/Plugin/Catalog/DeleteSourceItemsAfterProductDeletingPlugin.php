@@ -12,6 +12,7 @@ use Magento\Inventory\Model\SourceItem\Command\SourceItemsDelete as SourceItemsD
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\ProductRepository;
 
 /**
  * Class provides around Plugin on Magento\Catalog\Model\ProductRepository::delete
@@ -61,11 +62,11 @@ class DeleteSourceItemsAfterProductDeletingPlugin
      * @param $subject
      * @param callable $proceed
      * @param ProductInterface $product
-     * @return void
+     * @return bool
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundDelete($subject, callable $proceed, ProductInterface $product)
+    public function aroundDelete(ProductRepository $subject, callable $proceed, ProductInterface $product)
     {
         $connection = $this->resourceConnection->getConnection();
         $connection->beginTransaction();
@@ -76,6 +77,7 @@ class DeleteSourceItemsAfterProductDeletingPlugin
             $this->deleteSourceItemsByProductSku($sku);
 
             $connection->commit();
+            return true;
         } catch (\Exception $e) {
             $connection->rollBack();
             throw $e;
