@@ -15,6 +15,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
+ *
  */
 class StockStatusFilter
 {
@@ -61,6 +62,7 @@ class StockStatusFilter
      * @param string $type
      * @param bool $showOutOfStockFlag
      * @return Select
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundApply(
         OriginStockStatusFilter $subject,
