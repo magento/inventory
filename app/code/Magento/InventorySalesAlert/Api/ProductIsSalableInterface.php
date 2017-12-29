@@ -21,14 +21,14 @@ interface ProductIsSalableInterface
 {
     /**
      * @param ProductInterface $product
-     * @param int              $websiteCode
+     * @param string           $websiteCode
      * @param string           $salesChannel
      *
      * @return bool
      */
     public function isSalable(
         ProductInterface $product,
-        int $websiteCode = null,
+        string $websiteCode,
         string $salesChannel = SalesChannelInterface::TYPE_WEBSITE
     ): bool;
 }

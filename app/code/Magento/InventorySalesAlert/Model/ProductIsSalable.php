@@ -13,6 +13,7 @@ use Magento\InventorySales\Model\StockResolver;
 use Magento\InventoryApi\Api\IsProductInStockInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\Inventory\Model\IsProductInStock;
 
 class ProductIsSalable implements ProductIsSalableInterface
 {
@@ -49,13 +50,13 @@ class ProductIsSalable implements ProductIsSalableInterface
      */
     public function isSalable(
         ProductInterface $product,
-        int $websiteCode = null,
+        string $websiteCode,
         string $salesChannel = SalesChannelInterface::TYPE_WEBSITE
     ): bool
     {
         $stock = $this->stockResolver->get($salesChannel, $websiteCode);
         if ($stock->getId()) {
-            return $this->stockItem->execute($product->getSku(), $stock->getStockId());
+            return $this->stockItem->execute($product->getSku(), (int) $stock->getStockId());
         }
         return false;
     }

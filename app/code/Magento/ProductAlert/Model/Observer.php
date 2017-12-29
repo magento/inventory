@@ -358,7 +358,7 @@ class Observer
 
                     $product->setCustomerGroupId($customer->getGroupId());
 
-                    if ($this->productIsSalable->isSalable($product)) {
+                    if ($this->productIsSalable->isSalable($product, $website->getCode())) {
                         $email->addStockProduct($product);
 
                         $alert->setSendDate($this->dateFactory->create()->gmtDate());
