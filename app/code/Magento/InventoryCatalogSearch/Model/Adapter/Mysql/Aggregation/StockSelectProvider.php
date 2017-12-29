@@ -10,11 +10,16 @@ namespace Magento\InventoryCatalogSearch\Model\Adapter\Mysql\Aggregation;
 use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\StockSelectProviderInterface;
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilterInterface;
 use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\DB\Select;
 use Magento\CatalogInventory\Model\Stock;
+use Magento\Store\Model\ScopeInterface;
 
+/**
+ * MSI implementation for StockSelectProviderInterface
+ */
 class StockSelectProvider implements StockSelectProviderInterface
 {
     /**
@@ -33,18 +38,26 @@ class StockSelectProvider implements StockSelectProviderInterface
     private $stockStatusFilter;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * @param ResourceConnection $resource
      * @param ScopeResolverInterface $scopeResolver
      * @param StockStatusFilterInterface $stockStatusFilter
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         ResourceConnection $resource,
         ScopeResolverInterface $scopeResolver,
-        StockStatusFilterInterface $stockStatusFilter
+        StockStatusFilterInterface $stockStatusFilter,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->resource = $resource;
         $this->scopeResolver = $scopeResolver;
         $this->stockStatusFilter = $stockStatusFilter;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -86,9 +99,20 @@ class StockSelectProvider implements StockSelectProviderInterface
             $subSelect,
             Stock::STOCK_IN_STOCK,
             StockStatusFilterInterface::FILTER_JUST_SUB_PRODUCTS,
-            false
+            $this->isShowOutOfStock()
         );
 
         return $subSelect;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isShowOutOfStock()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'cataloginventory/options/show_out_of_stock',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 }
