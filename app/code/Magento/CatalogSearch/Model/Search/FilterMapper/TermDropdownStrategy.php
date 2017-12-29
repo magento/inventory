@@ -97,7 +97,7 @@ class TermDropdownStrategy implements FilterStrategyInterface
             []
         );
         if ($this->isAddStockFilter()) {
-          $this->joinProvider->get($select, $alias);
+          $this->joinProvider->add($select, $alias);
         }
 
         return true;
