@@ -14,7 +14,6 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-
 /**
  */
 class StockStatusFilter
