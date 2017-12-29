@@ -7,6 +7,7 @@
 namespace Magento\CatalogSearch\Test\Unit\Model\Adapter\Mysql\Aggregation;
 
 use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\DataProvider;
+use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\StockSelectProviderInterface;
 use Magento\Eav\Model\Config;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\ResourceConnection;
@@ -55,6 +56,11 @@ class DataProviderTest extends \PHPUnit\Framework\TestCase
      */
     private $adapterMock;
 
+    /**
+     * @var StockSelectProviderInterface | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $selectProvider;
+
     protected function setUp()
     {
         $this->eavConfigMock = $this->createMock(Config::class);
@@ -62,13 +68,15 @@ class DataProviderTest extends \PHPUnit\Framework\TestCase
         $this->scopeResolverMock = $this->createMock(ScopeResolverInterface::class);
         $this->sessionMock = $this->createMock(Session::class);
         $this->adapterMock = $this->createMock(AdapterInterface::class);
+        $this->selectProvider  = $this->createMock(StockSelectProviderInterface::class);
         $this->resourceConnectionMock->expects($this->once())->method('getConnection')->willReturn($this->adapterMock);
 
         $this->model = new DataProvider(
             $this->eavConfigMock,
             $this->resourceConnectionMock,
             $this->scopeResolverMock,
-            $this->sessionMock
+            $this->sessionMock,
+            $this->selectProvider
         );
     }
 

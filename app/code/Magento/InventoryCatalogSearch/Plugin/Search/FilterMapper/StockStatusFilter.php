@@ -16,8 +16,8 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-
 /**
+ *
  */
 class StockStatusFilter
 {
@@ -67,9 +67,13 @@ class StockStatusFilter
      * @param array $stockValues
      * @param string $type
      * @param bool $showOutOfStockFlag
+     *
      * @return Select
+     *
      * @throws \InvalidArgumentException
      * @throws LocalizedException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundApply(
         OriginStockStatusFilter $subject,
