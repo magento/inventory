@@ -10,27 +10,19 @@ namespace Magento\InventoryCatalogSearch\Plugin\Search\FilterMapper;
 use Magento\Framework\DB\Select;
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter as OriginStockStatusFilter;
 use Magento\Framework\Search\Adapter\Mysql\ConditionManager;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\Store\Model\StoreManagerInterface;
+
 
 /**
- * @inheritdoc
  */
 class StockStatusFilter
 {
     /**
-     * Defines strategy of how filter should be applied
      *
-     * Stock status filter will be applied only on parent products
-     * (e.g. only for configurable products, without options)
      */
-    const FILTER_JUST_ENTITY = 'general_filter';
-
-    /**
-     * Defines strategy of how filter should be applied
-     *
-     * Stock status filter will be applied on parent products with its child
-     * (e.g. for configurable products and options)
-     */
-    const FILTER_ENTITY_AND_SUB_PRODUCTS = 'filter_with_sub_products';
+    const STOCK_TABLE_BASE_NAME =  'inventory_stock_stock_';
 
     /**
      * @var ConditionManager
@@ -38,13 +30,28 @@ class StockStatusFilter
     private $conditionManager;
 
     /**
-     * StockStatusFilter constructor.
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param ConditionManager $conditionManager
+     * @param StoreManagerInterface $storeManager
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        ConditionManager $conditionManager
+        ConditionManager $conditionManager,
+        StoreManagerInterface $storeManager,
+        StockResolverInterface $stockResolver
     ) {
         $this->conditionManager = $conditionManager;
+        $this->storeManager = $storeManager;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
@@ -56,7 +63,7 @@ class StockStatusFilter
      * @param bool $showOutOfStockFlag
      * @return Select
      */
-    public function arroundApply(
+    public function aroundApply(
         OriginStockStatusFilter $subject,
         callable $proceed,
         Select $select,
@@ -64,7 +71,10 @@ class StockStatusFilter
         $type,
         $showOutOfStockFlag
     ) {
-        if ($type !== self::FILTER_JUST_ENTITY && $type !== self::FILTER_ENTITY_AND_SUB_PRODUCTS) {
+
+        if ($type !== OriginStockStatusFilter::FILTER_JUST_ENTITY &&
+            $type !== OriginStockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
+        ) {
             throw new \InvalidArgumentException(sprintf('Invalid filter type: %s', $type));
         }
 
@@ -97,7 +107,7 @@ class StockStatusFilter
     private function addInventoryStockJoin(Select $select, $showOutOfStockFlag)
     {
         $select->joinInner(
-            ['stock_index' => 'inventory_stock_stock_2'],
+            ['stock_index' => $this->getStockTableName()],
             'stock_index.sku = product.sku',
             []
         );
@@ -109,5 +119,37 @@ class StockStatusFilter
                 0
             ));
         }
+    }
+
+    /*
+     * @return string
+     */
+    private function getStockTableName(): string
+    {
+        $website = $this->storeManager->getWebsite();
+        $stock = $this->stockResolver->get(
+            SalesChannelInterface::TYPE_WEBSITE,
+            $website->getCode()
+        );
+
+        return self::STOCK_TABLE_BASE_NAME . $stock->getStockId();
+    }
+
+    /**
+     * Extracts alias for table that is used in FROM clause in Select
+     *
+     * @param Select $select
+     * @return string|null
+     */
+    private function extractTableAliasFromSelect(Select $select)
+    {
+        $fromArr = array_filter(
+            $select->getPart(Select::FROM),
+            function ($fromPart) {
+                return $fromPart['joinType'] === Select::FROM;
+            }
+        );
+
+        return $fromArr ? array_keys($fromArr)[0] : null;
     }
 }
