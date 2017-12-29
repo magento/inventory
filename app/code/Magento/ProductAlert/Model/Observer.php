@@ -14,9 +14,8 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 use Magento\Framework\Translate\Inline\StateInterface;
-use Magento\Inventory\Model\IsProductInStock;
-use Magento\InventorySales\Model\StockResolver;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesAlert\Api\ProductIsSalableInterface;
+use Magento\InventorySalesAlert\Api\SalesChannelInterface;
 use Magento\ProductAlert\Model\Email;
 use Magento\ProductAlert\Model\EmailFactory;
 use Magento\ProductAlert\Model\ResourceModel\Price\CollectionFactory;
@@ -134,14 +133,9 @@ class Observer
     private $inlineTranslation;
 
     /**
-     * @var \Magento\Inventory\Model\IsProductInStock
+     * @var \Magento\InventorySalesAlert\Api\ProductIsSalableInterface
      */
-    private $stockItem;
-
-    /**
-     * @var \Magento\InventorySales\Model\StockResolver
-     */
-    private $stockResolver;
+    private $productIsSalable;
 
 
     /**
@@ -156,8 +150,7 @@ class Observer
      * @param \Magento\Framework\Mail\Template\TransportBuilder                 $transportBuilder
      * @param \Magento\ProductAlert\Model\EmailFactory                          $emailFactory
      * @param \Magento\Framework\Translate\Inline\StateInterface                $inlineTranslation
-     * @param \Magento\Inventory\Model\IsProductInStock                         $stockItem
-     * @param \Magento\InventorySales\Model\StockResolver                       $stockResolver
+     * @param \Magento\InventorySalesAlert\Api\ProductIsSalableInterface        $productIsSalable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -172,8 +165,7 @@ class Observer
         TransportBuilder $transportBuilder,
         EmailFactory $emailFactory,
         StateInterface $inlineTranslation,
-        IsProductInStock $stockItem,
-        StockResolver $stockResolver
+        ProductIsSalableInterface $productIsSalable
     ) {
         $this->catalogData        = $catalogData;
         $this->scopeConfig        = $scopeConfig;
@@ -186,8 +178,7 @@ class Observer
         $this->transportBuilder   = $transportBuilder;
         $this->emailFactory       = $emailFactory;
         $this->inlineTranslation  = $inlineTranslation;
-        $this->stockItem          = $stockItem ?: ObjectManager::getInstance()->get(IsProductInStock::class);
-        $this->stockResolver      = $stockResolver ?: ObjectManager::getInstance()->get(StockResolver::class);
+        $this->productIsSalable   = $productIsSalable;
     }
 
     /**
@@ -366,9 +357,8 @@ class Observer
                     );
 
                     $product->setCustomerGroupId($customer->getGroupId());
-                    $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
 
-                    if ($this->stockItem->execute($product->getSku(), $stock->getStockId())) {
+                    if ($this->productIsSalable->isSalable($product)) {
                         $email->addStockProduct($product);
 
                         $alert->setSendDate($this->dateFactory->create()->gmtDate());
