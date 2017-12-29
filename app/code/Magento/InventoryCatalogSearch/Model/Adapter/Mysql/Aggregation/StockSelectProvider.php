@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogSearch\Model\Adapter\Mysql\Aggregation;
 
 use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\StockSelectProviderInterface;
+use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilterInterface;
 use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ScopeResolverInterface;
@@ -27,15 +28,23 @@ class StockSelectProvider implements StockSelectProviderInterface
     private $scopeResolver;
 
     /**
+     * @var StockStatusFilterInterface
+     */
+    private $stockStatusFilter;
+
+    /**
      * @param ResourceConnection $resource
      * @param ScopeResolverInterface $scopeResolver
+     * @param StockStatusFilterInterface $stockStatusFilter
      */
     public function __construct(
         ResourceConnection $resource,
-        ScopeResolverInterface $scopeResolver
+        ScopeResolverInterface $scopeResolver,
+        StockStatusFilterInterface $stockStatusFilter
     ) {
         $this->resource = $resource;
         $this->scopeResolver = $scopeResolver;
+        $this->stockStatusFilter = $stockStatusFilter;
     }
 
     /**
@@ -56,25 +65,30 @@ class StockSelectProvider implements StockSelectProviderInterface
      * @param AbstractAttribute $attribute
      * @param Select $select
      * @return Select
+     * @throws \InvalidArgumentException
      */
     private function getSubSelect(int $currentScope, AbstractAttribute $attribute, Select $select): Select
     {
         $currentScopeId = $this->scopeResolver->getScope($currentScope)
             ->getId();
+
         $table = $this->resource->getTableName(
             'catalog_product_index_eav' . ($attribute->getBackendType() === 'decimal' ? '_decimal' : '')
         );
+
         $subSelect = $select;
         $subSelect->from(['main_table' => $table], ['main_table.entity_id', 'main_table.value'])
             ->distinct()
-            ->joinLeft(
-                ['stock_index' => $this->resource->getTableName('cataloginventory_stock_status')],
-                'main_table.source_id = stock_index.product_id',
-                []
-            )
             ->where('main_table.attribute_id = ?', $attribute->getAttributeId())
-            ->where('main_table.store_id = ? ', $currentScopeId)
-            ->where('stock_index.stock_status = ?', Stock::STOCK_IN_STOCK);
+            ->where('main_table.store_id = ? ', $currentScopeId);
+
+        $subSelect = $this->stockStatusFilter->apply(
+            $subSelect,
+            Stock::STOCK_IN_STOCK,
+            StockStatusFilterInterface::FILTER_JUST_SUB_PRODUCTS,
+            false
+        );
+
         return $subSelect;
     }
 }

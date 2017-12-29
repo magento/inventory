@@ -15,6 +15,7 @@
     <preference for="Magento\CatalogSearch\Model\Indexer\IndexSwitcherInterface" type="Magento\CatalogSearch\Model\Indexer\IndexSwitcherProxy"/>
     <preference for="Magento\CatalogSearch\Model\Adapter\Aggregation\RequestCheckerInterface" type="Magento\CatalogSearch\Model\Adapter\Aggregation\RequestCheckerComposite"/>
     <preference for="Magento\CatalogSearch\Model\Search\FilterMapper\StockJoinProviderInterface" type="Magento\CatalogSearch\Model\Search\FilterMapper\StockJoinProvider"/>
+    <preference for="Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilterInterface" type="\Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter"/>
 
     <type name="Magento\CatalogSearch\Model\Indexer\IndexerHandlerFactory">
         <arguments>
