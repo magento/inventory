@@ -5,20 +5,19 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog;
+namespace Magento\InventoryCatalog\Observer;
 
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Event\Observer as EventObserver;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\Inventory\Model\SourceItem\Command\SourceItemsDelete as SourceItemsDeleteCommand;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\ProductRepository;
 
 /**
- * Class provides around Plugin on Magento\Catalog\Model\ProductRepository::delete
- * to delete source items of deleted product
+ * Delete source items related to product after product deleting
  */
-class DeleteSourceItemsAfterProductDeletingPlugin
+class DeleteSourceItemsAfterProductDeletingObserver implements ObserverInterface
 {
     /**
      * @var SourceItemRepositoryInterface
@@ -36,50 +35,35 @@ class DeleteSourceItemsAfterProductDeletingPlugin
     private $searchCriteriaBuilder;
 
     /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
+     * DeleteSourceItemsAfterProductDeletingObserver constructor.
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SourceItemsDeleteCommand $sourceItemsDeleteCommand
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
         SourceItemsDeleteCommand $sourceItemsDeleteCommand,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        ResourceConnection $resourceConnection
-    ) {
+        SearchCriteriaBuilder $searchCriteriaBuilder
+    )
+    {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->sourceItemsDeleteCommand = $sourceItemsDeleteCommand;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->resourceConnection = $resourceConnection;
     }
 
     /**
-     * @param $subject
-     * @param callable $proceed
-     * @param ProductInterface $product
-     * @return bool
+     * @param EventObserver $observer
+     * @return void
      * @throws \Exception
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundDelete(ProductRepository $subject, callable $proceed, ProductInterface $product)
+    public function execute(EventObserver $observer)
     {
-        $connection = $this->resourceConnection->getConnection();
-        $connection->beginTransaction();
-
         try {
+            /** @var ProductInterface $product */
+            $product = $observer->getEvent()->getProduct();
             $sku = $product->getSku();
-            $proceed($product);
             $this->deleteSourceItemsByProductSku($sku);
-
-            $connection->commit();
-            return true;
         } catch (\Exception $e) {
-            $connection->rollBack();
             throw $e;
         }
     }
@@ -87,6 +71,8 @@ class DeleteSourceItemsAfterProductDeletingPlugin
     /**
      * @param string $sku
      * @return void
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
     private function deleteSourceItemsByProductSku($sku)
     {
