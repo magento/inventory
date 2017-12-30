@@ -44,8 +44,7 @@ class DeleteSourceItemsAfterProductDeletingObserver implements ObserverInterface
         SourceItemRepositoryInterface $sourceItemRepository,
         SourceItemsDeleteCommand $sourceItemsDeleteCommand,
         SearchCriteriaBuilder $searchCriteriaBuilder
-    )
-    {
+    ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->sourceItemsDeleteCommand = $sourceItemsDeleteCommand;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;

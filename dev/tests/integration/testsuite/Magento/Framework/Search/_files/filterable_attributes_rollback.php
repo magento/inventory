@@ -9,6 +9,7 @@ use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\Catalog\Setup\CategorySetup;
 use Magento\Framework\Registry;
 use Magento\TestFramework\Helper\Bootstrap;
+
 $objectManager = Bootstrap::getObjectManager();
 $registry = $objectManager->get(Registry::class);
 $registry->unregister('isSecureArea');
