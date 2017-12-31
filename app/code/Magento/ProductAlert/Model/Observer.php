@@ -3,7 +3,26 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\ProductAlert\Model;
+
+use Magento\Backend\App\Area\FrontNameResolver;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Helper\Data;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
+use Magento\Framework\Translate\Inline\StateInterface;
+use Magento\InventorySalesAlert\Api\ProductIsSalableInterface;
+use Magento\InventorySalesAlert\Api\SalesChannelInterface;
+use Magento\ProductAlert\Model\Email;
+use Magento\ProductAlert\Model\EmailFactory;
+use Magento\ProductAlert\Model\ResourceModel\Price\CollectionFactory;
+use Magento\ProductAlert\Model\ResourceModel\Stock\CollectionFactory as StockCollectionFactory;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * ProductAlert observer
@@ -45,112 +64,121 @@ class Observer
      *
      * @var array
      */
-    protected $_websites;
+    private $websites;
 
     /**
      * Warning (exception) errors array
      *
      * @var array
      */
-    protected $_errors = [];
+    private $errors = [];
 
     /**
      * Catalog data
      *
      * @var \Magento\Catalog\Helper\Data
      */
-    protected $_catalogData = null;
+    private $catalogData = null;
 
     /**
      * Core store config
      *
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    private $scopeConfig;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    protected $_storeManager;
+    private $storeManager;
 
     /**
-     * @var \Magento\ProductAlert\Model\ResourceModel\Price\CollectionFactory
+     * @var CollectionFactory
      */
-    protected $_priceColFactory;
+    private $priceColFactory;
 
     /**
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
-    protected $customerRepository;
+    private $customerRepository;
 
     /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
      */
-    protected $productRepository;
+    private $productRepository;
 
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTimeFactory
      */
-    protected $_dateFactory;
+    private $dateFactory;
 
     /**
      * @var \Magento\ProductAlert\Model\ResourceModel\Stock\CollectionFactory
      */
-    protected $_stockColFactory;
+    private $stockColFactory;
 
     /**
      * @var \Magento\Framework\Mail\Template\TransportBuilder
      */
-    protected $_transportBuilder;
+    private $transportBuilder;
 
     /**
      * @var \Magento\ProductAlert\Model\EmailFactory
      */
-    protected $_emailFactory;
+    private $emailFactory;
 
     /**
      * @var \Magento\Framework\Translate\Inline\StateInterface
      */
-    protected $inlineTranslation;
+    private $inlineTranslation;
 
     /**
-     * @param \Magento\Catalog\Helper\Data $catalogData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @var \Magento\InventorySalesAlert\Api\ProductIsSalableInterface
+     */
+    private $productIsSalable;
+
+
+    /**
+     * @param \Magento\Catalog\Helper\Data                                      $catalogData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface                $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface                        $storeManager
      * @param \Magento\ProductAlert\Model\ResourceModel\Price\CollectionFactory $priceColFactory
-     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
-     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
-     * @param \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateFactory
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface                 $customerRepository
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface                   $productRepository
+     * @param \Magento\Framework\Stdlib\DateTime\DateTimeFactory                $dateFactory
      * @param \Magento\ProductAlert\Model\ResourceModel\Stock\CollectionFactory $stockColFactory
-     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
-     * @param \Magento\ProductAlert\Model\EmailFactory $emailFactory
-     * @param \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
+     * @param \Magento\Framework\Mail\Template\TransportBuilder                 $transportBuilder
+     * @param \Magento\ProductAlert\Model\EmailFactory                          $emailFactory
+     * @param \Magento\Framework\Translate\Inline\StateInterface                $inlineTranslation
+     * @param \Magento\InventorySalesAlert\Api\ProductIsSalableInterface        $productIsSalable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        \Magento\Catalog\Helper\Data $catalogData,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\ProductAlert\Model\ResourceModel\Price\CollectionFactory $priceColFactory,
-        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateFactory,
-        \Magento\ProductAlert\Model\ResourceModel\Stock\CollectionFactory $stockColFactory,
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
-        \Magento\ProductAlert\Model\EmailFactory $emailFactory,
-        \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
+        Data $catalogData,
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager,
+        CollectionFactory $priceColFactory,
+        CustomerRepositoryInterface $customerRepository,
+        ProductRepositoryInterface $productRepository,
+        DateTimeFactory $dateFactory,
+        StockCollectionFactory $stockColFactory,
+        TransportBuilder $transportBuilder,
+        EmailFactory $emailFactory,
+        StateInterface $inlineTranslation,
+        ProductIsSalableInterface $productIsSalable
     ) {
-        $this->_catalogData = $catalogData;
-        $this->_scopeConfig = $scopeConfig;
-        $this->_storeManager = $storeManager;
-        $this->_priceColFactory = $priceColFactory;
+        $this->catalogData        = $catalogData;
+        $this->scopeConfig        = $scopeConfig;
+        $this->storeManager       = $storeManager;
+        $this->priceColFactory    = $priceColFactory;
         $this->customerRepository = $customerRepository;
-        $this->productRepository = $productRepository;
-        $this->_dateFactory = $dateFactory;
-        $this->_stockColFactory = $stockColFactory;
-        $this->_transportBuilder = $transportBuilder;
-        $this->_emailFactory = $emailFactory;
-        $this->inlineTranslation = $inlineTranslation;
+        $this->productRepository  = $productRepository;
+        $this->dateFactory        = $dateFactory;
+        $this->stockColFactory    = $stockColFactory;
+        $this->transportBuilder   = $transportBuilder;
+        $this->emailFactory       = $emailFactory;
+        $this->inlineTranslation  = $inlineTranslation;
+        $this->productIsSalable   = $productIsSalable;
     }
 
     /**
@@ -161,27 +189,29 @@ class Observer
      */
     protected function _getWebsites()
     {
-        if ($this->_websites === null) {
+        if ($this->websites === null) {
             try {
-                $this->_websites = $this->_storeManager->getWebsites();
+                $this->websites = $this->storeManager->getWebsites();
             } catch (\Exception $e) {
-                $this->_errors[] = $e->getMessage();
+                $this->errors[] = $e->getMessage();
                 throw $e;
             }
         }
-        return $this->_websites;
+
+        return $this->websites;
     }
 
     /**
      * Process price emails
      *
      * @param \Magento\ProductAlert\Model\Email $email
+     *
      * @return $this
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function _processPrice(\Magento\ProductAlert\Model\Email $email)
+    protected function _processPrice(Email $email): Observer
     {
         $email->setType('price');
         foreach ($this->_getWebsites() as $website) {
@@ -189,20 +219,20 @@ class Observer
             if (!$website->getDefaultGroup() || !$website->getDefaultGroup()->getDefaultStore()) {
                 continue;
             }
-            if (!$this->_scopeConfig->getValue(
+            if (!$this->scopeConfig->getValue(
                 self::XML_PATH_PRICE_ALLOW,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                ScopeInterface::SCOPE_STORE,
                 $website->getDefaultGroup()->getDefaultStore()->getId()
             )
             ) {
                 continue;
             }
             try {
-                $collection = $this->_priceColFactory->create()->addWebsiteFilter(
+                $collection = $this->priceColFactory->create()->addWebsiteFilter(
                     $website->getId()
                 )->setCustomerOrder();
             } catch (\Exception $e) {
-                $this->_errors[] = $e->getMessage();
+                $this->errors[] = $e->getMessage();
                 throw $e;
             }
 
@@ -234,18 +264,18 @@ class Observer
                     $product->setCustomerGroupId($customer->getGroupId());
                     if ($alert->getPrice() > $product->getFinalPrice()) {
                         $productPrice = $product->getFinalPrice();
-                        $product->setFinalPrice($this->_catalogData->getTaxPrice($product, $productPrice));
-                        $product->setPrice($this->_catalogData->getTaxPrice($product, $product->getPrice()));
+                        $product->setFinalPrice($this->catalogData->getTaxPrice($product, $productPrice));
+                        $product->setPrice($this->catalogData->getTaxPrice($product, $product->getPrice()));
                         $email->addPriceProduct($product);
 
                         $alert->setPrice($productPrice);
-                        $alert->setLastSendDate($this->_dateFactory->create()->gmtDate());
+                        $alert->setLastSendDate($this->dateFactory->create()->gmtDate());
                         $alert->setSendCount($alert->getSendCount() + 1);
                         $alert->setStatus(1);
                         $alert->save();
                     }
                 } catch (\Exception $e) {
-                    $this->_errors[] = $e->getMessage();
+                    $this->errors[] = $e->getMessage();
                     throw $e;
                 }
             }
@@ -253,11 +283,12 @@ class Observer
                 try {
                     $email->send();
                 } catch (\Exception $e) {
-                    $this->_errors[] = $e->getMessage();
+                    $this->errors[] = $e->getMessage();
                     throw $e;
                 }
             }
         }
+
         return $this;
     }
 
@@ -265,12 +296,13 @@ class Observer
      * Process stock emails
      *
      * @param \Magento\ProductAlert\Model\Email $email
+     *
      * @return $this
      * @throws \Exception
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    protected function _processStock(\Magento\ProductAlert\Model\Email $email)
+    protected function _processStock(Email $email): Observer
     {
         $email->setType('stock');
 
@@ -280,22 +312,22 @@ class Observer
             if (!$website->getDefaultGroup() || !$website->getDefaultGroup()->getDefaultStore()) {
                 continue;
             }
-            if (!$this->_scopeConfig->getValue(
+            if (!$this->scopeConfig->getValue(
                 self::XML_PATH_STOCK_ALLOW,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                ScopeInterface::SCOPE_STORE,
                 $website->getDefaultGroup()->getDefaultStore()->getId()
             )
             ) {
                 continue;
             }
             try {
-                $collection = $this->_stockColFactory->create()->addWebsiteFilter(
+                $collection = $this->stockColFactory->create()->addWebsiteFilter(
                     $website->getId()
                 )->addStatusFilter(
                     0
                 )->setCustomerOrder();
             } catch (\Exception $e) {
-                $this->_errors[] = $e->getMessage();
+                $this->errors[] = $e->getMessage();
                 throw $e;
             }
 
@@ -326,16 +358,16 @@ class Observer
 
                     $product->setCustomerGroupId($customer->getGroupId());
 
-                    if ($product->isSalable()) {
+                    if ($this->productIsSalable->isSalable($product, $website->getCode())) {
                         $email->addStockProduct($product);
 
-                        $alert->setSendDate($this->_dateFactory->create()->gmtDate());
+                        $alert->setSendDate($this->dateFactory->create()->gmtDate());
                         $alert->setSendCount($alert->getSendCount() + 1);
                         $alert->setStatus(1);
                         $alert->save();
                     }
                 } catch (\Exception $e) {
-                    $this->_errors[] = $e->getMessage();
+                    $this->errors[] = $e->getMessage();
                     throw $e;
                 }
             }
@@ -344,7 +376,7 @@ class Observer
                 try {
                     $email->send();
                 } catch (\Exception $e) {
-                    $this->_errors[] = $e->getMessage();
+                    $this->errors[] = $e->getMessage();
                     throw $e;
                 }
             }
@@ -357,13 +389,14 @@ class Observer
      * Send email to administrator if error
      *
      * @return $this
+     * @throws \Magento\Framework\Exception\MailException
      */
-    protected function _sendErrorEmail()
+    protected function _sendErrorEmail(): Observer
     {
-        if (count($this->_errors)) {
-            if (!$this->_scopeConfig->getValue(
+        if (count($this->errors)) {
+            if (!$this->scopeConfig->getValue(
                 self::XML_PATH_ERROR_TEMPLATE,
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ScopeInterface::SCOPE_STORE
             )
             ) {
                 return $this;
@@ -371,35 +404,36 @@ class Observer
 
             $this->inlineTranslation->suspend();
 
-            $transport = $this->_transportBuilder->setTemplateIdentifier(
-                $this->_scopeConfig->getValue(
+            $transport = $this->transportBuilder->setTemplateIdentifier(
+                $this->scopeConfig->getValue(
                     self::XML_PATH_ERROR_TEMPLATE,
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ScopeInterface::SCOPE_STORE
                 )
             )->setTemplateOptions(
                 [
-                    'area' => \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE,
-                    'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
+                    'area'  => FrontNameResolver::AREA_CODE,
+                    'store' => Store::DEFAULT_STORE_ID,
                 ]
             )->setTemplateVars(
-                ['warnings' => join("\n", $this->_errors)]
+                ['warnings' => join("\n", $this->errors)]
             )->setFrom(
-                $this->_scopeConfig->getValue(
+                $this->scopeConfig->getValue(
                     self::XML_PATH_ERROR_IDENTITY,
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ScopeInterface::SCOPE_STORE
                 )
             )->addTo(
-                $this->_scopeConfig->getValue(
+                $this->scopeConfig->getValue(
                     self::XML_PATH_ERROR_RECIPIENT,
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ScopeInterface::SCOPE_STORE
                 )
             )->getTransport();
 
             $transport->sendMessage();
 
             $this->inlineTranslation->resume();
-            $this->_errors[] = [];
+            $this->errors[] = [];
         }
+
         return $this;
     }
 
@@ -407,11 +441,13 @@ class Observer
      * Run process send product alerts
      *
      * @return $this
+     * @throws \Exception
+     * @throws \Magento\Framework\Exception\MailException
      */
     public function process()
     {
-        /* @var $email \Magento\ProductAlert\Model\Email */
-        $email = $this->_emailFactory->create();
+        /* @var $email Email */
+        $email = $this->emailFactory->create();
         $this->_processPrice($email);
         $this->_processStock($email);
         $this->_sendErrorEmail();
