@@ -108,7 +108,7 @@ class StockSelectProvider implements StockSelectProviderInterface
     /**
      * @return bool
      */
-    private function isShowOutOfStock()
+    private function isShowOutOfStock(): bool
     {
         return $this->scopeConfig->isSetFlag(
             'cataloginventory/options/show_out_of_stock',

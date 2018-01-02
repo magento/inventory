@@ -10,6 +10,7 @@ use Magento\Framework\DB\Select;
 
 /**
  * Allow to use different stock query (Service Provider Interface - SPI)
+ * @api
  */
 interface StockSelectProviderInterface
 {

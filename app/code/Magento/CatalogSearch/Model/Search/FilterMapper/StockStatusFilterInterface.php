@@ -10,6 +10,7 @@ use Magento\Framework\DB\Select;
 
 /**
  * Adds filter by stock status to base select (SPI)
+ * @api
  */
 interface StockStatusFilterInterface
 {
