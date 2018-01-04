@@ -7,7 +7,7 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Backend\Block\Context;
-use Magento\InventorySales\Model\StockResolver;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
@@ -20,7 +20,7 @@ class Stock extends AbstractRenderer
     private $_storeManager;
 
     /**
-     * @var StockResolver
+     * @var StockResolverInterface
      */
     private $stockResolver;
 
@@ -32,14 +32,14 @@ class Stock extends AbstractRenderer
     /**
      * @param Context $context
      * @param StoreManagerInterface $storeManager
-     * @param StockResolver $stockResolver
+     * @param StockResolverInterface $stockResolver
      * @param ManagerInterface $messageManager
      * @param array $data
      */
     public function __construct(
         Context $context,
         StoreManagerInterface $storeManager,
-        StockResolver $stockResolver,
+        StockResolverInterface $stockResolver,
         ManagerInterface $messageManager,
         array $data = []
     )
