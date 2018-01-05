@@ -14,6 +14,11 @@ use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\Framework\Math\Division as MathDivision;
 use Magento\Framework\DataObject\Factory as ObjectFactory;
+use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
 
 /**
  * Interface StockStateProvider
@@ -46,10 +51,34 @@ class StockStateProvider implements StockStateProviderInterface
     protected $qtyCheckApplicable;
 
     /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var GetSkusByProductIdsInterface
+     */
+    private $getSkusByProductIds;
+
+    /**
+     * @var GetProductQuantityInStockInterface
+     */
+    private $getProductQuantityInStock;
+
+    /**
      * @param MathDivision $mathDivision
      * @param FormatInterface $localeFormat
      * @param ObjectFactory $objectFactory
      * @param ProductFactory $productFactory
+     * @param StockResolverInterface $stockResolver
+     * @param StoreManagerInterface $storeManager
+     * @param GetProductQuantityInStockInterface $getProductQuantityInStock
+     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param bool $qtyCheckApplicable
      */
     public function __construct(
@@ -57,6 +86,10 @@ class StockStateProvider implements StockStateProviderInterface
         FormatInterface $localeFormat,
         ObjectFactory $objectFactory,
         ProductFactory $productFactory,
+        StockResolverInterface $stockResolver,
+        StoreManagerInterface $storeManager,
+        GetProductQuantityInStockInterface $getProductQuantityInStock,
+        GetSkusByProductIdsInterface $getSkusByProductIds,
         $qtyCheckApplicable = true
     ) {
         $this->mathDivision = $mathDivision;
@@ -64,6 +97,10 @@ class StockStateProvider implements StockStateProviderInterface
         $this->objectFactory = $objectFactory;
         $this->productFactory = $productFactory;
         $this->qtyCheckApplicable = $qtyCheckApplicable;
+        $this->stockResolver = $stockResolver;
+        $this->storeManager = $storeManager;
+        $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->getProductQuantityInStock = $getProductQuantityInStock;
     }
 
     /**
@@ -241,7 +278,15 @@ class StockStateProvider implements StockStateProviderInterface
         if (!$stockItem->getManageStock()) {
             return true;
         }
-        if ($stockItem->getQty() - $stockItem->getMinQty() - $qty < 0) {
+
+        // Prototype code https://github.com/magento-engcom/msi/issues/372
+        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        $productSku = $this->getSkusByProductIds->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
+        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+
+        $productQty = $this->getProductQuantityInStock->execute($productSku, $stock->getStockId());
+
+        if ($productQty - $stockItem->getMinQty() - $qty < 0) {
             switch ($stockItem->getBackorders()) {
                 case \Magento\CatalogInventory\Model\Stock::BACKORDERS_YES_NONOTIFY:
                 case \Magento\CatalogInventory\Model\Stock::BACKORDERS_YES_NOTIFY:
