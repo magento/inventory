@@ -64,7 +64,7 @@ class GetProductQuantity implements GetProductQuantityInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(StockItemInterface $legacyStockItem): float
+    public function execute(StockItemInterface $legacyStockItem)
     {
         try {
             $websiteCode = $this->storeManager->getWebsite()->getCode();
@@ -81,5 +81,4 @@ class GetProductQuantity implements GetProductQuantityInterface
             return $legacyStockItem->getQty();
         }
     }
-
 }

@@ -18,7 +18,7 @@ interface GetProductQuantityInterface
     /**
      * @param StockItemInterface $legacyStockItem
      *
-     * @return float
+     * @return float|null
      */
-    public function execute(StockItemInterface $legacyStockItem): float;
+    public function execute(StockItemInterface $legacyStockItem);
 }
