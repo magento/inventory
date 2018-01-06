@@ -12,7 +12,7 @@ use Magento\Sales\Api\OrderManagementInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 
-class ReservationPlacingDuringRevertProductsSaleTest extends TestCase
+class ReservationPlacingDuringCancelOrderTest extends TestCase
 {
     /**
      * @var OrderManagementInterface
@@ -38,6 +38,7 @@ class ReservationPlacingDuringRevertProductsSaleTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_link.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_link.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/order.php
      */
     public function testRevertProductsSale()
     {
