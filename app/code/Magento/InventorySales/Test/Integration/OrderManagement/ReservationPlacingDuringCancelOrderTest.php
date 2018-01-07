@@ -11,15 +11,9 @@ use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
 use Magento\Sales\Api\OrderManagementInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\Indexer\Model\Indexer;
-use Magento\Inventory\Indexer\SourceItem\SourceItemIndexer;
 
 class ReservationPlacingDuringCancelOrderTest extends TestCase
 {
-    /**
-     * @var Indexer
-     */
-    private $indexer;
     /**
      * @var OrderManagementInterface
      */
@@ -32,8 +26,6 @@ class ReservationPlacingDuringCancelOrderTest extends TestCase
 
     protected function setUp()
     {
-        $this->indexer = Bootstrap::getObjectManager()->create(Indexer::class);
-        $this->indexer->load(SourceItemIndexer::INDEXER_ID);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
         $this->getProductQtyInStock = Bootstrap::getObjectManager()->get(GetProductQuantityInStockInterface::class);
     }
