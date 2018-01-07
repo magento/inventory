@@ -9,6 +9,7 @@ namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
 use Magento\InventoryApi\Api\AppendReservationsInterface;
 use Magento\InventoryApi\Api\ReservationBuilderInterface;
+use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySales\Model\StockByWebsiteIdResolver;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderManagementInterface;
@@ -37,6 +38,10 @@ class CancelOrderReturnsPlugin
      * @var StockByWebsiteIdResolver
      */
     private $stockByWebsiteIdResolver;
+    /**
+     * @var GetSkusByProductIdsInterface
+     */
+    private $getSkusByProductIds;
 
     /**
      * @param OrderRepositoryInterface $orderRepository
@@ -44,19 +49,22 @@ class CancelOrderReturnsPlugin
      * @param AppendReservationsInterface $appendReservations
      * @param StoreRepositoryInterface $storeRepository
      * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
+     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         ReservationBuilderInterface $reservationBuilder,
         AppendReservationsInterface $appendReservations,
         StoreRepositoryInterface $storeRepository,
-        StockByWebsiteIdResolver $stockByWebsiteIdResolver
+        StockByWebsiteIdResolver $stockByWebsiteIdResolver,
+        GetSkusByProductIdsInterface $getSkusByProductIds
     ) {
         $this->orderRepository = $orderRepository;
         $this->reservationBuilder = $reservationBuilder;
         $this->appendReservations = $appendReservations;
         $this->storeRepository = $storeRepository;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
+        $this->getSkusByProductIds = $getSkusByProductIds;
     }
 
     /**
@@ -75,8 +83,9 @@ class CancelOrderReturnsPlugin
 
             $reservations = [];
             foreach ($orderItems as $orderItem) {
+                $sku = current($this->getSkusByProductIds->execute([$orderItem->getProductId()]));
                 $reservations[] = $this->reservationBuilder
-                    ->setSku($orderItem->getSku())
+                    ->setSku($sku)
                     ->setQuantity((float)$orderItem->getQtyCanceled()[$orderItem->getProductId()])
                     ->setStockId((int)$stockId)
                     ->setMetadata('For returns')
