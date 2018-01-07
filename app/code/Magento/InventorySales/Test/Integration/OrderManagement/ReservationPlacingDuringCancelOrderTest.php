@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Test\Integration\StockManagement;
+namespace Magento\InventorySales\Test\Integration\OrderManagement;
 
 use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
 use Magento\Sales\Api\OrderManagementInterface;
