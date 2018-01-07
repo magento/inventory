@@ -11,9 +11,15 @@ use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
 use Magento\Sales\Api\OrderManagementInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Indexer\Model\Indexer;
+use Magento\Inventory\Indexer\SourceItem\SourceItemIndexer;
 
 class ReservationPlacingDuringCancelOrderTest extends TestCase
 {
+    /**
+     * @var Indexer
+     */
+    private $indexer;
     /**
      * @var OrderManagementInterface
      */
@@ -26,26 +32,24 @@ class ReservationPlacingDuringCancelOrderTest extends TestCase
 
     protected function setUp()
     {
+        $this->indexer = Bootstrap::getObjectManager()->create(Indexer::class);
+        $this->indexer->load(SourceItemIndexer::INDEXER_ID);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
         $this->getProductQtyInStock = Bootstrap::getObjectManager()->get(GetProductQuantityInStockInterface::class);
     }
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_link.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_link.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/order.php
      */
-    public function testRevertProductsSale()
+    public function testCancelOrder()
     {
         $orderId = 1;
-        $stockId = 10;
+        $orderItemSku = 'SKU-1';
+        $stockId = 1;
 
+        self::assertEquals(0, $this->getProductQtyInStock->execute($orderItemSku, $stockId));
         $this->orderManagement->cancel($orderId);
-        self::assertEquals(12, $this->getProductQtyInStock->execute('SKU-1', $stockId));
+        self::assertEquals(12, $this->getProductQtyInStock->execute($orderItemSku, $stockId));
     }
 }

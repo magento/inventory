@@ -5,51 +5,62 @@
  */
 declare(strict_types=1);
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderInterfaceFactory;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\Data\OrderItemInterfaceFactory;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 $objectManager = Bootstrap::getObjectManager();
-/** @var OrderInterfaceFactory $productFactory */
+/** @var OrderInterfaceFactory $orderFactory */
 $orderFactory = $objectManager->get(OrderInterfaceFactory::class);
-/** @var OrderRepositoryInterface $productRepository */
+/** @var OrderRepositoryInterface $orderRepository */
 $orderRepository = $objectManager->get(OrderRepositoryInterface::class);
-/** @var OrderItemInterfaceFactory $productFactory */
+/** @var OrderItemInterfaceFactory $orderItemFactory */
 $orderItemFactory = $objectManager->get(OrderItemInterfaceFactory::class);
-/** @var OrderPaymentInterfaceFactory $productFactory */
-$orderItemFactory = $objectManager->get(OrderPaymentInterfaceFactory::class);
+/** @var OrderPaymentInterfaceFactory $orderPaymentFactory */
+$orderPaymentFactory = $objectManager->get(OrderPaymentInterfaceFactory::class);
+/** @var StoreRepositoryInterface $storeRepository */
+$storeRepository = $objectManager->get(StoreRepositoryInterface::class);
+/** @var ProductRepositoryInterface $productRepository */
+$productRepository = $objectManager->get(ProductRepositoryInterface::class);
 
-$orderItemsData = [
-    [
-        OrderItemInterface::SKU => 'SKU-1',
-        OrderItemInterface::ITEM_ID => 1,
-        OrderItemInterface::ORDER_ID => 1,
-        OrderItemInterface::QTY_ORDERED => 3.5,
-    ],
-    [
-        OrderItemInterface::SKU => 'SKU-2',
-        OrderItemInterface::ITEM_ID => 2,
-        OrderItemInterface::ORDER_ID => 1,
-        OrderItemInterface::QTY_ORDERED => 4,
-    ],
+$product = $productRepository->get('SKU-1');
+$orderItems = [
+    $orderItemFactory->create(
+        [
+            'data' => [
+                OrderItemInterface::SKU => $product->getSku(),
+                OrderItemInterface::PRODUCT_ID => $product->getId(),
+                OrderItemInterface::ITEM_ID => 1,
+                OrderItemInterface::ORDER_ID => 1,
+                OrderItemInterface::QTY_ORDERED => 12,
+            ]
+        ]
+    )
 ];
-$orderItems = [];
-foreach ($orderItemsData as $orderItemsDatum) {
-    $orderItems[] = $orderItemFactory->create(['data' => $orderItemsDatum]);
-}
-
-$orderData = [
+$payment = $orderPaymentFactory->create(
     [
-        OrderInterface::ENTITY_ID => 1,
-        OrderInterface::STATE => 'pending',
-        OrderInterface::STATUS => 'pending',
-        OrderInterface::ITEMS => $orderItems,
-        OrderInterface::PAYMENT => ''
+        'data' => [
+            OrderPaymentInterface::ENTITY_ID => 1,
+            OrderPaymentInterface::METHOD => 'free'
+        ]
     ]
+);
+/** @var \Magento\Store\Api\Data\StoreInterface $store */
+$store = $storeRepository->get('default');
+$orderData = [
+    OrderInterface::ENTITY_ID => 1,
+    OrderInterface::STATE => 'pending',
+    OrderInterface::STATUS => 'pending',
+    OrderInterface::ITEMS => $orderItems,
+    OrderInterface::PAYMENT => $payment,
+    OrderInterface::STORE_ID => $store->getId()
 ];
-$order = $orderFactory->create(['date' => $orderData]);
+$order = $orderFactory->create(['data' => $orderData]);
 $orderRepository->save($order);

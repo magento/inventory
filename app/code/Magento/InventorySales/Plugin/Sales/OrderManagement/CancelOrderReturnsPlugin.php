@@ -68,7 +68,7 @@ class CancelOrderReturnsPlugin
      */
     public function aroundCancel(OrderManagementInterface $subject, callable $proceed, $orderId)
     {
-        if ($proceed()) {
+        if ($proceed($orderId)) {
             $order = $this->orderRepository->get($orderId);
             $stockId = $this->getStockId($order);
             $orderItems = $order->getItems();
@@ -78,7 +78,7 @@ class CancelOrderReturnsPlugin
                 $reservations[] = $this->reservationBuilder
                     ->setSku($orderItem->getSku())
                     ->setQuantity((float)$orderItem->getQtyCanceled()[$orderItem->getProductId()])
-                    ->setStockId($stockId)
+                    ->setStockId((int)$stockId)
                     ->setMetadata('For returns')
                     ->build();
             }
@@ -98,7 +98,7 @@ class CancelOrderReturnsPlugin
     {
         $store = $this->storeRepository->getById($order->getStoreId());
         $websiteId = $store->getWebsiteId();
-        $stock = $this->stockByWebsiteIdResolver->get($websiteId);
+        $stock = $this->stockByWebsiteIdResolver->get((int)$websiteId);
 
         return $stock->getStockId();
     }
