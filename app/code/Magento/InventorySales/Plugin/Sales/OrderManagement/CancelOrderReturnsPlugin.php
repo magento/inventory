@@ -16,6 +16,9 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 
+/**
+ * Class provides around Plugin on \Magento\Sales\Api\OrderManagementInterface::cancel
+ */
 class CancelOrderReturnsPlugin
 {
     /**
