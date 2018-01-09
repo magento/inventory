@@ -16,6 +16,7 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 
 /**
  * Prototype code
+ * Reindex SourceItem after SourceItem has been saved
  */
 class ReindexSourceItemsAfterSourceItemsSavePlugin
 {
