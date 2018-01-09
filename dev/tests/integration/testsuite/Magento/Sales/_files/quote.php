@@ -24,6 +24,12 @@ $product->setTypeId('simple')
         ]
     )->save();
 
+// prototype code
+$indexer = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
+    ->create(\Magento\Indexer\Model\Indexer::class);
+$indexer->load(\Magento\Inventory\Indexer\SourceItem\SourceItemIndexer::INDEXER_ID);
+$indexer->reindexAll();
+
 $productRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
     ->create(\Magento\Catalog\Api\ProductRepositoryInterface::class);
 $product = $productRepository->get('simple');
