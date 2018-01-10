@@ -37,7 +37,7 @@ class FilterMapper
     private $visibilityFilter;
 
     /**
-     * @var StockStatusFilter
+     * @var StockStatusFilterInterface
      */
     private $stockStatusFilter;
 
@@ -46,14 +46,14 @@ class FilterMapper
      * @param CustomAttributeFilter $customAttributeFilter
      * @param FilterStrategyInterface $filterStrategy
      * @param VisibilityFilter $visibilityFilter
-     * @param StockStatusFilter $stockStatusFilter
+     * @param StockStatusFilterInterface $stockStatusFilter
      */
     public function __construct(
         AliasResolver $aliasResolver,
         CustomAttributeFilter $customAttributeFilter,
         FilterStrategyInterface $filterStrategy,
         VisibilityFilter $visibilityFilter,
-        StockStatusFilter $stockStatusFilter
+        StockStatusFilterInterface $stockStatusFilter
     ) {
         $this->aliasResolver = $aliasResolver;
         $this->customAttributeFilter = $customAttributeFilter;

@@ -10,6 +10,7 @@ use Magento\CatalogSearch\Model\Adapter\Mysql\Filter\AliasResolver;
 use Magento\Eav\Model\Config as EavConfig;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Select;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -46,6 +47,11 @@ class TermDropdownStrategy implements FilterStrategyInterface
     private $scopeConfig;
 
     /**
+     * @var StockJoinProviderInterface
+     */
+    private $joinProvider;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param ResourceConnection $resourceConnection
      * @param EavConfig $eavConfig
@@ -58,13 +64,15 @@ class TermDropdownStrategy implements FilterStrategyInterface
         ResourceConnection $resourceConnection,
         EavConfig $eavConfig,
         ScopeConfigInterface $scopeConfig,
-        AliasResolver $aliasResolver
+        AliasResolver $aliasResolver,
+        StockJoinProviderInterface $joinProvider
     ) {
         $this->storeManager = $storeManager;
         $this->resourceConnection = $resourceConnection;
         $this->eavConfig = $eavConfig;
         $this->scopeConfig = $scopeConfig;
         $this->aliasResolver = $aliasResolver;
+        $this->joinProvider =  $joinProvider;
     }
 
     /**
@@ -89,14 +97,7 @@ class TermDropdownStrategy implements FilterStrategyInterface
             []
         );
         if ($this->isAddStockFilter()) {
-            $stockAlias = $alias . AliasResolver::STOCK_FILTER_SUFFIX;
-            $select->joinLeft(
-                [
-                    $stockAlias => $this->resourceConnection->getTableName('cataloginventory_stock_status'),
-                ],
-                sprintf('%2$s.product_id = %1$s.source_id', $alias, $stockAlias),
-                []
-            );
+            $this->joinProvider->add($select, $alias);
         }
 
         return true;

@@ -16,28 +16,12 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
  * Class StockStatusFilter
  * Adds filter by stock status to base select
  */
-class StockStatusFilter
+class StockStatusFilter implements StockStatusFilterInterface
 {
     /**
      * @var ResourceConnection
      */
     private $resourceConnection;
-
-    /**
-     * Defines strategy of how filter should be applied
-     *
-     * Stock status filter will be applied only on parent products
-     * (e.g. only for configurable products, without options)
-     */
-    const FILTER_JUST_ENTITY = 'general_filter';
-
-    /**
-     * Defines strategy of how filter should be applied
-     *
-     * Stock status filter will be applied on parent products with its child
-     * (e.g. for configurable products and options)
-     */
-    const FILTER_ENTITY_AND_SUB_PRODUCTS = 'filter_with_sub_products';
 
     /**
      * @var ConditionManager
@@ -84,7 +68,7 @@ class StockStatusFilter
      */
     public function apply(Select $select, $stockValues, $type, $showOutOfStockFlag)
     {
-        if ($type !== self::FILTER_JUST_ENTITY && $type !== self::FILTER_ENTITY_AND_SUB_PRODUCTS) {
+        if ($type !== static::FILTER_JUST_ENTITY && $type !== static::FILTER_ENTITY_AND_SUB_PRODUCTS) {
             throw new \InvalidArgumentException(sprintf('Invalid filter type: %s', $type));
         }
 

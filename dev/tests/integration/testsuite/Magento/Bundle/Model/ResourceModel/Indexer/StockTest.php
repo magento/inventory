@@ -6,6 +6,8 @@
 
 namespace Magento\Bundle\Model\ResourceModel\Indexer;
 
+use \Magento\TestFramework\Helper\Bootstrap;
+
 class StockTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -13,11 +15,18 @@ class StockTest extends \PHPUnit\Framework\TestCase
      */
     protected $processor;
 
+    /**
+     * @var \Magento\Inventory\Indexer\Stock\StockIndexer
+     */
+    private $stockIndexer;
+
     protected function setUp()
     {
-        $this->processor = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+        $this->processor = Bootstrap::getObjectManager()->get(
             \Magento\CatalogInventory\Model\Indexer\Stock\Processor::class
         );
+
+        $this->stockIndexer = Bootstrap::getObjectManager()->get(\Magento\Inventory\Indexer\Stock\StockIndexer::class);
     }
 
     /**
@@ -28,6 +37,7 @@ class StockTest extends \PHPUnit\Framework\TestCase
     public function testReindexAll()
     {
         $this->processor->reindexAll();
+        $this->stockIndexer->executeFull();
 
         $categoryFactory = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
             \Magento\Catalog\Model\CategoryFactory::class

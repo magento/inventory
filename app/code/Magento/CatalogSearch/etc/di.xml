@@ -14,6 +14,9 @@
     <preference for="Magento\CatalogSearch\Model\Search\FilterMapper\FilterStrategyInterface" type="Magento\CatalogSearch\Model\Search\FilterMapper\FilterContext"/>
     <preference for="Magento\CatalogSearch\Model\Indexer\IndexSwitcherInterface" type="Magento\CatalogSearch\Model\Indexer\IndexSwitcherProxy"/>
     <preference for="Magento\CatalogSearch\Model\Adapter\Aggregation\RequestCheckerInterface" type="Magento\CatalogSearch\Model\Adapter\Aggregation\RequestCheckerComposite"/>
+    <preference for="Magento\CatalogSearch\Model\Search\FilterMapper\StockJoinProviderInterface" type="Magento\CatalogSearch\Model\Search\FilterMapper\StockJoinProvider"/>
+    <preference for="Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilterInterface" type="\Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter"/>
+
     <type name="Magento\CatalogSearch\Model\Indexer\IndexerHandlerFactory">
         <arguments>
             <argument name="configPath" xsi:type="const">Magento\CatalogSearch\Model\ResourceModel\EngineInterface::CONFIG_ENGINE_PATH</argument>
@@ -132,6 +135,8 @@
         </arguments>
     </type>
     <preference for="Magento\Search\Model\SearchCollectionInterface" type="Magento\CatalogSearch\Model\ResourceModel\Search\Collection" />
+    <preference for="Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\StockSelectProviderInterface" type="Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\StockSelectProvider"/>
+
     <type name="Magento\Catalog\Model\Layer\Search\CollectionFilter">
         <plugin name="searchQuery" type="Magento\CatalogSearch\Model\Layer\Search\Plugin\CollectionFilter" />
     </type>
