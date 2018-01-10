@@ -46,7 +46,11 @@ class SetDataToLegacyStockStatus
      */
     public function execute(string $sku, float $quantity, int $status)
     {
-        $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
+        $productIds = $this->getProductIdsBySkus->execute([$sku]);
+        if (count($productIds) === 0) {
+            return;
+        }
+        $productId = $productIds[$sku];
 
         $connection = $this->resourceConnection->getConnection();
         $connection->update(

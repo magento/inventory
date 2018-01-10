@@ -13,8 +13,7 @@ $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 
 /** @var \Magento\Catalog\Api\ProductRepositoryInterface $productRepository */
-$productRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-    ->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+$productRepository = $objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
 
 foreach (['simple_1010', 'simple_1020', 'configurable'] as $sku) {
     try {

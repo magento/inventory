@@ -10,22 +10,23 @@ use Magento\Catalog\Setup\CategorySetup;
 use Magento\Framework\Registry;
 use Magento\TestFramework\Helper\Bootstrap;
 
-$registry = Bootstrap::getObjectManager()->get(Registry::class);
+$objectManager = Bootstrap::getObjectManager();
+$registry = $objectManager->get(Registry::class);
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 /** @var $productCollection \Magento\Catalog\Model\ResourceModel\Product\Collection */
-$productCollection = Bootstrap::getObjectManager()
-    ->create(Product::class)
-    ->getCollection();
+$productCollection = $objectManager->create(Product::class)->getCollection();
+
+$productRepository = $objectManager->get(Magento\Catalog\Model\ProductRepository::class);
 foreach ($productCollection as $product) {
-    $product->delete();
+    $productRepository->delete($product);
 }
 /** @var $attribute Attribute */
 $attribute = Bootstrap::getObjectManager()->create(
     Attribute::class
 );
 /** @var $installer CategorySetup */
-$installer = Bootstrap::getObjectManager()->create(CategorySetup::class);
+$installer = $objectManager->create(CategorySetup::class);
 foreach (range(1, 2) as $index) {
     $attribute->loadByCode($installer->getEntityTypeId('catalog_product'), 'select_attribute_' . $index);
     if ($attribute->getId()) {
