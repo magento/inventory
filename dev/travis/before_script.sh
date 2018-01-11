@@ -156,8 +156,9 @@ case $TEST_SUITE in
         echo "Prepare functional tests for running"
         cd dev/tests/api-functional
 
-        cp ./phpunit.xml.dist ./phpunit.xml
+        cp ../../travis/api-functional/phpunit.xml.dist ./phpunit.xml
         sed -e "s?magento.url?${MAGENTO_HOST_NAME}?g" --in-place ./phpunit.xml
+        sed -e "s?web_api_adapter?$rest?g" --in-place ./phpunit.xml
 
         cd ../../..
         ;;
