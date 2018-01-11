@@ -7,13 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\OrderManagement;
 
-use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
 use Magento\Sales\Api\OrderManagementInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Indexer\Model\Indexer;
 use Magento\Inventory\Indexer\SourceItem\SourceItemIndexer;
+use Magento\Inventory\Model\CleanupReservationsInterface;
+use Magento\Inventory\Test\Integration\Indexer\RemoveIndexData;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
+use Magento\CatalogInventory\Api\StockItemCriteriaInterface;
+use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 class CancelOrderBackwardCompatibilityWithLegacyStockInventoryTest extends TestCase
 {
@@ -28,14 +33,34 @@ class CancelOrderBackwardCompatibilityWithLegacyStockInventoryTest extends TestC
     private $orderManagement;
 
     /**
-     * @var GetProductQuantityInStockInterface
+     * @var CleanupReservationsInterface
      */
-    private $getProductQtyInStock;
+    private $reservationCleanup;
 
     /**
-     * @var StockRegistryInterface
+     * @var DefaultStockProviderInterface
      */
-    private $legacyStockItemRegistry;
+    private $defaultStockProvider;
+
+    /**
+     * @var RemoveIndexData
+     */
+    private $removeIndexData;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
+     * @var StockItemCriteriaInterfaceFactory
+     */
+    private $legacyStockItemCriteriaFactory;
+
+    /**
+     * @var StockItemRepositoryInterface
+     */
+    private $legacyStockItemRepository;
 
     protected function setUp()
     {
@@ -43,9 +68,26 @@ class CancelOrderBackwardCompatibilityWithLegacyStockInventoryTest extends TestC
         $this->indexer->load(SourceItemIndexer::INDEXER_ID);
         $this->indexer->reindexAll();
 
+        $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
-        $this->getProductQtyInStock = Bootstrap::getObjectManager()->get(GetProductQuantityInStockInterface::class);
-        $this->legacyStockItemRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
+
+        $this->legacyStockItemCriteriaFactory = Bootstrap::getObjectManager()->get(
+            StockItemCriteriaInterfaceFactory::class
+        );
+        $this->legacyStockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);
+        $this->reservationCleanup = Bootstrap::getObjectManager()->create(CleanupReservationsInterface::class);
+
+        $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
+        $this->removeIndexData = Bootstrap::getObjectManager()->get(RemoveIndexData::class);
+    }
+
+    /**
+     * We broke transaction during indexation so we need to clean db state manually
+     */
+    protected function tearDown()
+    {
+        $this->removeIndexData->execute([$this->defaultStockProvider->getId()]);
+        $this->reservationCleanup->execute();
     }
 
     /**
@@ -56,16 +98,27 @@ class CancelOrderBackwardCompatibilityWithLegacyStockInventoryTest extends TestC
      */
     public function testReturnShouldBeAddedToLegacyStockWhenSubtractOptionIsEnabled()
     {
+        $productSku = 'SKU-1';
+        $product = $this->productRepository->get($productSku);
+        $productId = $product->getId();
+        $websiteId = 0;
         $orderId = 1;
-        $orderItemSku = 'SKU-1';
 
-        $legacyStockItemQty = $this->legacyStockItemRegistry->getStockItemBySku($orderItemSku)->getQty();
-        self::assertEquals(5.5, $legacyStockItemQty);
+        /** @var StockItemCriteriaInterface $legacyStockItemCriteria */
+        $legacyStockItemCriteria = $this->legacyStockItemCriteriaFactory->create();
+        $legacyStockItemCriteria->setProductsFilter($productId);
+        $legacyStockItemCriteria->setScopeFilter($websiteId);
+        $legacyStockItems = $this->legacyStockItemRepository->getList($legacyStockItemCriteria)->getItems();
+
+        $legacyStockItem = current($legacyStockItems);
+        self::assertTrue($legacyStockItem->getIsInStock());
+        self::assertEquals(5.5, $legacyStockItem->getQty());
 
         $this->orderManagement->cancel($orderId);
 
-        $legacyStockItemQty = $this->legacyStockItemRegistry->getStockItemBySku($orderItemSku)->getQty();
-        self::assertEquals(17.5, $legacyStockItemQty);
+        $legacyStockItems = $this->legacyStockItemRepository->getList($legacyStockItemCriteria)->getItems();
+        $legacyStockItem = current($legacyStockItems);
+        self::assertEquals(17.5, $legacyStockItem->getQty());
     }
 
     /**
@@ -76,15 +129,26 @@ class CancelOrderBackwardCompatibilityWithLegacyStockInventoryTest extends TestC
      */
     public function testReturnShouldNotBeAddedToLegacyStockWhenSubtractOptionIsEnabled()
     {
+        $productSku = 'SKU-1';
+        $product = $this->productRepository->get($productSku);
+        $productId = $product->getId();
+        $websiteId = 0;
         $orderId = 1;
-        $orderItemSku = 'SKU-1';
 
-        $legacyStockItemQty = $this->legacyStockItemRegistry->getStockItemBySku($orderItemSku)->getQty();
-        self::assertEquals(5.5, $legacyStockItemQty);
+        /** @var StockItemCriteriaInterface $legacyStockItemCriteria */
+        $legacyStockItemCriteria = $this->legacyStockItemCriteriaFactory->create();
+        $legacyStockItemCriteria->setProductsFilter($productId);
+        $legacyStockItemCriteria->setScopeFilter($websiteId);
+        $legacyStockItems = $this->legacyStockItemRepository->getList($legacyStockItemCriteria)->getItems();
+
+        $legacyStockItem = current($legacyStockItems);
+        self::assertTrue($legacyStockItem->getIsInStock());
+        self::assertEquals(5.5, $legacyStockItem->getQty());
 
         $this->orderManagement->cancel($orderId);
 
-        $legacyStockItemQty = $this->legacyStockItemRegistry->getStockItemBySku($orderItemSku)->getQty();
-        self::assertEquals(5.5, $legacyStockItemQty);
+        $legacyStockItems = $this->legacyStockItemRepository->getList($legacyStockItemCriteria)->getItems();
+        $legacyStockItem = current($legacyStockItems);
+        self::assertEquals(5.5, $legacyStockItem->getQty());
     }
 }
