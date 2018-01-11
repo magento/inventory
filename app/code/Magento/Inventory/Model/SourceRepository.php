@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -51,17 +53,17 @@ class SourceRepository implements SourceRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function save(SourceInterface $source): int
+    public function save(SourceInterface $source)
     {
-        return $this->commandSave->execute($source);
+        $this->commandSave->execute($source);
     }
 
     /**
      * @inheritdoc
      */
-    public function get(int $sourceId): SourceInterface
+    public function get(string $sourceCode): SourceInterface
     {
-        return $this->commandGet->execute($sourceId);
+        return $this->commandGet->execute($sourceCode);
     }
 
     /**

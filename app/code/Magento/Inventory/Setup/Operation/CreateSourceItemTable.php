@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Setup\Operation;
 
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -51,14 +53,13 @@ class CreateSourceItemTable
             ],
             'Source Item ID'
         )->addColumn(
-            SourceItemInterface::SOURCE_ID,
-            Table::TYPE_INTEGER,
-            null,
+            SourceItemInterface::SOURCE_CODE,
+            Table::TYPE_TEXT,
+            255,
             [
-                Table::OPTION_UNSIGNED => true,
                 Table::OPTION_NULLABLE => false,
             ],
-            'Source ID'
+            'Source Code'
         )->addColumn(
             SourceItemInterface::SKU,
             Table::TYPE_TEXT,
@@ -84,32 +85,33 @@ class CreateSourceItemTable
             Table::TYPE_SMALLINT,
             null,
             [
-                Table::OPTION_NULLABLE => true,
+                Table::OPTION_NULLABLE => false,
+                Table::OPTION_DEFAULT => SourceItemInterface::STATUS_OUT_OF_STOCK,
                 Table::OPTION_UNSIGNED => true,
             ],
             'Status'
         )->addForeignKey(
             $setup->getFkName(
                 $sourceItemTable,
-                SourceItemInterface::SOURCE_ID,
+                SourceItemInterface::SOURCE_CODE,
                 $sourceTable,
-                SourceInterface::SOURCE_ID
+                SourceInterface::SOURCE_CODE
             ),
-            SourceItemInterface::SOURCE_ID,
+            SourceItemInterface::SOURCE_CODE,
             $sourceTable,
-            SourceInterface::SOURCE_ID,
+            SourceInterface::SOURCE_CODE,
             AdapterInterface::FK_ACTION_CASCADE
         )->addIndex(
             $setup->getIdxName(
                 $sourceItemTable,
                 [
-                    SourceItemInterface::SOURCE_ID,
+                    SourceItemInterface::SOURCE_CODE,
                     SourceItemInterface::SKU,
                 ],
                 AdapterInterface::INDEX_TYPE_UNIQUE
             ),
             [
-                SourceItemInterface::SOURCE_ID,
+                SourceItemInterface::SOURCE_CODE,
                 SourceItemInterface::SKU,
             ],
             ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]

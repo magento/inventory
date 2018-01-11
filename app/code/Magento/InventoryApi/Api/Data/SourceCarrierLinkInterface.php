@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\InventoryApi\Api\Data;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
@@ -21,6 +23,7 @@ interface SourceCarrierLinkInterface extends ExtensibleDataInterface
      */
     const CARRIER_CODE = 'carrier_code';
     const POSITION = 'position';
+    const SOURCE_CODE = 'source_code';
     /**#@-*/
 
     /**

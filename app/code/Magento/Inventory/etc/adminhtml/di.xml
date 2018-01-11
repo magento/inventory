@@ -9,12 +9,12 @@
     <!-- Buttons configurations -->
     <virtualType name="Magento\Inventory\Ui\Component\Control\Source\SaveSplitButton" type="Magento\Backend\Ui\Component\Control\SaveSplitButton">
         <arguments>
-            <argument name="saveTarget" xsi:type="string">inventory_source_form.inventory_source_form</argument>
+            <argument name="targetName" xsi:type="string">inventory_source_form.inventory_source_form</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\Inventory\Ui\Component\Control\Stock\SaveSplitButton" type="Magento\Backend\Ui\Component\Control\SaveSplitButton">
         <arguments>
-            <argument name="saveTarget" xsi:type="string">inventory_stock_form.inventory_stock_form</argument>
+            <argument name="targetName" xsi:type="string">inventory_stock_form.inventory_stock_form</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magento\Inventory\Ui\Component\Control\Stock\DeleteButton" type="Magento\Backend\Ui\Component\Control\DeleteButton">
@@ -23,17 +23,6 @@
             <argument name="idFieldName" xsi:type="const">Magento\InventoryApi\Api\Data\StockInterface::STOCK_ID</argument>
             <argument name="deleteRoutePath" xsi:type="string">*/*/delete</argument>
             <argument name="sortOrder" xsi:type="number">30</argument>
-        </arguments>
-    </virtualType>
-    <!-- Product form configurations -->
-    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
-        <arguments>
-            <argument name="modifiers" xsi:type="array">
-                <item name="sources" xsi:type="array">
-                    <item name="class" xsi:type="string">Magento\Inventory\Ui\DataProvider\Product\Form\Modifier\Sources</item>
-                    <item name="sortOrder" xsi:type="number">200</item>
-                </item>
-            </argument>
         </arguments>
     </virtualType>
 </config>

@@ -3,14 +3,17 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Controller\Adminhtml\Stock;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryApi\Api\StockRepositoryInterface;
 
 /**
  * Delete Controller
@@ -42,7 +45,7 @@ class Delete extends Action
     /**
      * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $resultRedirect = $this->resultRedirectFactory->create();
 
@@ -53,11 +56,9 @@ class Delete extends Action
         }
 
         try {
+            $stockId = (int)$stockId;
             $this->stockRepository->deleteById($stockId);
             $this->messageManager->addSuccessMessage(__('The Stock has been deleted.'));
-            $resultRedirect->setPath('*/*');
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('Stock with id "%1" does not exist.', $stockId));
             $resultRedirect->setPath('*/*');
         } catch (CouldNotDeleteException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
@@ -66,6 +67,7 @@ class Delete extends Action
                 '_current' => true,
             ]);
         }
+
         return $resultRedirect;
     }
 }

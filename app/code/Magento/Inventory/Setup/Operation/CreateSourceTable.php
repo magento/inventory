@@ -3,8 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Setup\Operation;
 
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
@@ -46,16 +49,14 @@ class CreateSourceTable
     private function addBaseFields(Table $sourceTable): Table
     {
         return $sourceTable->addColumn(
-            SourceInterface::SOURCE_ID,
-            Table::TYPE_INTEGER,
-            null,
+            SourceInterface::SOURCE_CODE,
+            Table::TYPE_TEXT,
+            255,
             [
-                Table::OPTION_IDENTITY => true,
-                Table::OPTION_UNSIGNED => true,
                 Table::OPTION_NULLABLE => false,
                 Table::OPTION_PRIMARY => true,
             ],
-            'Source ID'
+            'Source Code'
         )->addColumn(
             SourceInterface::NAME,
             Table::TYPE_TEXT,
@@ -120,7 +121,7 @@ class CreateSourceTable
      * @param Table $sourceTable
      * @return Table
      */
-    private function addAddressFields(Table $sourceTable)
+    private function addAddressFields(Table $sourceTable): Table
     {
         $sourceTable->addColumn(
             SourceInterface::COUNTRY_ID,
@@ -179,7 +180,7 @@ class CreateSourceTable
      * @param Table $sourceTable
      * @return Table
      */
-    private function addContactInfoFields(Table $sourceTable)
+    private function addContactInfoFields(Table $sourceTable): Table
     {
         $sourceTable->addColumn(
             SourceInterface::CONTACT_NAME,
@@ -221,7 +222,7 @@ class CreateSourceTable
      * @param Table $sourceTable
      * @return Table
      */
-    private function addSourceCarrierFields(Table $sourceTable)
+    private function addSourceCarrierFields(Table $sourceTable): Table
     {
         $sourceTable->addColumn(
             'use_default_carrier_config',

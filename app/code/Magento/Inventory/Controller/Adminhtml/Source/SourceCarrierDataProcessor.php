@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Controller\Adminhtml\Source;
 
 use Magento\Framework\Exception\InputException;
@@ -34,10 +36,11 @@ class SourceCarrierDataProcessor
 
     /**
      * @param array $data
+     *
      * @return array
      * @throws InputException
      */
-    public function process(array $data)
+    public function process(array $data): array
     {
         $useDefaultCarrierConfig = isset($data[SourceInterface::USE_DEFAULT_CARRIER_CONFIG])
             && true === (bool)$data[SourceInterface::USE_DEFAULT_CARRIER_CONFIG];
@@ -46,35 +49,21 @@ class SourceCarrierDataProcessor
             && isset($data['carrier_codes'])
             && is_array($data['carrier_codes'])
         ) {
-            $this->checkCarrierCodes($data['carrier_codes']);
             $data[SourceInterface::CARRIER_LINKS] = $this->getCarrierLinksData($data['carrier_codes']);
         } else {
             $data[SourceInterface::CARRIER_LINKS] = [];
         }
         unset($data['carrier_codes']);
+
         return $data;
     }
 
     /**
      * @param array $carrierCodes
-     * @return void
-     * @throws InputException
-     */
-    private function checkCarrierCodes(array $carrierCodes)
-    {
-        $availableCarriers = $this->shippingConfig->getAllCarriers();
-
-        // TODO: move validation to service (management + tests)
-        if (count(array_intersect_key(array_flip($carrierCodes), $availableCarriers)) !== count($carrierCodes)) {
-            throw new InputException(__('Wrong carrier codes data'));
-        }
-    }
-
-    /**
-     * @param array $carrierCodes
+     *
      * @return array
      */
-    private function getCarrierLinksData(array $carrierCodes)
+    private function getCarrierLinksData(array $carrierCodes): array
     {
         $carrierLinks = [];
         foreach ($carrierCodes as $carrierCode) {

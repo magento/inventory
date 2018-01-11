@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model\Source\Command;
 
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -25,9 +27,9 @@ interface SaveInterface
      * Save Source data
      *
      * @param SourceInterface $source
-     * @return int
+     * @return void
      * @throws ValidationException
      * @throws CouldNotSaveException
      */
-    public function execute(SourceInterface $source): int;
+    public function execute(SourceInterface $source);
 }

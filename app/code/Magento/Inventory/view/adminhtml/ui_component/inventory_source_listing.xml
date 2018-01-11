@@ -27,14 +27,15 @@
     <dataSource name="inventory_source_listing_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <storageConfig>
-                <param name="indexField" xsi:type="string">source_id</param>
+                <param name="indexField" xsi:type="string">source_code</param>
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
+        <aclResource>Magento_InventoryApi::source</aclResource>
         <dataProvider class="Magento\Inventory\Ui\DataProvider\SourceDataProvider" name="inventory_source_listing_data_source">
             <settings>
-                <requestFieldName>id</requestFieldName>
-                <primaryFieldName>source_id</primaryFieldName>
+                <requestFieldName>source_code</requestFieldName>
+                <primaryFieldName>source_code</primaryFieldName>
             </settings>
         </dataProvider>
     </dataSource>
@@ -67,7 +68,7 @@
                     <item name="saveUrl" xsi:type="url" path="inventory/source/inlineEdit"/>
                     <item name="validateBeforeSave" xsi:type="boolean">false</item>
                 </param>
-                <param name="indexField" xsi:type="string">source_id</param>
+                <param name="indexField" xsi:type="string">source_code</param>
                 <param name="enabled" xsi:type="boolean">true</param>
                 <param name="selectProvider" xsi:type="string">inventory_source_listing.inventory_source_listing.inventory_source_listing_columns.ids</param>
             </editorConfig>
@@ -84,14 +85,19 @@
         </settings>
         <selectionsColumn name="ids" sortOrder="10">
             <settings>
-                <indexField>source_id</indexField>
+                <indexField>source_code</indexField>
             </settings>
         </selectionsColumn>
-        <column name="source_id" sortOrder="20">
+        <column name="source_code" sortOrder="25">
             <settings>
-                <filter>textRange</filter>
-                <label translate="true">ID</label>
-                <sorting>asc</sorting>
+                <filter>text</filter>
+                <label translate="true">Code</label>
+                <editor>
+                    <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
+                </editor>
             </settings>
         </column>
         <column name="name" sortOrder="30">
@@ -268,14 +274,14 @@
                 <label translate="true">Priority</label>
             </settings>
         </column>
-        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction">
+        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction" sortOrder="200">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="editUrlPath" xsi:type="string">inventory/source/edit</item>
                 </item>
             </argument>
             <settings>
-                <indexField>source_id</indexField>
+                <indexField>source_code</indexField>
             </settings>
         </actionsColumn>
     </columns>

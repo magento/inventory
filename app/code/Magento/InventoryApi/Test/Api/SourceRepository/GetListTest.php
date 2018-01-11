@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryApi\Test\Api\SourceRepository;
 
@@ -83,7 +84,7 @@ class GetListTest extends WebapiAbstract
             : $this->_webApiCall($serviceInfo, $requestData);
 
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
-        self::assertEquals($expectedTotalCount, $response['total_count']);
+        self::assertGreaterThanOrEqual($expectedTotalCount, $response['total_count']);
         AssertArrayContains::assert($expectedItemsData, $response['items']);
     }
 }

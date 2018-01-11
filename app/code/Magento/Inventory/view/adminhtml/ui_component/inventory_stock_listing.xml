@@ -31,6 +31,7 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
+        <aclResource>Magento_InventoryApi::stock</aclResource>
         <dataProvider class="Magento\Inventory\Ui\DataProvider\StockDataProvider" name="inventory_stock_listing_data_stock">
             <settings>
                 <requestFieldName>id</requestFieldName>
@@ -118,7 +119,7 @@
                 </editor>
             </settings>
         </column>
-        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction">
+        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction" sortOrder="100">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="editUrlPath" xsi:type="string">inventory/stock/edit</item>

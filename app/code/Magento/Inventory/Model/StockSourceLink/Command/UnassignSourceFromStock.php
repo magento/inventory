@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model\StockSourceLink\Command;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
@@ -70,11 +72,11 @@ class UnassignSourceFromStock implements UnassignSourceFromStockInterface
     /**
      * @inheritdoc
      */
-    public function execute(int $sourceId, int $stockId)
+    public function execute(string $sourceCode, int $stockId)
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(StockSourceLink::STOCK_ID, (int)$stockId)
-            ->addFilter(StockSourceLink::SOURCE_ID, $sourceId)
+            ->addFilter(StockSourceLink::SOURCE_CODE, $sourceCode)
             ->create();
 
         /** @var Collection $collection */

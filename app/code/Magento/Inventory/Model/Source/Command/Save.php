@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model\Source\Command;
 
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -50,7 +52,7 @@ class Save implements SaveInterface
     /**
      * @inheritdoc
      */
-    public function execute(SourceInterface $source): int
+    public function execute(SourceInterface $source)
     {
         $validationResult = $this->sourceValidator->validate($source);
 
@@ -60,7 +62,7 @@ class Save implements SaveInterface
 
         try {
             $this->sourceResource->save($source);
-            return $source->getSourceId();
+            $source->getSourceCode();
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new CouldNotSaveException(__('Could not save Source'), $e);

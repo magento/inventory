@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model\ResourceModel\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
@@ -44,7 +46,7 @@ class SaveMultiple
         $tableName = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
 
         $columnsSql = $this->buildColumnsSqlPart([
-            SourceItemInterface::SOURCE_ID,
+            SourceItemInterface::SOURCE_CODE,
             SourceItemInterface::SKU,
             SourceItemInterface::QUANTITY,
             SourceItemInterface::STATUS
@@ -98,7 +100,7 @@ class SaveMultiple
         $bind = [];
         foreach ($sourceItems as $sourceItem) {
             $bind = array_merge($bind, [
-                $sourceItem->getSourceId(),
+                $sourceItem->getSourceCode(),
                 $sourceItem->getSku(),
                 $sourceItem->getQuantity(),
                 $sourceItem->getStatus(),

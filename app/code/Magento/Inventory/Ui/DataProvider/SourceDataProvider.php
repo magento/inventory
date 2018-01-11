@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Ui\DataProvider;
 
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -81,10 +83,10 @@ class SourceDataProvider extends DataProvider
             // It is need for support of several fieldsets.
             // For details see \Magento\Ui\Component\Form::getDataSourceData
             if ($data['totalRecords'] > 0) {
-                $sourceId = $data['items'][0][SourceInterface::SOURCE_ID];
+                $sourceCode = $data['items'][0][SourceInterface::SOURCE_CODE];
                 $sourceGeneralData = $data['items'][0];
-                $sourceGeneralData['carrier_codes'] =  $this->getAssignedCarrierCodes($sourceId);
-                $dataForSingle[$sourceId] = [
+                $sourceGeneralData['carrier_codes'] =  $this->getAssignedCarrierCodes($sourceCode);
+                $dataForSingle[$sourceCode] = [
                     'general' => $sourceGeneralData,
                 ];
                 $data = $dataForSingle;
@@ -107,18 +109,18 @@ class SourceDataProvider extends DataProvider
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
-            SourceInterface::SOURCE_ID
+            SourceInterface::SOURCE_CODE
         );
         return $searchResult;
     }
 
     /**
-     * @param int $sourceId
+     * @param string $sourceCode
      * @return array
      */
-    private function getAssignedCarrierCodes(int $sourceId): array
+    private function getAssignedCarrierCodes(string $sourceCode): array
     {
-        $source = $this->sourceRepository->get($sourceId);
+        $source = $this->sourceRepository->get($sourceCode);
         $carrierCodes = [];
 
         $carrierLinks = $source->getCarrierLinks();

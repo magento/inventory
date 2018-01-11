@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Controller\Adminhtml\Stock;
 
 use Magento\Backend\App\Action;
@@ -10,10 +12,12 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryApi\Api\StockRepositoryInterface;
 
 /**
  * InlineEdit Controller
@@ -53,7 +57,7 @@ class InlineEdit extends Action
     /**
      * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $errorMessages = [];
         $request = $this->getRequest();
@@ -62,19 +66,25 @@ class InlineEdit extends Action
         if ($request->isXmlHttpRequest() && $request->isPost() && $requestData) {
             foreach ($requestData as $itemData) {
                 try {
-                    $stock = $this->stockRepository->get(
-                        $itemData[StockInterface::STOCK_ID]
-                    );
+                    $stockId = (int)$itemData[StockInterface::STOCK_ID];
+                    $stock = $this->stockRepository->get($stockId);
                     $this->dataObjectHelper->populateWithArray($stock, $itemData, StockInterface::class);
                     $this->stockRepository->save($stock);
                 } catch (NoSuchEntityException $e) {
                     $errorMessages[] = __(
                         '[ID: %value] The Stock does not exist.',
-                        ['value' => $itemData[StockInterface::STOCK_ID]]
+                        ['value' => $stockId]
                     );
+                } catch (ValidationException $e) {
+                    foreach ($e->getErrors() as $localizedError) {
+                        $errorMessages[] = __('[ID: %value] %message', [
+                            'value' => $stockId,
+                            'message' => $localizedError->getMessage()
+                        ]);
+                    }
                 } catch (CouldNotSaveException $e) {
                     $errorMessages[] = __('[ID: %value] %message', [
-                        'value' => $itemData[StockInterface::STOCK_ID],
+                        'value' => $stockId,
                         'message' => $e->getMessage()
                     ]);
                 }
@@ -89,6 +99,7 @@ class InlineEdit extends Action
             'messages' => $errorMessages,
             'error' => count($errorMessages),
         ]);
+
         return $resultJson;
     }
 }

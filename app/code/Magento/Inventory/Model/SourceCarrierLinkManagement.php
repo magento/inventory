@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
@@ -88,7 +90,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
         $connection = $this->resourceConnection->getConnection();
         $connection->delete(
             $this->resourceConnection->getTableName(SourceCarrierLink::TABLE_NAME_SOURCE_CARRIER_LINK),
-            $connection->quoteInto('source_id = ?', $source->getSourceId())
+            $connection->quoteInto('source_code = ?', $source->getSourceCode())
         );
     }
 
@@ -101,7 +103,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
         $carrierLinkData = [];
         foreach ($source->getCarrierLinks() as $carrierLink) {
             $carrierLinkData[] = [
-                'source_id' => $source->getSourceId(),
+                'source_code' => $source->getSourceCode(),
                 SourceCarrierLinkInterface::CARRIER_CODE => $carrierLink->getCarrierCode(),
                 SourceCarrierLinkInterface::POSITION => $carrierLink->getPosition(),
             ];
@@ -119,7 +121,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     public function loadCarrierLinksBySource(SourceInterface $source)
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(SourceInterface::SOURCE_ID, $source->getSourceId())
+            ->addFilter(SourceCarrierLinkInterface::SOURCE_CODE, $source->getSourceCode())
             ->create();
 
         /** @var Collection $collection */

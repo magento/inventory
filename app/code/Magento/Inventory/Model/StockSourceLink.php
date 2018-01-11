@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Model\AbstractModel;
@@ -18,7 +20,7 @@ class StockSourceLink extends AbstractModel
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const SOURCE_ID = 'source_id';
+    const SOURCE_CODE = 'source_code';
     const STOCK_ID = 'stock_id';
     /**#@-*/
 
@@ -33,17 +35,17 @@ class StockSourceLink extends AbstractModel
     /**
      * @inheritdoc
      */
-    public function getSourceId()
+    public function getSourceCode()
     {
-        return $this->getData(self::SOURCE_ID);
+        return $this->getData(self::SOURCE_CODE);
     }
 
     /**
      * @inheritdoc
      */
-    public function setSourceId($sourceId)
+    public function setSourceCode($sourceCode)
     {
-        $this->setData(self::SOURCE_ID, $sourceId);
+        $this->setData(self::SOURCE_CODE, $sourceCode);
     }
 
     /**

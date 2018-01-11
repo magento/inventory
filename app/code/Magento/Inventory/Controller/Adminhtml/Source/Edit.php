@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Controller\Adminhtml\Source;
 
 use Magento\Backend\App\Action;
@@ -10,9 +12,10 @@ use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
  * Edit Controller
@@ -44,11 +47,11 @@ class Edit extends Action
     /**
      * @inheritdoc
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-        $sourceId = $this->getRequest()->getParam(SourceInterface::SOURCE_ID);
+        $sourceCode = $this->getRequest()->getParam(SourceInterface::SOURCE_CODE);
         try {
-            $source = $this->sourceRepository->get($sourceId);
+            $source = $this->sourceRepository->get($sourceCode);
 
             /** @var Page $result */
             $result = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
@@ -61,10 +64,11 @@ class Edit extends Action
             /** @var Redirect $result */
             $result = $this->resultRedirectFactory->create();
             $this->messageManager->addErrorMessage(
-                __('Source with id "%value" does not exist.', ['value' => $sourceId])
+                __('Source with source code "%value" does not exist.', ['value' => $sourceCode])
             );
             $result->setPath('*/*');
         }
+
         return $result;
     }
 }

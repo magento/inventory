@@ -3,10 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\InventoryApi\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 
 /**
@@ -24,7 +25,7 @@ use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
  * The method save is absent, due to different semantic (save multiple)
  * @see SourceItemsSaveInterface
  *
- * There is no get method because SourceItem identifies by compound identifier (sku and source_id),
+ * There is no get method because SourceItem identifies by compound identifier (sku and source_code),
  * so need to use getList() method
  *
  * Used fully qualified namespaces in annotations for proper work of WebApi request parser
@@ -43,13 +44,4 @@ interface SourceItemRepositoryInterface
      * @return \Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria): SourceItemSearchResultsInterface;
-
-    /**
-     * Delete SourceItem data
-     *
-     * @param \Magento\InventoryApi\Api\Data\SourceItemInterface $sourceItem
-     * @return void
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
-     */
-    public function delete(SourceItemInterface $sourceItem);
 }

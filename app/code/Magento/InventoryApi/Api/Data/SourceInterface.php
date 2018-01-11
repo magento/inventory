@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\InventoryApi\Api\Data;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
@@ -19,7 +21,7 @@ interface SourceInterface extends ExtensibleDataInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const SOURCE_ID = 'source_id';
+    const SOURCE_CODE = 'source_code';
     const NAME = 'name';
     const CONTACT_NAME = 'contact_name';
     const EMAIL = 'email';
@@ -38,22 +40,21 @@ interface SourceInterface extends ExtensibleDataInterface
     const PRIORITY = 'priority';
     const USE_DEFAULT_CARRIER_CONFIG = 'use_default_carrier_config';
     const CARRIER_LINKS = 'carrier_links';
-    /**#@-*/
 
     /**
-     * Get source id
+     * Get source code
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getSourceId();
+    public function getSourceCode();
 
     /**
-     * Set source id
+     * Set source code
      *
-     * @param int|null $sourceId
+     * @param string|null $sourceCode
      * @return void
      */
-    public function setSourceId($sourceId);
+    public function setSourceCode($sourceCode);
 
     /**
      * Get source name

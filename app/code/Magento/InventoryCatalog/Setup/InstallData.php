@@ -3,20 +3,18 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup;
 
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryApi\Api\Data\StockInterfaceFactory;
-use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
-use Magento\InventoryApi\Api\AssignSourcesToStockInterface;
-use Magento\Framework\Api\DataObjectHelper;
+use Magento\InventoryCatalog\Setup\Operation\AssignSourceToStock;
+use Magento\InventoryCatalog\Setup\Operation\CreateDefaultSource;
+use Magento\InventoryCatalog\Setup\Operation\CreateDefaultStock;
+use Magento\InventoryCatalog\Setup\Operation\ReindexDefaultStock;
+use Magento\InventoryCatalog\Setup\Operation\UpdateInventorySourceItem;
 
 /**
  * Install Default Source, Stock and link them together
@@ -24,57 +22,49 @@ use Magento\Framework\Api\DataObjectHelper;
 class InstallData implements InstallDataInterface
 {
     /**
-     * @var SourceRepositoryInterface
+     * @var CreateDefaultSource
      */
-    private $sourceRepository;
+    private $createDefaultSource;
 
     /**
-     * @var SourceInterfaceFactory
+     * @var CreateDefaultStock
      */
-    private $sourceFactory;
+    private $createDefaultStock;
 
     /**
-     * @var StockRepositoryInterface
+     * @var AssignSourceToStock
      */
-    private $stockRepository;
+    private $assignSourceToStock;
 
     /**
-     * @var StockInterfaceFactory
+     * @var UpdateInventorySourceItem
      */
-    private $stockFactory;
+    private $updateInventorySourceItem;
 
     /**
-     * @var DataObjectHelper
+     * @var ReindexDefaultStock
      */
-    private $dataObjectHelper;
+    private $reindexDefaultStock;
 
     /**
-     * @var AssignSourcesToStockInterface
-     */
-    private $assignSourcesToStock;
-
-    /**
-     * @param SourceRepositoryInterface $sourceRepository
-     * @param SourceInterfaceFactory $sourceFactory
-     * @param StockRepositoryInterface $stockRepository
-     * @param StockInterfaceFactory $stockFactory
-     * @param AssignSourcesToStockInterface $assignSourcesToStock
-     * @param DataObjectHelper $dataObjectHelper
+     * @param CreateDefaultSource $createDefaultSource
+     * @param CreateDefaultStock $createDefaultStock
+     * @param AssignSourceToStock $assignSourceToStock
+     * @param UpdateInventorySourceItem $updateInventorySourceItem
+     * @param ReindexDefaultStock $reindexDefaultStock
      */
     public function __construct(
-        SourceRepositoryInterface $sourceRepository,
-        SourceInterfaceFactory $sourceFactory,
-        StockRepositoryInterface $stockRepository,
-        StockInterfaceFactory $stockFactory,
-        AssignSourcesToStockInterface $assignSourcesToStock,
-        DataObjectHelper $dataObjectHelper
+        CreateDefaultSource $createDefaultSource,
+        CreateDefaultStock $createDefaultStock,
+        AssignSourceToStock $assignSourceToStock,
+        UpdateInventorySourceItem $updateInventorySourceItem,
+        ReindexDefaultStock $reindexDefaultStock
     ) {
-        $this->sourceRepository = $sourceRepository;
-        $this->sourceFactory = $sourceFactory;
-        $this->stockRepository = $stockRepository;
-        $this->stockFactory = $stockFactory;
-        $this->assignSourcesToStock = $assignSourcesToStock;
-        $this->dataObjectHelper = $dataObjectHelper;
+        $this->createDefaultSource = $createDefaultSource;
+        $this->createDefaultStock = $createDefaultStock;
+        $this->assignSourceToStock = $assignSourceToStock;
+        $this->updateInventorySourceItem = $updateInventorySourceItem;
+        $this->reindexDefaultStock = $reindexDefaultStock;
     }
 
     /**
@@ -83,57 +73,10 @@ class InstallData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        $this->addDefaultSource();
-        $this->addDefaultStock();
-        $this->assignStockToSource();
-    }
-
-    /**
-     * Add default source
-     *
-     * @return void
-     */
-    private function addDefaultSource()
-    {
-        $data = [
-            SourceInterface::SOURCE_ID => 1,
-            SourceInterface::NAME => 'Default Source',
-            SourceInterface::ENABLED => 1,
-            SourceInterface::DESCRIPTION => 'Default Source',
-            SourceInterface::LATITUDE => 0,
-            SourceInterface::LONGITUDE => 0,
-            SourceInterface::PRIORITY => 0,
-            SourceInterface::COUNTRY_ID => 'US',
-            SourceInterface::POSTCODE => '00000'
-        ];
-        $source = $this->sourceFactory->create();
-        $this->dataObjectHelper->populateWithArray($source, $data, SourceInterface::class);
-        $this->sourceRepository->save($source);
-    }
-
-    /**
-     * Add default stock
-     *
-     * @return void
-     */
-    private function addDefaultStock()
-    {
-        $data = [
-            StockInterface::STOCK_ID => 1,
-            StockInterface::NAME => 'Default Stock'
-        ];
-        $source = $this->stockFactory->create();
-        $this->dataObjectHelper->populateWithArray($source, $data, StockInterface::class);
-        $this->stockRepository->save($source);
-    }
-
-    /**
-     * Assign default stock to default source
-     *
-     * @return void
-     */
-    private function assignStockToSource()
-    {
-        $this->assignSourcesToStock->execute([1], 1);
+        $this->createDefaultSource->execute();
+        $this->createDefaultStock->execute();
+        $this->assignSourceToStock->execute();
+        $this->updateInventorySourceItem->execute($setup);
+        $this->reindexDefaultStock->execute();
     }
 }

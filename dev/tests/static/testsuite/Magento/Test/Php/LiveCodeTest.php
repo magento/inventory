@@ -70,17 +70,22 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
      * @param array $fileTypes
      * @param string $changedFilesBaseDir
      * @param string $baseFilesFolder
+     * @param string $whitelistFile
      * @return array
      */
-    public static function getWhitelist($fileTypes = ['php'], $changedFilesBaseDir = '', $baseFilesFolder = '')
-    {
+    public static function getWhitelist(
+        $fileTypes = ['php'],
+        $changedFilesBaseDir = '',
+        $baseFilesFolder = '',
+        $whitelistFile = '/_files/whitelist/common.txt'
+    ) {
         $changedFiles = self::getChangedFilesList($changedFilesBaseDir);
         if (empty($changedFiles)) {
             return [];
         }
 
         $globPatternsFolder = ('' !== $baseFilesFolder) ? $baseFilesFolder : self::getBaseFilesFolder();
-        $directoriesToCheck = Files::init()->readLists($globPatternsFolder . '/_files/whitelist/common.txt');
+        $directoriesToCheck = Files::init()->readLists($globPatternsFolder . $whitelistFile);
         $targetFiles = self::filterFiles($changedFiles, $fileTypes, $directoriesToCheck);
 
         return $targetFiles;
@@ -201,12 +206,17 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
 
     public function testCodeStyle()
     {
+        $whiteList = defined('TESTCODESTYLE_IS_FULL_SCAN') && TESTCODESTYLE_IS_FULL_SCAN === '1'
+            ? $this->getFullWhitelist() : self::getWhitelist(['php', 'phtml']);
+
         $reportFile = self::$reportDir . '/phpcs_report.txt';
         $codeSniffer = new CodeSniffer('Magento', $reportFile, new Wrapper());
+        $result = $codeSniffer->run($whiteList);
+        $report = file_exists($reportFile) ? file_get_contents($reportFile) : '';
         $this->assertEquals(
             0,
-            $result = $codeSniffer->run($this->getFullWhitelist()),
-            "PHP Code Sniffer detected {$result} violation(s): " . PHP_EOL . file_get_contents($reportFile)
+            $result,
+            "PHP Code Sniffer detected {$result} violation(s): " . PHP_EOL . $report
         );
     }
 
@@ -264,6 +274,31 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(
             $result,
             "PHP Copy/Paste Detector has found error(s):" . PHP_EOL . $output
+        );
+    }
+
+    /**
+     * Tests whitelisted files for strict type declarations.
+     */
+    public function testStrictTypes()
+    {
+        $toBeTestedFiles = array_diff(
+            self::getWhitelist(['php'], '', '', '/_files/whitelist/strict_type.txt'),
+            Files::init()->readLists(self::getBaseFilesFolder() . '/_files/blacklist/strict_type.txt')
+        );
+
+        $filesMissingStrictTyping = [];
+        foreach ($toBeTestedFiles as $fileName) {
+            $file = file_get_contents($fileName);
+            if (strstr($file, 'strict_types=1') === false) {
+                $filesMissingStrictTyping[] = $fileName;
+            }
+        }
+
+        $this->assertEquals(
+            0,
+            count($filesMissingStrictTyping),
+            "Following files are missing strict type declaration:" . PHP_EOL . implode(PHP_EOL, $filesMissingStrictTyping)
         );
     }
 }

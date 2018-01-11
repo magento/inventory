@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model\ResourceModel\StockSourceLink;
 
 use Magento\Framework\App\ResourceConnection;
@@ -30,13 +32,13 @@ class SaveMultiple
     }
 
     /**
-     * @param array $sourceIds
+     * @param array $sourceCodes
      * @param int $stockId
      * @return void
      */
-    public function execute(array $sourceIds, $stockId)
+    public function execute(array $sourceCodes, int $stockId)
     {
-        if (!count($sourceIds)) {
+        if (!count($sourceCodes)) {
             return;
         }
         $connection = $this->resourceConnection->getConnection();
@@ -45,13 +47,13 @@ class SaveMultiple
         );
 
         $columns = [
-            StockSourceLink::SOURCE_ID,
+            StockSourceLink::SOURCE_CODE,
             StockSourceLink::STOCK_ID,
         ];
 
         $data = [];
-        foreach ($sourceIds as $sourceId) {
-            $data[] = [$sourceId, $stockId];
+        foreach ($sourceCodes as $sourceCode) {
+            $data[] = [$sourceCode, $stockId];
         }
         if ($data) {
             $connection->insertArray($tableName, $columns, $data);

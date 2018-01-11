@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Inventory\Test\Unit\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -69,15 +71,15 @@ class SourceRepositoryTest extends TestCase
 
     public function testSave()
     {
-        $sourceId = 42;
+        $sourceCode = 'source-code';
 
         $this->commandSave
             ->expects($this->once())
             ->method('execute')
             ->with($this->source)
-            ->willReturn($sourceId);
+            ->willReturn($sourceCode);
 
-        self::assertEquals($sourceId, $this->sourceRepository->save($this->source));
+        $this->sourceRepository->save($this->source);
     }
 
     /**
@@ -97,15 +99,15 @@ class SourceRepositoryTest extends TestCase
 
     public function testGet()
     {
-        $sourceId = 42;
+        $sourceCode = 'source-code';
 
         $this->commandGet
             ->expects($this->once())
             ->method('execute')
-            ->with($sourceId)
+            ->with($sourceCode)
             ->willReturn($this->source);
 
-        self::assertEquals($this->source, $this->sourceRepository->get($sourceId));
+        self::assertEquals($this->source, $this->sourceRepository->get($sourceCode));
     }
 
     /**
@@ -114,15 +116,15 @@ class SourceRepositoryTest extends TestCase
      */
     public function testGetWithNoSuchEntityException()
     {
-        $sourceId = 42;
+        $sourceCode = 'source-code';
 
         $this->commandGet
             ->expects($this->once())
             ->method('execute')
-            ->with($sourceId)
+            ->with($sourceCode)
             ->willThrowException(new NoSuchEntityException(__('Some error')));
 
-        $this->sourceRepository->get($sourceId);
+        $this->sourceRepository->get($sourceCode);
     }
 
     public function testGetListWithoutSearchCriteria()

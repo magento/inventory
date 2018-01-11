@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\InventoryApi\Test\Api\SourceRepository;
 
 use Magento\Framework\App\ResourceConnection;
@@ -22,16 +24,18 @@ class RegionProcessingTest extends WebapiAbstract
 
     public function testCreateWithPredefinedRegion()
     {
+        $sourceCode = 'source-code-1';
         $regionId = 10;
         $data = [
+            SourceInterface::SOURCE_CODE => $sourceCode,
             SourceInterface::NAME => 'source-name-1',
             SourceInterface::POSTCODE => 'source-postcode',
             SourceInterface::COUNTRY_ID => 'US',
             SourceInterface::REGION_ID => $regionId,
         ];
 
-        $sourceId = $this->saveSource($data);
-        $sourceData = $this->getSourceDataById($sourceId);
+        $this->saveSource($data);
+        $sourceData = $this->getSourceDataByCode($sourceCode);
 
         self::assertArrayHasKey(SourceInterface::REGION_ID, $sourceData);
         self::assertEquals($regionId, $sourceData[SourceInterface::REGION_ID]);
@@ -40,16 +44,18 @@ class RegionProcessingTest extends WebapiAbstract
 
     public function testCreateWithCustomRegion()
     {
+        $sourceCode = 'source-code-1';
         $regionName = 'custom-region-name';
         $data = [
+            SourceInterface::SOURCE_CODE => $sourceCode,
             SourceInterface::NAME => 'source-name-1',
             SourceInterface::POSTCODE => 'source-postcode',
             SourceInterface::COUNTRY_ID => 'US',
             SourceInterface::REGION => $regionName,
         ];
 
-        $sourceId = $this->saveSource($data);
-        $sourceData = $this->getSourceDataById($sourceId);
+        $this->saveSource($data);
+        $sourceData = $this->getSourceDataByCode($sourceCode);
 
         self::assertArrayHasKey(SourceInterface::REGION, $sourceData);
         self::assertEquals($regionName, $sourceData[SourceInterface::REGION]);
@@ -58,9 +64,11 @@ class RegionProcessingTest extends WebapiAbstract
 
     public function testCreateWithBothFilledFields()
     {
+        $sourceCode = 'source-code-1';
         $regionId = 10;
         $regionName = 'custom-region-name';
         $data = [
+            SourceInterface::SOURCE_CODE => $sourceCode,
             SourceInterface::NAME => 'source-name-1',
             SourceInterface::REGION_ID => $regionId,
             SourceInterface::POSTCODE => 'source-postcode',
@@ -68,8 +76,8 @@ class RegionProcessingTest extends WebapiAbstract
             SourceInterface::REGION => $regionName,
         ];
 
-        $sourceId = $this->saveSource($data);
-        $sourceData = $this->getSourceDataById($sourceId);
+        $this->saveSource($data);
+        $sourceData = $this->getSourceDataByCode($sourceCode);
 
         self::assertArrayHasKey(SourceInterface::REGION_ID, $sourceData);
         self::assertEquals($regionId, $sourceData[SourceInterface::REGION_ID]);
@@ -82,7 +90,7 @@ class RegionProcessingTest extends WebapiAbstract
     {
         /** @var ResourceConnection $connection */
         $connection = Bootstrap::getObjectManager()->get(ResourceConnection::class);
-        $connection->getConnection()->delete('inventory_source', [
+        $connection->getConnection()->delete($connection->getTableName('inventory_source'), [
             SourceInterface::NAME . ' IN (?)' => ['source-name-1'],
         ]);
         parent::tearDown();
@@ -90,9 +98,9 @@ class RegionProcessingTest extends WebapiAbstract
 
     /**
      * @param array $data
-     * @return int
+     * @return void
      */
-    private function saveSource(array $data): int
+    private function saveSource(array $data)
     {
         $serviceInfo = [
             'rest' => [
@@ -104,21 +112,18 @@ class RegionProcessingTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'Save',
             ],
         ];
-        $sourceId = $this->_webApiCall($serviceInfo, ['source' => $data]);
-        self::assertTrue(is_numeric($sourceId));
-        self::assertNotEmpty($sourceId);
-        return $sourceId;
+        $this->_webApiCall($serviceInfo, ['source' => $data]);
     }
 
     /**
-     * @param int $sourceId
+     * @param string $sourceCode
      * @return array
      */
-    private function getSourceDataById(int $sourceId): array
+    private function getSourceDataByCode(string $sourceCode): array
     {
         $serviceInfo = [
             'rest' => [
-                'resourcePath' => self::RESOURCE_PATH . '/' . $sourceId,
+                'resourcePath' => self::RESOURCE_PATH . '/' . $sourceCode,
                 'httpMethod' => Request::HTTP_METHOD_GET,
             ],
             'soap' => [
@@ -128,8 +133,8 @@ class RegionProcessingTest extends WebapiAbstract
         ];
         $response = (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST)
             ? $this->_webApiCall($serviceInfo)
-            : $this->_webApiCall($serviceInfo, ['sourceId' => $sourceId]);
-        self::assertArrayHasKey(SourceInterface::SOURCE_ID, $response);
+            : $this->_webApiCall($serviceInfo, ['sourceCode' => $sourceCode]);
+        self::assertArrayHasKey(SourceInterface::SOURCE_CODE, $response);
         return $response;
     }
 }

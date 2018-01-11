@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -20,7 +21,7 @@ $sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface
 $sourcesData = [
     [
         // define only required and needed for tests fields
-        SourceInterface::SOURCE_ID => 10,
+        SourceInterface::SOURCE_CODE => 'eu-1',
         SourceInterface::NAME => 'EU-source-1',
         SourceInterface::ENABLED => true,
         SourceInterface::PRIORITY => 100,
@@ -28,7 +29,7 @@ $sourcesData = [
         SourceInterface::COUNTRY_ID => 'FR',
     ],
     [
-        SourceInterface::SOURCE_ID => 20,
+        SourceInterface::SOURCE_CODE => 'eu-2',
         SourceInterface::NAME => 'EU-source-2',
         SourceInterface::ENABLED => true,
         SourceInterface::PRIORITY => 200,
@@ -36,7 +37,7 @@ $sourcesData = [
         SourceInterface::COUNTRY_ID => 'FR',
     ],
     [
-        SourceInterface::SOURCE_ID => 30,
+        SourceInterface::SOURCE_CODE => 'eu-3',
         SourceInterface::NAME => 'EU-source-3',
         SourceInterface::ENABLED => true,
         SourceInterface::PRIORITY => 300,
@@ -44,7 +45,7 @@ $sourcesData = [
         SourceInterface::COUNTRY_ID => 'DE',
     ],
     [
-        SourceInterface::SOURCE_ID => 40,
+        SourceInterface::SOURCE_CODE => 'eu-disabled',
         SourceInterface::NAME => 'EU-source-disabled',
         SourceInterface::ENABLED => false,
         SourceInterface::PRIORITY => 10,
@@ -52,7 +53,7 @@ $sourcesData = [
         SourceInterface::COUNTRY_ID => 'DE',
     ],
     [
-        SourceInterface::SOURCE_ID => 50,
+        SourceInterface::SOURCE_CODE => 'us-1',
         SourceInterface::NAME => 'US-source-1',
         SourceInterface::ENABLED => true,
         SourceInterface::PRIORITY => 100,
