@@ -156,7 +156,7 @@ case $TEST_SUITE in
         echo "Prepare functional tests for running"
         cd dev/tests/api-functional
         cp config/install-config-mysql.php.dist config/install-config-mysql.php
-        sed -e "s?http://localhost/?${MAGENTO_HOST_NAME}?g" --in-place ./config/install-config-mysql.php
+        sed -e "s?http://localhost/?http://${MAGENTO_HOST_NAME}/?g" --in-place ./config/install-config-mysql.php
 
         cp ../../travis/api-functional/phpunit.xml ./phpunit.xml
         sed -e "s?magento.url?${MAGENTO_HOST_NAME}?g" --in-place ./phpunit.xml
