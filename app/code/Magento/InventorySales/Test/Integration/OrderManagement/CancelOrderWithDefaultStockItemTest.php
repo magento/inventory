@@ -8,12 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\OrderManagement;
 
 use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
-use Magento\Sales\Api\Data\OrderAddressInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\Data\OrderItemInterface;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Api\Data\AddressInterface;
+use Magento\Quote\Api\Data\CartItemInterface;
+use Magento\Quote\Api\Data\CartItemInterfaceFactory;
+use Magento\Quote\Api\Data\AddressInterfaceFactory;
 use Magento\Sales\Api\OrderManagementInterface;
-use Magento\Sales\Model\Order\Address;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Indexer\Model\Indexer;
@@ -22,12 +23,6 @@ use Magento\Inventory\Test\Integration\Indexer\RemoveIndexData;
 use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\Inventory\Model\CleanupReservationsInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Sales\Api\Data\OrderAddressInterfaceFactory;
-use Magento\Sales\Api\Data\OrderInterfaceFactory;
-use Magento\Sales\Api\Data\OrderItemInterfaceFactory;
-use Magento\Sales\Api\Data\OrderPaymentInterfaceFactory;
-use Magento\Store\Api\StoreRepositoryInterface;
-
 
 class CancelOrderWithDefaultStockItemTest extends TestCase
 {
@@ -64,20 +59,17 @@ class CancelOrderWithDefaultStockItemTest extends TestCase
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var OrderItemInterfaceFactory */
-    private $orderItemFactory;
-
-    /** @var OrderPaymentInterfaceFactory */
-    private $orderPaymentFactory;
-
-    /** @var OrderAddressInterfaceFactory */
+    /** @var AddressInterfaceFactory */
     private $addressFactory;
 
-    /** @var StoreRepositoryInterface */
-    private $storeRepository;
+    /** @var CartManagementInterface */
+    private $cartManagement;
 
-    /** @var OrderInterfaceFactory */
-    private $orderFactory;
+    /** @var CartRepositoryInterface */
+    private $cartRepository;
+
+    /** @var CartItemInterfaceFactory */
+    private $cartItemFactory;
 
     protected function setUp()
     {
@@ -86,13 +78,12 @@ class CancelOrderWithDefaultStockItemTest extends TestCase
         $this->indexer->reindexAll();
 
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
+        $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
+        $this->cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
         $this->getProductQtyInStock = Bootstrap::getObjectManager()->get(GetProductQuantityInStockInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
-        $this->orderItemFactory = Bootstrap::getObjectManager()->get(OrderItemInterfaceFactory::class);
-        $this->orderPaymentFactory = Bootstrap::getObjectManager()->get(OrderPaymentInterfaceFactory::class);
-        $this->addressFactory = Bootstrap::getObjectManager()->get(OrderAddressInterfaceFactory::class);
-        $this->storeRepository = Bootstrap::getObjectManager()->get(StoreRepositoryInterface::class);
-        $this->orderFactory = Bootstrap::getObjectManager()->get(OrderInterfaceFactory::class);
+        $this->addressFactory = Bootstrap::getObjectManager()->get(AddressInterfaceFactory::class);
+        $this->cartItemFactory = Bootstrap::getObjectManager()->get(CartItemInterfaceFactory::class);
 
         $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
         $this->removeIndexData = Bootstrap::getObjectManager()->get(RemoveIndexData::class);
@@ -114,65 +105,54 @@ class CancelOrderWithDefaultStockItemTest extends TestCase
      */
     public function testCancelOrder()
     {
-        $orderId = 1;
         $sku = 'SKU-1';
         $stockId = 1;
-
         $product = $this->productRepository->get($sku);
-        $orderItems = [
-            $this->orderItemFactory->create(
+
+        $cartId = $this->cartManagement->createEmptyCart();
+        $cart = $this->cartRepository->get($cartId);
+        $cart->setCustomerEmail('admin@example.com');
+        $cart->setCustomerIsGuest(true);
+        $cartItem =
+            $this->cartItemFactory->create(
                 [
                     'data' => [
-                        OrderItemInterface::SKU => $product->getSku(),
-                        OrderItemInterface::PRODUCT_ID => $product->getId(),
-                        OrderItemInterface::ITEM_ID => 1,
-                        OrderItemInterface::ORDER_ID => $orderId,
-                        OrderItemInterface::QTY_ORDERED => 3.5,
+                        CartItemInterface::KEY_SKU => $product->getSku(),
+                        CartItemInterface::KEY_QTY => 3.5,
+                        CartItemInterface::KEY_QUOTE_ID => $cartId,
+                        'product_id' => $product->getId(),
+                        'product' => $product
                     ]
                 ]
-            )
-        ];
-        $payment = $this->orderPaymentFactory->create(
-            [
-                'data' => [
-                    OrderPaymentInterface::ENTITY_ID => 1,
-                    OrderPaymentInterface::METHOD => 'free'
-                ]
-            ]
-        );
+            );
+        $cart->addItem($cartItem);
         $address = $this->addressFactory->create(
             [
                 'data' => [
-                    OrderAddressInterface::ENTITY_ID => 1,
-                    OrderAddressInterface::COUNTRY_ID => 1,
-                    OrderAddressInterface::LASTNAME => 'Doe',
-                    OrderAddressInterface::FIRSTNAME => 'John',
-                    OrderAddressInterface::STREET => 'example street',
-                    OrderAddressInterface::EMAIL => 'customer@example.com',
-                    OrderAddressInterface::CITY => 'example city',
-                    OrderAddressInterface::TELEPHONE => '000 0000',
-                    OrderAddressInterface::ADDRESS_TYPE => Address::TYPE_BILLING,
-                    'postcode' => 12345
+                    AddressInterface::KEY_COUNTRY_ID => 'US',
+                    AddressInterface::KEY_REGION_ID => 15,
+                    AddressInterface::KEY_LASTNAME => 'Doe',
+                    AddressInterface::KEY_FIRSTNAME => 'John',
+                    AddressInterface::KEY_STREET => 'example street',
+                    AddressInterface::KEY_EMAIL => 'customer@example.com',
+                    AddressInterface::KEY_CITY => 'example city',
+                    AddressInterface::KEY_TELEPHONE => '000 0000',
+                    AddressInterface::KEY_POSTCODE => 12345
                 ]
             ]
         );
-        /** @var \Magento\Store\Api\Data\StoreInterface $store */
-        $store = $this->storeRepository->get('default');
-        $orderData = [
-            OrderInterface::ENTITY_ID => 1,
-            OrderInterface::STATE => 'pending',
-            OrderInterface::STATUS => 'pending',
-            OrderInterface::ITEMS => $orderItems,
-            OrderInterface::PAYMENT => $payment,
-            OrderInterface::STORE_ID => $store->getId(),
-            OrderInterface::BILLING_ADDRESS => $address,
-            'addresses' => [$address]
-        ];
-        $order = $this->orderFactory->create(['data' => $orderData]);
+        $cart->setBillingAddress($address);
+        $cart->setShippingAddress($address);
+        $cart->getPayment()->setMethod('checkmo');
+        $cart->getShippingAddress()->setShippingMethod('flatrate_flatrate');
+        $cart->getShippingAddress()->setCollectShippingRates(true);
+        $cart->getShippingAddress()->collectShippingRates();
+
+        $this->cartRepository->save($cart);
 
         self::assertEquals(5.5, $this->getProductQtyInStock->execute($sku, $stockId));
 
-        $this->orderManagement->place($order);
+        $orderId = $this->cartManagement->placeOrder($cartId);
         self::assertEquals(2, $this->getProductQtyInStock->execute($sku, $stockId));
 
         $this->orderManagement->cancel($orderId);

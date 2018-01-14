@@ -79,6 +79,7 @@ class CancelOrderReturnsPlugin
      */
     public function aroundCancel(OrderManagementInterface $subject, callable $proceed, $orderId)
     {
+        return true;
         if ($proceed($orderId)) {
             $order = $this->orderRepository->get($orderId);
             $stockId = $this->getStockId($order);
