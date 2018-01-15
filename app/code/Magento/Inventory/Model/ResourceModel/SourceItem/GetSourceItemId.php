@@ -5,12 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Test\Integration\Indexer;
+namespace Magento\Inventory\Model\ResourceModel\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
+/**
+ * Get SourceItem id by product SKU and Source Code
+ */
 class GetSourceItemId
 {
     /**
@@ -29,6 +32,7 @@ class GetSourceItemId
     /**
      * @param string $sku
      * @param string $sourceCode
+     *
      * @return int
      */
     public function execute(string $sku, string $sourceCode): int

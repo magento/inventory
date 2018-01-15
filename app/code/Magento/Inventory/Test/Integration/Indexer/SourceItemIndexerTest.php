@@ -9,6 +9,7 @@ namespace Magento\Inventory\Test\Integration\Indexer;
 
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Inventory\Indexer\SourceItem\SourceItemIndexer;
+use Magento\Inventory\Model\ResourceModel\SourceItem\GetSourceItemId;
 use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
