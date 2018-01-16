@@ -38,8 +38,8 @@ class SourceItemsReindex
     public function execute(array $sourceItemIds)
     {
         /** @var IndexerInterface $indexer */
-//        $indexer = $this->indexerFactory->create();
-//        $indexer->load(SourceItemIndexer::INDEXER_ID);
-//        $indexer->reindexList($sourceItemIds);
+        $indexer = $this->indexerFactory->create();
+        $indexer->load(SourceItemIndexer::INDEXER_ID);
+        $indexer->reindexList($sourceItemIds);
     }
 }
