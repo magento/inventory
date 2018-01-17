@@ -83,7 +83,8 @@ class StockStateProvider implements StockStateProviderInterface
     public function verifyStock(StockItemInterface $stockItem)
     {
 //        prototype code
-        $productQty = $this->getProductQuantity->execute($stockItem);
+//        $productQty = $this->getProductQuantity->execute($stockItem);
+        $productQty = $stockItem->getQty();
         if ($productQty === null && $stockItem->getManageStock()) {
             return false;
         }
