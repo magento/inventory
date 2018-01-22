@@ -19,6 +19,9 @@ use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
 use PHPUnit\Framework\Assert;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class StockItemDataChecker
 {
     /**
