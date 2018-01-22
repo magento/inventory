@@ -13,6 +13,7 @@ use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\EntityManager\HydratorInterface;
+use Magento\Framework\Module\Manager;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
@@ -61,6 +62,11 @@ class StockItemDataChecker
     private $defaultSourceProvider;
 
     /**
+     * @var Manager
+     */
+    private $moduleManager;
+
+    /**
      * @param HydratorInterface $hydrator
      * @param StockItemRepositoryInterface $stockItemRepository
      * @param StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
@@ -69,6 +75,7 @@ class StockItemDataChecker
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param Manager $moduleManager
      */
     public function __construct(
         HydratorInterface $hydrator,
@@ -78,7 +85,8 @@ class StockItemDataChecker
         ProductInterfaceFactory $productFactory,
         SourceItemRepositoryInterface $sourceItemRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        Manager $moduleManager
     ) {
         $this->hydrator = $hydrator;
         $this->stockItemRepository = $stockItemRepository;
@@ -88,6 +96,7 @@ class StockItemDataChecker
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -166,21 +175,24 @@ class StockItemDataChecker
      */
     private function checkIntegrityWithInventory(Product $product, array $expectedData)
     {
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
-            ->addFilter(SourceItemInterface::SKU, $product->getSku())
-            ->create();
-        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-        Assert::assertCount(1, $sourceItems);
+        // soft dependency in tests because we don't have possibility replace tests from different modules
+        if ($this->moduleManager->isEnabled('Magento_Inventory')) {
+            $searchCriteria = $this->searchCriteriaBuilder
+                ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
+                ->addFilter(SourceItemInterface::SKU, $product->getSku())
+                ->create();
+            $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+            Assert::assertCount(1, $sourceItems);
 
-        $sourceItem = reset($sourceItems);
-        Assert::assertEquals(
-            $expectedData[StockItemInterface::QTY],
-            $sourceItem->getQuantity()
-        );
-        Assert::assertEquals(
-            $expectedData[StockItemInterface::IS_IN_STOCK],
-            (int)$sourceItem->getStatus()
-        );
+            $sourceItem = reset($sourceItems);
+            Assert::assertEquals(
+                $expectedData[StockItemInterface::QTY],
+                $sourceItem->getQuantity()
+            );
+            Assert::assertEquals(
+                $expectedData[StockItemInterface::IS_IN_STOCK],
+                (int)$sourceItem->getStatus()
+            );
+        }
     }
 }
