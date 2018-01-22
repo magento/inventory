@@ -15,7 +15,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 /**
  * Check that if product quantity <= 0 status is not "In Stock".
  */
-class ConsistencyValidator implements SourceItemValidatorInterface
+class StatusConsistencyValidator implements SourceItemValidatorInterface
 {
     /**
      * @var ValidationResultFactory
@@ -46,21 +46,18 @@ class ConsistencyValidator implements SourceItemValidatorInterface
     {
         $status = $source->getStatus();
         $quantity = $source->getQuantity();
-        $statusOptions = $this->sourceItemStatus->toOptionArray();
-        $label = '';
-        foreach ($statusOptions as $statusOption) {
-            if ($statusOption['value'] === SourceItemInterface::STATUS_IN_STOCK) {
-                $label = (string)$statusOption['label'];
-                break;
-            }
-        }
         $errors = [];
-        if ((float)$quantity <= 0 && (int)$status === SourceItemInterface::STATUS_IN_STOCK) {
+        if (is_numeric($quantity)
+            && (float)$quantity <= 0
+            && (int)$status === SourceItemInterface::STATUS_IN_STOCK
+        ) {
+            $statusOptions = $this->sourceItemStatus->toOptionArray();
+            $labels = array_column($statusOptions, 'label', 'value');
             $errors[] = __(
                 'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
                 [
                     'status' => SourceItemInterface::STATUS,
-                    'in_stock' => $label,
+                    'in_stock' => $labels[SourceItemInterface::STATUS_IN_STOCK],
                     'quantity' => SourceItemInterface::QUANTITY,
 
                 ]
