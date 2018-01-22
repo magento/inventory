@@ -22,7 +22,6 @@ $products = [
         'attribute_set' => 4,
         'website_ids' => [1],
         'price' => 10,
-        'qty' => 1,
         'category_id' => 333,
         'meta_title' => 'Key Title',
         'meta_keyword' => 'meta keyword',
@@ -38,7 +37,6 @@ $products = [
         'attribute_set' => 4,
         'website_ids' => [1],
         'price' => 10,
-        'qty' => 1,
         'category_id' => 333,
         'meta_title' => 'Last Title',
         'meta_keyword' => 'meta keyword',
@@ -54,7 +52,6 @@ $products = [
         'attribute_set' => 4,
         'website_ids' => [1],
         'price' => 20,
-        'qty' => 1,
         'category_id' => 333,
         'meta_title' => 'First Title',
         'meta_keyword' => 'meta keyword',
@@ -70,7 +67,6 @@ $products = [
         'attribute_set' => 4,
         'website_ids' => [1],
         'price' => 30,
-        'qty' => 1,
         'category_id' => 333,
         'meta_title' => 'A title',
         'meta_keyword' => 'meta keyword',
@@ -86,7 +82,6 @@ $products = [
         'attribute_set' => 4,
         'website_ids' => [1],
         'price' => 40,
-        'qty' => 1,
         'category_id' => 333,
         'meta_title' => 'meta title',
         'meta_keyword' => 'meta keyword',
@@ -116,7 +111,7 @@ foreach ($products as $data) {
         ->setMetaDescription($data['meta_keyword'])
         ->setVisibility($data['visibility'])
         ->setStatus($data['status'])
-        ->setStockData(['use_config_manage_stock' => 0, 'qty' => $data['qty']])
+        ->setStockData(['use_config_manage_stock' => 0])
         ->save();
 
     $categoriesToAssign[$data['sku']][] = $data['category_id'];
