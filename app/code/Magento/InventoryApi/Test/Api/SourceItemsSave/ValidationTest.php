@@ -103,7 +103,8 @@ class ValidationTest extends WebapiAbstract
                             ],
                         ],
                         [
-                            'message' => 'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
+                            'message' => 'Product cannot have "%status" "%in_stock" while '
+                                . 'product "%quantity" equals or below zero',
                             'parameters' => [
                                 'status' => SourceItemInterface::STATUS,
                                 'in_stock' => 'In Stock',
@@ -236,7 +237,8 @@ class ValidationTest extends WebapiAbstract
                             ],
                         ],
                         [
-                            'message' => 'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
+                            'message' => 'Product cannot have "%status" "%in_stock" while ' .
+                                'product "%quantity" equals or below zero',
                             'parameters' => [
                                 'status' => SourceItemInterface::STATUS,
                                 'in_stock' => 'In Stock',
@@ -320,7 +322,8 @@ class ValidationTest extends WebapiAbstract
                     'message' => 'Validation Failed',
                     'errors' => [
                         [
-                            'message' => 'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
+                            'message' => 'Product cannot have "%status" "%in_stock" while '
+                                . 'product "%quantity" equals or below zero',
                             'parameters' => [
                                 'status' => SourceItemInterface::STATUS,
                                 'in_stock' => 'In Stock',

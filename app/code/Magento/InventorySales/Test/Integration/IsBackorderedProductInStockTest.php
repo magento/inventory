@@ -78,6 +78,7 @@ class IsBackorderedProductInStockTest extends TestCase
      */
     public function testBackorderedZeroQtyProductIsInStock()
     {
+        $this->markTestSkipped('Skipped until backorders are supported.');
         $product = $this->productRepository->get('SKU-2');
         $stockItemSearchCriteria = $this->stockItemCriteriaFactory->create();
         $stockItemSearchCriteria->setProductsFilter($product->getId());
