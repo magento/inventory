@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceItem\Validator;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\OptionSource\SourceItemStatus;
@@ -28,15 +30,30 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
     private $sourceItemStatus;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfiguration;
+
+    /**
      * @param ValidationResultFactory $validationResultFactory
      * @param SourceItemStatus $sourceItemStatus
+     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
-        SourceItemStatus $sourceItemStatus
+        SourceItemStatus $sourceItemStatus,
+        ProductRepositoryInterface $productRepository,
+        StockConfigurationInterface $stockConfiguration
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->sourceItemStatus = $sourceItemStatus;
+        $this->productRepository = $productRepository;
+        $this->stockConfiguration = $stockConfiguration;
     }
 
     /**
@@ -44,10 +61,14 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
      */
     public function validate(SourceItemInterface $source): ValidationResult
     {
-        $status = $source->getStatus();
+        $product = $this->productRepository->get($source->getSku());
+        $typeId = $product->getTypeId() ?: $product->getTypeInstance()->getTypeId();
+        $isQty = $this->stockConfiguration->isQty($typeId);
         $quantity = $source->getQuantity();
+        $status = $source->getStatus();
         $errors = [];
-        if (is_numeric($quantity)
+        if ($isQty
+            && is_numeric($quantity)
             && (float)$quantity <= 0
             && (int)$status === SourceItemInterface::STATUS_IN_STOCK
         ) {
