@@ -115,7 +115,10 @@ class StockItemDataChecker
         $productLoadedByModel = $this->productFactory->create();
         $productLoadedByModel->load($product->getId());
         $this->doCheckStockItemData($product, $expectedData);
-        $this->checkIntegrityWithInventory($product, $expectedData);
+        // soft dependency in tests because we don't have possibility replace tests from different modules
+        if ($this->moduleManager->isEnabled('Magento_Inventory')) {
+            $this->checkIntegrityWithInventory($product, $expectedData);
+        }
     }
 
     /**
@@ -178,24 +181,21 @@ class StockItemDataChecker
      */
     private function checkIntegrityWithInventory(Product $product, array $expectedData)
     {
-        // soft dependency in tests because we don't have possibility replace tests from different modules
-        if ($this->moduleManager->isEnabled('Magento_Inventory')) {
-            $searchCriteria = $this->searchCriteriaBuilder
-                ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
-                ->addFilter(SourceItemInterface::SKU, $product->getSku())
-                ->create();
-            $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-            Assert::assertCount(1, $sourceItems);
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
+            ->addFilter(SourceItemInterface::SKU, $product->getSku())
+            ->create();
+        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+        Assert::assertCount(1, $sourceItems);
 
-            $sourceItem = reset($sourceItems);
-            Assert::assertEquals(
-                $expectedData[StockItemInterface::QTY],
-                $sourceItem->getQuantity()
-            );
-            Assert::assertEquals(
-                $expectedData[StockItemInterface::IS_IN_STOCK],
-                (int)$sourceItem->getStatus()
-            );
-        }
+        $sourceItem = reset($sourceItems);
+        Assert::assertEquals(
+            $expectedData[StockItemInterface::QTY],
+            $sourceItem->getQuantity()
+        );
+        Assert::assertEquals(
+            $expectedData[StockItemInterface::IS_IN_STOCK],
+            (int)$sourceItem->getStatus()
+        );
     }
 }
