@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 // @codingStandardsIgnoreFile
 
@@ -14,6 +15,7 @@ use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\Framework\Math\Division as MathDivision;
 use Magento\Framework\DataObject\Factory as ObjectFactory;
+use Magento\InventorySales\Model\GetProductQuantityInterface;
 
 /**
  * Interface StockStateProvider
@@ -46,10 +48,16 @@ class StockStateProvider implements StockStateProviderInterface
     protected $qtyCheckApplicable;
 
     /**
+     * @var GetProductQuantityInterface
+     */
+    private $getProductQuantity;
+
+    /**
      * @param MathDivision $mathDivision
      * @param FormatInterface $localeFormat
      * @param ObjectFactory $objectFactory
      * @param ProductFactory $productFactory
+     * @param GetProductQuantityInterface $getProductQuantity
      * @param bool $qtyCheckApplicable
      */
     public function __construct(
@@ -57,6 +65,7 @@ class StockStateProvider implements StockStateProviderInterface
         FormatInterface $localeFormat,
         ObjectFactory $objectFactory,
         ProductFactory $productFactory,
+        GetProductQuantityInterface $getProductQuantity,
         $qtyCheckApplicable = true
     ) {
         $this->mathDivision = $mathDivision;
@@ -64,6 +73,7 @@ class StockStateProvider implements StockStateProviderInterface
         $this->objectFactory = $objectFactory;
         $this->productFactory = $productFactory;
         $this->qtyCheckApplicable = $qtyCheckApplicable;
+        $this->getProductQuantity = $getProductQuantity;
     }
 
     /**
@@ -72,11 +82,14 @@ class StockStateProvider implements StockStateProviderInterface
      */
     public function verifyStock(StockItemInterface $stockItem)
     {
-        if ($stockItem->getQty() === null && $stockItem->getManageStock()) {
+//        prototype code
+//        $productQty = $this->getProductQuantity->execute($stockItem);
+        $productQty = $stockItem->getQty();
+        if ($productQty === null && $stockItem->getManageStock()) {
             return false;
         }
         if ($stockItem->getBackorders() == StockItemInterface::BACKORDERS_NO
-            && $stockItem->getQty() <= $stockItem->getMinQty()
+            && $productQty <= $stockItem->getMinQty()
         ) {
             return false;
         }
@@ -89,7 +102,7 @@ class StockStateProvider implements StockStateProviderInterface
      */
     public function verifyNotification(StockItemInterface $stockItem)
     {
-        return (float)$stockItem->getQty() < $stockItem->getNotifyStockQty();
+        return $this->getProductQuantity->execute($stockItem) < $stockItem->getNotifyStockQty();
     }
 
     /**
@@ -166,10 +179,11 @@ class StockStateProvider implements StockStateProviderInterface
             $result->setHasError(true)->setMessage($message)->setQuoteMessage($message)->setQuoteMessageIndex('qty');
             return $result;
         } else {
-            if ($stockItem->getQty() - $summaryQty < 0) {
+            $productQty = $this->getProductQuantity->execute($stockItem);
+            if ($productQty - $summaryQty < 0) {
                 if ($stockItem->getProductName()) {
                     if ($stockItem->getIsChildItem()) {
-                        $backOrderQty = $stockItem->getQty() > 0 ? ($summaryQty - $stockItem->getQty()) * 1 : $qty * 1;
+                        $backOrderQty = $productQty > 0 ? ($summaryQty - $productQty) * 1 : $qty * 1;
                         if ($backOrderQty > $qty) {
                             $backOrderQty = $qty;
                         }
@@ -179,7 +193,7 @@ class StockStateProvider implements StockStateProviderInterface
                         $orderedItems = (int)$stockItem->getOrderedItems();
 
                         // Available item qty in stock excluding item qty in other quotes
-                        $qtyAvailable = ($stockItem->getQty() - ($summaryQty - $qty)) * 1;
+                        $qtyAvailable = ($productQty - ($summaryQty - $qty)) * 1;
                         if ($qtyAvailable > 0) {
                             $backOrderQty = $qty * 1 - $qtyAvailable;
                         } else {
@@ -241,7 +255,7 @@ class StockStateProvider implements StockStateProviderInterface
         if (!$stockItem->getManageStock()) {
             return true;
         }
-        if ($stockItem->getQty() - $stockItem->getMinQty() - $qty < 0) {
+        if ($this->getProductQuantity->execute($stockItem) - $stockItem->getMinQty() - $qty < 0) {
             switch ($stockItem->getBackorders()) {
                 case \Magento\CatalogInventory\Model\Stock::BACKORDERS_YES_NONOTIFY:
                 case \Magento\CatalogInventory\Model\Stock::BACKORDERS_YES_NOTIFY:
@@ -277,7 +291,10 @@ class StockStateProvider implements StockStateProviderInterface
         $minQty = max($stockItem->getMinSaleQty(), $qtyIncrements);
         $divisibleMin = ceil($minQty / $qtyIncrements) * $qtyIncrements;
 
-        $maxQty = min($stockItem->getQty() - $stockItem->getMinQty(), $stockItem->getMaxSaleQty());
+        $maxQty = min(
+            $this->getProductQuantity->execute($stockItem) - $stockItem->getMinQty(),
+            $stockItem->getMaxSaleQty()
+        );
         $divisibleMax = floor($maxQty / $qtyIncrements) * $qtyIncrements;
 
         if ($qty < $minQty || $qty > $maxQty || $divisibleMin > $divisibleMax) {
@@ -343,7 +360,7 @@ class StockStateProvider implements StockStateProviderInterface
             $product->load($stockItem->getProductId());
             // prevent possible recursive loop
             if (!$product->isComposite()) {
-                $stockQty = $stockItem->getQty();
+                $stockQty = $this->getProductQuantity->execute($stockItem);
             } else {
                 $stockQty = null;
                 $productsByGroups = $product->getTypeInstance()->getProductsToPurchaseByReqGroups($product);

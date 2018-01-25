@@ -11,31 +11,25 @@
     <preference for="Magento\InventoryCatalog\Model\GetProductIdsBySkusInterface" type="Magento\InventoryCatalog\Model\GetProductIdsBySkus"/>
     <preference for="Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface" type="Magento\InventoryCatalog\Model\GetSkusByProductIds"/>
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
-        <plugin name="prevent_default_stock_deleting"
-                type="Magento\InventoryCatalog\Plugin\InventoryApi\StockRepository\PreventDeleting\DefaultStockPlugin"/>
+        <plugin name="prevent_default_stock_deleting" type="Magento\InventoryCatalog\Plugin\InventoryApi\StockRepository\PreventDeleting\DefaultStockPlugin"/>
     </type>
     <type name="Magento\InventoryApi\Api\AssignSourcesToStockInterface">
-        <plugin name="prevent_assign_sources_to_default_stock"
-                type="Magento\InventoryCatalog\Plugin\InventoryApi\AssignSourcesToStock\PreventAssignSourcesToDefaultStockPlugin"/>
+        <plugin name="prevent_assign_sources_to_default_stock" type="Magento\InventoryCatalog\Plugin\InventoryApi\AssignSourcesToStock\PreventAssignSourcesToDefaultStockPlugin"/>
     </type>
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
-        <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save"
-                type="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin"/>
+        <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save" type="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin"/>
     </type>
     <type name="Magento\InventoryApi\Api\SourceItemsDeleteInterface">
-        <plugin name="set_to_zero_legacy_catalog_inventory_at_source_items_delete"
-                type="Magento\InventoryCatalog\Plugin\InventoryApi\SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin"/>
+        <plugin name="set_to_zero_legacy_catalog_inventory_at_source_items_delete" type="Magento\InventoryCatalog\Plugin\InventoryApi\SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin"/>
     </type>
     <type name="Magento\InventoryApi\Api\AppendReservationsInterface">
-        <plugin name="apply_data_to_legacy_catalog_inventory_at_reservation_placing"
-                type="Magento\InventoryCatalog\Plugin\InventoryApi\ApplyDataToLegacyCatalogInventoryAtReservationPlacingPlugin"/>
+        <plugin name="apply_data_to_legacy_catalog_inventory_at_reservation_placing" type="Magento\InventoryCatalog\Plugin\InventoryApi\ApplyDataToLegacyCatalogInventoryAtReservationPlacingPlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\QtyCounterInterface">
         <plugin name="update_source_item_at_legacy_qty_counter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyQtyCounterPlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
-        <plugin name="update_source_item_at_legacy_stock_item_save"
-                type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin"/>
+        <plugin name="update_source_item_at_legacy_stock_item_save" type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Status">
         <plugin name="adapt_add_stock_data_to_collection"

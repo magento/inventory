@@ -7,6 +7,7 @@ namespace Magento\CatalogInventory\Test\Unit\Model\Spi;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
+use Magento\InventorySales\Model\GetProductQuantityInterface;
 
 /**
  * Class StockStateProviderTest
@@ -47,6 +48,11 @@ class StockStateProviderTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\Framework\DataObject\Factory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $objectFactory;
+
+    /**
+     * @var \Magento\InventorySales\Model\GetProductQuantityInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $getProductQuantity;
 
     /**
      * @var \Magento\Framework\DataObject|\PHPUnit_Framework_MockObject_MockObject
@@ -130,6 +136,8 @@ class StockStateProviderTest extends \PHPUnit\Framework\TestCase
         $this->productFactory = $this->createPartialMock(\Magento\Catalog\Model\ProductFactory::class, ['create']);
         $this->productFactory->expects($this->any())->method('create')->willReturn($this->product);
 
+        $this->getProductQuantity = $this->createPartialMock(GetProductQuantityInterface::class, ['execute']);
+
         $this->stockStateProvider = $this->objectManagerHelper->getObject(
             \Magento\CatalogInventory\Model\StockStateProvider::class,
             [
@@ -137,6 +145,7 @@ class StockStateProviderTest extends \PHPUnit\Framework\TestCase
                 'localeFormat' => $this->localeFormat,
                 'objectFactory' => $this->objectFactory,
                 'productFactory' => $this->productFactory,
+                'getProductQuantity' => $this->getProductQuantity,
                 'qtyCheckApplicable' => $this->qtyCheckApplicable
             ]
         );
@@ -154,6 +163,7 @@ class StockStateProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testVerifyStock(StockItemInterface $stockItem, $expectedResult)
     {
+        $this->getProductQuantity->expects($this->any())->method('execute')->willReturn($stockItem->getQty());
         $this->assertEquals(
             $expectedResult,
             $this->stockStateProvider->verifyStock($stockItem)
@@ -167,6 +177,7 @@ class StockStateProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testVerifyNotification(StockItemInterface $stockItem, $expectedResult)
     {
+        $this->getProductQuantity->expects($this->any())->method('execute')->willReturn($stockItem->getQty());
         $this->assertEquals(
             $expectedResult,
             $this->stockStateProvider->verifyNotification($stockItem)
@@ -193,6 +204,7 @@ class StockStateProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testSuggestQty(StockItemInterface $stockItem, $expectedResult)
     {
+        $this->getProductQuantity->expects($this->any())->method('execute')->willReturn($stockItem->getQty());
         $this->assertEquals(
             $expectedResult,
             $this->stockStateProvider->suggestQty($stockItem, $this->qty)
