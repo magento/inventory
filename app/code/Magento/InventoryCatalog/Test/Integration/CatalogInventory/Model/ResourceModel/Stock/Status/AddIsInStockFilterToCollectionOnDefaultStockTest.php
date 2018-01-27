@@ -5,14 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Test\Integration;
+namespace Magento\InventoryCatalog\Test\Integration\CatalogInventory\Model\ResourceModel\Stock\Status;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status as StockStatus;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class AddStockDataToCollectionWithDefaultStockTest extends TestCase
+/**
+ * Test add in in stock filter to collection on default website.
+ */
+class AddIsInStockFilterToCollectionOnDefaultStockTest extends TestCase
 {
     /**
      * @var StockStatus
@@ -26,35 +29,20 @@ class AddStockDataToCollectionWithDefaultStockTest extends TestCase
     {
         parent::setUp();
 
-        $this->stockStatus = Bootstrap::getObjectManager()->create(StockStatus::class);
+        $this->stockStatus = Bootstrap::getObjectManager()->get(StockStatus::class);
     }
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     *
-     * @param int $expectedSize
-     * @param bool $isFilterInStock
-     * @return void
-     *
-     * @dataProvider addStockDataToCollectionDataProvider
      */
-    public function testAddStockDataToCollection(int $expectedSize, bool $isFilterInStock)
+    public function testAddIsInStockFilterToCollection()
     {
+        /** @var Collection $collection */
         $collection = Bootstrap::getObjectManager()->create(Collection::class);
-        $collection = $this->stockStatus->addStockDataToCollection($collection, $isFilterInStock);
 
-        self::assertEquals($expectedSize, $collection->getSize());
-    }
+        $this->stockStatus->addIsInStockFilterToCollection($collection);
 
-    /**
-     * @return array
-     */
-    public function addStockDataToCollectionDataProvider(): array
-    {
-        return [
-            [2, true],
-            [3, false],
-        ];
+        self::assertEquals(2, $collection->getSize());
     }
 }
