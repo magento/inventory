@@ -75,6 +75,7 @@ class IsBackorderedProductInStockTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      */
     public function testBackorderedZeroQtyProductIsInStock()
     {
@@ -91,7 +92,8 @@ class IsBackorderedProductInStockTest extends TestCase
         $this->stockItemRepository->save($legacyStockItem);
 
         $sourceItem = $this->getSourceItemBySku('SKU-2');
-        $sourceItem->setQuantity(-15);
+        $sourceItem->setQuantity(0);
+        $sourceItem->setStatus(SourceItemInterface::STATUS_OUT_OF_STOCK);
         $this->sourceItemsSave->execute([$sourceItem]);
 
         $this->assertTrue($this->isProductInStock->execute('SKU-2', 20));
