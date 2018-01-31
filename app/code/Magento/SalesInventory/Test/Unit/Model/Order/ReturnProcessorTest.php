@@ -38,11 +38,6 @@ class ReturnProcessorTest extends \PHPUnit\Framework\TestCase
     private $stockManagementMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\CatalogInventory\Model\Indexer\Stock\Processor
-     */
-    private $stockIndexerProcessorMock;
-
-    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Model\Indexer\Product\Price\Processor
      */
     private $priceIndexerMock;
@@ -76,10 +71,6 @@ class ReturnProcessorTest extends \PHPUnit\Framework\TestCase
         $this->stockManagementMock = $this->getMockBuilder(StockManagementInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->stockIndexerProcessorMock = $this->getMockBuilder(
-            \Magento\CatalogInventory\Model\Indexer\Stock\Processor::class
-        )->disableOriginalConstructor()
-            ->getMock();
         $this->priceIndexerMock = $this->getMockBuilder(\Magento\Catalog\Model\Indexer\Product\Price\Processor::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -110,7 +101,7 @@ class ReturnProcessorTest extends \PHPUnit\Framework\TestCase
 
         $this->returnProcessor = new ReturnProcessor(
             $this->stockManagementMock,
-            $this->stockIndexerProcessorMock,
+            null,
             $this->priceIndexerMock,
             $this->storeManagerMock,
             $this->orderItemRepositoryMock
@@ -161,10 +152,6 @@ class ReturnProcessorTest extends \PHPUnit\Framework\TestCase
             ->method('backItemQty')
             ->with($productId, $qty, $webSiteId)
             ->willReturn(true);
-
-        $this->stockIndexerProcessorMock->expects($this->once())
-            ->method('reindexList')
-            ->with([$productId]);
 
         $this->priceIndexerMock->expects($this->once())
             ->method('reindexList')

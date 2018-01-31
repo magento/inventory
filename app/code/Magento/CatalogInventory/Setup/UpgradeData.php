@@ -56,7 +56,7 @@ class UpgradeData implements UpgradeDataInterface
     public function __construct(
         StockConfigurationInterface $configuration,
         StoreManagerInterface $storeManager,
-        AbstractProcessor $indexerProcessor,
+        $indexerProcessor,
         FieldDataConverterFactory $fieldDataConverterFactory,
         QueryModifierFactory $queryModifierFactory
     ) {
@@ -94,7 +94,6 @@ class UpgradeData implements UpgradeDataInterface
             ['website_id' => $this->configuration->getDefaultScopeId()],
             ['website_id = ?' => $this->storeManager->getWebsite()->getId()]
         );
-        $this->indexerProcessor->getIndexer()->invalidate();
     }
 
     /**
