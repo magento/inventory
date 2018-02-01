@@ -17,6 +17,8 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @magentoDataFixture Magento/Catalog/_files/multiple_products.php
  * @magentoDataFixture Magento/Catalog/_files/product_simple_out_of_stock.php
  * @magentoDataFixture Magento/Catalog/_files/products_with_multiselect_attribute.php
