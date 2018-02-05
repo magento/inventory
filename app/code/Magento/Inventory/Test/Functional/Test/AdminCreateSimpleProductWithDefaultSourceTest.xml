@@ -16,7 +16,6 @@
             <description value="You should be able to create a New Product, via the Admin, and assign the Default Source to it."/>
             <testCaseId value="483"/>
             <group value="msi"/>
-            <group value="bananas"/>
         </annotations>
         <before>
             <createData entity="_defaultCategory" stepKey="createPreReqCategory"/>

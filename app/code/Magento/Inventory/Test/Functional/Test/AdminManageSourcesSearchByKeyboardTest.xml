@@ -7,21 +7,21 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
-    <test name="AdminFilterSourcesInGridTest">
+        xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AdminManageSourcesSearchByKeywordTest">
         <annotations>
             <features value="Multi-Store Inventory"/>
-            <stories value="Filter Sources in Grid"/>
-            <title value="Filter Sources on the Manage Sources grid"/>
-            <description value="You should be able to Filter the Sources from the Manage Sources grid."/>
-            <testCaseId value="493"/>
+            <stories value="Search By Keyword in Grid"/>
+            <title value="Search by Keyword on the Manage Sources grid"/>
+            <description value="You should be able to Search by Keyword from the Manage Sources grid."/>
+            <testCaseId value="506"/>
             <group value="msi"/>
         </annotations>
         <before>
-            <createData entity="TestSource1" stepKey="createSource1"/>
-            <createData entity="TestSource2" stepKey="createSource2"/>
-            <createData entity="TestSource1" stepKey="createSource3"/>
-            <createData entity="TestSource2" stepKey="createSource4"/>
+            <createData entity="_defaultSource" stepKey="createSource1"/>
+            <createData entity="_defaultSource" stepKey="createSource2"/>
+            <createData entity="_defaultSource" stepKey="createSource3"/>
+            <createData entity="_defaultSource" stepKey="createSource4"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -32,9 +32,8 @@
         <waitForPageLoad stepKey="waitForPageLoad1"/>
 
         <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
-        <fillField userInput="$$createSource3.general[source_code]$$" selector="{{AdminGridFilterControls.code}}" stepKey="fillCodeField2"/>
-        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
+        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="$$createSource3.general[name]$$" stepKey="fillSearchByKeyword"/>
+        <click selector="{{AdminGridSearchBox.search}}" stepKey="clickOnSearch"/>
 
         <see userInput="$$createSource3.general[source_code]$$" selector="{{AdminGrid.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource3.general[name]$$" selector="{{AdminGrid.rowOne}}" stepKey="seeNameInRow1"/>
