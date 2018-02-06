@@ -32,4 +32,7 @@
         <plugin name="process_register_products_sale" type="Magento\InventorySales\Plugin\CatalogInventory\StockManagement\ProcessRegisterProductsSalePlugin"/>
         <plugin name="process_revert_products_sale" type="Magento\InventorySales\Plugin\CatalogInventory\StockManagement\ProcessRevertProductsSalePlugin"/>
     </type>
+    <type name="Magento\Sales\Api\OrderManagementInterface">
+        <plugin name="process_cancel_order_returns" type="Magento\InventorySales\Plugin\Sales\OrderManagement\CancelOrderReturnsPlugin"/>
+    </type>
 </config>
