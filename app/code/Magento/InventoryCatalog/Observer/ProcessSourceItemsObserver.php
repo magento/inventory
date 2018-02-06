@@ -74,7 +74,9 @@ class ProcessSourceItemsObserver implements ObserverInterface
     {
         /** @var ProductInterface $product */
         $product = $observer->getEvent()->getProduct();
-        if ($product->getTypeId() != Type::TYPE_SIMPLE) {
+        if ($product->getTypeId() != Type::TYPE_SIMPLE
+            && $product->getTypeId() != Type::TYPE_VIRTUAL
+        ) {
             return;
         }
         /** @var Save $controller */
