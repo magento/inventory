@@ -8,13 +8,13 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
-    <test name="AdminCreateNewStockWithNoSourceOrSalesChannelTest">
+    <test name="AdminUpdateStockDataTest">
         <annotations>
             <features value="Multi-Source Inventory"/>
-            <stories value="Create New Stock"/>
-            <title value="New Stock created by Admin user"/>
-            <description value="You should be able to create a New Stock, via the Admin, without adding a Source or Sales Channel."/>
-            <testCaseId value="513"/>
+            <stories value="Update existing Stock Data"/>
+            <title value="Stock data updated by Admin user"/>
+            <description value="You should be able to update a Stocks data via the Admin."/>
+            <testCaseId value="516"/>
             <group value="msi"/>
         </annotations>
         <before>
@@ -24,20 +24,22 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <amOnPage url="{{ManageStock.url}}" stepKey="amOnTheStockListPage"/>
+        <amOnPage url="{{ManageStock.url}}" stepKey="amOnStockListPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <click selector="{{AdminGridMainControls.add}}" stepKey="clickOnAdd"/>
 
-        <fillField userInput="{{_defaultStock.name}}" selector="{{AdminEditStockGeneralSection.name}}" stepKey="fillName"/>
+        <fillField userInput="{{TestStock1.name}}" selector="{{AdminEditStockGeneralSection.name}}" stepKey="fillName1"/>
+        <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="openSaveDropDown"/>
 
+        <fillField userInput="{{TestStock2.name}}" selector="{{AdminEditStockGeneralSection.name}}" stepKey="fillName2"/>
         <click selector="{{AdminProductFormActionSection.saveArrow}}" stepKey="openSaveDropDown"/>
         <click selector="{{AdminProductFormActionSection.saveAndClose}}" stepKey="clickOnSaveAndClose"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="assertSaveMessageSuccess"/>
 
         <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="{{_defaultStock.name}}" stepKey="fillSearchByKeyword"/>
+        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="{{TestStock2.name}}" stepKey="fillSearchByKeyword"/>
         <click selector="{{AdminGridSearchBox.search}}" stepKey="clickOnSearch"/>
 
-        <see userInput="{{_defaultStock.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
+        <see userInput="{{TestStock2.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
     </test>
 </tests>
