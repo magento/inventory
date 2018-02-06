@@ -25,7 +25,7 @@
         </after>
 
         <amOnPage url="{{ManageSources.url}}" stepKey="amOnTheSourcesListPage"/>
-        <click selector="{{AdminManageSourcesGrid.addNewSource}}" stepKey="clickOnAddNewSource"/>
+        <click selector="{{AdminGridMainControls.add}}" stepKey="clickOnTheAddButton"/>
 
         <fillField userInput="{{_defaultSource.name}}" selector="{{AdminEditSourceGeneralSection.name}}" stepKey="fillNameField1"/>
         <fillField userInput="{{_defaultSource.source_code}}" selector="{{AdminEditSourceGeneralSection.code}}" stepKey="fillCodeField1"/>
@@ -56,13 +56,13 @@
         <click selector="{{AdminProductFormActionSection.saveAndClose}}" stepKey="clickOnSaveAndClose"/>
 
         <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
-        <fillField userInput="{{_defaultSource.source_code}}" selector="{{AdminGridFilterControls.code}}" stepKey="fillCodeField2"/>
+        <fillField userInput="{{_defaultSource.source_code}}" selector="{{AdminManageSourcesGridFilterControls.code}}" stepKey="fillCodeField2"/>
         <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
 
-        <see userInput="{{_defaultSource.source_code}}" selector="{{AdminGrid.rowOne}}" stepKey="seeCodeInRow1"/>
-        <see userInput="{{_defaultSource.name}}" selector="{{AdminGrid.rowOne}}" stepKey="seeNameInRow1"/>
-        <see userInput="Enabled" selector="{{AdminGrid.rowOne}}" stepKey="seeIsEnabledInRow1"/>
+        <see userInput="{{_defaultSource.source_code}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
+        <see userInput="{{_defaultSource.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
+        <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
         <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
-        <see userInput="0" selector="{{AdminGrid.rowOne}}" stepKey="seePriorityInRow1"/>
+        <see userInput="0" selector="{{AdminGridRow.rowOne}}" stepKey="seePriorityInRow1"/>
     </test>
 </tests>

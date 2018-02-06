@@ -43,8 +43,8 @@
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSource"/>
 
         <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFiltersIfPresent1"/>
-        <click selector="{{AdminProductSourcesSidebarSection.defaultSourceCheckbox}}" stepKey="clickOnDefaultSource"/>
-        <click selector="{{AdminProductSourcesSidebarSection.done}}" stepKey="clickOnDone"/>
+        <click selector="{{AdminAssignSourcesSlideOutSection.defaultSourceCheckbox}}" stepKey="clickOnDefaultSources"/>
+        <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone"/>
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillQtyField"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity}}" userInput="{{SimpleMsiProduct.notifyQuantity}}" stepKey="fillNotifyQtyField"/>

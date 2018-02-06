@@ -35,10 +35,10 @@
         <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="$$createSource3.general[name]$$" stepKey="fillSearchByKeyword"/>
         <click selector="{{AdminGridSearchBox.search}}" stepKey="clickOnSearch"/>
 
-        <see userInput="$$createSource3.general[source_code]$$" selector="{{AdminGrid.rowOne}}" stepKey="seeCodeInRow1"/>
-        <see userInput="$$createSource3.general[name]$$" selector="{{AdminGrid.rowOne}}" stepKey="seeNameInRow1"/>
-        <see userInput="Enabled" selector="{{AdminGrid.rowOne}}" stepKey="seeIsEnabledInRow1"/>
+        <see userInput="$$createSource3.general[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
+        <see userInput="$$createSource3.general[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
+        <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
         <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
-        <see userInput="0" selector="{{AdminGrid.rowOne}}" stepKey="seePriorityInRow1"/>
+        <see userInput="0" selector="{{AdminGridRow.rowOne}}" stepKey="seePriorityInRow1"/>
     </test>
 </tests>
