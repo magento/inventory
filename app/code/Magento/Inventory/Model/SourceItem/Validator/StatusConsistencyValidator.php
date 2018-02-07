@@ -67,7 +67,8 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
         $quantity = $source->getQuantity();
         $status = $source->getStatus();
         $errors = [];
-        if ($isQty
+        if ($this->stockConfiguration->getManageStock()
+            && $isQty
             && is_numeric($quantity)
             && (float)$quantity <= 0
             && (int)$status === SourceItemInterface::STATUS_IN_STOCK
