@@ -13,12 +13,12 @@ use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryApi\Api\GetProductQuantityInStockInterface;
+use Magento\InventoryApi\Api\GetSalableProductQtyInterface;
 
 class ReservationPlacingDuringBackItemQtyTest extends TestCase
 {
     /**
-     * @var GetProductQuantityInStockInterface
+     * @var GetSalableProductQtyInterface
      */
     private $getProductQtyInStock;
 
@@ -44,7 +44,7 @@ class ReservationPlacingDuringBackItemQtyTest extends TestCase
 
     protected function setUp()
     {
-        $this->getProductQtyInStock = Bootstrap::getObjectManager()->get(GetProductQuantityInStockInterface::class);
+        $this->getProductQtyInStock = Bootstrap::getObjectManager()->get(GetSalableProductQtyInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);
         $this->websiteRepository = Bootstrap::getObjectManager()->get(WebsiteRepositoryInterface::class);
@@ -55,10 +55,11 @@ class ReservationPlacingDuringBackItemQtyTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_link.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_link.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      */
     public function testRevertProductsSale()
     {
