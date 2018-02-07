@@ -216,7 +216,7 @@ $product->setTypeId(\Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
     ->setSku('12345') // SKU intentionally contains digits only
     ->setPrice(45.67)
     ->setWeight(56)
-    ->setStockData(['use_config_manage_stock' => 0, 'qty' => 1])
+    ->setStockData(['use_config_manage_stock' => 0])
     ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
     ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
     ->save();

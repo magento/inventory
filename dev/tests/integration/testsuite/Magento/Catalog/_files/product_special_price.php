@@ -18,6 +18,6 @@ $product->setTypeId('simple')
     ->setMetaDescription('meta description')
     ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
     ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
-    ->setStockData(['use_config_manage_stock' => 0, 'qty' => 1])
+    ->setStockData(['use_config_manage_stock' => 0])
     ->setSpecialPrice('5.99')
     ->save();
