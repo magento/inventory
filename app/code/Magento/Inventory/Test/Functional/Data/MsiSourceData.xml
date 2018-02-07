@@ -8,30 +8,23 @@
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
-    <entity name="_defaultSource" type="general">
+    <entity name="_defaultSource" type="source">
         <data key="id_field_name">source_code</data>
-        <data key="name" unique="suffix">Default Source </data>
-        <data key="source_code" unique="suffix">default_</data>
+        <data key="name">Default Source</data>
+        <data key="source_code">default</data>
         <data key="enabled">1</data>
         <data key="isEnabled">true</data>
         <data key="description">Default Source</data>
         <data key="latitude">0</data>
         <data key="longitude">0</data>
         <data key="priority">0</data>
-        <data key="contact_name">First Last</data>
-        <data key="email" unique="prefix">test@test.com</data>
-        <data key="phone">123-456-7890</data>
-        <data key="fax">123-456-7890</data>
         <data key="country">United States</data>
         <data key="country_id">US</data>
-        <data key="stateProvince">California</data>
-        <data key="region_id">12</data>
-        <data key="city">Culver City</data>
-        <data key="street">6161 West Centinela Avenue</data>
-        <data key="postcode">90230</data>
+        <data key="postcode">00000</data>
         <data key="use_default_carrier_config">1</data>
+        <data key="useGlobalShippingConfiguration">true</data>
     </entity>
-    <entity name="_minimalSource" type="general">
+    <entity name="_minimalSource" type="source">
         <data key="id_field_name">source_code</data>
         <data key="name" unique="suffix">Minimal Source </data>
         <data key="source_code" unique="suffix">minimal_source_</data>
@@ -40,7 +33,7 @@
         <data key="postcode">90230</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
-    <entity name="TestSource1" type="general">
+    <entity name="TestSource1" type="source">
         <data key="id_field_name">source_code</data>
         <data key="name" unique="suffix">Test Source 1 </data>
         <data key="source_code" unique="suffix">test_source_1_</data>
@@ -64,7 +57,7 @@
         <data key="useGlobalShippingConfiguration">true</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
-    <entity name="TestSource2" type="general">
+    <entity name="TestSource2" type="source">
         <data key="id_field_name">source_code</data>
         <data key="name" unique="suffix">Test Source 2 </data>
         <data key="source_code" unique="suffix">test_source_2_</data>

@@ -18,10 +18,8 @@
             <group value="msi"/>
         </annotations>
         <before>
-            <createData entity="_defaultSource" stepKey="createSource1"/>
-            <createData entity="_defaultSource" stepKey="createSource2"/>
-            <createData entity="_defaultSource" stepKey="createSource3"/>
-            <createData entity="_defaultSource" stepKey="createSource4"/>
+            <createData entity="TestSource1" stepKey="createSource1"/>
+            <createData entity="TestSource2" stepKey="createSource2"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -32,13 +30,11 @@
         <waitForPageLoad stepKey="waitForPageLoad1"/>
 
         <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="$$createSource3.general[name]$$" stepKey="fillSearchByKeyword"/>
+        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="$$createSource2.general[name]$$" stepKey="fillSearchByKeyword"/>
         <click selector="{{AdminGridSearchBox.search}}" stepKey="clickOnSearch"/>
 
-        <see userInput="$$createSource3.general[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
-        <see userInput="$$createSource3.general[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
+        <see userInput="$$createSource2.general[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
+        <see userInput="$$createSource2.general[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
-        <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
-        <see userInput="0" selector="{{AdminGridRow.rowOne}}" stepKey="seePriorityInRow1"/>
     </test>
 </tests>

@@ -53,21 +53,22 @@
         <click selector="{{AdminProductFormActionSection.saveAndClose}}" stepKey="clickOnSaveAndClose"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="assertSaveMessageSuccess"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowId}}" userInput="{{_defaultSource.source_code}}" stepKey="seeDefaultAsId"/>
-        <see selector="{{AdminProductSourcesGrid.rowName}}" userInput="{{_defaultSource.name}}" stepKey="seeDefaultSourceAsName"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus}}" userInput="{{SimpleMsiProduct.stockStatus}}" stepKey="seeInStock"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowQty}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="seeQtyInField"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity}}" userInput="{{SimpleMsiProduct.notifyQuantity}}" stepKey="seeNotifyQtyInField"/>
+        <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
+        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
+        <fillField userInput="{{SimpleMsiProduct.sku}}" selector="{{AdminProductGridFilterControls.sku}}" stepKey="fillCodeField2"/>
+        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
 
         <!-- Go to storefront category page, assert product visibility -->
         <amOnPage url="{{StorefrontCategoryPage.url($$createPreReqCategory.name$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForPageLoad3"/>
+
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="assertProductPresent"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="assertProductPricePresent"/>
 
         <!-- Go to storefront product page, assert product visibility -->
         <amOnPage url="{{SimpleMsiProduct.urlKey}}.html" stepKey="navigateToProductPage"/>
         <waitForPageLoad stepKey="waitForPageLoad4"/>
+
         <seeInTitle userInput="{{SimpleMsiProduct.name}}" stepKey="assertProductNameTitle"/>
         <see userInput="{{SimpleMsiProduct.name}}" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName"/>
         <see userInput="{{SimpleMsiProduct.price}}" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice"/>

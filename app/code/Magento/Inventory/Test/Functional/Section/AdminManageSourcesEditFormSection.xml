@@ -15,7 +15,6 @@
         <element name="description" type="textarea" selector="textarea[name='general[description]']"/>
         <element name="latitude" type="input" selector="input[name='general[latitude]']"/>
         <element name="longitude" type="input" selector="input[name='general[longitude]']"/>
-        <element name="priority" type="input" selector="input[name='general[priority]']"/>
     </section>
     <section name="AdminEditSourceContactInfoSection">
         <element name="opened" type="wysiwyg" selector="div[data-index='contact_info'] .fieldset-wrapper-title[data-state-collapsible='open']"/>

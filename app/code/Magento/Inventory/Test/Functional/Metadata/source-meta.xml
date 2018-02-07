@@ -8,10 +8,10 @@
 
 <operations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd">
-    <operation name="CreateSource" dataType="general" type="create"
+    <operation name="CreateSource" dataType="source" type="create"
                auth="adminFormKey" url="/inventory/source/save" method="POST" successRegex="/messages-message-success/" returnRegex="">
         <contentType>application/x-www-form-urlencoded</contentType>
-        <object dataType="general" key="general">
+        <object dataType="source" key="general">
             <field key="id_field_name">string</field>
             <field key="name">string</field>
             <field key="source_code">string</field>

@@ -36,7 +36,6 @@
         <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
         <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.latitude}}" stepKey="fillLatitudeField1"/>
         <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.longitude}}" stepKey="fillLongitudeField1"/>
-        <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.priority}}" stepKey="fillPriorityField1"/>
 
         <conditionalClick selector="{{AdminEditSourceContactInfoSection.closed}}" dependentSelector="{{AdminEditSourceContactInfoSection.opened}}" visible="false" stepKey="clickOnContactInfo1"/>
         <fillField userInput="{{TestSource1.contact_name}}" selector="{{AdminEditSourceContactInfoSection.contactName}}" stepKey="fillContactNameField1"/>
@@ -57,14 +56,12 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveContinue1"/>
 
         <fillField userInput="{{TestSource2.name}}" selector="{{AdminEditSourceGeneralSection.name}}" stepKey="fillNameField2"/>
-        <fillField userInput="{{TestSource2.source_code}}" selector="{{AdminEditSourceGeneralSection.code}}" stepKey="fillCodeField2"/>
         <checkOption selector="{{AdminEditSourceGeneralSection.isEnabled}}" stepKey="checkIsEnabled2"/>
         <fillField userInput="{{TestSource2.description}}" selector="{{AdminEditSourceGeneralSection.description}}" stepKey="fillDescriptionField2"/>
 
         <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
         <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.latitude}}" stepKey="fillLatitudeField2"/>
         <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.longitude}}" stepKey="fillLongitudeField2"/>
-        <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.priority}}" stepKey="fillPriorityField2"/>
 
         <conditionalClick selector="{{AdminEditSourceContactInfoSection.closed}}" dependentSelector="{{AdminEditSourceContactInfoSection.opened}}" visible="false" stepKey="clickOnContactInfo2"/>
         <fillField userInput="{{TestSource2.contact_name}}" selector="{{AdminEditSourceContactInfoSection.contactName}}" stepKey="fillContactNameField2"/>
@@ -84,13 +81,11 @@
 
         <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
         <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters2"/>
-        <fillField userInput="{{TestSource2.source_code}}" selector="{{AdminManageSourcesGridFilterControls.code}}" stepKey="fillCodeFieldInGrid2"/>
+        <fillField userInput="{{TestSource1.source_code}}" selector="{{AdminManageSourcesGridFilterControls.code}}" stepKey="fillCodeFieldInGrid2"/>
         <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters2"/>
 
-        <see userInput="{{TestSource2.source_code}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow2"/>
+        <see userInput="{{TestSource1.source_code}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow2"/>
         <see userInput="{{TestSource2.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow2"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow2"/>
-        <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
-        <see userInput="0" selector="{{AdminGridRow.rowOne}}" stepKey="seePriorityInRow2"/>
     </test>
 </tests>

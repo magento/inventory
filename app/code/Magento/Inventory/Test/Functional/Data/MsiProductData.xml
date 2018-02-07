@@ -14,7 +14,7 @@
         <data key="price">10.00</data>
         <data key="quantity">100</data>
         <data key="weight">1</data>
-        <data key="urlKey" unique="suffix">simple_product_</data>
+        <data key="urlKey" unique="suffix">simple-product-</data>
         <data key="stockStatus">In Stock</data>
         <data key="notifyQuantity">1</data>
     </entity>
