@@ -31,10 +31,10 @@
         <amOnPage url="{{ManageSources.url}}" stepKey="amOnTheSourcesListPage"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
 
-        <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
-        <fillField userInput="$$createSource3.general[source_code]$$" selector="{{AdminManageSourcesGridFilterControls.code}}" stepKey="fillCodeField2"/>
-        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
+            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="value" value="$$createSource3.general[source_code]$$"/>
+        </actionGroup>
 
         <see userInput="$$createSource3.general[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource3.general[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>

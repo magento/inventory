@@ -21,7 +21,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{ManageSources.url}}" stepKey="amOnTheSourcesListPage"/>
@@ -54,9 +54,10 @@
         <click selector="{{AdminProductFormActionSection.saveArrow}}" stepKey="clickOnSaveArrow1"/>
         <click selector="{{AdminProductFormActionSection.saveAndClose}}" stepKey="clickOnSaveAndClose"/>
 
-        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
-        <fillField userInput="{{TestSource1.source_code}}" selector="{{AdminManageSourcesGridFilterControls.code}}" stepKey="fillCodeField2"/>
-        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
+            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="value" value="TestSource1.source_code"/>
+        </actionGroup>
 
         <see userInput="{{TestSource1.source_code}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="{{TestSource1.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>

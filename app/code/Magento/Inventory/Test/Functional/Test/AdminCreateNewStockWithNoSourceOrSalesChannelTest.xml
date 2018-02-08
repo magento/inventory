@@ -21,7 +21,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{ManageStock.url}}" stepKey="amOnTheStockListPage"/>
@@ -30,13 +30,11 @@
 
         <fillField userInput="{{_defaultStock.name}}" selector="{{AdminEditStockGeneralSection.name}}" stepKey="fillName"/>
 
-        <click selector="{{AdminProductFormActionSection.saveArrow}}" stepKey="openSaveDropDown"/>
-        <click selector="{{AdminProductFormActionSection.saveAndClose}}" stepKey="clickOnSaveAndClose"/>
-        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="assertSaveMessageSuccess"/>
+        <actionGroup ref="AdminSaveAndClose" stepKey="saveAndClose1"/>
 
-        <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="{{_defaultStock.name}}" stepKey="fillSearchByKeyword"/>
-        <click selector="{{AdminGridSearchBox.search}}" stepKey="clickOnSearch"/>
+        <actionGroup ref="AdminGridSearchByKeyword" stepKey="searchByKeyword">
+            <argument name="value" value="_defaultStock.name"/>
+        </actionGroup>
 
         <see userInput="{{_defaultStock.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
     </test>

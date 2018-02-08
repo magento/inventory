@@ -25,7 +25,7 @@
             <waitForPageLoad time="30" stepKey="waitForPageLoad"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
         </after>
 
@@ -50,14 +50,12 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillQtyField"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity}}" userInput="{{SimpleMsiProduct.notifyQuantity}}" stepKey="fillNotifyQtyField"/>
 
-        <click selector="{{AdminProductFormActionSection.saveArrow}}" stepKey="openSaveDropDown"/>
-        <click selector="{{AdminProductFormActionSection.saveAndClose}}" stepKey="clickOnSaveAndClose"/>
-        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="assertSaveMessageSuccess"/>
+        <actionGroup ref="AdminSaveAndClose" stepKey="saveAndClose1"/>
 
-        <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
-        <fillField userInput="{{SimpleMsiProduct.sku}}" selector="{{AdminProductGridFilterControls.sku}}" stepKey="fillCodeField2"/>
-        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
+            <argument name="selector" value="AdminProductGridFilterControls.sku"/>
+            <argument name="value" value="SimpleMsiProduct.sku"/>
+        </actionGroup>
 
         <!-- Go to storefront category page, assert product visibility -->
         <amOnPage url="{{StorefrontCategoryPage.url($$createPreReqCategory.name$$)}}" stepKey="navigateToCategoryPage"/>

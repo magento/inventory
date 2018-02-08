@@ -23,15 +23,15 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{ManageSources.url}}" stepKey="amOnTheSourcesListPage"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
 
-        <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFilterIfPresent"/>
-        <fillField selector="{{AdminGridSearchBox.searchByKeyword}}" userInput="$$createSource2.general[name]$$" stepKey="fillSearchByKeyword"/>
-        <click selector="{{AdminGridSearchBox.search}}" stepKey="clickOnSearch"/>
+        <actionGroup ref="AdminGridSearchByKeyword" stepKey="searchByKeyword">
+            <argument name="value" value="$$createSource2.general[name]$$"/>
+        </actionGroup>
 
         <see userInput="$$createSource2.general[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource2.general[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
