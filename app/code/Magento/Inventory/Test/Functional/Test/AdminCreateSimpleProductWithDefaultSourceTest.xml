@@ -40,6 +40,7 @@
         <fillField userInput="{{SimpleMsiProduct.urlKey}}" selector="{{AdminProductSEOSection.urlKeyInput}}" stepKey="fillUrlKey"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
 
+        <scrollToTopOfPage stepKey="scrollToTopOfPage"/>
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSource"/>
 
         <actionGroup ref="AdminClearGridFiltersIfPresent" stepKey="clearGridFiltersIfPresent1"/>
