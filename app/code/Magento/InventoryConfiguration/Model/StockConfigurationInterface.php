@@ -9,5 +9,5 @@ namespace Magento\InventoryConfiguration\Model;
 
 interface StockConfigurationInterface
 {
-    public function validate($sku, $stockId, $qtyWithReservation, $isSalable, $globalMinQty) : bool;
+    public function validate($sku, $stockId, $qtyWithReservation, $isSalable) : bool;
 }
