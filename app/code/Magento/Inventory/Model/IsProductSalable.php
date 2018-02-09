@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model;
 
-use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 use Magento\InventoryApi\Api\IsProductSalableInterface;
 use Magento\InventoryConfiguration\Model\StockConfigurationInterface;
 
