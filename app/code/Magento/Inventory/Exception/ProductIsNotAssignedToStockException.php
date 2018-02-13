@@ -9,7 +9,9 @@ namespace Magento\Inventory\Exception;
 
 use Magento\Framework\Exception\LocalizedException;
 
-
+/**
+ * @api
+ */
 class ProductIsNotAssignedToStockException extends LocalizedException
 {
 }
