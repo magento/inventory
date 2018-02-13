@@ -21,7 +21,7 @@
             </argument>
         </arguments>
     </type>
-    <preference for="Magento\InventoryConfiguration\Model\StockConfigurationInterface"
+    <preference for="Magento\InventoryConfiguration\Model\StockItemConfigurationInterface"
                 type="Magento\InventoryConfiguration\Model\StockConfigurationValidator"/>
 
     <type name="Magento\Inventory\Model\StockSourceLink\Validator\ValidatorChain">

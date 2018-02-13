@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model;
 
 use Magento\InventoryApi\Api\IsProductSalableInterface;
-use Magento\InventoryConfiguration\Model\StockConfigurationInterface;
+use Magento\InventoryConfiguration\Model\StockItemConfigurationInterface;
 
 /**
  * @inheritdoc
@@ -26,7 +26,7 @@ class IsProductSalable implements IsProductSalableInterface
     private $getReservationsQuantity;
 
     /**
-     * @var StockConfigurationInterface
+     * @var StockItemConfigurationInterface
      */
     private $stockConfiguration;
 
@@ -34,12 +34,12 @@ class IsProductSalable implements IsProductSalableInterface
      * IsProductSalable constructor.
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
-     * @param StockConfigurationInterface $stockConfiguration
+     * @param StockItemConfigurationInterface $stockConfiguration
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
-        StockConfigurationInterface $stockConfiguration
+        StockItemConfigurationInterface $stockConfiguration
     ) {
         $this->getReservationsQuantity = $getReservationsQuantity;
         $this->stockConfiguration = $stockConfiguration;
@@ -59,6 +59,6 @@ class IsProductSalable implements IsProductSalableInterface
         $isSalable = (bool)$stockItemData['is_salable'];
         $qtyWithReservation = $stockItemData['quantity'] + $this->getReservationsQuantity->execute($sku, $stockId);
 
-        return $this->stockConfiguration->validate($sku, $stockId, $qtyWithReservation, $isSalable);
+        return $this->stockConfiguration->execute($sku, $stockId, $qtyWithReservation, $isSalable);
     }
 }

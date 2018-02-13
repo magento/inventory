@@ -1,27 +1,29 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: dev
- * Date: 08.02.18
- * Time: 23:54
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryConfiguration\Model;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
+use Magento\InventoryCatalog\Model\GetProductIdsBySkusInterface;
 use Magento\CatalogInventory\Model\Configuration;
 use Magento\CatalogInventory\Model\Stock\StockItemRepository as LegacyStockItemRepository;
 use Magento\CatalogInventory\Model\Stock\Item as LegacyStockItem;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 
-class StockConfigurationValidator implements StockConfigurationInterface
+/**
+ * @inheritdoc
+ */
+class StockConfigurationValidator implements StockItemConfigurationInterface
 {
     /**
-     * @var StockConfigurationInterface[]
+     * @var StockItemConfigurationInterface[]
      */
-    protected $validators;
+    private $validators;
 
     /**
      * @var StockItemCriteriaInterfaceFactory
@@ -31,41 +33,41 @@ class StockConfigurationValidator implements StockConfigurationInterface
     /**
      * @var LegacyStockItemRepository
      */
-    protected $legacyStockItemRepository;
+    private $legacyStockItemRepository;
 
     /**
      * @var Configuration
      */
-    protected $configuration;
+    private $configuration;
 
     /**
-     * @var ProductResourceModel
+     * @var GetProductIdsBySkusInterface
      */
-    protected $productResource;
+    private $getProductIdsBySkus;
 
     /**
-     * StockValidationComposer constructor.
-     * @param StockConfigurationInterface[] $validators
+     * StockConfigurationValidator constructor.
+     * @param array $validators
      * @param Configuration $configuration
      * @param LegacyStockItemRepository $legacyStockItemRepository
      * @param StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
-     * @param ProductResourceModel $productResource
+     * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @throws LocalizedException
      */
     public function __construct(
-        array $validators=[],
+        array $validators = [],
         Configuration $configuration,
         LegacyStockItemRepository $legacyStockItemRepository,
         StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory,
-        ProductResourceModel $productResource
+        GetProductIdsBySkusInterface $getProductIdsBySkus
     ) {
         $this->configuration = $configuration;
         $this->legacyStockItemRepository = $legacyStockItemRepository;
-        $this->productResource = $productResource;
+        $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->stockItemCriteriaFactory = $stockItemCriteriaFactory;
 
         foreach ($validators as $validator) {
-            if (!$validator instanceof StockConfigurationInterface) {
+            if (!$validator instanceof StockItemConfigurationInterface) {
                 throw new LocalizedException(
                     __('Validator must implement StockConfigurationInterface.')
                 );
@@ -77,18 +79,18 @@ class StockConfigurationValidator implements StockConfigurationInterface
     /**
      * Old validation logic
      *
-     * @param $sku
-     * @param $stockId
-     * @param $qtyWithReservation
-     * @param $isSalable
+     * @param string $sku
+     * @param int $stockId
+     * @param float $qtyWithReservation
+     * @param bool $isSalable
      * @return bool
      * @throws LocalizedException
      */
-    public function validate($sku, $stockId, $qtyWithReservation, $isSalable): bool
+    public function execute(string $sku, int $stockId, float $qtyWithReservation, bool $isSalable): bool
     {
         //old validation logic below
         $globalMinQty = $this->configuration->getMinQty();
-        $legacyStockItem = $this->getLegacyStockItem($sku);
+        $legacyStockItem = $this->getLegacyStockItem($sku)[0];
         if (null === $legacyStockItem) {
             return false;
         }
@@ -104,7 +106,7 @@ class StockConfigurationValidator implements StockConfigurationInterface
     }
 
     /**
-     * @param LegacyStockItem $legacyStockItem
+     * @param LegacyStockItem|StockItemInterface $legacyStockItem
      *
      * @return bool
      */
@@ -122,12 +124,12 @@ class StockConfigurationValidator implements StockConfigurationInterface
 
     /**
      * @param string $sku
-     * @return StockItemInterface|mixed|null
+     * @return StockItemInterface[]|null
      * @throws LocalizedException
      */
     private function getLegacyStockItem(string $sku)
     {
-        $productIds = $this->productResource->getProductsIdsBySkus([$sku]);
+        $productIds = $this->getProductIdsBySkus->execute([$sku]);
         $searchCriteria = $this->stockItemCriteriaFactory->create();
         $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productIds[$sku]);
         $legacyStockItem = $this->legacyStockItemRepository->getList($searchCriteria);
