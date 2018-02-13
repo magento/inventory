@@ -16,6 +16,7 @@ use Magento\CatalogInventory\Model\Stock\StockItemRepository as LegacyStockItemR
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\OptionSource\SourceItemStatus;
+use Magento\Inventory\Model\SourceItem\Validator\StatusConsistencyValidator\IsValidationAllowed;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
@@ -54,12 +55,18 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
     private $stockItemCriteriaFactory;
 
     /**
+     * @var IsValidationAllowed
+     */
+    private $isValidationAllowed;
+
+    /**
      * @param ValidationResultFactory $validationResultFactory
      * @param SourceItemStatus $sourceItemStatus
      * @param StockConfigurationInterface $stockConfiguration
      * @param LegacyStockItemRepository $legacyStockItemRepository
      * @param ProductResourceModel $productResource
      * @param StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
+     * @param IsValidationAllowed $isValidationAllowed
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
@@ -67,7 +74,8 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
         StockConfigurationInterface $stockConfiguration,
         LegacyStockItemRepository $legacyStockItemRepository,
         ProductResourceModel $productResource,
-        StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
+        StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory,
+        IsValidationAllowed $isValidationAllowed
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->sourceItemStatus = $sourceItemStatus;
@@ -75,6 +83,7 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
         $this->legacyStockItemRepository = $legacyStockItemRepository;
         $this->productResource = $productResource;
         $this->stockItemCriteriaFactory = $stockItemCriteriaFactory;
+        $this->isValidationAllowed = $isValidationAllowed;
     }
 
     /**
@@ -82,33 +91,34 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
      */
     public function validate(SourceItemInterface $sourceItem): ValidationResult
     {
-        $quantity = $sourceItem->getQuantity();
-        $status = $sourceItem->getStatus();
         $errors = [];
+        if ($this->isValidationAllowed->execute($sourceItem)) {
+            $quantity = $sourceItem->getQuantity();
+            $status = $sourceItem->getStatus();
 
-        $legacyStockItem = $this->getLegacyStockItem($sourceItem->getSku());
-        if (null === $legacyStockItem) {
-            $isManageStock = true;
-        } else {
-            $isManageStock = $this->isManageStock($legacyStockItem);
-        }
+            $legacyStockItem = $this->getLegacyStockItem($sourceItem->getSku());
+            if (null === $legacyStockItem) {
+                $isManageStock = true;
+            } else {
+                $isManageStock = $this->isManageStock($legacyStockItem);
+            }
 
-        if ($isManageStock
-            && is_numeric($quantity)
-            && (float)$quantity <= 0
-            && (int)$status === SourceItemInterface::STATUS_IN_STOCK
-        ) {
-            $statusOptions = $this->sourceItemStatus->toOptionArray();
-            $labels = array_column($statusOptions, 'label', 'value');
-            $errors[] = __(
-                'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
-                [
-                    'status' => SourceItemInterface::STATUS,
-                    'in_stock' => $labels[SourceItemInterface::STATUS_IN_STOCK],
-                    'quantity' => SourceItemInterface::QUANTITY,
-
-                ]
-            );
+            if ($isManageStock
+                && is_numeric($quantity)
+                && (float)$quantity <= 0
+                && (int)$status === SourceItemInterface::STATUS_IN_STOCK
+            ) {
+                $statusOptions = $this->sourceItemStatus->toOptionArray();
+                $labels = array_column($statusOptions, 'label', 'value');
+                $errors[] = __(
+                    'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
+                    [
+                        'status' => SourceItemInterface::STATUS,
+                        'in_stock' => $labels[SourceItemInterface::STATUS_IN_STOCK],
+                        'quantity' => SourceItemInterface::QUANTITY
+                    ]
+                );
+            }
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
