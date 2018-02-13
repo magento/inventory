@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel\Reservation;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Inventory\Exception\ProductIsNotAssignedToStockException;
 use Magento\Inventory\Model\GetReservationsQuantityInterface;
 use Magento\Inventory\Setup\Operation\CreateReservationTable;
 use Magento\InventoryApi\Api\Data\ReservationInterface;
@@ -45,7 +46,15 @@ class GetReservationsQuantity implements GetReservationsQuantityInterface
             ->where(ReservationInterface::STOCK_ID . ' = ?', $stockId)
             ->limit(1);
 
-        $reservationQty = $connection->fetchOne($select);
+        try {
+            $reservationQty = $connection->fetchOne($select);
+        } catch (\Exception $e) {
+            throw new ProductIsNotAssignedToStockException(__(
+                'Product with sku "%sku" is not assigned to stock with id "%stock"',
+                ['sku' => $sku, 'stock' => $stockId]
+            ), $e);
+        }
+
         if (false === $reservationQty) {
             $reservationQty = 0;
         }
