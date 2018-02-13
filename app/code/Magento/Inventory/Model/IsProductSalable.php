@@ -7,13 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model;
 
-use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
-use Magento\CatalogInventory\Model\Configuration;
-use Magento\CatalogInventory\Model\Stock\Item as LegacyStockItem;
-use Magento\CatalogInventory\Model\Stock\StockItemRepository as LegacyStockItemRepository;
 use Magento\InventoryApi\Api\IsProductSalableInterface;
+use Magento\InventoryConfiguration\Model\StockItemConfigurationInterface;
 
 /**
  * @inheritdoc
@@ -31,47 +26,24 @@ class IsProductSalable implements IsProductSalableInterface
     private $getReservationsQuantity;
 
     /**
-     * @var Configuration
+     * @var StockItemConfigurationInterface
      */
-    private $configuration;
+    private $stockConfiguration;
 
     /**
-     * @var LegacyStockItemRepository
-     */
-    private $legacyStockItemRepository;
-
-    /**
-     * @var ProductResourceModel
-     */
-    private $productResource;
-
-    /**
-     * @var StockItemCriteriaInterfaceFactory
-     */
-    private $stockItemCriteriaFactory;
-
-    /**
+     * IsProductSalable constructor.
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
-     * @param Configuration $configuration
-     * @param LegacyStockItemRepository $legacyStockItemRepository
-     * @param ProductResourceModel $productResource
-     * @param StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
+     * @param StockItemConfigurationInterface $stockConfiguration
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
-        Configuration $configuration,
-        LegacyStockItemRepository $legacyStockItemRepository,
-        ProductResourceModel $productResource,
-        StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
+        StockItemConfigurationInterface $stockConfiguration
     ) {
-        $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
-        $this->configuration = $configuration;
-        $this->legacyStockItemRepository = $legacyStockItemRepository;
-        $this->productResource = $productResource;
-        $this->stockItemCriteriaFactory = $stockItemCriteriaFactory;
+        $this->stockConfiguration = $stockConfiguration;
+        $this->getStockItemData = $getStockItemData;
     }
 
     /**
@@ -86,55 +58,7 @@ class IsProductSalable implements IsProductSalableInterface
 
         $isSalable = (bool)$stockItemData['is_salable'];
         $qtyWithReservation = $stockItemData['quantity'] + $this->getReservationsQuantity->execute($sku, $stockId);
-        $globalMinQty = $this->configuration->getMinQty();
-        $legacyStockItem = $this->getLegacyStockItem($sku);
-        if (null === $legacyStockItem) {
-            return false;
-        }
 
-        if ($this->isManageStock($legacyStockItem)) {
-            if (($legacyStockItem->getUseConfigMinQty() == 1 && $qtyWithReservation <= $globalMinQty)
-                || ($legacyStockItem->getUseConfigMinQty() == 0 && $qtyWithReservation <= $legacyStockItem->getMinQty())
-            ) {
-                $isSalable = false;
-            }
-        }
-
-        return $isSalable;
-    }
-
-    /**
-     * @param LegacyStockItem $legacyStockItem
-     *
-     * @return bool
-     */
-    private function isManageStock(LegacyStockItem $legacyStockItem): bool
-    {
-        $globalManageStock = $this->configuration->getManageStock();
-        $manageStock = false;
-        if (($legacyStockItem->getUseConfigManageStock() == 1 && $globalManageStock == 1)
-            || ($legacyStockItem->getUseConfigManageStock() == 0 && $legacyStockItem->getManageStock() == 1)
-        ) {
-            $manageStock = true;
-        }
-
-        return $manageStock;
-    }
-
-    /**
-     * @param string $sku
-     *
-     * @return LegacyStockItem|null
-     */
-    private function getLegacyStockItem(string $sku)
-    {
-        $productIds = $this->productResource->getProductsIdsBySkus([$sku]);
-        $searchCriteria = $this->stockItemCriteriaFactory->create();
-        $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productIds[$sku]);
-
-        $legacyStockItem = $this->legacyStockItemRepository->getList($searchCriteria);
-        $items = $legacyStockItem->getItems();
-
-        return count($items) ? reset($items) : null;
+        return $this->stockConfiguration->execute($sku, $stockId, $qtyWithReservation, $isSalable);
     }
 }
