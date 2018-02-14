@@ -80,6 +80,7 @@ class CatalogInventoryTest extends \PHPUnit\Framework\TestCase
             'use_config_max_sale_qty' => 1,
             'use_config_backorders' => 1,
             'use_config_notify_stock_qty' => 1,
+            'use_config_manage_stock' => 1,
         ];
         $this->stockItemDoMock->expects($this->any())->method('getStockId')->will($this->returnValue(false));
 
@@ -99,6 +100,7 @@ class CatalogInventoryTest extends \PHPUnit\Framework\TestCase
             'use_config_max_sale_qty' => 1,
             'use_config_backorders' => 1,
             'use_config_notify_stock_qty' => 1,
+            'use_config_manage_stock' => 1,
             'use_config_enable_qty_inc' => 'use_config_enable_qty_inc',
             'enable_qty_increments' => 'enable_qty_increments',
             'use_config_qty_increments' => 'use_config_qty_increments',
