@@ -48,6 +48,7 @@ foreach ($options as $option) {
         ->setPrice(11)
         ->setTestConfigurable($option->getValue())
         ->setVisibility(Visibility::VISIBILITY_NOT_VISIBLE)
+        ->setStockData(['use_config_manage_stock' => 1])
         ->setStatus(Status::STATUS_DISABLED);
     $product = $productRepository->save($product);
 

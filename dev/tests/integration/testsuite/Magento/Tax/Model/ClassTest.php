@@ -70,6 +70,8 @@ class ClassTest extends \PHPUnit\Framework\TestCase
             \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
         )->setTaxClassId(
             $model->getId()
+        )->setStockData(
+            ['is_in_stock' => 1, 'qty' => 10, 'use_config_manage_stock' => 1]
         )->save();
 
         $this->expectException(\Magento\Framework\Exception\CouldNotDeleteException::class);

@@ -134,7 +134,7 @@ class VariationHandlerTest extends \PHPUnit\Framework\TestCase
                         'configurable_attribute' => '{"configurable_attribute":"23"}',
                         'price' => '3',
                         'sku' => '1-aaa-1',
-                        'quantity_and_stock_status' => ['qty' => ''],
+                        'quantity_and_stock_status' => ['qty' => 1],
                         'weight' => '6',
                     ],
                 ],

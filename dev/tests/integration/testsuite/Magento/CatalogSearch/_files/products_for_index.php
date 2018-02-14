@@ -67,6 +67,7 @@ foreach ($products as $data) {
         ->setSku($data['sku'])
         ->setPrice(10)
         ->setVisibility($data['visibility'])
+        ->setStockData(['use_config_manage_stock' => 1])
         ->setStatus($data['status']);
     $product = $productRepository->save($product);
 
