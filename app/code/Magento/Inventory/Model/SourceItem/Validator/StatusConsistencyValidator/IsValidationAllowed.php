@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceItem\Validator\StatusConsistencyValidator;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Inventory\Model\IsSourceItemsManagementAllowedForProductTypeInterface;
+use Magento\Inventory\Model\ResourceModel\GetProductTypeBySku;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
@@ -17,9 +17,9 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 class IsValidationAllowed
 {
     /**
-     * @var ProductRepositoryInterface
+     * @var GetProductTypeBySku
      */
-    private $productRepository;
+    private $getProductTypeBySku;
 
     /**
      * @var IsSourceItemsManagementAllowedForProductTypeInterface
@@ -27,14 +27,14 @@ class IsValidationAllowed
     private $isSourceItemsManagementAllowedForProductType;
 
     /**
-     * @param ProductRepositoryInterface $productRepository
+     * @param GetProductTypeBySku $getProductTypeBySku
      * @param IsSourceItemsManagementAllowedForProductTypeInterface $isSourceItemsManagementAllowedForProductType
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository,
+        GetProductTypeBySku $getProductTypeBySku,
         IsSourceItemsManagementAllowedForProductTypeInterface $isSourceItemsManagementAllowedForProductType
     ) {
-        $this->productRepository = $productRepository;
+        $this->getProductTypeBySku = $getProductTypeBySku;
         $this->isSourceItemsManagementAllowedForProductType = $isSourceItemsManagementAllowedForProductType;
     }
 
@@ -45,8 +45,8 @@ class IsValidationAllowed
      */
     public function execute(SourceItemInterface $sourceItem): bool
     {
-        $product = $this->productRepository->get($sourceItem->getSku());
+        $product = $this->getProductTypeBySku->execute($sourceItem->getSku());
 
-        return $this->isSourceItemsManagementAllowedForProductType->execute($product->getTypeId());
+        return $this->isSourceItemsManagementAllowedForProductType->execute(reset($product));
     }
 }
