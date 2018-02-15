@@ -8,16 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryReservations\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
-<<<<<<< HEAD:app/code/Magento/Inventory/Model/ResourceModel/Reservation/GetReservationsQuantity.php
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Inventory\Model\GetReservationsQuantityInterface;
-use Magento\Inventory\Setup\Operation\CreateReservationTable;
-use Magento\InventoryApi\Api\Data\ReservationInterface;
-=======
 use Magento\InventoryReservationsApi\Api\Data\ReservationInterface;
 use Magento\InventoryReservations\Model\GetReservationsQuantityInterface;
 use Magento\InventoryReservations\Setup\Operation\CreateReservationTable;
->>>>>>> origin/develop:app/code/Magento/InventoryReservations/Model/ResourceModel/GetReservationsQuantity.php
 
 /**
  * @inheritdoc
