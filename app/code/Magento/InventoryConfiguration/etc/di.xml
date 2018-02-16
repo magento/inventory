@@ -16,4 +16,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Inventory\Model\SourceItem\Validator\ValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="status_consistency" xsi:type="object">Magento\InventoryConfiguration\Model\SourceItem\Validator\ManageStockValidator</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

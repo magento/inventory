@@ -7,16 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceItem\Validator;
 
-use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
-use Magento\CatalogInventory\Model\Stock\Item as LegacyStockItem;
-use Magento\CatalogInventory\Model\Stock\StockItemRepository as LegacyStockItemRepository;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\OptionSource\SourceItemStatus;
-use Magento\Inventory\Model\SourceItem\Validator\StatusConsistencyValidator\IsValidationAllowed;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
@@ -35,55 +28,15 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
     private $sourceItemStatus;
 
     /**
-     * @var StockConfigurationInterface
-     */
-    private $stockConfiguration;
-
-    /**
-     * @var LegacyStockItemRepository
-     */
-    private $legacyStockItemRepository;
-
-    /**
-     * @var ProductResourceModel
-     */
-    private $productResource;
-
-    /**
-     * @var StockItemCriteriaInterfaceFactory
-     */
-    private $stockItemCriteriaFactory;
-
-    /**
-     * @var IsValidationAllowed
-     */
-    private $isValidationAllowed;
-
-    /**
      * @param ValidationResultFactory $validationResultFactory
      * @param SourceItemStatus $sourceItemStatus
-     * @param StockConfigurationInterface $stockConfiguration
-     * @param LegacyStockItemRepository $legacyStockItemRepository
-     * @param ProductResourceModel $productResource
-     * @param StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory
-     * @param IsValidationAllowed $isValidationAllowed
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
-        SourceItemStatus $sourceItemStatus,
-        StockConfigurationInterface $stockConfiguration,
-        LegacyStockItemRepository $legacyStockItemRepository,
-        ProductResourceModel $productResource,
-        StockItemCriteriaInterfaceFactory $stockItemCriteriaFactory,
-        IsValidationAllowed $isValidationAllowed
+        SourceItemStatus $sourceItemStatus
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->sourceItemStatus = $sourceItemStatus;
-        $this->stockConfiguration = $stockConfiguration;
-        $this->legacyStockItemRepository = $legacyStockItemRepository;
-        $this->productResource = $productResource;
-        $this->stockItemCriteriaFactory = $stockItemCriteriaFactory;
-        $this->isValidationAllowed = $isValidationAllowed;
     }
 
     /**
@@ -92,68 +45,25 @@ class StatusConsistencyValidator implements SourceItemValidatorInterface
     public function validate(SourceItemInterface $sourceItem): ValidationResult
     {
         $errors = [];
-        if ($this->isValidationAllowed->execute($sourceItem)) {
-            $quantity = $sourceItem->getQuantity();
-            $status = $sourceItem->getStatus();
+        $quantity = $sourceItem->getQuantity();
+        $status = $sourceItem->getStatus();
 
-            $legacyStockItem = $this->getLegacyStockItem($sourceItem->getSku());
-            if (null === $legacyStockItem) {
-                $isManageStock = true;
-            } else {
-                $isManageStock = $this->isManageStock($legacyStockItem);
-            }
-
-            if ($isManageStock
-                && is_numeric($quantity)
-                && (float)$quantity <= 0
-                && (int)$status === SourceItemInterface::STATUS_IN_STOCK
-            ) {
-                $statusOptions = $this->sourceItemStatus->toOptionArray();
-                $labels = array_column($statusOptions, 'label', 'value');
-                $errors[] = __(
-                    'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
-                    [
-                        'status' => SourceItemInterface::STATUS,
-                        'in_stock' => $labels[SourceItemInterface::STATUS_IN_STOCK],
-                        'quantity' => SourceItemInterface::QUANTITY
-                    ]
-                );
-            }
+        if (is_numeric($quantity)
+            && (float)$quantity <= 0
+            && (int)$status === SourceItemInterface::STATUS_IN_STOCK
+        ) {
+            $statusOptions = $this->sourceItemStatus->toOptionArray();
+            $labels = array_column($statusOptions, 'label', 'value');
+            $errors[] = __(
+                'Product cannot have "%status" "%in_stock" while product "%quantity" equals or below zero',
+                [
+                    'status' => SourceItemInterface::STATUS,
+                    'in_stock' => $labels[SourceItemInterface::STATUS_IN_STOCK],
+                    'quantity' => SourceItemInterface::QUANTITY
+                ]
+            );
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
-    }
-
-    /**
-     * @param string $sku
-     * @return LegacyStockItem|null
-     */
-    private function getLegacyStockItem(string $sku)
-    {
-        $productIds = $this->productResource->getProductsIdsBySkus([$sku]);
-        $searchCriteria = $this->stockItemCriteriaFactory->create();
-        $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productIds[$sku]);
-
-        $legacyStockItem = $this->legacyStockItemRepository->getList($searchCriteria);
-        $items = $legacyStockItem->getItems();
-
-        return count($items) ? reset($items) : null;
-    }
-
-    /**
-     * @param LegacyStockItem $legacyStockItem
-     * @return bool
-     */
-    private function isManageStock(LegacyStockItem $legacyStockItem): bool
-    {
-        $globalManageStock = $this->stockConfiguration->getManageStock();
-        $manageStock = false;
-        if (($legacyStockItem->getUseConfigManageStock() == 1 && $globalManageStock == 1)
-            || ($legacyStockItem->getUseConfigManageStock() == 0 && $legacyStockItem->getManageStock() == 1)
-        ) {
-            $manageStock = true;
-        }
-
-        return $manageStock;
     }
 }

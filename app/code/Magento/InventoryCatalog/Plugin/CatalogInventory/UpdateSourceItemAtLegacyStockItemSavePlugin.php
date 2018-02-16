@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Inventory\Model\IsSourceItemsManagementAllowedForProductTypeInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
@@ -61,6 +63,16 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     private $getSkusByProductIds;
 
     /**
+     * @var IsSourceItemsManagementAllowedForProductTypeInterface
+     */
+    private $isSourceItemsManagementAllowedForProductType;
+
+    /**
+     * @var  ProductRepositoryInterface
+     * */
+    private $productRepository;
+
+    /**
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SourceItemInterfaceFactory $sourceItemFactory
@@ -68,6 +80,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param ResourceConnection $resourceConnection
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
+     * @param IsSourceItemsManagementAllowedForProductTypeInterface $isSourceItemsManagementAllowedForProductType
+     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
@@ -76,7 +90,9 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         SourceItemsSaveInterface $sourceItemsSave,
         DefaultSourceProviderInterface $defaultSourceProvider,
         ResourceConnection $resourceConnection,
-        GetSkusByProductIdsInterface $getSkusByProductIds
+        GetSkusByProductIdsInterface $getSkusByProductIds,
+        IsSourceItemsManagementAllowedForProductTypeInterface $isSourceItemsManagementAllowedForProductType,
+        ProductRepositoryInterface $productRepository
     ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -85,12 +101,15 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->resourceConnection = $resourceConnection;
         $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->isSourceItemsManagementAllowedForProductType = $isSourceItemsManagementAllowedForProductType;
+        $this->productRepository = $productRepository;
     }
 
     /**
      * @param ItemResourceModel $subject
      * @param callable $proceed
      * @param AbstractModel $legacyStockItem
+     *
      * @return ItemResourceModel
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -103,9 +122,13 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
             // need to save configuration
             $proceed($legacyStockItem);
 
-            $this->updateSourceItemBasedOnLegacyStockItem($legacyStockItem);
+            $typeId = $this->getTypeId($legacyStockItem);
+            if ($this->isSourceItemsManagementAllowedForProductType->execute($typeId)) {
+                $this->updateSourceItemBasedOnLegacyStockItem($legacyStockItem);
+            }
 
             $connection->commit();
+
             return $subject;
         } catch (\Exception $e) {
             $connection->rollBack();
@@ -115,6 +138,7 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
 
     /**
      * @param Item $legacyStockItem
+     *
      * @return void
      */
     private function updateSourceItemBasedOnLegacyStockItem(Item $legacyStockItem)
@@ -139,5 +163,21 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $sourceItem->setQuantity((float)$legacyStockItem->getQty());
         $sourceItem->setStatus((int)$legacyStockItem->getIsInStock());
         $this->sourceItemsSave->execute([$sourceItem]);
+    }
+
+    /**
+     * @param $legacyStockItem
+     *
+     * @return string
+     */
+    private function getTypeId($legacyStockItem): string
+    {
+        $typeId = $legacyStockItem->getTypeId();
+        if (null === $typeId) {
+            $product = $this->productRepository->getById($legacyStockItem->getProductId());
+            $typeId = $product->getTypeId();
+        }
+
+        return $typeId;
     }
 }

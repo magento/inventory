@@ -61,11 +61,7 @@ class ByStockItemTest extends \PHPUnit\Framework\TestCase
         ProductInterface::NAME => 'Simple',
         ProductInterface::SKU => 'simple',
         ProductInterface::PRICE => 100,
-        ProductInterface::EXTENSION_ATTRIBUTES_KEY => [
-            'stock_item' => [
-                'manage_stock' => 1,
-            ]
-        ],
+        ProductInterface::EXTENSION_ATTRIBUTES_KEY => [],
     ];
 
     /**
