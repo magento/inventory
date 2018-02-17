@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservations\Model;
 
+use Magento\Framework\Exception\LocalizedException;
+
 /**
  * Responsible for retrieving Reservation Quantity (without stock data)
  *
@@ -20,6 +22,7 @@ interface GetReservationsQuantityInterface
      * @param string $sku
      * @param int $stockId
      * @return float
+     * @throws LocalizedException
      */
     public function execute(string $sku, int $stockId): float;
 }
