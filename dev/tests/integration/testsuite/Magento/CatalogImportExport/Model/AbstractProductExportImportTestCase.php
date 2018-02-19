@@ -286,7 +286,6 @@ abstract class AbstractProductExportImportTestCase extends \PHPUnit\Framework\Te
             'row_id',
             'entity_id',
             'tier_price',
-            'is_salable',
             'media_gallery'
         ];
         $skippedAttributes = array_merge($replacedAttributes, $skippedAttributes);
