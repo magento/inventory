@@ -48,4 +48,5 @@ $product->setTypeId(\Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
     ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
     ->setUrlKey('url-key')
     ->setUrlPath('url-key')
+    ->setStockData(['use_config_manage_stock' => 1])
     ->save();

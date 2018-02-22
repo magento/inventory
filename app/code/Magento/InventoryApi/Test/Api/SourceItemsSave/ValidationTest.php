@@ -297,6 +297,24 @@ class ValidationTest extends WebapiAbstract
                     ],
                 ],
             ],
+            'inconsistent_' . SourceItemInterface::STATUS => [
+                SourceItemInterface::QUANTITY,
+                0,
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => 'Product cannot have "%status" "%in_stock" while '
+                                . 'product "%quantity" equals or below zero',
+                            'parameters' => [
+                                'status' => SourceItemInterface::STATUS,
+                                'in_stock' => 'In Stock',
+                                'quantity' => SourceItemInterface::QUANTITY,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

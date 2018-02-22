@@ -61,6 +61,7 @@ $product->setStoreId(0)
     ->setWebsiteIds([1])
     ->setPrice(10)
     ->setQty(100)
+    ->setStockData(['use_config_manage_stock' => 1])
     ->setWeight(1);
 
 /** @var ProductRepositoryInterface $productRepository */

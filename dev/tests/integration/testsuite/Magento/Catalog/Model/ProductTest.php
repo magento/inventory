@@ -93,6 +93,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             'meta description'
         )->setVisibility(
             \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH
+        )->setStockData(
+            ['use_config_manage_stock' => 1]
         )->setStatus(
             \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
         );

@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Plugin\Import;
 
+use Magento\Catalog\Model\ProductRepository;
 use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\Inventory\Model\IsSourceItemsManagementAllowedForProductType;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
@@ -37,20 +39,34 @@ class SourceItemImporter
     private $defaultSource;
 
     /**
-     * StockItemImporter constructor
-     *
+     * @var IsSourceItemsManagementAllowedForProductType
+     */
+    private $isSourceItemsManagementAllowedForProductType;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param SourceItemInterfaceFactory $sourceItemFactory
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param IsSourceItemsManagementAllowedForProductType $isSourceItemsManagementAllowedForProductType
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         SourceItemInterfaceFactory $sourceItemFactory,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        IsSourceItemsManagementAllowedForProductType $isSourceItemsManagementAllowedForProductType,
+        ProductRepository $productRepository
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->defaultSource = $defaultSourceProvider;
+        $this->isSourceItemsManagementAllowedForProductType = $isSourceItemsManagementAllowedForProductType;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -74,9 +90,10 @@ class SourceItemImporter
     ) {
         $sourceItems = [];
         foreach ($stockData as $stockDatum) {
-            if (!isset($stockDatum['sku'])) {
+            if ($this->isNeedToSkip($stockDatum)) {
                 continue;
             }
+
             $inStock = (isset($stockDatum['is_in_stock'])) ? intval($stockDatum['is_in_stock']) : 0;
             $qty = (isset($stockDatum['qty'])) ? $stockDatum['qty'] : 0;
             /** @var SourceItemInterface $sourceItem */
@@ -91,5 +108,26 @@ class SourceItemImporter
             /** SourceItemInterface[] $sourceItems */
             $this->sourceItemsSave->execute($sourceItems);
         }
+    }
+
+    /**
+     * @param array $stockDatum
+     *
+     * @return bool
+     */
+    private function isNeedToSkip(array $stockDatum): bool
+    {
+        $needToSkip = false;
+        if (!isset($stockDatum['sku'])) {
+           $needToSkip = true;
+        }
+
+        if (!$needToSkip && isset($stockDatum['product_id'])) {
+            $product = $this->productRepository->getById($stockDatum['product_id']);
+            $typeId = $product->getTypeId();
+            $needToSkip = !$this->isSourceItemsManagementAllowedForProductType->execute($typeId);
+        }
+
+        return $needToSkip;
     }
 }
