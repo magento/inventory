@@ -12,8 +12,8 @@
         <element name="addNewStock" type="button" selector="#add" timeout="30"/>
     </section>
     <section name="AdminManageStockGridFilterControls">
-        <element name="idFrom" type="selector" selector=".admin__data-grid-filters-wrap input[name='stock_id[from]']"/>
-        <element name="idTo" type="selector" selector=".admin__data-grid-filters-wrap input[name='stock_id[to]']"/>
-        <element name="name" type="selector" selector="admin__data-grid-filters-wrap input[name='name']"/>
+        <element name="idFrom" type="input" selector=".admin__data-grid-filters-wrap input[name='stock_id[from]']"/>
+        <element name="idTo" type="input" selector=".admin__data-grid-filters-wrap input[name='stock_id[to]']"/>
+        <element name="name" type="input" selector="admin__data-grid-filters-wrap input[name='name']"/>
     </section>
 </sections>
