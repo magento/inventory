@@ -9,7 +9,7 @@
 <operations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd">
     <operation name="CreateSource" dataType="source" type="create"
-               auth="adminFormKey" url="/inventory/source/save" finalURL="true" method="POST" successRegex="/messages-message-success/" returnRegex="">
+               auth="adminFormKey" url="/inventory/source/save" removeBackend="true" method="POST" successRegex="/messages-message-success/" returnRegex="">
         <contentType>application/x-www-form-urlencoded</contentType>
         <object dataType="source" key="general">
             <field key="id_field_name">string</field>
