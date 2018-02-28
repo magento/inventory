@@ -16,6 +16,6 @@
         <data key="name" unique="suffix">Test Stock 1 </data>
     </entity>
     <entity name="TestStock2" type="stock">
-        <data key="name" unique="suffix">Test Stock  </data>
+        <data key="name" unique="suffix">Test Stock 2 </data>
     </entity>
 </entities>
