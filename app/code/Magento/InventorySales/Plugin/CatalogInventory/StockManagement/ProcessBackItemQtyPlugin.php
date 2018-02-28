@@ -86,7 +86,7 @@ class ProcessBackItemQtyPlugin
     public function aroundBackItemQty(StockManagement $subject, callable $proceed, $productId, $qty, $scopeId = null)
     {
         if (null === $scopeId) {
-            //TODO: do we need to throw exception?
+            //TODO: Do we need to throw exception?
             throw new LocalizedException(__('$scopeId is required'));
         }
         $product = $this->productRepository->getById($productId);
