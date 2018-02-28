@@ -107,7 +107,9 @@ class ProcessRegisterProductsSalePlugin
                 ->setStockId($stockId)
                 ->build();
         }
-        $this->appendReservations->execute($reservations);
+        if (!empty($reservations)) {
+            $this->appendReservations->execute($reservations);
+        }
 
         return [];
     }
