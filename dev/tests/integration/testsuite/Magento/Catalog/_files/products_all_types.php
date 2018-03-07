@@ -55,6 +55,7 @@ foreach ($productTypes as $productType) {
                     ],
                 ],
             ]
-        ]);
+        ]
+    );
     $productRepository->save($product);
 }
