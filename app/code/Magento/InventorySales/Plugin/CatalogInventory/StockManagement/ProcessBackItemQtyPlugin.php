@@ -7,11 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\CatalogInventory\StockManagement;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Api\GetProductTypeBySkuInterface;
 use Magento\CatalogInventory\Model\StockManagement;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\IsSourceItemsManagementAllowedForProductTypeInterface;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
+use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
 use Magento\InventoryReservations\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
 use Magento\InventorySales\Model\StockByWebsiteIdResolver;
@@ -42,35 +43,37 @@ class ProcessBackItemQtyPlugin
     private $appendReservations;
 
     /**
-     * @var ProductRepositoryInterface
+     * @var GetProductTypeBySkuInterface
      */
-    private $productRepository;
+    private $getProductTypeBySku;
 
     /**
-     * @var IsSourceItemsManagementAllowedForProductTypeInterface
+     * @var IsSourceItemsAllowedForProductTypeInterface
      */
-    private $isSourceItemsManagementAllowedForProductType;
+    private $isSourceItemsAllowedForProductType;
 
     /**
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
      * @param ReservationBuilderInterface $reservationBuilder
      * @param AppendReservationsInterface $appendReservations
+     * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
+     * @param GetProductTypeBySkuInterface $getProductTypeBySku
      */
     public function __construct(
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockByWebsiteIdResolver $stockByWebsiteIdResolver,
         ReservationBuilderInterface $reservationBuilder,
         AppendReservationsInterface $appendReservations,
-        ProductRepositoryInterface $productRepository,
-        IsSourceItemsManagementAllowedForProductTypeInterface $isSourceItemsManagementAllowedForProductType
+        IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
+        GetProductTypeBySkuInterface $getProductTypeBySku
     ) {
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->reservationBuilder = $reservationBuilder;
         $this->appendReservations = $appendReservations;
-        $this->productRepository = $productRepository;
-        $this->isSourceItemsManagementAllowedForProductType = $isSourceItemsManagementAllowedForProductType;
+        $this->getProductTypeBySku = $getProductTypeBySku;
+        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
     }
 
     /**
@@ -89,10 +92,10 @@ class ProcessBackItemQtyPlugin
             //TODO: Do we need to throw exception?
             throw new LocalizedException(__('$scopeId is required'));
         }
-        $product = $this->productRepository->getById($productId);
-        if ($this->isSourceItemsManagementAllowedForProductType->execute($product->getTypeId())) {
+        $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        $productType = $this->getProductTypeBySku->execute($productSku);
+        if ($this->isSourceItemsAllowedForProductType->execute($productType)) {
             $stockId = (int)$this->stockByWebsiteIdResolver->get((int)$scopeId)->getStockId();
-            $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $reservation = $this->reservationBuilder
                 ->setSku($productSku)
                 ->setQuantity((float)$qty)

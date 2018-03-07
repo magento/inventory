@@ -511,6 +511,8 @@ class QuoteManagement implements \Magento\Quote\Api\CartManagementInterface
                 ]
             );
             $this->quoteRepository->save($quote);
+
+            throw new \Exception('test');
         } catch (\Exception $e) {
             if (!empty($this->addressesToSync)) {
                 foreach ($this->addressesToSync as $addressId) {

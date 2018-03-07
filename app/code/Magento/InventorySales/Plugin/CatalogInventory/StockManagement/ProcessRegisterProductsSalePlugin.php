@@ -7,12 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\CatalogInventory\StockManagement;
 
+use Magento\Catalog\Api\GetProductTypeBySkuInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Model\StockManagement;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Inventory\Model\IsSourceItemsManagementAllowedForProductTypeInterface;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
+use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
 use Magento\InventoryReservations\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
 use Magento\InventorySales\Model\StockByWebsiteIdResolver;
@@ -43,35 +44,36 @@ class ProcessRegisterProductsSalePlugin
     private $appendReservations;
 
     /**
-     * @var IsSourceItemsManagementAllowedForProductTypeInterface
+     * @var IsSourceItemsAllowedForProductTypeInterface
      */
-    private $isSourceItemsManagementAllowedForProductType;
-
+    private $isSourceItemsAllowedForProductType;
     /**
-     * @var ProductRepositoryInterface
+     * @var GetProductTypeBySkuInterface
      */
-    private $productRepository;
+    private $getProductTypeBySku;
 
     /**
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
      * @param ReservationBuilderInterface $reservationBuilder
      * @param AppendReservationsInterface $appendReservations
+     * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
+     * @param GetProductTypeBySkuInterface $getProductTypeBySku
      */
     public function __construct(
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockByWebsiteIdResolver $stockByWebsiteIdResolver,
         ReservationBuilderInterface $reservationBuilder,
         AppendReservationsInterface $appendReservations,
-        ProductRepositoryInterface $productRepository,
-        IsSourceItemsManagementAllowedForProductTypeInterface $isSourceItemsManagementAllowedForProductType
+        IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
+        GetProductTypeBySkuInterface $getProductTypeBySku
     ) {
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->reservationBuilder = $reservationBuilder;
         $this->appendReservations = $appendReservations;
-        $this->isSourceItemsManagementAllowedForProductType = $isSourceItemsManagementAllowedForProductType;
-        $this->productRepository = $productRepository;
+        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
+        $this->getProductTypeBySku = $getProductTypeBySku;
     }
 
     /**
@@ -97,8 +99,8 @@ class ProcessRegisterProductsSalePlugin
 
         $reservations = [];
         foreach ($productSkus as $productId => $sku) {
-            $product = $this->productRepository->get($sku);
-            if (!$this->isSourceItemsManagementAllowedForProductType->execute($product->getTypeId())) {
+            $productType = $this->getProductTypeBySku->execute($sku);
+            if (!$this->isSourceItemsAllowedForProductType->execute($productType)) {
                 continue;
             }
             $reservations[] = $this->reservationBuilder
