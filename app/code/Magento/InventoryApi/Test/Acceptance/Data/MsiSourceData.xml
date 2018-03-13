@@ -12,6 +12,7 @@
         <data key="id_field_name">source_code</data>
         <data key="name">Default Source</data>
         <data key="source_code">default</data>
+        <!-- In this Data we need a boolean version along with the binary version. Therefore we include 2 versions. -->
         <data key="enabled">1</data>
         <data key="isEnabled">true</data>
         <data key="description">Default Source</data>
@@ -21,6 +22,7 @@
         <data key="country">United States</data>
         <data key="country_id">US</data>
         <data key="postcode">00000</data>
+        <!-- In this Data we need a boolean version along with the binary version. Therefore we include 2 versions. -->
         <data key="use_default_carrier_config">1</data>
         <data key="useGlobalShippingConfiguration">true</data>
     </entity>
@@ -33,12 +35,13 @@
         <data key="postcode">90230</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
-    <entity name="TestSource1" type="source">
+    <entity name="FullSource1" type="source">
         <data key="id_field_name">source_code</data>
         <data key="name" unique="suffix">Test Source 1 </data>
         <data key="source_code" unique="suffix">test_source_1_</data>
-        <data key="isEnabled">true</data>
+        <!-- In this Data we need a boolean version along with the binary version. Therefore we include 2 versions. -->
         <data key="enabled">1</data>
+        <data key="isEnabled">true</data>
         <data key="description">Test Source 1</data>
         <data key="latitude">0</data>
         <data key="longitude">0</data>
@@ -54,15 +57,17 @@
         <data key="city">Culver City</data>
         <data key="street">6161 West Centinela Avenue</data>
         <data key="postcode">90230</data>
-        <data key="useGlobalShippingConfiguration">true</data>
+        <!-- In this Data we need a boolean version along with the binary version. Therefore we include 2 versions. -->
         <data key="use_default_carrier_config">1</data>
+        <data key="useGlobalShippingConfiguration">true</data>
     </entity>
-    <entity name="TestSource2" type="source">
+    <entity name="FullSource2" type="source">
         <data key="id_field_name">source_code</data>
         <data key="name" unique="suffix">Test Source 2 </data>
         <data key="source_code" unique="suffix">test_source_2_</data>
-        <data key="isEnabled">true</data>
+        <!-- In this Data we need a boolean version along with the binary version. Therefore we include 2 versions. -->
         <data key="enabled">1</data>
+        <data key="isEnabled">true</data>
         <data key="description">Test Source 2</data>
         <data key="latitude">0</data>
         <data key="longitude">0</data>
@@ -78,7 +83,8 @@
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
         <data key="postcode">QC G2E 6J5</data>
-        <data key="useGlobalShippingConfiguration">true</data>
+        <!-- In this Data we need a boolean version along with the binary version. Therefore we include 2 versions. -->
         <data key="use_default_carrier_config">1</data>
+        <data key="useGlobalShippingConfiguration">true</data>
     </entity>
 </entities>
