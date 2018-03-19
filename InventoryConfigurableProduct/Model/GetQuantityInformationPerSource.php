@@ -5,19 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Plugin\ConfigurableProduct\Ui\DataProvider\ProductFormModifier;
+namespace Magento\InventoryConfigurableProduct\Model;
 
-use Magento\Catalog\Model\Product;
-use Magento\ConfigurableProduct\Ui\DataProvider\Product\Form\Modifier\Data\ProductQuantityProvider;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
-/**
- * Adapt product quantity provider for multi source inventory
- */
-class AdaptProductQuantityProviderPlugin
+class GetQuantityInformationPerSource
 {
     /**
      * @var SourceItemRepositoryInterface
@@ -50,35 +45,28 @@ class AdaptProductQuantityProviderPlugin
     }
 
     /**
-     * @param ProductQuantityProvider $subject
-     * @param callable $proceed
-     * @param Product $product
+     * @param string $sku
      *
      * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecute(
-        ProductQuantityProvider $subject,
-        callable $proceed,
-        Product $product
-    ) {
-        $formSourceItems = [];
+    public function execute(string $sku): array
+    {
+        $sourceItemsInformation = [];
 
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteria = $searchCriteriaBuilder->addFilter(SourceItemInterface::SKU, $product->getSku())->create();
+        $searchCriteria = $searchCriteriaBuilder->addFilter(SourceItemInterface::SKU, $sku)->create();
         $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
 
         foreach ($sourceItems as $sourceItem) {
             $source = $this->sourceRepository->get($sourceItem->getSourceCode());
 
-            $formSourceItems[] = [
+            $sourceItemsInformation[] = [
                 SourceItemInterface::SOURCE_CODE => $sourceItem->getSourceCode(),
                 SourceItemInterface::QUANTITY => $sourceItem->getQuantity(),
                 'source' => $source->getName(),
             ];
         }
 
-        return $formSourceItems;
+        return $sourceItemsInformation;
     }
 }
