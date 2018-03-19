@@ -19,8 +19,9 @@ class IsSourceItemsAllowedForProductTypePlugin
      * @param callable $proceed
      * @param string $productType
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecute(IsSourceItemsAllowedForProductType $subject, callable $proceed, $productType)
+    public function aroundExecute(IsSourceItemsAllowedForProductType $subject, callable $proceed, string $productType)
     {
         if ($productType === \Magento\Catalog\Model\Product\Type::TYPE_VIRTUAL) {
             return false;

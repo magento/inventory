@@ -19,8 +19,9 @@ class IsSourceItemsAllowedForProductTypePlugin
      * @param callable $proceed
      * @param string $productType
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecute(IsSourceItemsAllowedForProductType $subject, callable $proceed, $productType)
+    public function aroundExecute(IsSourceItemsAllowedForProductType $subject, callable $proceed, string $productType)
     {
         if ($productType === \Magento\Downloadable\Model\Product\Type::TYPE_DOWNLOADABLE) {
             return false;
