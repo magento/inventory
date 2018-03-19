@@ -3,16 +3,15 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Magento\InventoryDownloadable\Plugin\InventoryConfiguration;
+namespace Magento\InventoryDownloadable\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductType;
 
+use Magento\Downloadable\Model\Product\Type;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType;
 
 /**
- * Class provides after Plugin on
- * Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType::execute
- * to disable Source items management for downloadable product type
+ * Disable Source items management for downloadable product type
  */
-class IsSourceItemsAllowedForProductTypePlugin
+class DisableDownloadableTypePlugin
 {
     /**
      * @param IsSourceItemsAllowedForProductType $subject
@@ -23,7 +22,7 @@ class IsSourceItemsAllowedForProductTypePlugin
      */
     public function aroundExecute(IsSourceItemsAllowedForProductType $subject, callable $proceed, string $productType)
     {
-        if ($productType === \Magento\Downloadable\Model\Product\Type::TYPE_DOWNLOADABLE) {
+        if ($productType === Type::TYPE_DOWNLOADABLE) {
             return false;
         }
 

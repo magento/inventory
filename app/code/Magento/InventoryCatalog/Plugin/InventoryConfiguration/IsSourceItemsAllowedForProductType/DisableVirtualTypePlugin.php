@@ -3,16 +3,15 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Magento\InventoryCatalog\Plugin\InventoryConfiguration;
+namespace Magento\InventoryCatalog\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductType;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType;
 
 /**
- * Class provides after Plugin on
- * Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType::execute
- * to disable Source items management for virtual product type
+ * Disable Source items management for virtual product type
  */
-class IsSourceItemsAllowedForProductTypePlugin
+class DisableVirtualTypePlugin
 {
     /**
      * @param IsSourceItemsAllowedForProductType $subject
@@ -23,7 +22,7 @@ class IsSourceItemsAllowedForProductTypePlugin
      */
     public function aroundExecute(IsSourceItemsAllowedForProductType $subject, callable $proceed, string $productType)
     {
-        if ($productType === \Magento\Catalog\Model\Product\Type::TYPE_VIRTUAL) {
+        if ($productType === Type::TYPE_VIRTUAL) {
             return false;
         }
 

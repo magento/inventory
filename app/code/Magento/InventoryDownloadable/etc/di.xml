@@ -6,8 +6,8 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType">
-        <plugin name="disable_downloadable_product_type_for_inventory_source_items"
-                type="Magento\InventoryDownloadable\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductTypePlugin"/>
+    <type name="Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface">
+        <plugin name="disable_downloadable_type"
+                type="Magento\InventoryDownloadable\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductType\DisableDownloadableTypePlugin"/>
     </type>
 </config>
