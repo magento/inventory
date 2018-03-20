@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\S
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalog\Model\ResourceModel\AddIsInStockFilterToCollection;
 
@@ -28,15 +29,23 @@ class AdaptAddIsInStockFilterToCollectionPlugin
     private $addIsInStockFilterToCollection;
 
     /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AddIsInStockFilterToCollection $addIsInStockFilterToCollection
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        AddIsInStockFilterToCollection $addIsInStockFilterToCollection
+        AddIsInStockFilterToCollection $addIsInStockFilterToCollection,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->addIsInStockFilterToCollection = $addIsInStockFilterToCollection;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -44,8 +53,6 @@ class AdaptAddIsInStockFilterToCollectionPlugin
      * @param callable $proceed
      * @param Collection $collection
      * @return Status
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddIsInStockFilterToCollection(
         Status $stockStatus,
@@ -53,7 +60,11 @@ class AdaptAddIsInStockFilterToCollectionPlugin
         $collection
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        $this->addIsInStockFilterToCollection->execute($collection, $stockId);
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            $proceed($collection);
+        } else {
+            $this->addIsInStockFilterToCollection->execute($collection, $stockId);
+        }
 
         return $stockStatus;
     }

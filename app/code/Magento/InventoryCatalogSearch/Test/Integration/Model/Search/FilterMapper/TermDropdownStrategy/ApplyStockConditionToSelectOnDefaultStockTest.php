@@ -7,9 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Test\Integration\Model\Search\FilterMapper\TermDropdownStrategy;
 
+use Magento\Catalog\Model\Indexer\Product\Eav\Processor;
 use Magento\CatalogSearch\Model\Search\FilterMapper\TermDropdownStrategy\ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Select;
+use Magento\Indexer\Model\Indexer;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -21,6 +22,16 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
     private $applyStockConditionToSelect;
 
     /**
+     * @var Indexer
+     */
+    private $indexer;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -28,6 +39,8 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
         parent::setUp();
 
         $this->applyStockConditionToSelect = Bootstrap::getObjectManager()->get(ApplyStockConditionToSelect::class);
+        $this->indexer = Bootstrap::getObjectManager()->get(Indexer::class);
+        $this->resourceConnection = Bootstrap::getObjectManager()->get(ResourceConnection::class);
     }
 
     /**
@@ -36,16 +49,34 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
      */
     public function testExecute()
     {
-        /** @var ResourceConnection $resource */
-        $resource = Bootstrap::getObjectManager()->get(ResourceConnection::class);
+        $this->clearIndex();
+        $this->indexer->load(Processor::INDEXER_ID);
+        $this->indexer->reindexAll();
 
-        /** @var Select $select */
-        $select = $resource->getConnection()->select();
-        $select->from(['eav_index' => $resource->getTableName('catalog_product_index_eav')], 'entity_id');
+        $select = $this->resourceConnection->getConnection()->select();
+        $select->from(['eav_index' => $this->resourceConnection->getTableName('catalog_product_index_eav')], 'entity_id');
         $this->applyStockConditionToSelect->execute('eav_index', 'eav_index_stock', $select);
 
         $result = $select->query()->fetchAll();
 
         self::assertEquals(3, count($result));
+    }
+
+    /**
+     * Clear index data
+     */
+    private function clearIndex()
+    {
+        $this->resourceConnection->getConnection()->delete(
+            $this->resourceConnection->getTableName('catalog_product_index_eav')
+        );
+
+        $actualResult =  $this->resourceConnection->getConnection()->fetchOne(
+            $this->resourceConnection->getConnection()->select()->from(
+                $this->resourceConnection->getTableName('catalog_product_index_eav'),
+                'entity_id'
+            )
+        );
+        $this->assertFalse($actualResult);
     }
 }

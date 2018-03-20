@@ -12,6 +12,7 @@ use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Search\Adapter\Mysql\ConditionManager;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -49,24 +50,32 @@ class AdaptStockStatusFilterPlugin
     private $resourceConnection;
 
     /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param ConditionManager $conditionManager
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param ResourceConnection $resourceConnection
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ConditionManager $conditionManager,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->conditionManager = $conditionManager;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resourceConnection = $resourceConnection;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -88,19 +97,27 @@ class AdaptStockStatusFilterPlugin
         $type,
         $showOutOfStockFlag
     ) {
-        if ($type !== StockStatusFilter::FILTER_JUST_ENTITY
-            && $type !== StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
-        ) {
-            throw new InvalidArgumentException('Invalid filter type: ' . $type);
-        }
+        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+        $stockId = $stock->getStockId();
 
-        $mainTableAlias = $this->extractTableAliasFromSelect($select);
-        $this->addProductEntityJoin($select, $mainTableAlias);
-        $this->addInventoryStockJoin($select, $showOutOfStockFlag);
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            $proceed($select, $stockValues, $type, $showOutOfStockFlag);
+        } else {
+            if ($type !== StockStatusFilter::FILTER_JUST_ENTITY
+                && $type !== StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
+            ) {
+                throw new InvalidArgumentException('Invalid filter type: ' . $type);
+            }
 
-        if ($type === StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS) {
-            $this->addSubProductEntityJoin($select, $mainTableAlias);
-            $this->addSubProductInventoryStockJoin($select, $showOutOfStockFlag);
+            $mainTableAlias = $this->extractTableAliasFromSelect($select);
+            $this->addProductEntityJoin($select, $mainTableAlias);
+            $this->addInventoryStockJoin($select, $showOutOfStockFlag);
+
+            if ($type === StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS) {
+                $this->addSubProductEntityJoin($select, $mainTableAlias);
+                $this->addSubProductInventoryStockJoin($select, $showOutOfStockFlag);
+            }
         }
 
         return $select;
