@@ -59,7 +59,7 @@
         <plugin name="adapt_stock_resolver_to_admin_website"
                 type="Magento\InventoryCatalog\Plugin\InventorySalesApi\StockResolver\AdaptStockResolverToAdminWebsitePlugin"/>
     </type>
-    <type name="Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType">
+    <type name="Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface">
         <plugin name="disable_virtual_type"
                 type="Magento\InventoryCatalog\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductType\DisableVirtualTypePlugin"/>
     </type>
