@@ -13,6 +13,7 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Sales\Model\Order\ProductSalability;
 use Magento\Sales\Model\ResourceModel\Order\Address\Collection;
 use Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection as CreditmemoCollection;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\Collection as InvoiceCollection;
@@ -280,6 +281,11 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
     private $localeResolver;
 
     /**
+     * @var ProductSalability
+     */
+    private $productSalability;
+
+    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -308,6 +314,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
      * @param ResolverInterface $localeResolver
+     * @param ProductSalability $productSalability
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -338,7 +345,8 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
-        ResolverInterface $localeResolver = null
+        ResolverInterface $localeResolver = null,
+        ProductSalability $productSalability = null
     ) {
         $this->_storeManager = $storeManager;
         $this->_orderConfig = $orderConfig;
@@ -361,6 +369,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         $this->salesOrderCollectionFactory = $salesOrderCollectionFactory;
         $this->priceCurrency = $priceCurrency;
         $this->localeResolver = $localeResolver ?: ObjectManager::getInstance()->get(ResolverInterface::class);
+        $this->productSalability = $productSalability ?: ObjectManager::getInstance()->get(ProductSalability::class);
 
         parent::__construct(
             $context,
@@ -816,7 +825,8 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
                 if (!$product) {
                     return false;
                 }
-                if (!$ignoreSalable && !$product->isSalable()) {
+                $isProductSalable = $this->productSalability->isSalable($product, $this->getStore()->getWebsite());
+                if (!$ignoreSalable && !$isProductSalable) {
                     return false;
                 }
             }
