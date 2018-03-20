@@ -54,7 +54,12 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
         $this->indexer->reindexAll();
 
         $select = $this->resourceConnection->getConnection()->select();
-        $select->from(['eav_index' => $this->resourceConnection->getTableName('catalog_product_index_eav')], 'entity_id');
+        $select->from(
+            [
+                'eav_index' => $this->resourceConnection->getTableName('catalog_product_index_eav'),
+            ],
+            'entity_id'
+        );
         $this->applyStockConditionToSelect->execute('eav_index', 'eav_index_stock', $select);
 
         $result = $select->query()->fetchAll();
@@ -71,7 +76,7 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
             $this->resourceConnection->getTableName('catalog_product_index_eav')
         );
 
-        $actualResult =  $this->resourceConnection->getConnection()->fetchOne(
+        $actualResult = $this->resourceConnection->getConnection()->fetchOne(
             $this->resourceConnection->getConnection()->select()->from(
                 $this->resourceConnection->getTableName('catalog_product_index_eav'),
                 'entity_id'
