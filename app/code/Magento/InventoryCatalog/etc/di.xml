@@ -61,6 +61,6 @@
     </type>
     <type name="Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType">
         <plugin name="disable_virtual_type"
-                type="Magento\InventoryDownloadable\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductType\DisableDownloadableTypePlugin"/>
+                type="Magento\InventoryCatalog\Plugin\InventoryConfiguration\IsSourceItemsAllowedForProductType\DisableVirtualTypePlugin"/>
     </type>
 </config>
