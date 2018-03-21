@@ -60,12 +60,12 @@ class AdaptAddIsInStockFilterToCollectionPlugin
         $collection
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
+
         if ($this->defaultStockProvider->getId() === $stockId) {
             $proceed($collection);
         } else {
             $this->addIsInStockFilterToCollection->execute($collection, $stockId);
         }
-
         return $stockStatus;
     }
 }

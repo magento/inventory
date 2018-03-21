@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 
@@ -29,15 +30,23 @@ class AdaptAddStockStatusToProductsPlugin
     private $isProductSalable;
 
     /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param IsProductSalableInterface $isProductSalable
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable
+        IsProductSalableInterface $isProductSalable,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -54,6 +63,11 @@ class AdaptAddStockStatusToProductsPlugin
         AbstractCollection $productCollection
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
+
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            $proceed($productCollection);
+            return;
+        }
 
         /** @var Product $product */
         foreach ($productCollection as $product) {

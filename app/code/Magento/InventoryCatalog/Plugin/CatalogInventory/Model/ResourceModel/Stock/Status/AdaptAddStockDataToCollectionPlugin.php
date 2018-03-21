@@ -64,12 +64,12 @@ class AdaptAddStockDataToCollectionPlugin
         $isFilterInStock
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
+
         if ($this->defaultStockProvider->getId() === $stockId) {
             $proceed($collection, $isFilterInStock);
         } else {
             $this->addStockDataToCollection->execute($collection, (bool)$isFilterInStock, $stockId);
         }
-
         return $collection;
     }
 }

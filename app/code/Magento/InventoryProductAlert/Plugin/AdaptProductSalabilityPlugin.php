@@ -10,6 +10,7 @@ namespace Magento\InventoryProductAlert\Plugin;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -32,15 +33,23 @@ class AdaptProductSalabilityPlugin
     private $isProductSalable;
 
     /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param StockResolverInterface $stockResolver
      * @param IsProductSalableInterface $isProductSalable
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         StockResolverInterface $stockResolver,
-        IsProductSalableInterface $isProductSalable
+        IsProductSalableInterface $isProductSalable,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->stockResolver = $stockResolver;
         $this->isProductSalable = $isProductSalable;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -61,8 +70,13 @@ class AdaptProductSalabilityPlugin
     ): bool {
         /** @var StockInterface $stock */
         $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-        $isSalable = $this->isProductSalable->execute($product->getSku(), (int)$stock->getStockId());
+        $stockId = (int)$stock->getStockId();
 
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            return $proceed($product, $website);
+        }
+
+        $isSalable = $this->isProductSalable->execute($product->getSku(), (int)$stock->getStockId());
         return $isSalable;
     }
 }

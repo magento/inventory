@@ -59,6 +59,7 @@ class AdaptAddInStockFilterToCollectionPlugin
     public function aroundAddInStockFilterToCollection(Stock $subject, callable $proceed, $collection)
     {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
+
         if ($this->defaultStockProvider->getId() === $stockId) {
             $proceed($collection);
         } else {
