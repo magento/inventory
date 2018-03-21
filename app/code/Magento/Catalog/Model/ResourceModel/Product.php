@@ -511,48 +511,6 @@ class Product extends AbstractResource
     }
 
     /**
-     * Get product type by it's sku.
-     *
-     * @param string $productSku
-     * @return string
-     */
-    public function getProductTypeBySku(string $productSku): string
-    {
-        $select = $this->getConnection()
-            ->select()
-            ->from(
-                $this->getTable('catalog_product_entity'),
-                ['type_id']
-            )->where(
-                'sku = ?',
-                $productSku
-            );
-
-        return $this->getConnection()->fetchOne($select);
-    }
-
-    /**
-     * Get product type by it's id.
-     *
-     * @param int $productId
-     * @return string
-     */
-    public function getProductTypeById(int $productId): string
-    {
-        $select = $this->getConnection()
-            ->select()
-            ->from(
-                $this->getTable('catalog_product_entity'),
-                ['type_id']
-            )->where(
-                'entity_id = ?',
-                $productId
-            );
-
-        return $this->getConnection()->fetchOne($select);
-    }
-
-    /**
      * Return correct key for result array in getProductIdsBySku
      * Allows for different case sku to be passed in search array
      * with original cased sku to be passed back in result array
