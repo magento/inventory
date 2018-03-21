@@ -122,7 +122,4 @@
             <argument name="isProductSalableForRequestedQty" xsi:type="object">IsProductSalableForRequestedQtyConditionChainOnPlaceOrder</argument>
         </arguments>
     </type>
-    <type name="Magento\Sales\Model\Order\ProductSalability">
-        <plugin name="adapt_product_salability" type="Magento\InventorySales\Plugin\AdaptProductSalabilityPlugin" />
-    </type>
 </config>

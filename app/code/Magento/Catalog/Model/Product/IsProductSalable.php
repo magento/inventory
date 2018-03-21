@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Sales\Model\Order;
+namespace Magento\Catalog\Model\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
@@ -13,7 +13,7 @@ use Magento\Store\Api\Data\WebsiteInterface;
 /**
  * Checks product salability.
  */
-class ProductSalability
+class IsProductSalable
 {
     /**
      * @param ProductInterface $product
@@ -21,7 +21,7 @@ class ProductSalability
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function isSalable(ProductInterface $product, WebsiteInterface $website): bool
+    public function execute(ProductInterface $product, WebsiteInterface $website): bool
     {
         return $product->isSalable();
     }

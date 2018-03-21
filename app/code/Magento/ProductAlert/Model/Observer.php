@@ -5,6 +5,8 @@
  */
 namespace Magento\ProductAlert\Model;
 
+use Magento\Catalog\Model\Product\IsProductSalable;
+
 /**
  * ProductAlert observer
  *
@@ -114,9 +116,9 @@ class Observer
     protected $inlineTranslation;
 
     /**
-     * @var ProductSalability
+     * @var IsProductSalable
      */
-    protected $productSalability;
+    protected $isProductSalable;
 
     /**
      * @param \Magento\Catalog\Helper\Data $catalogData
@@ -130,7 +132,7 @@ class Observer
      * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
      * @param \Magento\ProductAlert\Model\EmailFactory $emailFactory
      * @param \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
-     * @param ProductSalability|null $productSalability
+     * @param IsProductSalable|null $isProductSalable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -145,7 +147,7 @@ class Observer
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
         \Magento\ProductAlert\Model\EmailFactory $emailFactory,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
-        ProductSalability $productSalability = null
+        IsProductSalable $isProductSalable = null
     ) {
         $this->_catalogData = $catalogData;
         $this->_scopeConfig = $scopeConfig;
@@ -159,7 +161,7 @@ class Observer
         $this->_emailFactory = $emailFactory;
         $this->inlineTranslation = $inlineTranslation;
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->productSalability = $productSalability ?: $objectManager->get(ProductSalability::class);
+        $this->isProductSalable = $isProductSalable ?: $objectManager->get(IsProductSalable::class);
     }
 
     /**
@@ -335,7 +337,7 @@ class Observer
 
                     $product->setCustomerGroupId($customer->getGroupId());
 
-                    if ($this->productSalability->isSalable($product, $website)) {
+                    if ($this->isProductSalable->execute($product, $website)) {
                         $email->addStockProduct($product);
 
                         $alert->setSendDate($this->_dateFactory->create()->gmtDate());

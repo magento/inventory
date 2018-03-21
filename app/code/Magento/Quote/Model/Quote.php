@@ -5,10 +5,12 @@
  */
 namespace Magento\Quote\Model;
 
+use Magento\Catalog\Model\Product\IsProductSalable;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\GroupInterface;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Model\AbstractExtensibleModel;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Model\Quote\Address;
@@ -354,6 +356,11 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
     protected $shippingAddressesItems;
 
     /**
+     * @var IsProductSalable
+     */
+    private $isProductSalable;
+
+    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -394,6 +401,7 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
      * @param array $data
+     * @param IsProductSalable $isProductSalable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -436,7 +444,8 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
         \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        IsProductSalable $isProductSalable = null
     ) {
         $this->quoteValidator = $quoteValidator;
         $this->_catalogProduct = $catalogProduct;
@@ -471,6 +480,8 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
         $this->totalsReader = $totalsReader;
         $this->shippingFactory = $shippingFactory;
         $this->shippingAssignmentFactory = $shippingAssignmentFactory;
+        $this->isProductSalable = $isProductSalable ?: ObjectManager::getInstance()->get(IsProductSalable::class);
+
         parent::__construct(
             $context,
             $registry,
@@ -1586,7 +1597,7 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
             );
         }
 
-        if (!$product->isSalable()) {
+        if (!$this->isProductSalable->execute($product, $this->getStore()->getWebsite())) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('Product that you are trying to add is not available.')
             );

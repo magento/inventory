@@ -5,6 +5,7 @@
  */
 namespace Magento\Sales\Model;
 
+use Magento\Catalog\Model\Product\IsProductSalable;
 use Magento\Directory\Model\Currency;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\App\ObjectManager;
@@ -13,7 +14,6 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderStatusHistoryInterface;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Sales\Model\Order\ProductSalability;
 use Magento\Sales\Model\ResourceModel\Order\Address\Collection;
 use Magento\Sales\Model\ResourceModel\Order\Creditmemo\Collection as CreditmemoCollection;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\Collection as InvoiceCollection;
@@ -281,9 +281,9 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
     private $localeResolver;
 
     /**
-     * @var ProductSalability
+     * @var IsProductSalable
      */
-    private $productSalability;
+    private $isProductSalable;
 
     /**
      * @param \Magento\Framework\Model\Context $context
@@ -314,7 +314,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
      * @param ResolverInterface $localeResolver
-     * @param ProductSalability $productSalability
+     * @param IsProductSalable $isProductSalable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -346,7 +346,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
         ResolverInterface $localeResolver = null,
-        ProductSalability $productSalability = null
+        IsProductSalable $isProductSalable = null
     ) {
         $this->_storeManager = $storeManager;
         $this->_orderConfig = $orderConfig;
@@ -369,7 +369,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         $this->salesOrderCollectionFactory = $salesOrderCollectionFactory;
         $this->priceCurrency = $priceCurrency;
         $this->localeResolver = $localeResolver ?: ObjectManager::getInstance()->get(ResolverInterface::class);
-        $this->productSalability = $productSalability ?: ObjectManager::getInstance()->get(ProductSalability::class);
+        $this->isProductSalable = $isProductSalable ?: ObjectManager::getInstance()->get(IsProductSalable::class);
 
         parent::__construct(
             $context,
@@ -825,7 +825,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
                 if (!$product) {
                     return false;
                 }
-                $isProductSalable = $this->productSalability->isSalable($product, $this->getStore()->getWebsite());
+                $isProductSalable = $this->isProductSalable->execute($product, $this->getStore()->getWebsite());
                 if (!$ignoreSalable && !$isProductSalable) {
                     return false;
                 }
