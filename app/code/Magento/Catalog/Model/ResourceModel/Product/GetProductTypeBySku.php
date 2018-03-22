@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Api\GetProductTypeBySkuInterface;
-use Magento\Framework\App\ResourceConnection;
+use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\Exception\InputException;
 
 /**
@@ -17,17 +17,17 @@ use Magento\Framework\Exception\InputException;
 class GetProductTypeBySku implements GetProductTypeBySkuInterface
 {
     /**
-     * @var ResourceConnection
+     * @var Product
      */
-    private $resourceConnection;
+    private $productResource;
 
     /**
-     * @param ResourceConnection $resourceConnection
+     * @param Product $productResource
      */
     public function __construct(
-        ResourceConnection $resourceConnection
+        Product $productResource
     ) {
-        $this->resourceConnection = $resourceConnection;
+        $this->productResource = $productResource;
     }
 
     /**
@@ -39,10 +39,10 @@ class GetProductTypeBySku implements GetProductTypeBySkuInterface
             throw new InputException(__('Input data is empty'));
         }
 
-        $connection = $this->resourceConnection->getConnection();
+        $connection = $this->productResource->getConnection();
         $select = $connection->select()
             ->from(
-                $this->getTable('catalog_product_entity'),
+                $this->productResource->getTable('catalog_product_entity'),
                 ['type_id']
             )->where(
                 'sku = ?',

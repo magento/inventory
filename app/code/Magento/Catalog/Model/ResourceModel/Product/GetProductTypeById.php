@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Api\GetProductTypeByIdInterface;
-use Magento\Framework\App\ResourceConnection;
+use Magento\Catalog\Model\ResourceModel\Product;
 
 /**
  * @inheritdoc
@@ -16,17 +16,17 @@ use Magento\Framework\App\ResourceConnection;
 class GetProductTypeById implements GetProductTypeByIdInterface
 {
     /**
-     * @var ResourceConnection
+     * @var Product
      */
-    private $resourceConnection;
+    private $productResource;
 
     /**
-     * @param ResourceConnection $resourceConnection
+     * @param Product $productResource
      */
     public function __construct(
-        ResourceConnection $resourceConnection
+        Product $productResource
     ) {
-        $this->resourceConnection = $resourceConnection;
+        $this->productResource = $productResource;
     }
 
     /**
@@ -34,10 +34,10 @@ class GetProductTypeById implements GetProductTypeByIdInterface
      */
     public function execute(int $productId)
     {
-        $connection = $this->resourceConnection->getConnection();
+        $connection = $this->productResource->getConnection();
         $select = $connection->select()
             ->from(
-                $this->getTable('catalog_product_entity'),
+                $this->productResource->getTable('catalog_product_entity'),
                 ['type_id']
             )->where(
                 'entity_id = ?',
