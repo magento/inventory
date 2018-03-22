@@ -30,6 +30,39 @@ class GetProductTypeBySkuTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Tests getting correct product type by product sku.
+     *
+     * @param string $expectedType
+     * @magentoDataFixture Magento/Catalog/_files/products_all_types.php
+     * @dataProvider productTypesDataProvider
+     */
+    public function testProductTypes(string $expectedType)
+    {
+        $actualType = $this->model->execute($expectedType . '_sku');
+        $this->assertEquals(
+            $expectedType,
+            $actualType
+        );
+    }
+
+    /**
+     * Data provider for testProductTypes.
+     *
+     * @return array
+     */
+    public function productTypesDataProvider()
+    {
+        return [
+            ['bundle'],
+            ['configurable'],
+            ['downloadable'],
+            ['grouped'],
+            ['simple'],
+            ['virtual'],
+        ];
+    }
+
+    /**
      * Tests negative scenario when Product Sku is empty.
      *
      * @expectedException \Magento\Framework\Exception\InputException
