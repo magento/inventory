@@ -70,13 +70,7 @@ class AdaptProductSalabilityPlugin
     ): bool {
         /** @var StockInterface $stock */
         $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-        $stockId = (int)$stock->getStockId();
 
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            return $proceed($product, $website);
-        }
-
-        $isSalable = $this->isProductSalable->execute($product->getSku(), (int)$stock->getStockId());
-        return $isSalable;
+        return $this->isProductSalable->execute($product->getSku(), (int)$stock->getStockId());
     }
 }
