@@ -5,6 +5,7 @@
  */
 namespace Magento\Sales\Model;
 
+use Magento\Catalog\Model\Product\IsProductSalable;
 use Magento\Directory\Model\Currency;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\App\ObjectManager;
@@ -280,6 +281,11 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
     private $localeResolver;
 
     /**
+     * @var IsProductSalable
+     */
+    private $isProductSalable;
+
+    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -308,6 +314,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
      * @param ResolverInterface $localeResolver
+     * @param IsProductSalable $isProductSalable
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -338,7 +345,8 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
-        ResolverInterface $localeResolver = null
+        ResolverInterface $localeResolver = null,
+        IsProductSalable $isProductSalable = null
     ) {
         $this->_storeManager = $storeManager;
         $this->_orderConfig = $orderConfig;
@@ -361,6 +369,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         $this->salesOrderCollectionFactory = $salesOrderCollectionFactory;
         $this->priceCurrency = $priceCurrency;
         $this->localeResolver = $localeResolver ?: ObjectManager::getInstance()->get(ResolverInterface::class);
+        $this->isProductSalable = $isProductSalable ?: ObjectManager::getInstance()->get(IsProductSalable::class);
 
         parent::__construct(
             $context,
@@ -816,7 +825,8 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
                 if (!$product) {
                     return false;
                 }
-                if (!$ignoreSalable && !$product->isSalable()) {
+                $isProductSalable = $this->isProductSalable->execute($product, $this->getStore()->getWebsite());
+                if (!$ignoreSalable && !$isProductSalable) {
                     return false;
                 }
             }

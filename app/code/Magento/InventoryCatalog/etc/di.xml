@@ -59,4 +59,7 @@
         <plugin name="adapt_stock_resolver_to_admin_website"
                 type="Magento\InventoryCatalog\Plugin\InventorySalesApi\StockResolver\AdaptStockResolverToAdminWebsitePlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\Product\IsProductSalable">
+        <plugin name="adapt_is_product_salable" type="Magento\InventoryCatalog\Plugin\AdaptIsProductSalable"/>
+    </type>
 </config>

@@ -5,21 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryProductAlert\Plugin;
+namespace Magento\InventoryCatalog\Plugin;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Catalog\Model\Product\IsProductSalable;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\ProductAlert\Model\ProductSalability;
 use Magento\Store\Api\Data\WebsiteInterface;
 
 /**
- * Adapt product salability for multi source.
+ * Adapt is product salable for multi stock.
  */
-class AdaptProductSalabilityPlugin
+class AdaptIsProductSalable
 {
     /**
      * @var StockResolverInterface
@@ -27,7 +26,7 @@ class AdaptProductSalabilityPlugin
     private $stockResolver;
 
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalable
      */
     private $isProductSalable;
 
@@ -44,17 +43,17 @@ class AdaptProductSalabilityPlugin
     }
 
     /**
-     * @param  ProductSalability $productSalability
+     * @param IsProductSalable $isProductSalable
      * @param callable $proceed
      * @param ProductInterface $product
      * @param WebsiteInterface $website
+     *
      * @return bool
-     * @throws NoSuchEntityException
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundIsSalable(
-        ProductSalability $productSalability,
+    public function aroundExecute(
+        IsProductSalable $isProductSalable,
         callable $proceed,
         ProductInterface $product,
         WebsiteInterface $website
