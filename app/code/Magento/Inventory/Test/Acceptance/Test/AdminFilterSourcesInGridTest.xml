@@ -36,7 +36,7 @@
             <argument name="value" value="$$createSource3.source[source_code]$$"/>
         </actionGroup>
 
-        <see userInput="$$createSource3.source[source_code]$$" selector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__current-filters-list" stepKey="seeFilterName1"/>
+        <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControls.dropDown}}" stepKey="seeFilterName1"/>
         <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource3.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
@@ -50,7 +50,7 @@
             <argument name="value" value="$$createSource4.source[source_code]$$"/>
         </actionGroup>
 
-        <see userInput="$$createSource4.source[source_code]$$" selector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__current-filters-list" stepKey="seeFilterName2"/>
+        <see userInput="$$createSource4.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControls.dropDown}}" stepKey="seeFilterName2"/>
         <see userInput="$$createSource4.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow2"/>
         <see userInput="$$createSource4.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow2"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow2"/>
