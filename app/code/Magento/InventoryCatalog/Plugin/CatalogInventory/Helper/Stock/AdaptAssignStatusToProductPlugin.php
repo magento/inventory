@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 
@@ -29,23 +28,15 @@ class AdaptAssignStatusToProductPlugin
     private $isProductSalable;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param IsProductSalableInterface $isProductSalable
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable,
-        DefaultStockProviderInterface $defaultStockProvider
+        IsProductSalableInterface $isProductSalable
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -54,7 +45,6 @@ class AdaptAssignStatusToProductPlugin
      * @param Product $product
      * @param int|null $status
      * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAssignStatusToProduct(
@@ -66,10 +56,8 @@ class AdaptAssignStatusToProductPlugin
         if (null === $product->getSku()) {
             return;
         }
-
-        $stockId = $this->getStockIdForCurrentWebsite->execute();
-
-        if ($this->defaultStockProvider->getId() !== $stockId && null === $status) {
+        if (null === $status) {
+            $stockId = $this->getStockIdForCurrentWebsite->execute();
             $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
         }
         $proceed($product, $status);

@@ -10,7 +10,6 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\S
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\AddStockStatusToSelect;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -24,7 +23,7 @@ class AdaptAddStockStatusToSelectPlugin
     /**
      * @var StockResolverInterface
      */
-    private $stockResolver;
+    private $getStockIdForCurrentWebsite;
 
     /**
      * @var AddStockStatusToSelect
@@ -32,23 +31,15 @@ class AdaptAddStockStatusToSelectPlugin
     private $addStockStatusToSelect;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @param StockResolverInterface $stockResolver
+     * @param StockResolverInterface $getStockIdForCurrentWebsite
      * @param AddStockStatusToSelect $addStockStatusToSelect
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        StockResolverInterface $stockResolver,
-        AddStockStatusToSelect $addStockStatusToSelect,
-        DefaultStockProviderInterface $defaultStockProvider
+        StockResolverInterface $getStockIdForCurrentWebsite,
+        AddStockStatusToSelect $addStockStatusToSelect
     ) {
-        $this->stockResolver = $stockResolver;
+        $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->addStockStatusToSelect = $addStockStatusToSelect;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -58,6 +49,7 @@ class AdaptAddStockStatusToSelectPlugin
      * @param Website $website
      * @return Status
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddStockStatusToSelect(
         Status $stockStatus,
@@ -70,14 +62,11 @@ class AdaptAddStockStatusToSelectPlugin
             throw new LocalizedException(__('Website code is empty'));
         }
 
-        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+        $stock = $this->getStockIdForCurrentWebsite->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
 
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            $proceed($select, $website);
-        } else {
-            $this->addStockStatusToSelect->execute($select, $stockId);
-        }
+        $this->addStockStatusToSelect->execute($select, $stockId);
+
         return $stockStatus;
     }
 }

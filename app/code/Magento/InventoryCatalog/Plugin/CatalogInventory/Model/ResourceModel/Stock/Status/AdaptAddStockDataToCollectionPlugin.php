@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\S
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalog\Model\ResourceModel\AddStockDataToCollection;
 
@@ -29,23 +28,15 @@ class AdaptAddStockDataToCollectionPlugin
     private $addStockDataToCollection;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AddStockDataToCollection $addStockDataToCollection
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        AddStockDataToCollection $addStockDataToCollection,
-        DefaultStockProviderInterface $defaultStockProvider
+        AddStockDataToCollection $addStockDataToCollection
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->addStockDataToCollection = $addStockDataToCollection;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -64,12 +55,8 @@ class AdaptAddStockDataToCollectionPlugin
         $isFilterInStock
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
+        $this->addStockDataToCollection->execute($collection, (bool)$isFilterInStock, $stockId);
 
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            $proceed($collection, $isFilterInStock);
-        } else {
-            $this->addStockDataToCollection->execute($collection, (bool)$isFilterInStock, $stockId);
-        }
         return $collection;
     }
 }
