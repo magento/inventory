@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection;
 use Magento\CatalogInventory\Helper\Stock;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalog\Model\ResourceModel\AddIsInStockFieldToCollection;
 
@@ -29,23 +28,15 @@ class AdaptAddInStockFilterToCollectionPlugin
     private $addIsInStockFieldToCollection;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AddIsInStockFieldToCollection $addIsInStockFieldToCollection
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        AddIsInStockFieldToCollection $addIsInStockFieldToCollection,
-        DefaultStockProviderInterface $defaultStockProvider
+        AddIsInStockFieldToCollection $addIsInStockFieldToCollection
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->addIsInStockFieldToCollection = $addIsInStockFieldToCollection;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -59,11 +50,6 @@ class AdaptAddInStockFilterToCollectionPlugin
     public function aroundAddInStockFilterToCollection(Stock $subject, callable $proceed, $collection)
     {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            $proceed($collection);
-        } else {
-            $this->addIsInStockFieldToCollection->execute($collection, $stockId);
-        }
+        $this->addIsInStockFieldToCollection->execute($collection, $stockId);
     }
 }
