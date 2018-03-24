@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCache\Plugin\InventoryApi;
 
-use Magento\Framework\Indexer\IndexerRegistry;
+use Magento\Framework\App\Cache\TypeListInterface as CacheTypeListInterface;
 use Magento\InventoryApi\Api\StockSourceLinksDeleteInterface;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 
 /**
  * Invalidate InventoryIndexer
@@ -17,28 +16,30 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 class CleanCacheAfterStockSourceLinksDeletePlugin
 {
     /**
-     * @var IndexerRegistry
+     * @var CacheTypeListInterface
      */
-    private $indexerRegistry;
+    private $cacheTypeList;
 
     /**
-     * @param IndexerRegistry $indexerRegistry
+     * @param CacheTypeListInterface $cacheTypeList
      */
-    public function __construct(IndexerRegistry $indexerRegistry)
+    public function __construct(CacheTypeListInterface $cacheTypeList)
     {
-        $this->indexerRegistry = $indexerRegistry;
+        $this->cacheTypeList = $cacheTypeList;
     }
 
     /**
      * @param StockSourceLinksDeleteInterface $subject
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(StockSourceLinksDeleteInterface $subject)
     {
-        $indexer = $this->indexerRegistry->get(InventoryIndexer::INDEXER_ID);
-        if ($indexer->isValid()) {
-            $indexer->invalidate();
+        $cacheTypesToInvalidate = [
+            'full_page',
+        ];
+
+        foreach ($cacheTypesToInvalidate as $cacheType) {
+            $this->cacheTypeList->invalidate($cacheType);
         }
     }
 }

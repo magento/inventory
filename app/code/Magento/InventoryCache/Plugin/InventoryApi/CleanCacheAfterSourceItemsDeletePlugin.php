@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCache\Plugin\InventoryApi;
 
+use Magento\Framework\App\Cache\TypeListInterface as CacheTypeListInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemId;
-use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 
 /**
  * Reindex after source items delete plugin
@@ -18,46 +17,35 @@ use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 class CleanCacheAfterSourceItemsDeletePlugin
 {
     /**
-     * @var GetSourceItemId
+     * @var CacheTypeListInterface
      */
-    private $getSourceItemId;
+    private $cacheTypeList;
 
     /**
-     * @var SourceIndexer
+     * @param CacheTypeListInterface $cacheTypeList
      */
-    private $sourceIndexer;
-
-    /**
-     * @param GetSourceItemId $getSourceItemId
-     * @param SourceIndexer $sourceIndexer
-     */
-    public function __construct(GetSourceItemId $getSourceItemId, SourceIndexer $sourceIndexer)
+    public function __construct(CacheTypeListInterface $cacheTypeList)
     {
-        $this->getSourceItemId = $getSourceItemId;
-        $this->sourceIndexer = $sourceIndexer;
+        $this->cacheTypeList = $cacheTypeList;
     }
 
     /**
      * @param SourceItemsDeleteInterface $subject
-     * @param callable $proceed
+     * @param void $result
      * @param SourceItemInterface[] $sourceItems
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecute(
+    public function afterExecute(
         SourceItemsDeleteInterface $subject,
-        callable $proceed,
+        $result,
         array $sourceItems
     ) {
-        $sourceCodes = [];
-        foreach ($sourceItems as $sourceItem) {
-            $sourceCodes[] = $sourceItem->getSourceCode();
-        }
+        $cacheTypesToInvalidate = [
+            'full_page',
+        ];
 
-        $proceed($sourceItems);
-
-        if (count($sourceCodes)) {
-            $this->sourceIndexer->executeList($sourceCodes);
+        foreach ($cacheTypesToInvalidate as $cacheType) {
+            $this->cacheTypeList->invalidate($cacheType);
         }
     }
 }

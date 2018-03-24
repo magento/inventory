@@ -7,12 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCache\Plugin\InventoryApi;
 
-use Magento\Framework\Indexer\IndexerInterface;
+use Magento\Framework\App\Cache\TypeListInterface as CacheTypeListInterface;
 use Magento\Framework\Indexer\IndexerInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemId;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
 /**
  * Reindex after source items save plugin
@@ -20,23 +18,16 @@ use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 class CleanCacheAfterSourceItemsSavePlugin
 {
     /**
-     * @var GetSourceItemId
+     * @var CacheTypeListInterface
      */
-    private $getSourceItemId;
+    private $cacheTypeList;
 
     /**
-     * @var SourceItemIndexer
+     * @param CacheTypeListInterface $cacheTypeList
      */
-    private $sourceItemIndexer;
-
-    /**
-     * @param GetSourceItemId $getSourceItemId
-     * @param SourceItemIndexer $sourceItemIndexer
-     */
-    public function __construct(GetSourceItemId $getSourceItemId, SourceItemIndexer $sourceItemIndexer)
+    public function __construct(CacheTypeListInterface $cacheTypeList)
     {
-        $this->getSourceItemId = $getSourceItemId;
-        $this->sourceItemIndexer = $sourceItemIndexer;
+        $this->cacheTypeList = $cacheTypeList;
     }
 
     /**
@@ -44,22 +35,18 @@ class CleanCacheAfterSourceItemsSavePlugin
      * @param void $result
      * @param SourceItemInterface[] $sourceItems
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(
         SourceItemsSaveInterface $subject,
         $result,
         array $sourceItems
     ) {
+        $cacheTypesToInvalidate = [
+            'full_page',
+        ];
 
-        $sourceItemIds = [];
-        foreach ($sourceItems as $sourceItem) {
-            // TODO: replace on multi operation
-            $sourceItemIds[] = $this->getSourceItemId->execute($sourceItem->getSku(), $sourceItem->getSourceCode());
-        }
-
-        if (count($sourceItemIds)) {
-            $this->sourceItemIndexer->executeList($sourceItemIds);
+        foreach ($cacheTypesToInvalidate as $cacheType) {
+            $this->cacheTypeList->invalidate($cacheType);
         }
     }
 }
