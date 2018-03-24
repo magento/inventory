@@ -102,7 +102,7 @@ class CheckQuoteItemQtyPlugin
         $result = $this->objectFactory->create();
         $result->setHasError(false);
 
-        $qty = $this->getNumber($qtyToCheck);
+        $qty = $this->getNumber($origQty);
 
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
