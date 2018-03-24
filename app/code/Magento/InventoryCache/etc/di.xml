@@ -6,6 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Source -->
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="clean_cache_after_source_save" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterSourceSavePlugin"/>
+    </type>
     <!-- StockSourceItems -->
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
         <plugin name="clean_cache_after_source_items_save" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterSourceItemsSavePlugin"/>

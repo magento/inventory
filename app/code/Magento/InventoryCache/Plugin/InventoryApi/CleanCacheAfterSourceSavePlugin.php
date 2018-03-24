@@ -8,12 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventoryCache\Plugin\InventoryApi;
 
 use Magento\Framework\App\Cache\TypeListInterface as CacheTypeListInterface;
-use Magento\InventoryApi\Api\StockSourceLinksDeleteInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
- * Clean cache after stock source links deleting 
+ * Clean cache after source save plugin
  */
-class CleanCacheAfterStockSourceLinksDeletePlugin
+class CleanCacheAfterSourceSavePlugin
 {
     /**
      * @var CacheTypeListInterface
@@ -29,11 +30,16 @@ class CleanCacheAfterStockSourceLinksDeletePlugin
     }
 
     /**
-     * @param StockSourceLinksDeleteInterface $subject
+     * @param SourceRepositoryInterface $subject
+     * @param void $result
+     * @param SourceInterface $source
      * @return void
      */
-    public function afterExecute(StockSourceLinksDeleteInterface $subject)
-    {
+    public function afterSave(
+        SourceRepositoryInterface $subject,
+        $result,
+        SourceInterface $source
+    ) {
         $cacheTypesToInvalidate = [
             'full_page',
         ];

@@ -11,7 +11,7 @@ use Magento\Framework\App\Cache\TypeListInterface as CacheTypeListInterface;
 use Magento\InventoryApi\Api\StockSourceLinksSaveInterface;
 
 /**
- * Invalidate InventoryIndexer
+ * Clean cache after stock source links saving
  */
 class CleanCacheAfterStockSourceLinksSavePlugin
 {

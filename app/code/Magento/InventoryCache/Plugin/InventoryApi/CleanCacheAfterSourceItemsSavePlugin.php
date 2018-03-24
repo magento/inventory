@@ -8,12 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryCache\Plugin\InventoryApi;
 
 use Magento\Framework\App\Cache\TypeListInterface as CacheTypeListInterface;
-use Magento\Framework\Indexer\IndexerInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 
 /**
- * Reindex after source items save plugin
+ * Clean cache after source items save plugin
  */
 class CleanCacheAfterSourceItemsSavePlugin
 {
