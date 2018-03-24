@@ -36,6 +36,10 @@
     <type name="Magento\InventoryApi\Api\SourceItemsDeleteInterface">
         <plugin name="reindex_after_source_items_delete" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceItemsDeletePlugin"/>
     </type>
+    <!-- Source -->
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="reindex_after_source_save" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceSavePlugin"/>
+    </type>
     <!-- StockSourceLink -->
     <type name="Magento\InventoryApi\Api\StockSourceLinksSaveInterface">
         <plugin name="reindex_after_stock_source_links_save" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterStockSourceLinksSavePlugin"/>
