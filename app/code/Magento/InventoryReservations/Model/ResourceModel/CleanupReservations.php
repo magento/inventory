@@ -11,6 +11,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryReservationsApi\Api\Data\ReservationInterface;
 use Magento\InventoryReservations\Model\CleanupReservationsInterface;
 use Magento\InventoryReservations\Setup\Operation\CreateReservationTable;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetGroupConcatMaxLen;
 
 /**
  * @inheritdoc
@@ -23,9 +24,9 @@ class CleanupReservations implements CleanupReservationsInterface
     private $resource;
 
     /**
-     * @var int
+     * @var GetGroupConcatMaxLen
      */
-    private $groupConcatMaxLen;
+    private $getGroupConcatMaxLen;
 
     /**
      * @param ResourceConnection $resource
@@ -33,10 +34,10 @@ class CleanupReservations implements CleanupReservationsInterface
      */
     public function __construct(
         ResourceConnection $resource,
-        int $groupConcatMaxLen
+        GetGroupConcatMaxLen $getGroupConcatMaxLen
     ) {
         $this->resource = $resource;
-        $this->groupConcatMaxLen = $groupConcatMaxLen;
+        $this->getGroupConcatMaxLen = $getGroupConcatMaxLen;
     }
 
     /**
@@ -54,7 +55,7 @@ class CleanupReservations implements CleanupReservationsInterface
             )
             ->group([ReservationInterface::STOCK_ID, ReservationInterface::SKU])
             ->having('SUM(' . ReservationInterface::QUANTITY . ') = 0');
-            $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
+        $connection->query('SET group_concat_max_len = ' . $this->getGroupConcatMaxLen->execute());
         $groupedReservationIds = implode(',', $connection->fetchCol($select));
 
         $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => explode(',', $groupedReservationIds)];
