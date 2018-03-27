@@ -9,6 +9,7 @@
         "magento/module-backend": "100.3.*",
         "magento/module-product-alert": "100.3.*",
         "magento/module-inventory-api": "100.0.0-dev",
+        "magento/module-inventory-catalog": "100.0.0-dev",
         "magento/module-inventory-sales-api": "100.0.0-dev"
     },
     "suggest": {
