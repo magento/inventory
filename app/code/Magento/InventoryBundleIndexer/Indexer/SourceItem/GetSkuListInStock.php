@@ -15,6 +15,7 @@ use Magento\Inventory\Model\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\SkuListInStock;
 use Magento\InventoryIndexer\Indexer\SourceItem\SkuListInStockFactory;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetGroupConcatMaxLen;
 
 /**
  * Returns relations between stock and sku list for bundle products.
@@ -32,25 +33,25 @@ class GetSkuListInStock
     private $skuListInStockFactory;
 
     /**
-     * @var int
+     * @var GetGroupConcatMaxLen
      */
-    private $groupConcatMaxLen;
+    private $getGroupConcatMaxLen;
 
     /**
      * GetSkuListInStock constructor.
      *
-     * @param ResourceConnection $resourceConnection
+     * @param ResourceConnection    $resourceConnection
      * @param SkuListInStockFactory $skuListInStockFactory
-     * @param int $groupConcatMaxLen
+     * @param GetGroupConcatMaxLen  $getGroupConcatMaxLen
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         SkuListInStockFactory $skuListInStockFactory,
-        int $groupConcatMaxLen
+        GetGroupConcatMaxLen $getGroupConcatMaxLen
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->skuListInStockFactory = $skuListInStockFactory;
-        $this->groupConcatMaxLen = $groupConcatMaxLen;
+        $this->getGroupConcatMaxLen = $getGroupConcatMaxLen;
     }
 
     /**
@@ -94,7 +95,7 @@ class GetSkuListInStock
             )
             ->group(['stock_source_link.' . StockSourceLink::STOCK_ID]);
 
-        $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
+        $connection->query('SET group_concat_max_len = ' . $this->getGroupConcatMaxLen->execute());
         $items = $connection->fetchAll($select);
 
         return $this->getStockIdToSkuList($items, $bundleChildrenSourceItemsIds);

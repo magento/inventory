@@ -12,6 +12,7 @@ use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkResourceModel;
 use Magento\Inventory\Model\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetGroupConcatMaxLen;
 
 /**
  * Returns relations between stock and sku list
@@ -29,25 +30,25 @@ class GetSkuListInStock
     private $skuListInStockFactory;
 
     /**
-     * @var int
+     * @var GetGroupConcatMaxLen
      */
-    private $groupConcatMaxLen;
+    private $getGroupConcatMaxLen;
 
     /**
      * GetSkuListInStock constructor.
      *
-     * @param ResourceConnection $resourceConnection
-     * @param SkuListInStockFactory $skuListInStockFactory
-     * @param int $groupConcatMaxLen
+     * @param ResourceConnection                                                $resourceConnection
+     * @param SkuListInStockFactory                                             $skuListInStockFactory
+     * @param \Magento\InventoryIndexer\Indexer\SourceItem\GetGroupConcatMaxLen $getGroupConcatMaxLen
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         SkuListInStockFactory $skuListInStockFactory,
-        int $groupConcatMaxLen
+        GetGroupConcatMaxLen $getGroupConcatMaxLen
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->skuListInStockFactory = $skuListInStockFactory;
-        $this->groupConcatMaxLen = $groupConcatMaxLen;
+        $this->getGroupConcatMaxLen = $getGroupConcatMaxLen;
     }
 
     /**
@@ -85,7 +86,7 @@ class GetSkuListInStock
             )->where('source_item.source_item_id IN (?)', $sourceItemIds)
             ->group(['stock_source_link.' . StockSourceLink::STOCK_ID]);
 
-        $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
+        $connection->query('SET group_concat_max_len = ' . $this->getGroupConcatMaxLen->execute());
         $items = $connection->fetchAll($select);
         return $this->getStockIdToSkuList($items);
     }

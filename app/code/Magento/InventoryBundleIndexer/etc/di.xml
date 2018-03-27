@@ -19,9 +19,4 @@
         <plugin name="bundle_product_index"
                 type="Magento\InventoryBundleIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\AddBundleDataToIndexByBundleIds" />
     </type>
-    <type name="Magento\InventoryBundleIndexer\Indexer\SourceItem\GetSkuListInStock">
-        <arguments>
-            <argument name="groupConcatMaxLen" xsi:type="number">2000</argument>
-        </arguments>
-    </type>
 </config>
