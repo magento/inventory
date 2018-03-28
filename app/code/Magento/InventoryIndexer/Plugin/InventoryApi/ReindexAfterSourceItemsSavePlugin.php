@@ -9,7 +9,7 @@ namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemId;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
 /**
@@ -18,9 +18,9 @@ use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 class ReindexAfterSourceItemsSavePlugin
 {
     /**
-     * @var GetSourceItemId
+     * @var GetSourceItemIds
      */
-    private $getSourceItemId;
+    private $getSourceItemIds;
 
     /**
      * @var SourceItemIndexer
@@ -28,12 +28,12 @@ class ReindexAfterSourceItemsSavePlugin
     private $sourceItemIndexer;
 
     /**
-     * @param GetSourceItemId $getSourceItemId
+     * @param GetSourceItemIds $getSourceItemIds
      * @param SourceItemIndexer $sourceItemIndexer
      */
-    public function __construct(GetSourceItemId $getSourceItemId, SourceItemIndexer $sourceItemIndexer)
+    public function __construct(GetSourceItemIds $getSourceItemIds, SourceItemIndexer $sourceItemIndexer)
     {
-        $this->getSourceItemId = $getSourceItemId;
+        $this->getSourceItemIds = $getSourceItemIds;
         $this->sourceItemIndexer = $sourceItemIndexer;
     }
 
@@ -49,13 +49,7 @@ class ReindexAfterSourceItemsSavePlugin
         $result,
         array $sourceItems
     ) {
-
-        $sourceItemIds = [];
-        foreach ($sourceItems as $sourceItem) {
-            // TODO: replace on multi operation
-            $sourceItemIds[] = $this->getSourceItemId->execute($sourceItem->getSku(), $sourceItem->getSourceCode());
-        }
-
+        $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         if (count($sourceItemIds)) {
             $this->sourceItemIndexer->executeList($sourceItemIds);
         }
