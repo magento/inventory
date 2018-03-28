@@ -11,6 +11,7 @@ use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\DataProvider\SelectBui
 ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\InventoryCatalog\Model\DefaultStockProvider;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolver;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -43,21 +44,29 @@ class AdaptApplyStockConditionToSelectPlugin
     private $stockResolver;
 
     /**
+     * @var DefaultStockProvider
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param StockIndexTableNameResolver $stockIndexTableNameResolver
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
+     * @param DefaultStockProvider $defaultStockProvider
      */
     public function __construct(
         StockIndexTableNameResolver $stockIndexTableNameResolver,
         ResourceConnection $resource,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        DefaultStockProvider $defaultStockProvider
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -77,17 +86,21 @@ class AdaptApplyStockConditionToSelectPlugin
         $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
 
-        $tableName = $this->stockIndexTableNameResolver->execute($stockId);
-        $select->joinInner(
-            ['product' => $this->resource->getTableName('catalog_product_entity')],
-            'main_table.source_id = product.entity_id',
-            []
-        );
-        $select->joinInner(
-            ['stock_index' => $tableName],
-            'product.sku = stock_index.sku',
-            []
-        )->where('stock_index.' . IndexStructure::IS_SALABLE . ' = ?', 1);
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            $proceed($select);
+        } else {
+            $tableName = $this->stockIndexTableNameResolver->execute($stockId);
+            $select->joinInner(
+                ['product' => $this->resource->getTableName('catalog_product_entity')],
+                'main_table.source_id = product.entity_id',
+                []
+            );
+            $select->joinInner(
+                ['stock_index' => $tableName],
+                'product.sku = stock_index.sku',
+                []
+            )->where('stock_index.' . IndexStructure::IS_SALABLE . ' = ?', 1);
+        }
 
         return $select;
     }

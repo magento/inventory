@@ -12,6 +12,7 @@ use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Search\Adapter\Mysql\ConditionManager;
+use Magento\InventoryCatalog\Model\DefaultStockProvider;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -49,24 +50,32 @@ class AdaptStockStatusFilterPlugin
     private $resourceConnection;
 
     /**
+     * @var DefaultStockProvider
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param ConditionManager $conditionManager
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param ResourceConnection $resourceConnection
+     * @param DefaultStockProvider $defaultStockProvider
      */
     public function __construct(
         ConditionManager $conditionManager,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        DefaultStockProvider $defaultStockProvider
     ) {
         $this->conditionManager = $conditionManager;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resourceConnection = $resourceConnection;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -88,19 +97,29 @@ class AdaptStockStatusFilterPlugin
         $type,
         $showOutOfStockFlag
     ) {
-        if ($type !== StockStatusFilter::FILTER_JUST_ENTITY
-            && $type !== StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
-        ) {
-            throw new InvalidArgumentException('Invalid filter type: ' . $type);
-        }
+        $website = $this->storeManager->getWebsite();
+        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
+        $stockId = (int)$stock->getStockId();
 
-        $mainTableAlias = $this->extractTableAliasFromSelect($select);
-        $this->addProductEntityJoin($select, $mainTableAlias);
-        $this->addInventoryStockJoin($select, $showOutOfStockFlag);
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            $proceed($select, $stockValues, $type, $showOutOfStockFlag);
+        } else {
+            if ($type !== StockStatusFilter::FILTER_JUST_ENTITY
+                && $type !== StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
+            ) {
+                throw new InvalidArgumentException('Invalid filter type: ' . $type);
+            }
 
-        if ($type === StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS) {
-            $this->addSubProductEntityJoin($select, $mainTableAlias);
-            $this->addSubProductInventoryStockJoin($select, $showOutOfStockFlag);
+            $stockTableName = $this->getStockTableName($stockId);
+            $mainTableAlias = $this->extractTableAliasFromSelect($select);
+
+            $this->addProductEntityJoin($select, $mainTableAlias);
+            $this->addInventoryStockJoin($select, $showOutOfStockFlag, $stockTableName);
+
+            if ($type === StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS) {
+                $this->addSubProductEntityJoin($select, $mainTableAlias);
+                $this->addSubProductInventoryStockJoin($select, $showOutOfStockFlag, $stockTableName);
+            }
         }
 
         return $select;
@@ -109,8 +128,9 @@ class AdaptStockStatusFilterPlugin
     /**
      * @param Select $select
      * @param string $mainTableAlias
+     * @return void
      */
-    private function addProductEntityJoin(Select $select, $mainTableAlias)
+    private function addProductEntityJoin(Select $select, string $mainTableAlias): void
     {
         $select->joinInner(
             ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -122,8 +142,9 @@ class AdaptStockStatusFilterPlugin
     /**
      * @param Select $select
      * @param string $mainTableAlias
+     * @return void
      */
-    private function addSubProductEntityJoin(Select $select, $mainTableAlias)
+    private function addSubProductEntityJoin(Select $select, string $mainTableAlias): void
     {
         $select->joinInner(
             ['sub_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -135,12 +156,13 @@ class AdaptStockStatusFilterPlugin
     /**
      * @param Select $select
      * @param bool $showOutOfStockFlag
+     * @param string $stockTableName
      * @return void
      */
-    private function addInventoryStockJoin(Select $select, $showOutOfStockFlag)
+    private function addInventoryStockJoin(Select $select, bool $showOutOfStockFlag, string $stockTableName): void
     {
         $select->joinInner(
-            ['stock_index' => $this->getStockTableName()],
+            ['stock_index' => $stockTableName],
             'stock_index.sku = product.sku',
             []
         );
@@ -153,12 +175,16 @@ class AdaptStockStatusFilterPlugin
     /**
      * @param Select $select
      * @param bool $showOutOfStockFlag
+     * @param string $stockTableName
      * @return void
      */
-    private function addSubProductInventoryStockJoin(Select $select, bool $showOutOfStockFlag)
-    {
+    private function addSubProductInventoryStockJoin(
+        Select $select,
+        bool $showOutOfStockFlag,
+        string $stockTableName
+    ): void {
         $select->joinInner(
-            ['sub_product_stock_index' => $this->getStockTableName()],
+            ['sub_product_stock_index' => $stockTableName],
             'sub_product_stock_index.sku = sub_product.sku',
             []
         );
@@ -175,7 +201,7 @@ class AdaptStockStatusFilterPlugin
      * @param Select $select
      * @return string|null
      */
-    private function extractTableAliasFromSelect(Select $select)
+    private function extractTableAliasFromSelect(Select $select) : ?string
     {
         $fromArr = array_filter(
             $select->getPart(Select::FROM),
@@ -188,16 +214,14 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * @param int $stockId
+     *
      * @return string
      */
-    private function getStockTableName(): string
+    private function getStockTableName(int $stockId): string
     {
-        $website = $this->storeManager->getWebsite();
-        $stock = $this->stockResolver->get(
-            SalesChannelInterface::TYPE_WEBSITE,
-            $website->getCode()
-        );
-        $tableName = $this->stockIndexTableNameResolver->execute((int)$stock->getStockId());
+        $tableName = $this->stockIndexTableNameResolver->execute($stockId);
+
         return $this->resourceConnection->getTableName($tableName);
     }
 }
