@@ -66,7 +66,7 @@ class CheckQuoteItemQtyPlugin
         $origQty,
         $scopeId
     ) {
-        $qty = $this->getNumber($qtyToCheck);
+        $qty = $this->getNumber($itemQty);
         $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
 
         $result = $this->checkQuoteItemQty->execute($productSku, $qty);
