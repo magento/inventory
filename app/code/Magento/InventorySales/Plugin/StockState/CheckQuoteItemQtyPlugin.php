@@ -9,37 +9,16 @@ namespace Magento\InventorySales\Plugin\StockState;
 
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\DataObject;
-use Magento\Framework\DataObject\Factory as ObjectFactory;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\ProductSalabilityError;
-use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventorySales\Model\GetProductBackorderWarningsInterface;
+use Magento\InventorySales\Model\CheckQuoteItemQty;
 
 class CheckQuoteItemQtyPlugin
 {
     /**
-     * @var GetProductBackorderWarningsInterface
+     * @var GetSkusByProductIdsInterface
      */
-    private $getProductBackorderWarnings;
-
-    /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
-
-    /**
-     * @var ObjectFactory
-     */
-    private $objectFactory;
+    private $getSkusByProductIds;
 
     /**
      * @var FormatInterface
@@ -47,53 +26,23 @@ class CheckQuoteItemQtyPlugin
     private $format;
 
     /**
-     * @var IsProductSalableForRequestedQtyInterface
+     * @var CheckQuoteItemQty
      */
-    private $isProductSalableForRequestedQty;
+    private $checkQuoteItemQty;
 
     /**
-     * @var GetSkusByProductIdsInterface
-     */
-    private $getSkusByProductIds;
-
-    /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @param ObjectFactory $objectFactory
-     * @param FormatInterface $format
-     * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param StockResolverInterface $stockResolver
-     * @param StoreManagerInterface $storeManager
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
-     * @param GetProductBackorderWarningsInterface $getProductBackorderWarnings
+     * @param FormatInterface $format
+     * @param CheckQuoteItemQty $checkQuoteItemQty
      */
     public function __construct(
-        ObjectFactory $objectFactory,
-        FormatInterface $format,
-        IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        StockResolverInterface $stockResolver,
-        StoreManagerInterface $storeManager,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
-        GetProductBackorderWarningsInterface $getProductBackorderWarnings
+        FormatInterface $format,
+        CheckQuoteItemQty $checkQuoteItemQty
     ) {
-        $this->objectFactory = $objectFactory;
-        $this->format = $format;
-        $this->isProductSalableForRequestedQty = $isProductSalableForRequestedQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->stockResolver = $stockResolver;
-        $this->storeManager = $storeManager;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
-        $this->getProductBackorderWarnings = $getProductBackorderWarnings;
+        $this->format = $format;
+        $this->checkQuoteItemQty = $checkQuoteItemQty;
     }
 
     /**
@@ -106,8 +55,6 @@ class CheckQuoteItemQtyPlugin
      * @param int|null $scopeId
      *
      * @return DataObject
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundCheckQuoteItemQty(
@@ -119,38 +66,10 @@ class CheckQuoteItemQtyPlugin
         $origQty,
         $scopeId
     ) {
-        $result = $this->objectFactory->create();
-        $result->setHasError(false);
-
         $qty = $this->getNumber($qtyToCheck);
+        $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
 
-        $skus = $this->getSkusByProductIds->execute([$productId]);
-        $productSku = $skus[$productId];
-
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = $stock->getStockId();
-
-        $isSalableResult = $this->isProductSalableForRequestedQty->execute($productSku, (int)$stockId, $qty);
-
-        if ($isSalableResult->isSalable() === false) {
-            /** @var ProductSalabilityError $error */
-            foreach ($isSalableResult->getErrors() as $error) {
-                $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
-                       ->setQuoteMessageIndex('qty');
-            }
-        } else {
-            $stockItemConfiguration = $this->getStockItemConfiguration->execute($productSku, (int)$stockId);
-            if ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY) {
-                $warnings = $this->getProductBackorderWarnings->execute($productSku, (int)$stockId, $qty);
-                if (count($warnings) > 0) {
-                    /** @var ProductSalabilityErrorInterface  $warning */
-                    foreach ($warnings as $warning) {
-                        $result->setMessage($warning->getMessage());
-                    }
-                }
-            }
-        }
+        $result = $this->checkQuoteItemQty->execute($productSku, $qty);
 
         return $result;
     }
