@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Api\GetProductTypeByIdInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Model\AbstractModel;
@@ -31,31 +31,31 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     private $isSourceItemsAllowedForProductType;
 
     /**
-     * @var  ProductRepositoryInterface
-     * */
-    private $productRepository;
-
-    /**
      * @var UpdateSourceItemBasedOnLegacyStockItem
      */
     private $updateSourceItemBasedOnLegacyStockItem;
 
     /**
+     * @var GetProductTypeByIdInterface
+     */
+    private $getProductTypeById;
+
+    /**
      * @param UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem
      * @param ResourceConnection $resourceConnection
      * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
-     * @param ProductRepositoryInterface $productRepository
+     * @param GetProductTypeByIdInterface $getProductTypeById
      */
     public function __construct(
         UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem,
         ResourceConnection $resourceConnection,
         IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
-        ProductRepositoryInterface $productRepository
+        GetProductTypeByIdInterface $getProductTypeById
     ) {
         $this->updateSourceItemBasedOnLegacyStockItem = $updateSourceItemBasedOnLegacyStockItem;
         $this->resourceConnection = $resourceConnection;
         $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
-        $this->productRepository = $productRepository;
+        $this->getProductTypeById = $getProductTypeById;
     }
 
     /**
@@ -98,8 +98,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     {
         $typeId = $legacyStockItem->getTypeId();
         if (null === $typeId) {
-            $product = $this->productRepository->getById($legacyStockItem->getProductId());
-            $typeId = $product->getTypeId();
+            $productId = $legacyStockItem->getProductId();
+            $typeId = $this->getProductTypeById->execute((int)$productId);
         }
 
         return $typeId;
