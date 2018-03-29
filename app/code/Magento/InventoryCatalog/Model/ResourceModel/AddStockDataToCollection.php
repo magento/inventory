@@ -39,16 +39,10 @@ class AddStockDataToCollection
     {
         $tableName = $this->stockIndexTableNameResolver->execute($stockId);
 
-        $resource = $collection->getResource();
-        $collection->getSelect()->joinInner(
-            ['product' => $resource->getTable('catalog_product_entity')],
-            sprintf('product.entity_id = %s.entity_id', Collection::MAIN_TABLE_ALIAS),
-            []
-        );
         $collection->getSelect()
             ->join(
                 ['stock_status_index' => $tableName],
-                'product.sku = stock_status_index.' . IndexStructure::SKU,
+                Collection::MAIN_TABLE_ALIAS . '.sku = stock_status_index.' . IndexStructure::SKU,
                 [IndexStructure::IS_SALABLE]
             );
 
