@@ -177,6 +177,9 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         StockItemConfigurationInterface $stockItemConfiguration,
         float $requestedQty
     ) : bool {
+        if ($stockItemConfiguration->isQtyDecimal()) {
+            return false;
+        }
         // Qty Increments
         if ($this->mathDivision->getExactDivision($requestedQty, $this->configuration->getQtyIncrements()) !== 0
             || $this->mathDivision->getExactDivision(
