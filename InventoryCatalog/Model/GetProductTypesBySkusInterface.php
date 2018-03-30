@@ -10,15 +10,16 @@ namespace Magento\InventoryCatalog\Model;
 use Magento\Framework\Exception\InputException;
 
 /**
- * Provides all product SKUs by ProductIds. Key is sku, value is product id
+ * Get product types id by product skus.
+ *
  * @api
  */
-interface GetProductIdsBySkusInterface
+interface GetProductTypesBySkusInterface
 {
     /**
      * @param array $skus
-     * @return array
+     * @return array (key: 'sku', value: 'product_type')
      * @throws InputException
      */
-    public function execute(array $skus): array;
+    public function execute(array $skus);
 }
