@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Source -->
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="clean_cache_after_source_save" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterSourceSavePlugin"/>
+    </type>
+    <!-- StockSourceItems -->
+    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
+        <plugin name="clean_cache_after_source_items_save" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterSourceItemsSavePlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\SourceItemsDeleteInterface">
+        <plugin name="clean_cache_after_source_items_delete" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterSourceItemsDeletePlugin"/>
+    </type>
+    <!-- StockSourceLink -->
+    <type name="Magento\InventoryApi\Api\StockSourceLinksSaveInterface">
+        <plugin name="clean_cache_after_stock_source_links_save" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterStockSourceLinksSavePlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\StockSourceLinksDeleteInterface">
+        <plugin name="clean_cache_after_stock_source_links_delete" type="Magento\InventoryCache\Plugin\InventoryApi\CleanCacheAfterStockSourceLinksDeletePlugin"/>
+    </type>
+</config>
