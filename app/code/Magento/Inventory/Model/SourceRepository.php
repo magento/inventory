@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Inventory\Model\Source\Command\GetInterface;
-use Magento\Inventory\Model\Source\Command\GetListInterface;
-use Magento\Inventory\Model\Source\Command\SaveInterface;
+use Magento\Inventory\Model\Source\GetInterface;
+use Magento\Inventory\Model\Source\GetListInterface;
+use Magento\Inventory\Model\Source\SaveInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
