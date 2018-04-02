@@ -15,13 +15,15 @@
             <title value="New Source created by Admin user"/>
             <description value="You should be able to create a New Source, via the Admin."/>
             <testCaseId value="482"/>
+            <severity value="CRITICAL"/>
             <group value="msi"/>
         </annotations>
+
         <before>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{ManageSources.url}}" stepKey="amOnTheSourcesListPage"/>
@@ -32,9 +34,8 @@
         <checkOption selector="{{AdminEditSourceGeneralSection.isEnabled}}" stepKey="checkIsEnabled"/>
         <fillField userInput="{{FullSource1.description}}" selector="{{AdminEditSourceGeneralSection.description}}" stepKey="fillDescriptionField1"/>
 
-        <!--Todo: MQE-677 needs to be merged into Develop before we can use "0" in the Data. Hardcoded "0" for now.-->
-        <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.latitude}}" stepKey="fillLatitudeField1"/>
-        <fillField userInput="0" selector="{{AdminEditSourceGeneralSection.longitude}}" stepKey="fillLongitudeField1"/>
+        <fillField userInput="{{FullSource1.latitude}}" selector="{{AdminEditSourceGeneralSection.latitude}}" stepKey="fillLatitudeField1"/>
+        <fillField userInput="{{FullSource1.longitude}}" selector="{{AdminEditSourceGeneralSection.longitude}}" stepKey="fillLongitudeField1"/>
 
         <conditionalClick selector="{{AdminEditSourceContactInfoSection.closed}}" dependentSelector="{{AdminEditSourceContactInfoSection.opened}}" visible="false" stepKey="clickOnContactInfo1"/>
         <fillField userInput="{{FullSource1.contact_name}}" selector="{{AdminEditSourceContactInfoSection.contactName}}" stepKey="fillContactNameField1"/>

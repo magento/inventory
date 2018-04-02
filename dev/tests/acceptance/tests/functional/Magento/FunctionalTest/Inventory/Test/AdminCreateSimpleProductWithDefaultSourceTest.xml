@@ -15,8 +15,10 @@
             <title value="Simple Product created with Default Source assigned by Admin user"/>
             <description value="You should be able to create a New Product, via the Admin, and assign the Default Source to it."/>
             <testCaseId value="483"/>
+            <severity value="CRITICAL"/>
             <group value="msi"/>
         </annotations>
+
         <before>
             <createData entity="_defaultCategory" stepKey="createPreReqCategory"/>
 
@@ -25,7 +27,7 @@
             <waitForPageLoad time="30" stepKey="waitForPageLoad"/>
         </before>
         <after>
-            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="createPreReqCategory" stepKey="deletePreReqCategory"/>
         </after>
 
@@ -49,12 +51,12 @@
         <click selector="{{AdminAssignSourcesSlideOutSection.defaultSourceCheckbox}}" stepKey="clickOnDefaultSources"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillQtyField"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillQtyField"/>
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
-            <argument name="selector" value="AdminProductGridFilterControls.sku"/>
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="SimpleMsiProduct.sku"/>
         </actionGroup>
 

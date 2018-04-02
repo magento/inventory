@@ -15,13 +15,15 @@
             <title value="New Stock created by Admin user"/>
             <description value="You should be able to create a New Stock, via the Admin, without adding a Source or Sales Channel."/>
             <testCaseId value="513"/>
+            <severity value="CRITICAL"/>
             <group value="msi"/>
         </annotations>
+
         <before>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="LogoutOfAdmin" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{ManageStock.url}}" stepKey="amOnTheStockListPage"/>
@@ -32,8 +34,8 @@
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
 
-        <actionGroup ref="AdminGridSearchByKeyword" stepKey="searchByKeyword">
-            <argument name="value" value="_defaultStock.name"/>
+        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword">
+            <argument name="keyword" value="_defaultStock.name"/>
         </actionGroup>
 
         <see userInput="{{_defaultStock.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
