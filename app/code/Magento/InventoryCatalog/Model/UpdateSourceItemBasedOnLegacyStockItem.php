@@ -62,7 +62,6 @@ class UpdateSourceItemBasedOnLegacyStockItem
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param ResourceConnection $resourceConnection
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
@@ -106,7 +105,7 @@ class UpdateSourceItemBasedOnLegacyStockItem
             $sourceItem->setSku($productSku);
         }
 
-        if ($legacyStockItem->getData(StockItemInterface::USE_CONFIG_MANAGE_STOCK) === null){
+        if ($legacyStockItem->getData(StockItemInterface::USE_CONFIG_MANAGE_STOCK) === null) {
             $legacyStockItem->setData(StockItemInterface::USE_CONFIG_MANAGE_STOCK, 1);
         }
 
