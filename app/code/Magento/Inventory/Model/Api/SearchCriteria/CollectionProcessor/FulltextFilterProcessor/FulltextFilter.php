@@ -10,6 +10,7 @@ namespace Magento\Inventory\Model\Api\SearchCriteria\CollectionProcessor\Fulltex
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor\CustomFilterInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Api\Filter;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -29,7 +30,7 @@ class FulltextFilter implements CustomFilterInterface
     {
         $indexes = $collection->getConnection()->getIndexList($indexTable);
         foreach ($indexes as $index) {
-            if (strtoupper($index['INDEX_TYPE']) === 'FULLTEXT') {
+            if (strtoupper($index['INDEX_TYPE']) === AdapterInterface::INDEX_TYPE_FULLTEXT) {
                 return $index['COLUMNS_LIST'];
             }
         }
