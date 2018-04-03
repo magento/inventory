@@ -33,8 +33,8 @@
                         <arguments>
                             <argument name="header" xsi:type="string" translate="true">Product</argument>
                             <argument name="sortable" xsi:type="string">0</argument>
-                            <argument name="index" xsi:type="string">product_name</argument>
-                            <argument name="filter_index" xsi:type="string">product_name</argument>
+                            <argument name="index" xsi:type="string">value</argument>
+                            <argument name="filter_index" xsi:type="string">value</argument>
                             <argument name="header_css_class" xsi:type="string">col-product</argument>
                             <argument name="column_css_class" xsi:type="string">col-product</argument>
                         </arguments>
@@ -44,7 +44,7 @@
                             <argument name="header" xsi:type="string" translate="true">SKU</argument>
                             <argument name="sortable" xsi:type="string">0</argument>
                             <argument name="index" xsi:type="string">sku</argument>
-                            <argument name="filter_index" xsi:type="string">sku</argument>
+                            <argument name="filter_index" xsi:type="string">main_table.sku</argument>
                             <argument name="header_css_class" xsi:type="string">col-sku</argument>
                             <argument name="column_css_class" xsi:type="string">col-sku</argument>
                         </arguments>
