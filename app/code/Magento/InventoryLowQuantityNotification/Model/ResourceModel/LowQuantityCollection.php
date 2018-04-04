@@ -83,6 +83,10 @@ class LowQuantityCollection extends AbstractCollection
         AdapterInterface $connection = null,
         AbstractDb $resource = null
     ) {
+        $this->attributeRepository = $attributeRepository;
+        $this->stockConfiguration = $stockConfiguration;
+        $this->getAllowedProductTypesForSourceItems = $getAllowedProductTypesForSourceItems;
+        $this->metadataPool = $metadataPool;
         parent::__construct(
             $entityFactory,
             $logger,
@@ -91,10 +95,6 @@ class LowQuantityCollection extends AbstractCollection
             $connection,
             $resource
         );
-        $this->attributeRepository = $attributeRepository;
-        $this->stockConfiguration = $stockConfiguration;
-        $this->getAllowedProductTypesForSourceItems = $getAllowedProductTypesForSourceItems;
-        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -121,9 +121,18 @@ class LowQuantityCollection extends AbstractCollection
     {
         parent::_beforeLoad();
 
+        $this->setOrder(SourceItemInterface::QUANTITY, self::SORT_ORDER_ASC);
+
+        return $this;
+    }
+
+    protected function _initSelect()
+    {
+        parent::_initSelect();
+
         $this->addFilterToMap('source_code', 'main_table.source_code');
         $this->addFilterToMap('sku', 'main_table.sku');
-        $this->addFilterToMap('product_name', 'product_entity_varchar.value');
+        $this->addFilterToMap('value', 'product_entity_varchar.value');
 
         $this->addFieldToSelect('*');
 
@@ -134,8 +143,6 @@ class LowQuantityCollection extends AbstractCollection
         $this->addNotifyStockQtyFilter();
         $this->addEnabledSourceFilter();
         $this->addSourceItemInStockFilter();
-
-        $this->setOrder(SourceItemInterface::QUANTITY, self::SORT_ORDER_ASC);
 
         return $this;
     }
@@ -173,14 +180,14 @@ class LowQuantityCollection extends AbstractCollection
                 'AND product_entity_varchar_store.store_id = ' . (int)$this->filterStoreId . ' ' .
                 'AND product_entity_varchar_store.attribute_id = ' . (int)$nameAttribute->getAttributeId(),
                 [
-                    'product_name' => $this->getConnection()->getIfNullSql(
+                    'value' => $this->getConnection()->getIfNullSql(
                         'product_entity_varchar_store.value',
                         'product_entity_varchar.value'
                     )
                 ]
             );
         } else {
-            $this->getSelect()->columns(['product_name' => 'product_entity_varchar.value']);
+            $this->getSelect()->columns(['value' => 'product_entity_varchar.value']);
         }
     }
 
