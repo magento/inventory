@@ -90,10 +90,7 @@ class Save extends Action
                 $this->messageManager->addErrorMessage($localizedError->getMessage());
             }
             $this->processRedirectAfterFailureSave($resultRedirect, $stockId);
-        } catch (CouldNotSaveException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-            $this->processRedirectAfterFailureSave($resultRedirect, $stockId);
-        } catch (InputException $e) {
+        } catch (CouldNotSaveException | InputException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->processRedirectAfterFailureSave($resultRedirect, $stockId);
         } catch (Exception $e) {
@@ -109,7 +106,7 @@ class Save extends Action
      *
      * @return void
      */
-    private function processRedirectAfterSuccessSave(Redirect $resultRedirect, int $stockId)
+    private function processRedirectAfterSuccessSave(Redirect $resultRedirect, int $stockId): void
     {
         if ($this->getRequest()->getParam('back')) {
             $resultRedirect->setPath('*/*/edit', [
@@ -131,7 +128,7 @@ class Save extends Action
      *
      * @return void
      */
-    private function processRedirectAfterFailureSave(Redirect $resultRedirect, int $stockId = null)
+    private function processRedirectAfterFailureSave(Redirect $resultRedirect, int $stockId = null): void
     {
         if (null === $stockId) {
             $resultRedirect->setPath('*/*/new');

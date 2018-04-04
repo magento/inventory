@@ -10,6 +10,10 @@ namespace Magento\Inventory\Controller\Adminhtml\Stock;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\EntityManager\EventManager;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\Data\StockInterfaceFactory;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
@@ -71,8 +75,12 @@ class StockSaveProcessor
      * @param int|null $stockId
      * @param RequestInterface $request
      * @return int
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws NoSuchEntityException
+     * @throws ValidationException
      */
-    public function process($stockId, RequestInterface $request): int
+    public function process(?int $stockId, RequestInterface $request): int
     {
         if (null === $stockId) {
             $stock = $this->stockFactory->create();

@@ -12,6 +12,7 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -121,18 +122,18 @@ class SourceDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->sourceRepository->getList($searchCriteria);
 
-        $searchResult = $this->searchResultFactory->create(
+        return $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
             SourceInterface::SOURCE_CODE
         );
-        return $searchResult;
     }
 
     /**
      * @param string $sourceCode
      * @return array
+     * @throws NoSuchEntityException
      */
     private function getAssignedCarrierCodes(string $sourceCode): array
     {

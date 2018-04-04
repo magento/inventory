@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Magento\Inventory\Controller\Adminhtml\Stock;
 
 use Magento\Framework\Api\DataObjectHelper;
-use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Validation\ValidationException;
 use Magento\Inventory\Model\StockSourceLink;
 use Magento\Inventory\Model\StockSourceLinkFactory;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
@@ -81,7 +83,9 @@ class StockSourceLinkProcessor
      * @param int $stockId
      * @param array $linksData
      * @return void
-     * @throws InputException
+     * @throws CouldNotDeleteException
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
     public function process(int $stockId, array $linksData)
     {

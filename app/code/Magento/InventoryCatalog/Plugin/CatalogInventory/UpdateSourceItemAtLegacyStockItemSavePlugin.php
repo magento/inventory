@@ -10,6 +10,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
@@ -74,11 +76,13 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param AbstractModel $legacyStockItem
      * @return ItemResourceModel
      * @throws \Exception
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundSave(ItemResourceModel $subject, callable $proceed, AbstractModel $legacyStockItem)
-    {
+    public function aroundSave(
+        ItemResourceModel $subject,
+        callable $proceed,
+        AbstractModel $legacyStockItem
+    ): ItemResourceModel {
         $connection = $this->resourceConnection->getConnection();
         $connection->beginTransaction();
         try {
@@ -101,7 +105,10 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
 
     /**
      * @param Item $legacyStockItem
+     *
      * @return string
+     * @throws InputException
+     * @throws LocalizedException
      */
     private function getTypeId(Item $legacyStockItem): string
     {

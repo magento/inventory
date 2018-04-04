@@ -23,7 +23,7 @@ class Stock extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    const TABLE_NAME_STOCK = 'inventory_stock';
+    public const TABLE_NAME_STOCK = 'inventory_stock';
     /**#@-*/
 
     /**

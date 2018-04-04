@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -40,14 +42,14 @@ class GetStockIdForCurrentWebsite
 
     /**
      * @return int
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function execute(): int
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
 
         $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = (int)$stock->getStockId();
-
-        return $stockId;
+        return (int)$stock->getStockId();
     }
 }

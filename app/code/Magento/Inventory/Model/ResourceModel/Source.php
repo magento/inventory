@@ -27,7 +27,7 @@ class Source extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    const TABLE_NAME_SOURCE = 'inventory_source';
+    public const TABLE_NAME_SOURCE = 'inventory_source';
     /**#@-*/
 
     /**

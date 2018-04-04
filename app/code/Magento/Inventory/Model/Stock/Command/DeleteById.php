@@ -51,7 +51,7 @@ class DeleteById implements DeleteByIdInterface
     /**
      * @inheritdoc
      */
-    public function execute(int $stockId)
+    public function execute(int $stockId): void
     {
         /** @var StockInterface $stock */
         $stock = $this->stockFactory->create();

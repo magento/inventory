@@ -9,6 +9,9 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
 use Magento\CatalogInventory\Model\ResourceModel\QtyCounterInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
@@ -92,7 +95,7 @@ class UpdateSourceItemAtLegacyQtyCounterPlugin
         array $items,
         $websiteId,
         $operator
-    ) {
+    ): void {
         if (empty($items)) {
             return;
         }
@@ -114,12 +117,15 @@ class UpdateSourceItemAtLegacyQtyCounterPlugin
     /**
      * @param int[] $productQuantitiesByProductId
      * @param string $operator
-     * @return void
+     *
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
      */
     private function updateSourceItemAtLegacyCatalogInventoryQtyCounter(
         array $productQuantitiesByProductId,
-        $operator
-    ) {
+        string $operator
+    ): void {
         $productQuantitiesBySku = $this->getProductQuantitiesBySku($productQuantitiesByProductId);
 
         $searchCriteria = $this->searchCriteriaBuilder->addFilter(
@@ -142,7 +148,9 @@ class UpdateSourceItemAtLegacyQtyCounterPlugin
 
     /**
      * @param int[] $productQuantitiesByProductId
+     *
      * @return array
+     * @throws InputException
      */
     private function getProductQuantitiesBySku(array $productQuantitiesByProductId): array
     {

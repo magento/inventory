@@ -71,7 +71,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     /**
      * @inheritdoc
      */
-    public function saveCarrierLinksBySource(SourceInterface $source)
+    public function saveCarrierLinksBySource(SourceInterface $source): void
     {
         $this->deleteCurrentCarrierLinks($source);
 
@@ -85,7 +85,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
      * @param SourceInterface $source
      * @return void
      */
-    private function deleteCurrentCarrierLinks(SourceInterface $source)
+    private function deleteCurrentCarrierLinks(SourceInterface $source): void
     {
         $connection = $this->resourceConnection->getConnection();
         $connection->delete(
@@ -98,7 +98,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
      * @param SourceInterface $source
      * @return void
      */
-    private function saveNewCarrierLinks(SourceInterface $source)
+    private function saveNewCarrierLinks(SourceInterface $source): void
     {
         $carrierLinkData = [];
         foreach ($source->getCarrierLinks() as $carrierLink) {
@@ -118,7 +118,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
     /**
      * @inheritdoc
      */
-    public function loadCarrierLinksBySource(SourceInterface $source)
+    public function loadCarrierLinksBySource(SourceInterface $source): void
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceCarrierLinkInterface::SOURCE_CODE, $source->getSourceCode())

@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Operation;
 
-use Magento\Framework\Indexer\IndexerInterface;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
-use Magento\Framework\Indexer\IndexerInterfaceFactory;
 
 /**
  * CReindex default stock during installation
@@ -44,7 +42,7 @@ class ReindexDefaultStock
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         $this->stockIndexer->executeRow($this->defaultStockProvider->getId());
     }

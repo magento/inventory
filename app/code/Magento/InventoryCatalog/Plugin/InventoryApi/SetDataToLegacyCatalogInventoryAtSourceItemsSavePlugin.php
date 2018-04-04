@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
@@ -73,9 +74,10 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
      * @param SourceItemInterface[] $sourceItems
      * @return void
      * @see SourceItemsSaveInterface::execute
+     * @throws InputException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems)
+    public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems): void
     {
         foreach ($sourceItems as $sourceItem) {
             if ($sourceItem->getSourceCode() !== $this->defaultSourceProvider->getCode()) {

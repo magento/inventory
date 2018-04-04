@@ -13,7 +13,6 @@ use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
-use Psr\Log\LoggerInterface;
 
 /**
  * Set to zero Qty and status to ‘Out of Stock’ for legacy CatalogInventory Stock Status and Stock Item DB tables,
@@ -57,9 +56,10 @@ class SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin
      * @param SourceItemInterface[] $sourceItems
      * @return void
      * @see SourceItemsDeleteInterface::execute
+     * @throws \Magento\Framework\Exception\InputException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecute(SourceItemsDeleteInterface $subject, $result, array $sourceItems)
+    public function afterExecute(SourceItemsDeleteInterface $subject, $result, array $sourceItems): void
     {
         foreach ($sourceItems as $sourceItem) {
             if ($sourceItem->getSourceCode() !== $this->defaultSourceProvider->getCode()) {

@@ -53,7 +53,6 @@ class SourceItemsValidator
         }
         $errors = array_merge(...$errors);
 
-        $validationResult = $this->validationResultFactory->create(['errors' => $errors]);
-        return $validationResult;
+        return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }

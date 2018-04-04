@@ -9,6 +9,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
@@ -54,15 +56,16 @@ class AdaptAssignStatusToProductPlugin
      * @param Product $product
      * @param int|null $status
      * @return void
-     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAssignStatusToProduct(
         Stock $subject,
         callable $proceed,
         Product $product,
-        $status = null
-    ) {
+        int $status = null
+    ): void {
         if (null === $product->getSku()) {
             return;
         }

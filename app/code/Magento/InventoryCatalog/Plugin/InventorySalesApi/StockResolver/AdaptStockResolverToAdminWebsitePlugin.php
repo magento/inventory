@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\InventorySalesApi\StockResolver;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -47,6 +48,7 @@ class AdaptStockResolverToAdminWebsitePlugin
      * @param string $type
      * @param string $code
      * @return StockInterface
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundGet(
@@ -54,7 +56,7 @@ class AdaptStockResolverToAdminWebsitePlugin
         callable $proceed,
         string $type,
         string $code
-    ) {
+    ): StockInterface {
         if (SalesChannelInterface::TYPE_WEBSITE === $type && WebsiteInterface::ADMIN_CODE === $code) {
             return $this->stockRepository->get($this->defaultStockProviderInterface->getId());
         }

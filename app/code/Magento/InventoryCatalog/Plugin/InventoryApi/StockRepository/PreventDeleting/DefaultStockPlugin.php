@@ -39,7 +39,7 @@ class DefaultStockPlugin
      * @throws CouldNotDeleteException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId)
+    public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId): void
     {
         if ($stockId === $this->defaultStockProvider->getId()) {
             throw new CouldNotDeleteException(__('Default Stock could not be deleted.'));

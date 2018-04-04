@@ -45,7 +45,7 @@ class UpdateInventorySourceItem
      * @param ModuleDataSetupInterface $setup
      * @return void
      */
-    public function execute(ModuleDataSetupInterface $setup)
+    public function execute(ModuleDataSetupInterface $setup): void
     {
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         $sourceItemTable = $setup->getTable(SourceItem::TABLE_NAME_SOURCE_ITEM);

@@ -10,6 +10,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 
@@ -45,14 +47,15 @@ class AdaptAddStockStatusToProductsPlugin
      * @param callable $proceed
      * @param AbstractCollection $productCollection
      * @return void
-     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddStockStatusToProducts(
         Stock $subject,
         callable $proceed,
         AbstractCollection $productCollection
-    ) {
+    ): void {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
 
         /** @var Product $product */

@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Setup\Operation;
 
 use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -60,8 +62,10 @@ class CreateDefaultSource
      * Create default source
      *
      * @return void
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
-    public function execute()
+    public function execute(): void
     {
         $data = [
             SourceInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),

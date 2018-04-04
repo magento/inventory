@@ -112,8 +112,10 @@ class Save extends Action
      * @param SourceInterface $source
      * @param array $requestData
      * @return void
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
-    private function processSave(SourceInterface $source, array $requestData)
+    private function processSave(SourceInterface $source, array $requestData): void
     {
         $source = $this->sourceHydrator->hydrate($source, $requestData);
 
@@ -141,7 +143,7 @@ class Save extends Action
      * @param string $sourceCode
      * @return void
      */
-    private function processRedirectAfterSuccessSave(Redirect $resultRedirect, string $sourceCode)
+    private function processRedirectAfterSuccessSave(Redirect $resultRedirect, string $sourceCode): void
     {
         if ($this->getRequest()->getParam('back')) {
             $resultRedirect->setPath('*/*/edit', [
@@ -162,7 +164,7 @@ class Save extends Action
      * @param string|null $sourceCode
      * @return void
      */
-    private function processRedirectAfterFailureSave(Redirect $resultRedirect, string $sourceCode = null)
+    private function processRedirectAfterFailureSave(Redirect $resultRedirect, string $sourceCode = null): void
     {
         if (null === $sourceCode) {
             $resultRedirect->setPath('*/*/new');

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Inventory\Model\ResourceModel\GetAssignedStockIdsBySku;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -49,6 +50,7 @@ class GetSalableQuantityDataBySku
     /**
      * @param string $sku
      * @return array
+     * @throws NoSuchEntityException
      */
     public function execute(string $sku): array
     {
