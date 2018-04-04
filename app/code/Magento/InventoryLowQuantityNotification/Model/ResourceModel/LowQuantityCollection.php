@@ -83,6 +83,10 @@ class LowQuantityCollection extends AbstractCollection
         AdapterInterface $connection = null,
         AbstractDb $resource = null
     ) {
+        $this->attributeRepository = $attributeRepository;
+        $this->stockConfiguration = $stockConfiguration;
+        $this->getAllowedProductTypesForSourceItems = $getAllowedProductTypesForSourceItems;
+        $this->metadataPool = $metadataPool;
         parent::__construct(
             $entityFactory,
             $logger,
@@ -91,10 +95,6 @@ class LowQuantityCollection extends AbstractCollection
             $connection,
             $resource
         );
-        $this->attributeRepository = $attributeRepository;
-        $this->stockConfiguration = $stockConfiguration;
-        $this->getAllowedProductTypesForSourceItems = $getAllowedProductTypesForSourceItems;
-        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -121,6 +121,15 @@ class LowQuantityCollection extends AbstractCollection
     {
         parent::_beforeLoad();
 
+        $this->setOrder(SourceItemInterface::QUANTITY, self::SORT_ORDER_ASC);
+
+        return $this;
+    }
+
+    protected function _initSelect()
+    {
+        parent::_initSelect();
+
         $this->addFilterToMap('source_code', 'main_table.source_code');
         $this->addFilterToMap('sku', 'main_table.sku');
         $this->addFilterToMap('value', 'product_entity_varchar.value');
@@ -134,8 +143,6 @@ class LowQuantityCollection extends AbstractCollection
         $this->addNotifyStockQtyFilter();
         $this->addEnabledSourceFilter();
         $this->addSourceItemInStockFilter();
-
-        $this->setOrder(SourceItemInterface::QUANTITY, self::SORT_ORDER_ASC);
 
         return $this;
     }
