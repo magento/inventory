@@ -177,7 +177,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         StockItemConfigurationInterface $stockItemConfiguration,
         float $requestedQty
     ) : bool {
-        if ($stockItemConfiguration->isQtyDecimal()) {
+        if ($stockItemConfiguration->isQtyDecimal() && !$stockItemConfiguration->isEnableQtyIncrements()) {
             return false;
         }
         // Qty Increments
