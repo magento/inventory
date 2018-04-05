@@ -22,6 +22,7 @@ use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
 /**
  * Class provides around Plugin on Magento\CatalogInventory\Model\ResourceModel::correctItemsQty
  * to update data in Inventory source item
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpdateSourceItemAtLegacyQtyCounterPlugin
 {

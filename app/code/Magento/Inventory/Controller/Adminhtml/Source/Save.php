@@ -21,6 +21,7 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
  * Save Controller
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Save extends Action
 {

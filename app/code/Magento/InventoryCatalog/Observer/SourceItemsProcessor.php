@@ -24,6 +24,7 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 /**
  * At the time of processing Product save form this class used to save source items correctly
  * Perform replace strategy of sources for the product
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SourceItemsProcessor
 {
