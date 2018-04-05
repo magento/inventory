@@ -43,7 +43,9 @@ class SalableQuantity extends AbstractModifier
     public function modifyMeta(array $meta)
     {
         if (true === $this->isSingleSourceMode->execute()) {
-            $meta['product_columns']['children']['salable_quantity']['arguments'] = null;
+            if (isset($meta['product_columns']['children']['salable_quantity']['arguments'])) {
+                $meta['product_columns']['children']['salable_quantity']['arguments'] = null;
+            }
         }
         return $meta;
     }

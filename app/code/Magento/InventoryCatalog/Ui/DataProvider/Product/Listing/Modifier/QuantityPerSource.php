@@ -43,7 +43,9 @@ class QuantityPerSource extends AbstractModifier
     public function modifyMeta(array $meta)
     {
         if (true === $this->isSingleSourceMode->execute()) {
-            $meta['product_columns']['children']['quantity_per_source']['arguments'] = null;
+            if (isset($meta['product_columns']['children']['quantity_per_source']['arguments'])) {
+                $meta['product_columns']['children']['quantity_per_source']['arguments'] = null;
+            }
         }
         return $meta;
     }
