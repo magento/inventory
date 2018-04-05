@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
@@ -40,7 +41,7 @@ class MigrateToMultiSource
      * @var DefaultSourceProvider
      */
     private $defaultSourceProvider;
-    
+
     /**
      * @var ResourceConnection
      */
@@ -64,29 +65,47 @@ class MigrateToMultiSource
     }
 
     /**
-     * @param $sku
-     * @param $migrationSourceCode
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Validation\ValidationException
+     * @param array $skus
+     * @param string $migrationSourceCode
      */
-    public function execute($sku, $migrationSourceCode)
+    public function execute(array $skus, string $migrationSourceCode)
     {
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
         $searchCriteria = $searchCriteriaBuilder
-            ->addFilter(SourceItemInterface::SKU, $sku)
+            ->addFilter(SourceItemInterface::SKU, $skus, 'in')
             ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
             ->create();
 
         $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
 
         if ($sourceItems) {
-            foreach ($sourceItems as $sourceItem) {
-                $sourceItem->setSourceCode($migrationSourceCode);
-            }
+            $connection = $this->resourceConnection->getConnection();
+            $connection->beginTransaction();
 
-            $this->sourceItemsDelete->execute($sourceItems);
-            $this->sourceItemsSave->execute($sourceItems);
+            try {
+                $this->migrateSourceItems($migrationSourceCode, $sourceItems);
+                $connection->commit();
+            }
+            catch (\Exception $e) {
+                $connection->rollBack();
+            }
         }
+    }
+
+    /**
+     * @param string $migrationSourceCode
+     * @param SourceItem[] $sourceItems
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Validation\ValidationException
+     */
+    private function migrateSourceItems(string $migrationSourceCode, array $sourceItems)
+    {
+        foreach ($sourceItems as $sourceItem) {
+            $sourceItem->setSourceCode($migrationSourceCode);
+        }
+
+        $this->sourceItemsDelete->execute($sourceItems);
+        $this->sourceItemsSave->execute($sourceItems);
     }
 }
