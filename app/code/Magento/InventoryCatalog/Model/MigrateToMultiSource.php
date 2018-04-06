@@ -55,7 +55,6 @@ class MigrateToMultiSource
         DefaultSourceProvider $defaultSourceProvider,
         ResourceConnection $resourceConnection
     ) {
-
         $this->sourceItemsDelete = $sourceItemsDelete;
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemRepository = $sourceItemRepository;

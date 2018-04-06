@@ -89,6 +89,11 @@
                     <label translate="true">Update attributes</label>
                 </settings>
             </action>
+            <action name="migrates">
+                <settings>
+                    <label translate="true">Migrate to source</label>
+                </settings>
+            </action>
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
