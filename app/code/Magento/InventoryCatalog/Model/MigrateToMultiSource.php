@@ -100,11 +100,12 @@ class MigrateToMultiSource
      */
     private function migrateSourceItems(string $migrationSourceCode, array $sourceItems)
     {
+        $this->sourceItemsDelete->execute($sourceItems);
+
         foreach ($sourceItems as $sourceItem) {
             $sourceItem->setSourceCode($migrationSourceCode);
         }
 
-        $this->sourceItemsDelete->execute($sourceItems);
         $this->sourceItemsSave->execute($sourceItems);
     }
 }
