@@ -225,4 +225,11 @@
             </argument>
         </container>
     </fieldset>
+    <modal name="advanced_inventory_modal">
+        <fieldset name="stock_data">
+            <container name="container_is_in_stock">
+                <field name="is_in_stock" component="Magento_InventoryCatalog/js/product/form/stock-status-modal"/>
+            </container>
+        </fieldset>
+    </modal>
 </form>
