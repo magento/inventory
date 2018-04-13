@@ -14,4 +14,14 @@
                 type="Magento\InventoryLowQuantityNotification\Model\SourceItemConfiguration\Command\Get"/>
     <preference for="Magento\InventoryLowQuantityNotificationApi\Api\DeleteSourceItemConfigurationInterface"
                 type="Magento\InventoryLowQuantityNotification\Model\SourceItemConfiguration\Command\Delete"/>
+    <virtualType name="Magento\Inventory\Ui\DataProvider\SourceDataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="notify_stock_quantity" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryLowQuantityNotification\Ui\DataProvider\Source\Listing\Modifier\NotifyStockQuantity</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
