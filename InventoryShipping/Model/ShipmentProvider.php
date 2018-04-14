@@ -5,16 +5,31 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryShipping\Controller\Adminhtml\SourceSelection;
+namespace Magento\InventoryShipping\Model;
 
-use Magento\Shipping\Controller\Adminhtml\Order\ShipmentProvider as LegacyShipmentProvider;
+use Magento\Shipping\Model\ShipmentProviderInterface;
+use Magento\Framework\App\RequestInterface;
 
-class ShipmentProvider extends LegacyShipmentProvider
+class ShipmentProvider implements ShipmentProviderInterface
 {
+    /**
+     * @var RequestInterface
+     */
+    private $request;
+
+    /**
+     * @param RequestInterface $request
+     */
+    public function __construct(
+        RequestInterface $request
+    ) {
+        $this->request = $request;
+    }
+
     /**
      * @inheritdoc
      */
-    public function getShipment()
+    public function getShipment(): array
     {
         $sourceCode = $this->request->getParam('sourceCode');
         $items = $this->request->getParam('items', []);
@@ -33,6 +48,6 @@ class ShipmentProvider extends LegacyShipmentProvider
             }
         }
 
-        return $shipmentItems;
+        return count($shipmentItems) > 0 ? $shipmentItems : [];
     }
 }
