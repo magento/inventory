@@ -50,32 +50,24 @@ class SourceItems extends AbstractModifier
     private $resourceConnection;
 
     /**
-     * @var CanManageSourceItemsBySku
-     */
-    private $canManageSourceItemsBySku;
-
-    /**
      * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param LocatorInterface $locator
      * @param CollectionFactory $sourceItemCollectionFactory
      * @param ResourceConnection $resourceConnection
-     * @param CanManageSourceItemsBySku $canManageSourceItemsBySku
      */
     public function __construct(
         IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
         IsSingleSourceModeInterface $isSingleSourceMode,
         LocatorInterface $locator,
         CollectionFactory $sourceItemCollectionFactory,
-        ResourceConnection $resourceConnection,
-        CanManageSourceItemsBySku $canManageSourceItemsBySku
+        ResourceConnection $resourceConnection
     ) {
         $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->locator = $locator;
         $this->sourceItemCollectionFactory = $sourceItemCollectionFactory;
         $this->resourceConnection = $resourceConnection;
-        $this->canManageSourceItemsBySku = $canManageSourceItemsBySku;
     }
 
     /**
@@ -132,13 +124,21 @@ class SourceItems extends AbstractModifier
     {
         $product = $this->locator->getProduct();
 
-        if ($this->isSingleSourceMode->execute() === true
-            || $this->isSourceItemsAllowedForProductType->execute($product->getTypeId()) === false) {
+        if ($this->isSingleSourceMode->execute() === true) {
             return $meta;
         }
 
-        $canMangeSourceItems = $this->canManageSourceItemsBySku->execute($product->getSku());
-        $meta['sources'] = [
+        $config = [
+            'imports' => [
+                'visible' => '${ $.provider }:data.product.stock_data.manage_stock',
+            ],
+        ];
+
+        if ($this->isSourceItemsAllowedForProductType->execute($product->getTypeId()) === false) {
+            $config = ['visible' => false];
+        }
+
+            $meta['sources'] = [
             'arguments' => [
                 'data' => [
                     'config' => [
@@ -152,9 +152,7 @@ class SourceItems extends AbstractModifier
                         'assign_sources_button' => [
                             'arguments' => [
                                 'data' => [
-                                    'config' => [
-                                        'visible' => $canMangeSourceItems,
-                                    ],
+                                    'config' => $config,
                                 ],
                             ],
                         ],
@@ -163,9 +161,7 @@ class SourceItems extends AbstractModifier
                 'assigned_sources' => [
                     'arguments' => [
                         'data' => [
-                            'config' => [
-                                'visible' => $canMangeSourceItems,
-                            ],
+                            'config' => $config,
                         ],
                     ],
                 ],
