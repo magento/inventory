@@ -99,7 +99,7 @@ class SourceItemConfiguration extends AbstractModifier
                 $sourceConfiguration[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY];
 
             if ($source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === null) {
-                $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $this->getNotifyQtyConfigValue();
+                $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $this->getNotifyQtyValue($product);
                 $source['notify_stock_qty_use_default'] = "1";
             }
         }
@@ -117,10 +117,21 @@ class SourceItemConfiguration extends AbstractModifier
     }
 
     /**
+     * @param ProductInterface $product
+     *
      * @return float
      */
-    private function getNotifyQtyConfigValue() : float
+    private function getNotifyQtyValue(ProductInterface $product): float
     {
-        return (float)$this->scopeConfig->getValue('cataloginventory/item_options/notify_stock_qty');
+        $notifyQty = (float)$this->scopeConfig->getValue('cataloginventory/item_options/notify_stock_qty');
+
+        $stockItem = $product->getExtensionAttributes()->getStockItem();
+        if (null !== $stockItem) {
+            if ($stockItem->getUseConfigNotifyStockQty() == false) {
+                $notifyQty = $stockItem->getNotifyStockQty();
+            }
+        }
+
+        return $notifyQty;
     }
 }
