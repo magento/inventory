@@ -15,6 +15,7 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryReservations\Model\CleanupReservationsInterface;
 use Magento\InventoryReservations\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -73,6 +74,11 @@ class IsSalableWithReservationsConditionTest extends TestCase
     private $sourceItemsSave;
 
     /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -91,6 +97,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
+        $this->getActualSalesChannel = Bootstrap::getObjectManager()->get(GetActualSalesChannel::class);
     }
 
     /**
@@ -109,7 +116,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      */
     public function testProductIsSalable(string $sku, int $stockId, bool $isSalable)
     {
-        self::assertEquals($isSalable, $this->isProductSalable->execute($sku, $stockId));
+        $salesChannel = $this->getActualSalesChannel->execute($stockId);
+        self::assertEquals($isSalable, $this->isProductSalable->execute($sku, $stockId, $salesChannel));
     }
 
     /**
@@ -144,7 +152,9 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->appendReservations->execute([
             $this->reservationBuilder->setStockId(10)->setSku('SKU-1')->setQuantity(-8.5)->build(),
         ]);
-        self::assertFalse($this->isProductSalable->execute('SKU-1', 10));
+
+        $salesChannel = $this->getActualSalesChannel->execute(10);
+        self::assertFalse($this->isProductSalable->execute('SKU-1', 10, $salesChannel));
 
         $this->appendReservations->execute([
             // unreserve 8.5 units for cleanup

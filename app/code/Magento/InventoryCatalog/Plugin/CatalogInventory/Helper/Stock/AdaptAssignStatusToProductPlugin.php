@@ -11,6 +11,7 @@ use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -34,6 +35,11 @@ class AdaptAssignStatusToProductPlugin
     private $defaultStockProvider;
 
     /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
+    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param IsProductSalableInterface $isProductSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
@@ -41,11 +47,13 @@ class AdaptAssignStatusToProductPlugin
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
         IsProductSalableInterface $isProductSalable,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        GetActualSalesChannel $getActualSalesChannel
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->getActualSalesChannel = $getActualSalesChannel;
     }
 
     /**
@@ -69,7 +77,8 @@ class AdaptAssignStatusToProductPlugin
 
         if (null === $status) {
             $stockId = $this->getStockIdForCurrentWebsite->execute();
-            $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+            $salesChannel = $this->getActualSalesChannel->execute($stockId);
+            $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId, $salesChannel);
         }
 
         $proceed($product, $status);

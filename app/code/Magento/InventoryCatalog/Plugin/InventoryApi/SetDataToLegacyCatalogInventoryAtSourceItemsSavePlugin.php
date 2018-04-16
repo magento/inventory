@@ -9,11 +9,14 @@ namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Status and Stock Item DB tables,
@@ -47,24 +50,32 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
     private $defaultStockProvider;
 
     /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
+    /**
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param IsProductSalableInterface $isProductSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param GetActualSalesChannel $getActualSalesChannel
      */
     public function __construct(
         DefaultSourceProviderInterface $defaultSourceProvider,
         SetDataToLegacyStockItem $setDataToLegacyStockItem,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         IsProductSalableInterface $isProductSalable,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        GetActualSalesChannel $getActualSalesChannel
     ) {
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
         $this->isProductSalable = $isProductSalable;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->getActualSalesChannel = $getActualSalesChannel;
     }
 
     /**
@@ -96,10 +107,12 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
              * as cataloginventory_stock_item table updated with plane SQL queries
              * Thus, initially we put the raw data there, and after that persist the calculated value
              */
+            $stockId = $this->defaultStockProvider->getId();
+            $salesChannel = $this->getActualSalesChannel->execute($stockId);
             $this->setDataToLegacyStockStatus->execute(
                 $sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
-                (int)$this->isProductSalable->execute($sourceItem->getSku(), $this->defaultStockProvider->getId())
+                (int)$this->isProductSalable->execute($sourceItem->getSku(), $stockId, $salesChannel)
             );
         }
     }

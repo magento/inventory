@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -81,10 +82,10 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId): bool
+    public function execute(string $sku, int $stockId, SalesChannelInterface $salesChannel): bool
     {
         foreach ($this->conditions as $condition) {
-            if ($condition->execute($sku, $stockId) === true) {
+            if ($condition->execute($sku, $stockId, $salesChannel) === true) {
                 return true;
             }
         }

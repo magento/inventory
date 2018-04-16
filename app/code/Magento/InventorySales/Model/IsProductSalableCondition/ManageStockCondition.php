@@ -9,6 +9,7 @@ namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -41,7 +42,7 @@ class ManageStockCondition implements IsProductSalableInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId): bool
+    public function execute(string $sku, int $stockId, SalesChannelInterface $salesChannel): bool
     {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         if (null === $stockItemConfiguration) {

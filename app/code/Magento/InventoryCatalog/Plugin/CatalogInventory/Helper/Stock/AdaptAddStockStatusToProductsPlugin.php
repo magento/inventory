@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 
@@ -29,15 +30,23 @@ class AdaptAddStockStatusToProductsPlugin
     private $isProductSalable;
 
     /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
+    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param IsProductSalableInterface $isProductSalable
+     * @param GetActualSalesChannel $getActualSalesChannel
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable
+        IsProductSalableInterface $isProductSalable,
+        GetActualSalesChannel $getActualSalesChannel
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
+        $this->getActualSalesChannel = $getActualSalesChannel;
     }
 
     /**
@@ -54,10 +63,11 @@ class AdaptAddStockStatusToProductsPlugin
         AbstractCollection $productCollection
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
+        $salesChannel = $this->getActualSalesChannel->execute($stockId);
 
         /** @var Product $product */
         foreach ($productCollection as $product) {
-            $isSalable = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+            $isSalable = (int)$this->isProductSalable->execute($product->getSku(), $stockId, $salesChannel);
             $product->setIsSalable($isSalable);
         }
     }

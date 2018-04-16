@@ -15,6 +15,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -56,6 +57,11 @@ class BackorderConditionTest extends TestCase
      */
     private $stockItemCriteriaFactory;
 
+    /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
     protected function setUp()
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
@@ -67,6 +73,7 @@ class BackorderConditionTest extends TestCase
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->getActualSalesChannel = Bootstrap::getObjectManager()->get(GetActualSalesChannel::class);
     }
 
     /**
@@ -93,8 +100,8 @@ class BackorderConditionTest extends TestCase
         $sourceItem->setQuantity(-15);
         $this->sourceItemsSave->execute([$sourceItem]);
 
-        $this->assertTrue($this->isProductSalable->execute('SKU-2', 20));
-        $this->assertTrue($this->isProductSalable->execute('SKU-2', 30));
+        $this->assertTrue($this->isProductSalable->execute('SKU-2', 20, $this->getActualSalesChannel->execute(20)));
+        $this->assertTrue($this->isProductSalable->execute('SKU-2', 30, $this->getActualSalesChannel->execute(30)));
     }
 
     /**
