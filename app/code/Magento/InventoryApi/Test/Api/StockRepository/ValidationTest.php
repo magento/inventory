@@ -7,9 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Test\Api\StockRepository;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
+use Magento\Inventory\Model\Stock\Command\GetListInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 class ValidationTest extends WebapiAbstract
@@ -27,6 +30,23 @@ class ValidationTest extends WebapiAbstract
     private $validData = [
         StockInterface::NAME => 'stock-name',
     ];
+
+    /**
+     * @var GetListInterface
+     */
+    private $getList;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->getList = Bootstrap::getObjectManager()->get(GetListInterface::class);
+        $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
+    }
 
     /**
      * @param string $field
@@ -79,6 +99,7 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param string|null $value
      * @param array $expectedErrorData
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock.php
      * @dataProvider failedValidationDataProvider
      */
     public function testFailedValidationOnCreate(string $field, $value, array $expectedErrorData)
@@ -111,7 +132,7 @@ class ValidationTest extends WebapiAbstract
         $data = $this->validData;
         $data[$field] = $value;
 
-        $stockId = 10;
+        $stockId = 20;
         $serviceInfo = [
             'rest' => [
                 'resourcePath' => self::RESOURCE_PATH . '/' . $stockId,
@@ -176,7 +197,7 @@ class ValidationTest extends WebapiAbstract
                     ],
                 ],
             ],
-            'used_' . StockInterface::NAME => [
+            'default_' . StockInterface::NAME => [
                 StockInterface::NAME,
                 'Default Stock',
                 [
@@ -190,6 +211,73 @@ class ValidationTest extends WebapiAbstract
                         ],
                     ],
                 ],
+            ],
+            'used_' . StockInterface::NAME => [
+                StockInterface::NAME,
+                'stock-name-1',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" value should be unique.',
+                            'parameters' => [
+                                'field' => StockInterface::NAME,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Tests updating existing Stocks, either Default or Custom.
+     *
+     * @param string $field
+     * @param string|null $value
+     * @dataProvider passedValidationDataProvider
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock.php
+     */
+    public function testPassedValidationOnUpdate(string $field, $value)
+    {
+        $data = $this->validData;
+        $data[$field] = $value;
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(StockInterface::NAME, $value)
+            ->create();
+        $stockSearchResults = $this->getList->execute($searchCriteria);
+        $stocks = $stockSearchResults->getItems();
+        $stockId = reset($stocks)->getId();
+
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => self::RESOURCE_PATH . '/' . $stockId,
+                'httpMethod' => Request::HTTP_METHOD_PUT,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_NAME,
+                'operation' => self::SERVICE_NAME . 'Save',
+            ],
+        ];
+        $this->_webApiCall($serviceInfo, ['stock' => $data]);
+    }
+
+    /**
+     * Data provider for testPassedValidationOnUpdate.
+     *
+     * @return array
+     */
+    public function passedValidationDataProvider(): array
+    {
+        return [
+            [
+                StockInterface::NAME,
+                'Default Stock',
+            ],
+            [
+                StockInterface::NAME,
+                'stock-name-1',
             ],
         ];
     }
