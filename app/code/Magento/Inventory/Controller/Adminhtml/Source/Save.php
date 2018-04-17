@@ -15,6 +15,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationException;
+use Magento\Inventory\Model\Source\Validator\UniqueCodeValidator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -45,21 +46,29 @@ class Save extends Action
     private $sourceHydrator;
 
     /**
+     * @var UniqueCodeValidator
+     */
+    private $uniqueCodeValidator;
+
+    /**
      * @param Context $context
      * @param SourceInterfaceFactory $sourceFactory
      * @param SourceRepositoryInterface $sourceRepository
      * @param SourceHydrator $sourceHydrator
+     * @param UniqueCodeValidator $codeValidator
      */
     public function __construct(
         Context $context,
         SourceInterfaceFactory $sourceFactory,
         SourceRepositoryInterface $sourceRepository,
-        SourceHydrator $sourceHydrator
+        SourceHydrator $sourceHydrator,
+        UniqueCodeValidator $codeValidator
     ) {
         parent::__construct($context);
         $this->sourceFactory = $sourceFactory;
         $this->sourceRepository = $sourceRepository;
         $this->sourceHydrator = $sourceHydrator;
+        $this->uniqueCodeValidator = $codeValidator;
     }
 
     /**
@@ -77,12 +86,8 @@ class Save extends Action
             return $resultRedirect;
         }
 
-        $sourceCodeQueryParam = $request->getQuery(SourceInterface::SOURCE_CODE);
         try {
-            $source = (null !== $sourceCodeQueryParam)
-                ? $this->sourceRepository->get($sourceCodeQueryParam)
-                : $this->sourceFactory->create();
-
+            $source = $this->getSource($requestData['general']);
             $this->processSave($source, $requestData);
 
             $this->messageManager->addSuccessMessage(__('The Source has been saved.'));
@@ -91,19 +96,23 @@ class Save extends Action
             $this->messageManager->addErrorMessage(__('The Source does not exist.'));
             $this->processRedirectAfterFailureSave($resultRedirect);
         } catch (ValidationException $e) {
-            foreach ($e->getErrors() as $localizedError) {
-                $this->messageManager->addErrorMessage($localizedError->getMessage());
-            }
+            $this->messageManager->addErrorMessage($e->getMessage());
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCodeQueryParam ?? $sourceCodeQueryParam);
+            $this->processRedirectAfterFailureSave($resultRedirect);
         } catch (CouldNotSaveException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCodeQueryParam ?? $sourceCodeQueryParam);
+            $this->processRedirectAfterFailureSave(
+                $resultRedirect,
+                $requestData['general'][SourceInterface::SOURCE_CODE] ?? null
+            );
         } catch (Exception $e) {
             $this->messageManager->addErrorMessage(__('Could not save Source.'));
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCodeQueryParam ?? $sourceCodeQueryParam);
+            $this->processRedirectAfterFailureSave(
+                $resultRedirect,
+                $requestData['general'][SourceInterface::SOURCE_CODE] ?? null
+            );
         }
         return $resultRedirect;
     }
@@ -172,5 +181,36 @@ class Save extends Action
                 '_current' => true,
             ]);
         }
+    }
+
+    /**
+     * Get existed source in case of update or create one in case of new source.
+     *
+     * @param array $sourceData
+     * @return SourceInterface
+     * @throws NoSuchEntityException in case requested source doesn't exist.
+     * @throws ValidationException in case source code is not unique.
+     */
+    private function getSource(array $sourceData): SourceInterface
+    {
+        //Only existed sources have source code disabled.
+        $isExistedSource = $sourceData['disable_source_code'] ?? false;
+        if ($isExistedSource) {
+            $source = $this->sourceRepository->get($sourceData[SourceInterface::SOURCE_CODE]);
+        } else {
+            $source = $this->sourceFactory->create();
+            $source->setSourceCode($sourceData['source_code']);
+            $validationResult = $this->uniqueCodeValidator->validate($source);
+            if ($validationResult->getErrors()) {
+                throw new ValidationException(
+                    __(
+                        'Source with code: "%code" already exists.',
+                        ['code' => $source->getSourceCode()]
+                    )
+                );
+            }
+        }
+
+        return $source;
     }
 }
