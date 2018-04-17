@@ -61,6 +61,7 @@
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="name" xsi:type="object">Magento\Inventory\Model\Stock\Validator\NameValidator</item>
+                <item name="unique" xsi:type="object">Magento\Inventory\Model\Stock\Validator\UniqueNameValidator</item>
             </argument>
         </arguments>
     </type>

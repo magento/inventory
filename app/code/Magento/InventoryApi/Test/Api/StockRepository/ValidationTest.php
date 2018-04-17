@@ -176,6 +176,21 @@ class ValidationTest extends WebapiAbstract
                     ],
                 ],
             ],
+            'used_' . StockInterface::NAME => [
+                StockInterface::NAME,
+                'Default Stock',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" value should be unique.',
+                            'parameters' => [
+                                'field' => StockInterface::NAME,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
