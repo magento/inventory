@@ -84,7 +84,7 @@ class ProcessRegisterProductsSalePlugin
         foreach ($productSkus as $productId => $sku) {
             $itemsBySku[$sku] = $items[$productId];
         }
-        $salesChannel = $this->salesChannelByWebsiteIdProvider->execute($websiteId);
+        $salesChannel = $this->salesChannelByWebsiteIdProvider->execute((int)$websiteId);
         $productTypes = $this->getProductTypesBySkus->execute(array_keys($itemsBySku));
         $this->checkItemsQuantity->execute($itemsBySku, $productTypes, $salesChannel);
         return [];

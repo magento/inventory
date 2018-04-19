@@ -71,7 +71,7 @@ class IsCorrectQtyConditionTest extends TestCase
     public function executeWithMissingConfigurationDataProvider(): array
     {
         return [
-            ['SKU-2', 'eu_webiste', 1, false],
+            ['SKU-2', 'eu_website', 1, false],
         ];
     }
     

@@ -11,13 +11,11 @@ use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as ObjectFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\ProductSalabilityError;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 class CheckQuoteItemQtyPlugin
@@ -43,37 +41,37 @@ class CheckQuoteItemQtyPlugin
     private $getSkusByProductIds;
 
     /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
      * @var StoreManagerInterface
      */
     private $storeManager;
+
+    /**
+     * @var SalesChannelByWebsiteCodeProvider
+     */
+    private $salesChannelByWebsiteCodeProvider;
 
     /**
      * @param ObjectFactory $objectFactory
      * @param FormatInterface $format
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
+     * @param SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
      */
     public function __construct(
         ObjectFactory $objectFactory,
         FormatInterface $format,
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        StockResolverInterface $stockResolver,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
     ) {
         $this->objectFactory = $objectFactory;
         $this->format = $format;
         $this->isProductSalableForRequestedQty = $isProductSalableForRequestedQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
+        $this->salesChannelByWebsiteCodeProvider = $salesChannelByWebsiteCodeProvider;
     }
 
     /**
@@ -87,7 +85,6 @@ class CheckQuoteItemQtyPlugin
      *
      * @return DataObject
      * @throws LocalizedException
-     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundCheckQuoteItemQty(
@@ -108,10 +105,8 @@ class CheckQuoteItemQtyPlugin
         $productSku = $skus[$productId];
 
         $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = $stock->getStockId();
-
-        $isSalableResult = $this->isProductSalableForRequestedQty->execute($productSku, (int)$stockId, $qty);
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
+        $isSalableResult = $this->isProductSalableForRequestedQty->execute($productSku, $salesChannel, $qty);
 
         if ($isSalableResult->isSalable() === false) {
             /** @var ProductSalabilityError $error */
