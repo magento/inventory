@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
@@ -126,8 +127,11 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
-    {
+    public function execute(
+        string $sku,
+        SalesChannelInterface $salesChannel,
+        float $requestedQty
+    ): ProductSalableResultInterface {
         if (!empty($this->conditions) && empty($this->unrequiredConditions) && empty($this->requiredConditions)) {
             $this->setConditions();
         }
@@ -136,7 +140,7 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
         $requiredConditionsErrors = [[]];
         foreach ($this->requiredConditions as $condition) {
             /** @var ProductSalableResultInterface $productSalableResult */
-            $productSalableResult = $condition->execute($sku, $stockId, $requestedQty);
+            $productSalableResult = $condition->execute($sku, $salesChannel, $requestedQty);
             if ($productSalableResult->isSalable()) {
                 continue;
             }
@@ -152,7 +156,7 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
         $unrequiredConditionsErrors = [[]];
         foreach ($this->unrequiredConditions as $condition) {
             /** @var ProductSalableResultInterface $productSalableResult */
-            $productSalableResult = $condition->execute($sku, $stockId, $requestedQty);
+            $productSalableResult = $condition->execute($sku, $salesChannel, $requestedQty);
             if ($productSalableResult->isSalable()) {
                 return $this->productSalableResultFactory->create(['errors' => []]);
             }

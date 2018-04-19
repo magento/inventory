@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
@@ -42,19 +43,19 @@ class CheckItemsQuantity
      *
      * @param array $items [['sku' => 'qty'], ...]
      * @param array $productTypes [['sku' => 'product_type'], ...]
-     * @psram int $stockId
+     * @param SalesChannelInterface $salesChannel
      *
      * @return void
      * @throws LocalizedException
      */
-    public function execute(array $items, array $productTypes, int $stockId) : void
+    public function execute(array $items, array $productTypes, SalesChannelInterface $salesChannel) : void
     {
         foreach ($items as $sku => $qty) {
             if (false === $this->isSourceItemsAllowedForProductType->execute($productTypes[$sku])) {
                 continue;
             }
             /** @var ProductSalableResultInterface $isSalable */
-            $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty);
+            $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $salesChannel, $qty);
             if (false === $isSalable->isSalable()) {
                 $errors = $isSalable->getErrors();
                 /** @var ProductSalabilityErrorInterface $errorMessage */

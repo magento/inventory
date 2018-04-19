@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySales\Model\IsProductSalableCondition\ManageStockCondition as IsProductSalableManageStockCondition;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
@@ -52,9 +53,12 @@ class ManageStockCondition implements IsProductSalableForRequestedQtyInterface
      * @inheritdoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
-    {
-        $isSalable = $this->manageStockCondition->execute($sku, $stockId);
+    public function execute(
+        string $sku,
+        SalesChannelInterface $salesChannel,
+        float $requestedQty
+    ): ProductSalableResultInterface {
+        $isSalable = $this->manageStockCondition->execute($sku, $salesChannel);
         if (!$isSalable) {
             $errors = [
                 $this->productSalabilityErrorFactory->create([

@@ -13,11 +13,13 @@ use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryReservations\Model\GetReservationsQuantityInterface;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
 use Magento\Framework\Phrase;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
@@ -59,6 +61,21 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
      */
     private $productSalableResultFactory;
 
+    /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
+     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param StockConfigurationInterface $configuration
+     * @param GetReservationsQuantityInterface $getReservationsQuantity
+     * @param GetStockItemDataInterface $getStockItemData
+     * @param MathDivision $mathDivision
+     * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
+     * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
+     * @param StockResolverInterface $stockResolver
+     */
     public function __construct(
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         StockConfigurationInterface $configuration,
@@ -66,7 +83,8 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         GetStockItemDataInterface $getStockItemData,
         MathDivision $mathDivision,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory $productSalableResultFactory
+        ProductSalableResultInterfaceFactory $productSalableResultFactory,
+        StockResolverInterface $stockResolver
     ) {
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->configuration = $configuration;
@@ -75,13 +93,18 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         $this->mathDivision = $mathDivision;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->productSalableResultFactory = $productSalableResultFactory;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
-    {
+    public function execute(
+        string $sku,
+        SalesChannelInterface $salesChannel,
+        float $requestedQty
+    ): ProductSalableResultInterface {
+        $stockId = (int)$this->stockResolver->get($salesChannel->getType(), $salesChannel->getCode())->getStockId();
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         if (null === $stockItemConfiguration) {

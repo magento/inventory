@@ -8,15 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Model;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Service for get stock id for current website.
+ * Service for get sales channel model for current website.
  */
-class GetStockIdForCurrentWebsite
+class GetSalesChannelForCurrentWebsite
 {
     /**
      * @var StoreManagerInterface
@@ -24,34 +23,29 @@ class GetStockIdForCurrentWebsite
     private $storeManager;
 
     /**
-     * @var StockResolverInterface
+     * @var SalesChannelByWebsiteCodeProvider
      */
-    private $stockResolver;
+    private $salesChannelByWebsiteCodeProvider;
 
     /**
      * @param StoreManagerInterface $storeManager
-     * @param StockResolverInterface $stockResolver
+     * @param SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
     ) {
         $this->storeManager = $storeManager;
-        $this->stockResolver = $stockResolver;
+        $this->salesChannelByWebsiteCodeProvider = $salesChannelByWebsiteCodeProvider;
     }
 
     /**
-     * @return int
+     * @return SalesChannelInterface
      * @throws LocalizedException
-     * @throws NoSuchEntityException
      */
-    public function execute(): int
+    public function execute(): SalesChannelInterface
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
-
-        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = (int)$stock->getStockId();
-
-        return $stockId;
+        return $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
     }
 }

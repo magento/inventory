@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
 use Magento\InventorySales\Model\IsProductSalableCondition\BackOrderCondition as IsProductSalableBackOrderCondition;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
@@ -52,9 +53,12 @@ class BackOrderCondition implements IsProductSalableForRequestedQtyInterface
      * @inheritdoc
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
-    {
-        $isValid = $this->backOrderCondition->execute($sku, $stockId);
+    public function execute(
+        string $sku,
+        SalesChannelInterface $salesChannel,
+        float $requestedQty
+    ): ProductSalableResultInterface {
+        $isValid = $this->backOrderCondition->execute($sku, $salesChannel);
         if (!$isValid) {
             $errors = [
                 $this->productSalabilityErrorFactory->create([

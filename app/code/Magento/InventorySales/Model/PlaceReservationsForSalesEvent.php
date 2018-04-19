@@ -85,7 +85,7 @@ class PlaceReservationsForSalesEvent implements PlaceReservationsForSalesEventIn
         }
         $skus = array_keys($itemsBySku);
         $productTypes = $this->getProductTypesBySkus->execute($skus);
-        $this->checkItemsQuantity->execute($itemsBySku, $productTypes, $stockId);
+        $this->checkItemsQuantity->execute($itemsBySku, $productTypes, $salesChannel);
         $reservations = [];
         /** @var ItemToSellInterface $item */
         foreach ($items as $item) {

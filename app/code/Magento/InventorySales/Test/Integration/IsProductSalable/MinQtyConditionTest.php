@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalable;
 
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +20,11 @@ class MinQtyConditionTest extends TestCase
     private $isProductSalable;
 
     /**
+     * @var SalesChannelByWebsiteCodeProvider
+     */
+    private $salesChannelByWebsiteCodeProvider;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -26,6 +32,8 @@ class MinQtyConditionTest extends TestCase
         parent::setUp();
 
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->salesChannelByWebsiteCodeProvider
+            = Bootstrap::getObjectManager()->get(SalesChannelByWebsiteCodeProvider::class);
     }
 
     /**
@@ -34,19 +42,21 @@ class MinQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoConfigFixture default_store cataloginventory/item_options/min_qty 5
      *
      * @param string $sku
-     * @param int $stockId
+     * @param string $websiteCode
      * @param bool $expectedResult
      * @return void
      *
      * @dataProvider executeWithMinQtyDataProvider
      */
-    public function testExecuteWithMinQty(string $sku, int $stockId, bool $expectedResult)
+    public function testExecuteWithMinQty(string $sku, string $websiteCode, bool $expectedResult)
     {
-        $isSalable = $this->isProductSalable->execute($sku, $stockId);
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
+        $isSalable = $this->isProductSalable->execute($sku, $salesChannel);
         self::assertEquals($expectedResult, $isSalable);
     }
 
@@ -56,15 +66,15 @@ class MinQtyConditionTest extends TestCase
     public function executeWithMinQtyDataProvider(): array
     {
         return [
-            ['SKU-1', 10, true],
-            ['SKU-1', 20, false],
-            ['SKU-1', 30, true],
-            ['SKU-2', 10, false],
-            ['SKU-2', 20, false],
-            ['SKU-2', 30, false],
-            ['SKU-3', 10, false],
-            ['SKU-3', 20, false],
-            ['SKU-3', 30, false],
+            ['SKU-1', 'eu_website', true],
+            ['SKU-1', 'us_website', false],
+            ['SKU-1', 'global_website', true],
+            ['SKU-2', 'eu_website', false],
+            ['SKU-2', 'us_website', false],
+            ['SKU-2', 'global_website', false],
+            ['SKU-3', 'eu_website', false],
+            ['SKU-3', 'us_website', false],
+            ['SKU-3', 'global_website', false],
         ];
     }
 
@@ -74,20 +84,22 @@ class MinQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoConfigFixture default_store cataloginventory/item_options/min_qty 5
      * @magentoConfigFixture default_store cataloginventory/item_options/manage_stock 0
      *
      * @param string $sku
-     * @param int $stockId
+     * @param string $websiteCode
      * @param bool $expectedResult
      * @return void
      *
      * @dataProvider executeWithManageStockFalseAndMinQty
      */
-    public function testExecuteWithManageStockFalseAndMinQty(string $sku, int $stockId, bool $expectedResult)
+    public function testExecuteWithManageStockFalseAndMinQty(string $sku, string $websiteCode, bool $expectedResult)
     {
-        $isSalable = $this->isProductSalable->execute($sku, $stockId);
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
+        $isSalable = $this->isProductSalable->execute($sku, $salesChannel);
         self::assertEquals($expectedResult, $isSalable);
     }
 
@@ -97,15 +109,15 @@ class MinQtyConditionTest extends TestCase
     public function executeWithManageStockFalseAndMinQty(): array
     {
         return [
-            ['SKU-1', 10, true],
-            ['SKU-1', 20, false],
-            ['SKU-1', 30, true],
-            ['SKU-2', 10, false],
-            ['SKU-2', 20, true],
-            ['SKU-2', 30, true],
-            ['SKU-3', 10, true],
-            ['SKU-3', 20, false],
-            ['SKU-3', 30, true],
+            ['SKU-1', 'eu_website', true],
+            ['SKU-1', 'us_website', false],
+            ['SKU-1', 'global_website', true],
+            ['SKU-2', 'eu_website', false],
+            ['SKU-2', 'us_website', true],
+            ['SKU-2', 'global_website', true],
+            ['SKU-3', 'eu_website', true],
+            ['SKU-3', 'us_website', false],
+            ['SKU-3', 'global_website', true],
         ];
     }
 }

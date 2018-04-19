@@ -13,7 +13,9 @@ use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
 use Magento\InventoryReservations\Model\CleanupReservationsInterface;
 use Magento\InventoryReservations\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -50,6 +52,16 @@ class IsSalableWithReservationsConditionTest extends TestCase
     private $saveStockItemConfiguration;
 
     /**
+     * @var SalesChannelByWebsiteCodeProvider
+     */
+    private $salesChannelByWebsiteCodeProvider;
+
+    /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -67,6 +79,10 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->saveStockItemConfiguration = Bootstrap::getObjectManager()->get(
             SaveStockItemConfigurationInterface::class
         );
+        $this->salesChannelByWebsiteCodeProvider
+            = Bootstrap::getObjectManager()->get(SalesChannelByWebsiteCodeProvider::class);
+        $this->stockResolver
+            = Bootstrap::getObjectManager()->get(StockResolverInterface::class);
     }
 
     /**
@@ -75,19 +91,21 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      *
      * @param string $sku
-     * @param int $stockId
+     * @param string $websiteCode
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableDataProvider
      */
-    public function testProductIsSalable(string $sku, int $stockId, float $qty, bool $isSalable)
+    public function testProductIsSalable(string $sku, string $websiteCode, float $qty, bool $isSalable)
     {
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
         self::assertEquals(
             $isSalable,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable()
+            $this->isProductSalableForRequestedQty->execute($sku, $salesChannel, $qty)->isSalable()
         );
     }
 
@@ -97,15 +115,15 @@ class IsSalableWithReservationsConditionTest extends TestCase
     public function productIsSalableDataProvider(): array
     {
         return [
-            ['SKU-1', 10, 1, true],
-            ['SKU-1', 20, 1, false],
-            ['SKU-1', 30, 1, true],
-            ['SKU-2', 10, 1, false],
-            ['SKU-2', 20, 1, true],
-            ['SKU-2', 30, 1, true],
-            ['SKU-3', 10, 1, false],
-            ['SKU-3', 20, 1, false],
-            ['SKU-3', 30, 1, false],
+            ['SKU-1', 'eu_website', 1, true],
+            ['SKU-1', 'us_website', 1, false],
+            ['SKU-1', 'global_website', 1, true],
+            ['SKU-2', 'eu_website', 1, false],
+            ['SKU-2', 'us_website', 1, true],
+            ['SKU-2', 'global_website', 1, true],
+            ['SKU-3', 'eu_website', 1, false],
+            ['SKU-3', 'us_website', 1, false],
+            ['SKU-3', 'global_website', 1, false],
         ];
     }
 
@@ -115,18 +133,25 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      *
      * @magentoConfigFixture default_store cataloginventory/item_options/min_qty 5
      *
      * @param string $sku
-     * @param int $stockId
+     * @param string $websiteCode
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableWithUseConfigMinQtyDataProvider
      */
-    public function testProductIsSalableWithUseConfigMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
-    {
+    public function testProductIsSalableWithUseConfigMinQty(
+        string $sku,
+        string $websiteCode,
+        float $qty,
+        bool $isSalable
+    ) {
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
+        $stockId = (int)$this->stockResolver->get($salesChannel->getType(), $salesChannel->getCode())->getStockId();
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         $stockItemConfiguration->setUseConfigMinQty(true);
@@ -134,7 +159,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
 
         self::assertEquals(
             $isSalable,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable()
+            $this->isProductSalableForRequestedQty->execute($sku, $salesChannel, $qty)->isSalable()
         );
     }
 
@@ -144,14 +169,14 @@ class IsSalableWithReservationsConditionTest extends TestCase
     public function productIsSalableWithUseConfigMinQtyDataProvider(): array
     {
         return [
-            ['SKU-1', 10, 3, true],
-            ['SKU-1', 10, 4, false],
-            ['SKU-1', 30, 3, true],
-            ['SKU-1', 30, 4, false],
-            ['SKU-2', 20, 1, false],
-            ['SKU-2', 30, 1, false],
-            ['SKU-3', 10, 1, false],
-            ['SKU-3', 30, 1, false],
+            ['SKU-1', 'eu_website', 3, true],
+            ['SKU-1', 'eu_website', 4, false],
+            ['SKU-1', 'global_website', 3, true],
+            ['SKU-1', 'global_website', 4, false],
+            ['SKU-2', 'us_website', 1, false],
+            ['SKU-2', 'global_website', 1, false],
+            ['SKU-3', 'eu_website', 1, false],
+            ['SKU-3', 'global_website', 1, false],
         ];
     }
 
@@ -161,16 +186,20 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      *
      * @param string $sku
-     * @param int $stockId
+     * @param string $websiteCode
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableWithMinQtyDataProvider
      */
-    public function testProductIsSalableWithMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
+    public function testProductIsSalableWithMinQty(string $sku, string $websiteCode, float $qty, bool $isSalable)
     {
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
+        $stockId = (int)$this->stockResolver->get($salesChannel->getType(), $salesChannel->getCode())->getStockId();
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         $stockItemConfiguration->setUseConfigMinQty(false);
@@ -179,7 +208,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
 
         self::assertEquals(
             $isSalable,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable()
+            $this->isProductSalableForRequestedQty->execute($sku, $salesChannel, $qty)->isSalable()
         );
     }
 
@@ -189,14 +218,14 @@ class IsSalableWithReservationsConditionTest extends TestCase
     public function productIsSalableWithMinQtyDataProvider(): array
     {
         return [
-            ['SKU-1', 10, 3, true],
-            ['SKU-1', 10, 4, false],
-            ['SKU-1', 30, 3, true],
-            ['SKU-1', 30, 4, false],
-            ['SKU-2', 20, 1, false],
-            ['SKU-2', 30, 1, false],
-            ['SKU-3', 10, 1, false],
-            ['SKU-3', 30, 1, false],
+            ['SKU-1', 'eu_website', 3, true],
+            ['SKU-1', 'eu_website', 4, false],
+            ['SKU-1', 'global_website', 3, true],
+            ['SKU-1', 'global_website', 4, false],
+            ['SKU-2', 'us_website', 1, false],
+            ['SKU-2', 'global_website', 1, false],
+            ['SKU-3', 'eu_website', 1, false],
+            ['SKU-3', 'global_website', 1, false],
         ];
     }
 
@@ -206,6 +235,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      */
     public function testProductIsOutOfStockIfReservationsArePresent()
@@ -214,7 +244,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->appendReservations->execute([
             $this->reservationBuilder->setStockId(10)->setSku('SKU-1')->setQuantity(-8.5)->build(),
         ]);
-        self::assertFalse($this->isProductSalableForRequestedQty->execute('SKU-1', 10, 1)->isSalable());
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute('eu_website');
+        self::assertFalse($this->isProductSalableForRequestedQty->execute('SKU-1', $salesChannel, 1)->isSalable());
 
         $this->appendReservations->execute([
             // unreserve 8.5 units for cleanup

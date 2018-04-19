@@ -9,7 +9,9 @@ namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
@@ -27,22 +29,31 @@ class ManageStockCondition implements IsProductSalableInterface
     private $getStockItemConfiguration;
 
     /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param StockConfigurationInterface $configuration
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         StockConfigurationInterface $configuration,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        StockResolverInterface $stockResolver
     ) {
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->configuration = $configuration;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId): bool
+    public function execute(string $sku, SalesChannelInterface $salesChannel): bool
     {
+        $stockId = (int)$this->stockResolver->get($salesChannel->getType(), $salesChannel->getCode())->getStockId();
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         if (null === $stockItemConfiguration) {
             return false;
