@@ -11,6 +11,7 @@ use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryReservations\Model\GetReservationsQuantityInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
@@ -69,7 +70,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId): bool
+    public function execute(string $sku, int $stockId, SalesChannelInterface $salesChannel): bool
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         if (null === $stockItemData) {

@@ -9,6 +9,7 @@ namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -33,7 +34,7 @@ class BackOrderCondition implements IsProductSalableInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId): bool
+    public function execute(string $sku, int $stockId, SalesChannelInterface $salesChannel): bool
     {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         if (null === $stockItemConfiguration) {

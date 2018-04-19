@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySales\Model\IsProductSalableCondition\ManageStockCondition as IsProductSalableManageStockCondition;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
@@ -34,6 +35,11 @@ class ManageStockCondition implements IsProductSalableForRequestedQtyInterface
     private $productSalableResultFactory;
 
     /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
+    /**
      * @param IsProductSalableManageStockCondition $manageStockCondition
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
@@ -41,11 +47,13 @@ class ManageStockCondition implements IsProductSalableForRequestedQtyInterface
     public function __construct(
         IsProductSalableManageStockCondition $manageStockCondition,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory $productSalableResultFactory
+        ProductSalableResultInterfaceFactory $productSalableResultFactory,
+        GetActualSalesChannel $getActualSalesChannel
     ) {
         $this->manageStockCondition = $manageStockCondition;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->productSalableResultFactory = $productSalableResultFactory;
+        $this->getActualSalesChannel = $getActualSalesChannel;
     }
 
     /**
@@ -54,7 +62,8 @@ class ManageStockCondition implements IsProductSalableForRequestedQtyInterface
      */
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
-        $isSalable = $this->manageStockCondition->execute($sku, $stockId);
+        $salesChannel = $this->getActualSalesChannel->execute($stockId);
+        $isSalable = $this->manageStockCondition->execute($sku, $stockId, $salesChannel);
         if (!$isSalable) {
             $errors = [
                 $this->productSalabilityErrorFactory->create([

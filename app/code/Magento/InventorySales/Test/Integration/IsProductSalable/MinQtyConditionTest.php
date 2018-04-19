@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalable;
 
+use Magento\InventorySales\Model\GetActualSalesChannel;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +20,11 @@ class MinQtyConditionTest extends TestCase
     private $isProductSalable;
 
     /**
+     * @var GetActualSalesChannel
+     */
+    private $getActualSalesChannel;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -26,6 +32,7 @@ class MinQtyConditionTest extends TestCase
         parent::setUp();
 
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->getActualSalesChannel = Bootstrap::getObjectManager()->get(GetActualSalesChannel::class);
     }
 
     /**
@@ -46,7 +53,8 @@ class MinQtyConditionTest extends TestCase
      */
     public function testExecuteWithMinQty(string $sku, int $stockId, bool $expectedResult)
     {
-        $isSalable = $this->isProductSalable->execute($sku, $stockId);
+        $salesChannel = $this->getActualSalesChannel->execute($stockId);
+        $isSalable = $this->isProductSalable->execute($sku, $stockId, $salesChannel);
         self::assertEquals($expectedResult, $isSalable);
     }
 
@@ -87,7 +95,8 @@ class MinQtyConditionTest extends TestCase
      */
     public function testExecuteWithManageStockFalseAndMinQty(string $sku, int $stockId, bool $expectedResult)
     {
-        $isSalable = $this->isProductSalable->execute($sku, $stockId);
+        $salesChannel = $this->getActualSalesChannel->execute($stockId);
+        $isSalable = $this->isProductSalable->execute($sku, $stockId, $salesChannel);
         self::assertEquals($expectedResult, $isSalable);
     }
 
