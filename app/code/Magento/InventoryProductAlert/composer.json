@@ -8,7 +8,6 @@
         "magento/module-store": "*",
         "magento/module-backend": "*",
         "magento/module-product-alert": "*",
-        "magento/module-inventory-api": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-inventory-sales": "*"
     },
