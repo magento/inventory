@@ -10,7 +10,6 @@ namespace Magento\InventorySales\Model\IsProductSalableCondition;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
@@ -27,7 +26,6 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
      * @throws LocalizedException
      */
     public function __construct(
-        StockResolverInterface $stockResolver,
         array $conditions
     ) {
         $this->setConditions($conditions);
