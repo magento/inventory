@@ -28,9 +28,9 @@ interface StockInterface extends ExtensibleDataInterface
     /**
      * Get stock id
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getStockId(): ?string;
+    public function getStockId(): ?int;
 
     /**
      * Set stock id

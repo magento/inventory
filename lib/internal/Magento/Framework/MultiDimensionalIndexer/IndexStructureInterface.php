@@ -20,7 +20,6 @@ interface IndexStructureInterface
      * @param IndexName $indexName
      * @param string $connectionName
      * @throws \Magento\Framework\Exception\StateException
-     * @throws \Zend_Db_Exception
      * @return void
      */
     public function create(IndexName $indexName, string $connectionName);
