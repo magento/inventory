@@ -91,8 +91,7 @@ class ProcessBackItemQtyPlugin
         callable $proceed,
         $productId,
         $qty,
-        $scopeId = null)
-    : bool {
+        $scopeId = null): bool {
         if (null === $scopeId) {
             throw new LocalizedException(__('$scopeId is required'));
         }

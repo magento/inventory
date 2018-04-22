@@ -47,7 +47,8 @@ class AddQuantityPerSourceToVariationsMatrix
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetProductMatrix(Matrix $subject, ?array $result): ?array {
+    public function afterGetProductMatrix(Matrix $subject, ?array $result): ?array
+    {
         if ($this->isSingleSourceMode->execute() === false && is_array($result)) {
             foreach ($result as $key => $variation) {
                 $result[$key]['quantityPerSource'] = $this->getQuantityInformationPerSource->execute($variation['sku']);
