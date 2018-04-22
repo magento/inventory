@@ -9,126 +9,116 @@ namespace Magento\InventoryShipping\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
-use Magento\InventoryReservations\Model\ReservationBuilderInterface;
-use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
-use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventorySales\Model\StockByWebsiteIdResolver;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryShipping\Model\GetSourceItemBySourceCodeAndSku;
-use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
+use Magento\InventoryShipping\Model\SourceDeduction\SourceDeductionServiceInterface;
+use Magento\InventoryShipping\Model\SourceDeduction\Request\SourceDeductionRequestInterfaceFactory;
+use Magento\InventoryCatalog\Model\DefaultSourceProvider;
+use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 
+/**
+ * Class SourceDeductionProcessor
+ */
 class SourceDeductionProcessor implements ObserverInterface
 {
     /**
-     * @var ReservationBuilderInterface
+     * @var SourceDeductionRequestInterfaceFactory
      */
-    private $reservationBuilder;
+    private $sourceDeductionRequestFactory;
 
     /**
-     * @var AppendReservationsInterface
+     * @var SourceDeductionServiceInterface
      */
-    private $appendReservations;
+    private $sourceDeductionService;
 
     /**
-     * @var SourceItemsSaveInterface
+     * @var DefaultSourceProvider
      */
-    private $sourceItemsSave;
+    private $defaultSourceProvider;
 
     /**
-     * @var StockByWebsiteIdResolver
+     * @var SalesEventInterfaceFactory
      */
-    private $stockByWebsiteIdResolver;
+    private $salesEventFactory;
 
     /**
-     * @var GetSourceItemBySourceCodeAndSku
+     * @var IsSingleSourceModeInterface
      */
-    private $getSourceItemBySourceCodeAndSku;
+    private $isSingleSourceMode;
 
     /**
-     * @var GetSkusByProductIdsInterface
+     * @var GetItemsToDeduct
      */
-    private $getSkusByProductIds;
+    private $getItemsToDeduct;
 
     /**
-     * SourceDeductionProcessor constructor.
-     * @param ReservationBuilderInterface $reservationBuilder
-     * @param AppendReservationsInterface $appendReservations
-     * @param SourceItemsSaveInterface $sourceItemsSave
-     * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
-     * @param GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku
-     * @param GetSkusByProductIdsInterface $getSkusByProductIds
+     * @param SourceDeductionRequestInterfaceFactory $sourceDeductionRequestFactory
+     * @param SourceDeductionServiceInterface $sourceDeductionService
+     * @param DefaultSourceProvider $defaultSourceProvider
+     * @param SalesEventInterfaceFactory $salesEventFactory
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param GetItemsToDeduct $getItemsToDeduct
      */
     public function __construct(
-        ReservationBuilderInterface $reservationBuilder,
-        AppendReservationsInterface $appendReservations,
-        SourceItemsSaveInterface $sourceItemsSave,
-        StockByWebsiteIdResolver $stockByWebsiteIdResolver,
-        GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
-        GetSkusByProductIdsInterface $getSkusByProductIds
+        SourceDeductionRequestInterfaceFactory $sourceDeductionRequestFactory,
+        SourceDeductionServiceInterface $sourceDeductionService,
+        DefaultSourceProvider $defaultSourceProvider,
+        SalesEventInterfaceFactory $salesEventFactory,
+        IsSingleSourceModeInterface $isSingleSourceMode,
+        GetItemsToDeduct $getItemsToDeduct
     ) {
-        $this->reservationBuilder = $reservationBuilder;
-        $this->appendReservations = $appendReservations;
-        $this->sourceItemsSave = $sourceItemsSave;
-        $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
-        $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->sourceDeductionRequestFactory = $sourceDeductionRequestFactory;
+        $this->sourceDeductionService = $sourceDeductionService;
+        $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->salesEventFactory = $salesEventFactory;
+        $this->isSingleSourceMode = $isSingleSourceMode;
+        $this->getItemsToDeduct = $getItemsToDeduct;
     }
 
     /**
      * @param EventObserver $observer
+     *
      * @return void
+     * @throws InputException
      * @throws LocalizedException
      */
     public function execute(EventObserver $observer): void
     {
-        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-        $shipment = $observer->getEvent()->getShipment();
-        if ($shipment->getOrigData('entity_id')) {
+        /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
+        $shipmentItem = $observer->getShipmentItem();
+
+        if ($shipmentItem->getOrigData('entity_id')) {
             return;
         }
 
-        $order = $shipment->getOrder();
+        $shipment = $shipmentItem->getShipment();
 
-        // I'm not sure about websiteId
-        $websiteId = $order->getStore()->getWebsiteId();
-        $stockId = (int)$this->stockByWebsiteIdResolver->get((int)$websiteId)->getStockId();
+        //TODO: I'm not sure that is good idea (with default source code)...
+        if (!empty($shipment->getExtensionAttributes())
+            || $shipment->getExtensionAttributes()->getSourceCode()) {
+            $sourceCode = $shipment->getExtensionAttributes()->getSourceCode();
+        } elseif ($this->isSingleSourceMode->execute()) {
+            $sourceCode = $this->defaultSourceProvider->getCode();
+        }
 
-        foreach ($shipment->getItems() as $item) {
-            $sources = $item->getSources();
-            if (!$sources) {
-                continue;
-            }
-            $sourceItemToSave = [];
-            $reservationsToBuild = [];
-            foreach ($sources as $source) {
-                $sourceCode = $source['sourceCode'];
-                $qty = $source['qtyToDeduct'];
-                $itemSku = $item->getSku() ?: $this->getSkusByProductIds->execute(
-                    [$item->getProductId()]
-                )[$item->getProductId()];
-                $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute($sourceCode, $itemSku);
-                //TODO: need to implement additional checks
-                // with backorder+when source disabled or product OutOfStock
-                if (($sourceItem->getQuantity() - $qty) >= 0) {
-                    $sourceItem->setQuantity($sourceItem->getQuantity() - $qty);
-                    $sourceItemToSave[] = $sourceItem;
-                    $reservationsToBuild[$itemSku] = ($reservationsToBuild[$itemSku] ?? 0) + $qty;
-                    //TODO: add data to history order_item_id|source_code|qty
-                } else {
-                    throw new LocalizedException(__('Negative quantity is not allowed.'));
-                }
-            }
+        $websiteId = $shipment->getOrder()->getStore()->getWebsiteId();
 
-            $reservationToSave = [];
-            foreach ($reservationsToBuild as $sku => $reservationQty) {
-                $reservationToSave[] = $this->reservationBuilder
-                    ->setSku($sku)
-                    ->setQuantity($reservationQty)
-                    ->setStockId($stockId)
-                    ->build();
-            }
-            $this->sourceItemsSave->execute($sourceItemToSave);
-            $this->appendReservations->execute($reservationToSave);
+        $salesEvent = $this->salesEventFactory->create([
+            'type' => SalesEventInterface::EVENT_SHIPMENT_CREATED,
+            'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+            'objectId' => $shipment->getOrderId()
+        ]);
+
+        if ($items = $this->getItemsToDeduct->execute($shipmentItem)) {
+            $sourceDeductionRequest = $this->sourceDeductionRequestFactory->create([
+                'websiteId' => $websiteId,
+                'sourceCode' => $sourceCode,
+                'items' => $items,
+                'salesEvent' => $salesEvent
+            ]);
+            $this->sourceDeductionService->execute($sourceDeductionRequest);
         }
     }
 }

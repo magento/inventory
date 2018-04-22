@@ -14,9 +14,9 @@ class SchemaTest extends \PHPUnit\Framework\TestCase
     {
         $invoker = new \Magento\Framework\App\Utility\AggregateInvoker($this);
         $invoker(
-        /**
-         * @param string $filename
-         */
+            /**
+             * @param string $filename
+             */
             function ($filename) {
                 $dom = new \DOMDocument();
                 $xmlFile = file_get_contents($filename);
@@ -106,7 +106,8 @@ class SchemaTest extends \PHPUnit\Framework\TestCase
             '#etc/countries.xml$#',
             '#conf/schema.xml$#',
             '#layout/swagger_index_index.xml$#',
-            '#Doc/etc/doc/vars.xml$#'
+            '#Doc/etc/doc/vars.xml$#',
+            '#Test/Acceptance#'
         ];
         foreach ($list as $pattern) {
             foreach ($files as $key => $value) {
