@@ -63,7 +63,7 @@ class IndexStructure implements IndexStructureInterface
     /**
      * @inheritdoc
      */
-    public function create(IndexName $indexName, string $connectionName): void
+    public function create(IndexName $indexName, string $connectionName)
     {
         $connection = $this->resourceConnection->getConnection($connectionName);
         $tableName = $this->indexNameResolver->resolveName($indexName);
@@ -125,7 +125,7 @@ class IndexStructure implements IndexStructureInterface
     /**
      * @inheritdoc
      */
-    public function delete(IndexName $indexName, string $connectionName): void
+    public function delete(IndexName $indexName, string $connectionName)
     {
         $connection = $this->resourceConnection->getConnection($connectionName);
         $tableName = $this->indexNameResolver->resolveName($indexName);

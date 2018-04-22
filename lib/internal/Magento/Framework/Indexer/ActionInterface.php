@@ -22,7 +22,6 @@ interface ActionInterface
      *
      * @param int[] $ids
      * @return void
-     * @throws \Magento\Framework\Exception\StateException
      */
     public function executeList(array $ids);
 
@@ -31,7 +30,6 @@ interface ActionInterface
      *
      * @param int $id
      * @return void
-     * @throws \Magento\Framework\Exception\StateException
      */
     public function executeRow($id);
 }

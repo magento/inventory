@@ -23,7 +23,7 @@ interface IndexStructureInterface
      * @throws \Zend_Db_Exception
      * @return void
      */
-    public function create(IndexName $indexName, string $connectionName): void;
+    public function create(IndexName $indexName, string $connectionName);
 
     /**
      * Delete the given Index
@@ -32,7 +32,7 @@ interface IndexStructureInterface
      * @param string $connectionName
      * @return void
      */
-    public function delete(IndexName $indexName, string $connectionName): void;
+    public function delete(IndexName $indexName, string $connectionName);
 
     /**
      * Checks whether the Index exits

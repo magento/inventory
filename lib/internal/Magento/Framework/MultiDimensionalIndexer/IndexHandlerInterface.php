@@ -22,7 +22,7 @@ interface IndexHandlerInterface
      * @param string $connectionName
      * @return void
      */
-    public function saveIndex(IndexName $indexName, \Traversable $documents, string $connectionName): void;
+    public function saveIndex(IndexName $indexName, \Traversable $documents, string $connectionName);
 
     /**
      * Remove given documents from Index
@@ -32,5 +32,5 @@ interface IndexHandlerInterface
      * @param string $connectionName
      * @return void
      */
-    public function cleanIndex(IndexName $indexName, \Traversable $documents, string $connectionName): void;
+    public function cleanIndex(IndexName $indexName, \Traversable $documents, string $connectionName);
 }

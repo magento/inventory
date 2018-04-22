@@ -59,7 +59,7 @@ class IndexHandler implements IndexHandlerInterface
     /**
      * @inheritdoc
      */
-    public function saveIndex(IndexName $indexName, \Traversable $documents, string $connectionName): void
+    public function saveIndex(IndexName $indexName, \Traversable $documents, string $connectionName)
     {
         $connection = $this->resourceConnection->getConnection($connectionName);
         $tableName = $this->indexNameResolver->resolveName($indexName);
@@ -73,7 +73,7 @@ class IndexHandler implements IndexHandlerInterface
     /**
      * @inheritdoc
      */
-    public function cleanIndex(IndexName $indexName, \Traversable $documents, string $connectionName): void
+    public function cleanIndex(IndexName $indexName, \Traversable $documents, string $connectionName)
     {
         $connection = $this->resourceConnection->getConnection($connectionName);
         $tableName = $this->indexNameResolver->resolveName($indexName);

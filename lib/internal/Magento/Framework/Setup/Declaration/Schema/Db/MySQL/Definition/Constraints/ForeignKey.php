@@ -72,7 +72,7 @@ class ForeignKey implements DbDefinitionProcessorInterface
      */
     public function fromDefinition(array $data)
     {
-        $createMySQL = $data['Create Table'] ?? $data['Create View'];
+        $createMySQL = $data['Create Table'];
         $ddl = [];
         $regExp  = '#,\s*CONSTRAINT\s*`([^`]*)`\s*FOREIGN KEY\s*?\(`([^`]*)`\)\s*'
             . 'REFERENCES\s*(`([^`]*)`\.)?`([^`]*)`\s*\(`([^`]*)`\)\s*'
