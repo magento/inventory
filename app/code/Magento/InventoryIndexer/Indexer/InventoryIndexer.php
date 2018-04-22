@@ -39,7 +39,7 @@ class InventoryIndexer implements ActionInterface
     /**
      * @inheritdoc
      */
-    public function executeFull(): void
+    public function executeFull()
     {
         $this->sourceItemIndexer->executeFull();
     }
@@ -47,7 +47,7 @@ class InventoryIndexer implements ActionInterface
     /**
      * @inheritdoc
      */
-    public function executeRow($sourceItemId): void
+    public function executeRow($sourceItemId)
     {
         $this->sourceItemIndexer->executeList([$sourceItemId]);
     }
@@ -55,7 +55,7 @@ class InventoryIndexer implements ActionInterface
     /**
      * @inheritdoc
      */
-    public function executeList(array $sourceItemIds): void
+    public function executeList(array $sourceItemIds)
     {
         $this->sourceItemIndexer->executeList($sourceItemIds);
     }

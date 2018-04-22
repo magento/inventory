@@ -15,7 +15,7 @@ interface ActionInterface
      *
      * @return void
      */
-    public function executeFull(): void;
+    public function executeFull();
 
     /**
      * Execute partial indexation by ID list
@@ -24,7 +24,7 @@ interface ActionInterface
      * @return void
      * @throws \Magento\Framework\Exception\StateException
      */
-    public function executeList(array $ids): void;
+    public function executeList(array $ids);
 
     /**
      * Execute partial indexation by ID
@@ -33,5 +33,5 @@ interface ActionInterface
      * @return void
      * @throws \Magento\Framework\Exception\StateException
      */
-    public function executeRow($id): void;
+    public function executeRow($id);
 }
