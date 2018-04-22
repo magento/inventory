@@ -26,7 +26,7 @@ class GetSources extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Inventory::source';
+    public const ADMIN_RESOURCE = 'Magento_Inventory::source';
 
     /**
      * @var StockByWebsiteIdResolver

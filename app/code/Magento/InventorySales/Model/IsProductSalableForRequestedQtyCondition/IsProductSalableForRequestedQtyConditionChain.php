@@ -61,8 +61,11 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
     /**
      * This method validates conditions, splits them between required and not required and sorts the latter.
      * Required conditions are not sorted because changing their order may impact on the condition chain logic.
+     *
+     * @return void
+     * @throws LocalizedException
      */
-    private function setConditions()
+    private function setConditions(): void
     {
         $this->validateConditions();
 
@@ -84,10 +87,10 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
     }
 
     /**
-     * @param array $this->conditions
+     * @return void
      * @throws LocalizedException
      */
-    private function validateConditions()
+    private function validateConditions(): VOID
     {
         foreach ($this->conditions as $condition) {
             if (empty($condition['object'])) {
@@ -112,7 +115,7 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
      * @param array $conditions
      * @return array
      */
-    private function sortConditions(array $conditions)
+    private function sortConditions(array $conditions): array
     {
         usort($conditions, function (array $conditionLeft, array $conditionRight) {
             if ($conditionLeft['sort_order'] == $conditionRight['sort_order']) {

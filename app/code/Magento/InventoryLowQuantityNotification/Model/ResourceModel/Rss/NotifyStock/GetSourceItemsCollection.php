@@ -41,7 +41,7 @@ class GetSourceItemsCollection
     /**
      * @return Collection
      */
-    public function execute()
+    public function execute(): Collection
     {
         $collection = $this->collectionFactory->create();
         $collection->removeAllFieldsFromSelect();

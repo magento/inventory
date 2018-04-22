@@ -40,7 +40,7 @@ class ReindexAfterSourceItemsDeletePlugin
         SourceItemsDeleteInterface $subject,
         callable $proceed,
         array $sourceItems
-    ) {
+    ): void {
         $sourceCodes = [];
         foreach ($sourceItems as $sourceItem) {
             $sourceCodes[] = $sourceItem->getSourceCode();

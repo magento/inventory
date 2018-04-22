@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -42,6 +43,7 @@ class StockByWebsiteIdResolver
     /**
      * @param int $websiteId
      * @return StockInterface
+     * @throws NoSuchEntityException
      */
     public function get(int $websiteId): StockInterface
     {

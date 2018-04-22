@@ -48,7 +48,6 @@ class GetAssignedStockIds
             ->group(StockSourceLink::STOCK_ID);
 
         $stockIds = $connection->fetchCol($select);
-        $stockIds = array_map('intval', $stockIds);
-        return $stockIds;
+        return array_map('intval', $stockIds);
     }
 }

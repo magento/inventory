@@ -72,7 +72,7 @@ class AlgorithmSelectionButton extends Container
      *
      * @return array
      */
-    protected function _getAlgorithmsListOptions()
+    protected function _getAlgorithmsListOptions(): array
     {
         $algorithmsList = $this->getSourceSelectionAlgorithmList->execute();
         $splitButtonOptions = [];
@@ -90,9 +90,10 @@ class AlgorithmSelectionButton extends Container
      *
      * @return int
      */
-    public function getWebsiteId()
+    public function getWebsiteId(): int
     {
-        if ($shipment = $this->registry->registry('current_shipment')) {
+        $shipment = $this->registry->registry('current_shipment');
+        if ($shipment) {
             return $shipment->getOrder()->getStore()->getWebsiteId();
         }
         return 1;

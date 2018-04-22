@@ -39,7 +39,7 @@ class PreventDeletingAssignedToSalesChannelsStockPlugin
      * @throws CouldNotDeleteException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId)
+    public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId): void
     {
         $assignSalesChannels = $this->assignedSalesChannelsForStock->execute($stockId);
         if (count($assignSalesChannels)) {

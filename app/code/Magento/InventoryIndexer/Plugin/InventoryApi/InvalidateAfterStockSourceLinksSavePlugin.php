@@ -46,13 +46,14 @@ class InvalidateAfterStockSourceLinksSavePlugin
      * @param StockSourceLinksSaveInterface $subject
      * @param void $result
      * @param StockSourceLinkInterface[] $links
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(
         StockSourceLinksSaveInterface $subject,
         $result,
         array $links
-    ) {
+    ): void {
         foreach ($links as $link) {
             if ($this->defaultStockProvider->getId() !== $link->getStockId()) {
                 $indexer = $this->indexerRegistry->get(InventoryIndexer::INDEXER_ID);

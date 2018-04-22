@@ -32,7 +32,7 @@ class CleanupReservations
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         $this->cleanupReservations->execute();
     }

@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotificationApi\Api;
 
+use Magento\Framework\Exception\CouldNotDeleteException;
+
 /**
  * Delete the source item configuration
  *
@@ -18,6 +20,7 @@ interface DeleteSourceItemConfigurationInterface
      * @param string $sourceCode
      * @param string $sku
      * @return void
+     * @throws CouldNotDeleteException
      */
-    public function execute(string $sourceCode, string $sku);
+    public function execute(string $sourceCode, string $sku): void;
 }

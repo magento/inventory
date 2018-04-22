@@ -9,6 +9,7 @@ namespace Magento\InventoryLowQuantityNotification\Model\ResourceModel\Rss\Notif
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
 
 class SelectBuilder
 {
@@ -62,8 +63,9 @@ class SelectBuilder
      * @param Select $select
      *
      * @return void
+     * @throws LocalizedException
      */
-    public function build(Select $select)
+    public function build(Select $select): void
     {
         $this->applyBaseJoins->execute($select);
         $this->applyNameAttributeJoin->execute($select);

@@ -151,7 +151,7 @@ class SourceSelection extends Template implements TabInterface
     /**
      * @return SourceSelectionResultInterface
      */
-    private function getShippingAlgorithmResult()
+    private function getShippingAlgorithmResult(): SourceSelectionResultInterface
     {
         if (null === $this->sourceSelectionResult) {
             $order = $this->registry->registry('current_order');

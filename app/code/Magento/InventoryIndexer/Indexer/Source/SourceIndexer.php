@@ -41,7 +41,7 @@ class SourceIndexer
     /**
      * @return void
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $this->stockIndexer->executeFull();
     }
@@ -50,15 +50,16 @@ class SourceIndexer
      * @param string $sourceCode
      * @return void
      */
-    public function executeRow(string $sourceCode)
+    public function executeRow(string $sourceCode): void
     {
         $this->executeList([$sourceCode]);
     }
 
     /**
      * @param array $sourceCodes
+     * @return void
      */
-    public function executeList(array $sourceCodes)
+    public function executeList(array $sourceCodes): void
     {
         $stockIds = $this->getAssignedStockIds->execute($sourceCodes);
         $this->stockIndexer->executeList($stockIds);

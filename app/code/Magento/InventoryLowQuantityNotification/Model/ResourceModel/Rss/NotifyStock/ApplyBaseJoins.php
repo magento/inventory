@@ -39,7 +39,7 @@ class ApplyBaseJoins
      *
      * @return void
      */
-    public function execute(Select $select)
+    public function execute(Select $select): void
     {
         $sourceItemConfigurationTable = 'inventory_low_stock_notification_configuration';
         $configurationJoinCondition =

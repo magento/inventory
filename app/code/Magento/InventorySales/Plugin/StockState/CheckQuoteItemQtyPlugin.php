@@ -98,7 +98,7 @@ class CheckQuoteItemQtyPlugin
         $qtyToCheck,
         $origQty,
         $scopeId
-    ) {
+    ): DataObject {
         $result = $this->objectFactory->create();
         $result->setHasError(false);
 
@@ -129,7 +129,7 @@ class CheckQuoteItemQtyPlugin
      *
      * @return float|null
      */
-    private function getNumber($qty)
+    private function getNumber($qty): ?float
     {
         if (!is_numeric($qty)) {
             return $this->format->getNumber($qty);

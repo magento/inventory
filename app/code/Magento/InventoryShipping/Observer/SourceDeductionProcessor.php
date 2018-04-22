@@ -79,12 +79,12 @@ class SourceDeductionProcessor implements ObserverInterface
      * @return void
      * @throws LocalizedException
      */
-    public function execute(EventObserver $observer)
+    public function execute(EventObserver $observer): void
     {
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getEvent()->getShipment();
         if ($shipment->getOrigData('entity_id')) {
-            return $this;
+            return;
         }
 
         $order = $shipment->getOrder();

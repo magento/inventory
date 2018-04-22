@@ -111,7 +111,6 @@ class SelectBuilder
             ->where('stock_source_link.' . StockSourceLink::STOCK_ID . ' = ?', $stockId)
             ->where(SourceInterface::ENABLED . ' = ?', 1);
 
-        $sourceCodes = $connection->fetchCol($select);
-        return $sourceCodes;
+        return $connection->fetchCol($select);
     }
 }

@@ -21,21 +21,21 @@ interface SalesChannelInterface extends ExtensibleDataInterface
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const TYPE = 'type';
-    const CODE = 'code';
+    public const TYPE = 'type';
+    public const CODE = 'code';
     /**#@-*/
 
     /**
      * Default sales channel type
      */
-    const TYPE_WEBSITE = 'website';
+    public const TYPE_WEBSITE = 'website';
 
     /**
      * Get sales channel type
      *
      * @return string|null
      */
-    public function getType();
+    public function getType(): ?string;
 
     /**
      * Set sales channel type
@@ -43,14 +43,14 @@ interface SalesChannelInterface extends ExtensibleDataInterface
      * @param string $type
      * @return void
      */
-    public function setType(string $type);
+    public function setType(string $type): void;
 
     /**
      * Get sales channel code
      *
      * @return string|null
      */
-    public function getCode();
+    public function getCode(): ?string;
 
     /**
      * Set sales channel code
@@ -58,7 +58,7 @@ interface SalesChannelInterface extends ExtensibleDataInterface
      * @param string $code
      * @return void
      */
-    public function setCode(string $code);
+    public function setCode(string $code): void;
 
     /**
      * Retrieve existing extension attributes object
@@ -67,7 +67,7 @@ interface SalesChannelInterface extends ExtensibleDataInterface
      *
      * @return \Magento\InventorySalesApi\Api\Data\SalesChannelExtensionInterface|null
      */
-    public function getExtensionAttributes();
+    public function getExtensionAttributes(): ?SalesChannelExtensionInterface;
 
     /**
      * Set an extension attributes object
@@ -75,5 +75,5 @@ interface SalesChannelInterface extends ExtensibleDataInterface
      * @param \Magento\InventorySalesApi\Api\Data\SalesChannelExtensionInterface $extensionAttributes
      * @return void
      */
-    public function setExtensionAttributes(SalesChannelExtensionInterface $extensionAttributes);
+    public function setExtensionAttributes(SalesChannelExtensionInterface $extensionAttributes): void;
 }

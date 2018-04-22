@@ -39,7 +39,7 @@ class ApplyConfigurationCondition
      * @param Select $select
      * @return void
      */
-    public function execute(Select $select)
+    public function execute(Select $select): void
     {
         $configManageStock = $this->configuration->getManageStock();
         $configNotifyStockQty = $this->configuration->getNotifyStockQty();

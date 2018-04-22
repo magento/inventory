@@ -34,7 +34,7 @@ class SaveMultiple
      * @param ReservationInterface[] $reservations
      * @return void
      */
-    public function execute(array $reservations)
+    public function execute(array $reservations): void
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_reservation');

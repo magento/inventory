@@ -94,8 +94,12 @@ class ProcessRegisterProductsSalePlugin
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundRegisterProductsSale(StockManagement $subject, callable $proceed, $items, $websiteId = null)
-    {
+    public function aroundRegisterProductsSale(
+        StockManagement $subject,
+        callable $proceed,
+        $items,
+        $websiteId = null
+    ): array {
         if (empty($items)) {
             return [];
         }

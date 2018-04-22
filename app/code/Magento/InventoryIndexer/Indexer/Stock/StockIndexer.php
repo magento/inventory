@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\StateException;
 use Magento\Framework\MultiDimensionalIndexer\Alias;
 use Magento\Framework\MultiDimensionalIndexer\IndexHandlerInterface;
 use Magento\Framework\MultiDimensionalIndexer\IndexNameBuilder;
@@ -21,6 +22,7 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
  * Extension point for indexation
  *
  * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class StockIndexer
 {
@@ -90,8 +92,9 @@ class StockIndexer
 
     /**
      * @return void
+     * @throws StateException
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $stockIds = $this->getAllStockIds->execute();
         $this->executeList($stockIds);
@@ -100,8 +103,9 @@ class StockIndexer
     /**
      * @param int $stockId
      * @return void
+     * @throws StateException
      */
-    public function executeRow(int $stockId)
+    public function executeRow(int $stockId): void
     {
         $this->executeList([$stockId]);
     }
@@ -109,8 +113,9 @@ class StockIndexer
     /**
      * @param array $stockIds
      * @return void
+     * @throws StateException
      */
-    public function executeList(array $stockIds)
+    public function executeList(array $stockIds): void
     {
         foreach ($stockIds as $stockId) {
             if ($this->defaultStockProvider->getId() === (int)$stockId) {

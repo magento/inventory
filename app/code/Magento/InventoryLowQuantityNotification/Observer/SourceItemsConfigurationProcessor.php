@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryLowQuantityNotification\Observer;
 
 use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryLowQuantityNotification\Model\SourceItemConfigurationFactory;
@@ -63,8 +65,10 @@ class SourceItemsConfigurationProcessor
      * @param array $sourceItemsData
      * @return void
      * @throws InputException
+     * @throws CouldNotSaveException
+     * @throws CouldNotDeleteException
      */
-    public function process($sku, array $sourceItemsData)
+    public function process($sku, array $sourceItemsData): void
     {
         $sourceItemConfigurations = [];
         foreach ($sourceItemsData as $sourceItemData) {
@@ -96,7 +100,7 @@ class SourceItemsConfigurationProcessor
      * @return void
      * @throws InputException
      */
-    private function validateSourceItemData(array $sourceItemData)
+    private function validateSourceItemData(array $sourceItemData): void
     {
         if (!isset($sourceItemData[SourceItemInterface::SOURCE_CODE])) {
             throw new InputException(__('Wrong Product to Source relation parameters given.'));
@@ -106,8 +110,9 @@ class SourceItemsConfigurationProcessor
     /**
      * @param SourceItemInterface[] $sourceItemsConfigurations
      * @return void
+     * @throws CouldNotDeleteException
      */
-    private function deleteSourceItemsConfiguration(array $sourceItemsConfigurations)
+    private function deleteSourceItemsConfiguration(array $sourceItemsConfigurations): void
     {
         /** @var SourceItemInterface $sourceItemConfiguration */
         foreach ($sourceItemsConfigurations as $sourceItemConfiguration) {

@@ -21,6 +21,10 @@ class ProductSalabilityError implements ProductSalabilityErrorInterface
      */
     private $message;
 
+    /**
+     * @param string $code
+     * @param string $message
+     */
     public function __construct(string $code, string $message)
     {
         $this->code = $code;

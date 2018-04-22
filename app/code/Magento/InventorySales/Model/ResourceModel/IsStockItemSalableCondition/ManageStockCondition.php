@@ -36,10 +36,8 @@ class ManageStockCondition implements GetIsStockItemSalableConditionInterface
     {
         $globalManageStock = (int)$this->configuration->getManageStock();
 
-        $condition = (0 === $globalManageStock)
+        return (0 === $globalManageStock)
             ? 'legacy_stock_item.use_config_manage_stock = 1'
             : 'legacy_stock_item.use_config_manage_stock = 0 AND legacy_stock_item.manage_stock = 0';
-
-        return $condition;
     }
 }

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Plugin\Sales;
 
+use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\ShipmentFactory;
 
@@ -22,7 +23,7 @@ class CollectSourcesForShipmentItems
      * @param array $items
      * @param null $tracks
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @return
+     * @return ShipmentInterface
      */
     public function aroundCreate(
         ShipmentFactory $subject,
@@ -30,7 +31,7 @@ class CollectSourcesForShipmentItems
         Order $order,
         array $items = [],
         $tracks = null
-    ) {
+    ): ShipmentInterface {
         $itemToProcess = [];
         foreach ($items as $orderItemId => $data) {
             if (!is_array($data)) {
@@ -49,7 +50,7 @@ class CollectSourcesForShipmentItems
                 }
             }
         }
-        /** @var \Magento\Sales\Api\Data\ShipmentInterface $shipment */
+        /** @var ShipmentInterface $shipment */
         $shipment = $proceed($order, $items, $tracks);
         if (empty($items)) {
             return $shipment;

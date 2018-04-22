@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Model\SourceSelection\Algorithms;
 
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
@@ -64,6 +66,8 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
     /**
      * @param InventoryRequestInterface $inventoryRequest
      * @return SourceSelectionResultInterface
+     * @throws InputException
+     * @throws LocalizedException
      */
     public function execute(InventoryRequestInterface $inventoryRequest): SourceSelectionResultInterface
     {
@@ -132,13 +136,14 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
      * Get enabled sources ordered by priority by $stockId
      * @param int $stockId
      * @return array
+     * @throws InputException
+     * @throws LocalizedException
      */
     private function getEnabledSourcesOrderedByPriorityByStockId(int $stockId): array
     {
         $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
-        $sources = array_filter($sources, function (SourceInterface $source) {
+        return array_filter($sources, function (SourceInterface $source) {
             return $source->isEnabled();
         });
-        return $sources;
     }
 }
