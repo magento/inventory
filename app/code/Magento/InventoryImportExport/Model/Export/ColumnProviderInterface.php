@@ -20,6 +20,7 @@ interface ColumnProviderInterface
      * @param AttributeCollection $attributeCollection
      * @param array $filters
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getHeaders(AttributeCollection $attributeCollection, array $filters): array;
 
@@ -29,6 +30,7 @@ interface ColumnProviderInterface
      * @param AttributeCollection $attributeCollection
      * @param array $filters
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getColumns(AttributeCollection $attributeCollection, array $filters): array;
 }

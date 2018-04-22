@@ -10,6 +10,8 @@ namespace Magento\InventoryConfigurableProduct\Model\ResourceModel\Product;
 use Magento\Catalog\Model\ResourceModel\Product\BaseSelectProcessorInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -70,8 +72,10 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
     /**
      * @param Select $select
      * @return Select
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function process(Select $select)
+    public function process(Select $select): Select
     {
         if (!$this->stockConfig->isShowOutOfStock()) {
             $websiteCode = $this->storeManager->getWebsite()->getCode();
@@ -80,7 +84,6 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
 
             $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
 
-            /** @var Select $select */
             $select->join(
                 ['stock' => $stockTable],
                 sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),

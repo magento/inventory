@@ -40,11 +40,10 @@ class BulkStepChangeTemplate
     /**
      * @param Bulk $bulk
      * @param string $template
-     *
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeSetTemplate(Bulk $bulk, string $template)
+    public function beforeSetTemplate(Bulk $bulk, string $template): string
     {
         if ($this->isSingleSourceMode->execute() === false) {
             $template = $this->multiSourceTemplate;

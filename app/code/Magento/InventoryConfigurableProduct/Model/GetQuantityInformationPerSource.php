@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -46,8 +47,8 @@ class GetQuantityInformationPerSource
 
     /**
      * @param string $sku
-     *
      * @return array
+     * @throws NoSuchEntityException
      */
     public function execute(string $sku): array
     {

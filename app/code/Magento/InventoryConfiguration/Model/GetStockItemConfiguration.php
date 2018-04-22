@@ -10,14 +10,17 @@ namespace Magento\InventoryConfiguration\Model;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 
 /**
  * @inheritdoc
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GetStockItemConfiguration implements GetStockItemConfigurationInterface
 {
@@ -78,7 +81,7 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, int $stockId)
+    public function execute(string $sku, int $stockId): ?StockItemConfigurationInterface
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         if (null === $stockItemData) {
@@ -96,7 +99,9 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     /**
      * @param string $sku
      * @return StockItemInterface
+     * @throws InputException
      * @throws LocalizedException
+     * @throws \RuntimeException
      */
     private function getLegacyStockItem(string $sku): StockItemInterface
     {
@@ -118,7 +123,6 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
         }
 
         $stockItems = $stockItemCollection->getItems();
-        $stockItem = reset($stockItems);
-        return $stockItem;
+        return reset($stockItems);
     }
 }
