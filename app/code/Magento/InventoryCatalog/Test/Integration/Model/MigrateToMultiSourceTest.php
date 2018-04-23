@@ -84,5 +84,4 @@ class MigrateToMultiSourceTest extends TestCase
 
         return $this->sourceItemsRepository->getList($searchCriteria)->getItems();
     }
-
 }

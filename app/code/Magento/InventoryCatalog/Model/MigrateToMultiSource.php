@@ -84,8 +84,7 @@ class MigrateToMultiSource
             try {
                 $this->migrateSourceItems($migrationSourceCode, $sourceItems);
                 $connection->commit();
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $connection->rollBack();
             }
         }
