@@ -46,4 +46,7 @@
     <type name="Magento\Catalog\Model\Product\Copier">
         <plugin name="copy_source_items" type="Magento\InventoryCatalogAdminUi\Plugin\Catalog\CopySourceItemsPlugin"/>
     </type>
+    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
+        <plugin name="reindex_after_source_items_save" type="Magento\InventoryCatalogAdminUi\Plugin\InventoryApi\MaintainSourceItemStatusConsistencyPlugin"/>
+    </type>
 </config>
