@@ -35,7 +35,8 @@ class QuantityValidator implements SourceItemValidatorInterface
     public function validate(SourceItemInterface $source): ValidationResult
     {
         $errors = [];
-        if (!is_numeric($source->getQuantity())) {
+        $quantity = $source->getQuantity();
+        if ('' !== $quantity && !is_numeric($quantity)) {
             $errors[] = __(
                 '"%field" should be numeric.',
                 ['field' => SourceItemInterface::QUANTITY]
