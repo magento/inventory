@@ -6,6 +6,7 @@
         "magento/framework": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-catalog": "*",
+        "magento/module-configurable-product": "*",
         "magento/module-inventory-api": "*",
         "magento/module-inventory-catalog": "*",
         "magento/module-inventory-configuration": "*",

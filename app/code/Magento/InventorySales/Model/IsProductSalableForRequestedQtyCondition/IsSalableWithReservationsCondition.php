@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
+use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
+use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType;
 use Magento\InventoryReservations\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
@@ -47,24 +49,40 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
     private $productSalableResultFactory;
 
     /**
+     * @var IsSourceItemsAllowedForProductType
+     */
+    private $isSourceItemsAllowedForProductType;
+
+    /**
+     * @var GetProductTypesBySkusInterface
+     */
+    private $getProductTypesBySkus;
+
+    /**
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
+     * @param IsSourceItemsAllowedForProductType $isSourceItemsAllowedForProductType
+     * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory $productSalableResultFactory
+        ProductSalableResultInterfaceFactory $productSalableResultFactory,
+        IsSourceItemsAllowedForProductType $isSourceItemsAllowedForProductType,
+        GetProductTypesBySkusInterface $getProductTypesBySkus
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->productSalableResultFactory = $productSalableResultFactory;
+        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
+        $this->getProductTypesBySkus = $getProductTypesBySkus;
     }
 
     /**
@@ -84,21 +102,31 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
 
-        $qtyWithReservation = $stockItemData[GetStockItemDataInterface::QUANTITY] +
-            $this->getReservationsQuantity->execute($sku, $stockId);
-        /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-        $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
-        $isEnoughQty = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE] && $qtyLeftInStock >= 0;
-        if (!$isEnoughQty) {
+        $productType = $this->getProductTypesBySkus->execute([$sku])[$sku];
+
+        if (true === $this->isSourceItemsAllowedForProductType->execute($productType)) {
+            $qtyWithReservation = $stockItemData[GetStockItemDataInterface::QUANTITY] +
+                $this->getReservationsQuantity->execute($sku, $stockId);
+
+            /** @var StockItemConfigurationInterface $stockItemConfiguration */
+            $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
+            $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
+            $isSalable = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE];
+            $isSalableForRequestedQty = $isSalable && $qtyLeftInStock >= 0;
+        } else {
+            $isSalableForRequestedQty = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE];
+        }
+
+        $errors = [];
+        if (!$isSalableForRequestedQty) {
             $errors = [
                 $this->productSalabilityErrorFactory->create([
                     'code' => 'is_salable_with_reservations-not_enough_qty',
                     'message' => __('The requested qty is not available')
                 ])
             ];
-            return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
-        return $this->productSalableResultFactory->create(['errors' => []]);
+
+        return $this->productSalableResultFactory->create(['errors' => $errors]);
     }
 }
