@@ -16,7 +16,7 @@ use Magento\InventoryReservations\Model\CleanupReservationsInterface;
 use Magento\InventoryReservations\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
 use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -39,7 +39,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     private $cleanupReservations;
 
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
@@ -88,7 +88,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
-        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableForSalesChannelInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->stockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);
         $this->stockItemCriteriaFactory = Bootstrap::getObjectManager()->get(

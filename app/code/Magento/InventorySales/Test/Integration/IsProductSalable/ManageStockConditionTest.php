@@ -8,14 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\IsProductSalable;
 
 use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 class ManageStockConditionTest extends TestCase
 {
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
@@ -31,7 +31,7 @@ class ManageStockConditionTest extends TestCase
     {
         parent::setUp();
 
-        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableForSalesChannelInterface::class);
         $this->salesChannelByWebsiteCodeProvider
             = Bootstrap::getObjectManager()->get(SalesChannelByWebsiteCodeProvider::class);
     }

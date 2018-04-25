@@ -14,7 +14,7 @@
         </resources>
     </route>
     <route url="/V1/inventory/is-product-salable/:sku/:stockId" method="GET">
-        <service class="Magento\InventorySalesApi\Api\IsProductSalableInterface" method="execute"/>
+        <service class="Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface" method="execute"/>
         <resources>
             <resource ref="InventorySalesApi::stock"/>
         </resources>

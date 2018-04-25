@@ -11,10 +11,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
-use Magento\InventorySales\Model\SalesChannelByWebsiteIdProvider;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForStockInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Status and Stock Item DB tables,
@@ -38,34 +38,34 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
     private $setDataToLegacyStockStatus;
 
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForStockInterface
      */
     private $isProductSalable;
 
     /**
-     * @var SalesChannelByWebsiteIdProvider
+     * @var DefaultStockProviderInterface
      */
-    private $salesChannelByWebsiteIdProvider;
+    private $defaultStockProvider;
 
     /**
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
-     * @param IsProductSalableInterface $isProductSalable
-     * @param SalesChannelByWebsiteIdProvider $salesChannelByWebsiteIdProvider
+     * @param IsProductSalableForStockInterface $isProductSalable
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         DefaultSourceProviderInterface $defaultSourceProvider,
         SetDataToLegacyStockItem $setDataToLegacyStockItem,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
-        IsProductSalableInterface $isProductSalable,
-        SalesChannelByWebsiteIdProvider $salesChannelByWebsiteIdProvider
+        IsProductSalableForStockInterface $isProductSalable,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
         $this->isProductSalable = $isProductSalable;
-        $this->salesChannelByWebsiteIdProvider = $salesChannelByWebsiteIdProvider;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -75,12 +75,9 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
      * @return void
      * @see SourceItemsSaveInterface::execute
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @throws NoSuchEntityException
      */
     public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems)
     {
-        $defaultSalesChannel = $this->salesChannelByWebsiteIdProvider->execute(0);
-
         foreach ($sourceItems as $sourceItem) {
             if ($sourceItem->getSourceCode() !== $this->defaultSourceProvider->getCode()) {
                 continue;
@@ -103,7 +100,7 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
             $this->setDataToLegacyStockStatus->execute(
                 $sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
-                (int)$this->isProductSalable->execute($sourceItem->getSku(), $defaultSalesChannel)
+                (int)$this->isProductSalable->execute($sourceItem->getSku(), $this->defaultStockProvider->getId())
             );
         }
     }

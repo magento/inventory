@@ -12,7 +12,7 @@ use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalog\Model\GetSalesChannelForCurrentWebsite;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 
 /**
@@ -21,7 +21,7 @@ use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 class AdaptAddStockStatusToProductsPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
@@ -32,11 +32,11 @@ class AdaptAddStockStatusToProductsPlugin
 
     /**
      * @param GetSalesChannelForCurrentWebsite $getSalesChannelForCurrentWebsite
-     * @param IsProductSalableInterface $isProductSalable
+     * @param IsProductSalableForSalesChannelInterface $isProductSalable
      */
     public function __construct(
         GetSalesChannelForCurrentWebsite $getSalesChannelForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable
+        IsProductSalableForSalesChannelInterface $isProductSalable
     ) {
         $this->isProductSalable = $isProductSalable;
         $this->getSalesChannelForCurrentWebsite = $getSalesChannelForCurrentWebsite;

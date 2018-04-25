@@ -14,7 +14,7 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
  *
  * @api
  */
-interface IsProductSalableInterface
+interface IsProductSalableForSalesChannelInterface
 {
     /**
      * Get is product in salable for given SKU in a given Stock

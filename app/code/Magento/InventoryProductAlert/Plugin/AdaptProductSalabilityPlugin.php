@@ -9,7 +9,7 @@ namespace Magento\InventoryProductAlert\Plugin;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\ProductAlert\Model\ProductSalability;
 use Magento\Store\Api\Data\WebsiteInterface;
 
@@ -19,7 +19,7 @@ use Magento\Store\Api\Data\WebsiteInterface;
 class AdaptProductSalabilityPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
@@ -29,11 +29,11 @@ class AdaptProductSalabilityPlugin
     private $salesChannelByWebsiteCodeProvider;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @param IsProductSalableForSalesChannelInterface $isProductSalable
      * @param SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
+        IsProductSalableForSalesChannelInterface $isProductSalable,
         SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
     ) {
         $this->isProductSalable = $isProductSalable;

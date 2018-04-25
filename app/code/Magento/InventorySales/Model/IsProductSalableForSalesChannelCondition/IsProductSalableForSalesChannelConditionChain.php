@@ -5,19 +5,19 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\IsProductSalableCondition;
+namespace Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 
 /**
  * @inheritdoc
  */
-class IsProductSalableConditionChain implements IsProductSalableInterface
+class IsProductSalableForSalesChannelConditionChain implements IsProductSalableForSalesChannelInterface
 {
     /**
-     * @var IsProductSalableInterface[]
+     * @var IsProductSalableForSalesChannelInterface[]
      */
     private $conditions;
 
@@ -58,9 +58,9 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
                 throw new LocalizedException(__('Parameter "sort_order" must be present.'));
             }
 
-            if (!$condition['object'] instanceof IsProductSalableInterface) {
+            if (!$condition['object'] instanceof IsProductSalableForSalesChannelInterface) {
                 throw new LocalizedException(
-                    __('Condition have to implement IsProductSalableInterface.')
+                    __('Condition have to implement IsProductSalableForSalesChannelInterface.')
                 );
             }
         }

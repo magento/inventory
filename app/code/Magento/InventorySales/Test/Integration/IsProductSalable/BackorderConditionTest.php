@@ -17,7 +17,7 @@ use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +44,7 @@ class BackorderConditionTest extends TestCase
     private $productRepository;
 
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
@@ -73,7 +73,7 @@ class BackorderConditionTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
-        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableForSalesChannelInterface::class);
         $this->salesChannelByWebsiteCodeProvider
             = Bootstrap::getObjectManager()->get(SalesChannelByWebsiteCodeProvider::class);
     }

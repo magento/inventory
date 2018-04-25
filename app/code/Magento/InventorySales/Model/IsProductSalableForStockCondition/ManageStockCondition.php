@@ -5,18 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\IsProductSalableCondition;
+namespace Magento\InventorySales\Model\IsProductSalableForStockCondition;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForStockInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
  */
-class ManageStockCondition implements IsProductSalableInterface
+class ManageStockCondition implements IsProductSalableForStockInterface
 {
     /**
      * @var StockConfigurationInterface
@@ -51,9 +50,8 @@ class ManageStockCondition implements IsProductSalableInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, SalesChannelInterface $salesChannel): bool
+    public function execute(string $sku, int $stockId): bool
     {
-        $stockId = (int)$this->stockResolver->get($salesChannel->getType(), $salesChannel->getCode())->getStockId();
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         if (null === $stockItemConfiguration) {
             return false;

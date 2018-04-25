@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\IsProductSalableCondition;
+namespace Magento\InventorySales\Model\IsProductSalableForStockCondition;
 
 use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryReservations\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForStockInterface;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -20,7 +20,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 /**
  * @inheritdoc
  */
-class IsSalableWithReservationsCondition implements IsProductSalableInterface
+class IsSalableWithReservationsCondition implements IsProductSalableForStockInterface
 {
     /**
      * @var GetStockItemDataInterface
@@ -79,9 +79,8 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
     /**
      * @inheritdoc
      */
-    public function execute(string $sku, SalesChannelInterface $salesChannel): bool
+    public function execute(string $sku, int $stockId): bool
     {
-        $stockId = (int)$this->stockResolver->get($salesChannel->getType(), $salesChannel->getCode())->getStockId();
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         if (null === $stockItemData) {
             // Sku is not assigned to Stock
