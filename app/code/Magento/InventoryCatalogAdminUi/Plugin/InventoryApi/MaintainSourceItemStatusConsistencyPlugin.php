@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogAdminUi\Plugin\InventoryApi;
 
+use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+
 /**
  * Maintains consistency with Single-Source mode in case when no Source Item Quantity provided.
  */
