@@ -11,7 +11,6 @@ use Magento\CatalogInventory\Api\RegisterProductSaleInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySales\Model\SalesChannelByWebsiteIdProvider;
-use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 
 /**
@@ -25,11 +24,6 @@ class ProcessRegisterProductsSalePlugin
     private $getSkusByProductIds;
 
     /**
-     * @var GetProductTypesBySkusInterface
-     */
-    private $getProductTypesBySkus;
-
-    /**
      * @var CheckItemsQuantity
      */
     private $checkItemsQuantity;
@@ -41,18 +35,15 @@ class ProcessRegisterProductsSalePlugin
 
     /**
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param CheckItemsQuantity $checkItemsQuantity
      * @param SalesChannelByWebsiteIdProvider $salesChannelByWebsiteIdProvider
      */
     public function __construct(
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        GetProductTypesBySkusInterface $getProductTypesBySkus,
         CheckItemsQuantity $checkItemsQuantity,
         SalesChannelByWebsiteIdProvider $salesChannelByWebsiteIdProvider
     ) {
         $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->checkItemsQuantity = $checkItemsQuantity;
         $this->salesChannelByWebsiteIdProvider = $salesChannelByWebsiteIdProvider;
     }
@@ -85,8 +76,7 @@ class ProcessRegisterProductsSalePlugin
             $itemsBySku[$sku] = $items[$productId];
         }
         $salesChannel = $this->salesChannelByWebsiteIdProvider->execute((int)$websiteId);
-        $productTypes = $this->getProductTypesBySkus->execute(array_keys($itemsBySku));
-        $this->checkItemsQuantity->execute($itemsBySku, $productTypes, $salesChannel);
+        $this->checkItemsQuantity->execute($itemsBySku, $salesChannel);
         return [];
     }
 }
