@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
-use Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\BackOrderCondition as IsProductSalableBackOrderCondition;
+use Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\BackOrderCondition
+    as IsProductSalableBackOrderCondition;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;

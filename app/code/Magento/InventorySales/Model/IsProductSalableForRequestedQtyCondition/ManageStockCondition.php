@@ -9,7 +9,8 @@ namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
-use Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\ManageStockCondition as IsProductSalableManageStockCondition;
+use Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\ManageStockCondition
+    as IsProductSalableManageStockCondition;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
