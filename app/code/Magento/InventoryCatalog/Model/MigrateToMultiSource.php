@@ -18,16 +18,6 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 class MigrateToMultiSource
 {
     /**
-     * @var SourceItemsDeleteInterface
-     */
-    private $sourceItemsDelete;
-
-    /**
-     * @var SourceItemsSaveInterface
-     */
-    private $sourceItemsSave;
-
-    /**
      * @var SourceItemRepositoryInterface
      */
     private $sourceItemRepository;
