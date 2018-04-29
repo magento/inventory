@@ -47,20 +47,33 @@ class MigrateToMultiSource
      */
     private $resourceConnection;
 
+    /**
+     * @var MigrateSourceItemsToSourceInterface
+     */
+    private $migrateSourceItemsToSource;
+
+    /**
+     * MigrateToMultiSource constructor.
+     * @param SourceItemsDeleteInterface $sourceItemsDelete
+     * @param SourceItemsSaveInterface $sourceItemsSave
+     * @param SourceItemRepositoryInterface $sourceItemRepository
+     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
+     * @param DefaultSourceProvider $defaultSourceProvider
+     * @param ResourceConnection $resourceConnection
+     * @param MigrateSourceItemsToSourceInterface $migrateSourceItemsToSource
+     */
     public function __construct(
-        SourceItemsDeleteInterface $sourceItemsDelete,
-        SourceItemsSaveInterface $sourceItemsSave,
         SourceItemRepositoryInterface $sourceItemRepository,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         DefaultSourceProvider $defaultSourceProvider,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        MigrateSourceItemsToSourceInterface $migrateSourceItemsToSource
     ) {
-        $this->sourceItemsDelete = $sourceItemsDelete;
-        $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->resourceConnection = $resourceConnection;
+        $this->migrateSourceItemsToSource = $migrateSourceItemsToSource;
     }
 
     /**
@@ -82,29 +95,11 @@ class MigrateToMultiSource
             $connection->beginTransaction();
 
             try {
-                $this->migrateSourceItems($migrationSourceCode, $sourceItems);
+                $this->migrateSourceItemsToSource($migrationSourceCode, $sourceItems);
                 $connection->commit();
             } catch (\Exception $e) {
                 $connection->rollBack();
             }
         }
-    }
-
-    /**
-     * @param string $migrationSourceCode
-     * @param SourceItem[] $sourceItems
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Validation\ValidationException
-     */
-    private function migrateSourceItems(string $migrationSourceCode, array $sourceItems)
-    {
-        $this->sourceItemsDelete->execute($sourceItems);
-
-        foreach ($sourceItems as $sourceItem) {
-            $sourceItem->setSourceCode($migrationSourceCode);
-        }
-
-        $this->sourceItemsSave->execute($sourceItems);
     }
 }
