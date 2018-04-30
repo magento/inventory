@@ -18,8 +18,7 @@ use PHPUnit\Framework\TestCase;
  * Tests Stock Item validation.
  *
  * @magentoAppIsolation enabled
- * @magentoDbIsolation disabled
- * @magentoAppArea adminhtml
+ * @magentoDbIsolation enabled
  */
 class StockItemValidationTest extends TestCase
 {
@@ -98,7 +97,7 @@ class StockItemValidationTest extends TestCase
                 'source_code' => 'eu-3',
                 'sku' => 'SKU-1',
                 'quantity' => 0,
-                'status' => 0
+                'status' => 1
             ],
             [
                 'source_code' => 'eu-disabled',
