@@ -214,4 +214,12 @@ class ForeignKeyTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
+
+    /**
+     * Test from definition conversion with 'Create View' key.
+     */
+    public function testFromDefinitionCreateView()
+    {
+        $this->assertEmpty($this->foreignKey->fromDefinition(['Create View' => '']));
+    }
 }
