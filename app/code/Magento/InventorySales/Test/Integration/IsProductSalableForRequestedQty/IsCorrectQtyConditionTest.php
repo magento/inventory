@@ -64,7 +64,7 @@ class IsCorrectQtyConditionTest extends TestCase
             ['SKU-2', 10, 1, false],
         ];
     }
-    
+
     public function testExecuteWithUseConfigMinSaleQty()
     {
         $this->markTestIncomplete('Still to implement');
@@ -85,8 +85,53 @@ class IsCorrectQtyConditionTest extends TestCase
         $this->markTestIncomplete('Still to implement');
     }
 
-    public function testExecuteWithQtyIncrements()
+    /**
+     * Test IsProductSalableForRequestedQty takes into consideration "decimal qty" value for product.
+     *
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @dataProvider qtyIncrementsDataProvider
+     * @param string $sku
+     * @param int $stockId
+     * @param float $qty
+     * @param bool $expected
+     */
+    public function testExecuteWithQtyIncrements(string $sku, int $stockId, float $qty, bool $expected)
     {
-        $this->markTestIncomplete('Still to implement');
+        $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty);
+        $this->assertEquals($expected, $result->isSalable());
+    }
+
+    /**
+     * Provide test data for testExecuteWithQtyIncrements.
+     *
+     * @return array
+     */
+    public function qtyIncrementsDataProvider(): array
+    {
+        return [
+            [
+                'product_sku' => 'SKU-1',
+                'stock_id' => 10,
+                'qty' => 1.5,
+                'is_salable' => true,
+            ],
+            [
+                'product_sku' => 'SKU-2',
+                'stock_id' => 20,
+                'qty' => 2,
+                'is_salable' => true,
+            ],
+            [
+                'product_sku' => 'SKU-2',
+                'stock_id' => 20,
+                'qty' => 1.5,
+                'is_salable' => false,
+            ],
+        ];
     }
 }
