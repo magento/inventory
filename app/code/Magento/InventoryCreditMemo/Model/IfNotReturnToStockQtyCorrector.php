@@ -10,9 +10,7 @@ namespace Magento\InventoryCreditMemo\Model;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
-use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryCreditMemo\Model\IfNotReturnToStockQtyCorrector\IsBackToStockAllowed;
 use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Api\ReservationBuilderInterface;
 use Magento\InventorySales\Model\StockByWebsiteIdResolver;
@@ -45,16 +43,6 @@ class IfNotReturnToStockQtyCorrector
     private $storeManager;
 
     /**
-     * @var IsSourceItemsAllowedForProductTypeInterface
-     */
-    private $isSourceItemsAllowedForProductType;
-
-    /**
-     * @var GetProductTypesBySkusInterface
-     */
-    private $getProductTypesBySkus;
-
-    /**
      * @var SourceItemsSaveInterface
      */
     private $sourceItemsSave;
@@ -65,9 +53,9 @@ class IfNotReturnToStockQtyCorrector
     private $productRepository;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var IsBackToStockAllowed
      */
-    private $getStockItemConfiguration;
+    private $isBackToStockAllowed;
 
     /**
      * @var GetSourceItem
@@ -79,35 +67,29 @@ class IfNotReturnToStockQtyCorrector
      * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
      * @param AppendReservationsInterface $appendReservations
      * @param StoreManagerInterface $storeManager
-     * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
-     * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param ProductRepositoryInterface $productRepository
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param GetSourceItem $getSourceItem
+     * @param IsBackToStockAllowed $isBackToStockAllowed
      */
     public function __construct(
         ReservationBuilderInterface $reservationBuilder,
         StockByWebsiteIdResolver $stockByWebsiteIdResolver,
         AppendReservationsInterface $appendReservations,
         StoreManagerInterface $storeManager,
-        IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
-        GetProductTypesBySkusInterface $getProductTypesBySkus,
         SourceItemsSaveInterface $sourceItemsSave,
         ProductRepositoryInterface $productRepository,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
-        GetSourceItem $getSourceItem
+        GetSourceItem $getSourceItem,
+        IsBackToStockAllowed $isBackToStockAllowed
     ) {
         $this->reservationBuilder = $reservationBuilder;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->appendReservations = $appendReservations;
         $this->storeManager = $storeManager;
-        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
-        $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->sourceItemsSave = $sourceItemsSave;
         $this->productRepository = $productRepository;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getSourceItem = $getSourceItem;
+        $this->isBackToStockAllowed = $isBackToStockAllowed;
     }
 
     /**
@@ -126,16 +108,8 @@ class IfNotReturnToStockQtyCorrector
             if (!$item->getBackToStock()) {
                 $qty = $item->getQty();
                 $sku = $item->getSku() ?: $this->productRepository->getById($item->getProductId())->getSku();
-                $productType = $this->getProductTypesBySkus->execute([$sku])[$sku];
 
-                $stockItemConfiguration = $this->getStockItemConfiguration->execute(
-                    $sku,
-                    $stockId
-                );
-
-                if (!$stockItemConfiguration->isManageStock()
-                    || false === $this->isSourceItemsAllowedForProductType->execute($productType)
-                ) {
+                if (!$this->isBackToStockAllowed->execute($sku, $stockId)) {
                     continue;
                 }
 

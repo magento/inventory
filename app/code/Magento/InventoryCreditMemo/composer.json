@@ -8,7 +8,9 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory-catalog": "*",
         "magento/module-inventory-configuration": "*",
+        "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-sales": "*",
+        "magento/module-inventory-reservations-api": "*",
         "magento/module-sales": "*",
         "magento/module-store": "*"
     },
