@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Inventory\Model\SourceItem\Command\GetListInterface;
+use Magento\Inventory\Model\SourceItem\GetListInterface;
 use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 
