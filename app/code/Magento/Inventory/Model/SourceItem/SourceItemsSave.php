@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\SourceItem\Command;
+namespace Magento\Inventory\Model\SourceItem;
 
 use Magento\Inventory\Model\SourceItem\Command\Handler\SourceItemsSaveHandler;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;

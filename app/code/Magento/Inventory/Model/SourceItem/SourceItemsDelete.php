@@ -5,19 +5,18 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\StockSourceLink\Command;
+namespace Magento\Inventory\Model\SourceItem;
 
-use Exception;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\InputException;
-use Magento\Inventory\Model\ResourceModel\StockSourceLink\DeleteMultiple;
-use Magento\InventoryApi\Api\StockSourceLinksDeleteInterface;
+use Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple;
+use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * @inheritdoc
  */
-class StockSourceLinksDelete implements StockSourceLinksDeleteInterface
+class SourceItemsDelete implements SourceItemsDeleteInterface
 {
     /**
      * @var DeleteMultiple
@@ -44,17 +43,16 @@ class StockSourceLinksDelete implements StockSourceLinksDeleteInterface
     /**
      * @inheritdoc
      */
-    public function execute(array $links)
+    public function execute(array $sourceItems)
     {
-        if (empty($links)) {
+        if (empty($sourceItems)) {
             throw new InputException(__('Input data is empty'));
         }
-
         try {
-            $this->deleteMultiple->execute($links);
-        } catch (Exception $e) {
+            $this->deleteMultiple->execute($sourceItems);
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            throw new CouldNotDeleteException(__('Could not delete StockSourceLinks'), $e);
+            throw new CouldNotDeleteException(__('Could not delete Source Items'), $e);
         }
     }
 }
