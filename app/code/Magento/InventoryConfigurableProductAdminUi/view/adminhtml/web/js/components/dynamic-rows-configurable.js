@@ -24,11 +24,11 @@ define([
 
             product[this.quantityFieldName] = row.quantityPerSource;
             _.each(row.quantityPerSource, function (data) {
-                if (data['source_code'] === defaultSourceCode) {
+                if (data.source_code === defaultSourceCode) {
                     defaultSourceQty = data[quantityFieldName];
                 }
             });
-            product['qty'] = defaultSourceQty;
+            product.qty = defaultSourceQty;
 
             return product;
         }

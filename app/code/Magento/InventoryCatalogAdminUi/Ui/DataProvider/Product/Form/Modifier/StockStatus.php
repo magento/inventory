@@ -79,8 +79,8 @@ class StockStatus extends AbstractModifier
         $product = $this->locator->getProduct();
 
         if ($this->isSourceItemsAllowedForProductType->execute($product->getTypeId()) === false
-            || $product->getId() === null) {
-
+            || $product->getId() === null
+        ) {
             return $meta;
         }
 
