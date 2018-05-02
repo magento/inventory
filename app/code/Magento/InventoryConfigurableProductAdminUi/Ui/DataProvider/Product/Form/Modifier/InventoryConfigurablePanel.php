@@ -11,6 +11,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\ConfigurableProduct\Ui\DataProvider\Product\Form\Modifier\ConfigurablePanel;
+use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurableProduct\Model\GetQuantityInformationPerSource;
 use Magento\Ui\Component\Form;
@@ -36,18 +37,26 @@ class InventoryConfigurablePanel extends AbstractModifier
     private $locator;
 
     /**
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
+    /**
      * @param GetQuantityInformationPerSource $getQuantityInformationPerSource
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param LocatorInterface $locator
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         GetQuantityInformationPerSource $getQuantityInformationPerSource,
         IsSingleSourceModeInterface $isSingleSourceMode,
-        LocatorInterface $locator
+        LocatorInterface $locator,
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->getQuantityInformationPerSource = $getQuantityInformationPerSource;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->locator = $locator;
+        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -105,13 +114,16 @@ class InventoryConfigurablePanel extends AbstractModifier
             [ConfigurablePanel::CONFIGURABLE_MATRIX]['children']
             ['record']['children']['quantity_per_source_container'] = $this->getQuantityContainerConfig();
 
-            unset($meta[ConfigurablePanel::GROUP_CONFIGURABLE]['children']
+            $meta[ConfigurablePanel::GROUP_CONFIGURABLE]['children']
                 [ConfigurablePanel::CONFIGURABLE_MATRIX]['children']
-                ['record']['children']['quantity_container']);
+                ['record']['children']['quantity_container']['arguments']['data']['config']['visible'] = false;
 
             $meta[ConfigurablePanel::GROUP_CONFIGURABLE]['children']
             [ConfigurablePanel::CONFIGURABLE_MATRIX]['arguments']['data']['config']['component']
                 = 'Magento_InventoryConfigurableProductAdminUi/js/components/dynamic-rows-configurable';
+            $meta[ConfigurablePanel::GROUP_CONFIGURABLE]['children']
+            [ConfigurablePanel::CONFIGURABLE_MATRIX]['arguments']['data']['config']['defaultSourceCode']
+                = $this->defaultSourceProvider->getCode();
         }
 
         return $meta;
