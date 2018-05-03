@@ -176,6 +176,7 @@
         "magento/module-inventory-configurable-product-indexer": "*",
         "magento/module-inventory-configuration": "*",
         "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-credit-memo": "*",
         "magento/module-inventory-grouped-product": "*",
         "magento/module-inventory-import-export": "*",
         "magento/module-inventory-indexer": "*",
