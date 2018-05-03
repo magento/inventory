@@ -86,4 +86,10 @@
             <argument name="stockSourceLinkValidator" xsi:type="object">Magento\Inventory\Model\StockSourceLink\Validator\ValidatorChain</argument>
         </arguments>
     </type>
+    <virtualType name="Magento\Inventory\Ui\DataProvider\SourceDataProvider\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool"/>
+    <type name="Magento\Inventory\Ui\DataProvider\SourceDataProvider">
+        <arguments>
+            <argument name="modifiersPool" xsi:type="object">Magento\Inventory\Ui\DataProvider\SourceDataProvider\Modifier\Pool</argument>
+        </arguments>
+    </type>
 </config>

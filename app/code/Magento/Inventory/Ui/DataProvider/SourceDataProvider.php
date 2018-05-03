@@ -15,6 +15,8 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
+use Magento\Ui\DataProvider\Modifier\PoolInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
 
 /**
@@ -38,6 +40,11 @@ class SourceDataProvider extends DataProvider
     private $session;
 
     /**
+     * @var PoolInterface
+     */
+    private $modifiersPool;
+
+    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -48,6 +55,7 @@ class SourceDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchResultFactory $searchResultFactory
      * @param Session $session
+     * @param PoolInterface $modifiersPool
      * @param array $meta
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
@@ -63,6 +71,7 @@ class SourceDataProvider extends DataProvider
         SourceRepositoryInterface $sourceRepository,
         SearchResultFactory $searchResultFactory,
         Session $session,
+        PoolInterface $modifiersPool,
         array $meta = [],
         array $data = []
     ) {
@@ -80,6 +89,7 @@ class SourceDataProvider extends DataProvider
         $this->sourceRepository = $sourceRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->session = $session;
+        $this->modifiersPool = $modifiersPool;
     }
 
     /**
@@ -110,6 +120,12 @@ class SourceDataProvider extends DataProvider
                 }
             }
         }
+
+        /** @var ModifierInterface $modifier */
+        foreach ($this->modifiersPool->getModifiersInstances() as $modifier) {
+            $data = $modifier->modifyData($data);
+        }
+
         return $data;
     }
 
@@ -146,5 +162,20 @@ class SourceDataProvider extends DataProvider
             }
         }
         return $carrierCodes;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMeta()
+    {
+        $meta = parent::getMeta();
+
+        /** @var ModifierInterface $modifier */
+        foreach ($this->modifiersPool->getModifiersInstances() as $modifier) {
+            $meta = $modifier->modifyMeta($meta);
+        }
+
+        return $meta;
     }
 }
