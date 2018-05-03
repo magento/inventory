@@ -30,6 +30,15 @@ class TestService
     }
 
     /**
+     * @param \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructorWithData $simpleConstructorWithData
+     * @return \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructorWithData
+     */
+    public function simpleConstructorWithData(SimpleConstructorWithData $simpleConstructorWithData)
+    {
+        return $simpleConstructorWithData;
+    }
+
+    /**
      * @param int $entityId
      * @return string[]
      */
@@ -115,7 +124,7 @@ class TestService
      * @return \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\ObjectWithCustomAttributes
      */
     public function objectWithCustomAttributesMethod(
-        \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\ObjectWithCustomAttributes $param
+        ObjectWithCustomAttributes $param
     ) {
         return $param;
     }

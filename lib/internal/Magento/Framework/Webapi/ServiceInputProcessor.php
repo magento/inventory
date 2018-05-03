@@ -169,6 +169,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      * @param array $data
      * @return array
      * @throws \ReflectionException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function getConstructorData(string $className, array $data): array
     {
@@ -180,15 +181,78 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
             return [];
         }
 
+        // Inject into named parameters if a getter method exists
         $res = [];
         $parameters = $constructor->getParameters();
+        $parametersByName = [];
         foreach ($parameters as $parameter) {
-            if (isset($data[$parameter->getName()])) {
-                $res[$parameter->getName()] = $data[$parameter->getName()];
+            $parametersByName[$parameter->getName()] = $parameter;
+
+            $type = $this->getPropertyTypeFromGetterMethod($class, $parameter->getName());
+            if (($type !== '') && (isset($data[$parameter->getName()]))) {
+                $res[$parameter->getName()] = $this->convertValue($data[$parameter->getName()], $type);
+            }
+        }
+
+        // Inject data field if existing for backward compatibility with
+        // \Magento\Framework\Model\AbstractModel
+        if (isset($parametersByName['data']) && ((string) $parametersByName['data']->getType() === 'array')) {
+            $res['data'] = [];
+            foreach ($data as $propertyName => $propertyValue) {
+                // Find data getter to retrieve its type
+                $snakeCaseProperty = SimpleDataObjectConverter::camelCaseToSnakeCase($propertyName);
+                $type = $this->getPropertyTypeFromGetterMethod($class, $propertyName);
+                if ($type !== '') {
+                    $res['data'][$snakeCaseProperty] = $this->getConvertedValue($class, $propertyName, $propertyValue);
+                }
             }
         }
 
         return $res;
+    }
+
+    /**
+     * Return the property type by its getter name
+     * @param ClassReflection $classReflection
+     * @param string $propertyName
+     * @return string
+     */
+    private function getPropertyTypeFromGetterMethod(ClassReflection $classReflection, string $propertyName): string
+    {
+        $camelCaseProperty = SimpleDataObjectConverter::snakeCaseToUpperCamelCase($propertyName);
+        try {
+            $methodName = $this->getNameFinder()->getGetterMethodName($classReflection, $camelCaseProperty);
+        } catch (\Exception $e) {
+            return '';
+        }
+
+        $methodReflection = $classReflection->getMethod($methodName);
+        if ($methodReflection->isPublic()) {
+            return (string) $this->typeProcessor->getGetterReturnType($methodReflection)['type'];
+        }
+
+        return '';
+    }
+
+    /**
+     * Get converted value from property
+     * @param ClassReflection $classReflection
+     * @param string $propertyName
+     * @param $value
+     * @return AttributeValue[]|mixed
+     * @throws SerializationException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function getConvertedValue(ClassReflection $classReflection, string $propertyName, $value)
+    {
+        $camelCaseProperty = SimpleDataObjectConverter::snakeCaseToUpperCamelCase($propertyName);
+        $returnType = $this->getPropertyTypeFromGetterMethod($classReflection, $propertyName);
+
+        if ($camelCaseProperty === 'CustomAttributes') {
+            return $this->convertCustomAttributeValue($value, $classReflection->getName());
+        }
+
+        return $this->convertValue($value, $returnType);
     }
 
     /**
@@ -217,45 +281,45 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
         $constructorArgs = $this->getConstructorData($className, $data);
         $object = $this->objectManager->create($className, $constructorArgs);
 
-        // Secondary method: fallback to setter methods
-        foreach ($data as $propertyName => $value) {
-            if (isset($constructorArgs[$propertyName])) {
-                continue;
-            }
+        // Secondary method: fallback to setter methods, but
+        // skip if "data" parameters is set (see getConstructorData)
+        if (!isset($constructorArgs['data'])) {
+            foreach ($data as $propertyName => $value) {
+                if (isset($constructorArgs[$propertyName])) {
+                    continue;
+                }
 
-            // Converts snake_case to uppercase CamelCase to help form getter/setter method names
-            // This use case is for REST only. SOAP request data is already camel cased
-            $camelCaseProperty = SimpleDataObjectConverter::snakeCaseToUpperCamelCase($propertyName);
-            $methodName = $this->getNameFinder()->getGetterMethodName($class, $camelCaseProperty);
-            $methodReflection = $class->getMethod($methodName);
-            if ($methodReflection->isPublic()) {
-                $returnType = $this->typeProcessor->getGetterReturnType($methodReflection)['type'];
-                try {
-                    $setterName = $this->getNameFinder()->getSetterMethodName($class, $camelCaseProperty);
-                } catch (\Exception $e) {
-                    if (empty($value)) {
-                        continue;
-                    } else {
-                        throw $e;
+                // Converts snake_case to uppercase CamelCase to help form getter/setter method names
+                // This use case is for REST only. SOAP request data is already camel cased
+                $camelCaseProperty = SimpleDataObjectConverter::snakeCaseToUpperCamelCase($propertyName);
+                $returnType = $this->getPropertyTypeFromGetterMethod($class, $propertyName);
+                if ($returnType !== '') {
+                    try {
+                        $setterName = $this->getNameFinder()->getSetterMethodName($class, $camelCaseProperty);
+                    } catch (\Exception $e) {
+                        if (empty($value)) {
+                            continue;
+                        } else {
+                            throw $e;
+                        }
                     }
-                }
-                try {
-                    if ($camelCaseProperty === 'CustomAttributes') {
-                        $setterValue = $this->convertCustomAttributeValue($value, $className);
-                    } else {
-                        $setterValue = $this->convertValue($value, $returnType);
+
+                    try {
+                        $setterValue = $this->getConvertedValue($class, $propertyName, $value);
+                    } catch (SerializationException $e) {
+                        throw new SerializationException(
+                            new Phrase(
+                                'Error occurred during "%field_name" processing. %details',
+                                ['field_name' => $propertyName, 'details' => $e->getMessage()]
+                            )
+                        );
                     }
-                } catch (SerializationException $e) {
-                    throw new SerializationException(
-                        new Phrase(
-                            'Error occurred during "%field_name" processing. %details',
-                            ['field_name' => $propertyName, 'details' => $e->getMessage()]
-                        )
-                    );
+
+                    $object->{$setterName}($setterValue);
                 }
-                $object->{$setterName}($setterValue);
             }
         }
+
         return $object;
     }
 
