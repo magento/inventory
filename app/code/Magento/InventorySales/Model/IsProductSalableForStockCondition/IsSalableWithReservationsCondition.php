@@ -5,20 +5,22 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\IsProductSalableCondition;
+namespace Magento\InventorySales\Model\IsProductSalableForStockCondition;
 
 use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductType;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryReservations\Model\GetReservationsQuantityInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForStockInterface;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
  */
-class IsSalableWithReservationsCondition implements IsProductSalableInterface
+class IsSalableWithReservationsCondition implements IsProductSalableForStockInterface
 {
     /**
      * @var GetStockItemDataInterface
@@ -46,24 +48,32 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
     private $getProductTypesBySkus;
 
     /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param IsSourceItemsAllowedForProductType $isSourceItemsAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         IsSourceItemsAllowedForProductType $isSourceItemsAllowedForProductType,
-        GetProductTypesBySkusInterface $getProductTypesBySkus
+        GetProductTypesBySkusInterface $getProductTypesBySkus,
+        StockResolverInterface $stockResolver
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
         $this->getProductTypesBySkus = $getProductTypesBySkus;
+        $this->stockResolver = $stockResolver;
     }
 
     /**

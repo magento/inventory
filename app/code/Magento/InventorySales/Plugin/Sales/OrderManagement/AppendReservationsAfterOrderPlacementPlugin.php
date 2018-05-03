@@ -7,15 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
+use Magento\InventorySales\Model\SalesChannelByWebsiteIdProvider;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySales\Model\StockByWebsiteIdResolver;
@@ -31,11 +30,6 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @var GetSkusByProductIdsInterface
      */
     private $getSkusByProductIds;
-
-    /**
-     * @var WebsiteRepositoryInterface
-     */
-    private $websiteRepository;
 
     /**
      * @var SalesChannelInterfaceFactory
@@ -63,40 +57,44 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $stockByWebsiteIdResolver;
 
     /**
+     * @var SalesChannelByWebsiteIdProvider
+     */
+    private $salesChannelByWebsiteIdProvider;
+
+    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param WebsiteRepositoryInterface $websiteRepository
      * @param SalesChannelInterfaceFactory $salesChannelFactory
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param ItemToSellInterfaceFactory $itemsToSellFactory
      * @param CheckItemsQuantity $checkItemsQuantity
      * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
+     * @param SalesChannelByWebsiteIdProvider $salesChannelByWebsiteIdProvider
      */
     public function __construct(
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        WebsiteRepositoryInterface $websiteRepository,
         SalesChannelInterfaceFactory $salesChannelFactory,
         SalesEventInterfaceFactory $salesEventFactory,
         ItemToSellInterfaceFactory $itemsToSellFactory,
         CheckItemsQuantity $checkItemsQuantity,
-        StockByWebsiteIdResolver $stockByWebsiteIdResolver
+        StockByWebsiteIdResolver $stockByWebsiteIdResolver,
+        SalesChannelByWebsiteIdProvider $salesChannelByWebsiteIdProvider
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->websiteRepository = $websiteRepository;
         $this->salesChannelFactory = $salesChannelFactory;
         $this->salesEventFactory = $salesEventFactory;
         $this->itemsToSellFactory = $itemsToSellFactory;
         $this->checkItemsQuantity = $checkItemsQuantity;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
+        $this->salesChannelByWebsiteIdProvider = $salesChannelByWebsiteIdProvider;
     }
 
     /**
      * @param OrderManagementInterface $subject
      * @param OrderInterface $order
      * @return OrderInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterPlace(OrderManagementInterface $subject, OrderInterface $order) : OrderInterface
     {
@@ -117,22 +115,15 @@ class AppendReservationsAfterOrderPlacementPlugin
         }
 
         $websiteId = (int)$order->getStore()->getWebsiteId();
-        $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
-        $stockId = (int)$this->stockByWebsiteIdResolver->get((int)$websiteId)->getStockId();
+        $salesChannel = $this->salesChannelByWebsiteIdProvider->execute($websiteId);
 
-        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
+        $this->checkItemsQuantity->execute($itemsBySku, $salesChannel);
 
         /** @var SalesEventInterface $salesEvent */
         $salesEvent = $this->salesEventFactory->create([
             'type' => SalesEventInterface::EVENT_ORDER_PLACED,
             'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
             'objectId' => (string)$order->getEntityId()
-        ]);
-        $salesChannel = $this->salesChannelFactory->create([
-            'data' => [
-                'type' => SalesChannelInterface::TYPE_WEBSITE,
-                'code' => $websiteCode
-            ]
         ]);
 
         $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);

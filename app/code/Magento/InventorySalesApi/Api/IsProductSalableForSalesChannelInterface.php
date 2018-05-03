@@ -7,19 +7,21 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesApi\Api;
 
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+
 /**
  * Service which detects whether Product is salable for a given Stock (stock data + reservations)
  *
  * @api
  */
-interface IsProductSalableInterface
+interface IsProductSalableForSalesChannelInterface
 {
     /**
      * Get is product in salable for given SKU in a given Stock
      *
      * @param string $sku
-     * @param int $stockId
+     * @param SalesChannelInterface $salesChannel
      * @return bool
      */
-    public function execute(string $sku, int $stockId): bool;
+    public function execute(string $sku, SalesChannelInterface $salesChannel): bool;
 }

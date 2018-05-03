@@ -9,6 +9,7 @@ namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQt
 
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -31,6 +32,11 @@ class IsCorrectQtyConditionTest extends TestCase
     private $isProductSalableForRequestedQty;
 
     /**
+     * @var SalesChannelByWebsiteCodeProvider
+     */
+    private $salesChannelByWebsiteCodeProvider;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -41,6 +47,8 @@ class IsCorrectQtyConditionTest extends TestCase
         $this->saveStockItemConfig = Bootstrap::getObjectManager()->get(SaveStockItemConfigurationInterface::class);
         $this->isProductSalableForRequestedQty
             = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
+        $this->salesChannelByWebsiteCodeProvider
+            = Bootstrap::getObjectManager()->get(SalesChannelByWebsiteCodeProvider::class);
     }
 
     /**
@@ -49,19 +57,21 @@ class IsCorrectQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @dataProvider executeWithMissingConfigurationDataProvider
      */
-    public function testExecuteWithMissingConfiguration($sku, $stockId, $requestedQty, bool $expectedResult)
+    public function testExecuteWithMissingConfiguration($sku, $websiteCode, $requestedQty, bool $expectedResult)
     {
-        $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($websiteCode);
+        $result = $this->isProductSalableForRequestedQty->execute($sku, $salesChannel, $requestedQty);
         $this->assertEquals($expectedResult, $result->isSalable());
     }
 
     public function executeWithMissingConfigurationDataProvider(): array
     {
         return [
-            ['SKU-2', 10, 1, false],
+            ['SKU-2', 'eu_website', 1, false],
         ];
     }
     

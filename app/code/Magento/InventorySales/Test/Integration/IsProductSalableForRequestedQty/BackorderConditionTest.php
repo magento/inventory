@@ -15,6 +15,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -56,6 +57,11 @@ class BackorderConditionTest extends TestCase
      */
     private $stockItemCriteriaFactory;
 
+    /**
+     * @var SalesChannelByWebsiteCodeProvider
+     */
+    private $salesChannelByWebsiteCodeProvider;
+
     protected function setUp()
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
@@ -68,6 +74,8 @@ class BackorderConditionTest extends TestCase
         $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
         $this->isProductSalableForRequestedQty
             = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
+        $this->salesChannelByWebsiteCodeProvider
+            = Bootstrap::getObjectManager()->get(SalesChannelByWebsiteCodeProvider::class);
     }
 
     /**
@@ -76,6 +84,7 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      */
     public function testBackorderedZeroQtyProductIsSalable()
     {
@@ -94,8 +103,17 @@ class BackorderConditionTest extends TestCase
         $sourceItem->setQuantity(-15);
         $this->sourceItemsSave->execute([$sourceItem]);
 
-        $this->assertTrue($this->isProductSalableForRequestedQty->execute('SKU-2', 20, 1)->isSalable());
-        $this->assertTrue($this->isProductSalableForRequestedQty->execute('SKU-2', 30, 1)->isSalable());
+        $this->assertTrue($this->isProductSalableForRequestedQty->execute(
+            'SKU-2',
+            $this->salesChannelByWebsiteCodeProvider->execute('us_website'),
+            1
+        )->isSalable());
+
+        $this->assertTrue($this->isProductSalableForRequestedQty->execute(
+            'SKU-2',
+            $this->salesChannelByWebsiteCodeProvider->execute('global_website'),
+            1
+        )->isSalable());
     }
 
     /**

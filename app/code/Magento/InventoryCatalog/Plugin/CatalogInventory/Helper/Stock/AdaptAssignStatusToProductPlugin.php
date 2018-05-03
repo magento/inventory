@@ -9,9 +9,9 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
-use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryCatalog\Model\GetSalesChannelForCurrentWebsite;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 
 /**
  * Adapt assignStatusToProduct for multi stocks.
@@ -19,33 +19,25 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 class AdaptAssignStatusToProductPlugin
 {
     /**
-     * @var GetStockIdForCurrentWebsite
+     * @var GetSalesChannelForCurrentWebsite
      */
-    private $getStockIdForCurrentWebsite;
+    private $getSalesChannelForCurrentWebsite;
 
     /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
-     * @param IsProductSalableInterface $isProductSalable
-     * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param GetSalesChannelForCurrentWebsite $getSalesChannelForCurrentWebsite
+     * @param IsProductSalableForSalesChannelInterface $isProductSalable
      */
     public function __construct(
-        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable,
-        DefaultStockProviderInterface $defaultStockProvider
+        GetSalesChannelForCurrentWebsite $getSalesChannelForCurrentWebsite,
+        IsProductSalableForSalesChannelInterface $isProductSalable
     ) {
-        $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
+        $this->getSalesChannelForCurrentWebsite = $getSalesChannelForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -56,6 +48,7 @@ class AdaptAssignStatusToProductPlugin
      * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws LocalizedException
      */
     public function aroundAssignStatusToProduct(
         Stock $subject,
@@ -68,8 +61,8 @@ class AdaptAssignStatusToProductPlugin
         }
 
         if (null === $status) {
-            $stockId = $this->getStockIdForCurrentWebsite->execute();
-            $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+            $salesChannel = $this->getSalesChannelForCurrentWebsite->execute();
+            $status = (int)$this->isProductSalable->execute($product->getSku(), $salesChannel);
         }
 
         $proceed($product, $status);

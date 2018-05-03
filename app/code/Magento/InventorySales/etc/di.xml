@@ -47,22 +47,42 @@
             </argument>
         </arguments>
     </type>
-    <!-- IsProductSalable -->
-    <preference for="Magento\InventorySalesApi\Api\IsProductSalableInterface" type="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain"/>
-    <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
+    <!-- IsProductSalableForSalesChannel -->
+    <preference for="Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface" type="Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\IsProductSalableForSalesChannelConditionChain"/>
+    <type name="Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\IsProductSalableForSalesChannelConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
                 <item name="back_order" xsi:type="array">
                     <item name="sort_order" xsi:type="number">10</item>
-                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\BackOrderCondition</item>
+                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\BackOrderCondition</item>
                 </item>
                 <item name="manage_stock" xsi:type="array">
                     <item name="sort_order" xsi:type="number">20</item>
-                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\ManageStockCondition</item>
+                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\ManageStockCondition</item>
                 </item>
                 <item name="is_salable_with_reservations" xsi:type="array">
                     <item name="sort_order" xsi:type="number">30</item>
-                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\IsSalableWithReservationsCondition</item>
+                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableForSalesChannelCondition\IsSalableWithReservationsCondition</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- IsProductSalableForStock -->
+    <preference for="Magento\InventorySalesApi\Api\IsProductSalableForStockInterface" type="Magento\InventorySales\Model\IsProductSalableForStockCondition\IsProductSalableForStockConditionChain"/>
+    <type name="Magento\InventorySales\Model\IsProductSalableForStockCondition\IsProductSalableForStockConditionChain">
+        <arguments>
+            <argument name="conditions" xsi:type="array">
+                <item name="back_order" xsi:type="array">
+                    <item name="sort_order" xsi:type="number">10</item>
+                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableForStockCondition\BackOrderCondition</item>
+                </item>
+                <item name="manage_stock" xsi:type="array">
+                    <item name="sort_order" xsi:type="number">20</item>
+                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableForStockCondition\ManageStockCondition</item>
+                </item>
+                <item name="is_salable_with_reservations" xsi:type="array">
+                    <item name="sort_order" xsi:type="number">30</item>
+                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableForStockCondition\IsSalableWithReservationsCondition</item>
                 </item>
             </argument>
         </arguments>

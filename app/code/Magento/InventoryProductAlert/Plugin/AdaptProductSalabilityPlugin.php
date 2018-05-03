@@ -8,11 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryProductAlert\Plugin;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\InventorySales\Model\SalesChannelByWebsiteCodeProvider;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\ProductAlert\Model\ProductSalability;
 use Magento\Store\Api\Data\WebsiteInterface;
 
@@ -22,25 +19,25 @@ use Magento\Store\Api\Data\WebsiteInterface;
 class AdaptProductSalabilityPlugin
 {
     /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
     /**
-     * @param StockResolverInterface $stockResolver
-     * @param IsProductSalableInterface $isProductSalable
+     * @var SalesChannelByWebsiteCodeProvider
+     */
+    private $salesChannelByWebsiteCodeProvider;
+
+    /**
+     * @param IsProductSalableForSalesChannelInterface $isProductSalable
+     * @param SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
      */
     public function __construct(
-        StockResolverInterface $stockResolver,
-        IsProductSalableInterface $isProductSalable
+        IsProductSalableForSalesChannelInterface $isProductSalable,
+        SalesChannelByWebsiteCodeProvider $salesChannelByWebsiteCodeProvider
     ) {
-        $this->stockResolver = $stockResolver;
         $this->isProductSalable = $isProductSalable;
+        $this->salesChannelByWebsiteCodeProvider = $salesChannelByWebsiteCodeProvider;
     }
 
     /**
@@ -49,7 +46,6 @@ class AdaptProductSalabilityPlugin
      * @param ProductInterface $product
      * @param WebsiteInterface $website
      * @return bool
-     * @throws NoSuchEntityException
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -59,10 +55,7 @@ class AdaptProductSalabilityPlugin
         ProductInterface $product,
         WebsiteInterface $website
     ): bool {
-        /** @var StockInterface $stock */
-        $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-        $isSalable = $this->isProductSalable->execute($product->getSku(), (int)$stock->getStockId());
-
-        return $isSalable;
+        $salesChannel = $this->salesChannelByWebsiteCodeProvider->execute($website->getCode());
+        return $this->isProductSalable->execute($product->getSku(), $salesChannel);
     }
 }

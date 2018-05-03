@@ -10,7 +10,9 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryCatalog\Model\GetSalesChannelForCurrentWebsite;
+use Magento\InventorySalesApi\Api\IsProductSalableForSalesChannelInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 
 /**
@@ -19,25 +21,25 @@ use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 class AdaptAddStockStatusToProductsPlugin
 {
     /**
-     * @var GetStockIdForCurrentWebsite
-     */
-    private $getStockIdForCurrentWebsite;
-
-    /**
-     * @var IsProductSalableInterface
+     * @var IsProductSalableForSalesChannelInterface
      */
     private $isProductSalable;
 
     /**
-     * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
-     * @param IsProductSalableInterface $isProductSalable
+     * @var GetSalesChannelForCurrentWebsite
+     */
+    private $getSalesChannelForCurrentWebsite;
+
+    /**
+     * @param GetSalesChannelForCurrentWebsite $getSalesChannelForCurrentWebsite
+     * @param IsProductSalableForSalesChannelInterface $isProductSalable
      */
     public function __construct(
-        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable
+        GetSalesChannelForCurrentWebsite $getSalesChannelForCurrentWebsite,
+        IsProductSalableForSalesChannelInterface $isProductSalable
     ) {
-        $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
+        $this->getSalesChannelForCurrentWebsite = $getSalesChannelForCurrentWebsite;
     }
 
     /**
@@ -47,17 +49,18 @@ class AdaptAddStockStatusToProductsPlugin
      * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws LocalizedException
      */
     public function aroundAddStockStatusToProducts(
         Stock $subject,
         callable $proceed,
         AbstractCollection $productCollection
     ) {
-        $stockId = $this->getStockIdForCurrentWebsite->execute();
+        $salesChannel = $this->getSalesChannelForCurrentWebsite->execute();
 
         /** @var Product $product */
         foreach ($productCollection as $product) {
-            $isSalable = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+            $isSalable = (int)$this->isProductSalable->execute($product->getSku(), $salesChannel);
             $product->setIsSalable($isSalable);
         }
     }

@@ -5,16 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\IsProductSalableCondition;
+namespace Magento\InventorySales\Model\IsProductSalableForStockCondition;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableForStockInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
  */
-class ManageStockCondition implements IsProductSalableInterface
+class ManageStockCondition implements IsProductSalableForStockInterface
 {
     /**
      * @var StockConfigurationInterface
@@ -27,15 +28,23 @@ class ManageStockCondition implements IsProductSalableInterface
     private $getStockItemConfiguration;
 
     /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param StockConfigurationInterface $configuration
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         StockConfigurationInterface $configuration,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        StockResolverInterface $stockResolver
     ) {
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->configuration = $configuration;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
