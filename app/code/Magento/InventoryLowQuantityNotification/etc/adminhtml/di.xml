@@ -13,6 +13,10 @@
                     <item name="class" xsi:type="string">Magento\InventoryLowQuantityNotification\Ui\DataProvider\Product\Form\Modifier\SourceItemConfiguration</item>
                     <item name="sortOrder" xsi:type="number">300</item>
                 </item>
+                <item name="notify_stock_qty" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryLowQuantityNotification\Ui\DataProvider\Product\Form\Modifier\NotifyStockQty</item>
+                    <item name="sortOrder" xsi:type="number">350</item>
+                </item>
             </argument>
         </arguments>
     </virtualType>
