@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Plugin\Model\Adapter\Mysql\Aggregation\DataProvider\SelectBuilderForAttribute;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\DataProvider\SelectBuilderForAttribute\
 ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolver;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -43,21 +45,29 @@ class AdaptApplyStockConditionToSelectPlugin
     private $stockResolver;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param StockIndexTableNameResolver $stockIndexTableNameResolver
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         StockIndexTableNameResolver $stockIndexTableNameResolver,
         ResourceConnection $resource,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        MetadataPool $metadataPool
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -77,10 +87,11 @@ class AdaptApplyStockConditionToSelectPlugin
         $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
 
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $tableName = $this->stockIndexTableNameResolver->execute($stockId);
         $select->joinInner(
             ['product' => $this->resource->getTableName('catalog_product_entity')],
-            'main_table.source_id = product.entity_id',
+            'main_table.source_id = product.' . $linkField,
             []
         );
         $select->joinInner(

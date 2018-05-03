@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Operation;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
@@ -30,15 +32,23 @@ class UpdateInventorySourceItem
     private $defaultSourceProvider;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        MetadataPool $metadataPool
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -51,6 +61,7 @@ class UpdateInventorySourceItem
         $sourceItemTable = $setup->getTable(SourceItem::TABLE_NAME_SOURCE_ITEM);
         $legacyStockItemTable = $setup->getTable('cataloginventory_stock_item');
         $productTable = $setup->getTable('catalog_product_entity');
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
 
         $selectForInsert = $this->resourceConnection->getConnection()
             ->select()
@@ -62,7 +73,7 @@ class UpdateInventorySourceItem
                     'is_in_stock'
                 ]
             )
-            ->join($productTable, 'entity_id = product_id', 'sku')
+            ->join($productTable, $linkField . ' = product_id', 'sku')
             ->where('website_id = ?', 0);
 
         $sql = $this->resourceConnection->getConnection()->insertFromSelect(
