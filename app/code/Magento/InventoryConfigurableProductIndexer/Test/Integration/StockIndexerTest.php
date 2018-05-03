@@ -7,19 +7,20 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Test\Integration;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\ConfigurableProduct\Api\LinkManagementInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySkuInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
+use Magento\InventoryIndexer\Test\Integration\Indexer\RemoveIndexData;
 use Magento\InventorySales\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
-use Magento\InventoryIndexer\Test\Integration\Indexer\RemoveIndexData;
-use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 
 class StockIndexerTest extends TestCase
 {
@@ -69,6 +70,11 @@ class StockIndexerTest extends TestCase
     private $productRepository;
 
     /**
+     * @var IsProductSalableInterface
+     */
+    private $isProductSalable;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -83,6 +89,7 @@ class StockIndexerTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
 
         $this->removeIndexData = Bootstrap::getObjectManager()->get(RemoveIndexData::class);
         $this->removeIndexData->execute([10, 20, 30]);
@@ -202,5 +209,35 @@ class StockIndexerTest extends TestCase
 
         $stockItemData = $this->getStockItemData->execute($configurableSku, 30);
         self::assertEquals(1, $stockItemData[GetStockItemDataInterface::IS_SALABLE]);
+    }
+
+    // @codingStandardsIgnoreStart
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProductIndexer/Test/_files/product_configurable_multiple.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProductIndexer/Test/_files/source_items_configurable_multiple.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoAppArea frontend
+     */
+    // @codingStandardsIgnoreEnd
+    public function testReindexListSetParentOutOfStock()
+    {
+        $configurableSku = 'configurable_1';
+        $stockIds = [1, 10, 20, 30];
+        $configurableProduct = $this->productRepository->get($configurableSku);
+        $configurableProduct->setQuantityAndStockStatus(['is_in_stock' => 0]);
+        $this->productRepository->save($configurableProduct);
+        $this->stockIndexer->executeList($stockIds);
+
+        foreach ($stockIds as $stockId) {
+            self::assertEquals(
+                false,
+                $this->isProductSalable->execute($configurableSku, $stockId)
+            );
+        }
     }
 }
