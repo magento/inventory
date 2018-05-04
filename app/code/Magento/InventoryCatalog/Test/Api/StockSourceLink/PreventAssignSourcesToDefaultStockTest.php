@@ -99,11 +99,15 @@ class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
                     'message' => 'Validation Failed',
                     'errors' => [
                         [
-                            'message' => 'Can not save link related to Default Source or Default Stock',
+                            'message' => 'Can not save link related to Default Stock',
                             'parameters' => [],
                         ],
                         [
-                            'message' => 'Can not save link related to Default Source or Default Stock',
+                            'message' => 'Can not save link related to Default Source',
+                            'parameters' => [],
+                        ],
+                        [
+                            'message' => 'Can not save link related to Default Stock',
                             'parameters' => [],
                         ],
                     ],
@@ -116,7 +120,7 @@ class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
                     'message' => 'Validation Failed',
                     'errors' => [
                         [
-                            'message' => 'Can not save link related to Default Source or Default Stock',
+                            'message' => 'Can not save link related to Default Stock',
                             'parameters' => [],
                         ],
                     ],
