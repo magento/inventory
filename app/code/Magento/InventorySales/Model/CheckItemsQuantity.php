@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
@@ -67,11 +68,13 @@ class CheckItemsQuantity
     {
         $productTypes = $this->getProductTypesBySkus->execute(array_keys($items));
         foreach ($items as $sku => $qty) {
-            if (false === $this->isSourceItemsAllowedForProductType->execute($productTypes[$sku])) {
+            if (false === $this->isSourceItemsAllowedForProductType->execute($productTypes[$sku])
+                && $productTypes[$sku] != Configurable::TYPE_CODE
+            ) {
                 $defaultStockId = $this->defaultStockProvider->getId();
                 if ($defaultStockId !== $stockId) {
                     throw new LocalizedException(
-                        __('Product type is not supported on Default Stock.')
+                        __('Product type is not supported on not Default Stock.')
                     );
                 }
                 continue;
