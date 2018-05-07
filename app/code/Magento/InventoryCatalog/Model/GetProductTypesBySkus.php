@@ -43,6 +43,10 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
             );
         }
 
-        return $typesBySkus;
+        $preparedTypesBySkus = [];
+        foreach ($typesBySkus as $sku => $type) {
+            $preparedTypesBySkus[(string)$sku] = (string)$type;
+        }
+        return $preparedTypesBySkus;
     }
 }
