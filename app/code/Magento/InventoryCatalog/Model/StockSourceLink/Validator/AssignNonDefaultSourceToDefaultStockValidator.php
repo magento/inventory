@@ -49,5 +49,4 @@ class AssignNonDefaultSourceToDefaultStockValidator implements StockSourceLinkVa
 
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
-
 }
