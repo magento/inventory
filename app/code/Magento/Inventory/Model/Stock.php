@@ -32,7 +32,8 @@ class Stock extends AbstractExtensibleModel implements StockInterface
      */
     public function getStockId(): ?int
     {
-        return $this->getData(self::STOCK_ID);
+        $stockId = $this->getData(self::STOCK_ID);
+        return $stockId !== null ? (int)$stockId : null;
     }
 
     /**
