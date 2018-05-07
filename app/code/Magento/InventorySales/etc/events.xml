@@ -7,6 +7,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="website_save_after">
+        <observer name="update_stock_sales_channel_links" instance="Magento\InventorySales\Observer\Website\UpdateStockSalesChannelLinks"/>
         <observer name="assign_website_to_default_stock" instance="Magento\InventorySales\Observer\Website\AssignWebsiteToDefaultStock"/>
     </event>
     <event name="website_delete_after">
