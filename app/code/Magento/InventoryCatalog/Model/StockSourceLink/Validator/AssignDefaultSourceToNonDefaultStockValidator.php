@@ -12,9 +12,8 @@ use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\StockSourceLink\Validator\StockSourceLinkValidatorInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
 
-class AssignToDefaultStockDefaultSourceValidator implements StockSourceLinkValidatorInterface
+class AssignDefaultSourceToNonDefaultStockValidator implements StockSourceLinkValidatorInterface
 {
     /**
      * @var ValidationResultFactory
@@ -27,23 +26,15 @@ class AssignToDefaultStockDefaultSourceValidator implements StockSourceLinkValid
     private $defaultSourceProvider;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param ValidationResultFactory $validationResultFactory
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
-        DefaultSourceProviderInterface $defaultSourceProvider,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -52,9 +43,8 @@ class AssignToDefaultStockDefaultSourceValidator implements StockSourceLinkValid
     public function validate(StockSourceLinkInterface $link): ValidationResult
     {
         $errors = [];
-        if ($link->getStockId() === $this->defaultStockProvider->getId()
-        || $link->getSourceCode() === $this->defaultSourceProvider->getCode()) {
-            $errors[] = __('Can not save link related to Default Source or Default Stock');
+        if ($link->getSourceCode() === $this->defaultSourceProvider->getCode()) {
+            $errors[] = __('Can not save link related to Default Source');
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
