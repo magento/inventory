@@ -41,16 +41,20 @@ class UpdateStockSalesChannelLinksTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     *
+     * @param string $oldWebsiteCode
+     * @param string $newWebsiteCode
+     * @throws \Exception
+     *
      * @dataProvider updateWebsiteCodeDataProvider
+     *
      * @magentoDbIsolation disabled
      */
-    public function testUpdateWebsiteCode($oldWebsiteCode, $newWebsiteCode)
+    public function testUpdateWebsiteCode(string $oldWebsiteCode, string $newWebsiteCode)
     {
         $originalStockId = $this->getAssignedStockIdForWebsite->execute($oldWebsiteCode);
 
-        $website = $this->websiteModel->load($oldWebsiteCode, 'code');
-        $website->setCode($newWebsiteCode);
-        $website->save();
+        $this->updateWebsiteCode($oldWebsiteCode, $newWebsiteCode);
 
         // We need specific assertion if the char cases are the only difference between old and new codes.
         if (strcasecmp($oldWebsiteCode, $newWebsiteCode)) {
@@ -64,8 +68,7 @@ class UpdateStockSalesChannelLinksTest extends TestCase
         );
 
         // Needed for correct rollback.
-        $website->setCode($oldWebsiteCode);
-        $website->save();
+        $this->updateWebsiteCode($newWebsiteCode, $oldWebsiteCode);
     }
 
     /**
@@ -89,5 +92,17 @@ class UpdateStockSalesChannelLinksTest extends TestCase
                 'Global_Website',
             ],
         ];
+    }
+
+    /**
+     * @param string $oldWebsiteCode
+     * @param string $newWebsiteCode
+     * @throws \Exception
+     */
+    private function updateWebsiteCode(string $oldWebsiteCode, string $newWebsiteCode)
+    {
+        $website = $this->websiteModel->load($oldWebsiteCode, 'code');
+        $website->setCode($newWebsiteCode);
+        $website->save();
     }
 }

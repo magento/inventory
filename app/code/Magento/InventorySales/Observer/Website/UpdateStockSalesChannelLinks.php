@@ -45,11 +45,9 @@ class UpdateStockSalesChannelLinks implements ObserverInterface
             return;
         }
 
-        if (isset($website->getStoredData()['code'])) {
-            $oldWebsiteCode = $website->getStoredData()['code'];
-            if ($websiteCode !== $oldWebsiteCode) {
-                $this->updateSalesChannelsWebsiteCode->execute($websiteCode, $oldWebsiteCode);
-            }
+        $oldWebsiteCode = $website->getOrigData('code');
+        if (null !== $oldWebsiteCode && $websiteCode !== $oldWebsiteCode) {
+            $this->updateSalesChannelsWebsiteCode->execute($oldWebsiteCode, $websiteCode);
         }
     }
 }

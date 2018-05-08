@@ -31,8 +31,11 @@ class UpdateSalesChannelsWebsiteCode
 
     /**
      * Replace all occurrences of old Website Code value in inventory_stock_sales_channel table with the new one.
+     *
+     * @param string $oldWebsiteCode
+     * @param string $newWebsiteCode
      */
-    public function execute(string $newWebsiteCode, string $oldWebsiteCode)
+    public function execute(string $oldWebsiteCode, string $newWebsiteCode)
     {
         $connection = $this->resourceConnection->getConnection();
 
