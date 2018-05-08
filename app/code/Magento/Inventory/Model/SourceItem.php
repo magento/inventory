@@ -64,7 +64,8 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
      */
     public function getQuantity(): ?float
     {
-        return $this->getData(self::QUANTITY);
+        $quantity = $this->getData(self::QUANTITY);
+        return $quantity !== null ? (float)$quantity : null;
     }
 
     /**
