@@ -81,7 +81,8 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
      */
     public function getStatus(): ?int
     {
-        return $this->getData(self::STATUS);
+        $status = $this->getData(self::STATUS);
+        return $status !== null ? (int)$status : null;
     }
 
     /**
