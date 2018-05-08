@@ -96,7 +96,7 @@ class Source extends AbstractExtensibleModel implements SourceInterface
      */
     public function isEnabled(): ?bool
     {
-        return $this->getData(self::ENABLED);
+        return (bool)$this->getData(self::ENABLED);
     }
 
     /**
