@@ -5,9 +5,10 @@
  */
 namespace Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor;
 
+use Magento\Framework\Api\ImmutableDtoInterface;
 use Magento\Framework\Model\AbstractExtensibleModel;
 
-class SimpleConstructorWithData extends AbstractExtensibleModel
+class SimpleImmutableWithData extends AbstractExtensibleModel implements ImmutableDtoInterface
 {
     const ENTITY_ID = 'entity_id';
     const NAME = 'name';

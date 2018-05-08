@@ -21,21 +21,21 @@ class TestService
     }
 
     /**
-     * @param \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructor $simpleConstructor
-     * @return \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructor
+     * @param \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleImmutable $simpleImmutable
+     * @return \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleImmutable
      */
-    public function simpleConstructor(SimpleConstructor $simpleConstructor)
+    public function simpleImmutable(SimpleImmutable $simpleImmutable)
     {
-        return $simpleConstructor;
+        return $simpleImmutable;
     }
 
     /**
-     * @param \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructorWithData $simpleConstructorWithData
-     * @return \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructorWithData
+     * @param \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleImmutableWithData $simpleImmutableWithData
+     * @return \Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleImmutableWithData
      */
-    public function simpleConstructorWithData(SimpleConstructorWithData $simpleConstructorWithData)
+    public function simpleImmutableWithData(SimpleImmutableWithData $simpleImmutableWithData)
     {
-        return $simpleConstructorWithData;
+        return $simpleImmutableWithData;
     }
 
     /**

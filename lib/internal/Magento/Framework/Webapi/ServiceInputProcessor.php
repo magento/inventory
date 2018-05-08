@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Magento\Framework\Webapi;
 
+use Magento\Framework\Api\ImmutableDtoInterface;
+use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Webapi\ServiceTypeToEntityTypeMap;
 use Magento\Framework\Api\AttributeValue;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\SimpleDataObjectConverter;
@@ -80,6 +83,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      * @param AttributeValueFactory $attributeValueFactory
      * @param CustomAttributeTypeLocatorInterface $customAttributeTypeLocator
      * @param MethodsMap $methodsMap
+     * @param \Magento\Framework\ObjectManager\ConfigInterface $config
      * @param ServiceTypeToEntityTypeMap $serviceTypeToEntityTypeMap
      * @param ConfigInterface $config
      */
@@ -134,6 +138,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      * @return array list of parameters that can be used to call the service method
      * @throws InputException if no value is provided for required parameters
      * @throws WebapiException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function process($serviceClassName, $serviceMethodName, array $inputArray)
     {
@@ -165,6 +170,63 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
     }
 
     /**
+     * Return true if $className has $parentClass in its parents
+     *
+     * @param string $className
+     * @param string $parentClass
+     * @return bool
+     * @throws \ReflectionException
+     */
+    private function hasParent(string $className, string $parentClass): bool
+    {
+        $class = new ClassReflection($this->getRealClassName($className));
+        if (!$class->getParentClass()) {
+            return false;
+        }
+
+        if ($class->getParentClass()->getName() === $parentClass) {
+            return true;
+        }
+
+        return $this->hasParent($class->getParentClass()->getName(), $parentClass);
+    }
+
+    /**
+     * Return true if a class is inherited from \Magento\Framework\Model\AbstractModel
+     *
+     * @param string $className
+     * @return bool
+     */
+    private function isAbstractModel(string $className): bool
+    {
+        $className = $this->getRealClassName($className);
+        return is_subclass_of($className, AbstractModel::class);
+    }
+
+    /**
+     * Return true if a class is inherited from \Magento\Framework\Model\AbstractModel
+     *
+     * @param string $className
+     * @return bool
+     */
+    private function isImmutableDto(string $className): bool
+    {
+        return is_subclass_of($className, ImmutableDtoInterface::class);
+    }
+
+    /**
+     * Get real class name (if preferenced)
+     *
+     * @param string $className
+     * @return string
+     */
+    private function getRealClassName(string $className): string
+    {
+        $preferenceClass = $this->config->getPreference($className);
+        return $preferenceClass ?: $className;
+    }
+
+    /**
      * @param string $className
      * @param array $data
      * @return array
@@ -173,8 +235,8 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      */
     private function getConstructorData(string $className, array $data): array
     {
-        $preferenceClass = $this->config->getPreference($className);
-        $class = new ClassReflection($preferenceClass ?: $className);
+        $className = $this->getRealClassName($className);
+        $class = new ClassReflection($className);
 
         $constructor = $class->getConstructor();
         if ($constructor === null) {
@@ -196,7 +258,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
 
         // Inject data field if existing for backward compatibility with
         // \Magento\Framework\Model\AbstractModel
-        if (isset($parametersByName['data']) && ((string) $parametersByName['data']->getType() === 'array')) {
+        if ($this->isAbstractModel($class->getName())) {
             $res['data'] = [];
             foreach ($data as $propertyName => $propertyValue) {
                 // Find data getter to retrieve its type
@@ -264,7 +326,6 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      * @param array $data
      * @return object the newly created and populated object
      * @throws \Exception
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function _createFromArray($className, $data)
     {
@@ -278,12 +339,12 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
         }
 
         // Primary method: assign to constructor parameters
-        $constructorArgs = $this->getConstructorData($className, $data);
-        $object = $this->objectManager->create($className, $constructorArgs);
+        if ($this->isImmutableDto($className)) {
+            $constructorArgs = $this->getConstructorData($className, $data);
+            $object = $this->objectManager->create($className, $constructorArgs);
+        } else {
+            $object = $this->objectManager->create($className, $data);
 
-        // Secondary method: fallback to setter methods, but
-        // skip if "data" parameters is set (see getConstructorData)
-        if (!isset($constructorArgs['data'])) {
             foreach ($data as $propertyName => $value) {
                 if (isset($constructorArgs[$propertyName])) {
                     continue;

@@ -41,26 +41,26 @@ class Save extends Action
     private $sourceRepository;
 
     /**
-     * @var SourceHydrator
+     * @var SourceMapper
      */
-    private $sourceHydrator;
+    private $sourceMapper;
 
     /**
      * @param Context $context
      * @param SourceInterfaceFactory $sourceFactory
      * @param SourceRepositoryInterface $sourceRepository
-     * @param SourceHydrator $sourceHydrator
+     * @param SourceMapper $sourceMapper
      */
     public function __construct(
         Context $context,
         SourceInterfaceFactory $sourceFactory,
         SourceRepositoryInterface $sourceRepository,
-        SourceHydrator $sourceHydrator
+        SourceMapper $sourceMapper
     ) {
         parent::__construct($context);
         $this->sourceFactory = $sourceFactory;
         $this->sourceRepository = $sourceRepository;
-        $this->sourceHydrator = $sourceHydrator;
+        $this->sourceMapper = $sourceMapper;
     }
 
     /**
@@ -82,9 +82,9 @@ class Save extends Action
         try {
             $source = (null !== $sourceCodeQueryParam)
                 ? $this->sourceRepository->get($sourceCodeQueryParam)
-                : $this->sourceFactory->create();
+                : $this->sourceFactory->create(['data' => $requestData]);
 
-            $this->processSave($source, $requestData);
+            $source = $this->processSave($source, $requestData);
 
             $this->messageManager->addSuccessMessage(__('The Source has been saved.'));
             $this->processRedirectAfterSuccessSave($resultRedirect, $source->getSourceCode());
@@ -112,11 +112,15 @@ class Save extends Action
     /**
      * @param SourceInterface $source
      * @param array $requestData
-     * @return void
+     * @return SourceInterface
+     * @throws CouldNotSaveException
+     * @throws ValidationException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \ReflectionException
      */
-    private function processSave(SourceInterface $source, array $requestData)
+    private function processSave(SourceInterface $source, array $requestData): SourceInterface
     {
-        $source = $this->sourceHydrator->hydrate($source, $requestData);
+        $source = $this->sourceMapper->map($source, $requestData);
 
         $this->_eventManager->dispatch(
             'controller_action_inventory_populate_source_with_data',
@@ -135,6 +139,8 @@ class Save extends Action
                 'source' => $source,
             ]
         );
+
+        return $source;
     }
 
     /**

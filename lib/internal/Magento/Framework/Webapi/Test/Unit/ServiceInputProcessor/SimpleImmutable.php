@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor;
 
-class SimpleConstructor
+use Magento\Framework\Api\ImmutableDtoInterface;
+
+class SimpleImmutable implements ImmutableDtoInterface
 {
     /**
      * @var int

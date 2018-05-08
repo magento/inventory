@@ -9,8 +9,8 @@ namespace Magento\Framework\Webapi\Test\Unit;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Webapi\ServiceInputProcessor;
 use Magento\Framework\Webapi\ServiceTypeToEntityTypeMap;
-use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructor;
-use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleConstructorWithData;
+use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleImmutable;
+use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\SimpleImmutableWithData;
 use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\WebapiBuilderFactory;
 use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\AssociativeArray;
 use Magento\Framework\Webapi\Test\Unit\ServiceInputProcessor\DataArray;
@@ -204,34 +204,34 @@ class ServiceInputProcessorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Test', $details->getName());
     }
 
-    public function testSimpleConstructorProperties()
+    public function testSimpleImmutableProperties()
     {
-        $data = ['simpleConstructor' => ['entityId' => 15, 'name' => 'Test']];
+        $data = ['simpleImmutable' => ['entityId' => 15, 'name' => 'Test']];
         $result = $this->serviceInputProcessor->process(
             TestService::class,
-            'simpleConstructor',
+            'simpleImmutable',
             $data
         );
         $this->assertNotNull($result);
         $arg = $result[0];
 
-        $this->assertTrue($arg instanceof SimpleConstructor);
+        $this->assertTrue($arg instanceof SimpleImmutable);
         $this->assertEquals(15, $arg->getEntityId());
         $this->assertEquals('Test', $arg->getName());
     }
 
-    public function testSimpleConstructorWithDataProperties()
+    public function testSimpleImmutableWithDataProperties()
     {
-        $data = ['simpleConstructorWithData' => ['entityId' => 15, 'name' => 'Test']];
+        $data = ['simpleImmutableWithData' => ['entityId' => 15, 'name' => 'Test']];
         $result = $this->serviceInputProcessor->process(
             TestService::class,
-            'simpleConstructorWithData',
+            'simpleImmutableWithData',
             $data
         );
         $this->assertNotNull($result);
         $arg = $result[0];
 
-        $this->assertTrue($arg instanceof SimpleConstructorWithData);
+        $this->assertTrue($arg instanceof SimpleImmutableWithData);
         $this->assertEquals(15, $arg->getEntityId());
         $this->assertEquals('Test', $arg->getName());
     }
