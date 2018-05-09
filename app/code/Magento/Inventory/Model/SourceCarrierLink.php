@@ -48,7 +48,8 @@ class SourceCarrierLink extends AbstractExtensibleModel implements SourceCarrier
      */
     public function getPosition(): ?int
     {
-        return $this->getData(self::POSITION);
+        $position = $this->getData(self::POSITION);
+        return $position !== null ? (int)$position : null;
     }
 
     /**

@@ -135,6 +135,6 @@ class CheckQuoteItemQtyPlugin
             return $this->format->getNumber($qty);
         }
 
-        return $qty;
+        return (float)$qty;
     }
 }

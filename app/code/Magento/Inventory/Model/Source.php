@@ -128,7 +128,8 @@ class Source extends AbstractExtensibleModel implements SourceInterface
      */
     public function getLatitude(): ?float
     {
-        return $this->getData(self::LATITUDE);
+        $latitude = $this->getData(self::LATITUDE);
+        return $latitude !== null ? (float)$latitude : null;
     }
 
     /**
@@ -144,7 +145,8 @@ class Source extends AbstractExtensibleModel implements SourceInterface
      */
     public function getLongitude(): ?float
     {
-        return $this->getData(self::LONGITUDE);
+        $longitude = $this->getData(self::LONGITUDE);
+        return $longitude !== null ? (float)$longitude : null;
     }
 
     /**
@@ -176,7 +178,8 @@ class Source extends AbstractExtensibleModel implements SourceInterface
      */
     public function getRegionId(): ?int
     {
-        return $this->getData(self::REGION_ID);
+        $regionId = $this->getData(self::REGION_ID);
+        return $regionId !== null ? $regionId : null;
     }
 
     /**

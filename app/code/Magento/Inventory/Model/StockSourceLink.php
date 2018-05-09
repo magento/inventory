@@ -65,7 +65,8 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
      */
     public function getPriority(): ?int
     {
-        return $this->getData(self::PRIORITY);
+        $priority = $this->getData(self::PRIORITY);
+        return $priority !== null ? (int)$priority : null;
     }
 
     /**
