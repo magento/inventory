@@ -288,7 +288,7 @@ class Source extends AbstractExtensibleModel implements SourceInterface
      */
     public function isUseDefaultCarrierConfig(): ?bool
     {
-        return $this->getData(self::USE_DEFAULT_CARRIER_CONFIG);
+        return (bool)$this->getData(self::USE_DEFAULT_CARRIER_CONFIG);
     }
 
     /**

@@ -83,7 +83,7 @@ class SourceItemImporter
             $sourceItem = $this->sourceItemFactory->create();
             $sourceItem->setSku($stockDatum['sku']);
             $sourceItem->setSourceCode($this->defaultSource->getCode());
-            $sourceItem->setQuantity($qty);
+            $sourceItem->setQuantity((float)$qty);
             $sourceItem->setStatus($inStock);
             $sourceItems[] = $sourceItem;
         }
