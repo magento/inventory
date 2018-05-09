@@ -49,7 +49,7 @@ class Reservation implements ReservationInterface
      * @param null $metadata
      */
     public function __construct(
-        ?int $reservationId,
+        $reservationId,
         int $stockId,
         string $sku,
         float $quantity,
