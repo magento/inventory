@@ -40,7 +40,7 @@ class UpdateSalesChannelsWebsiteCode
         $connection = $this->resourceConnection->getConnection();
 
         $connection->update(
-            $tableName = $this->resourceConnection->getTableName('inventory_stock_sales_channel'),
+            $this->resourceConnection->getTableName('inventory_stock_sales_channel'),
             [
                 SalesChannelInterface::CODE => $newWebsiteCode,
             ],
