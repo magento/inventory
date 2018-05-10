@@ -21,4 +21,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="configurable_reindex_on_default_stock" xsi:type="object">Magento\InventoryConfigurableProduct\Model\SetConfigurableDataToLegacyStockStatus</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

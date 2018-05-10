@@ -20,6 +20,13 @@
         <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save"
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin"/>
     </type>
+    <type name="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="set_data_to_legacy_catalog_inventory" xsi:type="object">Magento\InventoryCatalog\Model\SetDataToLegacyCatalogInventory</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryApi\Api\SourceItemsDeleteInterface">
         <plugin name="set_to_zero_legacy_catalog_inventory_at_source_items_delete"
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin"/>
