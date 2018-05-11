@@ -17,4 +17,7 @@
         <element name="name" type="input" selector=".admin__data-grid-filters-wrap input[name='name']"/>
         <element name="noRecords" type="text" selector=".data-grid-tr-no-data"/>
     </section>
+    <section name="AdminManageStockGridBody">
+        <element name="dataRows" type="input" selector=".data-row"/>
+    </section>
 </sections>
