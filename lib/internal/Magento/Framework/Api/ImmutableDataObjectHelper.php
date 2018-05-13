@@ -84,7 +84,7 @@ class ImmutableDataObjectHelper
      */
     private function isImmutableDto(string $className): bool
     {
-        return is_subclass_of($className, ImmutableDtoInterface::class);
+        return $className instanceof ImmutableDtoInterface;
     }
 
     /**
@@ -195,14 +195,14 @@ class ImmutableDataObjectHelper
     /**
      * Populate data object using data in array format.
      *
-     * @param ImmutableDtoInterface $sourceObject
+     * @param $sourceObject
      * @param array $data
      * @param string $interfaceName
      * @return ImmutableDtoInterface
      * @throws \ReflectionException
      */
     public function mapFromArray(
-        ImmutableDtoInterface $sourceObject,
+        $sourceObject,
         array $data,
         string $interfaceName
     ): ImmutableDtoInterface {
@@ -213,10 +213,10 @@ class ImmutableDataObjectHelper
     /**
      * Merge data into object data
      *
-     * @param ImmutableDtoInterface $sourceObject
+     * @param $sourceObject
      * @return array
      */
-    public function getObjectData(ImmutableDtoInterface $sourceObject): array
+    public function getObjectData($sourceObject): array
     {
         if ($this->isAbstractModel(get_class($sourceObject))) {
             return $sourceObject->getData();
@@ -239,11 +239,11 @@ class ImmutableDataObjectHelper
     /**
      * Merge data into object data
      *
-     * @param ImmutableDtoInterface $sourceObject
+     * @param $sourceObject
      * @param array $data
      * @return array
      */
-    public function mergeObjectData(ImmutableDtoInterface $sourceObject, array $data): array
+    public function mergeObjectData($sourceObject, array $data): array
     {
         // TODO: Handle extension_attributes & custom_attributes
         $sourceData = $this->getObjectData($sourceObject);
