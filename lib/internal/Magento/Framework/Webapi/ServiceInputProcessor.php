@@ -200,7 +200,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
     private function isAbstractModel(string $className): bool
     {
         $className = $this->getRealClassName($className);
-        return is_subclass_of($className, AbstractModel::class);
+        return $className instanceof AbstractModel;
     }
 
     /**
@@ -211,7 +211,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      */
     private function isImmutableDto(string $className): bool
     {
-        return is_subclass_of($className, ImmutableDtoInterface::class);
+        return $className instanceof ImmutableDtoInterface;
     }
 
     /**
