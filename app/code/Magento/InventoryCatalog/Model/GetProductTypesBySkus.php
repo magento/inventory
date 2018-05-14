@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkus as GetProductTypesBySkusResourceModel;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 
 /**
  * @inheritdoc
@@ -37,11 +39,15 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
         $notFoundedSkus = array_diff($skus, array_keys($typesBySkus));
 
         if (!empty($notFoundedSkus)) {
-            throw new \Magento\Framework\Exception\InputException(
+            throw new InputException(
                 __('Following products with requested skus were not found: %1', implode($notFoundedSkus, ', '))
             );
         }
 
-        return $typesBySkus;
+        $preparedTypesBySkus = [];
+        foreach ($typesBySkus as $sku => $type) {
+            $preparedTypesBySkus[(string)$sku] = (string)$type;
+        }
+        return $preparedTypesBySkus;
     }
 }

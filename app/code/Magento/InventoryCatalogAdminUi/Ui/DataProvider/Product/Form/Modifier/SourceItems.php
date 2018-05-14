@@ -15,8 +15,8 @@ use Magento\Inventory\Model\ResourceModel\SourceItem\Collection;
 use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryCatalog\Model\CanManageSourceItemsBySku;
-use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
+use Magento\InventoryCatalogAdminUi\Model\CanManageSourceItemsBySku;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
 
 /**
@@ -111,6 +111,8 @@ class SourceItems extends AbstractModifier
             sprintf('s.%s = main_table.%s', SourceInterface::SOURCE_CODE, SourceItemInterface::SOURCE_CODE),
             ['source_name' => SourceInterface::NAME, 'source_status' => SourceInterface::ENABLED]
         );
+
+        $collection->setOrder(SourceInterface::NAME, Collection::SORT_ORDER_ASC);
 
         $sourceItemsData = [];
         foreach ($collection->getData() as $row) {

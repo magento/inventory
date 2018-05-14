@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Api;
 
 use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\Framework\Webapi\Rest\Request;
@@ -42,7 +42,7 @@ class GetDefaultStockTest extends WebapiAbstract
                 'operation' => 'inventoryApiStockRepositoryV1Get',
             ],
         ];
-        if (self::ADAPTER_REST == TESTS_WEB_API_ADAPTER) {
+        if (self::ADAPTER_REST === TESTS_WEB_API_ADAPTER) {
             $stock = $this->_webApiCall($serviceInfo);
         } else {
             $stock = $this->_webApiCall($serviceInfo, ['stockId' => $defaultStockId]);

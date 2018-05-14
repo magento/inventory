@@ -8,12 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 
 class CheckItemsQuantity
 {
@@ -41,6 +41,7 @@ class CheckItemsQuantity
      * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      */
     public function __construct(
         IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
@@ -58,7 +59,6 @@ class CheckItemsQuantity
      * Check whether all items salable
      *
      * @param array $items [['sku' => 'qty'], ...]
-     * @param array $productTypes [['sku' => 'product_type'], ...]
      * @param int $stockId
      * @return void
      * @throws LocalizedException
@@ -77,7 +77,7 @@ class CheckItemsQuantity
                 continue;
             }
             /** @var ProductSalableResultInterface $isSalable */
-            $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty);
+            $isSalable = $this->isProductSalableForRequestedQty->execute((string)$sku, $stockId, (float)$qty);
             if (false === $isSalable->isSalable()) {
                 $errors = $isSalable->getErrors();
                 /** @var ProductSalabilityErrorInterface $errorMessage */
