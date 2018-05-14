@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Controller\Adminhtml\Source;
+namespace Magento\InventoryAdminUi\Controller\Adminhtml\Source;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Inventory\Ui\Component\MassAction\Filter;
+use Magento\InventoryAdminUi\Ui\Component\MassAction\Filter;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
