@@ -86,7 +86,7 @@ class SelectBuilder
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
+                    IndexStructure::IS_SALABLE => 'IF(legacy_stock_item.is_in_stock > 0, MAX(stock.is_salable), 0)',
                 ]
             )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -100,8 +100,11 @@ class SelectBuilder
                 ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'parent_product_entity.' . $linkField . ' = parent_link.parent_id',
                 []
-            )
-            ->group(['parent_product_entity.sku']);
+            )->joinInner(
+                ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                'parent_product_entity.' . $linkField . ' = legacy_stock_item.product_id',
+                []
+            )->group(['parent_product_entity.sku', 'legacy_stock_item.is_in_stock']);
 
         return $select;
     }
