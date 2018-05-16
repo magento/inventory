@@ -9,6 +9,7 @@ namespace Magento\InventoryProductAlert\Block\Adminhtml\Product\Edit\Tab\Alerts;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Helper\Data;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Module\Manager;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -48,6 +49,7 @@ class Stock extends \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Alerts\Sto
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
     protected function _prepareColumns()
     {
@@ -59,6 +61,7 @@ class Stock extends \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Alerts\Sto
 
     /**
      * @inheritdoc
+     * @throws LocalizedException
      */
     protected function _afterLoadCollection()
     {
