@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductAdminUi\Plugin\Block;
 
 use Magento\ConfigurableProduct\Block\Adminhtml\Product\Edit\Tab\Variations\Config\Matrix;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurableProduct\Model\GetQuantityInformationPerSource;
 
@@ -41,16 +42,13 @@ class AddQuantityPerSourceToVariationsMatrix
 
     /**
      * @param Matrix $subject
-     * @param $result
-     *
-     * @return array
-     *
+     * @param array|null $result
+     * @return array|null
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetProductMatrix(
-        Matrix $subject,
-        $result
-    ) {
+    public function afterGetProductMatrix(Matrix $subject, ?array $result): ?array
+    {
         if ($this->isSingleSourceMode->execute() === false && is_array($result)) {
             foreach ($result as $key => $variation) {
                 $result[$key]['quantityPerSource'] = $this->getQuantityInformationPerSource->execute($variation['sku']);

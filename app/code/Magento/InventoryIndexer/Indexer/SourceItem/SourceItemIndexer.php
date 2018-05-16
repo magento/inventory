@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\StateException;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -20,6 +21,7 @@ use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
  * Source Item indexer
  *
  * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SourceItemIndexer
 {
@@ -90,7 +92,7 @@ class SourceItemIndexer
     /**
      * @return void
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $this->stockIndexer->executeFull();
     }
@@ -98,8 +100,9 @@ class SourceItemIndexer
     /**
      * @param int $sourceItemId
      * @return void
+     * @throws StateException
      */
-    public function executeRow(int $sourceItemId)
+    public function executeRow(int $sourceItemId): void
     {
         $this->executeList([$sourceItemId]);
     }
@@ -107,8 +110,9 @@ class SourceItemIndexer
     /**
      * @param array $sourceItemIds
      * @return void
+     * @throws StateException
      */
-    public function executeList(array $sourceItemIds)
+    public function executeList(array $sourceItemIds): void
     {
         $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
 

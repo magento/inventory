@@ -45,7 +45,7 @@ class GetSourceItemBySourceCodeAndSku
      * @param string $sku
      * @return SourceItemInterface|null
      */
-    public function execute(string $sourceCode, string $sku)
+    public function execute(string $sourceCode, string $sku): ?SourceItemInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceItemInterface::SOURCE_CODE, $sourceCode)

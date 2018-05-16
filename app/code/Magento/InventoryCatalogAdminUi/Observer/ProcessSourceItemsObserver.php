@@ -14,6 +14,8 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
@@ -87,8 +89,10 @@ class ProcessSourceItemsObserver implements ObserverInterface
      *
      * @param EventObserver $observer
      * @return void
+     * @throws InputException
+     * @throws LocalizedException
      */
-    public function execute(EventObserver $observer)
+    public function execute(EventObserver $observer): void
     {
         /** @var ProductInterface $product */
         $product = $observer->getEvent()->getProduct();

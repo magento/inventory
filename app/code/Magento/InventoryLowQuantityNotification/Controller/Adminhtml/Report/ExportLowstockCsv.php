@@ -19,14 +19,15 @@ class ExportLowstockCsv extends ProductReportController
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Reports::report_products';
+    public const ADMIN_RESOURCE = 'Magento_Reports::report_products';
 
     /**
      * Export low stock products report to CSV format
      *
      * @return ResponseInterface
+     * @throws \Exception
      */
-    public function execute()
+    public function execute(): ResponseInterface
     {
         $this->_view->loadLayout(false);
         $fileName = 'products_lowstock.csv';

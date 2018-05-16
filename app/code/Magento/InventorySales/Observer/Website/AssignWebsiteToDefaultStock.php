@@ -9,6 +9,9 @@ namespace Magento\InventorySales\Observer\Website;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface;
@@ -61,9 +64,13 @@ class AssignWebsiteToDefaultStock implements ObserverInterface
     }
 
     /**
-     * @inheritdoc
+     * @param Observer $observer
+     *
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
+     * @throws ValidationException
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var Website $website */
         $website = $observer->getData('website');

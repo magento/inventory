@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventorySourceSelection\Model\Algorithms;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -16,7 +19,6 @@ use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Model\SourceSelectionInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 
 /**
  * {@inheritdoc}
@@ -143,17 +145,15 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
      *
      * @param int $stockId
      * @return array
-     *
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws InputException
+     * @throws LocalizedException
      */
     private function getEnabledSourcesOrderedByPriorityByStockId(int $stockId): array
     {
         $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
-        $sources = array_filter($sources, function (SourceInterface $source) {
+        return array_filter($sources, function (SourceInterface $source) {
             return $source->isEnabled();
         });
-        return $sources;
     }
 
     /**

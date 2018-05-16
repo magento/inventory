@@ -33,7 +33,7 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
     /**
      * @inheritdoc
      */
-    public function execute(array $skus)
+    public function execute(array $skus): array
     {
         $typesBySkus = $this->getProductTypesBySkusResource->execute($skus);
         $notFoundedSkus = array_diff($skus, array_keys($typesBySkus));

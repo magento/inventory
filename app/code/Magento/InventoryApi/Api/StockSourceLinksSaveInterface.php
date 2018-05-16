@@ -24,6 +24,7 @@ interface StockSourceLinksSaveInterface
      * @return void
      * @throws \Magento\Framework\Validation\ValidationException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function execute(array $links);
 }

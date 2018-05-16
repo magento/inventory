@@ -21,5 +21,5 @@ interface GetProductTypesBySkusInterface
      * @return array (key: 'sku', value: 'product_type')
      * @throws InputException
      */
-    public function execute(array $skus);
+    public function execute(array $skus): array;
 }

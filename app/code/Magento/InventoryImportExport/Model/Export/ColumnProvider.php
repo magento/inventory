@@ -9,7 +9,7 @@ namespace Magento\InventoryImportExport\Model\Export;
 
 use Magento\Framework\Data\Collection as AttributeCollection;
 use Magento\ImportExport\Model\Export;
-use \Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * @inheritdoc

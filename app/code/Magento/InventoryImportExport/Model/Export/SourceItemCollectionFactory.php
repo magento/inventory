@@ -7,16 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Export;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Data\Collection as AttributeCollection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem\Collection;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryImportExport\Model\Export\ColumnProviderInterface;
-use Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface;
 use Magento\ImportExport\Model\Export;
 
 /**
@@ -24,11 +18,6 @@ use Magento\ImportExport\Model\Export;
  */
 class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterface
 {
-    /**
-     * Source code field name
-     */
-    const SOURCE_CODE_FIELD = 'source_' . SourceInterface::SOURCE_CODE;
-
     /**
      * @var ObjectManagerInterface
      */
@@ -98,7 +87,7 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
      * @param array $filters
      * @return array
      */
-    private function retrieveFilterData(array $filters)
+    private function retrieveFilterData(array $filters): array
     {
         return array_filter(
             $filters[Export::FILTER_ELEMENT_GROUP] ?? [],

@@ -12,6 +12,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
@@ -27,7 +28,7 @@ class ProcessAlgorithm extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::source';
+    public const ADMIN_RESOURCE = 'Magento_InventoryApi::source';
 
     /**
      * @var StockByWebsiteIdResolverInterface
@@ -154,8 +155,8 @@ class ProcessAlgorithm extends Action
      * Get source name by code
      *
      * @param string $sourceCode
-     * @return mixed
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return string
+     * @throws NoSuchEntityException
      */
     public function getSourceName(string $sourceCode): string
     {

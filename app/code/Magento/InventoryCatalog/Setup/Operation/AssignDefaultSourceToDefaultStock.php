@@ -61,7 +61,7 @@ class AssignDefaultSourceToDefaultStock
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         /** @var StockSourceLinkInterface $link */
         $link = $this->stockSourceLinkFactory->create();

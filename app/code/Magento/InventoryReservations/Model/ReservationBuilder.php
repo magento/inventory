@@ -135,7 +135,7 @@ class ReservationBuilder implements ReservationBuilderInterface
     /**
      * @return ValidationResult
      */
-    private function validate()
+    private function validate(): ValidationResult
     {
         $errors = [];
 
@@ -158,7 +158,7 @@ class ReservationBuilder implements ReservationBuilderInterface
      * Used to clean state after object creation
      * @return void
      */
-    private function reset()
+    private function reset(): void
     {
         $this->stockId = null;
         $this->sku = null;

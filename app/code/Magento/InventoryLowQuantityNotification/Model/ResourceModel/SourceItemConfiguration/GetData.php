@@ -33,7 +33,7 @@ class GetData
      * @param string $sku
      * @return array|null
      */
-    public function execute(string $sourceCode, string $sku)
+    public function execute(string $sourceCode, string $sku): ?array
     {
         $connection = $this->resourceConnection->getConnection();
         $sourceItemConfigurationTable = $this->resourceConnection

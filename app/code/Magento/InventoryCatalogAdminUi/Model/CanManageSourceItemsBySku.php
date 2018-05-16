@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalogAdminUi\Model;
 
 use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 
@@ -54,10 +55,11 @@ class CanManageSourceItemsBySku
     }
 
     /**
-     * @param string $sku Sku can be null if product is new
+     * @param string|null $sku Sku can be null if product is new
      * @return bool
+     * @throws LocalizedException
      */
-    public function execute(string $sku = null): bool
+    public function execute(?string $sku = null): bool
     {
         if (null !== $sku) {
             $stockId = $this->defaultStockProvider->getId();

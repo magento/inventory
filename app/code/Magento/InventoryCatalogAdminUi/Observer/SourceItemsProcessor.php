@@ -11,7 +11,10 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
@@ -21,6 +24,7 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 /**
  * At the time of processing Product save form this class used to save source items correctly
  * Perform replace strategy of sources for the product
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SourceItemsProcessor
 {
@@ -82,9 +86,12 @@ class SourceItemsProcessor
      * @param string $sku
      * @param array $sourceItemsData
      * @return void
+     * @throws CouldNotDeleteException
+     * @throws CouldNotSaveException
      * @throws InputException
+     * @throws ValidationException
      */
-    public function process($sku, array $sourceItemsData)
+    public function process(string $sku, array $sourceItemsData): void
     {
         $sourceItemsForDelete = $this->getCurrentSourceItemsMap($sku);
         $sourceItemsForSave = [];
@@ -141,7 +148,7 @@ class SourceItemsProcessor
      * @return void
      * @throws InputException
      */
-    private function validateSourceItemData(array $sourceItemData)
+    private function validateSourceItemData(array $sourceItemData): void
     {
         if (!isset($sourceItemData[SourceItemInterface::SOURCE_CODE])) {
             throw new InputException(__('Wrong Product to Source relation parameters given.'));

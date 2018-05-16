@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\StateException;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -81,8 +82,10 @@ class SourceItemIndexer
 
     /**
      * @param array $sourceItemIds
+     * @return void
+     * @throws StateException
      */
-    public function executeList(array $sourceItemIds)
+    public function executeList(array $sourceItemIds): void
     {
         $skuListInStockList = $this->siblingSkuListInStockProvider->execute($sourceItemIds);
 

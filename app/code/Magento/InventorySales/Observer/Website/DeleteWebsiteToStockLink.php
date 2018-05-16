@@ -34,9 +34,10 @@ class DeleteWebsiteToStockLink implements ObserverInterface
     }
 
     /**
-     * @inheritdoc
+     * @param Observer $observer
+     * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var Website $website */
         $website = $observer->getData('website');

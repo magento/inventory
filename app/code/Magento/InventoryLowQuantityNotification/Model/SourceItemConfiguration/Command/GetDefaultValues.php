@@ -18,7 +18,7 @@ class GetDefaultValues
     /**
      * Default Notify Stock Qty config path
      */
-    const XML_PATH_NOTIFY_STOCK_QTY = 'cataloginventory/item_options/notify_stock_qty';
+    private const XML_PATH_NOTIFY_STOCK_QTY = 'cataloginventory/item_options/notify_stock_qty';
 
     /**
      * @var ScopeConfigInterface
@@ -43,11 +43,10 @@ class GetDefaultValues
     {
         $inventoryNotifyQty = (float)$this->scopeConfig->getValue(self::XML_PATH_NOTIFY_STOCK_QTY);
 
-        $defaultConfiguration = [
+        return [
             SourceItemConfigurationInterface::SOURCE_CODE => $sourceCode,
             SourceItemConfigurationInterface::SKU => $sku,
             SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY => $inventoryNotifyQty,
         ];
-        return $defaultConfiguration;
     }
 }

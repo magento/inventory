@@ -88,7 +88,7 @@ class StockIndexer
      * @return void
      * @throws StateException
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $stockIds = $this->getAllStockIds->execute();
         $this->executeList($stockIds);
@@ -99,7 +99,7 @@ class StockIndexer
      * @return void
      * @throws StateException
      */
-    public function executeRow(int $stockId)
+    public function executeRow(int $stockId): void
     {
         $this->executeList([$stockId]);
     }
@@ -109,7 +109,7 @@ class StockIndexer
      * @return void
      * @throws StateException
      */
-    public function executeList(array $stockIds)
+    public function executeList(array $stockIds): void
     {
         foreach ($stockIds as $stockId) {
             if ($this->defaultStockProvider->getId() === $stockId) {

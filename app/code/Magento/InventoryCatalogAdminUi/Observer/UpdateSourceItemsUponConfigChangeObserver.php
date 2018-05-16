@@ -32,9 +32,10 @@ class UpdateSourceItemsUponConfigChangeObserver implements ObserverInterface
 
     /**
      * @param EventObserver $observer
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(EventObserver $observer)
+    public function execute(EventObserver $observer): void
     {
         $indexer = $this->indexerRegistry->get(InventoryIndexer::INDEXER_ID);
         if ($indexer->isValid()) {

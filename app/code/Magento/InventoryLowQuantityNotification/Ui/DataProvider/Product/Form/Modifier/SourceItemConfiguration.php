@@ -11,6 +11,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryLowQuantityNotificationApi\Api\GetSourceItemConfigurationInterface;
@@ -85,6 +86,7 @@ class SourceItemConfiguration extends AbstractModifier
      * @param array $assignedSources
      * @param ProductInterface $product
      * @return array
+     * @throws LocalizedException
      */
     private function getSourceItemsConfigurationData(array $assignedSources, ProductInterface $product): array
     {

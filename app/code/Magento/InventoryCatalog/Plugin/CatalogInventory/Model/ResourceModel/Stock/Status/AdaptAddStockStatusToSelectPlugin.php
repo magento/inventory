@@ -56,7 +56,7 @@ class AdaptAddStockStatusToSelectPlugin
         callable $proceed,
         Select $select,
         Website $website
-    ) {
+    ): Status {
         $websiteCode = $website->getCode();
         if (null === $websiteCode) {
             throw new LocalizedException(__('Website code is empty'));

@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Model\ResourceModel;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
@@ -43,8 +44,9 @@ class SetDataToLegacyStockItem
      * @param float $quantity
      * @param int $status
      * @return void
+     * @throws InputException
      */
-    public function execute(string $sku, float $quantity, int $status)
+    public function execute(string $sku, float $quantity, int $status): void
     {
         $productIds = $this->getProductIdsBySkus->execute([$sku]);
 

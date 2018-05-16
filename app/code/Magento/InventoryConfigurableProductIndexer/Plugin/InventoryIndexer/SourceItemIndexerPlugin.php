@@ -22,9 +22,8 @@ class SourceItemIndexerPlugin
     /**
      * @param ConfigurableProductsSourceItemIndexer $configurableProductsSourceItemIndexer
      */
-    public function __construct(
-        ConfigurableProductsSourceItemIndexer $configurableProductsSourceItemIndexer
-    ) {
+    public function __construct(ConfigurableProductsSourceItemIndexer $configurableProductsSourceItemIndexer)
+    {
         $this->configurableProductsSourceItemIndexer = $configurableProductsSourceItemIndexer;
     }
 
@@ -33,15 +32,11 @@ class SourceItemIndexerPlugin
      * @param void $result
      * @param array $sourceItemIds
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws StateException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(
-        SourceItemIndexer $subject,
-        $result,
-        array $sourceItemIds
-    ) {
+    public function afterExecuteList(SourceItemIndexer $subject, $result, array $sourceItemIds): void
+    {
         $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
     }
 }

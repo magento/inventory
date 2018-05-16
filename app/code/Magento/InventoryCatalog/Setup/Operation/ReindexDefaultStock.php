@@ -42,7 +42,7 @@ class ReindexDefaultStock
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         $this->stockIndexer->executeRow($this->defaultStockProvider->getId());
     }

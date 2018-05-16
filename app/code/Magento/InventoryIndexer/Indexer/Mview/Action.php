@@ -40,7 +40,7 @@ class Action implements ActionInterface
      * @param int[] $ids
      * @return void
      */
-    public function execute($ids)
+    public function execute($ids): void
     {
         /** @var IndexerInterface $indexer */
         $indexer = $this->indexerFactory->create();

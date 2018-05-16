@@ -20,7 +20,7 @@ class InventoryIndexer implements ActionInterface
     /**
      * Indexer ID in configuration
      */
-    const INDEXER_ID = 'inventory';
+    public const INDEXER_ID = 'inventory';
 
     /**
      * @var SourceItemIndexer

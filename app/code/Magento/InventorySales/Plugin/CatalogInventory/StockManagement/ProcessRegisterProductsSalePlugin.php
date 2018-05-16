@@ -64,7 +64,7 @@ class ProcessRegisterProductsSalePlugin
      * @param float[] $items
      * @param int|null $websiteId
      *
-     * @return []
+     * @return array
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -73,7 +73,7 @@ class ProcessRegisterProductsSalePlugin
         callable $proceed,
         $items,
         $websiteId = null
-    ) {
+    ): array {
         if (empty($items)) {
             return [];
         }

@@ -24,5 +24,5 @@ interface GetStockItemConfigurationInterface
      * @return StockItemConfigurationInterface|null
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function execute(string $sku, int $stockId);
+    public function execute(string $sku, int $stockId): ?StockItemConfigurationInterface;
 }

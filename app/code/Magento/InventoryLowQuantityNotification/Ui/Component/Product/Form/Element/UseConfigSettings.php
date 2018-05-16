@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotification\Ui\Component\Product\Form\Element;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\ValueSourceInterface;
 use Magento\Framework\Serialize\JsonValidator;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -54,7 +53,7 @@ class UseConfigSettings extends Checkbox
      *
      * @return void
      */
-    public function prepare()
+    public function prepare(): void
     {
         $config = $this->getData('config');
         if (isset($config['keyInConfiguration'])
