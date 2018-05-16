@@ -179,7 +179,7 @@ class Source extends AbstractExtensibleModel implements SourceInterface
     public function getRegionId(): ?int
     {
         $regionId = $this->getData(self::REGION_ID);
-        return $regionId !== null ? $regionId : null;
+        return $regionId !== null ? (int)$regionId : null;
     }
 
     /**
