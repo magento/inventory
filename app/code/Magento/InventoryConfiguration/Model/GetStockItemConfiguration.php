@@ -14,6 +14,7 @@ use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\InputException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\Framework\Exception\LocalizedException;
 
