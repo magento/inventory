@@ -10,13 +10,12 @@ namespace Magento\InventoryConfiguration\Model;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
+use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\InputException;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
-use Magento\InventoryCatalog\Model\GetProductIdsBySkusInterface;
+use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventorySales\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 
 /**
  * @inheritdoc
@@ -50,32 +49,24 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     private $stockItemConfigurationFactory;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param GetStockItemDataInterface $getStockItemData
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param StockItemConfigurationFactory $stockItemConfigurationFactory
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
         StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory,
         StockItemRepositoryInterface $legacyStockItemRepository,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        StockItemConfigurationFactory $stockItemConfigurationFactory,
-        DefaultStockProviderInterface $defaultStockProvider
+        StockItemConfigurationFactory $stockItemConfigurationFactory
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->legacyStockItemCriteriaFactory = $legacyStockItemCriteriaFactory;
         $this->legacyStockItemRepository = $legacyStockItemRepository;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->stockItemConfigurationFactory = $stockItemConfigurationFactory;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -110,10 +101,8 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
         $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
         $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId);
 
-        // TODO We use $legacyStockId until we have proper multi-stock item configuration
-        $legacyStockId = $this->defaultStockProvider->getId();
-
-        $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, $legacyStockId);
+        // TODO We use Stock::DEFAULT_STOCK_ID until we have proper multi-stock item configuration
+        $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID);
 
         $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
         if ($stockItemCollection->getTotalCount() === 0) {

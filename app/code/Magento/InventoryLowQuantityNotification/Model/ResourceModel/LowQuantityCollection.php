@@ -23,7 +23,7 @@ use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\Inventory\Model\SourceItem as SourceItemModel;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryConfiguration\Model\GetAllowedProductTypesForSourceItemsInterface;
+use Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface;
 use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\Store\Model\Store;
 use Psr\Log\LoggerInterface;
@@ -39,9 +39,9 @@ class LowQuantityCollection extends AbstractCollection
     private $stockConfiguration;
 
     /**
-     * @var GetAllowedProductTypesForSourceItemsInterface
+     * @var GetAllowedProductTypesForSourceItemManagementInterface
      */
-    private $getAllowedProductTypesForSourceItems;
+    private $getAllowedProductTypesForSourceItemManagement;
 
     /**
      * @var AttributeRepositoryInterface
@@ -65,7 +65,7 @@ class LowQuantityCollection extends AbstractCollection
      * @param ManagerInterface $eventManager
      * @param AttributeRepositoryInterface $attributeRepository
      * @param StockConfigurationInterface $stockConfiguration
-     * @param GetAllowedProductTypesForSourceItemsInterface $getAllowedProductTypesForSourceItems
+     * @param GetAllowedProductTypesForSourceItemManagementInterface $getAllowedProductTypesForSourceItemManagement
      * @param MetadataPool $metadataPool
      * @param AdapterInterface|null $connection
      * @param AbstractDb|null $resource
@@ -79,7 +79,7 @@ class LowQuantityCollection extends AbstractCollection
         ManagerInterface $eventManager,
         AttributeRepositoryInterface $attributeRepository,
         StockConfigurationInterface $stockConfiguration,
-        GetAllowedProductTypesForSourceItemsInterface $getAllowedProductTypesForSourceItems,
+        GetAllowedProductTypesForSourceItemManagementInterface $getAllowedProductTypesForSourceItemManagement,
         MetadataPool $metadataPool,
         AdapterInterface $connection = null,
         AbstractDb $resource = null
@@ -95,7 +95,7 @@ class LowQuantityCollection extends AbstractCollection
 
         $this->attributeRepository = $attributeRepository;
         $this->stockConfiguration = $stockConfiguration;
-        $this->getAllowedProductTypesForSourceItems = $getAllowedProductTypesForSourceItems;
+        $this->getAllowedProductTypesForSourceItemManagement = $getAllowedProductTypesForSourceItemManagement;
         $this->metadataPool = $metadataPool;
     }
 
@@ -220,7 +220,10 @@ class LowQuantityCollection extends AbstractCollection
      */
     private function addProductTypeFilter(): void
     {
-        $this->addFieldToFilter('product_entity.type_id', $this->getAllowedProductTypesForSourceItems->execute());
+        $this->addFieldToFilter(
+            'product_entity.type_id',
+            $this->getAllowedProductTypesForSourceItemManagement->execute()
+        );
     }
 
     /**

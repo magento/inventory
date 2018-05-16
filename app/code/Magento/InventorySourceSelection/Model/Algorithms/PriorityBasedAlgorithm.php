@@ -7,18 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventorySourceSelection\Model\Algorithms;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
-use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory;
-use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory;
-use Magento\InventorySourceSelection\Model\SourceSelectionInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
+use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
+use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterfaceFactory;
+use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterfaceFactory;
+use Magento\InventorySourceSelectionApi\Model\SourceSelectionInterface;
 
 /**
  * {@inheritdoc}
@@ -73,10 +73,7 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
     }
 
     /**
-     * @param InventoryRequestInterface $inventoryRequest
-     * @return SourceSelectionResultInterface
-     * @throws InputException
-     * @throws LocalizedException
+     * @inheritdoc
      */
     public function execute(InventoryRequestInterface $inventoryRequest): SourceSelectionResultInterface
     {
@@ -106,14 +103,12 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
                     continue;
                 }
 
-                $sourceItemSelections[] = $this->sourceSelectionItemFactory->create(
-                    [
-                        'sourceCode' => $sourceItem->getSourceCode(),
-                        'sku' => $itemSku,
-                        'qtyToDeduct' => $qtyToDeduct,
-                        'qtyAvailable' => $sourceItemQty
-                    ]
-                );
+                $sourceItemSelections[] = $this->sourceSelectionItemFactory->create([
+                    'sourceCode' => $sourceItem->getSourceCode(),
+                    'sku' => $itemSku,
+                    'qtyToDeduct' => $qtyToDeduct,
+                    'qtyAvailable' => $sourceItemQty
+                ]);
 
                 $qtyToDeliver -= $qtyToDeduct;
             }
@@ -147,6 +142,7 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
 
     /**
      * Get enabled sources ordered by priority by $stockId
+     *
      * @param int $stockId
      * @return array
      * @throws InputException
@@ -167,7 +163,7 @@ class PriorityBasedAlgorithm implements SourceSelectionInterface
      * @param string $sku
      * @return SourceItemInterface|null
      */
-    public function getSourceItemBySourceCodeAndSku(string $sourceCode, string $sku)
+    private function getSourceItemBySourceCodeAndSku(string $sourceCode, string $sku)
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceItemInterface::SOURCE_CODE, $sourceCode)

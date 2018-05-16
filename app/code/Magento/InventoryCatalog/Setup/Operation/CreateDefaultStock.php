@@ -11,7 +11,7 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryApi\Api\Data\StockInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 

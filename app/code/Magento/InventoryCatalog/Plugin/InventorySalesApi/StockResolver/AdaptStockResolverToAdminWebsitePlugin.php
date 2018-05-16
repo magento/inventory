@@ -9,7 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\InventorySalesApi\StockResolver;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;

@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Setup\Operation;
 
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 
 /**
  * CReindex default stock during installation

@@ -11,12 +11,13 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
- * Resolve Stock by Website ID
+ * @inheritdoc
  */
-class StockByWebsiteIdResolver
+class StockByWebsiteIdResolver implements StockByWebsiteIdResolverInterface
 {
     /**
      * @var WebsiteRepositoryInterface
@@ -30,7 +31,7 @@ class StockByWebsiteIdResolver
 
     /**
      * @param WebsiteRepositoryInterface $websiteRepository
-     * @param StockResolverInterface     $stockResolver
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         WebsiteRepositoryInterface $websiteRepository,
@@ -41,11 +42,10 @@ class StockByWebsiteIdResolver
     }
 
     /**
-     * @param int $websiteId
-     * @return StockInterface
+     * @inheritdoc
      * @throws NoSuchEntityException
      */
-    public function get(int $websiteId): StockInterface
+    public function execute(int $websiteId): StockInterface
     {
         $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
 

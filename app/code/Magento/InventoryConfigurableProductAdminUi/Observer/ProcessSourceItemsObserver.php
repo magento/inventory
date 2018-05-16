@@ -18,7 +18,7 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
 
 /**

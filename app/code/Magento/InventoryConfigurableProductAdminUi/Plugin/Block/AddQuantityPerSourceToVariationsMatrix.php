@@ -9,7 +9,7 @@ namespace Magento\InventoryConfigurableProductAdminUi\Plugin\Block;
 
 use Magento\ConfigurableProduct\Block\Adminhtml\Product\Edit\Tab\Variations\Config\Matrix;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurableProduct\Model\GetQuantityInformationPerSource;
 
 /**

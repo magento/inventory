@@ -10,9 +10,9 @@ namespace Magento\InventorySalesAdminUi\Ui\Component\Control\Stock;
 use Magento\Backend\Ui\Component\Control\DeleteButton as StockDeleteButton;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\InventorySales\Model\GetAssignedSalesChannelsForStockInterface;
+use Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface;
 
 /**
  * Represents delete button with pre-configured options

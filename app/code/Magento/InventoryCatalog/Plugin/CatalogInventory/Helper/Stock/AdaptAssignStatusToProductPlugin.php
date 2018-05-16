@@ -11,7 +11,7 @@ use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
