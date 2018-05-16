@@ -43,6 +43,7 @@ class IndexDataBySkuListProvider
      * @param int $stockId
      * @param array $skuList
      * @return ArrayIterator
+     * @throws \Exception
      */
     public function execute(int $stockId, array $skuList): ArrayIterator
     {

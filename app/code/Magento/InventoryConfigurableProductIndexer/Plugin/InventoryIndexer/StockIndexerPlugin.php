@@ -21,26 +21,21 @@ class StockIndexerPlugin
     /**
      * @param ConfigurableProductsStockIndexer $configurableProductsStockIndexer
      */
-    public function __construct(
-        ConfigurableProductsStockIndexer $configurableProductsStockIndexer
-    ) {
+    public function __construct(ConfigurableProductsStockIndexer $configurableProductsStockIndexer)
+    {
         $this->configurableProductsStockIndexer = $configurableProductsStockIndexer;
     }
 
     /**
      * @param StockIndexer $subject
-     * @param void $result
+     * @param null $result
      * @param array $stockIds
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws StateException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(
-        StockIndexer $subject,
-        $result,
-        array $stockIds
-    ) {
+    public function afterExecuteList(StockIndexer $subject, $result, array $stockIds): void
+    {
         $this->configurableProductsStockIndexer->executeList($stockIds);
     }
 }

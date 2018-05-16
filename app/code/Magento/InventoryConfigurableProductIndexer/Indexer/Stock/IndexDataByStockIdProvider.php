@@ -41,6 +41,7 @@ class IndexDataByStockIdProvider
     /**
      * @param int $stockId
      * @return ArrayIterator
+     * @throws \Exception
      */
     public function execute(int $stockId): ArrayIterator
     {
