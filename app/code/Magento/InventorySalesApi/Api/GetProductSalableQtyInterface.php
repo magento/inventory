@@ -20,6 +20,7 @@ interface GetProductSalableQtyInterface
      * @param string $sku
      * @param int $stockId
      * @return float
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(string $sku, int $stockId): float;
 }

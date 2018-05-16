@@ -63,7 +63,7 @@ class CheckItemsQuantity
      * @return void
      * @throws LocalizedException
      */
-    public function execute(array $items, int $stockId) : void
+    public function execute(array $items, int $stockId): void
     {
         $productTypes = $this->getProductTypesBySkus->execute(array_keys($items));
         foreach ($items as $sku => $qty) {

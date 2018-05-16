@@ -23,6 +23,7 @@ interface IsProductSalableForRequestedQtyInterface
      * @param int $stockId
      * @param float $requestedQty
      * @return ProductSalableResultInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface;
 }

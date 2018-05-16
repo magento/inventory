@@ -78,9 +78,9 @@ class SuggestQtyPlugin
     public function aroundSuggestQty(
         StockStateInterface $subject,
         \Closure $proceed,
-        $productId,
-        $qty,
-        $scopeId
+        int $productId,
+        float $qty,
+        ?int $scopeId
     ): float {
         try {
             $skus = $this->getSkusByProductIds->execute([$productId]);

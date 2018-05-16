@@ -21,10 +21,15 @@ interface ProcessRefundItemsInterface
      * @param ItemsToRefundInterface[] $itemsToRefund
      * @param array $returnToStockItems
      * @return void
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Validation\ValidationException
      */
     public function execute(
         OrderInterface $order,
         array $itemsToRefund,
         array $returnToStockItems
-    );
+    ): void;
 }

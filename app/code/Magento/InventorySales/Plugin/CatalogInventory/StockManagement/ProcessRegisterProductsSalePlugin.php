@@ -64,16 +64,16 @@ class ProcessRegisterProductsSalePlugin
      * @param float[] $items
      * @param int|null $websiteId
      *
-     * @return []
+     * @return array
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundRegisterProductsSale(
         RegisterProductSaleInterface $subject,
         callable $proceed,
-        $items,
-        $websiteId = null
-    ) {
+        array $items,
+        ?int $websiteId = null
+    ): array {
         if (empty($items)) {
             return [];
         }

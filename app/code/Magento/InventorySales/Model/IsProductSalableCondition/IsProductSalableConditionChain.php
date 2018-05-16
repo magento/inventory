@@ -22,6 +22,7 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
 
     /**
      * @param array $conditions
+     * @throws LocalizedException
      */
     public function __construct(
         array $conditions
@@ -31,8 +32,10 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
 
     /**
      * @param array $conditions
+     * @return void
+     * @throws LocalizedException
      */
-    private function setConditions(array $conditions)
+    private function setConditions(array $conditions): void
     {
         $this->validateConditions($conditions);
         $conditions = $this->sortConditions($conditions);
@@ -42,9 +45,10 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
 
     /**
      * @param array $conditions
+     * @return void
      * @throws LocalizedException
      */
-    private function validateConditions(array $conditions)
+    private function validateConditions(array $conditions): void
     {
         foreach ($conditions as $condition) {
             if (empty($condition['object'])) {
@@ -67,7 +71,7 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
      * @param array $conditions
      * @return array
      */
-    private function sortConditions(array $conditions)
+    private function sortConditions(array $conditions): array
     {
         usort($conditions, function (array $conditionLeft, array $conditionRight) {
             if ($conditionLeft['sort_order'] == $conditionRight['sort_order']) {

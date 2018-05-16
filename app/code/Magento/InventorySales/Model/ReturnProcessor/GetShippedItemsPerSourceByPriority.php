@@ -84,9 +84,7 @@ class GetShippedItemsPerSourceByPriority
         $sources = $this->sortSourcesByPriority($sources, (int)$websiteId);
 
         // Group items by SKU
-        $sources = $this->groupItemsBySku($sources);
-
-        return $sources;
+        return $this->groupItemsBySku($sources);
     }
 
     /**

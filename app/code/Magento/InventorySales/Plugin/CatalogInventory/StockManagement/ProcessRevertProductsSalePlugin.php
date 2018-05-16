@@ -85,8 +85,12 @@ class ProcessRevertProductsSalePlugin
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundRevertProductsSale(StockManagement $subject, callable $proceed, $items, $websiteId = null)
-    {
+    public function aroundRevertProductsSale(
+        StockManagement $subject,
+        callable $proceed,
+        array $items,
+        ?int $websiteId = null
+    ): array {
         if (empty($items)) {
             return [];
         }

@@ -7,6 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
@@ -20,6 +24,9 @@ use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AppendReservationsAfterOrderPlacementPlugin
 {
     /**
@@ -96,6 +103,10 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param OrderManagementInterface $subject
      * @param OrderInterface $order
      * @return OrderInterface
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterPlace(OrderManagementInterface $subject, OrderInterface $order) : OrderInterface

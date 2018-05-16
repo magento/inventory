@@ -7,6 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Setup\Operation;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -57,13 +61,13 @@ class AssignWebsiteToDefaultStock
     }
 
     /**
-     * @inheritdoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Validation\ValidationException
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return void
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws ValidationException
+     * @throws LocalizedException
      */
-    public function execute()
+    public function execute(): void
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
 

@@ -37,7 +37,7 @@ class StockIdResolver
      * @param string $code
      * @return int|null
      */
-    public function resolve(string $type, string $code)
+    public function resolve(string $type, string $code): ?int
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_stock_sales_channel');
