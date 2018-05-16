@@ -14,6 +14,7 @@ use Magento\Eav\Model\Config as EavConfig;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -72,8 +73,9 @@ class ApplyStatusAttributeJoin
      * @param Select $select
      *
      * @return void
+     * @throws LocalizedException
      */
-    public function execute(Select $select)
+    public function execute(Select $select): void
     {
         $storeId = $this->storeManager->getStore()->getId();
         $connection = $this->resourceConnection->getConnection();
@@ -105,6 +107,8 @@ class ApplyStatusAttributeJoin
      * @param string $alias
      *
      * @return string
+     * @throws LocalizedException
+     * @throws \Exception
      */
     private function getConditionByAliasAndStoreId(int $storeId, string $alias): string
     {

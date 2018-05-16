@@ -25,8 +25,9 @@ class ExportLowstockCsv extends ProductReportController
      * Export low stock products report to CSV format
      *
      * @return ResponseInterface
+     * @throws \Exception
      */
-    public function execute()
+    public function execute(): ResponseInterface
     {
         $this->_view->loadLayout(false);
         $fileName = 'products_lowstock.csv';

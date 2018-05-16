@@ -11,6 +11,7 @@ use Magento\Backend\Block\AbstractBlock;
 use Magento\Backend\Block\Context;
 use Magento\Framework\App\Rss\DataProviderInterface;
 use Magento\Framework\App\Rss\UrlBuilderInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\Rss\NotifyStock\GetSourceItemsCollection;
 
@@ -46,6 +47,7 @@ class NotifyStock extends AbstractBlock implements DataProviderInterface
 
     /**
      * @return void
+     * @throws LocalizedException
      */
     protected function _construct()
     {

@@ -15,6 +15,7 @@ use Magento\Framework\Data\Collection\EntityFactoryInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Inventory\Model\ResourceModel\Source;
@@ -114,13 +115,14 @@ class LowQuantityCollection extends AbstractCollection
      * @param int $storeId
      * @return void
      */
-    public function addStoreFilter(int $storeId)
+    public function addStoreFilter(int $storeId): void
     {
         $this->filterStoreId = $storeId;
     }
 
     /**
      * @inheritdoc
+     * @throws NoSuchEntityException
      */
     protected function _renderFilters()
     {
@@ -151,8 +153,10 @@ class LowQuantityCollection extends AbstractCollection
      * joinCatalogProduct depends on dynamic condition 'filterStoreId'
      *
      * @return void
+     * @throws NoSuchEntityException
+     * @throws \Exception
      */
-    private function joinCatalogProduct()
+    private function joinCatalogProduct(): void
     {
         $productEntityTable = $this->getTable('catalog_product_entity');
         $productEavVarcharTable = $this->getTable('catalog_product_entity_varchar');
@@ -196,7 +200,7 @@ class LowQuantityCollection extends AbstractCollection
     /**
      * @return void
      */
-    private function joinInventoryConfiguration()
+    private function joinInventoryConfiguration(): void
     {
         $sourceItemConfigurationTable = $this->getTable('inventory_low_stock_notification_configuration');
 
@@ -216,7 +220,7 @@ class LowQuantityCollection extends AbstractCollection
     /**
      * @return void
      */
-    private function addProductTypeFilter()
+    private function addProductTypeFilter(): void
     {
         $this->addFieldToFilter(
             'product_entity.type_id',
@@ -227,7 +231,7 @@ class LowQuantityCollection extends AbstractCollection
     /**
      * @return void
      */
-    private function addNotifyStockQtyFilter()
+    private function addNotifyStockQtyFilter(): void
     {
         $notifyStockExpression = $this->getConnection()->getIfNullSql(
             'notification_configuration.' . SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY,
@@ -243,7 +247,7 @@ class LowQuantityCollection extends AbstractCollection
     /**
      * @return void
      */
-    private function addEnabledSourceFilter()
+    private function addEnabledSourceFilter(): void
     {
         $this->getSelect()->joinInner(
             ['inventory_source' => $this->getTable(Source::TABLE_NAME_SOURCE)],
@@ -260,7 +264,7 @@ class LowQuantityCollection extends AbstractCollection
     /**
      * @return void
      */
-    private function addSourceItemInStockFilter()
+    private function addSourceItemInStockFilter(): void
     {
         $this->addFieldToFilter('main_table.status', SourceItemInterface::STATUS_IN_STOCK);
     }

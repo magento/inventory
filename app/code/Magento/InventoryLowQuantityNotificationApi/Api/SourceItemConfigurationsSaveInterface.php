@@ -20,6 +20,8 @@ interface SourceItemConfigurationsSaveInterface
      * @param \Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface[]
      *      $sourceItemConfigurations
      * @return void
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
      */
-    public function execute(array $sourceItemConfigurations);
+    public function execute(array $sourceItemConfigurations): void;
 }

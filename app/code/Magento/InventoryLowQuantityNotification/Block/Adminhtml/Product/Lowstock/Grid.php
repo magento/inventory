@@ -10,6 +10,7 @@ namespace Magento\InventoryLowQuantityNotification\Block\Adminhtml\Product\Lowst
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Grid as GridWidget;
 use Magento\Backend\Helper\Data;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\LowQuantityCollection;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\LowQuantityCollectionFactory;
 
@@ -42,9 +43,10 @@ class Grid extends GridWidget
     }
 
     /**
-     * @return GridWidget
+     * {@inheritdoc}
+     * @throws LocalizedException
      */
-    protected function _prepareCollection(): GridWidget
+    protected function _prepareCollection()
     {
         $website = $this->getRequest()->getParam('website');
         $group = $this->getRequest()->getParam('group');

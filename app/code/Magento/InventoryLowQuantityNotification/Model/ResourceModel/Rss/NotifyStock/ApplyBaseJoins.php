@@ -11,7 +11,6 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
-use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Inventory\Model\ResourceModel\Source;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -39,7 +38,7 @@ class ApplyBaseJoins
      *
      * @return void
      */
-    public function execute(Select $select)
+    public function execute(Select $select): void
     {
         $sourceItemConfigurationTable = 'inventory_low_stock_notification_configuration';
         $configurationJoinCondition =
