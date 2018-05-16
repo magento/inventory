@@ -13,6 +13,7 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder as SearchSearchCriteriaBu
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
@@ -114,6 +115,7 @@ class StockDataProvider extends DataProvider
 
     /**
      * {@inheritdoc}
+     * @throws NoSuchEntityException
      */
     public function getData()
     {
@@ -146,18 +148,18 @@ class StockDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->stockRepository->getList($searchCriteria);
 
-        $searchResult = $this->searchResultFactory->create(
+        return $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
             StockInterface::STOCK_ID
         );
-        return $searchResult;
     }
 
     /**
      * @param int $stockId
      * @return array
+     * @throws NoSuchEntityException
      */
     private function getAssignedSourcesData(int $stockId): array
     {
