@@ -67,7 +67,7 @@ class AssignToDefaultStockDefaultSourceValidator implements StockSourceLinkValid
      * @param StockSourceLinkInterface $link
      * @return bool
      */
-    private function isInitialAssignment(StockSourceLinkInterface $link)
+    private function isInitialAssignment(StockSourceLinkInterface $link): bool
     {
         $defaultStockId = $this->defaultStockProvider->getId();
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
@@ -88,7 +88,7 @@ class AssignToDefaultStockDefaultSourceValidator implements StockSourceLinkValid
      * @param StockSourceLinkInterface $link
      * @return bool
      */
-    private function isLinkContainDefaultSourceOrStock(StockSourceLinkInterface $link)
+    private function isLinkContainDefaultSourceOrStock(StockSourceLinkInterface $link): bool
     {
         $defaultStockId = $this->defaultStockProvider->getId();
         $defaultSourceCode = $this->defaultSourceProvider->getCode();

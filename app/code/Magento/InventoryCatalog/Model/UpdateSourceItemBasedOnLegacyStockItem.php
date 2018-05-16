@@ -10,6 +10,9 @@ namespace Magento\InventoryCatalog\Model;
 use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
@@ -17,6 +20,9 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class UpdateSourceItemBasedOnLegacyStockItem
 {
     /**
@@ -84,10 +90,12 @@ class UpdateSourceItemBasedOnLegacyStockItem
 
     /**
      * @param Item $legacyStockItem
-     *
      * @return void
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
      */
-    public function execute(Item $legacyStockItem)
+    public function execute(Item $legacyStockItem): void
     {
         $productSku = $this->getSkusByProductIds
             ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];

@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Patch\Schema;
 
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Setup\Patch\SchemaPatchInterface;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalog\Setup\Operation\AssignDefaultSourceToDefaultStock;
 use Magento\InventoryCatalog\Setup\Operation\CreateDefaultSource;
 use Magento\InventoryCatalog\Setup\Operation\CreateDefaultStock;
@@ -49,6 +51,8 @@ class InitializeDefaultStock implements SchemaPatchInterface
 
     /**
      * @inheritDoc
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
     public function apply()
     {
