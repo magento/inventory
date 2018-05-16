@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\ResourceModel;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 
 /**
@@ -28,7 +27,7 @@ trait PredefinedId
      * @param AbstractModel $object
      * @return bool
      */
-    protected function isObjectNotNew(AbstractModel $object)
+    protected function isObjectNotNew(AbstractModel $object): bool
     {
         $connection = $this->getConnection();
         $select = $connection->select()
@@ -44,11 +43,11 @@ trait PredefinedId
      * Overwrite default \Magento\Framework\Model\ResourceModel\Db\AbstractDb implementation of the saveNewObject
      * @see \Magento\Framework\Model\ResourceModel\Db\AbstractDb::saveNewObject()
      *
-     * @param \Magento\Framework\Model\AbstractModel $object
-     * @throws LocalizedException
+     * @param AbstractModel $object
+     *
      * @return void
      */
-    protected function saveNewObject(\Magento\Framework\Model\AbstractModel $object)
+    protected function saveNewObject(AbstractModel $object): void
     {
         $bind = $this->_prepareDataForSave($object);
         $this->getConnection()->insert($this->getMainTable(), $bind);

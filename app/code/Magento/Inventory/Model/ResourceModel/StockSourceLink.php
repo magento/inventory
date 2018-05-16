@@ -17,8 +17,8 @@ class StockSourceLink extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    const TABLE_NAME_STOCK_SOURCE_LINK = 'inventory_source_stock_link';
-    const ID_FIELD_NAME = 'link_id';
+    public const TABLE_NAME_STOCK_SOURCE_LINK = 'inventory_source_stock_link';
+    private const ID_FIELD_NAME = 'link_id';
     /**#@-*/
 
     /**

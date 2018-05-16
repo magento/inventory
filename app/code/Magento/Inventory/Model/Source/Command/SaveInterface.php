@@ -31,5 +31,5 @@ interface SaveInterface
      * @throws ValidationException
      * @throws CouldNotSaveException
      */
-    public function execute(SourceInterface $source);
+    public function execute(SourceInterface $source): void;
 }

@@ -52,10 +52,7 @@ class StockSourceLinksSave implements StockSourceLinksSaveInterface
     }
 
     /**
-     * @param StockSourceLink[] $links
-     * @throws CouldNotSaveException
-     * @throws InputException
-     * @throws ValidationException
+     * {@inheritdoc}
      */
     public function execute(array $links)
     {

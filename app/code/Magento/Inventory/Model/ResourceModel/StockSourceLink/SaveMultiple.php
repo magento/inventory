@@ -38,7 +38,7 @@ class SaveMultiple
      * @param StockSourceLinkInterface[] $links
      * @return void
      */
-    public function execute(array $links)
+    public function execute(array $links): void
     {
         if (!count($links)) {
             return;
@@ -86,8 +86,7 @@ class SaveMultiple
      */
     private function buildValuesSqlPart(array $links): string
     {
-        $sql = rtrim(str_repeat('(?, ?, ?), ', count($links)), ', ');
-        return $sql;
+        return rtrim(str_repeat('(?, ?, ?), ', count($links)), ', ');
     }
 
     /**
