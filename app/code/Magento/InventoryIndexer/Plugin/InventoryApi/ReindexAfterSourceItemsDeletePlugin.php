@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\StateException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
@@ -34,13 +35,14 @@ class ReindexAfterSourceItemsDeletePlugin
      * @param callable $proceed
      * @param SourceItemInterface[] $sourceItems
      * @return void
+     * @throws StateException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
         SourceItemsDeleteInterface $subject,
         callable $proceed,
         array $sourceItems
-    ) {
+    ): void {
         $sourceCodes = [];
         foreach ($sourceItems as $sourceItem) {
             $sourceCodes[] = $sourceItem->getSourceCode();

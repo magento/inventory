@@ -53,7 +53,7 @@ class InvalidateAfterEnablingOrDisablingSourcePlugin
         SourceRepositoryInterface $subject,
         callable $proceed,
         SourceInterface $source
-    ) {
+    ): void {
         $invalidationRequired = false;
         if ($source->getSourceCode()) {
             $invalidationRequired = $this->isInvalidationRequiredForSource->execute(

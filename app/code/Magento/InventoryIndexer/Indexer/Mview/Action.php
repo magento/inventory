@@ -35,10 +35,7 @@ class Action implements ActionInterface
     }
 
     /**
-     * Execute materialization on ids entities
-     *
-     * @param int[] $ids
-     * @return void
+     * {@inheritdoc}
      */
     public function execute($ids)
     {
