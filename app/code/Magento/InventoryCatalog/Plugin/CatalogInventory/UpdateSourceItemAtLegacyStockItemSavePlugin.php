@@ -82,13 +82,13 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $connection = $this->resourceConnection->getConnection();
         $connection->beginTransaction();
         try {
-            // need to save configuration
-            $proceed($legacyStockItem);
-
             $typeId = $this->getTypeId($legacyStockItem);
             if ($this->isSourceItemManagementAllowedForProductType->execute($typeId)) {
                 $this->updateSourceItemBasedOnLegacyStockItem->execute($legacyStockItem);
             }
+
+            // need to save configuration
+            $proceed($legacyStockItem);
 
             $connection->commit();
 
