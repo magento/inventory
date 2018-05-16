@@ -44,10 +44,11 @@ class CacheFlush
      * @param SourceItemIndexer $subject
      * @param array $sourceItemIds
      * @param null $result
+     * @return void
      * @throws \Exception in case catalog product entity type hasn't been initialize.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(SourceItemIndexer $subject, $result, array $sourceItemIds)
+    public function afterExecuteList(SourceItemIndexer $subject, $result, array $sourceItemIds): void
     {
         $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
         $this->flushCacheByIds->execute($productIds);
