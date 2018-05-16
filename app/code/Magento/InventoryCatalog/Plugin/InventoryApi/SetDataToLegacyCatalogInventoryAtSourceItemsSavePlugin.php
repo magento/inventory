@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization\SetDataToLegacyCatalogInventory;
@@ -73,7 +74,11 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
             }
 
             $sku = $sourceItem->getSku();
-            $typeId = $this->getProductTypeBySku->execute([$sku])[$sku];
+            try {
+                $typeId = $this->getProductTypeBySku->execute([$sku])[$sku];
+            } catch (InputException $e) {
+                continue;
+            }
 
             if (false === $this->isSourceItemsAllowedForProductType->execute($typeId)) {
                 continue;
