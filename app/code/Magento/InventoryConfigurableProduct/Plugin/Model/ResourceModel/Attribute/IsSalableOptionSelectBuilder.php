@@ -9,6 +9,7 @@ namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Attrib
 
 use Magento\ConfigurableProduct\Model\ResourceModel\Attribute\OptionSelectBuilderInterface;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -55,13 +56,13 @@ class IsSalableOptionSelectBuilder
      * @param OptionSelectBuilderInterface $subject
      * @param Select $select
      * @return Select
-     *
+     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetSelect(
         OptionSelectBuilderInterface $subject,
         Select $select
-    ) {
+    ): Select {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();

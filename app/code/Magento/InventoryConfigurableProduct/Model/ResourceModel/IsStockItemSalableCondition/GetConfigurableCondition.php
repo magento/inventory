@@ -22,8 +22,6 @@ class GetConfigurableCondition implements GetIsStockItemSalableConditionInterfac
      */
     public function execute(Select $select): string
     {
-        $condition = 'product_entity.type_id = \'configurable\'';
-
-        return $condition;
+        return 'product_entity.type_id = \'configurable\'';
     }
 }
