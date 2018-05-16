@@ -12,6 +12,8 @@ use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
@@ -45,10 +47,11 @@ class ProcessSourceItemsObserver implements ObserverInterface
 
     /**
      * @param EventObserver $observer
-     *
      * @return void
+     * @throws InputException
+     * @throws LocalizedException
      */
-    public function execute(EventObserver $observer)
+    public function execute(EventObserver $observer): void
     {
         /** @var ProductInterface $product */
         $product = $observer->getEvent()->getProduct();
@@ -79,10 +82,10 @@ class ProcessSourceItemsObserver implements ObserverInterface
     /**
      * @param array $sourceItems
      * @param string $productSku
-     *
      * @return void
+     * @throws InputException
      */
-    private function processSourceItems(array $sourceItems, string $productSku)
+    private function processSourceItems(array $sourceItems, string $productSku): void
     {
         foreach ($sourceItems as $key => $sourceItem) {
             if (!isset($sourceItem[SourceItemInterface::STATUS])) {
