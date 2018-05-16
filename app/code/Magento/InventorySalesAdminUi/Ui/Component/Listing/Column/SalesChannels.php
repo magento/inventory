@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Ui\Component\Listing\Column;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesAdminUi\Ui\SalesChannelNameResolverInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -45,8 +46,9 @@ class SalesChannels extends Column
      *
      * @param array $dataSource
      * @return array
+     * @throws NoSuchEntityException
      */
-    public function prepareDataSource(array $dataSource)
+    public function prepareDataSource(array $dataSource): array
     {
         if ($dataSource['data']['totalRecords'] > 0) {
             foreach ($dataSource['data']['items'] as &$row) {
@@ -64,6 +66,7 @@ class SalesChannels extends Column
      *
      * @param array $salesChannelData
      * @return array
+     * @throws NoSuchEntityException
      */
     private function prepareSalesChannelData(array $salesChannelData): array
     {

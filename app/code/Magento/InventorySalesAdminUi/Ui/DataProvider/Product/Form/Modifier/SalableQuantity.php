@@ -9,6 +9,7 @@ namespace Magento\InventorySalesAdminUi\Ui\DataProvider\Product\Form\Modifier;
 
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\Catalog\Model\Locator\LocatorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
@@ -58,6 +59,7 @@ class SalableQuantity extends AbstractModifier
 
     /**
      * @inheritdoc
+     * @throws NoSuchEntityException
      */
     public function modifyData(array $data)
     {

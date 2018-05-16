@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Ui\Component\Listing\Column;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
@@ -60,6 +61,7 @@ class SalableQuantity extends Column
 
     /**
      * @inheritdoc
+     * @throws NoSuchEntityException
      */
     public function prepareDataSource(array $dataSource)
     {

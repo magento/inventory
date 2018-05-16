@@ -18,6 +18,7 @@ interface SalesChannelNameResolverInterface
      * @param string $type
      * @param string $code
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function resolve(string $type, string $code): string;
 }
