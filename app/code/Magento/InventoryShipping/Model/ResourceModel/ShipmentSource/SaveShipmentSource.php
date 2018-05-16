@@ -17,8 +17,8 @@ class SaveShipmentSource
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    const SOURCE_CODE = 'source_code';
+    private const SHIPMENT_ID = 'shipment_id';
+    private const SOURCE_CODE = 'source_code';
     
     /**
      * @var ResourceConnection
@@ -39,7 +39,7 @@ class SaveShipmentSource
      * @param string $sourceCode
      * @return void
      */
-    public function execute(int $shipmentId, string $sourceCode)
+    public function execute(int $shipmentId, string $sourceCode): void
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_shipment_source');

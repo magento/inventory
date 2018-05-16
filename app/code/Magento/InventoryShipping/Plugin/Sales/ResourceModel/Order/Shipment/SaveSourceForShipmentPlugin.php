@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Plugin\Sales\ResourceModel\Order\Shipment;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryShipping\Model\ResourceModel\ShipmentSource\SaveShipmentSource;
 use Magento\Sales\Model\ResourceModel\Order\Shipment as ShipmentResource;
@@ -41,13 +42,14 @@ class SaveSourceForShipmentPlugin
      * @param ShipmentResource $result
      * @param AbstractModel $shipment
      * @return ShipmentResource
+     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(
         ShipmentResource $subject,
         ShipmentResource $result,
         AbstractModel $shipment
-    ) {
+    ): ShipmentResource {
         if (!empty($shipment->getExtensionAttributes())
             && $shipment->getExtensionAttributes()->getSourceCode()) {
             $sourceCode = $shipment->getExtensionAttributes()->getSourceCode();

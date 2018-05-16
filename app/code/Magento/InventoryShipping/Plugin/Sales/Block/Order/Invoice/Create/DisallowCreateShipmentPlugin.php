@@ -45,7 +45,7 @@ class DisallowCreateShipmentPlugin
      * @param bool $result
      * @return bool
      */
-    public function afterCanCreateShipment(Form $subject, bool $result)
+    public function afterCanCreateShipment(Form $subject, bool $result): bool
     {
         try {
             $websiteId = $subject->getOrder()->getStore()->getWebsiteId();

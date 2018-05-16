@@ -10,6 +10,7 @@ namespace Magento\InventoryShipping\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\OrderRepository;
 use Magento\InventoryShipping\Model\IsMultiSourceMode;
 use Magento\Framework\Exception\InputException;
@@ -51,8 +52,8 @@ class NewShipmentLoadBefore implements ObserverInterface
     }
 
     /**
-     * @param EventObserver $observer
-     * @return void
+     * {@inheritdoc}
+     * @throws LocalizedException
      */
     public function execute(EventObserver $observer)
     {

@@ -13,7 +13,6 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\ShipmentFactory;
 use Magento\Sales\Api\Data\ShipmentExtensionFactory;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
-use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 
 class AssignSourceCodeToShipmentPlugin
@@ -66,7 +65,7 @@ class AssignSourceCodeToShipmentPlugin
      * @throws \Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterCreate(ShipmentFactory $subject, ShipmentInterface $shipment, Order $order)
+    public function afterCreate(ShipmentFactory $subject, ShipmentInterface $shipment, Order $order): ShipmentInterface
     {
         $sourceCode = $this->request->getParam('sourceCode');
         if (empty($sourceCode)) {

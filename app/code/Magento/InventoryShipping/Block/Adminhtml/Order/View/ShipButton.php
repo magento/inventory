@@ -70,7 +70,7 @@ class ShipButton extends Container
      *
      * @return string
      */
-    public function getSourceSelectionUrl()
+    public function getSourceSelectionUrl(): string
     {
         return $this->getUrl(
             'inventoryshipping/SourceSelection/index',

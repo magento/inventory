@@ -17,7 +17,7 @@ class DeleteShipmentSource
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
+    private const SHIPMENT_ID = 'shipment_id';
     
     /**
      * @var ResourceConnection
@@ -37,7 +37,7 @@ class DeleteShipmentSource
      * @param int $shipmentId
      * @return void
      */
-    public function execute(int $shipmentId)
+    public function execute(int $shipmentId): void
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_shipment_source');

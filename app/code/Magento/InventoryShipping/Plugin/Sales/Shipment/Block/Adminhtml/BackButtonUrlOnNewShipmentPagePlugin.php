@@ -28,10 +28,10 @@ class BackButtonUrlOnNewShipmentPagePlugin
 
     /**
      * @param Create $subject
-     * @param $result
+     * @param string $result
      * @return string
      */
-    public function afterGetBackUrl(Create $subject, $result)
+    public function afterGetBackUrl(Create $subject, string $result): string
     {
         if (empty($subject->getShipment())) {
             return $result;

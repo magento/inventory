@@ -19,6 +19,11 @@ interface SourceDeductionServiceInterface
     /**
      * @param SourceDeductionRequestInterface $sourceDeductionRequest
      * @return void
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Validation\ValidationException
      */
     public function execute(SourceDeductionRequestInterface $sourceDeductionRequest): void;
 }

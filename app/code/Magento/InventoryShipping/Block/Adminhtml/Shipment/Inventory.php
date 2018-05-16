@@ -11,6 +11,7 @@ use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\Sales\Model\Order\Shipment;
 
 /**
  * Display selected source on shipment creation page
@@ -50,7 +51,7 @@ class Inventory extends Template
     /**
      * Retrieve shipment model instance
      *
-     * @return \Magento\Sales\Model\Order\Shipment
+     * @return Shipment
      */
     public function getShipment()
     {
@@ -62,11 +63,12 @@ class Inventory extends Template
      *
      * @return null|string
      */
-    public function getSourceCode()
+    public function getSourceCode(): ?string
     {
         $shipment = $this->getShipment();
         $extensionAttributes = $shipment->getExtensionAttributes();
-        if ($sourceCode = $extensionAttributes->getSourceCode()) {
+        $sourceCode = $extensionAttributes->getSourceCode();
+        if ($sourceCode) {
             return $sourceCode;
         }
         return null;

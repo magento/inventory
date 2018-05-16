@@ -17,8 +17,8 @@ class GetSourceCodeByShipmentId
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    const SOURCE_CODE = 'source_code';
+    private const SHIPMENT_ID = 'shipment_id';
+    private const SOURCE_CODE = 'source_code';
     
     /**
      * @var ResourceConnection
@@ -39,7 +39,7 @@ class GetSourceCodeByShipmentId
      * @param int $shipmentId
      * @return string|null
      */
-    public function execute(int $shipmentId)
+    public function execute(int $shipmentId): ?string
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection

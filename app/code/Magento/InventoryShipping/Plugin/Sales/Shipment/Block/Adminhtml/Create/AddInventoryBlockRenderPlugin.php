@@ -18,10 +18,10 @@ class AddInventoryBlockRenderPlugin
     /**
      * After get shipment Items
      * @param Form $subject
-     * @param $result
+     * @param string $result
      * @return string
      */
-    public function afterGetItemsHtml(Form $subject, $result)
+    public function afterGetItemsHtml(Form $subject, string $result): string
     {
         return $subject->getChildHtml('inventory_shipment') . $result;
     }
