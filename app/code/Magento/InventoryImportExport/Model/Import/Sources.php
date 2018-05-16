@@ -26,10 +26,10 @@ class Sources extends AbstractEntity
     /**
      * Column names for import file
      */
-    const COL_SKU = SourceItemInterface::SKU;
-    const COL_SOURCE_CODE = SourceItemInterface::SOURCE_CODE;
-    const COL_QTY = SourceItemInterface::QUANTITY;
-    const COL_STATUS = SourceItemInterface::STATUS;
+    public const COL_SKU = SourceItemInterface::SKU;
+    public const COL_SOURCE_CODE = SourceItemInterface::SOURCE_CODE;
+    public const COL_QTY = SourceItemInterface::QUANTITY;
+    public const COL_STATUS = SourceItemInterface::STATUS;
 
     /**
      * @var Json
@@ -102,7 +102,7 @@ class Sources extends AbstractEntity
      * @return CommandInterface
      * @throws LocalizedException
      */
-    private function getCommandByBehavior($behavior)
+    private function getCommandByBehavior(string $behavior): CommandInterface
     {
         if (!isset($this->commands[$behavior])) {
             throw new LocalizedException(

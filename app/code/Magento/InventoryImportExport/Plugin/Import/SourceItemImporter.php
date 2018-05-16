@@ -8,6 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
@@ -59,9 +62,9 @@ class SourceItemImporter
      * @param StockItemImporterInterface $subject
      * @param null $result
      * @param array $stockData
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Validation\ValidationException
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
      * @return void
      * @see StockItemImporterInterface::import()
      *
@@ -71,7 +74,7 @@ class SourceItemImporter
         StockItemImporterInterface $subject,
         $result,
         array $stockData
-    ) {
+    ): void {
         $sourceItems = [];
         foreach ($stockData as $stockDatum) {
             if (!isset($stockDatum['sku'])) {
@@ -83,7 +86,7 @@ class SourceItemImporter
             $sourceItem = $this->sourceItemFactory->create();
             $sourceItem->setSku($stockDatum['sku']);
             $sourceItem->setSourceCode($this->defaultSource->getCode());
-            $sourceItem->setQuantity($qty);
+            $sourceItem->setQuantity((float)$qty);
             $sourceItem->setStatus($inStock);
             $sourceItems[] = $sourceItem;
         }

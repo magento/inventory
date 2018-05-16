@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import\Validator;
 
+use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryImportExport\Model\Import\Sources;
@@ -47,7 +48,7 @@ class SourceValidator implements ValidatorInterface
     /**
      * @inheritdoc
      */
-    public function validate(array $rowData, int $rowNumber)
+    public function validate(array $rowData, int $rowNumber): ValidationResult
     {
         $errors = [];
 
@@ -66,7 +67,7 @@ class SourceValidator implements ValidatorInterface
      * @param string $sourceCode
      * @return bool
      */
-    private function isExistingSource($sourceCode): bool
+    private function isExistingSource(string $sourceCode): bool
     {
         return isset($this->sourceCodes[$sourceCode]);
     }
@@ -76,7 +77,7 @@ class SourceValidator implements ValidatorInterface
      *
      * @return void
      */
-    private function loadSourceCodes()
+    private function loadSourceCodes(): void
     {
         $sources = $this->sourceRepository->getList();
         foreach ($sources->getItems() as $source) {

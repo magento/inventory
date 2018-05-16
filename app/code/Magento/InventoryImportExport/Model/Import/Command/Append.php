@@ -40,7 +40,7 @@ class Append implements CommandInterface
     /**
      * @inheritdoc
      */
-    public function execute(array $bunch)
+    public function execute(array $bunch): void
     {
         $sourceItems = $this->sourceItemConvert->convert($bunch);
         $this->sourceItemsSave->execute($sourceItems);

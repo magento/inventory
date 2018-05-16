@@ -41,7 +41,7 @@ class Delete implements CommandInterface
     /**
      * @inheritdoc
      */
-    public function execute(array $bunch)
+    public function execute(array $bunch): void
     {
         $sourceItems = $this->sourceItemConvert->convert($bunch);
         $this->sourceItemsDelete->execute($sourceItems);

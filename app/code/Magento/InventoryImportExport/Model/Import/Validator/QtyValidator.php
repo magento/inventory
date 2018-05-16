@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import\Validator;
 
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryImportExport\Model\Import\Sources;
 
@@ -23,7 +23,6 @@ class QtyValidator implements ValidatorInterface
 
     /**
      * @param ValidationResultFactory $validationResultFactory
-     * @throws LocalizedException
      */
     public function __construct(ValidationResultFactory $validationResultFactory)
     {
@@ -33,7 +32,7 @@ class QtyValidator implements ValidatorInterface
     /**
      * @inheritdoc
      */
-    public function validate(array $rowData, int $rowNumber)
+    public function validate(array $rowData, int $rowNumber): ValidationResult
     {
         $errors = [];
 

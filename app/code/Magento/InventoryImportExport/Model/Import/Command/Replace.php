@@ -52,7 +52,7 @@ class Replace implements CommandInterface
      * If an SKU and SOURCE_CODE in the import data matches the SKU and SOURCE_CODE of an existing entity,
      * all fields are deleted and new a record is created.
      */
-    public function execute(array $bunch)
+    public function execute(array $bunch): void
     {
         $sourceItems = $this->sourceItemConvert->convert($bunch);
         $this->sourceItemsDelete->execute($sourceItems);
