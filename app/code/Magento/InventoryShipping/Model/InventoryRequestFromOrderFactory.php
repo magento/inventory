@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Model;
 
+use Magento\Framework\Exception\InputException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
@@ -60,6 +61,7 @@ class InventoryRequestFromOrderFactory
     /**
      * @param OrderInterface $order
      * @return InventoryRequestInterface
+     * @throws InputException
      */
     public function create(OrderInterface $order) : InventoryRequestInterface
     {

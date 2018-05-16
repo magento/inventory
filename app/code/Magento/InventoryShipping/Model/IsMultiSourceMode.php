@@ -51,7 +51,7 @@ class IsMultiSourceMode
      * @param int $websiteId
      * @return bool
      */
-    public function execute(int $websiteId):bool
+    public function execute(int $websiteId): bool
     {
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
         $searchCriteria = $this->searchCriteriaBuilder

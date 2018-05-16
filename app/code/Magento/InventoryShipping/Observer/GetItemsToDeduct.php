@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryShipping\Observer;
 
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Shipment\Item;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -50,6 +51,7 @@ class GetItemsToDeduct
      * @param Item $shipmentItem
      * @return array
      * @throws InputException
+     * @throws LocalizedException
      */
     public function execute(Item $shipmentItem): array
     {

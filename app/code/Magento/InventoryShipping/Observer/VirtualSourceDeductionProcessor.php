@@ -80,8 +80,7 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
     }
 
     /**
-     * @param EventObserver $observer
-     * @return void
+     * {@inheritdoc}
      * @throws LocalizedException
      */
     public function execute(EventObserver $observer)

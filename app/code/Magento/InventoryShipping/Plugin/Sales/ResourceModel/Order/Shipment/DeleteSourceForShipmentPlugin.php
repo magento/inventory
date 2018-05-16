@@ -38,7 +38,7 @@ class DeleteSourceForShipmentPlugin
         ShipmentResource $subject,
         ShipmentResource $result,
         AbstractModel $shipment
-    ) {
+    ): ShipmentResource {
         $this->deleteShipmentSource->execute((int)$shipment->getId());
 
         return $result;

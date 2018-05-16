@@ -84,7 +84,7 @@ class AlgorithmSelectionButton implements ButtonProviderInterface
      *
      * @return array
      */
-    protected function getAlgorithmsListOptions()
+    protected function getAlgorithmsListOptions(): array
     {
         $algorithmsList = $this->getSourceSelectionAlgorithmList->execute();
         $splitButtonOptions = [];

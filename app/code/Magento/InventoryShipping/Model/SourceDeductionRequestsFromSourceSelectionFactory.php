@@ -67,7 +67,7 @@ class SourceDeductionRequestsFromSourceSelectionFactory
      * @param SourceSelectionItemInterface[] $sourceSelectionItems
      * @return ItemToDeductInterface[]
      */
-    private function getItemsPerSource(array $sourceSelectionItems)
+    private function getItemsPerSource(array $sourceSelectionItems): array
     {
         $itemsPerSource = [];
         foreach ($sourceSelectionItems as $sourceSelectionItem) {

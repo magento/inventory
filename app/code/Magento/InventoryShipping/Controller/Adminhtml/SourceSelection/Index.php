@@ -8,11 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryShipping\Controller\Adminhtml\SourceSelection;
 
 use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\Registry;
-use Magento\Sales\Model\OrderRepository;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class Index
@@ -26,6 +21,7 @@ class Index extends Action
 
     /**
      * @inheritdoc
+     * @throws \RuntimeException
      */
     public function execute()
     {

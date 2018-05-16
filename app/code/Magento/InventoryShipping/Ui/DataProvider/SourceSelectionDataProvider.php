@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryShipping\Ui\DataProvider;
 
 use Magento\Framework\Api\Filter;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Model\OrderRepository;
@@ -16,7 +17,6 @@ use Magento\Ui\DataProvider\AbstractDataProvider;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\InventoryShipping\Ui\DataProvider\GetSourcesByStockIdSkuAndQty;
 
 class SourceSelectionDataProvider extends AbstractDataProvider
 {
@@ -97,6 +97,9 @@ class SourceSelectionDataProvider extends AbstractDataProvider
 
     /**
      * @inheritdoc
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getData()
     {
@@ -166,7 +169,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
      * @return bool
      * @throws LocalizedException
      */
-    private function isManageStock($itemSku, $stockId)
+    private function isManageStock($itemSku, $stockId): bool
     {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($itemSku, $stockId);
         if (!empty($stockItemConfiguration)) {
@@ -181,7 +184,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
      * @param Item $item
      * @return null|string
      */
-    private function getProductName(Item $item)
+    private function getProductName(Item $item): ?string
     {
         //TODO: need to transfer this to html block and render on Ui
         $name = $item->getName();
@@ -207,9 +210,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
                 }
             }
         }
-        $name .= '<br>' .__('SKU: ') . $item->getSku();
-
-        return $name;
+        return $name . '<br>' .__('SKU: ') . $item->getSku();
     }
 
     /**

@@ -55,7 +55,7 @@ class BackButton implements ButtonProviderInterface
      *
      * @return string
      */
-    public function getBackUrl()
+    public function getBackUrl(): string
     {
         $orderId = $this->request->getParam('order_id');
         return $this->urlBuilder->getUrl(

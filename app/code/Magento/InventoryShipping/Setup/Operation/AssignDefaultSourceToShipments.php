@@ -17,8 +17,8 @@ class AssignDefaultSourceToShipments
     /**
      * Constant for fields in data array
      */
-    const SHIPMENT_ID = 'shipment_id';
-    const SOURCE_CODE = 'source_code';
+    public const SHIPMENT_ID = 'shipment_id';
+    public const SOURCE_CODE = 'source_code';
 
     /**
      * @var ResourceConnection
@@ -46,7 +46,7 @@ class AssignDefaultSourceToShipments
      * @param ModuleDataSetupInterface $setup
      * @return void
      */
-    public function execute(ModuleDataSetupInterface $setup)
+    public function execute(ModuleDataSetupInterface $setup): void
     {
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         $sourceShipmentTable = $setup->getTable('inventory_shipment_source');

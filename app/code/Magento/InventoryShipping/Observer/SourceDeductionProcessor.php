@@ -9,6 +9,8 @@ namespace Magento\InventoryShipping\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventoryShipping\Model\SourceDeduction\SourceDeductionServiceInterface;
 use Magento\InventoryShipping\Model\SourceDeduction\Request\SourceDeductionRequestInterfaceFactory;
@@ -77,10 +79,12 @@ class SourceDeductionProcessor implements ObserverInterface
 
     /**
      * @param EventObserver $observer
+     *
      * @return void
-     * @throws \Magento\Framework\Exception\InputException
+     * @throws InputException
+     * @throws LocalizedException
      */
-    public function execute(EventObserver $observer)
+    public function execute(EventObserver $observer): void
     {
         /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
         $shipmentItem = $observer->getShipmentItem();
