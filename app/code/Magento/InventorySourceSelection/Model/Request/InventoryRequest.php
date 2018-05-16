@@ -54,7 +54,7 @@ class InventoryRequest implements InventoryRequestInterface
     /**
      * @inheritdoc
      */
-    public function setStockId($stockId)
+    public function setStockId(int $stockId): void
     {
         $this->stockId = $stockId;
     }
@@ -62,7 +62,7 @@ class InventoryRequest implements InventoryRequestInterface
     /**
      * @inheritdoc
      */
-    public function setItems($items)
+    public function setItems(array $items): void
     {
         $this->items = $items;
     }

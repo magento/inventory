@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySourceSelectionApi\Model;
 
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 
@@ -21,6 +23,8 @@ interface SourceSelectionInterface
     /**
      * @param InventoryRequestInterface $inventoryRequest
      * @return SourceSelectionResultInterface
+     * @throws InputException
+     * @throws LocalizedException
      */
     public function execute(InventoryRequestInterface $inventoryRequest): SourceSelectionResultInterface;
 }
