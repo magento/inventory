@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Operation;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -60,8 +62,10 @@ class CreateDefaultStock
      * Create default stock
      *
      * @return void
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
-    public function execute()
+    public function execute(): void
     {
         $data = [
             StockInterface::STOCK_ID => $this->defaultStockProvider->getId(),

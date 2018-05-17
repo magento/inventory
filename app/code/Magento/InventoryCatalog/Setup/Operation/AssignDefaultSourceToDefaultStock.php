@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Operation;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterfaceFactory;
 use Magento\InventoryApi\Api\StockSourceLinksSaveInterface;
@@ -60,8 +62,10 @@ class AssignDefaultSourceToDefaultStock
      * Assign default source to stock
      *
      * @return void
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
-    public function execute()
+    public function execute(): void
     {
         /** @var StockSourceLinkInterface $link */
         $link = $this->stockSourceLinkFactory->create();

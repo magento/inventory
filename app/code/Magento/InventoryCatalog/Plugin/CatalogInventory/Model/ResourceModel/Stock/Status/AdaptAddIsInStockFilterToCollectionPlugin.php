@@ -7,8 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\Stock\Status;
 
-use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalog\Model\ResourceModel\AddIsInStockFilterToCollection;
 
@@ -42,16 +43,17 @@ class AdaptAddIsInStockFilterToCollectionPlugin
     /**
      * @param Status $stockStatus
      * @param callable $proceed
-     * @param Collection $collection
+     * @param $collection
      * @return Status
-     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddIsInStockFilterToCollection(
         Status $stockStatus,
         callable $proceed,
         $collection
-    ) {
+    ): Status {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
         $this->addIsInStockFilterToCollection->execute($collection, $stockId);
 

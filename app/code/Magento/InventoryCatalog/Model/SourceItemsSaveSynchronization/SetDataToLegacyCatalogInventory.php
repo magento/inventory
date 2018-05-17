@@ -14,6 +14,7 @@ use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalogApi\Model\SourceItemsSaveSynchronizationInterface;
@@ -80,6 +81,8 @@ class SetDataToLegacyCatalogInventory
     /**
      * @param array $sourceItems
      * @return void
+     * @throws InputException
+     * @throws LocalizedException
      */
     public function execute(array $sourceItems): void
     {
@@ -126,6 +129,7 @@ class SetDataToLegacyCatalogInventory
     /**
      * @param int $productId
      * @return null|StockItemInterface
+     * @throws LocalizedException
      */
     private function getLegacyStockItem(int $productId): ?StockItemInterface
     {
@@ -140,7 +144,6 @@ class SetDataToLegacyCatalogInventory
         }
 
         $stockItems = $stockItemCollection->getItems();
-        $stockItem = reset($stockItems);
-        return $stockItem;
+        return reset($stockItems);
     }
 }

@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization\SetDataToLegacyCatalogInventory;
@@ -63,6 +65,8 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
      * @param SourceItemInterface[] $sourceItems
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws InputException
+     * @throws LocalizedException
      */
     public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems): void
     {

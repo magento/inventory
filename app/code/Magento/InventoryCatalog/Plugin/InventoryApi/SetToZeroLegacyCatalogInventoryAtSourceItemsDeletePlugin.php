@@ -82,9 +82,10 @@ class SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin
      * @param void $result
      * @param SourceItemInterface[] $sourceItems
      * @return void
+     * @throws InputException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecute(SourceItemsDeleteInterface $subject, $result, array $sourceItems)
+    public function afterExecute(SourceItemsDeleteInterface $subject, $result, array $sourceItems): void
     {
         $productIds = [];
         foreach ($sourceItems as $sourceItem) {

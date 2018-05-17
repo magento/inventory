@@ -7,8 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
-use Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalog\Model\ResourceModel\AddIsInStockFieldToCollection;
 
@@ -42,12 +43,13 @@ class AdaptAddInStockFilterToCollectionPlugin
     /**
      * @param Stock $subject
      * @param callable $proceed
-     * @param Collection $collection
+     * @param $collection
      * @return void
-     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundAddInStockFilterToCollection(Stock $subject, callable $proceed, $collection)
+    public function aroundAddInStockFilterToCollection(Stock $subject, callable $proceed, $collection): void
     {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
         $this->addIsInStockFieldToCollection->execute($collection, $stockId);
