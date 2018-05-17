@@ -22,7 +22,8 @@ interface StockSourceLinksDeleteInterface
      *
      * @param \Magento\InventoryApi\Api\Data\StockSourceLinkInterface[] $links
      * @return void
+     * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function execute(array $links);
+    public function execute(array $links): void;
 }

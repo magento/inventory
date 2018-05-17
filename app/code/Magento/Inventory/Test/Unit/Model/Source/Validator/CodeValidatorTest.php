@@ -11,7 +11,6 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\Source\Validator\CodeValidator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use PHPUnit\Framework\TestCase;
 
 class CodeValidatorTest extends TestCase

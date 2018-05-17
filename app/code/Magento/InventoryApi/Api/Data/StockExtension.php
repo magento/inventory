@@ -7,27 +7,27 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api\Data;
 
+use Magento\Framework\Api\AbstractSimpleObject;
+
 /**
  * TODO: temporal fix of extension classes generation during installation
  * Extension class for @see \Magento\InventoryApi\Api\Data\StockInterface
  */
-class StockExtension extends \Magento\Framework\Api\AbstractSimpleObject implements StockExtensionInterface
+class StockExtension extends AbstractSimpleObject implements StockExtensionInterface
 {
     /**
-     * @return \Magento\InventorySalesApi\Api\Data\SalesChannelInterface[]|null
+     * {@inheritdoc}
      */
-    public function getSalesChannels()
+    public function getSalesChannels(): ?array
     {
         return $this->_get('sales_channels');
     }
 
     /**
-     * @param \Magento\InventorySalesApi\Api\Data\SalesChannelInterface[] $salesChannels
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setSalesChannels($salesChannels)
+    public function setSalesChannels(array $salesChannels): void
     {
         $this->setData('sales_channels', $salesChannels);
-        return $this;
     }
 }
