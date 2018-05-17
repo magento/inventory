@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Model\ResourceModel\PredefinedId;
 use Magento\InventoryApi\Api\Data\StockInterface;
 
 /**

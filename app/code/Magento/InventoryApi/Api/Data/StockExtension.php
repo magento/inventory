@@ -16,7 +16,7 @@ use Magento\Framework\Api\AbstractSimpleObject;
 class StockExtension extends AbstractSimpleObject implements StockExtensionInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getSalesChannels(): ?array
     {
@@ -24,7 +24,7 @@ class StockExtension extends AbstractSimpleObject implements StockExtensionInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setSalesChannels(array $salesChannels): void
     {
