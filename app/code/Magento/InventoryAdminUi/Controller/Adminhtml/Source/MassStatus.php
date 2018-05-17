@@ -10,6 +10,7 @@ namespace Magento\InventoryAdminUi\Controller\Adminhtml\Source;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryAdminUi\Ui\Component\MassAction\Filter;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -68,8 +69,8 @@ class MassStatus extends Action
                 $source->setEnabled($status);
                 $this->sourceRepository->save($source);
                 $updatedItemsCount++;
-            } catch (CouldNotDeleteException $e) {
-                $errorMessage = __('[Source Code: %1] ', $source->getSourceCode()) . $e->getMessage();
+            } catch (ValidationException $e) {
+                $errorMessage = __('Could not save Source with "%1" code: ', $source->getSourceCode()) . $e->getMessage();
                 $this->messageManager->addErrorMessage($errorMessage);
             }
         }
