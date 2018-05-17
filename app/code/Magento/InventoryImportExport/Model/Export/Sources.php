@@ -7,14 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Export;
 
-use Exception;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\ImportExport\Model\Export\Factory as ExportFactory;
 use Magento\ImportExport\Model\Export\AbstractEntity;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\Inventory\Model\ResourceModel\SourceItem\Collection as SourceItemCollection;
-use Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface;
-use Magento\InventoryImportExport\Model\Export\ColumnProviderInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\ImportExport\Model\ResourceModel\CollectionByPagesIteratorFactory;
 
@@ -75,7 +72,7 @@ class Sources extends AbstractEntity
 
     /**
      * @inheritdoc
-     * @throws Exception
+     * @throws \Exception
      */
     public function export()
     {
@@ -98,7 +95,7 @@ class Sources extends AbstractEntity
 
     /**
      * @inheritdoc
-     * @throws Exception
+     * @throws \Exception
      */
     protected function _getHeaderColumns()
     {

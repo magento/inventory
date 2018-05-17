@@ -19,6 +19,9 @@ interface CommandInterface
      *
      * @param array $bunch
      * @return void
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Validation\ValidationException
      */
-    public function execute(array $bunch);
+    public function execute(array $bunch): void;
 }

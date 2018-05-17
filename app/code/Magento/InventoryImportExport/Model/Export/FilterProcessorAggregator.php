@@ -9,7 +9,6 @@ namespace Magento\InventoryImportExport\Model\Export;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem\Collection;
-use Magento\InventoryImportExport\Model\Export\FilterProcessorInterface;
 
 /**
  * @api
@@ -44,9 +43,10 @@ class FilterProcessorAggregator
      * @param Collection $collection
      * @param string $columnName
      * @param string|array $value
+     * @return void
      * @throws LocalizedException
      */
-    public function process($type, Collection $collection, $columnName, $value)
+    public function process($type, Collection $collection, string $columnName, $value): void
     {
         if (!isset($this->handler[$type])) {
             throw new LocalizedException(__(

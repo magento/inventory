@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Model\Import\Validator;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 
 /**
@@ -49,7 +50,7 @@ class ValidatorChain implements ValidatorInterface
     /**
      * @inheritdoc
      */
-    public function validate(array $rowData, int $rowNumber)
+    public function validate(array $rowData, int $rowNumber): ValidationResult
     {
         /* the inner empty array covers cases when no loops were made */
         $errors = [[]];

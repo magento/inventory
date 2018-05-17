@@ -36,7 +36,7 @@ class Json implements SerializerInterface
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function jsonEncode($valueToEncode)
+    public function jsonEncode($valueToEncode): string
     {
         return $this->serialize($valueToEncode);
     }
@@ -50,7 +50,7 @@ class Json implements SerializerInterface
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function jsonDecode($encodedValue)
+    public function jsonDecode(string $encodedValue)
     {
         return $this->unserialize($encodedValue);
     }

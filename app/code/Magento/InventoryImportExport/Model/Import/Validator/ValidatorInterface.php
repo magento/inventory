@@ -21,5 +21,5 @@ interface ValidatorInterface
      * @param int $rowNumber
      * @return ValidationResult
      */
-    public function validate(array $rowData, int $rowNumber);
+    public function validate(array $rowData, int $rowNumber): ValidationResult;
 }
