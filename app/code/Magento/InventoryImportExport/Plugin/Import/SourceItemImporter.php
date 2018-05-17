@@ -71,7 +71,7 @@ class SourceItemImporter
         StockItemImporterInterface $subject,
         $result,
         array $stockData
-    ) {
+    ): void {
         $sourceItems = [];
         foreach ($stockData as $stockDatum) {
             if (!isset($stockDatum['sku'])) {
@@ -83,7 +83,7 @@ class SourceItemImporter
             $sourceItem = $this->sourceItemFactory->create();
             $sourceItem->setSku($stockDatum['sku']);
             $sourceItem->setSourceCode($this->defaultSource->getCode());
-            $sourceItem->setQuantity($qty);
+            $sourceItem->setQuantity((float)$qty);
             $sourceItem->setStatus($inStock);
             $sourceItems[] = $sourceItem;
         }

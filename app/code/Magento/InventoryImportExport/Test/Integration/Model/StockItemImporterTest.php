@@ -93,9 +93,9 @@ class StockItemImporterTest extends TestCase
         $compareData = $this->buildDataArray($this->getSourceItemList()->getItems());
         $expectedData = [
             SourceItemInterface::SKU => 'SKU-1',
-            SourceItemInterface::QUANTITY => '1.0000',
+            SourceItemInterface::QUANTITY => 1.0,
             SourceItemInterface::SOURCE_CODE => (string)$this->defaultSourceProvider->getCode(),
-            SourceItemInterface::STATUS => (string)SourceItemInterface::STATUS_IN_STOCK,
+            SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
         ];
 
         $this->assertArrayHasKey('SKU-1', $compareData);
