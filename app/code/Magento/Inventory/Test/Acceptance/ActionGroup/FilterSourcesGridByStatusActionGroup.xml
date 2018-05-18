@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="FilterSourcesGridByStatus">
+        <arguments>
+            <argument name="Status" defaultValue="AdminManageSourcesGridFilterControls.enabledOption"/>
+        </arguments>
+        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters"/>
+        <click selector="{{AdminManageSourcesGridFilterControls.selectStatus}}" stepKey="clickSelectStatus"/>
+        <click selector="{{Status}}" stepKey="setStatusFilter"/>
+        <click selector="{{AdminManageSourcesGridFilterControls.doneButton}}" stepKey="saveFilter"/>
+        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForAppliyngFilters"/>
+    </actionGroup>
+</actionGroups>

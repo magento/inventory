@@ -20,43 +20,46 @@
         </annotations>
 
         <before>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource1"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource2"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource3"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource4"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource5"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource6"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource7"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource8"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource9"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource10"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource11"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource12"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource13"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource14"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource15"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource16"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource17"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource18"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource19"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource20"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource21"/>
-            <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource22"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="ChangeAllSourcesStatusActionGroup" stepKey="disableAllSourcesBeforeTest"/>
+            <createData entity="_minimalSource" stepKey="createSource1"/>
+            <createData entity="_minimalSource" stepKey="createSource2"/>
+            <createData entity="_minimalSource" stepKey="createSource3"/>
+            <createData entity="_minimalSource" stepKey="createSource4"/>
+            <createData entity="_minimalSource" stepKey="createSource5"/>
+            <createData entity="_minimalSource" stepKey="createSource6"/>
+            <createData entity="_minimalSource" stepKey="createSource7"/>
+            <createData entity="_minimalSource" stepKey="createSource8"/>
+            <createData entity="_minimalSource" stepKey="createSource9"/>
+            <createData entity="_minimalSource" stepKey="createSource10"/>
+            <createData entity="_minimalSource" stepKey="createSource11"/>
+            <createData entity="_minimalSource" stepKey="createSource12"/>
+            <createData entity="_minimalSource" stepKey="createSource13"/>
+            <createData entity="_minimalSource" stepKey="createSource14"/>
+            <createData entity="_minimalSource" stepKey="createSource15"/>
+            <createData entity="_minimalSource" stepKey="createSource16"/>
+            <createData entity="_minimalSource" stepKey="createSource17"/>
+            <createData entity="_minimalSource" stepKey="createSource18"/>
+            <createData entity="_minimalSource" stepKey="createSource19"/>
+            <createData entity="_minimalSource" stepKey="createSource20"/>
+            <createData entity="_minimalSource" stepKey="createSource21"/>
+            <createData entity="_minimalSource" stepKey="createSource22"/>            
         </before>
 
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="ChangeAllSourcesStatusActionGroup" stepKey="disableAllSourcesAfterTest"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheManageSourcePage"/>
         <waitForPageLoad time="30" stepKey="waitForAdminManageSourcePageLoad"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters1"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsByCode">
             <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
-            <argument name="value" value="special_source"/>
+            <argument name="value" value="minimal_source"/>
         </actionGroup>
+        <actionGroup ref="FilterSourcesGridByStatus" stepKey="filterSearchResultsByStatus"/>
         <waitForPageLoad time="30" stepKey="waitFilterApplied"/>
         <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20SourcesPerPage">
             <argument name="perPage" value="20"/>
