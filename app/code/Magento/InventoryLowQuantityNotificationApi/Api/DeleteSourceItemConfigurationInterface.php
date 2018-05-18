@@ -18,6 +18,7 @@ interface DeleteSourceItemConfigurationInterface
      * @param string $sourceCode
      * @param string $sku
      * @return void
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function execute(string $sourceCode, string $sku);
+    public function execute(string $sourceCode, string $sku): void;
 }

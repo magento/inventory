@@ -19,7 +19,7 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function getSourceCode()
+    public function getSourceCode(): ?string
     {
         return $this->getData(self::SOURCE_CODE);
     }
@@ -27,7 +27,7 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function setSourceCode(string $sourceCode)
+    public function setSourceCode(string $sourceCode): void
     {
         $this->setData(self::SOURCE_CODE, $sourceCode);
     }
@@ -35,15 +35,16 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function getNotifyStockQty()
+    public function getNotifyStockQty(): ?float
     {
-        return $this->getData(self::INVENTORY_NOTIFY_QTY);
+        $notifyStockQty = $this->getData(self::INVENTORY_NOTIFY_QTY);
+        return $notifyStockQty !== null ? $notifyStockQty : null;
     }
 
     /**
      * @inheritdoc
      */
-    public function setNotifyStockQty($quantity)
+    public function setNotifyStockQty(?float $quantity): void
     {
         $this->setData(self::INVENTORY_NOTIFY_QTY, $quantity);
     }
@@ -51,7 +52,7 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function getSku()
+    public function getSku(): ?string
     {
         return $this->getData(self::SKU);
     }
@@ -59,7 +60,7 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function setSku(string $sku)
+    public function setSku(string $sku): void
     {
         $this->setData(self::SKU, $sku);
     }
@@ -67,7 +68,7 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function getExtensionAttributes()
+    public function getExtensionAttributes(): ?SourceItemConfigurationExtensionInterface
     {
         $extensionAttributes = $this->_getExtensionAttributes();
         if (null === $extensionAttributes) {
@@ -80,7 +81,7 @@ class SourceItemConfiguration extends AbstractExtensibleModel implements SourceI
     /**
      * @inheritdoc
      */
-    public function setExtensionAttributes(SourceItemConfigurationExtensionInterface $extensionAttributes)
+    public function setExtensionAttributes(SourceItemConfigurationExtensionInterface $extensionAttributes): void
     {
         $this->_setExtensionAttributes($extensionAttributes);
     }

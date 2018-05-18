@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotification\Ui\Component\Product\Form\Element;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\ValueSourceInterface;
 use Magento\Framework\Serialize\JsonValidator;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -50,22 +49,19 @@ class UseConfigSettings extends Checkbox
     }
 
     /**
-     * Prepare component configuration.
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function prepare()
     {
         $config = $this->getData('config');
-        if (isset($config['keyInConfiguration'])
-            && isset($config['valueFromConfig'])
-            && $config['valueFromConfig'] instanceof ValueSourceInterface
-        ) {
+        if (isset($config['keyInConfiguration']) &&
+            isset($config['valueFromConfig']) &&
+            $config['valueFromConfig'] instanceof ValueSourceInterface) {
             $keyInConfiguration = $config['valueFromConfig']->getValue($config['keyInConfiguration']);
-            if (!empty($config['unserialized']) && is_string($keyInConfiguration)) {
-                if ($this->jsonValidator->isValid($keyInConfiguration)) {
-                    $keyInConfiguration = $this->serializer->unserialize($keyInConfiguration);
-                }
+            if (!empty($config['unserialized']) &&
+                is_string($keyInConfiguration) &&
+                $this->jsonValidator->isValid($keyInConfiguration)) {
+                $keyInConfiguration = $this->serializer->unserialize($keyInConfiguration);
             }
             $config['valueFromConfig'] = $keyInConfiguration;
         }

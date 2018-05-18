@@ -44,7 +44,7 @@ class EnabledSourceCode implements OptionSourceInterface
     /**
      * @inheritdoc
      */
-    public function toOptionArray(): array
+    public function toOptionArray()
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceInterface::ENABLED, true)

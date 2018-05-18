@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotification\Model\ResourceModel\Rss\NotifyStock;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem\Collection;
 use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -40,8 +41,9 @@ class GetSourceItemsCollection
 
     /**
      * @return Collection
+     * @throws LocalizedException
      */
-    public function execute()
+    public function execute(): Collection
     {
         $collection = $this->collectionFactory->create();
         $collection->removeAllFieldsFromSelect();
