@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
-    <test name="AdminPriorityOfSourcesChangedByDragAndDrop">
+    <test name="AdminPriorityOfSourcesChangedByDragAndDropTest">
         <annotations>
             <features value="Multi-Source Inventory"/>
             <stories value="Configuration-Stocks"/>
@@ -77,9 +77,9 @@
         <waitForPageLoad time="30" stepKey="waitForStockSaved"/>
 
         <!-- Check Sources priority saved -->
-        <see selector="{{AdminEditStockSourcesSection.rowSourceName('0')}}" userInput="$$createSource1.source[name]$$" stepKey="5"></see>
-        <see selector="{{AdminEditStockSourcesSection.rowSourceName('1')}}" userInput="$$createSource4.source[name]$$" stepKey="6"></see>
-        <see selector="{{AdminEditStockSourcesSection.rowSourceName('2')}}" userInput="$$createSource2.source[name]$$" stepKey="7"></see>
-        <see selector="{{AdminEditStockSourcesSection.rowSourceName('3')}}" userInput="$$createSource3.source[name]$$" stepKey="8"></see>
+        <see selector="{{AdminEditStockSourcesSection.rowSourceName('0')}}" userInput="$$createSource1.source[name]$$" stepKey="checkChangedtSourcesOrder1"></see>
+        <see selector="{{AdminEditStockSourcesSection.rowSourceName('1')}}" userInput="$$createSource4.source[name]$$" stepKey="checkChangedtSourcesOrder2"></see>
+        <see selector="{{AdminEditStockSourcesSection.rowSourceName('2')}}" userInput="$$createSource2.source[name]$$" stepKey="checkChangedtSourcesOrder3"></see>
+        <see selector="{{AdminEditStockSourcesSection.rowSourceName('3')}}" userInput="$$createSource3.source[name]$$" stepKey="checkChangedtSourcesOrder4"></see>
     </test>
 </tests>
