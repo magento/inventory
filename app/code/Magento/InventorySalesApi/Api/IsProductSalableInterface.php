@@ -20,6 +20,7 @@ interface IsProductSalableInterface
      * @param string $sku
      * @param int $stockId
      * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(string $sku, int $stockId): bool;
 }

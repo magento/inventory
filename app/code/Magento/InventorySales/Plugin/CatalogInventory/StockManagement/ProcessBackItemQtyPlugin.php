@@ -86,8 +86,13 @@ class ProcessBackItemQtyPlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundBackItemQty(StockManagement $subject, callable $proceed, $productId, $qty, $scopeId = null)
-    {
+    public function aroundBackItemQty(
+        StockManagement $subject,
+        callable $proceed,
+        int $productId,
+        float $qty,
+        ?int $scopeId = null
+    ): bool {
         if (null === $scopeId) {
             throw new LocalizedException(__('$scopeId is required'));
         }

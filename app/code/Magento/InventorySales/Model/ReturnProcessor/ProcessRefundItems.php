@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\ReturnProcessor;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
@@ -15,11 +16,12 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefundInterface;
 use Magento\InventorySales\Model\ReturnProcessor\Request\BackItemQtyRequestInterfaceFactory;
-use Magento\InventorySales\Model\ReturnProcessor\GetShippedItemsPerSourceByPriority;
-use Magento\InventorySales\Model\ReturnProcessor\ProcessBackItemQtyToSource;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ProcessRefundItems implements ProcessRefundItemsInterface
 {
     /**
@@ -99,7 +101,7 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
         OrderInterface $order,
         array $itemsToRefund,
         array $returnToStockItems
-    ) {
+    ): void {
         $salesChannel = $this->getSalesChannelForOrder($order);
         $shippedItems = $this->getShippedItemsPerSourceByPriority->execute($order, $returnToStockItems);
         $itemToSell = [];
@@ -153,6 +155,7 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     /**
      * @param OrderInterface $order
      * @return SalesChannelInterface
+     * @throws NoSuchEntityException
      */
     private function getSalesChannelForOrder(OrderInterface $order): SalesChannelInterface
     {

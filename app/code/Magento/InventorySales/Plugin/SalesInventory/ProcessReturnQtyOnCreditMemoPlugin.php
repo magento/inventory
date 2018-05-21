@@ -7,6 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\SalesInventory;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefundInterfaceFactory;
 use Magento\InventorySales\Model\ReturnProcessor\ProcessRefundItemsInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
@@ -15,6 +20,9 @@ use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\SalesInventory\Model\Order\ReturnProcessor;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ProcessReturnQtyOnCreditMemoPlugin
 {
     /**
@@ -54,9 +62,13 @@ class ProcessReturnQtyOnCreditMemoPlugin
      * @param OrderInterface $order
      * @param array $returnToStockItems
      * @param bool $isAutoReturn
+     * @return void
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws ValidationException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @throws \Magento\Framework\Exception\InputException
      */
     public function aroundExecute(
         ReturnProcessor $subject,
@@ -64,8 +76,8 @@ class ProcessReturnQtyOnCreditMemoPlugin
         CreditmemoInterface $creditmemo,
         OrderInterface $order,
         array $returnToStockItems = [],
-        $isAutoReturn = false
-    ) {
+        bool $isAutoReturn = false
+    ): void {
         $items = [];
         foreach ($creditmemo->getItems() as $item) {
             $orderItem = $item->getOrderItem();

@@ -44,11 +44,11 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
      * @param AppendReservationsInterface $subject
      * @param \Closure $proceed
      * @param ReservationInterface[] $reservations
-     *
+     * @return void
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecute(AppendReservationsInterface $subject, \Closure $proceed, array $reservations)
+    public function aroundExecute(AppendReservationsInterface $subject, \Closure $proceed, array $reservations): void
     {
         if (!$this->stockConfiguration->canSubtractQty()) {
             return;

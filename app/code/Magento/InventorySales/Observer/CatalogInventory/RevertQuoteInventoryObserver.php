@@ -37,8 +37,7 @@ class RevertQuoteInventoryObserver implements ObserverInterface
     }
 
     /**
-     * @param EventObserver $observer
-     * @return void
+     * {@inheritdoc}
      */
     public function execute(EventObserver $observer)
     {

@@ -68,7 +68,7 @@ class ProcessBackItemQtyToSource
     public function execute(
         BackItemQtyRequestInterface $backItemQtyRequest,
         SalesChannelInterface $salesChannel
-    ) {
+    ): void {
         $backQty = $backItemQtyRequest->getQuantity();
         if ($backQty <= 0) {
             return;

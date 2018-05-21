@@ -17,22 +17,31 @@ interface SalesEventInterface
     /**#@+
      * Constants for event types
      */
-    const EVENT_ORDER_PLACED = 'order_placed';
-    const EVENT_ORDER_CANCELED = 'order_canceled';
-    const EVENT_SHIPMENT_CREATED = 'shipment_created';
-    const EVENT_CREDITMEMO_CREATED = 'creditmemo_created';
-    const EVENT_INVOICE_CREATED = 'invoice_created';
+    public const EVENT_ORDER_PLACED = 'order_placed';
+    public const EVENT_ORDER_CANCELED = 'order_canceled';
+    public const EVENT_SHIPMENT_CREATED = 'shipment_created';
+    public const EVENT_CREDITMEMO_CREATED = 'creditmemo_created';
+    public const EVENT_INVOICE_CREATED = 'invoice_created';
     /**#@-*/
 
     /**#@+
      * Constants for event object types
      */
-    const OBJECT_TYPE_ORDER = 'order';
+    public const OBJECT_TYPE_ORDER = 'order';
     /**#@-*/
 
+    /**
+     * @return string
+     */
     public function getType(): string;
 
+    /**
+     * @return string
+     */
     public function getObjectType(): string;
 
+    /**
+     * @return string
+     */
     public function getObjectId(): string;
 }

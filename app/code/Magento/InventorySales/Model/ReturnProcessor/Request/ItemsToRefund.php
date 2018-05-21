@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\ReturnProcessor\Request;
 
-use Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefundInterface;
-
 class ItemsToRefund implements ItemsToRefundInterface
 {
     /**

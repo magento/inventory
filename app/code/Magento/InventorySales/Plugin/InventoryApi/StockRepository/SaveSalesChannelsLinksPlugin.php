@@ -52,7 +52,7 @@ class SaveSalesChannelsLinksPlugin
      */
     public function afterSave(
         StockRepositoryInterface $subject,
-        $stockId,
+        int $stockId,
         StockInterface $stock
     ): int {
         $extensionAttributes = $stock->getExtensionAttributes();

@@ -10,6 +10,7 @@ namespace Magento\InventorySales\Observer\Stock;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
@@ -38,8 +39,8 @@ class PopulateWithWebsiteSalesChannelsObserver implements ObserverInterface
     /**
      * Populate stock with sales channels during saving via controller
      *
-     * @param EventObserver $observer
-     * @return void
+     * {@inheritdoc}
+     * @throws LocalizedException
      */
     public function execute(EventObserver $observer)
     {
