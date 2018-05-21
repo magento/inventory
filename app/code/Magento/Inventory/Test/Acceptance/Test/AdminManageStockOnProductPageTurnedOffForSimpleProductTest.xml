@@ -74,8 +74,8 @@
         <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
 
         <!--Create Product-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage1"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
+        <waitForPageLoad time="30" stepKey="waitForProductGridPageLoad"/>
         <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickAddProductDropDown"/>
         <click selector="{{AdminProductGridActionSection.addSimpleProduct}}" stepKey="clickAddSimpleProduct"/>
         <actionGroup ref="FillMainProductFormInMultiSourceMode" stepKey="fillSimpleProductMain">
@@ -84,20 +84,20 @@
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
                                     parameterArray="[$$createCategory.name$$]" requiredAction="true"
                                     stepKey="searchAndSelectCategory"/>
-        <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSource2"/>
+        <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSource"/>
         <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
                           dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true"
-                          stepKey="clearTheFiltersIfPresent1"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword3">
+                          stepKey="clearTheFiltersIfPresent"/>
+        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword">
             <argument name="keyword" value="$$createSource.source[name]$$"/>
         </actionGroup>
-        <waitForPageLoad time="5" stepKey="waitForPageLoad4"/>
+        <waitForPageLoad time="5" stepKey="waitForDataGridPageLoad"/>
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$createSource.source[source_code]$$)}}"
-               stepKey="clickOnCheckbox1"/>
-        <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone2"/>
+               stepKey="clickOnCheckbox"/>
+        <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDoneSlideOutSection"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
-                   stepKey="fillSourceQtyField1"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+                   stepKey="fillSourceQtyField"/>
+        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
 
         <!-- Check Product is visible on Storefront-->
         <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryPage"/>
