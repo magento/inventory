@@ -70,7 +70,8 @@ class MassStatus extends Action
                 $this->sourceRepository->save($source);
                 $updatedItemsCount++;
             } catch (ValidationException $e) {
-                $errorMessage = __('Could not save Source with "%1" code: ', $source->getSourceCode()) . $e->getMessage();
+                $errorMessage = __('Could not save Source with "%1" code: ', $source->getSourceCode())
+                    . $e->getMessage();
                 $this->messageManager->addErrorMessage($errorMessage);
             }
         }
