@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\Website;
 
-use Magento\InventorySales\Model\GetAssignedStockIdForWebsiteInterface;
+use Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
