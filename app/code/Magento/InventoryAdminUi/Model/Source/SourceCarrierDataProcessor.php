@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryAdminUi\Model\Source;
 
-use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface;
 use Magento\InventoryApi\Api\Data\SourceCarrierLinkInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -38,7 +37,6 @@ class SourceCarrierDataProcessor
      * @param array $data
      *
      * @return array
-     * @throws InputException
      */
     public function process(array $data): array
     {
