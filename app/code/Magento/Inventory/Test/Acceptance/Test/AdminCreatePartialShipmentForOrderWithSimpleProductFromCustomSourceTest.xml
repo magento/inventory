@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
-    <test name="AdminCreatePartialShipmentForOrderWithSimpleProductFromTestSource">
+    <test name="AdminCreatePartialShipmentForOrderWithSimpleProductFromCustomSourceTest">
         <annotations>
             <features value="Multi-Source Inventory"/>
             <stories value="Sales-Shipments"/>
@@ -16,7 +16,7 @@
             <description value="You should be able to create partial shipment from Custom Source."/>
             <testCaseId value="1138"/>
             <severity value="CRITICAL"/>
-            <group value="tmp"/>
+            <group value="msi"/>
         </annotations>
 
         <before>
@@ -56,20 +56,20 @@
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
                                         parameterArray="[$$createCategory.name$$]" requiredAction="true"
                                         stepKey="searchAndSelectCategory"/>
-            <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSource2"/>
+            <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="assignSourcesToProduct"/>
             <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
                               dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true"
-                              stepKey="clearTheFiltersIfPresent1"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword3">
+                              stepKey="clearTheFiltersIfPresent"/>
+            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchSourceByKeyword">
                 <argument name="keyword" value="$$createSource.source[name]$$"/>
             </actionGroup>
-            <waitForPageLoad time="5" stepKey="waitForPageLoad4"/>
+            <waitForPageLoad time="5" stepKey="waitForAdminDataGridLoad"/>
             <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$createSource.source[source_code]$$)}}"
-                   stepKey="clickOnCheckbox1"/>
-            <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone2"/>
+                   stepKey="clickOnCheckbox"/>
+            <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone"/>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
-                       stepKey="fillSourceQtyField1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+                       stepKey="fillSourceQtyField"/>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
         </before>
 
         <after>
