@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\SourceItem\Command\Handler;
+namespace Magento\Inventory\Model\SourceItem\Handler;
 
 use Exception;
 use Magento\Framework\Exception\CouldNotSaveException;
