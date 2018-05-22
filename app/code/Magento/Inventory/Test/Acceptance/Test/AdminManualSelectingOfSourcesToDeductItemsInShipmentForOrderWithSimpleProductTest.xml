@@ -123,6 +123,7 @@
                           stepKey="exposeMiniCart"/>
         <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForCartItem"/>
         <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForPayment"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="checkMoneyOrderPayment"/>
         <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton"/>
         <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
