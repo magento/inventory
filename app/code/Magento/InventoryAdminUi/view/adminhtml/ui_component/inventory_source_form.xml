@@ -81,6 +81,9 @@
             <settings>
                 <dataType>boolean</dataType>
                 <label translate="true">Is Enabled</label>
+                <imports>
+                    <link name="disabled">${ $.provider }:data.general.switcher_disabled</link>
+                </imports>
             </settings>
             <formElements>
                 <checkbox>
