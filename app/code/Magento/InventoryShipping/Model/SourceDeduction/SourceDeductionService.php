@@ -99,7 +99,6 @@ class SourceDeductionService implements SourceDeductionServiceInterface
      */
     public function execute(SourceDeductionRequestInterface $sourceDeductionRequest): void
     {
-        $sourceItemToSave = [];
         $sourceCode = $sourceDeductionRequest->getSourceCode();
         $websiteId = $sourceDeductionRequest->getWebsiteId();
 
@@ -120,21 +119,19 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute($sourceCode, $itemSku);
             if (($sourceItem->getQuantity() - $qty) >= 0) {
                 $sourceItem->setQuantity($sourceItem->getQuantity() - $qty);
-                $sourceItemToSave[] = $sourceItem;
                 $itemsToSell[] = $this->itemsToSellFactory->create([
                     'sku' => $itemSku,
                     'qty' => (float)$qty
                 ]);
+                $this->sourceItemsSave->execute([$sourceItem]);
             } else {
                 throw new LocalizedException(
                     __('Not all of your products are available in the requested quantity.')
                 );
             }
         }
-        $this->sourceItemsSave->execute($sourceItemToSave);
 
         $salesEvent = $sourceDeductionRequest->getSalesEvent();
-
         $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
         $salesChannel = $this->salesChannelFactory->create([
             'data' => [
