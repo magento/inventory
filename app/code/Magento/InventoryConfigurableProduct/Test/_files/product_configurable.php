@@ -5,6 +5,7 @@
  */
 declare(strict_types=1);
 
+use Magento\Catalog\Api\CategoryLinkManagementInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
@@ -15,10 +16,12 @@ use Magento\ConfigurableProduct\Helper\Product\Options\Factory;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Eav\Api\Data\AttributeOptionInterface;
 use Magento\Eav\Model\Config;
+use Magento\Framework\Registry;
+use Magento\Quote\Model\ResourceModel\Quote\Item;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
 
-\Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
+Bootstrap::getInstance()->reinitialize();
 
 /** @var ProductRepositoryInterface $productRepository */
 $productRepository = Bootstrap::getObjectManager()->create(ProductRepositoryInterface::class);
@@ -33,7 +36,7 @@ $websiteIds = [$website->getId()];
 
 /** @var Config $eavConfig */
 $eavConfig = Bootstrap::getObjectManager()->create(Config::class);
-$attribute = $eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, 'test_configurable');
+$attribute = $eavConfig->getAttribute(Product::ENTITY, 'test_configurable');
 
 /* Create simple products per each option value*/
 /** @var AttributeOptionInterface[] $options */
@@ -62,19 +65,6 @@ foreach ($options as $option) {
         ->setStockData(['use_config_manage_stock' => 1, 'qty' => 100, 'is_qty_decimal' => 0, 'is_in_stock' => 1]);
 
     $product = $productRepository->save($product);
-
-    /** @var \Magento\CatalogInventory\Model\Stock\Item $stockItem */
-    $stockItem = Bootstrap::getObjectManager()->create(\Magento\CatalogInventory\Model\Stock\Item::class);
-    $stockItem->load($productId, 'product_id');
-
-    if (!$stockItem->getProductId()) {
-        $stockItem->setProductId($productId);
-    }
-    $stockItem->setUseConfigManageStock(1);
-    $stockItem->setQty(1000);
-    $stockItem->setIsQtyDecimal(0);
-    $stockItem->setIsInStock(1);
-    $stockItem->save();
 
     $attributeValues[] = [
         'label' => 'test',
@@ -109,16 +99,16 @@ $extensionConfigurableAttributes->setConfigurableProductLinks($associatedProduct
 $product->setExtensionAttributes($extensionConfigurableAttributes);
 
 // Remove any previously created product with the same id.
-/** @var \Magento\Framework\Registry $registry */
-$registry = Bootstrap::getObjectManager()->get(\Magento\Framework\Registry::class);
+/** @var Registry $registry */
+$registry = Bootstrap::getObjectManager()->get(Registry::class);
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 try {
     $productToDelete = $productRepository->getById(1);
     $productRepository->delete($productToDelete);
 
-    /** @var \Magento\Quote\Model\ResourceModel\Quote\Item $itemResource */
-    $itemResource = Bootstrap::getObjectManager()->get(\Magento\Quote\Model\ResourceModel\Quote\Item::class);
+    /** @var Item $itemResource */
+    $itemResource = Bootstrap::getObjectManager()->get(Item::class);
     $itemResource->getConnection()->delete(
         $itemResource->getMainTable(),
         'product_id = ' . $productToDelete->getId()
@@ -141,9 +131,9 @@ $product->setTypeId(Configurable::TYPE_CODE)
 
 $productRepository->save($product);
 
-/** @var \Magento\Catalog\Api\CategoryLinkManagementInterface $categoryLinkManagement */
+/** @var CategoryLinkManagementInterface $categoryLinkManagement */
 $categoryLinkManagement = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-    ->create(\Magento\Catalog\Api\CategoryLinkManagementInterface::class);
+    ->create(CategoryLinkManagementInterface::class);
 
 $categoryLinkManagement->assignProductToCategories(
     $product->getSku(),

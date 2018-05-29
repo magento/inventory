@@ -20,11 +20,6 @@ $productRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
 foreach (['simple_10', 'simple_20', 'configurable'] as $sku) {
     try {
         $product = $productRepository->get($sku, false, null, true);
-
-        $stockStatus = $objectManager->create(\Magento\CatalogInventory\Model\Stock\Status::class);
-        $stockStatus->load($product->getEntityId(), 'product_id');
-        $stockStatus->delete();
-
         $productRepository->delete($product);
     } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
         //Product already removed
