@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Model\Export\Source;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
-use Magento\Inventory\Model\OptionSource\SourceItemStatus;
+use Magento\InventoryCatalogAdminUi\Model\OptionSource\SourceItemStatus;
 
 /**
  * @inheritdoc
