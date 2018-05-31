@@ -103,7 +103,7 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         $websiteId = $sourceDeductionRequest->getWebsiteId();
 
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-        $itemsToSell = [];
+        $itemsToSell = $sourceItems = [];
         foreach ($sourceDeductionRequest->getItems() as $item) {
             $itemSku = $item->getSku();
             $qty = $item->getQty();
@@ -119,17 +119,23 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute($sourceCode, $itemSku);
             if (($sourceItem->getQuantity() - $qty) >= 0) {
                 $sourceItem->setQuantity($sourceItem->getQuantity() - $qty);
+                $sourceItems[] = $sourceItem;
                 $itemsToSell[] = $this->itemsToSellFactory->create([
                     'sku' => $itemSku,
                     'qty' => (float)$qty
                 ]);
-                $this->sourceItemsSave->execute([$sourceItem]);
             } else {
                 throw new LocalizedException(
                     __('Not all of your products are available in the requested quantity.')
                 );
             }
         }
+
+        if (empty($sourceItems)) {
+            return;
+        }
+
+        $this->sourceItemsSave->execute($sourceItems);
 
         $salesEvent = $sourceDeductionRequest->getSalesEvent();
         $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
