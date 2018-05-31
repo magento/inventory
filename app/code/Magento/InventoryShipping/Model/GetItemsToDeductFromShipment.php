@@ -15,7 +15,7 @@ use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryShipping\Model\SourceDeduction\Request\ItemToDeductInterfaceFactory;
 use Magento\Sales\Model\Order\Shipment;
 
-class GetShipmentItemsToDeduct
+class GetItemsToDeductFromShipment
 {
     /**
      * @var GetSkusByProductIdsInterface

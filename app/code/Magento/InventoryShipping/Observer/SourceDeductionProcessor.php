@@ -16,7 +16,7 @@ use Magento\InventoryShipping\Model\SourceDeduction\Request\ItemToDeductInterfac
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
-use Magento\InventoryShipping\Model\GetShipmentItemsToDeduct;
+use Magento\InventoryShipping\Model\GetItemsToDeductFromShipment;
 
 /**
  * Class SourceDeductionProcessor
@@ -54,9 +54,9 @@ class SourceDeductionProcessor implements ObserverInterface
     private $isSingleSourceMode;
 
     /**
-     * @var GetShipmentItemsToDeduct
+     * @var GetItemsToDeductFromShipment
      */
-    private $getShipmentItemsToDeduct;
+    private $getItemsToDeductFromShipment;
 
     /**
      * @param ItemToDeductInterfaceFactory $itemToDeductInterfaceFactory
@@ -65,7 +65,7 @@ class SourceDeductionProcessor implements ObserverInterface
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param IsSingleSourceModeInterface $isSingleSourceMode
-     * @param GetShipmentItemsToDeduct $getShipmentItemsToDeduct
+     * @param GetItemsToDeductFromShipment $getItemsToDeductFromShipment
      */
     public function __construct(
         ItemToDeductInterfaceFactory $itemToDeductInterfaceFactory,
@@ -74,14 +74,14 @@ class SourceDeductionProcessor implements ObserverInterface
         DefaultSourceProviderInterface $defaultSourceProvider,
         SalesEventInterfaceFactory $salesEventFactory,
         IsSingleSourceModeInterface $isSingleSourceMode,
-        GetShipmentItemsToDeduct $getShipmentItemsToDeduct
+        GetItemsToDeductFromShipment $getItemsToDeductFromShipment
     ) {
         $this->sourceDeductionRequestFactory = $sourceDeductionRequestFactory;
         $this->sourceDeductionService = $sourceDeductionService;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->salesEventFactory = $salesEventFactory;
         $this->isSingleSourceMode = $isSingleSourceMode;
-        $this->getShipmentItemsToDeduct = $getShipmentItemsToDeduct;
+        $this->getItemsToDeductFromShipment = $getItemsToDeductFromShipment;
         $this->itemToDeductInterfaceFactory = $itemToDeductInterfaceFactory;
     }
 
@@ -115,7 +115,7 @@ class SourceDeductionProcessor implements ObserverInterface
             'objectId' => $shipment->getOrderId()
         ]);
 
-        $shipmentItems = $this->getShipmentItemsToDeduct->execute($shipment);
+        $shipmentItems = $this->getItemsToDeductFromShipment->execute($shipment);
 
         if (!empty($shipmentItems)) {
             $sourceDeductionRequest = $this->sourceDeductionRequestFactory->create([
