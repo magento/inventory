@@ -106,7 +106,9 @@ class SchemaTest extends \PHPUnit\Framework\TestCase
             '#etc/countries.xml$#',
             '#conf/schema.xml$#',
             '#layout/swagger_index_index.xml$#',
-            '#Doc/etc/doc/vars.xml$#'
+            '#Doc/etc/doc/vars.xml$#',
+            '#Test/Acceptance#',
+            '#Test/Mftf#'
         ];
         foreach ($list as $pattern) {
             foreach ($files as $key => $value) {
