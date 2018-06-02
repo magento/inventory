@@ -12,6 +12,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @magentoDbIsolation disabled
  * @magentoDataFixture Magento/Catalog/_files/multiple_products.php
  * @magentoDataFixture Magento/Catalog/_files/product_simple_out_of_stock.php
  * @magentoDataFixture Magento/Catalog/_files/products_with_multiselect_attribute.php
@@ -39,18 +40,18 @@ class StockStatusFilterWithGeneralFilterTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->objectManager = Bootstrap::getObjectManager();
         $this->resource = $this->objectManager->get(ResourceConnection::class);
         $this->stockStatusFilter = $this->objectManager->get(StockStatusFilter::class);
-
-        parent::setUp();
     }
 
     /**
      * @return void
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid filter type: Luke I am your father!
+     * @expectedExceptionMessage Invalid filter type: some_wrong_type
      */
     public function testApplyWithWrongType()
     {
@@ -58,7 +59,7 @@ class StockStatusFilterWithGeneralFilterTest extends TestCase
         $this->stockStatusFilter->apply(
             $select,
             Stock::STOCK_IN_STOCK,
-            'Luke I am your father!',
+            'some_wrong_type',
             true
         );
     }

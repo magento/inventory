@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
+ * @magentoDbIsolation disabled
  * @magentoDataFixture Magento/Catalog/_files/multiple_products.php
  * @magentoDataFixture Magento/Catalog/_files/product_simple_out_of_stock.php
  * @magentoDataFixture Magento/Catalog/_files/products_with_multiselect_attribute.php
@@ -56,6 +57,8 @@ class StockStatusFilterWithFullFilterTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->objectManager = Bootstrap::getObjectManager();
         $this->resource = $this->objectManager->get(ResourceConnection::class);
         $this->stockStatusFilter = $this->objectManager->get(StockStatusFilter::class);
@@ -75,8 +78,6 @@ class StockStatusFilterWithFullFilterTest extends TestCase
                 'value' => reset($multiSelectArray),
             ]
         );
-
-        parent::setUp();
     }
 
     /**
