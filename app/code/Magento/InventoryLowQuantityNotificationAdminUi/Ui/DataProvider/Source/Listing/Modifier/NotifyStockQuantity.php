@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotificationAdminUi\Ui\DataProvider\Source\Listing\Modifier;
 
-use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\CatalogInventory\Model\Source\StockConfiguration;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 
 /**
  * Notify stock quantity modifier. To add default value for "notify_stock_qty_use_default" and "notify_stock_qty"
  * when map it from source modal window in product edit page to source grid.
  */
-class NotifyStockQuantity extends AbstractModifier
+class NotifyStockQuantity implements ModifierInterface
 {
     /**
      * @var StockConfiguration
