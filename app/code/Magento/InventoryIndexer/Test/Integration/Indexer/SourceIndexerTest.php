@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Test\Integration\Indexer;
 
-use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
-use Magento\InventoryIndexer\Model\GetStockItemData;
+use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -62,6 +62,8 @@ class SourceIndexerTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider reindexRowDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testReindexRow(string $sku, int $stockId, $expectedData)
     {
@@ -77,12 +79,12 @@ class SourceIndexerTest extends TestCase
     public function reindexRowDataProvider(): array
     {
         return [
-            ['SKU-1', 10, [IndexStructure::QUANTITY => 8.5, IndexStructure::IS_SALABLE => 1]],
-            ['SKU-1', 30, [IndexStructure::QUANTITY => 8.5, IndexStructure::IS_SALABLE => 1]],
+            ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
+            ['SKU-1', 30, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
             ['SKU-2', 10, null],
-            ['SKU-2', 30, [IndexStructure::QUANTITY => 5, IndexStructure::IS_SALABLE => 1]],
-            ['SKU-3', 10, [IndexStructure::QUANTITY => 0, IndexStructure::IS_SALABLE => 0]],
-            ['SKU-3', 30, [IndexStructure::QUANTITY => 0, IndexStructure::IS_SALABLE => 0]],
+            ['SKU-2', 30, [GetStockItemDataInterface::QUANTITY => 5, GetStockItemDataInterface::IS_SALABLE => 1]],
+            ['SKU-3', 10, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
+            ['SKU-3', 30, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
         ];
     }
 
@@ -101,6 +103,8 @@ class SourceIndexerTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider reindexListDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testReindexList(string $sku, int $stockId, $expectedData)
     {
@@ -124,6 +128,8 @@ class SourceIndexerTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider reindexListDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testReindexAll(string $sku, int $stockId, $expectedData)
     {
@@ -139,15 +145,15 @@ class SourceIndexerTest extends TestCase
     public function reindexListDataProvider(): array
     {
         return [
-            ['SKU-1', 10, [IndexStructure::QUANTITY => 8.5, IndexStructure::IS_SALABLE => 1]],
+            ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
             ['SKU-1', 20, null],
-            ['SKU-1', 30, [IndexStructure::QUANTITY => 8.5, IndexStructure::IS_SALABLE => 1]],
+            ['SKU-1', 30, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
             ['SKU-2', 10, null],
-            ['SKU-2', 20, [IndexStructure::QUANTITY => 5, IndexStructure::IS_SALABLE => 1]],
-            ['SKU-2', 30, [IndexStructure::QUANTITY => 5, IndexStructure::IS_SALABLE => 1]],
-            ['SKU-3', 10, [IndexStructure::QUANTITY => 0, IndexStructure::IS_SALABLE => 0]],
+            ['SKU-2', 20, [GetStockItemDataInterface::QUANTITY => 5, GetStockItemDataInterface::IS_SALABLE => 1]],
+            ['SKU-2', 30, [GetStockItemDataInterface::QUANTITY => 5, GetStockItemDataInterface::IS_SALABLE => 1]],
+            ['SKU-3', 10, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
             ['SKU-3', 20, null],
-            ['SKU-3', 30, [IndexStructure::QUANTITY => 0, IndexStructure::IS_SALABLE => 0]],
+            ['SKU-3', 30, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
         ];
     }
 }

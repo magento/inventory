@@ -165,186 +165,186 @@ class ValidationTest extends WebapiAbstract
     public function failedValidationDataProvider(): array
     {
         return [
-//            'null_' . SourceInterface::SOURCE_CODE => [
-//                SourceInterface::SOURCE_CODE,
-//                null,
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::SOURCE_CODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'empty_' . SourceInterface::SOURCE_CODE => [
-//                SourceInterface::SOURCE_CODE,
-//                '',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::SOURCE_CODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'whitespaces_' . SourceInterface::SOURCE_CODE => [
-//                SourceInterface::SOURCE_CODE,
-//                ' ',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::SOURCE_CODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'with_whitespaces_' . SourceInterface::SOURCE_CODE => [
-//                SourceInterface::SOURCE_CODE,
-//                'source code',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not contain whitespaces.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::SOURCE_CODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'null_' . SourceInterface::NAME => [
-//                SourceInterface::NAME,
-//                null,
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::NAME,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'empty_' . SourceInterface::NAME => [
-//                SourceInterface::NAME,
-//                '',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::NAME,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'whitespaces_' . SourceInterface::NAME => [
-//                SourceInterface::NAME,
-//                ' ',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::NAME,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'empty_' . SourceInterface::POSTCODE => [
-//                SourceInterface::POSTCODE,
-//                '',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::POSTCODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'whitespaces_' . SourceInterface::POSTCODE => [
-//                SourceInterface::POSTCODE,
-//                ' ',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::POSTCODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'null_' . SourceInterface::POSTCODE => [
-//                SourceInterface::POSTCODE,
-//                null,
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::POSTCODE,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'empty_' . SourceInterface::COUNTRY_ID => [
-//                SourceInterface::COUNTRY_ID,
-//                '',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::COUNTRY_ID,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//            'whitespaces_' . SourceInterface::COUNTRY_ID => [
-//                SourceInterface::COUNTRY_ID,
-//                ' ',
-//                [
-//                    'message' => 'Validation Failed',
-//                    'errors' => [
-//                        [
-//                            'message' => '"%field" can not be empty.',
-//                            'parameters' => [
-//                                'field' => SourceInterface::COUNTRY_ID,
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
+            'null_' . SourceInterface::SOURCE_CODE => [
+                SourceInterface::SOURCE_CODE,
+                null,
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::SOURCE_CODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'empty_' . SourceInterface::SOURCE_CODE => [
+                SourceInterface::SOURCE_CODE,
+                '',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::SOURCE_CODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'whitespaces_' . SourceInterface::SOURCE_CODE => [
+                SourceInterface::SOURCE_CODE,
+                ' ',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::SOURCE_CODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'with_whitespaces_' . SourceInterface::SOURCE_CODE => [
+                SourceInterface::SOURCE_CODE,
+                'source code',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not contain whitespaces.',
+                            'parameters' => [
+                                'field' => SourceInterface::SOURCE_CODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'null_' . SourceInterface::NAME => [
+                SourceInterface::NAME,
+                null,
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::NAME,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'empty_' . SourceInterface::NAME => [
+                SourceInterface::NAME,
+                '',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::NAME,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'whitespaces_' . SourceInterface::NAME => [
+                SourceInterface::NAME,
+                ' ',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::NAME,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'empty_' . SourceInterface::POSTCODE => [
+                SourceInterface::POSTCODE,
+                '',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::POSTCODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'whitespaces_' . SourceInterface::POSTCODE => [
+                SourceInterface::POSTCODE,
+                ' ',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::POSTCODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'null_' . SourceInterface::POSTCODE => [
+                SourceInterface::POSTCODE,
+                null,
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::POSTCODE,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'empty_' . SourceInterface::COUNTRY_ID => [
+                SourceInterface::COUNTRY_ID,
+                '',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::COUNTRY_ID,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'whitespaces_' . SourceInterface::COUNTRY_ID => [
+                SourceInterface::COUNTRY_ID,
+                ' ',
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceInterface::COUNTRY_ID,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
             'null_' . SourceInterface::COUNTRY_ID => [
                 SourceInterface::COUNTRY_ID,
                 null,
@@ -376,10 +376,10 @@ class ValidationTest extends WebapiAbstract
             $this->_webApiCall($serviceInfo, ['source' => $data]);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
-            if (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST) {
+            if (TESTS_WEB_API_ADAPTER === self::ADAPTER_REST) {
                 self::assertEquals($expectedErrorData, $this->processRestExceptionResult($e));
                 self::assertEquals(Exception::HTTP_BAD_REQUEST, $e->getCode());
-            } elseif (TESTS_WEB_API_ADAPTER == self::ADAPTER_SOAP) {
+            } elseif (TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP) {
                 $this->assertInstanceOf('SoapFault', $e);
                 $expectedWrappedErrors = [];
                 foreach ($expectedErrorData['errors'] as $error) {

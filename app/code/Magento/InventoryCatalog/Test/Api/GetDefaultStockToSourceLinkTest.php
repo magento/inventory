@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Api;
 
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\Framework\Webapi\Rest\Request;
@@ -42,15 +42,15 @@ class GetDefaultStockToSourceLinkTest extends WebapiAbstract
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         $serviceInfo = [
             'rest' => [
-                'resourcePath' => '/V1/inventory/stock/get-assigned-sources/' . $defaultStockId,
+                'resourcePath' => '/V1/inventory/get-sources-assigned-to-stock-ordered-by-priority/' . $defaultStockId,
                 'httpMethod' => Request::HTTP_METHOD_GET,
             ],
             'soap' => [
-                'service' => 'inventoryApiGetAssignedSourcesForStockV1',
-                'operation' => 'inventoryApiStockRepositoryV1Get',
+                'service' => 'inventoryApiGetSourcesAssignedToStockOrderedByPriorityV1',
+                'operation' => 'inventoryApiGetSourcesAssignedToStockOrderedByPriorityV1Execute',
             ],
         ];
-        if (self::ADAPTER_REST == TESTS_WEB_API_ADAPTER) {
+        if (self::ADAPTER_REST === TESTS_WEB_API_ADAPTER) {
             $source = $this->_webApiCall($serviceInfo);
         } else {
             $source = $this->_webApiCall($serviceInfo, ['stockId' => $defaultStockId]);

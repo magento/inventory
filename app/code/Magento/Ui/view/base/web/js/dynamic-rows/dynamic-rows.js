@@ -224,6 +224,14 @@ define([
             return this;
         },
 
+        /** @inheritdoc */
+        destroy: function () {
+            if (this.dnd()) {
+                this.dnd().destroy();
+            }
+            this._super();
+        },
+
         /**
          * Calls 'initObservable' of parent
          *
@@ -902,7 +910,7 @@ define([
             prop = prop || this.identificationProperty;
 
             return _.reject(this.getChildItems(), function (recordData) {
-                return ~~recordData[prop] === ~~id;
+                return recordData[prop].toString() === id.toString();
             }, this);
         },
 

@@ -62,6 +62,8 @@ class AddStockDataToCollectionTest extends TestCase
      * @return void
      *
      * @dataProvider addStockDataToCollectionDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testAddStockDataToCollection(string $store, int $expectedSize, bool $isFilterInStock)
     {
@@ -80,12 +82,12 @@ class AddStockDataToCollectionTest extends TestCase
     public function addStockDataToCollectionDataProvider(): array
     {
         return [
-            ['store_for_eu_website', 1, true],
+            ['store_for_eu_website', 2, true],
             ['store_for_us_website', 1, true],
-            ['store_for_global_website', 2, true],
-            ['store_for_eu_website', 2, false],
+            ['store_for_global_website', 3, true],
+            ['store_for_eu_website', 3, false],
             ['store_for_us_website', 1, false],
-            ['store_for_global_website', 3, false],
+            ['store_for_global_website', 4, false],
         ];
     }
 

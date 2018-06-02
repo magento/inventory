@@ -9,11 +9,13 @@ namespace Magento\Setup\Model\FixtureGenerator;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Indexer\Model\Config;
+use Magento\Store\Model\WebsiteRepository;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
  * @magentoAppArea adminhtml
  * @magentoDataFixture Magento/Catalog/_files/category.php
+ * @magentoDataFixture Magento/Store/_files/second_website_with_two_stores.php
  */
 class ProductGeneratorTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,6 +40,11 @@ class ProductGeneratorTest extends \PHPUnit\Framework\TestCase
     private $indexersState = [];
 
     /**
+     * @var WebsiteRepository
+     */
+    private $websiteRepository;
+
+    /**
      * @return void
      */
     protected function setUp()
@@ -45,7 +52,7 @@ class ProductGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->objectManager = Bootstrap::getObjectManager();
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
         $this->productGenerator = $this->objectManager->get(ProductGenerator::class);
-
+        $this->websiteRepository = $this->objectManager->get(WebsiteRepository::class);
         $indexerRegistry = $this->objectManager->get(IndexerRegistry::class);
         $indexerListIds = $this->objectManager->get(Config::class)->getIndexers();
 
@@ -69,14 +76,17 @@ class ProductGeneratorTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    /**
+     * @magentoDbIsolation disabled
+     */
     public function testProductGeneration()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/421');
         $name = 'Simple Product Name';
         $sku = 'simple_product_sku';
         $price = 7.99;
         $url = 'simple-product-url';
         $categoryId = 333;
+        $secondWebsiteId = $this->websiteRepository->get('test')->getId();
 
         $fixtureMap = [
             'name' => function () use ($name) {
@@ -94,6 +104,9 @@ class ProductGeneratorTest extends \PHPUnit\Framework\TestCase
             'category_ids' => function () use ($categoryId) {
                 return $categoryId;
             },
+            'website_ids' => function () use ($secondWebsiteId) {
+                return [1, $secondWebsiteId];
+            }
         ];
         $this->productGenerator->generate(1, $fixtureMap);
 

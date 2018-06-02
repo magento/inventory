@@ -10,13 +10,13 @@ namespace Magento\InventorySales\Test\Integration\StockManagement;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Model\StockManagement;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
-use Magento\InventoryReservations\Model\CleanupReservationsInterface;
-use Magento\InventoryReservations\Model\ReservationBuilderInterface;
-use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
-use PHPUnit\Framework\TestCase;
-use Magento\TestFramework\Helper\Bootstrap;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use Magento\Store\Api\WebsiteRepositoryInterface;
+use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\TestCase;
 
 class ReservationPlacingDuringBackItemQtyTest extends TestCase
 {
@@ -89,6 +89,8 @@ class ReservationPlacingDuringBackItemQtyTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     *
+     * @magentoDbIsolation disabled
      */
     public function testRevertProductsSale()
     {

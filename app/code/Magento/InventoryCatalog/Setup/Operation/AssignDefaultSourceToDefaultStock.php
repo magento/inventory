@@ -10,8 +10,8 @@ namespace Magento\InventoryCatalog\Setup\Operation;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterfaceFactory;
 use Magento\InventoryApi\Api\StockSourceLinksSaveInterface;
-use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 
 /**
  * Assign default source to default stock
@@ -29,14 +29,14 @@ class AssignDefaultSourceToDefaultStock
     private $defaultSourceProvider;
 
     /**
-     * @var StockSourceLinksSaveInterface
-     */
-    private $stockSourceLinksSave;
-
-    /**
      * @var StockSourceLinkInterfaceFactory
      */
     private $stockSourceLinkFactory;
+
+    /**
+     * @var StockSourceLinksSaveInterface
+     */
+    private $stockSourceLinksSave;
 
     /**
      * @param DefaultStockProviderInterface $defaultStockProvider
@@ -52,8 +52,8 @@ class AssignDefaultSourceToDefaultStock
     ) {
         $this->defaultStockProvider = $defaultStockProvider;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->stockSourceLinksSave = $stockSourceLinksSave;
         $this->stockSourceLinkFactory = $stockSourceLinkFactory;
+        $this->stockSourceLinksSave = $stockSourceLinksSave;
     }
 
     /**

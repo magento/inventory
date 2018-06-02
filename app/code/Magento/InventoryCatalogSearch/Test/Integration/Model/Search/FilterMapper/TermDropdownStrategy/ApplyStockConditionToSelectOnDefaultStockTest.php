@@ -33,6 +33,8 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
+     *
+     * @magentoDbIsolation disabled
      */
     public function testExecute()
     {
@@ -46,6 +48,6 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
 
         $result = $select->query()->fetchAll();
 
-        self::assertEquals(3, count($result));
+        self::assertEquals(4, count($result));
     }
 }

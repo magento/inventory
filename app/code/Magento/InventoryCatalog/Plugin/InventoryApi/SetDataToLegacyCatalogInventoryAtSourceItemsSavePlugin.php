@@ -7,15 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
-use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
-use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
+use Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization\SetDataToLegacyCatalogInventory;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 
 /**
- * Set Qty and status for legacy CatalogInventory Stock Status and Stock Item DB tables,
- * if corresponding MSI SourceItem assigned to Default Source has been saved
+ * Synchronization between legacy Stock Items and saved Source Items
  */
 class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
 {
@@ -25,28 +26,36 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
     private $defaultSourceProvider;
 
     /**
-     * @var SetDataToLegacyStockItem
+     * @var IsSourceItemManagementAllowedForProductTypeInterface
      */
-    private $setDataToLegacyStockItem;
+    private $isSourceItemsAllowedForProductType;
 
     /**
-     * @var SetDataToLegacyStockStatus
+     * @var GetProductTypesBySkusInterface
      */
-    private $setDataToLegacyStockStatus;
+    private $getProductTypeBySku;
+
+    /**
+     * @var SetDataToLegacyCatalogInventory
+     */
+    private $setDataToLegacyCatalogInventory;
 
     /**
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
-     * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+     * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
+     * @param GetProductTypesBySkusInterface $getProductTypeBySku
+     * @param SetDataToLegacyCatalogInventory $setDataToLegacyCatalogInventory
      */
     public function __construct(
         DefaultSourceProviderInterface $defaultSourceProvider,
-        SetDataToLegacyStockItem $setDataToLegacyStockItem,
-        SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
+        GetProductTypesBySkusInterface $getProductTypeBySku,
+        SetDataToLegacyCatalogInventory $setDataToLegacyCatalogInventory
     ) {
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
-        $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
+        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
+        $this->getProductTypeBySku = $getProductTypeBySku;
+        $this->setDataToLegacyCatalogInventory = $setDataToLegacyCatalogInventory;
     }
 
     /**
@@ -54,25 +63,32 @@ class SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin
      * @param void $result
      * @param SourceItemInterface[] $sourceItems
      * @return void
-     * @see SourceItemsSaveInterface::execute
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems)
+    public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems): void
     {
+        $sourceItemsForSynchronization = [];
         foreach ($sourceItems as $sourceItem) {
             if ($sourceItem->getSourceCode() !== $this->defaultSourceProvider->getCode()) {
                 continue;
             }
-            $this->setDataToLegacyStockItem->execute(
-                $sourceItem->getSku(),
-                (float)$sourceItem->getQuantity(),
-                (int)$sourceItem->getStatus()
-            );
-            $this->setDataToLegacyStockStatus->execute(
-                $sourceItem->getSku(),
-                (float)$sourceItem->getQuantity(),
-                (int)$sourceItem->getStatus()
-            );
+
+            $sku = $sourceItem->getSku();
+
+            try {
+                $typeId = $this->getProductTypeBySku->execute([$sku])[$sku];
+            } catch (InputException $e) {
+                // Save source item data for not existed product
+                continue;
+            }
+
+            if (false === $this->isSourceItemsAllowedForProductType->execute($typeId)) {
+                continue;
+            }
+
+            $sourceItemsForSynchronization[] = $sourceItem;
         }
+
+        $this->setDataToLegacyCatalogInventory->execute($sourceItemsForSynchronization);
     }
 }

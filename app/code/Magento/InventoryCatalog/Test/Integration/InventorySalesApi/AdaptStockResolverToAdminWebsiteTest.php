@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration\InventorySalesApi;
 
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
@@ -32,22 +32,7 @@ class AdaptStockResolverToAdminWebsiteTest extends TestCase
         $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
     }
 
-    /**
-     * @magentoAppArea adminhtml
-     */
     public function testAdaptStockResolverToAdminWebsite()
-    {
-        $defaultStockId = $this->defaultStockProvider->getId();
-        $currentStock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, WebsiteInterface::ADMIN_CODE);
-
-        self::assertEquals($defaultStockId, $currentStock->getStockId());
-    }
-
-    /**
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
-     * @expectedExceptionMessage No linked stock found
-     */
-    public function testAdaptStockResolverToAdminWebsiteIfAreaIsNotAdminhtml()
     {
         $defaultStockId = $this->defaultStockProvider->getId();
         $currentStock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, WebsiteInterface::ADMIN_CODE);

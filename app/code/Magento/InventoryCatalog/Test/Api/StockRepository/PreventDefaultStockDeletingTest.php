@@ -11,7 +11,7 @@ use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 
 class PreventDefaultStockDeletingTest extends WebapiAbstract
 {
@@ -43,11 +43,11 @@ class PreventDefaultStockDeletingTest extends WebapiAbstract
         ];
         $expectedMessage = 'Default Stock could not be deleted.';
         try {
-            (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST) ? $this->_webApiCall($serviceInfo) :
+            (TESTS_WEB_API_ADAPTER === self::ADAPTER_REST) ? $this->_webApiCall($serviceInfo) :
                 $this->_webApiCall($serviceInfo, ['stockId' => $this->defaultStockProvider->getId()]);
             $this->fail('Expected throwing exception');
         } catch (\Exception $e) {
-            if (TESTS_WEB_API_ADAPTER == self::ADAPTER_REST) {
+            if (TESTS_WEB_API_ADAPTER === self::ADAPTER_REST) {
                 $errorData = $this->processRestExceptionResult($e);
                 self::assertEquals($expectedMessage, $errorData['message']);
                 self::assertEquals(Exception::HTTP_BAD_REQUEST, $e->getCode());

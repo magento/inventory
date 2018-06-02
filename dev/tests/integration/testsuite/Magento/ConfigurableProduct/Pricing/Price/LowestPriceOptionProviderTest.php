@@ -11,6 +11,9 @@ use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class LowestPriceOptionProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -34,8 +37,6 @@ class LowestPriceOptionProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetProductsIfOneOfChildIsDisabled()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/456');
-
         $configurableProduct = $this->productRepository->get('configurable', false, null, true);
         $lowestPriceChildrenProducts = $this->createLowestPriceOptionsProvider()->getProducts($configurableProduct);
         self::assertCount(1, $lowestPriceChildrenProducts);
@@ -67,8 +68,6 @@ class LowestPriceOptionProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetProductsIfOneOfChildIsDisabledPerStore()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/456');
-
         $configurableProduct = $this->productRepository->get('configurable', false, null, true);
         $lowestPriceChildrenProducts = $this->createLowestPriceOptionsProvider()->getProducts($configurableProduct);
         self::assertCount(1, $lowestPriceChildrenProducts);
@@ -101,8 +100,6 @@ class LowestPriceOptionProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetProductsIfOneOfChildIsOutOfStock()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/456');
-
         $configurableProduct = $this->productRepository->get('configurable', false, null, true);
         $lowestPriceChildrenProducts = $this->createLowestPriceOptionsProvider()->getProducts($configurableProduct);
         self::assertCount(1, $lowestPriceChildrenProducts);
@@ -131,8 +128,6 @@ class LowestPriceOptionProviderTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetProductsIfOneOfChildrenIsAssignedToOtherWebsite()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/456');
-
         $configurableProduct = $this->productRepository->getById(1, false, null, true);
         $lowestPriceChildrenProducts = $this->createLowestPriceOptionsProvider()->getProducts($configurableProduct);
         self::assertCount(1, $lowestPriceChildrenProducts);

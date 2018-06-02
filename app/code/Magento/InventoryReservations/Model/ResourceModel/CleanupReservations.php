@@ -8,9 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryReservations\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryReservationsApi\Api\Data\ReservationInterface;
-use Magento\InventoryReservations\Model\CleanupReservationsInterface;
-use Magento\InventoryReservations\Setup\Operation\CreateReservationTable;
+use Magento\InventoryReservationsApi\Model\ReservationInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 
 /**
  * @inheritdoc
@@ -45,7 +44,7 @@ class CleanupReservations implements CleanupReservationsInterface
     public function execute()
     {
         $connection = $this->resource->getConnection();
-        $reservationTable = $this->resource->getTableName(CreateReservationTable::TABLE_NAME_RESERVATION);
+        $reservationTable = $this->resource->getTableName('inventory_reservation');
 
         $select = $connection->select()
             ->from(

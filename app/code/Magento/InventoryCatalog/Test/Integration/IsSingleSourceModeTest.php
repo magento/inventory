@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Integration;
 
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -17,25 +17,25 @@ class IsSingleSourceModeTest extends TestCase
     /**
      * @var IsSingleSourceModeInterface
      */
-    protected $isSingleSourcekMode;
+    private $isSingleSourceMode;
 
     /**
      * @var SourceRepositoryInterface
      */
-    protected $sourceRepository;
+    private $sourceRepository;
 
     /**
      * @inheritdoc
      */
     protected function setUp()
     {
-        $this->isSingleSourcekMode = Bootstrap::getObjectManager()->get(IsSingleSourceModeInterface::class);
+        $this->isSingleSourceMode = Bootstrap::getObjectManager()->get(IsSingleSourceModeInterface::class);
         $this->sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);
     }
 
     public function testExecuteOnCleanInstall()
     {
-        self::assertTrue($this->isSingleSourcekMode->execute());
+        self::assertTrue($this->isSingleSourceMode->execute());
     }
 
     /**
@@ -47,7 +47,7 @@ class IsSingleSourceModeTest extends TestCase
         $sourceToDisable->setEnabled(false);
         $this->sourceRepository->save($sourceToDisable);
 
-        self::assertTrue($this->isSingleSourcekMode->execute());
+        self::assertTrue($this->isSingleSourceMode->execute());
     }
 
     /**
@@ -55,6 +55,6 @@ class IsSingleSourceModeTest extends TestCase
      */
     public function testExecuteWithEnabledSources()
     {
-        self::assertFalse($this->isSingleSourcekMode->execute());
+        self::assertFalse($this->isSingleSourceMode->execute());
     }
 }

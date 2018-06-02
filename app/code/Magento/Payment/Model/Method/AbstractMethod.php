@@ -4,16 +4,16 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
-
 namespace Magento\Payment\Model\Method;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\PaymentMethodInterface;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Directory\Helper\Data as DirectoryHelper;
 
 /**
  * Payment method abstract model
@@ -31,12 +31,6 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
     MethodInterface,
     PaymentMethodInterface
 {
-    const ACTION_ORDER = 'order';
-
-    const ACTION_AUTHORIZE = 'authorize';
-
-    const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
-
     const STATUS_UNKNOWN = 'UNKNOWN';
 
     const STATUS_APPROVED = 'APPROVED';
@@ -48,23 +42,6 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
     const STATUS_VOID = 'VOID';
 
     const STATUS_SUCCESS = 'SUCCESS';
-
-    /**
-     * Different payment method checks.
-     */
-    const CHECK_USE_FOR_COUNTRY = 'country';
-
-    const CHECK_USE_FOR_CURRENCY = 'currency';
-
-    const CHECK_USE_CHECKOUT = 'checkout';
-
-    const CHECK_USE_INTERNAL = 'internal';
-
-    const CHECK_ORDER_TOTAL_MIN_MAX = 'total';
-
-    const CHECK_ZERO_TOTAL = 'zero_total';
-
-    const GROUP_OFFLINE = 'offline';
 
     /**
      * @var string
@@ -220,6 +197,11 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
     protected $logger;
 
     /**
+     * @var DirectoryHelper
+     */
+    private $directory;
+
+    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -230,6 +212,7 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
+     * @param DirectoryHelper $directory
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -242,7 +225,8 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
         \Magento\Payment\Model\Method\Logger $logger,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        DirectoryHelper $directory = null
     ) {
         parent::__construct(
             $context,
@@ -256,6 +240,7 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
         $this->_paymentData = $paymentData;
         $this->_scopeConfig = $scopeConfig;
         $this->logger = $logger;
+        $this->directory = $directory ?: ObjectManager::getInstance()->get(DirectoryHelper::class);
         $this->initializeData($data);
     }
 
@@ -528,7 +513,9 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
     public function getCode()
     {
         if (empty($this->_code)) {
-            throw new \Magento\Framework\Exception\LocalizedException(__('We cannot retrieve the payment method code.'));
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('We cannot retrieve the payment method code.')
+            );
         }
         return $this->_code;
     }
@@ -568,7 +555,9 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
     {
         $instance = $this->getData('info_instance');
         if (!$instance instanceof InfoInterface) {
-            throw new \Magento\Framework\Exception\LocalizedException(__('We cannot retrieve the payment information object instance.'));
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('We cannot retrieve the payment information object instance.')
+            );
         }
         return $instance;
     }
@@ -605,11 +594,14 @@ abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibl
         } else {
             $billingCountry = $paymentInfo->getQuote()->getBillingAddress()->getCountryId();
         }
+        $billingCountry = $billingCountry ?: $this->directory->getDefaultCountry();
+
         if (!$this->canUseForCountry($billingCountry)) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('You can\'t use the payment type you selected to make payments to the billing country.')
             );
         }
+
         return $this;
     }
 

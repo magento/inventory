@@ -41,7 +41,6 @@ class AssignStatusToProductTest extends TestCase
      */
     protected function setUp()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/385');
         parent::setUp();
 
         $this->stockHelper = Bootstrap::getObjectManager()->get(Stock::class);
@@ -62,6 +61,8 @@ class AssignStatusToProductTest extends TestCase
      * @dataProvider assignStatusToProductDataProvider
      * @param string $storeCode
      * @param array $productsData
+     *
+     * @magentoDbIsolation disabled
      */
     public function testAssignStatusToProductIfStatusParameterIsNotPassed(string $storeCode, array $productsData)
     {
@@ -88,6 +89,8 @@ class AssignStatusToProductTest extends TestCase
      * @dataProvider assignStatusToProductDataProvider
      * @param string $storeCode
      * @param array $productsData
+     *
+     * @magentoDbIsolation disabled
      */
     public function testAssignStatusToProductIfStatusParameterIsPassed(string $storeCode, array $productsData)
     {

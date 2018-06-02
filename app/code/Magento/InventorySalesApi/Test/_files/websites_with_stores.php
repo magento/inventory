@@ -5,33 +5,41 @@
  */
 declare(strict_types=1);
 
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Store\Api\Data\GroupInterface;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\Store;
 use Magento\Store\Model\Website;
+use Magento\TestFramework\Db\Sequence;
 use Magento\TestFramework\Helper\Bootstrap;
 
 $websiteCodes = ['eu_website', 'us_website', 'global_website'];
 
+$objectManager = Bootstrap::getObjectManager();
+/** @var ManagerInterface $eventManager */
+$eventManager = $objectManager->create(ManagerInterface::class);
+/** @var Sequence $sequence */
+$sequence = $objectManager->create(Sequence::class);
+/** @var StoreInterface $store */
+$store = $objectManager->create(Store::class);
+$store->load('default');
+$rootCategoryId = $store->getRootCategoryId();
+
 foreach ($websiteCodes as $key => $websiteCode) {
     /** @var Website $website */
-    $website = Bootstrap::getObjectManager()->create(Website::class);
+    $website = $objectManager->create(Website::class);
     $website->setData([
         'code' => $websiteCode,
         'name' => 'Test Website ' . $websiteCode,
-        'default_group_id' => '1',
         'is_default' => '0',
     ]);
     $website->save();
 
-    $store = Bootstrap::getObjectManager()->create(\Magento\Store\Model\Store::class);
-
-    $groupId = Bootstrap::getObjectManager()->get(\Magento\Store\Model\StoreManagerInterface::class)
-        ->getWebsite()->getDefaultGroupId();
-
+    $store = $objectManager->create(Store::class);
     $store->setCode(
         'store_for_' . $websiteCode
     )->setWebsiteId(
         $website->getId()
-    )->setGroupId(
-        $groupId
     )->setName(
         'store_for_' . $websiteCode
     )->setSortOrder(
@@ -39,9 +47,19 @@ foreach ($websiteCodes as $key => $websiteCode) {
     )->setIsActive(
         1
     );
-    $store->save();
-}
 
-$objectManager = Bootstrap::getObjectManager();
-/* Refresh stores memory cache */
-$objectManager->get(\Magento\Store\Model\StoreManagerInterface::class)->reinitStores();
+    /** @var GroupInterface $group */
+    $group = $objectManager->create(GroupInterface::class);
+    $group->setName('store_view_' . $websiteCode);
+    $group->setCode('store_view_' . $websiteCode);
+    $group->setWebsiteId($website->getId());
+    $group->setDefaultStoreId($store->getId());
+    $group->setRootCategoryId($rootCategoryId);
+    $group->save();
+
+    $website->setDefaultGroupId($group->getId());
+    $website->save();
+    $store->setGroupId($group->getId());
+    $store->save();
+    $eventManager->dispatch('store_add', ['store' => $store]);
+}

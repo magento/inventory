@@ -36,11 +36,10 @@ class ConfigurableTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDataFixture Magento/ConfigurableProduct/_files/product_configurable.php
+     * @magentoDbIsolation disabled
      */
     public function testGetProductFinalPriceIfOneOfChildIsDisabled()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/456');
-
         /** @var Collection $collection */
         $collection = Bootstrap::getObjectManager()->get(CollectionFactory::class)
             ->create();
@@ -72,11 +71,10 @@ class ConfigurableTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDataFixture Magento/ConfigurableProduct/_files/product_configurable.php
+     * @magentoDbIsolation disabled
      */
     public function testGetProductFinalPriceIfOneOfChildIsDisabledPerStore()
     {
-        $this->markTestSkipped('https://github.com/magento-engcom/msi/issues/456');
-
         /** @var Collection $collection */
         $collection = Bootstrap::getObjectManager()->get(CollectionFactory::class)
             ->create();
