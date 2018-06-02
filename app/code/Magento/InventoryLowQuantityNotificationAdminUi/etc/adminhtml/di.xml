@@ -23,4 +23,14 @@
             </argument>
         </arguments>
     </type>
+    <virtualType name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="notify_stock_quantity" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryLowQuantityNotificationAdminUi\Ui\DataProvider\Source\Listing\Modifier\NotifyStockQuantity</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
