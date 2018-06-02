@@ -11,7 +11,6 @@ namespace Magento\Framework\Webapi;
 
 use Magento\Framework\Api\ImmutableDtoInterface;
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Webapi\ServiceTypeToEntityTypeMap;
 use Magento\Framework\Api\AttributeValue;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\SimpleDataObjectConverter;
@@ -179,6 +178,10 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      */
     private function hasParent(string $className, string $parentClass): bool
     {
+        if (in_array($className, $class->getInterfaceNames())) {
+            return true;
+        }
+
         $class = new ClassReflection($this->getRealClassName($className));
         if (!$class->getParentClass()) {
             return false;
@@ -200,7 +203,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
     private function isAbstractModel(string $className): bool
     {
         $className = $this->getRealClassName($className);
-        return $className instanceof AbstractModel;
+        return is_subclass_of($className, AbstractModel::class);
     }
 
     /**
@@ -211,7 +214,7 @@ class ServiceInputProcessor implements ServicePayloadConverterInterface
      */
     private function isImmutableDto(string $className): bool
     {
-        return $className instanceof ImmutableDtoInterface;
+        return is_subclass_of($className, ImmutableDtoInterface::class);
     }
 
     /**
