@@ -43,16 +43,19 @@ class CreateTest extends WebapiAbstract
             SourceInterface::POSTCODE => 'source-postcode',
             SourceInterface::PHONE => 'source-phone',
             SourceInterface::FAX => 'source-fax',
-            SourceInterface::USE_DEFAULT_CARRIER_CONFIG => 0,
+            // TODO: Test for carriers link implementation not yet available in MSI MVP.
+            // TODO: Reactivate them when custom linked carriers are available
+            SourceInterface::USE_DEFAULT_CARRIER_CONFIG => 1,
+            //SourceInterface::USE_DEFAULT_CARRIER_CONFIG => 0,
             SourceInterface::CARRIER_LINKS => [
-                [
+                /*[
                     SourceCarrierLinkInterface::CARRIER_CODE => 'ups',
                     SourceCarrierLinkInterface::POSITION => 100,
                 ],
                 [
                     SourceCarrierLinkInterface::CARRIER_CODE => 'usps',
                     SourceCarrierLinkInterface::POSITION => 200,
-                ],
+                ],*/
             ],
         ];
         $serviceInfo = [
