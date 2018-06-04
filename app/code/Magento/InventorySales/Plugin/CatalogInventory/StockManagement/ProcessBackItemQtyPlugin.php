@@ -9,12 +9,13 @@ namespace Magento\InventorySales\Plugin\CatalogInventory\StockManagement;
 
 use Magento\CatalogInventory\Model\StockManagement;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryCatalog\Model\GetProductTypesBySkusInterface;
-use Magento\InventoryCatalog\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
-use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
-use Magento\InventoryReservationsApi\Api\ReservationBuilderInterface;
-use Magento\InventorySales\Model\StockByWebsiteIdResolver;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
+use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\Framework\Exception\InputException;
 
 /**
  * Class provides around Plugin on \Magento\CatalogInventory\Model\StockManagement::backItemQty
@@ -27,7 +28,7 @@ class ProcessBackItemQtyPlugin
     private $getSkusByProductIds;
 
     /**
-     * @var StockByWebsiteIdResolver
+     * @var StockByWebsiteIdResolverInterface
      */
     private $stockByWebsiteIdResolver;
 
@@ -42,9 +43,9 @@ class ProcessBackItemQtyPlugin
     private $appendReservations;
 
     /**
-     * @var IsSourceItemsAllowedForProductTypeInterface
+     * @var IsSourceItemManagementAllowedForProductTypeInterface
      */
-    private $isSourceItemsAllowedForProductType;
+    private $isSourceItemManagementAllowedForProductType;
 
     /**
      * @var GetProductTypesBySkusInterface
@@ -53,25 +54,25 @@ class ProcessBackItemQtyPlugin
 
     /**
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
+     * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param ReservationBuilderInterface $reservationBuilder
      * @param AppendReservationsInterface $appendReservations
-     * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
+     * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      */
     public function __construct(
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        StockByWebsiteIdResolver $stockByWebsiteIdResolver,
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         ReservationBuilderInterface $reservationBuilder,
         AppendReservationsInterface $appendReservations,
-        IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         GetProductTypesBySkusInterface $getProductTypesBySkus
     ) {
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->reservationBuilder = $reservationBuilder;
         $this->appendReservations = $appendReservations;
-        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
+        $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->getProductTypesBySkus = $getProductTypesBySkus;
     }
 
@@ -86,17 +87,33 @@ class ProcessBackItemQtyPlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundBackItemQty(StockManagement $subject, callable $proceed, $productId, $qty, $scopeId = null)
-    {
+    public function aroundBackItemQty(
+        StockManagement $subject,
+        callable $proceed,
+        $productId,
+        $qty,
+        $scopeId = null
+    ): bool {
         if (null === $scopeId) {
             throw new LocalizedException(__('$scopeId is required'));
         }
 
-        $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        try {
+            $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        } catch (InputException $e) {
+            /**
+             * As it was decided the Inventory should not use data constraints depending on Catalog
+             * (these two systems are not highly coupled, i.e. Magento does not sync data between them, so that
+             * it's possible that SKU exists in Catalog, but does not exist in Inventory and vice versa)
+             * it is necessary for Magento to have an ability to process placed orders even with
+             * deleted or non-existing products
+             */
+            return true;
+        }
         $productType = $this->getProductTypesBySkus->execute([$productSku])[$productSku];
 
-        if (true === $this->isSourceItemsAllowedForProductType->execute($productType)) {
-            $stockId = (int)$this->stockByWebsiteIdResolver->get((int)$scopeId)->getStockId();
+        if (true === $this->isSourceItemManagementAllowedForProductType->execute($productType)) {
+            $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$scopeId)->getStockId();
             $reservation = $this->reservationBuilder
                 ->setSku($productSku)
                 ->setQuantity((float)$qty)

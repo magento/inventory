@@ -13,9 +13,9 @@ use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryReservations\Model\CleanupReservationsInterface;
-use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
-use Magento\InventoryReservationsApi\Api\ReservationBuilderInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -106,6 +106,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testProductIsSalable(string $sku, int $stockId, bool $isSalable)
     {
@@ -137,6 +139,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     *
+     * @magentoDbIsolation disabled
      */
     public function testProductIsOutOfStockIfReservationsArePresent()
     {

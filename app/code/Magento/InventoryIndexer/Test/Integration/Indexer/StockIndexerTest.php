@@ -9,7 +9,7 @@ namespace Magento\InventoryIndexer\Test\Integration\Indexer;
 
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
-use Magento\InventorySales\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -59,6 +59,8 @@ class StockIndexerTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider reindexRowDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testReindexRow(string $sku, int $stockId, $expectedData)
     {
@@ -92,6 +94,8 @@ class StockIndexerTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider reindexListDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testReindexList(string $sku, int $stockId, $expectedData)
     {
@@ -128,6 +132,8 @@ class StockIndexerTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider reindexAllDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testReindexAll(string $sku, int $stockId, $expectedData)
     {

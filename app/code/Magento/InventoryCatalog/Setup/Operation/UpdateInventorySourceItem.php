@@ -7,12 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Operation;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\EntityManager\MetadataPool;
-use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryCatalog\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\DB\Adapter\Pdo\Mysql;
 
@@ -32,23 +29,23 @@ class UpdateInventorySourceItem
     private $defaultSourceProvider;
 
     /**
-     * @var MetadataPool
+     * @var string
      */
-    private $metadataPool;
+    private $tableNameSourceItem;
 
     /**
      * @param ResourceConnection $resourceConnection
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param MetadataPool $metadataPool
+     * @param string $tableNameSourceItem
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        MetadataPool $metadataPool
+        $tableNameSourceItem
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->metadataPool = $metadataPool;
+        $this->tableNameSourceItem = $tableNameSourceItem;
     }
 
     /**
@@ -58,10 +55,9 @@ class UpdateInventorySourceItem
     public function execute(ModuleDataSetupInterface $setup)
     {
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
-        $sourceItemTable = $setup->getTable(SourceItem::TABLE_NAME_SOURCE_ITEM);
+        $sourceItemTable = $setup->getTable($this->tableNameSourceItem);
         $legacyStockItemTable = $setup->getTable('cataloginventory_stock_item');
         $productTable = $setup->getTable('catalog_product_entity');
-        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
 
         $selectForInsert = $this->resourceConnection->getConnection()
             ->select()
@@ -73,7 +69,7 @@ class UpdateInventorySourceItem
                     'is_in_stock'
                 ]
             )
-            ->join($productTable, $linkField . ' = product_id', 'sku')
+            ->join($productTable, 'entity_id = product_id', 'sku')
             ->where('website_id = ?', 0);
 
         $sql = $this->resourceConnection->getConnection()->insertFromSelect(

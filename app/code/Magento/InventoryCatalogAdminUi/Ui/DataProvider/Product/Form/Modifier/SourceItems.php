@@ -9,15 +9,10 @@ namespace Magento\InventoryCatalogAdminUi\Ui\DataProvider\Product\Form\Modifier;
 
 use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
-use Magento\Inventory\Model\ResourceModel\SourceItem\Collection;
-use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryCatalog\Model\CanManageSourceItemsBySku;
-use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
-use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventoryCatalogAdminUi\Model\CanManageSourceItemsBySku;
+use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 
 /**
  * Product form modifier. Add to form source data
@@ -25,9 +20,9 @@ use Magento\InventoryConfiguration\Model\IsSourceItemsAllowedForProductTypeInter
 class SourceItems extends AbstractModifier
 {
     /**
-     * @var IsSourceItemsAllowedForProductTypeInterface
+     * @var IsSourceItemManagementAllowedForProductTypeInterface
      */
-    private $isSourceItemsAllowedForProductType;
+    private $isSourceItemManagementAllowedForProductType;
 
     /**
      * @var IsSingleSourceModeInterface
@@ -40,42 +35,34 @@ class SourceItems extends AbstractModifier
     private $locator;
 
     /**
-     * @var CollectionFactory
-     */
-    private $sourceItemCollectionFactory;
-
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
      * @var CanManageSourceItemsBySku
      */
     private $canManageSourceItemsBySku;
 
     /**
-     * @param IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType
+     * @var GetSourceItemsDataBySku
+     */
+    private $getSourceItemsDataBySku;
+
+    /**
+     * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param LocatorInterface $locator
-     * @param CollectionFactory $sourceItemCollectionFactory
-     * @param ResourceConnection $resourceConnection
      * @param CanManageSourceItemsBySku $canManageSourceItemsBySku
+     * @param GetSourceItemsDataBySku $getSourceItemsDataBySku
      */
     public function __construct(
-        IsSourceItemsAllowedForProductTypeInterface $isSourceItemsAllowedForProductType,
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         IsSingleSourceModeInterface $isSingleSourceMode,
         LocatorInterface $locator,
-        CollectionFactory $sourceItemCollectionFactory,
-        ResourceConnection $resourceConnection,
-        CanManageSourceItemsBySku $canManageSourceItemsBySku
+        CanManageSourceItemsBySku $canManageSourceItemsBySku,
+        GetSourceItemsDataBySku $getSourceItemsDataBySku
     ) {
-        $this->isSourceItemsAllowedForProductType = $isSourceItemsAllowedForProductType;
+        $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->locator = $locator;
-        $this->sourceItemCollectionFactory = $sourceItemCollectionFactory;
-        $this->resourceConnection = $resourceConnection;
         $this->canManageSourceItemsBySku = $canManageSourceItemsBySku;
+        $this->getSourceItemsDataBySku = $getSourceItemsDataBySku;
     }
 
     /**
@@ -86,45 +73,17 @@ class SourceItems extends AbstractModifier
         $product = $this->locator->getProduct();
 
         if ($this->isSingleSourceMode->execute() === true
-            || $this->isSourceItemsAllowedForProductType->execute($product->getTypeId()) === false
+            || $this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId()) === false
             || null === $product->getId()
         ) {
             return $data;
         }
 
-        $data[$product->getId()]['sources']['assigned_sources'] = $this->getSourceItemsData();
-        return $data;
-    }
-
-    /**
-     * @return array
-     */
-    private function getSourceItemsData(): array
-    {
-        $product = $this->locator->getProduct();
-
-        /** @var Collection $collection */
-        $collection = $this->sourceItemCollectionFactory->create();
-        $collection->addFilter(SourceItemInterface::SKU, $product->getSku());
-        $collection->join(
-            ['s' => $this->resourceConnection->getTableName(SourceResourceModel::TABLE_NAME_SOURCE)],
-            sprintf('s.%s = main_table.%s', SourceInterface::SOURCE_CODE, SourceItemInterface::SOURCE_CODE),
-            ['source_name' => SourceInterface::NAME, 'source_status' => SourceInterface::ENABLED]
+        $data[$product->getId()]['sources']['assigned_sources'] = $this->getSourceItemsDataBySku->execute(
+            $product->getSku()
         );
 
-        $collection->setOrder(SourceInterface::NAME, Collection::SORT_ORDER_ASC);
-
-        $sourceItemsData = [];
-        foreach ($collection->getData() as $row) {
-            $sourceItemsData[] = [
-                SourceItemInterface::SOURCE_CODE => $row[SourceItemInterface::SOURCE_CODE],
-                SourceItemInterface::QUANTITY => $row[SourceItemInterface::QUANTITY],
-                SourceItemInterface::STATUS => $row[SourceItemInterface::STATUS],
-                SourceInterface::NAME => $row['source_name'],
-                'source_status' => $row['source_status'],
-            ];
-        }
-        return $sourceItemsData;
+        return $data;
     }
 
     /**
@@ -135,7 +94,7 @@ class SourceItems extends AbstractModifier
         $product = $this->locator->getProduct();
 
         if ($this->isSingleSourceMode->execute() === true
-            || $this->isSourceItemsAllowedForProductType->execute($product->getTypeId()) === false) {
+            || $this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId()) === false) {
             return $meta;
         }
 

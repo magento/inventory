@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\GetStockItemData;
 
-use Magento\InventorySales\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -41,6 +41,8 @@ class GetStockItemDataTest extends TestCase
      * @param array|null $expectedData
      *
      * @dataProvider getStockItemDataDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testGetStockItemData(string $sku, int $stockId, $expectedData)
     {

@@ -11,7 +11,7 @@ use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\TestFramework\Assert\AssertArrayContains;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventorySourceSelection\Model\GetDefaultSourceSelectionAlgorithmCodeInterface;
+use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
 
 class SourceSelectionServiceTest extends WebapiAbstract
 {
@@ -19,7 +19,7 @@ class SourceSelectionServiceTest extends WebapiAbstract
      * Service constants
      */
     const RESOURCE_PATH = '/V1/inventory/source-selection-algorithm-result';
-    const SERVICE_NAME = 'InventorySourceSelectionApiSourceSelectionServiceV1';
+    const SERVICE_NAME = 'inventorySourceSelectionApiSourceSelectionServiceV1';
     /**#@-*/
 
     /**

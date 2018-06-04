@@ -10,11 +10,15 @@ namespace Magento\InventoryShipping\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventoryShipping\Model\SourceDeduction\SourceDeductionServiceInterface;
 use Magento\InventoryShipping\Model\SourceDeduction\Request\SourceDeductionRequestInterfaceFactory;
-use Magento\InventoryCatalog\Model\DefaultSourceProvider;
-use Magento\InventoryCatalog\Model\IsSingleSourceModeInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
+use Magento\InventoryShipping\Model\GetItemsToDeduct;
+use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
  * Class SourceDeductionProcessor
@@ -32,14 +36,24 @@ class SourceDeductionProcessor implements ObserverInterface
     private $sourceDeductionService;
 
     /**
-     * @var DefaultSourceProvider
+     * @var DefaultSourceProviderInterface
      */
     private $defaultSourceProvider;
+
+    /**
+     * @var SalesChannelInterfaceFactory
+     */
+    private $salesChannelFactory;
 
     /**
      * @var SalesEventInterfaceFactory
      */
     private $salesEventFactory;
+
+    /**
+     * @var WebsiteRepositoryInterface
+     */
+    private $websiteRepository;
 
     /**
      * @var IsSingleSourceModeInterface
@@ -54,23 +68,29 @@ class SourceDeductionProcessor implements ObserverInterface
     /**
      * @param SourceDeductionRequestInterfaceFactory $sourceDeductionRequestFactory
      * @param SourceDeductionServiceInterface $sourceDeductionService
-     * @param DefaultSourceProvider $defaultSourceProvider
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param SalesChannelInterfaceFactory $salesChannelFactory
      * @param SalesEventInterfaceFactory $salesEventFactory
+     * @param WebsiteRepositoryInterface $websiteRepository
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param GetItemsToDeduct $getItemsToDeduct
      */
     public function __construct(
         SourceDeductionRequestInterfaceFactory $sourceDeductionRequestFactory,
         SourceDeductionServiceInterface $sourceDeductionService,
-        DefaultSourceProvider $defaultSourceProvider,
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        SalesChannelInterfaceFactory $salesChannelFactory,
         SalesEventInterfaceFactory $salesEventFactory,
+        WebsiteRepositoryInterface $websiteRepository,
         IsSingleSourceModeInterface $isSingleSourceMode,
         GetItemsToDeduct $getItemsToDeduct
     ) {
         $this->sourceDeductionRequestFactory = $sourceDeductionRequestFactory;
         $this->sourceDeductionService = $sourceDeductionService;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->salesChannelFactory = $salesChannelFactory;
         $this->salesEventFactory = $salesEventFactory;
+        $this->websiteRepository = $websiteRepository;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->getItemsToDeduct = $getItemsToDeduct;
     }
@@ -82,38 +102,52 @@ class SourceDeductionProcessor implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
-        /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
-        $shipmentItem = $observer->getShipmentItem();
+        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
+        $shipment = $observer->getEvent()->getShipment();
 
-        if ($shipmentItem->getOrigData('entity_id')) {
+        if ($shipment->getOrigData('entity_id')) {
             return;
         }
 
-        $shipment = $shipmentItem->getShipment();
-
         //TODO: I'm not sure that is good idea (with default source code)...
         if (!empty($shipment->getExtensionAttributes())
-            || $shipment->getExtensionAttributes()->getSourceCode()) {
+            || !empty($shipment->getExtensionAttributes()->getSourceCode())) {
             $sourceCode = $shipment->getExtensionAttributes()->getSourceCode();
         } elseif ($this->isSingleSourceMode->execute()) {
             $sourceCode = $this->defaultSourceProvider->getCode();
         }
 
-        $websiteId = $shipment->getOrder()->getStore()->getWebsiteId();
+        /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
+        foreach ($shipment->getAllItems() as $shipmentItem) {
+            foreach ($this->getItemsToDeduct->execute($shipmentItem) as $item) {
+                $shipmentItems[] = $item;
+            }
+        }
 
-        $salesEvent = $this->salesEventFactory->create([
-            'type' => SalesEventInterface::EVENT_SHIPMENT_CREATED,
-            'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-            'objectId' => $shipment->getOrderId()
-        ]);
+        if (!empty($shipmentItems)) {
+            $websiteId = $shipment->getOrder()->getStore()->getWebsiteId();
 
-        if ($items = $this->getItemsToDeduct->execute($shipmentItem)) {
+            $salesEvent = $this->salesEventFactory->create([
+                'type' => SalesEventInterface::EVENT_SHIPMENT_CREATED,
+                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+                'objectId' => $shipment->getOrderId()
+            ]);
+
+            $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
+            $salesChannel = $this->salesChannelFactory->create([
+                'data' => [
+                    'type' => SalesChannelInterface::TYPE_WEBSITE,
+                    'code' => $websiteCode
+                ]
+            ]);
+
             $sourceDeductionRequest = $this->sourceDeductionRequestFactory->create([
-                'websiteId' => $websiteId,
                 'sourceCode' => $sourceCode,
-                'items' => $items,
+                'items' => $shipmentItems,
+                'salesChannel' => $salesChannel,
                 'salesEvent' => $salesEvent
             ]);
+
             $this->sourceDeductionService->execute($sourceDeductionRequest);
         }
     }

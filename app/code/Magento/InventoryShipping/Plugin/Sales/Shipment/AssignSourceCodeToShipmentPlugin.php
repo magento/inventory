@@ -12,9 +12,9 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\ShipmentFactory;
 use Magento\Sales\Api\Data\ShipmentExtensionFactory;
-use Magento\InventorySales\Model\StockByWebsiteIdResolver;
-use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
+use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 
 class AssignSourceCodeToShipmentPlugin
 {
@@ -29,7 +29,7 @@ class AssignSourceCodeToShipmentPlugin
     private $shipmentExtensionFactory;
 
     /**
-     * @var StockByWebsiteIdResolver
+     * @var StockByWebsiteIdResolverInterface
      */
     private $stockByWebsiteIdResolver;
 
@@ -39,22 +39,29 @@ class AssignSourceCodeToShipmentPlugin
     private $getSourcesAssignedToStockOrderedByPriority;
 
     /**
-     * AssignSourceCodeToShipmentPlugin constructor.
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
+    /**
      * @param RequestInterface $request
      * @param ShipmentExtensionFactory $shipmentExtensionFactory
-     * @param StockByWebsiteIdResolver $stockByWebsiteIdResolver
+     * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         RequestInterface $request,
         ShipmentExtensionFactory $shipmentExtensionFactory,
-        StockByWebsiteIdResolver $stockByWebsiteIdResolver,
-        GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
+        GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->request = $request;
         $this->shipmentExtensionFactory = $shipmentExtensionFactory;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
+        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -71,11 +78,13 @@ class AssignSourceCodeToShipmentPlugin
         $sourceCode = $this->request->getParam('sourceCode');
         if (empty($sourceCode)) {
             $websiteId = $order->getStore()->getWebsiteId();
-            $stockId = $this->stockByWebsiteIdResolver->get((int)$websiteId)->getStockId();
+            $stockId = $this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
             $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute((int)$stockId);
             //TODO: need ro rebuild this logic | create separate service
             if (!empty($sources) && count($sources) == 1) {
                 $sourceCode = $sources[0]->getSourceCode();
+            } else {
+                $sourceCode = $this->defaultSourceProvider->getCode();
             }
         }
         $shipmentExtension = $shipment->getExtensionAttributes();

@@ -11,7 +11,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Setup\Patch\SchemaPatchInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
-use Magento\InventoryCatalog\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 
 /**

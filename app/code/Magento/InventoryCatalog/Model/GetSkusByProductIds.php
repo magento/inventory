@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\Framework\Exception\InputException;
 
 /**
@@ -48,6 +49,7 @@ class GetSkusByProductIds implements GetSkusByProductIdsInterface
             );
         }
 
+        $skuByIds = array_map('strval', $skuByIds);
         return $skuByIds;
     }
 }

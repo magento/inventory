@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductIndexer\Test\Integration;
 
 use Magento\ConfigurableProduct\Api\LinkManagementInterface;
-use Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySkuInterface;
+use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
-use Magento\InventorySales\Model\GetStockItemDataInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use Magento\InventoryIndexer\Test\Integration\Indexer\RemoveIndexData;
@@ -98,6 +98,8 @@ class StockIndexerTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProductIndexer/Test/_files/source_items_configurable_multiple.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     *
+     * @magentoDbIsolation disabled
      */
     // @codingStandardsIgnoreEnd
     public function testReindexList()
@@ -126,6 +128,8 @@ class StockIndexerTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProductIndexer/Test/_files/source_items_configurable_multiple.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     *
+     * @magentoDbIsolation disabled
      */
     // @codingStandardsIgnoreEnd
     public function testReindexListSetAllSimplesOutOfStock()
@@ -137,7 +141,7 @@ class StockIndexerTest extends TestCase
             $sku = $child->getSku();
             $sourceItems = $this->getSourceItemsBySku->execute($sku);
             $changesSourceItems = [];
-            foreach ($sourceItems->getItems() as $sourceItem) {
+            foreach ($sourceItems as $sourceItem) {
                 $sourceItem->setStatus(SourceItemInterface::STATUS_OUT_OF_STOCK);
                 $changesSourceItems[] = $sourceItem;
             }
@@ -167,6 +171,8 @@ class StockIndexerTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProductIndexer/Test/_files/source_items_configurable_multiple.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     *
+     * @magentoDbIsolation disabled
      */
     // @codingStandardsIgnoreEnd
     public function testReindexListSetAllEuSimplesOutOfStock()

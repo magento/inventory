@@ -10,9 +10,9 @@ namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQt
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
-use Magento\InventoryReservations\Model\CleanupReservationsInterface;
-use Magento\InventoryReservationsApi\Api\AppendReservationsInterface;
-use Magento\InventoryReservationsApi\Api\ReservationBuilderInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -82,6 +82,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testProductIsSalable(string $sku, int $stockId, float $qty, bool $isSalable)
     {
@@ -124,6 +126,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableWithUseConfigMinQtyDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testProductIsSalableWithUseConfigMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
@@ -168,6 +172,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @param bool $isSalable
      *
      * @dataProvider productIsSalableWithMinQtyDataProvider
+     *
+     * @magentoDbIsolation disabled
      */
     public function testProductIsSalableWithMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
@@ -207,6 +213,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     *
+     * @magentoDbIsolation disabled
      */
     public function testProductIsOutOfStockIfReservationsArePresent()
     {
