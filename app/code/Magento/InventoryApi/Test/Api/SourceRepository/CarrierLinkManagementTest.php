@@ -26,11 +26,12 @@ class CarrierLinkManagementTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
      * @dataProvider dataProviderCarrierLinks
      */
-    public function testCarrierLinksManagement(array $carrierLinks)
+    // TODO: Test for carriers link implementation not yet available in MSI MVP.
+    // TODO: Reactivate them when custom linked carriers are available
+    /*public function testCarrierLinksManagement(array $carrierLinks)
     {
-        // TODO: Test for carriers link implementation not yet available in MSI MVP.
-        // TODO: Reactivate them when custom linked carriers are available
-        /*$sourceCode = 'source-code-1';
+
+        $sourceCode = 'source-code-1';
         $expectedData = [
             SourceInterface::NAME => 'source-name-1',
             SourceInterface::POSTCODE => 'source-postcode',
@@ -49,8 +50,8 @@ class CarrierLinkManagementTest extends WebapiAbstract
         );
 
         self::assertArrayHasKey(SourceInterface::CARRIER_LINKS, $sourceData);
-        self::assertEquals($expectedData[SourceInterface::CARRIER_LINKS], $sourceData[SourceInterface::CARRIER_LINKS]);*/
-    }
+        self::assertEquals($expectedData[SourceInterface::CARRIER_LINKS], $sourceData[SourceInterface::CARRIER_LINKS]);
+    }*/
 
     /**
      * @return array
@@ -101,7 +102,9 @@ class CarrierLinkManagementTest extends WebapiAbstract
      * @param array $data
      * @return void
      */
-    private function saveSource(string $sourceCode, array $data)
+    // TODO: Test for carriers link implementation not yet available in MSI MVP.
+    // TODO: Reactivate them when custom linked carriers are available
+    /*private function saveSource(string $sourceCode, array $data)
     {
         $serviceInfo = [
             'rest' => [
@@ -120,7 +123,7 @@ class CarrierLinkManagementTest extends WebapiAbstract
             $requestData['sourceCode'] = $sourceCode;
             $this->_webApiCall($serviceInfo, ['source' => $requestData]);
         }
-    }
+    }*/
 
     /**
      * @param string $sourceCode
