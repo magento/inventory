@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\ResourceModel;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 
@@ -22,11 +24,20 @@ class AddStockDataToCollection
     private $stockIndexTableNameResolver;
 
     /**
-     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @var MetadataPool
      */
-    public function __construct(StockIndexTableNameResolverInterface $stockIndexTableNameResolver)
-    {
+    private $metadataPool;
+
+    /**
+     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @param MetadataPool $metadataPool
+     */
+    public function __construct(
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
+        MetadataPool $metadataPool
+    ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -39,10 +50,11 @@ class AddStockDataToCollection
     {
         $tableName = $this->stockIndexTableNameResolver->execute($stockId);
 
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $resource = $collection->getResource();
         $collection->getSelect()->joinInner(
             ['product' => $resource->getTable('catalog_product_entity')],
-            sprintf('product.entity_id = %s.entity_id', Collection::MAIN_TABLE_ALIAS),
+            sprintf('product.' . $linkField . ' = %s.' . $linkField, Collection::MAIN_TABLE_ALIAS),
             []
         );
         $collection->getSelect()

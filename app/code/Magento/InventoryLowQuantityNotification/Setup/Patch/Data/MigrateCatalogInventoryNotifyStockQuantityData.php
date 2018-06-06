@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotification\Setup\Patch\Data;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Model\Stock\Item as StockItem;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
@@ -30,15 +32,23 @@ class MigrateCatalogInventoryNotifyStockQuantityData implements DataPatchInterfa
     private $defaultSourceProvider;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        MetadataPool $metadataPool
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -46,6 +56,8 @@ class MigrateCatalogInventoryNotifyStockQuantityData implements DataPatchInterfa
      */
     public function apply()
     {
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
+
         $defaultSource = $this->defaultSourceProvider->getCode();
         $connection = $this->moduleDataSetup->getConnection();
         $select = $connection->select();
@@ -59,7 +71,7 @@ class MigrateCatalogInventoryNotifyStockQuantityData implements DataPatchInterfa
                 ]
             )->join(
                 ['product' => $this->moduleDataSetup->getTable('catalog_product_entity')],
-                'product.entity_id = stock_item.product_id',
+                'product.' . $linkField . ' = stock_item.product_id',
                 []
             )->join(
                 ['source_item' => $this->moduleDataSetup->getTable(SourceItem::TABLE_NAME_SOURCE_ITEM)],

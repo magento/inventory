@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkResourceModel;
@@ -33,15 +35,23 @@ class SelectBuilder
     private $getIsStockItemSalableCondition;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
+        GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
+        MetadataPool $metadataPool
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -61,6 +71,7 @@ class SelectBuilder
             SourceItemInterface::QUANTITY
         );
         $sourceCodes = $this->getSourceCodes($stockId);
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
 
         $select = $connection->select();
         $select->joinLeft(
@@ -69,7 +80,7 @@ class SelectBuilder
             []
         )->joinLeft(
             ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
-            'product_entity.entity_id = legacy_stock_item.product_id',
+            'product_entity.' . $linkField . ' = legacy_stock_item.product_id',
             []
         );
 

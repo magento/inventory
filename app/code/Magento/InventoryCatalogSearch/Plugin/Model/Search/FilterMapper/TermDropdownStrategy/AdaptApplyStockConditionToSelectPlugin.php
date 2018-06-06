@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Plugin\Model\Search\FilterMapper\TermDropdownStrategy;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogSearch\Model\Search\FilterMapper\TermDropdownStrategy\ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -41,21 +43,29 @@ class AdaptApplyStockConditionToSelectPlugin
     private $stockResolver;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        MetadataPool $metadataPool
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -75,9 +85,11 @@ class AdaptApplyStockConditionToSelectPlugin
         string $stockAlias,
         Select $select
     ) {
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
+
         $select->joinInner(
             ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            sprintf('product.entity_id = %s.source_id', $alias),
+            sprintf('product.' . $linkField . ' = %s.source_id', $alias),
             []
         );
         $websiteCode = $this->storeManager->getWebsite()->getCode();

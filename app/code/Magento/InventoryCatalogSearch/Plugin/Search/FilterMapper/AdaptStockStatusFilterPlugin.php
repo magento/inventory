@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogSearch\Plugin\Search\FilterMapper;
 
 use InvalidArgumentException;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Search\Adapter\Mysql\ConditionManager;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
@@ -49,24 +51,32 @@ class AdaptStockStatusFilterPlugin
     private $resourceConnection;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ConditionManager $conditionManager
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param ResourceConnection $resourceConnection
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ConditionManager $conditionManager,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        MetadataPool $metadataPool
     ) {
         $this->conditionManager = $conditionManager;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resourceConnection = $resourceConnection;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -112,9 +122,10 @@ class AdaptStockStatusFilterPlugin
      */
     private function addProductEntityJoin(Select $select, $mainTableAlias)
     {
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $select->joinInner(
             ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            sprintf('product.entity_id = %s.entity_id', $mainTableAlias),
+            sprintf('product.' . $linkField . ' = %s.entity_id', $mainTableAlias),
             []
         );
     }
@@ -125,9 +136,10 @@ class AdaptStockStatusFilterPlugin
      */
     private function addSubProductEntityJoin(Select $select, $mainTableAlias)
     {
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $select->joinInner(
             ['sub_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            sprintf('sub_product.entity_id = %s.source_id', $mainTableAlias),
+            sprintf('sub_product.' . $linkField . ' = %s.source_id', $mainTableAlias),
             []
         );
     }

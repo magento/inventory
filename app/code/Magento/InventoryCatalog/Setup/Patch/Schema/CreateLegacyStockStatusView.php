@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Patch\Schema;
 
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Setup\Patch\SchemaPatchInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -33,18 +35,26 @@ class CreateLegacyStockStatusView implements SchemaPatchInterface
     private $stockIndexTableNameResolver;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param SchemaSetupInterface $schemaSetup
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         SchemaSetupInterface $schemaSetup,
         DefaultStockProviderInterface $defaultStockProvider,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
+        MetadataPool $metadataPool
     ) {
         $this->schemaSetup = $schemaSetup;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -61,6 +71,7 @@ class CreateLegacyStockStatusView implements SchemaPatchInterface
     public function apply()
     {
         $this->schemaSetup->startSetup();
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $defaultStockId = $this->defaultStockProvider->getId();
         $legacyView = $this->stockIndexTableNameResolver->execute($defaultStockId);
         $cataloginventoryStockStatus = $this->schemaSetup->getTable('cataloginventory_stock_status');
@@ -77,7 +88,7 @@ class CreateLegacyStockStatusView implements SchemaPatchInterface
                       cpe.sku
                     FROM {$cataloginventoryStockStatus} AS css
                       INNER JOIN {$catalogProductEntity} AS cpe
-                        ON css.product_id = cpe.entity_id;";
+                        ON css.product_id = cpe.{$linkField};";
         $this->schemaSetup->getConnection()->query($sql);
         $this->schemaSetup->endSetup();
 
