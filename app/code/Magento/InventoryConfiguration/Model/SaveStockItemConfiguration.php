@@ -51,10 +51,8 @@ class SaveStockItemConfiguration implements SaveStockItemConfigurationInterface
 
     /**
      * @inheritdoc
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(string $sku, int $stockId, StockItemConfigurationInterface $stockItemConfiguration)
+    public function execute(string $sku, int $stockId, StockItemConfigurationInterface $stockItemConfiguration): void
     {
         $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
 
@@ -75,7 +73,6 @@ class SaveStockItemConfiguration implements SaveStockItemConfigurationInterface
 
     /**
      * @param StockItemConfigurationInterface $stockItemConfiguration
-     *
      * @return array
      */
     private function getBinds(StockItemConfigurationInterface $stockItemConfiguration): array

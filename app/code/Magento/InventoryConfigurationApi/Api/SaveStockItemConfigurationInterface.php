@@ -18,8 +18,10 @@ interface SaveStockItemConfigurationInterface
 {
     /**
      * @param string $sku
+     * @param int $stockId
      * @param StockItemConfigurationInterface $stockItemConfiguration
      * @return void
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function execute(string $sku, int $stockId, StockItemConfigurationInterface $stockItemConfiguration);
 }
