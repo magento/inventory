@@ -4,6 +4,8 @@
  * See COPYING.txt for license details.
  */
 
+declare(strict_types=1);
+
 namespace Magento\Inventory\Model\Stock\SearchCriteria\CollectionProcessor\StockFilterProcessor;
 
 use Magento\Framework\Api\Filter;
@@ -18,10 +20,9 @@ class StockNameFilter implements CustomFilterInterface
      *
      * @param Filter $filter
      * @param AbstractDb $collection
-     * @return bool Whether the filter was applied
-     * @since 100.2.0
+     * @return bool
      */
-    public function apply(Filter $filter, AbstractDb $collection)
+    public function apply(Filter $filter, AbstractDb $collection): bool
     {
         $conditionType = $filter->getConditionType();
         $value = $filter->getValue();
@@ -30,9 +31,9 @@ class StockNameFilter implements CustomFilterInterface
             $conditionType = 'like';
             $value = '%' . $value . '%';
         }
-        $nameFilter = [$conditionType => [$value]];
+        $fieldFilter = [$conditionType => [$value]];
 
-        $collection->addFieldToFilter($filter->getField(), $nameFilter);
+        $collection->addFieldToFilter($filter->getField(), $fieldFilter);
 
         return true;
     }
