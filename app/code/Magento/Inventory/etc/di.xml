@@ -69,6 +69,28 @@
             </argument>
         </arguments>
     </type>
+
+    <virtualType name="Magento\Inventory\Model\Stock\SearchCriteria\StockCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Magento\Inventory\Model\Stock\SearchCriteria\CollectionProcessor\StockFilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\Inventory\Model\Stock\SearchCriteria\CollectionProcessor\StockFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="name" xsi:type="object">Magento\Inventory\Model\Stock\SearchCriteria\CollectionProcessor\StockFilterProcessor\StockNameFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Inventory\Model\Stock\Command\GetList">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Magento\Inventory\Model\Stock\SearchCriteria\StockCollectionProcessor</argument>
+        </arguments>
+    </type>
     <!-- StockSourceLink -->
     <preference for="Magento\InventoryApi\Api\Data\StockSourceLinkInterface" type="Magento\Inventory\Model\StockSourceLink"/>
     <preference for="Magento\InventoryApi\Api\Data\StockSourceLinkSearchResultsInterface" type="Magento\Inventory\Model\StockSourceLinkSearchResults"/>
