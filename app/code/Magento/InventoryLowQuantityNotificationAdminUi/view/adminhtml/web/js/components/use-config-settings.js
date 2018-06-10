@@ -32,6 +32,17 @@ define([
             }
 
             this._super(newChecked);
-        }
+        },
+
+        /** @inheritdoc */
+        initialize: function () {
+            this._super();
+
+            if (this.linkedValue() === "") {
+                this.checked(true);
+            }
+
+            return this;
+        },
     });
 });
