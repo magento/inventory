@@ -14,6 +14,17 @@ define([
             linkedValue: ''
         },
 
+        /** @inheritdoc */
+        initialize: function () {
+            this._super();
+
+            if (this.linkedValue() === '') {
+                this.checked(true);
+            }
+
+            return this;
+        },
+
         /**
          * @returns {Element}
          */
@@ -32,17 +43,6 @@ define([
             }
 
             this._super(newChecked);
-        },
-
-        /** @inheritdoc */
-        initialize: function () {
-            this._super();
-
-            if (this.linkedValue() === "") {
-                this.checked(true);
-            }
-
-            return this;
-        },
+        }
     });
 });
