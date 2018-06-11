@@ -129,7 +129,9 @@ class CarrierLinkManagementTest extends WebapiAbstract
      * @param string $sourceCode
      * @return array
      */
-    private function getSourceDataByCode(string $sourceCode): array
+    // TODO: Test for carriers link implementation not yet available in MSI MVP.
+    // TODO: Reactivate them when custom linked carriers are available
+    /*private function getSourceDataByCode(string $sourceCode): array
     {
         $serviceInfo = [
             'rest' => [
@@ -146,12 +148,13 @@ class CarrierLinkManagementTest extends WebapiAbstract
             : $this->_webApiCall($serviceInfo, ['sourceCode' => $sourceCode]);
         self::assertArrayHasKey(SourceInterface::SOURCE_CODE, $response);
         return $response;
-    }
+    }*/
 
     /**
      * @param array $carrierData
      * @param array $expectedErrorData
      * @dataProvider failedValidationDataProvider
+     * @throws \Exception
      */
     public function testCarrierLinksValidation(array $carrierData, array $expectedErrorData)
     {
@@ -175,10 +178,10 @@ class CarrierLinkManagementTest extends WebapiAbstract
                 self::assertEquals(\Magento\Framework\Webapi\Exception::HTTP_BAD_REQUEST, $e->getCode());
             } elseif (TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP) {
                 $this->assertInstanceOf('SoapFault', $e);
-                $expectedWrappedErrors = [];
+                $expWrappedErrors = [];
                 foreach ($expectedErrorData['errors'] as $error) {
                     // @see \Magento\TestFramework\TestCase\WebapiAbstract::getActualWrappedErrors()
-                    $expectedWrappedErrors[] = [
+                    $expWrappedErrors[] = [
                         'message' => $error['message'],
                         'params' => $error['parameters'],
                     ];
@@ -188,7 +191,7 @@ class CarrierLinkManagementTest extends WebapiAbstract
                     $expectedErrorData['message'],
                     'env:Sender',
                     [],
-                    $expectedWrappedErrors
+                    $expWrappedErrors
                 );
             } else {
                 throw $e;
