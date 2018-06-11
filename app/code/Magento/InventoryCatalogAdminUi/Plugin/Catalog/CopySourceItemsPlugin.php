@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogAdminUi\Plugin\Catalog;
 
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Copier;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -64,8 +63,6 @@ class CopySourceItemsPlugin
         Product $product
     ) {
         $this->copySourceItems($product->getSku(), $result->getSku());
-        $result->setStatus(Status::STATUS_DISABLED);
-
         return $result;
     }
 

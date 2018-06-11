@@ -9,7 +9,6 @@ namespace Magento\InventorySales\Plugin\CatalogInventory\StockManagement;
 
 use Magento\CatalogInventory\Model\StockManagement;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
@@ -87,29 +86,13 @@ class ProcessBackItemQtyPlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundBackItemQty(
-        StockManagement $subject,
-        callable $proceed,
-        $productId,
-        $qty,
-        $scopeId = null
-    ): bool {
+    public function aroundBackItemQty(StockManagement $subject, callable $proceed, $productId, $qty, $scopeId = null)
+    {
         if (null === $scopeId) {
             throw new LocalizedException(__('$scopeId is required'));
         }
 
-        try {
-            $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
-        } catch (NoSuchEntityException $e) {
-            /**
-             * As it was decided the Inventory should not use data constraints depending on Catalog
-             * (these two systems are not highly coupled, i.e. Magento does not sync data between them, so that
-             * it's possible that SKU exists in Catalog, but does not exist in Inventory and vice versa)
-             * it is necessary for Magento to have an ability to process placed orders even with
-             * deleted or non-existing products
-             */
-            return true;
-        }
+        $productSku = $this->getSkusByProductIds->execute([$productId])[$productId];
         $productType = $this->getProductTypesBySkus->execute([$productSku])[$productSku];
 
         if (true === $this->isSourceItemManagementAllowedForProductType->execute($productType)) {

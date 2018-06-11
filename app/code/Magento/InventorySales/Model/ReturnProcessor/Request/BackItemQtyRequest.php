@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\ReturnProcessor\Request;
 
-class BackItemQtyRequest
+use Magento\InventorySales\Model\ReturnProcessor\Request\BackItemQtyRequestInterface;
+
+class BackItemQtyRequest implements BackItemQtyRequestInterface
 {
     /**
      * @var string

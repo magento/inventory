@@ -13,10 +13,9 @@ use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
-use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterface;
-use Magento\InventorySalesApi\Model\ReturnProcessor\ProcessRefundItemsInterface;
-use Magento\InventorySalesApi\Model\ReturnProcessor\GetSourceDeductedOrderItemsInterface;
-use Magento\InventorySales\Model\ReturnProcessor\Request\BackItemQtyRequestFactory;
+use Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefundInterface;
+use Magento\InventorySales\Model\ReturnProcessor\Request\BackItemQtyRequestInterfaceFactory;
+use Magento\InventorySales\Model\ReturnProcessor\GetShippedItemsPerSourceByPriority;
 use Magento\InventorySales\Model\ReturnProcessor\ProcessBackItemQtyToSource;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
@@ -34,12 +33,17 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     private $salesChannelFactory;
 
     /**
+     * @var GetShippedItemsPerSourceByPriority
+     */
+    private $getShippedItemsPerSourceByPriority;
+
+    /**
      * @var ProcessBackItemQtyToSource
      */
     private $processBackItemQtyToSource;
 
     /**
-     * @var BackItemQtyRequestFactory
+     * @var BackItemQtyRequestInterfaceFactory
      */
     private $backItemQtyRequestFactory;
 
@@ -59,38 +63,33 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     private $placeReservationsForSalesEvent;
 
     /**
-     * @var GetSourceDeductedOrderItemsInterface
-     */
-    private $getSourceDeductedOrderItems;
-
-    /**
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param SalesChannelInterfaceFactory $salesChannelFactory
-     * @param BackItemQtyRequestFactory $backItemQtyRequestFactory
+     * @param GetShippedItemsPerSourceByPriority $getShippedItemsPerSourceByPriority
+     * @param BackItemQtyRequestInterfaceFactory $backItemQtyRequestFactory
      * @param ProcessBackItemQtyToSource $processBackItemQtyToSource
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param ItemToSellInterfaceFactory $itemsToSellFactory
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
-     * @param GetSourceDeductedOrderItemsInterface $getSourceDeductedOrderItems
      */
     public function __construct(
         WebsiteRepositoryInterface $websiteRepository,
         SalesChannelInterfaceFactory $salesChannelFactory,
-        BackItemQtyRequestFactory $backItemQtyRequestFactory,
+        GetShippedItemsPerSourceByPriority $getShippedItemsPerSourceByPriority,
+        BackItemQtyRequestInterfaceFactory $backItemQtyRequestFactory,
         ProcessBackItemQtyToSource $processBackItemQtyToSource,
         SalesEventInterfaceFactory $salesEventFactory,
         ItemToSellInterfaceFactory $itemsToSellFactory,
-        PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
-        GetSourceDeductedOrderItemsInterface $getSourceDeductedOrderItems
+        PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
     ) {
         $this->websiteRepository = $websiteRepository;
         $this->salesChannelFactory = $salesChannelFactory;
+        $this->getShippedItemsPerSourceByPriority = $getShippedItemsPerSourceByPriority;
         $this->backItemQtyRequestFactory = $backItemQtyRequestFactory;
         $this->processBackItemQtyToSource = $processBackItemQtyToSource;
         $this->salesEventFactory = $salesEventFactory;
         $this->itemsToSellFactory = $itemsToSellFactory;
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
-        $this->getSourceDeductedOrderItems = $getSourceDeductedOrderItems;
     }
 
     /**
@@ -102,7 +101,7 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
         array $returnToStockItems
     ) {
         $salesChannel = $this->getSalesChannelForOrder($order);
-        $deductedItems = $this->getSourceDeductedOrderItems->execute($order, $returnToStockItems);
+        $shippedItems = $this->getShippedItemsPerSourceByPriority->execute($order, $returnToStockItems);
         $itemToSell = [];
 
         /** @var ItemsToRefundInterface $item */
@@ -111,28 +110,26 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
             $qtyBackToSource = $item->getQuantity();
             $originalProcessedQty = $item->getProcessedQuantity() + $item->getQuantity();
 
-            foreach ($deductedItems as $deductedItemResult) {
-                $sourceCode = $deductedItemResult->getSourceCode();
-                foreach ($deductedItemResult->getItems() as $deductedItem) {
-                    if ($sku != $deductedItem->getSku()) {
-                        continue;
-                    }
-                    $availableQtyToBack = $deductedItem->getQuantity() + $originalProcessedQty;
-                    $backQty = min($availableQtyToBack, $qtyBackToSource);
-                    $originalProcessedQty += $deductedItem->getQuantity();
-
-                    if ($this->isZero((float)$availableQtyToBack)) {
-                        continue;
-                    }
-
-                    $backItemQtyRequest = $this->backItemQtyRequestFactory->create([
-                        'sourceCode' => $sourceCode,
-                        'sku' => $deductedItem->getSku(),
-                        'qty' => $backQty
-                    ]);
-                    $this->processBackItemQtyToSource->execute($backItemQtyRequest, $salesChannel);
-                    $qtyBackToSource -= $backQty;
+            foreach ($shippedItems as $sourceCode => $data) {
+                if (empty($data[$sku])) {
+                    continue;
                 }
+
+                $availableQtyToBack = $data[$sku] + $originalProcessedQty;
+                $backQty = min($availableQtyToBack, $qtyBackToSource);
+                $originalProcessedQty += $data[$sku];
+
+                if ($this->isZero((float)$availableQtyToBack)) {
+                    continue;
+                }
+
+                $backItemQtyRequest = $this->backItemQtyRequestFactory->create([
+                    'sourceCode' => $sourceCode,
+                    'sku' => $sku,
+                    'qty' => $backQty
+                ]);
+                $this->processBackItemQtyToSource->execute($backItemQtyRequest, $salesChannel);
+                $qtyBackToSource -= $backQty;
             }
 
             if ($qtyBackToSource > 0) {

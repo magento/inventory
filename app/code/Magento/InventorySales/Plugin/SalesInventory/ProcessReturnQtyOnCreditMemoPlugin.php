@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\SalesInventory;
 
-use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterfaceFactory;
-use Magento\InventorySalesApi\Model\ReturnProcessor\ProcessRefundItemsInterface;
+use Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefundInterfaceFactory;
+use Magento\InventorySales\Model\ReturnProcessor\ProcessRefundItemsInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
@@ -56,7 +56,7 @@ class ProcessReturnQtyOnCreditMemoPlugin
      * @param bool $isAutoReturn
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function aroundExecute(
         ReturnProcessor $subject,

@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryShipping\Model;
 
 use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
@@ -85,7 +84,7 @@ class InventoryRequestFromInvoiceFactory
     /**
      * @param InvoiceItemInterface[]|Traversable $invoiceItems
      * @return array
-     * @throws NoSuchEntityException
+     * @throws InputException
      */
     private function getSelectionRequestItems(Traversable $invoiceItems): array
     {

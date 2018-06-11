@@ -21,6 +21,5 @@
         <section name="AdminManageSourcesGridColumnControls"/>
         <section name="AdminProductSourcesSection"/>
         <section name="AdminProductSourcesGrid"/>
-        <section name="AdminManageSourcesGridMassAction"/>
     </page>
 </pages>

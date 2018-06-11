@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryShipping\Model\SourceDeduction\Request;
 
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 
 /**
  * Request products in a given Qty, sourceCode and StockId
@@ -18,6 +17,11 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 interface SourceDeductionRequestInterface
 {
     /**
+     * @return int
+     */
+    public function getWebsiteId(): int;
+
+    /**
      * @return string
      */
     public function getSourceCode(): string;
@@ -26,11 +30,6 @@ interface SourceDeductionRequestInterface
      * @return ItemToDeductInterface[]
      */
     public function getItems(): array;
-
-    /**
-     * @return SalesChannelInterface
-     */
-    public function getSalesChannel(): SalesChannelInterface;
 
     /**
      * @return SalesEventInterface

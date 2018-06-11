@@ -15,7 +15,6 @@ use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Exception\InputException;
 
 /**
  * Adapt getStockStatus for multi stocks
@@ -89,11 +88,7 @@ class AdaptGetStockStatusPlugin
         $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
 
         $status = (int)$this->isProductSalable->execute($sku, $stockId);
-        try {
-            $qty = $this->getProductSalableQty->execute($sku, $stockId);
-        } catch (InputException $e) {
-            $qty = 0;
-        }
+        $qty = $this->getProductSalableQty->execute($sku, $stockId);
 
         $stockStatus->setStockStatus($status);
         $stockStatus->setQty($qty);

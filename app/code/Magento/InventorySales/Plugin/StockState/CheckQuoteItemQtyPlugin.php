@@ -14,7 +14,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventorySales\Model\IsProductSalableCondition\BackOrderNotifyCustomerCondition;
 use Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\ProductSalabilityError;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
@@ -54,18 +53,12 @@ class CheckQuoteItemQtyPlugin
     private $storeManager;
 
     /**
-     * @var BackOrderNotifyCustomerCondition
-     */
-    private $backOrderNotifyCustomerCondition;
-
-    /**
      * @param ObjectFactory $objectFactory
      * @param FormatInterface $format
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
-     * @param BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition
      */
     public function __construct(
         ObjectFactory $objectFactory,
@@ -73,8 +66,7 @@ class CheckQuoteItemQtyPlugin
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockResolverInterface $stockResolver,
-        StoreManagerInterface $storeManager,
-        BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition
+        StoreManagerInterface $storeManager
     ) {
         $this->objectFactory = $objectFactory;
         $this->format = $format;
@@ -82,7 +74,6 @@ class CheckQuoteItemQtyPlugin
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
-        $this->backOrderNotifyCustomerCondition = $backOrderNotifyCustomerCondition;
     }
 
     /**
@@ -127,14 +118,6 @@ class CheckQuoteItemQtyPlugin
             foreach ($isSalableResult->getErrors() as $error) {
                 $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
                        ->setQuoteMessageIndex('qty');
-            }
-        }
-
-        $productSalableResult = $this->backOrderNotifyCustomerCondition->execute($productSku, (int)$stockId, $qty);
-        if ($productSalableResult->getErrors()) {
-            /** @var ProductSalabilityError $error */
-            foreach ($productSalableResult->getErrors() as $error) {
-                $result->setMessage($error->getMessage());
             }
         }
 

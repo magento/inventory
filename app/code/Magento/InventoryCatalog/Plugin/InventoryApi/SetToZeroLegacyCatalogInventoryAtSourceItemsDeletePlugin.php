@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
@@ -96,7 +96,7 @@ class SetToZeroLegacyCatalogInventoryAtSourceItemsDeletePlugin
 
             try {
                 $productId = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
-            } catch (NoSuchEntityException $e) {
+            } catch (InputException $e) {
                 // Delete source item data for not existed product
                 continue;
             }

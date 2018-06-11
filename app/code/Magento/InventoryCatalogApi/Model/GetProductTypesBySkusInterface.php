@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogApi\Model;
 
+use Magento\Framework\Exception\InputException;
+
 /**
  * Get product types id by product skus.
  *
@@ -17,6 +19,7 @@ interface GetProductTypesBySkusInterface
     /**
      * @param array $skus
      * @return array (key: 'sku', value: 'product_type')
+     * @throws InputException
      */
     public function execute(array $skus);
 }
