@@ -131,20 +131,18 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             }
         }
 
-        if (empty($sourceItems)) {
-            return;
+        if (!empty($sourceItems)) {
+            $this->sourceItemsSave->execute($sourceItems);
+
+            $salesEvent = $sourceDeductionRequest->getSalesEvent();
+            $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
+            $salesChannel = $this->salesChannelFactory->create([
+                'data' => [
+                    'type' => SalesChannelInterface::TYPE_WEBSITE,
+                    'code' => $websiteCode
+                ]
+            ]);
+            $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
         }
-
-        $this->sourceItemsSave->execute($sourceItems);
-
-        $salesEvent = $sourceDeductionRequest->getSalesEvent();
-        $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
-        $salesChannel = $this->salesChannelFactory->create([
-            'data' => [
-                'type' => SalesChannelInterface::TYPE_WEBSITE,
-                'code' => $websiteCode
-            ]
-        ]);
-        $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
     }
 }

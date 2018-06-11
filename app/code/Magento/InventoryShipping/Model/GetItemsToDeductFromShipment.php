@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Model;
 
-use Magento\Framework\Exception\InputException;
 use Magento\Sales\Model\Order\Shipment\Item;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryShipping\Model\SourceDeduction\Request\ItemToDeductInterfaceFactory;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class GetItemsToDeductFromShipment
 {
@@ -50,7 +50,7 @@ class GetItemsToDeductFromShipment
     /**
      * @param Shipment $shipment
      * @return array
-     * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function execute(Shipment $shipment): array
     {
@@ -109,7 +109,7 @@ class GetItemsToDeductFromShipment
     /**
      * @param Item $shipmentItem
      * @return array
-     * @throws InputException
+     * @throws NoSuchEntityException
      */
     private function processComplexItem(Item $shipmentItem): array
     {

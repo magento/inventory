@@ -18,9 +18,6 @@ use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventoryShipping\Model\GetItemsToDeductFromShipment;
 
-/**
- * Class SourceDeductionProcessor
- */
 class SourceDeductionProcessor implements ObserverInterface
 {
     /**
@@ -88,36 +85,33 @@ class SourceDeductionProcessor implements ObserverInterface
     /**
      * @param EventObserver $observer
      * @return void
-     * @throws \Magento\Framework\Exception\InputException
      */
     public function execute(EventObserver $observer)
     {
         /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         $shipment = $observer->getEvent()->getShipment();
-
         if ($shipment->getOrigData('entity_id')) {
             return;
         }
 
-        //TODO: I'm not sure that is good idea (with default source code)...
         if (!empty($shipment->getExtensionAttributes())
-            || !empty($shipment->getExtensionAttributes()->getSourceCode())) {
+            && !empty($shipment->getExtensionAttributes()->getSourceCode())) {
             $sourceCode = $shipment->getExtensionAttributes()->getSourceCode();
         } elseif ($this->isSingleSourceMode->execute()) {
             $sourceCode = $this->defaultSourceProvider->getCode();
         }
 
-        $websiteId = $shipment->getOrder()->getStore()->getWebsiteId();
-
-        $salesEvent = $this->salesEventFactory->create([
-            'type' => SalesEventInterface::EVENT_SHIPMENT_CREATED,
-            'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-            'objectId' => $shipment->getOrderId()
-        ]);
-
         $shipmentItems = $this->getItemsToDeductFromShipment->execute($shipment);
 
         if (!empty($shipmentItems)) {
+            $websiteId = $shipment->getOrder()->getStore()->getWebsiteId();
+
+            $salesEvent = $this->salesEventFactory->create([
+                'type' => SalesEventInterface::EVENT_SHIPMENT_CREATED,
+                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+                'objectId' => $shipment->getOrderId()
+            ]);
+
             $sourceDeductionRequest = $this->sourceDeductionRequestFactory->create([
                 'websiteId' => $websiteId,
                 'sourceCode' => $sourceCode,
