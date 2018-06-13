@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Model;
 
 use Magento\CatalogInventory\Model\Stock\Item;
+use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -103,6 +104,10 @@ class UpdateSourceItemBasedOnLegacyStockItem
             $sourceItem = $this->sourceItemFactory->create();
             $sourceItem->setSourceCode($this->defaultSourceProvider->getCode());
             $sourceItem->setSku($productSku);
+        }
+
+        if ($legacyStockItem->getData(StockItemInterface::USE_CONFIG_MANAGE_STOCK) === null) {
+            $legacyStockItem->setData(StockItemInterface::USE_CONFIG_MANAGE_STOCK, 1);
         }
 
         $sourceItem->setQuantity((float)$legacyStockItem->getQty());
