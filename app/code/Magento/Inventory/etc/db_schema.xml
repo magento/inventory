@@ -68,6 +68,9 @@
         <constraint xsi:type="primary" name="PRIMARY">
             <column name="stock_id"/>
         </constraint>
+        <index name="INVENTORY_STOCK_NAME" indexType="fulltext">
+            <column name="name"/>
+        </index>
     </table>
     <table name="inventory_source_stock_link" resource="default" engine="innodb">
         <column xsi:type="int" name="link_id" padding="10" unsigned="true" nullable="false" identity="true"/>
