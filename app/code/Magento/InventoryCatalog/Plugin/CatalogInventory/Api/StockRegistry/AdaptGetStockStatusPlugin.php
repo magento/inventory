@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\Data\StockStatusInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Framework\App\CacheInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -49,9 +48,9 @@ class AdaptGetStockStatusPlugin
     private $stockResolver;
 
     /**
-     * @var CacheInterface
+     * @var array
      */
-    private $cache;
+    private $stockStatuses = [];
 
     /**
      * @param IsProductSalableInterface $isProductSalable
@@ -59,22 +58,19 @@ class AdaptGetStockStatusPlugin
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
-     * @param CacheInterface $cache
      */
     public function __construct(
         IsProductSalableInterface $isProductSalable,
         GetProductSalableQtyInterface $getProductSalableQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver,
-        CacheInterface $cache
+        StockResolverInterface $stockResolver
     ) {
         $this->isProductSalable = $isProductSalable;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
-        $this->cache = $cache;
     }
 
     /**
@@ -91,15 +87,10 @@ class AdaptGetStockStatusPlugin
         $productId,
         $scopeId = null
     ): StockStatusInterface {
-        $cacheKey = 'stock_status_' . $productId . '_' . $scopeId;
-        $stockStatusData = $this->cache->load($cacheKey);
+        $key = 'stock_status_' . $productId . '_' . $scopeId;
 
-        if ($stockStatusData) {
-            $qtyAndStatus = json_decode($stockStatusData, true);
-            $stockStatus->setStockStatus($qtyAndStatus['status']);
-            $stockStatus->setQty($qtyAndStatus['qty']);
-
-            return $stockStatus;
+        if (array_key_exists($key, $this->stockStatuses)) {
+            return $this->stockStatuses[$key];
         }
 
         $websiteCode = null === $scopeId
@@ -117,7 +108,7 @@ class AdaptGetStockStatusPlugin
 
         $stockStatus->setStockStatus($status);
         $stockStatus->setQty($qty);
-        $this->cache->save(json_encode(['status' => $status, 'qty' => $qty]), $cacheKey, [], 120);
+        $this->stockStatuses[$key] = $stockStatus;
 
         return $stockStatus;
     }
