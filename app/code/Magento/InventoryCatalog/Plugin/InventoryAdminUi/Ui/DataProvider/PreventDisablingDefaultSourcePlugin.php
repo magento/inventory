@@ -28,17 +28,32 @@ class PreventDisablingDefaultSourcePlugin
 
     /**
      * @param SourceDataProvider $subject
-     * @param $result
+     * @param $meta
      * @return array
      */
-    public function afterGetData(
+    public function afterGetMeta(
         SourceDataProvider $subject,
-        $result
+        $meta
     ): array {
+        $data = $subject->getData();
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
-        if (array_key_exists($defaultSourceCode, $result)) {
-            $result[$defaultSourceCode]['general']['switcher_disabled'] = true;
+        if (array_key_exists($defaultSourceCode, $data)) {
+            //$result[$defaultSourceCode]['general']['switcher_disabled'] = true;
+            $meta['general'] = [
+                'children' => [
+                    'enabled' => [
+                        'arguments' => [
+                            'data' => [
+                                'config' => [
+                                    'disabled' => true,
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
         }
-        return $result;
+
+        return $meta;
     }
 }
