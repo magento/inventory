@@ -69,9 +69,8 @@ class InventoryRequestFromOrderFactory
 
         /** @var OrderItemInterface|OrderItem $orderItem */
         foreach ($order->getItems() as $orderItem) {
-            $itemSku = $orderItem->getSku() ?: $this->getSkusByProductIds->execute(
-                [$orderItem->getProductId()]
-            )[$orderItem->getProductId()];
+            $productId = $orderItem->getProductId();
+            $itemSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $qtyToDeliver = $orderItem->getQtyToShip();
 
             //check if order item is not delivered yet
