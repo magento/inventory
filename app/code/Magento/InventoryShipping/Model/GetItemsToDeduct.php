@@ -61,9 +61,8 @@ class GetItemsToDeduct
             }
             $itemsToShip = $this->processComplexItem($shipmentItem);
         } else {
-            $itemSku = $shipmentItem->getSku() ?: $this->getSkusByProductIds->execute(
-                [$shipmentItem->getProductId()]
-            )[$shipmentItem->getProductId()];
+            $productId = $shipmentItem->getProductId();
+            $itemSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $qty = $this->castQty($orderItem, $shipmentItem->getQty());
             $itemsToShip[] = $this->itemToDeduct->create([
                 'sku' => $itemSku,

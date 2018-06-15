@@ -95,9 +95,8 @@ class InventoryRequestFromInvoiceFactory
                 continue;
             }
 
-            $itemSku = $invoiceItem->getSku() ?: $this->getSkusByProductIds->execute(
-                [$invoiceItem->getProductId()]
-            )[$invoiceItem->getProductId()];
+            $productId = $invoiceItem->getProductId();
+            $itemSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $qty = $this->castQty($invoiceItem->getOrderItem(), $invoiceItem->getQty());
 
             $selectionRequestItems[] = $this->itemRequestFactory->create([
