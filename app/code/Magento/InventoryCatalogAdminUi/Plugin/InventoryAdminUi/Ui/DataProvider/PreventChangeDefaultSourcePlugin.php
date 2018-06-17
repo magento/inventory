@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\InventoryAdminUi\Ui\DataProvider;
+namespace Magento\InventoryCatalogAdminUi\Plugin\InventoryAdminUi\Ui\DataProvider;
 
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;

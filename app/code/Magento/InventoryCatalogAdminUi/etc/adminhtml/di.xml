@@ -46,6 +46,6 @@
         <plugin name="prevent_process_for_default_stock" type="Magento\InventoryCatalogAdminUi\Plugin\InventoryAdminUi\Stock\StockSaveProcessor\PreventProcessDefaultStockLinksPlugin"/>
     </type>
     <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
-        <plugin name="prevent_change_default_source" type="Magento\InventoryCatalog\Plugin\InventoryAdminUi\Ui\DataProvider\PreventChangeDefaultSourcePlugin"/>
+        <plugin name="prevent_change_default_source" type="Magento\InventoryCatalogAdminUi\Plugin\InventoryAdminUi\Ui\DataProvider\PreventChangeDefaultSourcePlugin"/>
     </type>
 </config>
