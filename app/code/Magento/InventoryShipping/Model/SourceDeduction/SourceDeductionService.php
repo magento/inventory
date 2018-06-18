@@ -104,19 +104,17 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             }
 
             $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute($sourceCode, $itemSku);
-            if (null !== $sourceItem) {
-                if (($sourceItem->getQuantity() - $qty) >= 0) {
-                    $sourceItem->setQuantity($sourceItem->getQuantity() - $qty);
-                    $sourceItemToSave[] = $sourceItem;
-                    $itemsToSell[] = $this->itemsToSellFactory->create([
-                        'sku' => $itemSku,
-                        'qty' => (float)$qty
-                    ]);
-                } else {
-                    throw new LocalizedException(
-                        __('Not all of your products are available in the requested quantity.')
-                    );
-                }
+            if (($sourceItem->getQuantity() - $qty) >= 0) {
+                $sourceItem->setQuantity($sourceItem->getQuantity() - $qty);
+                $sourceItemToSave[] = $sourceItem;
+                $itemsToSell[] = $this->itemsToSellFactory->create([
+                    'sku' => $itemSku,
+                    'qty' => (float)$qty
+                ]);
+            } else {
+                throw new LocalizedException(
+                    __('Not all of your products are available in the requested quantity.')
+                );
             }
         }
         $this->sourceItemsSave->execute($sourceItemToSave);
