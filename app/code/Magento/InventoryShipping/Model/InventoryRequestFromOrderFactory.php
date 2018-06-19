@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
@@ -69,8 +70,6 @@ class InventoryRequestFromOrderFactory
 
         /** @var OrderItemInterface|OrderItem $orderItem */
         foreach ($order->getItems() as $orderItem) {
-            $productId = $orderItem->getProductId();
-            $itemSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $qtyToDeliver = $orderItem->getQtyToShip();
 
             //check if order item is not delivered yet
@@ -83,7 +82,7 @@ class InventoryRequestFromOrderFactory
             }
 
             $requestItems[] = $this->itemRequestFactory->create([
-                    'sku' => $itemSku,
+                    'sku' => $this->getItemSku($orderItem),
                     'qty' => $qtyToDeliver
             ]);
         }
@@ -104,5 +103,28 @@ class InventoryRequestFromOrderFactory
     private function isZero(float $floatNumber): bool
     {
         return $floatNumber < 0.0000001;
+    }
+
+    /**
+     * Get actual product sku considering product custom options.
+     *
+     * @param OrderItem $orderItem
+     * @return string
+     */
+    private function getItemSku(OrderItem $orderItem) :string
+    {
+        $buyRequest = $orderItem->getProductOptionByCode('info_buyRequest');
+        if (isset($buyRequest['product_sku'])) {
+            return $buyRequest['product_sku'];
+        }
+
+        try {
+            $productId = $orderItem->getProductId();
+            $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        } catch (NoSuchEntityException $e) {
+            $sku = $orderItem->getSku();
+        }
+
+        return $sku;
     }
 }

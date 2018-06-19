@@ -95,12 +95,9 @@ class InventoryRequestFromInvoiceFactory
                 continue;
             }
 
-            $productId = $invoiceItem->getProductId();
-            $itemSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $qty = $this->castQty($invoiceItem->getOrderItem(), $invoiceItem->getQty());
-
             $selectionRequestItems[] = $this->itemRequestFactory->create([
-                'sku' => $itemSku,
+                'sku' => $this->getItemSku($invoiceItem),
                 'qty' => $qty,
             ]);
         }
@@ -135,5 +132,29 @@ class InventoryRequestFromInvoiceFactory
         }
 
         return $qty > 0 ? $qty : 0;
+    }
+
+    /**
+     * Get actual product sku considering product custom options.
+     *
+     * @param InvoiceItemModel $invoiceItem
+     * @return string
+     */
+    private function getItemSku(InvoiceItemModel $invoiceItem) :string
+    {
+        $orderItem = $invoiceItem->getOrderItem();
+        $buyRequest = $orderItem->getProductOptionByCode('info_buyRequest');
+        if (isset($buyRequest['product_sku'])) {
+            return $buyRequest['product_sku'];
+        }
+
+        try {
+            $productId = $invoiceItem->getProductId();
+            $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        } catch (NoSuchEntityException $e) {
+            $sku = $invoiceItem->getSku();
+        }
+
+        return $sku;
     }
 }

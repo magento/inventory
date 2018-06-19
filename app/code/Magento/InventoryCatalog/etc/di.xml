@@ -86,4 +86,7 @@
         <plugin name="adapt_get_product_stock_status" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetProductStockStatusPlugin"/>
         <plugin name="adapt_get_product_stock_status_by_sku" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetProductStockStatusBySkuPlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="add_product_sku_to_buy_request" type="Magento\InventoryCatalog\Plugin\Catalog\Product\AddProductSkuToBuyRequest"/>
+    </type>
 </config>

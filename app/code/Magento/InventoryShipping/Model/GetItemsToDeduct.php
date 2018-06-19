@@ -61,11 +61,9 @@ class GetItemsToDeduct
             }
             $itemsToShip = $this->processComplexItem($shipmentItem);
         } else {
-            $productId = $shipmentItem->getProductId();
-            $itemSku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $qty = $this->castQty($orderItem, $shipmentItem->getQty());
             $itemsToShip[] = $this->itemToDeduct->create([
-                'sku' => $itemSku,
+                'sku' => $this->getItemSku($shipmentItem),
                 'qty' => $qty
             ]);
         }
@@ -133,5 +131,29 @@ class GetItemsToDeduct
         }
 
         return $qty > 0 ? $qty : 0;
+    }
+
+    /**
+     * Get actual product sku considering product custom options.
+     *
+     * @param Item $shipmentItem
+     * @return string
+     */
+    private function getItemSku(Item $shipmentItem) :string
+    {
+        $orderItem = $shipmentItem->getOrderItem();
+        $buyRequest = $orderItem->getProductOptionByCode('info_buyRequest');
+        if (isset($buyRequest['product_sku'])) {
+            return $buyRequest['product_sku'];
+        }
+
+        try {
+            $productId = $shipmentItem->getProductId();
+            $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        } catch (NoSuchEntityException $e) {
+            $sku = $shipmentItem->getSku();
+        }
+
+        return $sku;
     }
 }
