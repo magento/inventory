@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog\Product;
+namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Serialize\Serializer\Json;
