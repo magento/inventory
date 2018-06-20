@@ -362,8 +362,10 @@ class Application
         $objectManager->addSharedInstance($filesystem, \Magento\Framework\Filesystem::class);
         Helper\Bootstrap::setObjectManager($objectManager);
         $this->initLogger();
-        $sequenceBuilder = $objectManager->get(\Magento\TestFramework\Db\Sequence\Builder::class);
-        $objectManager->addSharedInstance($sequenceBuilder, \Magento\SalesSequence\Model\Builder::class);
+
+        // Allow to generate sequence tables during creating stores
+        //$sequenceBuilder = $objectManager->get(\Magento\TestFramework\Db\Sequence\Builder::class);
+        //$objectManager->addSharedInstance($sequenceBuilder, \Magento\SalesSequence\Model\Builder::class);
 
         $objectManagerConfiguration = [
             'preferences' => [
@@ -414,11 +416,11 @@ class Application
             $objectManager->get(\Magento\Framework\Phrase\Renderer\Placeholder::class)
         );
 
-        if ($this->canInstallSequence) {
-            /** @var \Magento\TestFramework\Db\Sequence $sequence */
-            $sequence = $objectManager->get(\Magento\TestFramework\Db\Sequence::class);
-            $sequence->generateSequences();
-        }
+        //if ($this->canInstallSequence) {
+        //    /** @var \Magento\TestFramework\Db\Sequence $sequence */
+        //    $sequence = $objectManager->get(\Magento\TestFramework\Db\Sequence::class);
+        //    $sequence->generateSequences();
+        //}
 
         $objectManager->create(\Magento\TestFramework\Config::class, ['configPath' => $this->globalConfigFile])
             ->rewriteAdditionalConfig();
