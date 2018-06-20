@@ -11,7 +11,6 @@ use Magento\Framework\Api\Filter;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Sales\Model\Order\Item;
@@ -51,11 +50,6 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     private $sources = [];
 
     /**
-     * @var GetSkusByProductIdsInterface
-     */
-    private $getSkusByProductIds;
-
-    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -64,7 +58,6 @@ class SourceSelectionDataProvider extends AbstractDataProvider
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty
-     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param array $meta
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -78,7 +71,6 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty,
-        GetSkusByProductIdsInterface $getSkusByProductIds,
         array $meta = [],
         array $data = []
     ) {
@@ -88,7 +80,6 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getSourcesByStockIdSkuAndQty = $getSourcesByStockIdSkuAndQty;
-        $this->getSkusByProductIds = $getSkusByProductIds;
     }
 
     /**
@@ -245,17 +236,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     private function getItemSku(Item $orderItem) :string
     {
         $buyRequest = $orderItem->getProductOptionByCode('info_buyRequest');
-        if (isset($buyRequest['product_sku'])) {
-            return $buyRequest['product_sku'];
-        }
 
-        try {
-            $productId = $orderItem->getProductId();
-            $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
-        } catch (NoSuchEntityException $e) {
-            $sku = $orderItem->getSku();
-        }
-
-        return $sku;
+        return $buyRequest['product_sku'] ?? $orderItem->getSku();
     }
 }

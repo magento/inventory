@@ -119,7 +119,7 @@ class GroupedTest extends \PHPUnit\Framework\TestCase
             $products = $type->processConfiguration($buyRequest, $product, $processMode);
             foreach ($products as $item) {
                 $productId = $item->getId();
-                $this->assertEquals(
+                $this->assertRegExp(
                     $expectedData[$processMode][$productId],
                     $item->getCustomOptions()['info_buyRequest']->getValue(),
                     "Wrong info_buyRequest data for product with id: $productId"
