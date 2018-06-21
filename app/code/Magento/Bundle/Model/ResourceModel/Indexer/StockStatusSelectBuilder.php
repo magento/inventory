@@ -7,8 +7,6 @@
 namespace Magento\Bundle\Model\ResourceModel\Indexer;
 
 use Magento\Framework\DB\Select;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 
 /**
  * Class StockStatusSelectBuilder
@@ -18,20 +16,18 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
  */
 class StockStatusSelectBuilder
 {
+    /**
+     * @var \Magento\Framework\App\ResourceConnection
+     */
+    private $resourceConnection;
 
     /**
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
-     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
-     * @param \Magento\Eav\Model\Config $eavConfig
      */
     public function __construct(
-        \Magento\Framework\App\ResourceConnection $resourceConnection,
-        \Magento\Framework\EntityManager\MetadataPool $metadataPool,
-        \Magento\Eav\Model\Config $eavConfig
+        \Magento\Framework\App\ResourceConnection $resourceConnection
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->metadataPool = $metadataPool;
-        $this->eavConfig = $eavConfig;
     }
 
     /**
@@ -56,16 +52,5 @@ class StockStatusSelectBuilder
         );
 
         return $select;
-    }
-
-    /**
-     * Retrieve catalog_product attribute instance by attribute code
-     *
-     * @param string $attributeCode
-     * @return \Magento\Catalog\Model\ResourceModel\Eav\Attribute
-     */
-    private function getAttribute($attributeCode)
-    {
-        return $this->eavConfig->getAttribute(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
     }
 }
