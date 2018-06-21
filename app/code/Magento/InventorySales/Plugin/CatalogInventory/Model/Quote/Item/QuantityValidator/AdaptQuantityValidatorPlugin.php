@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator;
 
-
 use Magento\CatalogInventory\Helper\Data;
 use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator;
 use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\Option;
@@ -20,7 +19,6 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\Quote\Model\Quote\Item;
 
 class AdaptQuantityValidatorPlugin
 {
@@ -161,7 +159,6 @@ class AdaptQuantityValidatorPlugin
             foreach ($isSalableResult->getErrors() as $error) {
                 $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
                     ->setQuoteMessageIndex('qty');
-
             }
 
             if ($result->getHasError()) {
@@ -175,11 +172,11 @@ class AdaptQuantityValidatorPlugin
     /**
      * Removes error statuses from quote and item, set by this observer
      *
-     * @param Item $item
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @param int $code
      * @return void
      */
-    protected function removeErrorsFromQuoteAndItem(Item $item, int $code) :void
+    protected function removeErrorsFromQuoteAndItem($item, int $code) :void
     {
         if ($item->getHasError()) {
             $params = ['origin' => 'cataloginventory', 'code' => $code];
@@ -219,11 +216,11 @@ class AdaptQuantityValidatorPlugin
      * Add error information to Quote Item
      *
      * @param DataObject $result
-     * @param Item $quoteItem
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
      * @param bool $removeError
      * @return void
      */
-    private function addErrorInfoToQuote(DataObject $result, Item $quoteItem)
+    private function addErrorInfoToQuote(DataObject $result, $quoteItem)
     {
         $quoteItem->addErrorInfo(
             'cataloginventory',
