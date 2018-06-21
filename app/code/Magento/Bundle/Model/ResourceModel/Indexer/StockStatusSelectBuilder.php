@@ -42,8 +42,6 @@ class StockStatusSelectBuilder
     public function buildSelect(Select $select)
     {
         $select = clone $select;
-        $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
-        $linkField = $metadata->getLinkField();
 
         $select->reset(
             Select::COLUMNS
@@ -53,35 +51,9 @@ class StockStatusSelectBuilder
             ['o' => $this->resourceConnection->getTableName('catalog_product_bundle_stock_index')],
             'o.entity_id = e.entity_id AND o.website_id = cis.website_id AND o.stock_id = cis.stock_id',
             []
-        )->joinInner(
-            ['cpr' => $this->resourceConnection->getTableName('catalog_product_relation')],
-            'e.' . $linkField . ' = cpr.parent_id',
-            []
         )->columns(
             ['qty' => new \Zend_Db_Expr('0')]
         );
-
-        if ($metadata->getIdentifierField() === $metadata->getLinkField()) {
-            $select->joinInner(
-                ['cpei' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
-                'cpr.child_id = cpei.' . $linkField
-                . ' AND cpei.attribute_id = ' . $this->getAttribute('status')->getId()
-                . ' AND cpei.value = ' . ProductStatus::STATUS_ENABLED,
-                []
-            );
-        } else {
-            $select->joinInner(
-                ['cpel' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'cpel.entity_id = cpr.child_id',
-                []
-            )->joinInner(
-                ['cpei' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
-                'cpel.'. $linkField . ' = cpei.' . $linkField
-                . ' AND cpei.attribute_id = ' . $this->getAttribute('status')->getId()
-                . ' AND cpei.value = ' . ProductStatus::STATUS_ENABLED,
-                []
-            );
-        }
 
         return $select;
     }
