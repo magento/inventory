@@ -50,9 +50,11 @@ class AddProductSkuToBuyRequest
     {
         if ($code === 'info_buyRequest') {
             $sku = $this->getSkusByProductIds->execute([$subject->getId()])[$subject->getId()];
-            $value = $this->serializer->unserialize($value);
-            $value['product_sku'] = $sku;
-            $value = $this->serializer->serialize($value);
+            if (is_string($value)) {
+                $value = $this->serializer->unserialize($value);
+                $value['product_sku'] = $sku;
+                $value = $this->serializer->serialize($value);
+            }
         }
 
         return [$code, $value, $product];

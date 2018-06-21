@@ -5,6 +5,8 @@
  */
 namespace Magento\GroupedProduct\Model\Product\Type;
 
+use Magento\Framework\Serialize\Serializer\Json;
+
 class GroupedTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -17,11 +19,17 @@ class GroupedTest extends \PHPUnit\Framework\TestCase
      */
     protected $_productType;
 
+    /**
+     * @var Json
+     */
+    private $serializer;
+
     protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
         $this->_productType = $this->objectManager->get(\Magento\Catalog\Model\Product\Type::class);
+        $this->serializer = $this->objectManager->create(Json::class);
     }
 
     public function testFactory()
@@ -105,25 +113,35 @@ class GroupedTest extends \PHPUnit\Framework\TestCase
         ];
         $expectedData = [
             \Magento\GroupedProduct\Model\Product\Type\Grouped::PROCESS_MODE_FULL => [
-                1  => '{"super_product_config":{"product_type":"grouped","product_id":"'
-                    . $product->getId() . '"}}',
-                21 => '{"super_product_config":{"product_type":"grouped","product_id":"'
-                    . $product->getId() . '"}}',
+                1  => [
+                    'super_product_config' => [
+                        'product_type' => 'grouped',
+                        'product_id' => $product->getId(),
+                    ]
+                ],
+                21  => [
+                    'super_product_config' => [
+                        'product_type' => 'grouped',
+                        'product_id' => $product->getId(),
+                    ]
+                ],
             ],
             \Magento\GroupedProduct\Model\Product\Type\Grouped::PROCESS_MODE_LITE => [
-                $product->getId() => '{"value":{"qty":2}}',
+                $product->getId() => [
+                    'value' => [
+                        'qty' => 2,
+                    ]
+                ],
             ]
         ];
 
         foreach ($processModes as $processMode) {
             $products = $type->processConfiguration($buyRequest, $product, $processMode);
             foreach ($products as $item) {
-                $productId = $item->getId();
-                $this->assertRegExp(
-                    $expectedData[$processMode][$productId],
-                    $item->getCustomOptions()['info_buyRequest']->getValue(),
-                    "Wrong info_buyRequest data for product with id: $productId"
-                );
+                $result = $this->serializer->unserialize($item->getCustomOptions()['info_buyRequest']->getValue());
+                foreach ($expectedData[$processMode][$item->getId()] as $key => $value) {
+                    $this->assertEquals($value, $result[$key]);
+                }
             }
         }
     }

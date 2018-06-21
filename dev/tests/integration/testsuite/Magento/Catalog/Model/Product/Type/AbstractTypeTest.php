@@ -16,6 +16,11 @@ class AbstractTypeTest extends \PHPUnit\Framework\TestCase
      */
     protected $_model;
 
+    /**
+     * @var \Magento\Framework\Serialize\Serializer\Json
+     */
+    private $serializer;
+
     protected function setUp()
     {
         $productRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
@@ -30,7 +35,7 @@ class AbstractTypeTest extends \PHPUnit\Framework\TestCase
         $filesystem = $this->createMock(\Magento\Framework\Filesystem::class);
         $registry = $this->createMock(\Magento\Framework\Registry::class);
         $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
-        $serializer = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+        $this->serializer = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
             \Magento\Framework\Serialize\Serializer\Json::class
         );
         $this->_model = $this->getMockForAbstractClass(
@@ -45,7 +50,7 @@ class AbstractTypeTest extends \PHPUnit\Framework\TestCase
                 $registry,
                 $logger,
                 $productRepository,
-                $serializer
+                $this->serializer
             ]
         );
     }
@@ -185,7 +190,10 @@ class AbstractTypeTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\Magento\Framework\DataObject::class, $buyRequest);
         $this->assertEquals($product->getId(), $buyRequest->getProductId());
         $this->assertSame($product, $buyRequest->getProduct());
-        $this->assertRegExp(json_encode($requestData), $buyRequest->getValue());
+        $buyRequest = $this->serializer->unserialize($buyRequest->getValue());
+        foreach ($requestData as $key => $value) {
+            $this->assertEquals($value, $buyRequest[$key]);
+        }
     }
 
     /**

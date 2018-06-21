@@ -9,6 +9,8 @@
  */
 namespace Magento\Downloadable\Model\Product;
 
+use Magento\Framework\Serialize\Serializer\Json;
+
 /**
  * Test for \Magento\Downloadable\Model\Product\Type
  */
@@ -24,12 +26,18 @@ class TypeTest extends \PHPUnit\Framework\TestCase
      */
     private $objectManager;
 
+    /**
+     * @var Json
+     */
+    private $serializer;
+
     protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->_model = $this->objectManager->create(
             \Magento\Downloadable\Model\Product\Type::class
         );
+        $this->serializer = $this->objectManager->create(Json::class);
     }
 
     /**
@@ -250,9 +258,13 @@ class TypeTest extends \PHPUnit\Framework\TestCase
         $linksFactory = $this->objectManager
             ->get(\Magento\Downloadable\Model\ResourceModel\Link\CollectionFactory::class);
         $allLinksIds = $linksFactory->create()->addProductToFilter($product->getEntityId())->getAllIds();
-        $this->assertRegExp(
-            '/"qty"\:23,"links"\:\["' . implode('","', $allLinksIds) . '"\]/',
-            $product->getCustomOption('info_buyRequest')->getValue()
-        );
+        $expectedResult =  [
+            'qty' => 23,
+            'links' => $allLinksIds,
+        ];
+        $result = $this->serializer->unserialize($product->getCustomOption('info_buyRequest')->getValue());
+        foreach ($expectedResult as $key => $value) {
+            $this->assertEquals($value, $result[$key]);
+        }
     }
 }
