@@ -33,7 +33,7 @@ class WebsiteSource implements OptionSourceInterface
     /**
      * @inheritdoc
      */
-    public function toOptionArray(): array
+    public function toOptionArray()
     {
         $websites = [];
         foreach ($this->websiteRepository->getList() as $website) {
