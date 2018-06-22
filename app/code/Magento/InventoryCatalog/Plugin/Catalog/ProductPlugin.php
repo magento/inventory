@@ -1,11 +1,8 @@
 <?php
 /**
- * Company: Ping24/7 GmbH
- * Developer: Stepan Furman (s.furman@ping247.de)
- * Date: 22.06.18
- * Time: 14:23
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
-
 namespace Magento\InventoryCatalog\Plugin\Catalog;
 
 use Magento\Catalog\Model\Product;
