@@ -12,7 +12,7 @@ use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\CatalogInventory\Helper\Data;
 
 /**
- * Check is requested quantity available for given quote item.
+ * Check requested quantity available for given quote item.
  */
 class ItemValidator
 {

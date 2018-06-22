@@ -11,7 +11,7 @@ use Magento\Framework\DataObject;
 use Magento\CatalogInventory\Helper\Data;
 
 /**
- * Process errors for quote and quote item.
+ * Process quantity errors for quote and quote item.
  */
 class ErrorProcessor
 {

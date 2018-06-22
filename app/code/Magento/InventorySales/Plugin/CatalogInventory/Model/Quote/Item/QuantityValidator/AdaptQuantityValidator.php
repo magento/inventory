@@ -19,7 +19,7 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
- * Multi-stock quote item validator.
+ * Multi-stock quote item quantity validator.
  */
 class AdaptQuantityValidator
 {
