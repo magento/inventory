@@ -84,8 +84,12 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
     public function execute(string $sku, int $stockId): bool
     {
         foreach ($this->conditions as $condition) {
-            if ($condition->execute($sku, $stockId) === true) {
-                return true;
+            try {
+                if ($condition->execute($sku, $stockId) === true) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+               //if no one condition is satisfied is_salable should be false.
             }
         }
 
