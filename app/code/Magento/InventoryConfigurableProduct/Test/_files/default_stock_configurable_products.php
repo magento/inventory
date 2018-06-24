@@ -5,6 +5,8 @@
  */
 declare(strict_types=1);
 
+// @codingStandardsIgnoreFile
+
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
@@ -17,9 +19,8 @@ use Magento\Eav\Api\Data\AttributeOptionInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 \Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
-// @codingStandardsIgnoreStart
+
 require __DIR__ . '/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/configurable_attribute.php';
-// @codingStandardsIgnoreEnd
 
 /** @var ProductRepositoryInterface $productRepository */
 $productRepository = Bootstrap::getObjectManager()

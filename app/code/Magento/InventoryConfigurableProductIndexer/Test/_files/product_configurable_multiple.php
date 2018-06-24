@@ -52,6 +52,8 @@ foreach ($configurableIds as $configurableId) {
         /** @var $product Product */
         $product = Bootstrap::getObjectManager()->create(Product::class);
         $productId = $configurableId + array_shift($productIds);
+        // @codingStandardsIgnoreFile
+        // @codeCoverageIgnoreStart
         $product->setTypeId(Type::TYPE_SIMPLE)
             ->setId($productId)
             ->setAttributeSetId($attributeSetId)
@@ -117,6 +119,7 @@ foreach ($configurableIds as $configurableId) {
     $registry->unregister('isSecureArea');
     $registry->register('isSecureArea', true);
     try {
+        // @codeCoverageIgnoreEnd
         $productToDelete = $productRepository->getById($configurableId);
         $productRepository->delete($productToDelete);
 

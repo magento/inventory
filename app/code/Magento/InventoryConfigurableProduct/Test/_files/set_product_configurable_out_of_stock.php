@@ -5,6 +5,8 @@
  */
 declare(strict_types=1);
 
+// @codingStandardsIgnoreFile
+
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Inventory\Model\SourceItem\Command\SourceItemsSave;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;

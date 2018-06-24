@@ -5,6 +5,8 @@
  */
 declare(strict_types=1);
 
+// @codingStandardsIgnoreFile
+
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
