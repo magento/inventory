@@ -152,6 +152,6 @@
         <plugin name="update_sales_channel_website_code" type="Magento\InventorySales\Plugin\Store\Model\ResourceModel\Website\UpdateSalesChannelWebsiteCodePlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator">
-        <plugin name="adapt_quantity_validator" type="Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator"/>
+        <plugin name="adapt_quantity_validator" type="Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator"/>
     </type>
 </config>

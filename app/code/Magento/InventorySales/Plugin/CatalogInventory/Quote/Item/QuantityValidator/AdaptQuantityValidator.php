@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator;
+namespace Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator;
 
 use Magento\CatalogInventory\Helper\Data;
 use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator;
 use Magento\Framework\Event\Observer;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator\ErrorProcessor;
-use Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator\ItemValidator;
-use Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator\OptionsValidator;
-use Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator\StatusValidator;
+use Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator\ErrorProcessor;
+use Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator\ItemValidator;
+use Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator\OptionsValidator;
+use Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator\StatusValidator;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
@@ -52,6 +52,11 @@ class AdaptQuantityValidator
      * @var ErrorProcessor
      */
     private $errorProcessor;
+
+    /**
+     * @var array
+     */
+    private $validationResults = [];
 
     /**
      * @param StockResolverInterface $stockResolver
@@ -102,6 +107,10 @@ class AdaptQuantityValidator
             $product->getStore()->getWebsite()->getCode()
         );
 
+        if (isset($this->validationResults[$stock->getStockId()][$sku])) {
+            return;
+        }
+
         if ($this->statusValidator->execute($quoteItem, (int)$stock->getStockId(), $sku)) {
             $this->errorProcessor->removeErrorsFromQuoteAndItem($quoteItem, Data::ERROR_QTY);
             $options = $quoteItem->getQtyOptions();
@@ -111,5 +120,6 @@ class AdaptQuantityValidator
                 $this->itemValidator->execute($quoteItem, $quoteItem->getQty(), $sku, (int)$stock->getStockId());
             }
         }
+        $this->validationResults[$stock->getStockId()][$sku] = $quoteItem;
     }
 }

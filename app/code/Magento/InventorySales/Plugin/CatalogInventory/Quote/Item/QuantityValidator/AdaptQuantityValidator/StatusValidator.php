@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator;
+namespace Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator;
 
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
@@ -13,7 +13,7 @@ use Magento\CatalogInventory\Model\Stock;
 use Magento\CatalogInventory\Helper\Data;
 
 /**
- * Check product stock status from given quote item.
+ * Check product stock status for given quote item.
  */
 class StatusValidator
 {

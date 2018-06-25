@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\AdaptQuantityValidator;
+namespace Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator;
 
 use Magento\Framework\DataObject\Factory as ObjectFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
