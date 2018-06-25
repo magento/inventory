@@ -32,4 +32,4 @@ $searchCriteria = $searchCriteriaBuilder->addFilter(
 )->create();
 $products = $productRepository->getList($searchCriteria)->getItems();
 
-require_once __DIR__ . '../../../InventoryApi/Test/_files/delete_products.php';
+require_once __DIR__ . '/../../../InventoryApi/Test/_files/delete_products.php';
