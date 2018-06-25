@@ -54,11 +54,6 @@ class AdaptQuantityValidator
     private $errorProcessor;
 
     /**
-     * @var array
-     */
-    private $validationResults = [];
-
-    /**
      * @param StockResolverInterface $stockResolver
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StatusValidator $statusValidator
@@ -107,10 +102,6 @@ class AdaptQuantityValidator
             $product->getStore()->getWebsite()->getCode()
         );
 
-        if (isset($this->validationResults[$stock->getStockId()][$sku])) {
-            return;
-        }
-
         if ($this->statusValidator->execute($quoteItem, (int)$stock->getStockId(), $sku)) {
             $this->errorProcessor->removeErrorsFromQuoteAndItem($quoteItem, Data::ERROR_QTY);
             $options = $quoteItem->getQtyOptions();
@@ -120,6 +111,5 @@ class AdaptQuantityValidator
                 $this->itemValidator->execute($quoteItem, $quoteItem->getQty(), $sku, (int)$stock->getStockId());
             }
         }
-        $this->validationResults[$stock->getStockId()][$sku] = $quoteItem;
     }
 }

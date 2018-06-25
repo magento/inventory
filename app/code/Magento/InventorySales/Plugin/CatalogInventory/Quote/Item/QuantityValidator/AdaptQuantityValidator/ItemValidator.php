@@ -25,10 +25,16 @@ class ItemValidator
      * @var ObjectFactory
      */
     private $objectFactory;
+
     /**
      * @var ErrorProcessor
      */
     private $errorProcessor;
+
+    /**
+     * @var array
+     */
+    private $validationResults = [];
 
     /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
@@ -54,6 +60,12 @@ class ItemValidator
      */
     public function execute($quoteItem, float $qty, string $sku, int $stockId): void
     {
+        $key = $stockId . '_' . $sku . '_' . $qty;
+
+        if (isset($this->validationResults[$key])) {
+            return;
+        }
+
         $result = $this->objectFactory->create();
         $result->setHasError(false);
 
@@ -63,6 +75,7 @@ class ItemValidator
             $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
                 ->setQuoteMessageIndex('qty');
         }
+        $this->validationResults[$key] = $result;
 
         if ($result->getHasError()) {
             $this->errorProcessor->addErrorInfoToQuote($result, $quoteItem);
