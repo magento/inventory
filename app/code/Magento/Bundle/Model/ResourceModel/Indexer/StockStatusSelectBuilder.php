@@ -16,18 +16,20 @@ use Magento\Framework\DB\Select;
  */
 class StockStatusSelectBuilder
 {
-    /**
-     * @var \Magento\Framework\App\ResourceConnection
-     */
-    private $resourceConnection;
 
     /**
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
+     * @param \Magento\Eav\Model\Config $eavConfig
      */
     public function __construct(
-        \Magento\Framework\App\ResourceConnection $resourceConnection
+        \Magento\Framework\App\ResourceConnection $resourceConnection,
+        \Magento\Framework\EntityManager\MetadataPool $metadataPool,
+        \Magento\Eav\Model\Config $eavConfig
     ) {
         $this->resourceConnection = $resourceConnection;
+        $this->metadataPool = $metadataPool;
+        $this->eavConfig = $eavConfig;
     }
 
     /**
