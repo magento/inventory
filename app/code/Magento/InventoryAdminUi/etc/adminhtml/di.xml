@@ -25,4 +25,10 @@
             <argument name="sortOrder" xsi:type="number">30</argument>
         </arguments>
     </virtualType>
+    <virtualType name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool"/>
+    <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
+        <arguments>
+            <argument name="modifiersPool" xsi:type="object">Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider\Modifier\Pool</argument>
+        </arguments>
+    </type>
 </config>
