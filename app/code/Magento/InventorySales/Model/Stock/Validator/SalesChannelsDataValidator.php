@@ -16,7 +16,7 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 /**
  * Check that sales channels are correct
  */
-class SalesChannelsValidator implements StockValidatorInterface
+class SalesChannelsDataValidator implements StockValidatorInterface
 {
     /**
      * @var ValidationResultFactory

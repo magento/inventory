@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryApi\Model;
+namespace Magento\InventorySalesApi\Model;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;

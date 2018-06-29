@@ -154,7 +154,15 @@
     <type name="Magento\InventoryApi\Model\StockValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="sales_channels" xsi:type="object">Magento\InventorySales\Model\Stock\Validator\SalesChannelsValidator</item>
+                <item name="sales_channels" xsi:type="object">Magento\InventorySales\Model\Stock\Validator\SalesChannelsDataValidator</item>
+                <item name="sales_channel" xsi:type="object">Magento\InventorySales\Model\Stock\Validator\SalesChannelValidator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventorySales\Model\Stock\Validator\SalesChannelValidator">
+        <arguments>
+            <argument name="salesChannelValidators" xsi:type="array">
+                <item name="website" xsi:type="object">Magento\InventorySales\Model\Stock\Validator\SalesChannel\WebsiteCodeValidator</item>
             </argument>
         </arguments>
     </type>

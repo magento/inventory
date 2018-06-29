@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\Stock\Validator\SalesChannel;
+namespace Magento\InventorySales\Model\Stock\Validator\SalesChannel;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventoryApi\Model\SalesChannelValidatorInterface;
+use Magento\InventorySalesApi\Model\SalesChannelValidatorInterface;
 
 /**
  * Check that website code is valid
