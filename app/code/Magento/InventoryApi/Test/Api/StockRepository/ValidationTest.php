@@ -11,6 +11,7 @@ use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 
 class ValidationTest extends WebapiAbstract
 {
@@ -31,6 +32,7 @@ class ValidationTest extends WebapiAbstract
     /**
      * @param string $field
      * @param array $expectedErrorData
+     *
      * @throws \Exception
      * @dataProvider dataProviderRequiredFields
      */
@@ -79,6 +81,7 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param string|null $value
      * @param array $expectedErrorData
+     *
      * @dataProvider failedValidationDataProvider
      */
     public function testFailedValidationOnCreate(string $field, $value, array $expectedErrorData)
@@ -103,7 +106,8 @@ class ValidationTest extends WebapiAbstract
      * @param string $field
      * @param string|null $value
      * @param array $expectedErrorData
-     * @dataProvider failedValidationDataProvider
+     *
+     * @dataProvider          failedValidationDataProvider
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock.php
      */
     public function testFailedValidationOnUpdate(string $field, $value, array $expectedErrorData)
@@ -123,6 +127,70 @@ class ValidationTest extends WebapiAbstract
             ],
         ];
         $this->webApiCall($serviceInfo, $data, $expectedErrorData);
+    }
+
+    /**
+     * @param array $salesChannels
+     * @param array $expectedErrorData
+     *
+     * @dataProvider          failedNonExistedWebsiteValidationDataProvider
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock.php
+     */
+    public function testNonExistedWebsiteValidationOnUpdate(array $salesChannels, array $expectedErrorData)
+    {
+        $stockId = 10;
+        $stockName = 'stock-name-1';
+        $data = [
+            "stock_id" => $stockId,
+            "name" => $stockName,
+            "extension_attributes" => [
+                "sales_channels" => $salesChannels
+            ]
+        ];
+
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => self::RESOURCE_PATH . '/' . $stockId,
+                'httpMethod' => Request::HTTP_METHOD_PUT,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_NAME,
+                'operation' => self::SERVICE_NAME . 'Save',
+            ],
+        ];
+        $this->webApiCall($serviceInfo, $data, $expectedErrorData);
+    }
+
+    /**
+     * @return array
+     */
+    public function failedNonExistedWebsiteValidationDataProvider(): array
+    {
+        return [
+            'non_existed_'.SalesChannelInterface::TYPE_WEBSITE => [
+               [
+                    [
+                        SalesChannelInterface::TYPE => SalesChannelInterface::TYPE_WEBSITE,
+                        SalesChannelInterface::CODE => 'base'
+                    ],
+                    [
+                       SalesChannelInterface::TYPE => SalesChannelInterface::TYPE_WEBSITE,
+                       SalesChannelInterface::CODE => 'non_existed'
+                    ],
+                ],
+                [
+                    'message' => 'Validation Failed',
+                    'errors' => [
+                        [
+                            'message' => 'Website with code "%code" does not exist. Cannot add sales channel.',
+                            'parameters' => [
+                                SalesChannelInterface::CODE => 'non_existed'
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        ];
     }
 
     /**
@@ -183,6 +251,7 @@ class ValidationTest extends WebapiAbstract
      * @param array $serviceInfo
      * @param array $data
      * @param array $expectedErrorData
+     *
      * @return void
      * @throws \Exception
      */
