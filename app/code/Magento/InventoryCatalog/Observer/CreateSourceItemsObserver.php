@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Observer;
 
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
@@ -34,20 +35,27 @@ class CreateSourceItemsObserver implements ObserverInterface
      * @var IsSourceItemManagementAllowedForProductTypeInterface
      */
     private $isSourceItemAllowedForProductType;
+    /**
+     * @var ResourceConnection
+     */
+    private $resource;
 
     /**
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemAllowedForProductType
+     * @param ResourceConnection $resource
      */
     public function __construct(
         IsSingleSourceModeInterface $isSingleSourceMode,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemAllowedForProductType
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemAllowedForProductType,
+        ResourceConnection $resource
     ) {
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->isSourceItemAllowedForProductType = $isSourceItemAllowedForProductType;
+        $this->resource = $resource;
     }
 
     /**
@@ -74,8 +82,8 @@ class CreateSourceItemsObserver implements ObserverInterface
                 ];
             }
         }
-        $adapter->getConnection()->insertOnDuplicate(
-            $adapter->getConnection()->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
+        $this->resource->getConnection()->insertOnDuplicate(
+            $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
             $data
         );
     }
