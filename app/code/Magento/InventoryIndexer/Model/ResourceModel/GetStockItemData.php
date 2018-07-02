@@ -29,6 +29,11 @@ class GetStockItemData implements GetStockItemDataInterface
     private $stockIndexTableNameResolver;
 
     /**
+     * @var array
+     */
+    private $stockItemsData = [];
+
+    /**
      * @param ResourceConnection $resource
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      */
@@ -45,6 +50,12 @@ class GetStockItemData implements GetStockItemDataInterface
      */
     public function execute(string $sku, int $stockId)
     {
+        $key = 'stock_data_' . $sku . '_' . $stockId;
+
+        if (array_key_exists($key, $this->stockItemsData)) {
+            return $this->stockItemsData[$key];
+        }
+
         $stockItemTableName = $this->stockIndexTableNameResolver->execute($stockId);
 
         $connection = $this->resource->getConnection();
@@ -60,7 +71,8 @@ class GetStockItemData implements GetStockItemDataInterface
 
         try {
             if ($connection->isTableExists($stockItemTableName)) {
-                return $connection->fetchRow($select) ?: null;
+                $this->stockItemsData[$key] = $connection->fetchRow($select) ?: null;
+                return $this->stockItemsData[$key];
             }
 
             return null;
