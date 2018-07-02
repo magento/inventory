@@ -9,6 +9,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\Data\StockStatusInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -79,6 +81,8 @@ class AdaptGetStockStatusPlugin
      * @param int $productId
      * @param int $scopeId
      * @return StockStatusInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetStockStatus(
