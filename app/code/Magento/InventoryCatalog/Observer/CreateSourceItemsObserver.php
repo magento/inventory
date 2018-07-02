@@ -35,6 +35,7 @@ class CreateSourceItemsObserver implements ObserverInterface
      * @var IsSourceItemManagementAllowedForProductTypeInterface
      */
     private $isSourceItemAllowedForProductType;
+
     /**
      * @var ResourceConnection
      */
@@ -77,14 +78,16 @@ class CreateSourceItemsObserver implements ObserverInterface
                 $data[] = [
                     SourceItemInterface::SOURCE_CODE => $sourceCode,
                     SourceItemInterface::SKU => $product['sku'],
-                    SourceItemInterface::QUANTITY => $product['qty'] ?? null,
+                    SourceItemInterface::QUANTITY => $product['qty'] ?? 0,
                     SourceItemInterface::STATUS => $product['is_in_stock'] ?? 0,
                 ];
             }
         }
-        $this->resource->getConnection()->insertOnDuplicate(
-            $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
-            $data
-        );
+        if ($data) {
+            $this->resource->getConnection()->insertOnDuplicate(
+                $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
+                $data
+            );
+        }
     }
 }
