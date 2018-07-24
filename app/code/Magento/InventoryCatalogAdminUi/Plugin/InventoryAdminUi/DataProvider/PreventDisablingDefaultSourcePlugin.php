@@ -46,13 +46,10 @@ class PreventDisablingDefaultSourcePlugin
         $meta
     ): array {
         $isFormComponent = SourceDataProvider::SOURCE_FORM_NAME === $subject->getName();
-        if (!$isFormComponent || !$this->isDefaultSource()) {
-            return $meta;
-        }
 
-        $meta['general'] = [
-            'children' => [
-                'enabled' => [
+        if ($isFormComponent) {
+            if ($this->isDefaultSource()) {
+                $meta['general']['children']['enabled'] = [
                     'arguments' => [
                         'data' => [
                             'config' => [
@@ -60,9 +57,21 @@ class PreventDisablingDefaultSourcePlugin
                             ]
                         ]
                     ]
-                ]
-            ]
-        ];
+                ];
+            }
+
+            if (!$this->isNewSource()) {
+                $meta['general']['children']['source_code'] = [
+                    'arguments' => [
+                        'data' => [
+                            'config' => [
+                                'disabled' => true,
+                            ]
+                        ]
+                    ]
+                ];
+            }
+        }
 
         return $meta;
     }
@@ -75,5 +84,13 @@ class PreventDisablingDefaultSourcePlugin
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         $currentSourceCode = $this->request->getParam(SourceItemInterface::SOURCE_CODE);
         return $defaultSourceCode === $currentSourceCode;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isNewSource(): bool
+    {
+        return $this->request->getParam(SourceItemInterface::SOURCE_CODE) === null;
     }
 }
