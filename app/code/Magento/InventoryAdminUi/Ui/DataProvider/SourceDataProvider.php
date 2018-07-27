@@ -137,18 +137,4 @@ class SourceDataProvider extends DataProvider
         );
         return $searchResult;
     }
-
-    /**
-     * @return array
-     */
-    public function getMeta()
-    {
-        $meta = parent::getMeta();
-
-        foreach ($this->pool->getModifiersInstances() as $modifier) {
-            $meta = $modifier->modifyMeta($meta);
-        }
-
-        return $meta;
-    }
 }

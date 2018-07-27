@@ -47,5 +47,6 @@
     </type>
     <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
         <plugin name="prevent_disabling_default_source" type="Magento\InventoryCatalogAdminUi\Plugin\InventoryAdminUi\DataProvider\PreventDisablingDefaultSourcePlugin"/>
+        <plugin name="remove_notice_from_enable_field" type="Magento\InventoryCatalogAdminUi\Plugin\InventoryAdminUi\DataProvider\RemoveNoticeFromEnableFieldForNoneDefaultSourcePlugin"/>
     </type>
 </config>

@@ -25,19 +25,4 @@
             <argument name="sortOrder" xsi:type="number">30</argument>
         </arguments>
     </virtualType>
-    <virtualType name="inventorySourceModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
-        <arguments>
-            <argument name="modifiers" xsi:type="array">
-                <item name="notice" xsi:type="array">
-                    <item name="class" xsi:type="string">Magento\InventoryAdminUi\Ui\DataProvider\Modifier\DeleteNoticeFromNonDefaultSource</item>
-                    <item name="sortOrder" xsi:type="number">10</item>
-                </item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
-        <arguments>
-            <argument name="pool" xsi:type="object">inventorySourceModifierPool</argument>
-        </arguments>
-    </type>
 </config>
