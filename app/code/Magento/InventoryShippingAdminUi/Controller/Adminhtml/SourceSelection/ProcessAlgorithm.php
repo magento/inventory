@@ -13,6 +13,7 @@ use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\InventoryShippingAdminUi\Model\SortSourcesAfterSourceSelectionAlgorithm;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
@@ -60,6 +61,11 @@ class ProcessAlgorithm extends Action
     private $sourceRepository;
 
     /**
+     * @var SortSourcesAfterSourceSelectionAlgorithm
+     */
+    private $sortSourcesAfterSourceSelectionAlgorithm;
+
+    /**
      * @var array
      */
     private $sources = [];
@@ -72,6 +78,7 @@ class ProcessAlgorithm extends Action
      * @param SourceSelectionServiceInterface $sourceSelectionService
      * @param GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode
      * @param SourceRepositoryInterface $sourceRepository
+     * @param SortSourcesAfterSourceSelectionAlgorithm $sortSourcesAfterSourceSelectionAlgorithm
      */
     public function __construct(
         Context $context,
@@ -80,7 +87,8 @@ class ProcessAlgorithm extends Action
         InventoryRequestInterfaceFactory $inventoryRequestFactory,
         SourceSelectionServiceInterface $sourceSelectionService,
         GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
-        SourceRepositoryInterface $sourceRepository
+        SourceRepositoryInterface $sourceRepository,
+        SortSourcesAfterSourceSelectionAlgorithm $sortSourcesAfterSourceSelectionAlgorithm
     ) {
         parent::__construct($context);
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
@@ -89,6 +97,7 @@ class ProcessAlgorithm extends Action
         $this->sourceSelectionService = $sourceSelectionService;
         $this->getDefaultSourceSelectionAlgorithmCode = $getDefaultSourceSelectionAlgorithmCode;
         $this->sourceRepository = $sourceRepository;
+        $this->sortSourcesAfterSourceSelectionAlgorithm = $sortSourcesAfterSourceSelectionAlgorithm;
     }
 
     /**
@@ -138,10 +147,12 @@ class ProcessAlgorithm extends Action
                 }
             }
 
-            foreach ($this->sources as $value => $label) {
+            $sources = $this->sortSourcesAfterSourceSelectionAlgorithm->execute($sourceSelectionResult);
+
+            foreach ($sources as $sourceCode) {
                 $result['sourceCodes'][] = [
-                    'value' => $value,
-                    'label' => $label
+                    'value' => $sourceCode,
+                    'label' => $this->getSourceName($sourceCode)
                 ];
             }
             $resultJson->setData($result);
@@ -154,10 +165,10 @@ class ProcessAlgorithm extends Action
      * Get source name by code
      *
      * @param string $sourceCode
-     * @return mixed
+     * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSourceName(string $sourceCode): string
+    private function getSourceName(string $sourceCode): string
     {
         if (!isset($this->sources[$sourceCode])) {
             $this->sources[$sourceCode] = $this->sourceRepository->get($sourceCode)->getName();
