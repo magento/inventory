@@ -38,7 +38,9 @@ class SourceSelectionService implements SourceSelectionServiceInterface
     }
 
     /**
-     * @inheritdoc
+     * @param InventoryRequestInterface $inventoryRequest
+     * @param string $algorithmCode
+     * @return SourceSelectionResultInterface
      */
     public function execute(
         InventoryRequestInterface $inventoryRequest,
