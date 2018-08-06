@@ -6,6 +6,7 @@
 
 namespace Magento\Framework\Reflection;
 
+use Doctrine\Common\Annotations\TokenParser;
 use Magento\Framework\Exception\SerializationException;
 use Magento\Framework\Phrase;
 use Zend\Code\Reflection\ClassReflection;
@@ -512,7 +513,7 @@ class TypeProcessor
     public function getParamType(ParameterReflection $param)
     {
         $type = $param->detectType();
-        if ($type == 'null') {
+        if ($type === 'null') {
             throw new \LogicException(sprintf(
                 '@param annotation is incorrect for the parameter "%s" in the method "%s:%s".'
                 . ' First declared type should not be null. E.g. string|null',
@@ -521,14 +522,66 @@ class TypeProcessor
                 $param->getDeclaringFunction()->name
             ));
         }
-        if ($type == 'array') {
+        if ($type === 'array') {
             // try to determine class, if it's array of objects
             $paramDocBlock = $this->getParamDocBlockTag($param);
             $paramTypes = $paramDocBlock->getTypes();
             $paramType = array_shift($paramTypes);
+
+            $paramType = $this->resolveFullyQualifiedClassName($param->getDeclaringClass(), $paramType);
+
             return strpos($paramType, '[]') !== false ? $paramType : "{$paramType}[]";
         }
-        return $type;
+
+        return $this->resolveFullyQualifiedClassName($param->getDeclaringClass(), $type);
+    }
+
+    /**
+     * Resolve fully qualified type name in the class alias context
+     * @param ClassReflection $sourceClass
+     * @param string $typeName
+     * @return string
+     */
+    public function resolveFullyQualifiedClassName(ClassReflection $sourceClass, string $typeName): string
+    {
+        $typeName = trim($typeName);
+
+        // Resolve fully qualified name
+        $sourceFileName = $sourceClass->getDeclaringFile();
+        $source = $sourceFileName->getContents();
+        $parser = new TokenParser($source);
+
+        $namespace = $sourceClass->getNamespaceName();
+        $aliases = $parser->parseUseStatements($namespace);
+
+        // Not a class, but a basic type
+        if ((strtolower($typeName[0])) === $typeName[0]) {
+            return $typeName;
+        }
+
+        preg_match('/^(.+?)(\[\])?$/', $typeName, $matches);
+        $typeName = $matches[1];
+        $isArray = $matches[2] ? '[]' : '';
+
+        $pos = strpos($typeName, '\\');
+        if ($pos === 0) {
+            return substr($typeName, 1);
+        }
+
+        if ($pos === false) {
+            $namespacePrefix = $typeName;
+            $partialClassName = '';
+        } else {
+            $namespacePrefix = substr($typeName, 0, $pos);
+            $partialClassName = substr($typeName, $pos);
+        }
+
+        $namespacePrefix = strtolower($namespacePrefix);
+        if (isset($aliases[$namespacePrefix])) {
+            return $aliases[$namespacePrefix] . $partialClassName . $isArray;
+        }
+
+        return $namespace . '\\' . $typeName . $isArray;
     }
 
     /**
