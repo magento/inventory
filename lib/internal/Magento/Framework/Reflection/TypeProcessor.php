@@ -546,6 +546,27 @@ class TypeProcessor
     {
         $typeName = trim($typeName);
 
+        // Not a class, but a basic type
+        if ((strtolower($typeName[0])) === $typeName[0]) {
+            return $typeName;
+        }
+
+        // Split array suffix
+        if (preg_match('/^(.+?)\[\]$/', $typeName, $matches)) {
+            $typeName = $matches[1];
+            $arraySuffix = '[]';
+        } else {
+            $arraySuffix = '';
+        }
+
+        // If class exists, then return it
+        try {
+            $classTypeReflection = new ClassReflection($typeName);
+            return $typeName;
+        } catch (\ReflectionException $e) {
+            unset($e);
+        }
+
         // Resolve fully qualified name
         $sourceFileName = $sourceClass->getDeclaringFile();
         $source = $sourceFileName->getContents();
@@ -553,18 +574,6 @@ class TypeProcessor
 
         $namespace = $sourceClass->getNamespaceName();
         $aliases = $parser->parseUseStatements($namespace);
-
-        // Not a class, but a basic type
-        if ((strtolower($typeName[0])) === $typeName[0]) {
-            return $typeName;
-        }
-
-        if (preg_match('/^(.+?)\[\]$/', $typeName, $matches)) {
-            $typeName = $matches[1];
-            $arraySuffix = '[]';
-        } else {
-            $arraySuffix = '';
-        }
 
         $pos = strpos($typeName, '\\');
         if ($pos === 0) {
