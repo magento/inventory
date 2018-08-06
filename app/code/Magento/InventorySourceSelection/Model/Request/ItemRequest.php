@@ -53,7 +53,7 @@ class ItemRequest implements ItemRequestInterface
     /**
      * @inheritdoc
      */
-    public function setSku(string $sku): void
+    public function setSku($sku)
     {
         $this->sku = $sku;
     }
@@ -61,7 +61,7 @@ class ItemRequest implements ItemRequestInterface
     /**
      * @inheritdoc
      */
-    public function setQty(float $qty): void
+    public function setQty($qty)
     {
         $this->qty = $qty;
     }
