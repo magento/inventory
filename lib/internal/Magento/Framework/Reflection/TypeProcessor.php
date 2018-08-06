@@ -559,9 +559,12 @@ class TypeProcessor
             return $typeName;
         }
 
-        preg_match('/^(.+?)(\[\])?$/', $typeName, $matches);
-        $typeName = $matches[1];
-        $arraySuffix = count($matches) > 2 ? $matches[2] : '';
+        if (preg_match('/^(.+?)\[\]$/', $typeName, $matches)) {
+            $typeName = $matches[1];
+            $arraySuffix = '[]';
+        } else {
+            $arraySuffix = '';
+        }
 
         $pos = strpos($typeName, '\\');
         if ($pos === 0) {
