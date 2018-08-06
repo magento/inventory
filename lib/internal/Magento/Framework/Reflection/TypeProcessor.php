@@ -561,7 +561,7 @@ class TypeProcessor
 
         preg_match('/^(.+?)(\[\])?$/', $typeName, $matches);
         $typeName = $matches[1];
-        $isArray = $matches[2] ? '[]' : '';
+        $arraySuffix = count($matches) > 2 ? $matches[2] : '';
 
         $pos = strpos($typeName, '\\');
         if ($pos === 0) {
@@ -578,10 +578,10 @@ class TypeProcessor
 
         $namespacePrefix = strtolower($namespacePrefix);
         if (isset($aliases[$namespacePrefix])) {
-            return $aliases[$namespacePrefix] . $partialClassName . $isArray;
+            return $aliases[$namespacePrefix] . $partialClassName . $arraySuffix;
         }
 
-        return $namespace . '\\' . $typeName . $isArray;
+        return $namespace . '\\' . $typeName . $arraySuffix;
     }
 
     /**
