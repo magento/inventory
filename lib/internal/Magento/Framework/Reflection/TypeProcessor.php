@@ -562,7 +562,7 @@ class TypeProcessor
         // If class exists, then return it
         try {
             $classTypeReflection = new ClassReflection($typeName);
-            return $typeName;
+            return $typeName . $arraySuffix;
         } catch (\ReflectionException $e) {
             unset($e);
         }
