@@ -9,16 +9,12 @@ namespace Magento\InventoryShippingAdminUi\Controller\Adminhtml\SourceSelection;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Backend\Model\View\Result\Page;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
-use Magento\InventoryShippingAdminUi\Model\SortSourcesAfterSourceSelectionAlgorithm;
+use Magento\InventoryShippingAdminUi\Model\SourceSelectionResultAdapterFromRequestItemsFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
-use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
-use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
-use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
  * ProcessAlgorithm Controller
@@ -41,63 +37,26 @@ class ProcessAlgorithm extends Action
     private $itemRequestFactory;
 
     /**
-     * @var InventoryRequestInterfaceFactory
+     * @var SourceSelectionResultAdapterFromRequestItemsFactory
      */
-    private $inventoryRequestFactory;
-
-    /**
-     * @var SourceSelectionServiceInterface
-     */
-    private $sourceSelectionService;
-
-    /**
-     * @var GetDefaultSourceSelectionAlgorithmCodeInterface
-     */
-    private $getDefaultSourceSelectionAlgorithmCode;
-
-    /**
-     * @var SourceRepositoryInterface
-     */
-    private $sourceRepository;
-
-    /**
-     * @var SortSourcesAfterSourceSelectionAlgorithm
-     */
-    private $sortSourcesAfterSourceSelectionAlgorithm;
-
-    /**
-     * @var array
-     */
-    private $sources = [];
+    private $sourceAdapterFromRequestItemsFactory;
 
     /**
      * @param Context $context
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param ItemRequestInterfaceFactory $itemRequestFactory
-     * @param InventoryRequestInterfaceFactory $inventoryRequestFactory
-     * @param SourceSelectionServiceInterface $sourceSelectionService
-     * @param GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode
-     * @param SourceRepositoryInterface $sourceRepository
-     * @param SortSourcesAfterSourceSelectionAlgorithm $sortSourcesAfterSourceSelectionAlgorithm
+     * @param SourceSelectionResultAdapterFromRequestItemsFactory $sourceAdapterFromRequestItemsFactory
      */
     public function __construct(
         Context $context,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         ItemRequestInterfaceFactory $itemRequestFactory,
-        InventoryRequestInterfaceFactory $inventoryRequestFactory,
-        SourceSelectionServiceInterface $sourceSelectionService,
-        GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
-        SourceRepositoryInterface $sourceRepository,
-        SortSourcesAfterSourceSelectionAlgorithm $sortSourcesAfterSourceSelectionAlgorithm
+        SourceSelectionResultAdapterFromRequestItemsFactory $sourceAdapterFromRequestItemsFactory
     ) {
         parent::__construct($context);
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->itemRequestFactory = $itemRequestFactory;
-        $this->inventoryRequestFactory = $inventoryRequestFactory;
-        $this->sourceSelectionService = $sourceSelectionService;
-        $this->getDefaultSourceSelectionAlgorithmCode = $getDefaultSourceSelectionAlgorithmCode;
-        $this->sourceRepository = $sourceRepository;
-        $this->sortSourcesAfterSourceSelectionAlgorithm = $sortSourcesAfterSourceSelectionAlgorithm;
+        $this->sourceAdapterFromRequestItemsFactory = $sourceAdapterFromRequestItemsFactory;
     }
 
     /**
@@ -105,75 +64,40 @@ class ProcessAlgorithm extends Action
      */
     public function execute(): ResultInterface
     {
-        /** @var Page $result */
+        /** @var Json $resultJson */
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $request = $this->getRequest();
         $postRequest = $request->getPost()->toArray();
 
         if ($request->isPost() && !empty($postRequest['requestData'])) {
             $requestData = $postRequest['requestData'];
-            $defaultCode = $this->getDefaultSourceSelectionAlgorithmCode->execute();
-            $algorithmCode = !empty($postRequest['algorithmCode']) ? $postRequest['algorithmCode'] : $defaultCode;
+            $algorithmCode = $postRequest['algorithmCode'];
 
             //TODO: maybe need to add exception when websiteId empty
             $websiteId = $postRequest['websiteId'] ?? 1;
             $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-
             $result = $requestItems = [];
+
             foreach ($requestData as $data) {
                 $requestItems[] = $this->itemRequestFactory->create([
                     'sku' => $data['sku'],
                     'qty' => $data['qty']
                 ]);
             }
-            $inventoryRequest = $this->inventoryRequestFactory->create([
-                'stockId' => $stockId,
-                'items'   => $requestItems
-            ]);
 
-            $sourceSelectionResult = $this->sourceSelectionService->execute($inventoryRequest, $algorithmCode);
+            $sourceAdapter = $this->sourceAdapterFromRequestItemsFactory
+                ->create($stockId, $requestItems, $algorithmCode);
 
             foreach ($requestData as $data) {
                 $orderItem = $data['orderItem'];
-                foreach ($sourceSelectionResult->getSourceSelectionItems() as $item) {
-                    if ($item->getSku() === $data['sku']) {
-                        $result[$orderItem][] = [
-                            'sourceName' => $this->getSourceName($item->getSourceCode()),
-                            'sourceCode' => $item->getSourceCode(),
-                            'qtyAvailable' => $item->getQtyAvailable(),
-                            'qtyToDeduct' => $item->getQtyToDeduct()
-                        ];
-                    }
-                }
+                $result[$orderItem] = $sourceAdapter->getSkuSources($data['sku']);
             }
 
-            $sources = $this->sortSourcesAfterSourceSelectionAlgorithm->execute($sourceSelectionResult);
+            $result['sourceCodes'] = $sourceAdapter->getSources();
 
-            foreach ($sources as $sourceCode) {
-                $result['sourceCodes'][] = [
-                    'value' => $sourceCode,
-                    'label' => $this->getSourceName($sourceCode)
-                ];
-            }
             $resultJson->setData($result);
         }
 
         return $resultJson;
-    }
-
-    /**
-     * Get source name by code
-     *
-     * @param string $sourceCode
-     * @return string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    private function getSourceName(string $sourceCode): string
-    {
-        if (!isset($this->sources[$sourceCode])) {
-            $this->sources[$sourceCode] = $this->sourceRepository->get($sourceCode)->getName();
-        }
-
-        return $this->sources[$sourceCode];
     }
 }
