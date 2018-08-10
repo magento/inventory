@@ -1,0 +1,17 @@
+{
+  "inventory_configuration": {
+    "column": {
+      "sku": true,
+      "source_code": true,
+      "stock_id": true,
+      "config_option": true,
+      "value": true
+    }
+  },
+  "patch_list": {
+    "column": {
+      "patch_id": true,
+      "patch_name": true
+    }
+  }
+}

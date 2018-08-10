@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="inventory_configuration" sortOrder="60">
+        <settings>
+            <label translate="true">Configuration</label>
+            <collapsible>true</collapsible>
+            <opened>true</opened>
+            <dataScope>inventory_configuration</dataScope>
+        </settings>
+        <container name="container_manage_stock" component="Magento_Ui/js/form/components/group" sortOrder="100">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="label" xsi:type="string" translate="true">Manage Stock</item>
+                    <item name="dataScope" xsi:type="string">stock_data</item>
+                </item>
+            </argument>
+            <field name="manage_stock" formElement="select">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="rawOptions" xsi:type="boolean">true</item>
+                        <item name="value" xsi:type="object">Magento\CatalogInventory\Model\Source\StockConfiguration</item>
+                    </item>
+                </argument>
+                <settings>
+                    <label translate="true">Manage Stock</label>
+                    <dataScope>manage_stock</dataScope>
+                </settings>
+                <formElements>
+                    <select>
+                        <settings>
+                            <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                        </settings>
+                    </select>
+                </formElements>
+            </field>
+            <field name="use_config_manage_stock" component="Magento_CatalogInventory/js/components/use-config-settings" formElement="checkbox">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="valueFromConfig" xsi:type="object">Magento\CatalogInventory\Model\Source\StockConfiguration</item>
+                        <item name="keyInConfiguration" xsi:type="string">manage_stock</item>
+                    </item>
+                </argument>
+                <settings>
+                    <dataScope>use_config_manage_stock</dataScope>
+                    <exports>
+                        <link name="checked">${$.parentName}.manage_stock:disabled</link>
+                    </exports>
+                </settings>
+                <formElements>
+                    <checkbox class="Magento\CatalogInventory\Ui\Component\Product\Form\Element\UseConfigSettings">
+                        <settings>
+                            <description translate="true">Use Config Settings</description>
+                            <valueMap>
+                                <map name="false" xsi:type="string">0</map>
+                                <map name="true" xsi:type="string">1</map>
+                            </valueMap>
+                        </settings>
+                    </checkbox>
+                </formElements>
+            </field>
+        </container>
+    </fieldset>
+</form>
