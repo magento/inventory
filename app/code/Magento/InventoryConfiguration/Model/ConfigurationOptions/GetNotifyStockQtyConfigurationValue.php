@@ -38,7 +38,7 @@ class GetNotifyStockQtyConfigurationValue implements GetNotifyStockQtyConfigurat
             $sourceCode,
             $sku
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**
@@ -51,7 +51,7 @@ class GetNotifyStockQtyConfigurationValue implements GetNotifyStockQtyConfigurat
             null,
             $sourceCode
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**

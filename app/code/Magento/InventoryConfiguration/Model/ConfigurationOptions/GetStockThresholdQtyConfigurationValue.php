@@ -33,7 +33,7 @@ class GetStockThresholdQtyConfigurationValue implements GetStockThresholdQtyConf
     public function forStock(int $stockId): ?float
     {
         $result = $this->getConfigurationValue->execute(StockItemConfigurationInterface::STOCK_THRESHOLD_QTY, $stockId);
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**

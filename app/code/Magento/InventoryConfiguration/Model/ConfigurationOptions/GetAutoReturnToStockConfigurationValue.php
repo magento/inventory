@@ -35,7 +35,7 @@ class GetAutoReturnToStockConfigurationValue implements GetAutoReturnToStockConf
     public function forStock(int $stockId): ?int
     {
         $result = $this->getConfigurationValue->execute(self::CONFIG_OPTION, $stockId);
-        return (int)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**

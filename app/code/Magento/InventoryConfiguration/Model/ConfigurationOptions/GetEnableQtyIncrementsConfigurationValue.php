@@ -38,7 +38,7 @@ class GetEnableQtyIncrementsConfigurationValue implements GetEnableQtyIncrements
             null,
             $sku
         );
-        return (int)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**
@@ -50,7 +50,7 @@ class GetEnableQtyIncrementsConfigurationValue implements GetEnableQtyIncrements
             StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS,
             $stockId
         );
-        return (int)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**

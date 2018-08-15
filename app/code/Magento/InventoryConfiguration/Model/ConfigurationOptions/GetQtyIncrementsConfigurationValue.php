@@ -38,7 +38,7 @@ class GetQtyIncrementsConfigurationValue implements GetQtyIncrementsConfiguratio
             null,
             $sku
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**
@@ -47,7 +47,7 @@ class GetQtyIncrementsConfigurationValue implements GetQtyIncrementsConfiguratio
     public function forStock(int $stockId): ?float
     {
         $result = $this->getConfigurationValue->execute(StockItemConfigurationInterface::QTY_INCREMENTS, $stockId);
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**

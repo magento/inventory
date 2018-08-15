@@ -38,7 +38,7 @@ class GetMinQtyConfigurationValue implements GetMinQtyConfigurationValueInterfac
             null,
             $sku
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**
@@ -47,7 +47,7 @@ class GetMinQtyConfigurationValue implements GetMinQtyConfigurationValueInterfac
     public function forStock(int $stockId): ?float
     {
         $result = $this->getConfigurationValue->execute(StockItemConfigurationInterface::MIN_QTY, $stockId);
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**

@@ -55,6 +55,6 @@ class GetMinSaleQtyConfigurationValue implements GetMinSaleQtyConfigurationValue
      */
     public function forGlobal(): float
     {
-        return (int)$this->getConfigurationValue->execute(StockItemConfigurationInterface::MIN_SALE_QTY);
+        return (float)$this->getConfigurationValue->execute(StockItemConfigurationInterface::MIN_SALE_QTY);
     }
 }

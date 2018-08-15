@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryConfiguration\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryConfigurationApi\Api\Data\InventoryConfigurationInterface;
 
 /**
  * If $stockId && $sourceCode && $sku are NULL => GLOBAL CONFIG
@@ -49,30 +48,30 @@ class GetConfigurationValue
         $inventoryConfigurationTable = $this->resourceConnection->getTableName('inventory_configuration');
 
         $select = $connection->select()
-            ->from($inventoryConfigurationTable, InventoryConfigurationInterface::VALUE)
-            ->where(InventoryConfigurationInterface::CONFIG_OPTION . ' = ?', $configOption)
+            ->from($inventoryConfigurationTable, 'value')
+            ->where('config_option = ?', $configOption)
             ->limit(1);
 
-        if (empty($stockId)) {
-            $select->where(InventoryConfigurationInterface::STOCK_ID . ' IS NULL');
+        if (isset($stockId)) {
+            $select->where('stock_id IS NULL');
         } else {
-            $select->where(InventoryConfigurationInterface::STOCK_ID . ' = ?', $stockId);
+            $select->where('stock_id = ?', $stockId);
         }
 
-        if (empty($sourceCode)) {
-            $select->where(InventoryConfigurationInterface::SOURCE_CODE . ' IS NULL');
+        if (isset($sourceCode)) {
+            $select->where('source_code IS NULL');
         } else {
-            $select->where(InventoryConfigurationInterface::SOURCE_CODE . ' = ?', $sourceCode);
+            $select->where('source_code = ?', $sourceCode);
         }
 
-        if (empty($sku)) {
-            $select->where(InventoryConfigurationInterface::SKU . ' IS NULL');
+        if (isset($sku)) {
+            $select->where('sku IS NULL');
         } else {
-            $select->where(InventoryConfigurationInterface::SKU . ' = ?', $sku);
+            $select->where('sku = ?', $sku);
         }
 
         $value = $connection->fetchOne($select);
 
-        return $value ?? null;
+        return ($value === false) ? null : $value;
     }
 }

@@ -30,7 +30,7 @@ class GetBackordersConfigurationValue implements GetBackordersConfigurationValue
     /**
      * @inheritdoc
      */
-    public function forSourceItem(string $sku, string $sourceCode): ?float
+    public function forSourceItem(string $sku, string $sourceCode): ?int
     {
         $result = $this->getConfigurationValue->execute(
             StockItemConfigurationInterface::BACKORDERS,
@@ -38,26 +38,26 @@ class GetBackordersConfigurationValue implements GetBackordersConfigurationValue
             $sourceCode,
             $sku
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**
      * @inheritdoc
      */
-    public function forSource(string $sourceCode): ?float
+    public function forSource(string $sourceCode): ?int
     {
         $result = $this->getConfigurationValue->execute(
             StockItemConfigurationInterface::BACKORDERS,
             null,
             $sourceCode
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**
      * @inheritdoc
      */
-    public function forGlobal(): float
+    public function forGlobal(): int
     {
         return (int)$this->getConfigurationValue->execute(StockItemConfigurationInterface::BACKORDERS);
     }

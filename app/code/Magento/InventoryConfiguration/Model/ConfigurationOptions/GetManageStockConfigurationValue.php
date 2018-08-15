@@ -38,7 +38,7 @@ class GetManageStockConfigurationValue implements GetManageStockConfigurationVal
             null,
             $sku
         );
-        return (int)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**
@@ -47,7 +47,7 @@ class GetManageStockConfigurationValue implements GetManageStockConfigurationVal
     public function forStock(int $stockId): ?int
     {
         $result = $this->getConfigurationValue->execute(StockItemConfigurationInterface::MANAGE_STOCK, $stockId);
-        return (int)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 
     /**

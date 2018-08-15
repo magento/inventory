@@ -17,18 +17,18 @@ interface GetBackordersConfigurationValueInterface
     /**
      * @param string $sku
      * @param string $sourceCode
-     * @return float|null
+     * @return int|null
      */
-    public function forSourceItem(string $sku, string $sourceCode): ?float;
+    public function forSourceItem(string $sku, string $sourceCode): ?int;
 
     /**
      * @param string $sourceCode
-     * @return float|null
+     * @return int|null
      */
-    public function forSource(string $sourceCode): ?float;
+    public function forSource(string $sourceCode): ?int;
 
     /**
-     * @return float
+     * @return int
      */
-    public function forGlobal(): float;
+    public function forGlobal(): int;
 }

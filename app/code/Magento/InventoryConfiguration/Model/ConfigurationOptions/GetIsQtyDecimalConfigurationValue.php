@@ -41,6 +41,6 @@ class GetIsQtyDecimalConfigurationValue implements GetIsQtyDecimalConfigurationV
             null,
             $sku
         );
-        return (int)$result ?? $result;
+        return isset($result) ? (int)$result : $result;
     }
 }

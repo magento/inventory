@@ -38,7 +38,7 @@ class GetMaxSaleQtyConfigurationValue implements GetMaxSaleQtyConfigurationValue
             null,
             $sku
         );
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**
@@ -47,7 +47,7 @@ class GetMaxSaleQtyConfigurationValue implements GetMaxSaleQtyConfigurationValue
     public function forStock(int $stockId): ?float
     {
         $result = $this->getConfigurationValue->execute(StockItemConfigurationInterface::MAX_SALE_QTY, $stockId);
-        return (float)$result ?? $result;
+        return isset($result) ? (float)$result : $result;
     }
 
     /**
