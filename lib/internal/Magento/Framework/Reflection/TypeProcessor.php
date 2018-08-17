@@ -6,7 +6,6 @@
 
 namespace Magento\Framework\Reflection;
 
-use Doctrine\Common\Annotations\TokenParser;
 use Magento\Framework\Exception\SerializationException;
 use Magento\Framework\Phrase;
 use Zend\Code\Reflection\ClassReflection;
@@ -561,19 +560,28 @@ class TypeProcessor
 
         // If class exists, then return it
         try {
-            $classTypeReflection = new ClassReflection($typeName);
+            new ClassReflection($typeName);
             return $typeName . $arraySuffix;
         } catch (\ReflectionException $e) {
             unset($e);
         }
 
-        // Resolve fully qualified name
+        // Extract alias mapping
         $sourceFileName = $sourceClass->getDeclaringFile();
-        $source = $sourceFileName->getContents();
-        $parser = new TokenParser($source);
+        $aliases = [];
+        foreach ($sourceFileName->getUses() as $use) {
+            if ($use['as'] !== null) {
+                $aliases[$use['as']] = $use['use'];
+            } else {
+                $pos = strrpos($use['use'], '\\');
 
+                $aliasName = substr($use['use'], $pos + 1);
+                $aliases[$aliasName] = $use['use'];
+            }
+        }
+
+        // Resolve FQN
         $namespace = $sourceClass->getNamespaceName();
-        $aliases = $parser->parseUseStatements($namespace);
 
         $pos = strpos($typeName, '\\');
         if ($pos === 0) {
@@ -588,7 +596,6 @@ class TypeProcessor
             $partialClassName = substr($typeName, $pos);
         }
 
-        $namespacePrefix = strtolower($namespacePrefix);
         if (isset($aliases[$namespacePrefix])) {
             return $aliases[$namespacePrefix] . $partialClassName . $arraySuffix;
         }
