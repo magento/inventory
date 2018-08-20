@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurationApi\Api;
 
-interface StockItemConfigurationInterface
+interface InventoryConfigurationInterface
 {
     const BACKORDERS_NO = 0;
     const BACKORDERS_YES_NONOTIFY = 1;
@@ -107,5 +107,4 @@ interface StockItemConfigurationInterface
      * @return float
      */
     public function getStockThresholdQty(): float;
-
 }

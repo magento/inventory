@@ -7,11 +7,49 @@
 -->
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="inventory_configuration" resource="default" engine="innodb">
+    <table name="inventory_source_configuration" resource="default" engine="innodb">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
         <column xsi:type="varchar" name="sku" nullable="true" length="64"/>
-        <column xsi:type="varchar" name="source_code" nullable="true" length="255"/>
-        <column xsi:type="int" name="stock_id" padding="10" nullable="true"/>
-        <column xsi:type="varchar" name="config_option" nullable="false" length="255"/>
-        <column xsi:type="varchar" name="value" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="source_code" nullable="false" length="255"/>
+        <column xsi:type="smallint" name="backorders" padding="5" unsigned="true" nullable="true" identity="false"/>
+        <column xsi:type="decimal" name="notify_stock_qty" scale="4" precision="12" unsigned="false" nullable="true"/>
+        <constraint xsi:type="primary" name="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" name="INV_SOURCE_CONFIGURATION_SOURCE_CODE_INV_SOURCE_SOURCE_CODE"
+                    table="inventory_source_configuration" column="source_code" referenceTable="inventory_source"
+                    referenceColumn="source_code" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" name="INV_SOURCE_CONFIGURATION_SOURCE_CODE_SKU">
+            <column name="source_code"/>
+            <column name="sku"/>
+        </constraint>
+    </table>
+    <table name="inventory_stock_configuration" resource="default" engine="innodb">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="sku" nullable="true" length="64"/>
+        <column xsi:type="int" name="stock_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+        <column xsi:type="decimal" name="min_qty" scale="4" precision="12" unsigned="false" nullable="true"/>
+        <column xsi:type="decimal" name="min_sale_qty" scale="4" precision="12" unsigned="false" nullable="true"/>
+        <column xsi:type="decimal" name="max_sale_qty" scale="4" precision="12" unsigned="false" nullable="true"/>
+        <column xsi:type="smallint" name="manage_stock" padding="5" unsigned="true" nullable="true" identity="false"/>
+        <column xsi:type="smallint" name="stock_status_changed_auto" padding="5" unsigned="true" nullable="true" identity="false"/>
+        <column xsi:type="decimal" name="qty_increments" scale="4" precision="12" unsigned="false" nullable="true"/>
+        <column xsi:type="smallint" name="enable_qty_increments" padding="5" unsigned="true" nullable="true" identity="false"/>
+        <column xsi:type="decimal" name="stock_threshold_qty" scale="4" precision="12" unsigned="false" nullable="true"/>
+        <column xsi:type="timestamp" name="low_stock_date" on_update="false" nullable="true"/>
+        <constraint xsi:type="primary" name="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" name="INV_STOCK_CONFIGURATION_STOCK_ID_INV_STOCK_STOCK_ID"
+                    table="inventory_stock_configuration" column="stock_id" referenceTable="inventory_stock"
+                    referenceColumn="stock_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" name="INV_STOCK_CONFIGURATION_STOCK_ID_SKU">
+            <column name="stock_id"/>
+            <column name="sku"/>
+        </constraint>
+<!--        <column xsi:type="smallint" name="is_qty_decimal" padding="5" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Is Qty Decimal"/>
+        <column xsi:type="smallint" name="is_decimal_divided" padding="5" unsigned="true" nullable="false"
+                identity="false" default="0" comment="Is Divided into Multiple Boxes for Shipping"/>-->
     </table>
 </schema>

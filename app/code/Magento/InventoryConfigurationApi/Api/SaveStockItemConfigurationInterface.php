@@ -18,8 +18,26 @@ interface SaveStockItemConfigurationInterface
 {
     /**
      * @param string $sku
+     * @param int $stockId
      * @param StockItemConfigurationInterface $stockItemConfiguration
      * @return void
      */
-    public function execute(string $sku, int $stockId, StockItemConfigurationInterface $stockItemConfiguration);
+    public function forStockItem(
+        string $sku,
+        int $stockId,
+        StockItemConfigurationInterface $stockItemConfiguration
+    ): void;
+
+    /**
+     * @param int $stockId
+     * @param StockItemConfigurationInterface $stockItemConfiguration
+     * @return void
+     */
+    public function forStock(int $stockId, StockItemConfigurationInterface $stockItemConfiguration): void;
+
+    /**
+     * @param StockItemConfigurationInterface $stockItemConfiguration
+     * @return void
+     */
+    public function forGlobal(StockItemConfigurationInterface $stockItemConfiguration): void;
 }

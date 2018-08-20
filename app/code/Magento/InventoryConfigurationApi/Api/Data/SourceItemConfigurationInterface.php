@@ -1,0 +1,66 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
+
+namespace Magento\InventoryConfigurationApi\Api\Data;
+
+use Magento\Framework\Api\ExtensibleDataInterface;
+
+/**
+ * @api
+ */
+interface SourceItemConfigurationInterface extends ExtensibleDataInterface
+{
+    const BACKORDERS_NO = 0;
+    const BACKORDERS_YES_NONOTIFY = 1;
+    const BACKORDERS_YES_NOTIFY = 2;
+
+    /**#@+
+     * Constants for keys of data array. Identical to the name of the getter in snake case
+     */
+    const BACKORDERS = 'backorders';
+    const NOTIFY_STOCK_QTY = 'notify_stock_qty';
+    /**#@-*/
+
+    /**
+     * @return int|null
+     */
+    public function getBackorders(): ?int;
+
+    /**
+     * @param int|null $backOrders
+     * @return void
+     */
+    public function setBackorders(?int $backOrders): void;
+
+    /**
+     * @return float|null
+     */
+    public function getNotifyStockQty(): ?float;
+
+    /**
+     * @param float|null $notifyStockQty
+     * @return void
+     */
+    public function setNotifyStockQty(?float $notifyStockQty): void;
+
+    /**
+     * Retrieve existing extension attributes object
+     *
+     * Null for return is specified for proper work SOAP requests parser
+     *
+     * @return \Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationExtensionInterface|null
+     */
+    public function getExtensionAttributes();
+
+    /**
+     * Set an extension attributes object
+     *
+     * @param \Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationExtensionInterface $extensionAttributes
+     * @return void
+     */
+    public function setExtensionAttributes(SourceItemConfigurationExtensionInterface $extensionAttributes);
+}

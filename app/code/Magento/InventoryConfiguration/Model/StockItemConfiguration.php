@@ -7,377 +7,190 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfiguration\Model;
 
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Model\AbstractExtensibleModel;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationExtensionInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 
-/**
- * @inheritdoc
- */
-class StockItemConfiguration implements StockItemConfigurationInterface
+class StockItemConfiguration extends AbstractExtensibleModel implements StockItemConfigurationInterface
 {
     /**
-     * @var StockItemInterface
+     * @inheritdoc
      */
-    private $stockItem;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * @param StockItemInterface $stockItem
-     */
-    public function __construct(
-        StockItemInterface $stockItem,
-        ScopeConfigInterface $scopeConfig
-    ) {
-        $this->stockItem = $stockItem;
-        $this->scopeConfig = $scopeConfig;
+    public function getMinQty(): ?float
+    {
+        return $this->getData(self::MIN_QTY);
     }
 
     /**
      * @inheritdoc
      */
-    public function isQtyDecimal(): bool
+    public function setMinQty(?float $minQty): void
     {
-        return (bool)$this->stockItem->getIsQtyDecimal();
+        $this->setData(self::MIN_QTY, $minQty);
     }
 
     /**
      * @inheritdoc
      */
-    public function setIsQtyDecimal(bool $isQtyDecimal): void
+    public function getMinSaleQty(): ?float
     {
-        $this->stockItem->setIsQtyDecimal($isQtyDecimal);
+        return $this->getData(self::MIN_SALE_QTY);
     }
 
     /**
      * @inheritdoc
      */
-    public function isShowDefaultNotificationMessage(): bool
+    public function setMinSaleQty(?float $minSaleQty): void
     {
-        return $this->stockItem->getShowDefaultNotificationMessage();
+        $this->setData(self::MIN_SALE_QTY, $minSaleQty);
     }
 
     /**
      * @inheritdoc
      */
-    public function isUseConfigMinQty(): bool
+    public function getMaxSaleQty(): ?float
     {
-        return (bool)$this->stockItem->getUseConfigMinQty();
+        return $this->getData(self::MAX_SALE_QTY);
     }
 
     /**
      * @inheritdoc
      */
-    public function setUseConfigMinQty(bool $useConfigMinQty): void
+    public function setMaxSaleQty(?float $maxSaleQty): void
     {
-        $this->stockItem = $this->stockItem->setUseConfigMinQty($useConfigMinQty);
+        $this->setData(self::MAX_SALE_QTY, $maxSaleQty);
     }
 
     /**
      * @inheritdoc
      */
-    public function getMinQty(): float
+    public function getQtyIncrements(): ?float
     {
-        return $this->stockItem->getMinQty();
+        return $this->getData(self::QTY_INCREMENTS);
     }
 
     /**
      * @inheritdoc
      */
-    public function setMinQty(float $minQty): void
+    public function setQtyIncrements(?float $qtyIncrements): void
     {
-        $this->stockItem->setMinQty($minQty);
+        $this->setData(self::QTY_INCREMENTS, $qtyIncrements);
     }
 
     /**
      * @inheritdoc
      */
-    public function isUseConfigMinSaleQty(): bool
+    public function isEnableQtyIncrements(): ?bool
     {
-        return (bool)$this->stockItem->getUseConfigMinSaleQty();
+        return $this->getData(self::ENABLE_QTY_INCREMENTS);
     }
 
     /**
      * @inheritdoc
      */
-    public function setUseConfigMinSaleQty(bool $useConfigMinSaleQty): void
+    public function setEnableQtyIncrements(?bool $enableQtyIncrements): void
     {
-        $this->stockItem->setUseConfigMinSaleQty($useConfigMinSaleQty);
+        $this->setData(self::ENABLE_QTY_INCREMENTS, $enableQtyIncrements);
     }
 
     /**
      * @inheritdoc
      */
-    public function getMinSaleQty(): float
+    public function isManageStock(): ?bool
     {
-        return $this->stockItem->getMinSaleQty();
+        return $this->getData(self::MANAGE_STOCK);
     }
 
     /**
      * @inheritdoc
      */
-    public function setMinSaleQty(float $minSaleQty): void
+    public function setManageStock(?bool $manageStock): void
     {
-        $this->stockItem->setMinSaleQty($minSaleQty);
+        $this->setData(self::MANAGE_STOCK, $manageStock);
     }
 
     /**
      * @inheritdoc
      */
-    public function isUseConfigMaxSaleQty(): bool
+    public function getLowStockDate(): ?string
     {
-        return (bool)$this->stockItem->getUseConfigMaxSaleQty();
+        return $this->getData(self::LOW_STOCK_DATE);
     }
 
     /**
      * @inheritdoc
      */
-    public function setUseConfigMaxSaleQty(bool $useConfigMaxSaleQty): void
+    public function setLowStockDate(?string $lowStockDate): void
     {
-        $this->stockItem->setUseConfigMaxSaleQty($useConfigMaxSaleQty);
+        $this->setData(self::LOW_STOCK_DATE, $lowStockDate);
     }
 
     /**
      * @inheritdoc
      */
-    public function getMaxSaleQty(): float
+    public function isDecimalDivided(): ?bool
     {
-        return $this->stockItem->getMaxSaleQty();
+        return $this->getData(self::IS_DECIMAL_DIVIDED);
     }
 
     /**
      * @inheritdoc
      */
-    public function setMaxSaleQty(float $maxSaleQty): void
+    public function setIsDecimalDivided(?bool $isDecimalDivided): void
     {
-        $this->stockItem->setMaxSaleQty($maxSaleQty);
+        $this->setData(self::IS_DECIMAL_DIVIDED, $isDecimalDivided);
     }
 
     /**
      * @inheritdoc
      */
-    public function isUseConfigBackorders(): bool
+    public function getStockStatusChangedAuto(): ?bool
     {
-        return (bool)$this->stockItem->getUseConfigBackorders();
+        return $this->getData(self::STOCK_STATUS_CHANGED_AUTO);
     }
 
     /**
      * @inheritdoc
      */
-    public function setUseConfigBackorders(bool $useConfigBackorders): void
+    public function setStockStatusChangedAuto(?bool $stockStatusChangedAuto): void
     {
-        $this->stockItem->setUseConfigBackorders($useConfigBackorders);
+        $this->setData(self::STOCK_STATUS_CHANGED_AUTO, $stockStatusChangedAuto);
     }
 
     /**
      * @inheritdoc
      */
-    public function getBackorders(): int
+    public function getStockThresholdQty(): ?float
     {
-        return $this->stockItem->getBackorders();
+        return $this->getData(self::STOCK_THRESHOLD_QTY);
     }
 
     /**
      * @inheritdoc
      */
-    public function setBackorders(int $backOrders): void
+    public function setStockThresholdQty(?float $stockThresholdQty): void
     {
-        $this->stockItem->setBackorders($backOrders);
+        $this->setData(self::STOCK_THRESHOLD_QTY, $stockThresholdQty);
     }
 
     /**
      * @inheritdoc
      */
-    public function isUseConfigNotifyStockQty(): bool
+    public function getExtensionAttributes()
     {
-        return (bool)$this->stockItem->getUseConfigNotifyStockQty();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setUseConfigNotifyStockQty(bool $useConfigNotifyStockQty): void
-    {
-        $this->stockItem->setUseConfigNotifyStockQty($useConfigNotifyStockQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getNotifyStockQty(): float
-    {
-        return $this->stockItem->getNotifyStockQty();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setNotifyStockQty(float $notifyStockQty): void
-    {
-        $this->stockItem->setNotifyStockQty($notifyStockQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isUseConfigQtyIncrements(): bool
-    {
-        return (bool)$this->stockItem->getUseConfigQtyIncrements();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setUseConfigQtyIncrements(bool $useConfigQtyIncrements): void
-    {
-        $this->stockItem->setUseConfigQtyIncrements($useConfigQtyIncrements);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getQtyIncrements(): float
-    {
-        $qtyIncrements = $this->stockItem->getQtyIncrements();
-        if (false === $qtyIncrements) {
-            return 0;
+        $extensionAttributes = $this->_getExtensionAttributes();
+        if (null === $extensionAttributes) {
+            $extensionAttributes = $this->extensionAttributesFactory->create(StockItemConfigurationInterface::class);
+            $this->setExtensionAttributes($extensionAttributes);
         }
-        return $qtyIncrements;
+        return $extensionAttributes;
     }
 
     /**
      * @inheritdoc
      */
-    public function setQtyIncrements(float $qtyIncrements): void
+    public function setExtensionAttributes(StockItemConfigurationExtensionInterface $extensionAttributes)
     {
-        $this->stockItem->setQtyIncrements($qtyIncrements);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isUseConfigEnableQtyInc(): bool
-    {
-        return (bool)$this->stockItem->getUseConfigEnableQtyInc();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setUseConfigEnableQtyInc(bool $useConfigEnableQtyInc): void
-    {
-        $this->stockItem->setUseConfigEnableQtyInc($useConfigEnableQtyInc);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isEnableQtyIncrements(): bool
-    {
-        return (bool)$this->stockItem->getEnableQtyIncrements();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setEnableQtyIncrements(bool $enableQtyIncrements): void
-    {
-        $this->stockItem->setEnableQtyIncrements($enableQtyIncrements);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isUseConfigManageStock(): bool
-    {
-        return (bool)$this->stockItem->getUseConfigManageStock();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setUseConfigManageStock(bool $useConfigManageStock): void
-    {
-        $this->stockItem->setUseConfigManageStock($useConfigManageStock);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isManageStock(): bool
-    {
-        return (bool)$this->stockItem->getManageStock();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setManageStock(bool $manageStock): void
-    {
-        $this->stockItem->setManageStock($manageStock);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getLowStockDate(): string
-    {
-        $lowStockDate = $this->stockItem->getLowStockDate();
-        return null === $lowStockDate ? '' : $lowStockDate;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setLowStockDate(string $lowStockDate): void
-    {
-        $this->stockItem->setLowStockDate($lowStockDate);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isDecimalDivided(): bool
-    {
-        return (bool)$this->stockItem->getIsDecimalDivided();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setIsDecimalDivided(bool $isDecimalDivided): void
-    {
-        $this->stockItem->setIsDecimalDivided($isDecimalDivided);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getStockStatusChangedAuto(): bool
-    {
-        return (bool)$this->stockItem->getStockStatusChangedAuto();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setStockStatusChangedAuto(int $stockStatusChangedAuto): void
-    {
-        $this->stockItem->setStockStatusChangedAuto($stockStatusChangedAuto);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getStockThresholdQty(): float
-    {
-        return (float)$this->scopeConfig->getValue(
-            \Magento\CatalogInventory\Model\Configuration::XML_PATH_STOCK_THRESHOLD_QTY,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        $this->_setExtensionAttributes($extensionAttributes);
     }
 }
