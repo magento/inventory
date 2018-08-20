@@ -13,11 +13,5 @@
         <column xsi:type="int" name="stock_id" padding="10" nullable="true"/>
         <column xsi:type="varchar" name="config_option" nullable="false" length="255"/>
         <column xsi:type="varchar" name="value" nullable="false" length="255"/>
-        <!-- <constraint xsi:type="primary" name="PRIMARY">
-            <column name="sku"/>
-            <column name="source_code"/>
-            <column name="stock_id"/>
-            <column name="config_option"/>
-        </constraint>-->
     </table>
 </schema>

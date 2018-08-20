@@ -16,7 +16,7 @@ use Magento\Framework\App\ResourceConnection;
  * If specified $sourceCode only => SOURCE CONFIG
  * If specified $sourceCode && $sku => SOURCE ITEM CONFIG
  */
-class GetConfigurationValue
+class SetConfigurationValue
 {
     /**
      * @var ResourceConnection
@@ -33,45 +33,53 @@ class GetConfigurationValue
 
     /**
      * @param string $configOption
-     * @param string|null $sku
-     * @param string|null $sourceCode
+     * @param string|null $value
      * @param int|null $stockId
-     * @return null|string
+     * @param string|null $sourceCode
+     * @param string|null $sku
+     * @return void
      */
     public function execute(
         string $configOption,
+        ?string $value,
         int $stockId = null,
         string $sourceCode = null,
         string $sku = null
-    ): ?string {
+    ): void {
         $connection = $this->resourceConnection->getConnection();
         $inventoryConfigurationTable = $this->resourceConnection->getTableName('inventory_configuration');
 
-        $select = $connection->select()
-            ->from($inventoryConfigurationTable, 'value')
-            ->where('config_option = ?', $configOption)
-            ->limit(1);
-
+        $where = [];
+        $where[] = $connection->quoteInto('config_option = ?', $configOption);
         if (isset($stockId)) {
-            $select->where('stock_id = ?', $stockId);
+            $where['stock_id = ?'] = $stockId;
         } else {
-            $select->where('stock_id IS NULL');
+            $where[] = 'stock_id IS NULL';
         }
 
         if (isset($sourceCode)) {
-            $select->where('source_code = ?', $sourceCode);
+            $where['source_code = ?'] = $sourceCode;
         } else {
-            $select->where('source_code IS NULL');
+            $where[] = 'source_code IS NULL';
         }
 
         if (isset($sku)) {
-            $select->where('sku = ?', $sku);
+            $where['sku =?'] = $sku;
         } else {
-            $select->where('sku IS NULL');
+            $where[] = 'sku IS NULL';
         }
 
-        $value = $connection->fetchOne($select);
+        $connection->delete($inventoryConfigurationTable, $where);
 
-        return ($value === false) ? null : $value;
+        if ($value !== null) {
+            $data = [
+                'sku' => $sku,
+                'source_code' => $sourceCode,
+                'stock_id' => $stockId,
+                'config_option' => $configOption,
+                'value' => $value
+            ];
+            $connection->insert($inventoryConfigurationTable, $data);
+        }
     }
 }

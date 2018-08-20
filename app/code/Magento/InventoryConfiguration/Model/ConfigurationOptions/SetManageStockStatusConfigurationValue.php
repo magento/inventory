@@ -9,9 +9,24 @@ namespace Magento\InventoryConfiguration\Model\ConfigurationOptions;
 
 use Magento\InventoryConfigurationApi\Api\SetManageStockStatusConfigurationValueInterface;
 use Magento\InventoryConfigurationApi\Api\StockItemConfigurationInterface;
+use Magento\InventoryConfiguration\Model\ResourceModel\SetConfigurationValue;
 
 class SetManageStockStatusConfigurationValue implements SetManageStockStatusConfigurationValueInterface
 {
+    /**
+     * @var SetConfigurationValue
+     */
+    private $setConfigurationValue;
+
+    /**
+     * @param SetConfigurationValue $setConfigurationValue
+     */
+    public function __construct(
+        SetConfigurationValue $setConfigurationValue
+    ) {
+        $this->setConfigurationValue = $setConfigurationValue;
+    }
+
     /**
      * @param string $sku
      * @param int $stockId
@@ -20,7 +35,13 @@ class SetManageStockStatusConfigurationValue implements SetManageStockStatusConf
      */
     public function forStockItem(string $sku, int $stockId, ?int $manageStock): void
     {
-        // TODO: Implement forStockItem() method.
+        $this->setConfigurationValue->execute(
+            StockItemConfigurationInterface::MANAGE_STOCK,
+            (string)$manageStock,
+            $stockId,
+            null,
+            $sku
+        );
     }
 
     /**
@@ -30,7 +51,11 @@ class SetManageStockStatusConfigurationValue implements SetManageStockStatusConf
      */
     public function forStock(int $stockId, ?int $manageStock): void
     {
-        // TODO: Implement forStock() method.
+        $this->setConfigurationValue->execute(
+            StockItemConfigurationInterface::MANAGE_STOCK,
+            (string)$manageStock,
+            $stockId
+        );
     }
 
     /**
@@ -39,6 +64,9 @@ class SetManageStockStatusConfigurationValue implements SetManageStockStatusConf
      */
     public function forGlobal(?int $manageStock): void
     {
-        // TODO: Implement forGlobal() method.
+        $this->setConfigurationValue->execute(
+            StockItemConfigurationInterface::MANAGE_STOCK,
+            (string)$manageStock
+        );
     }
 }

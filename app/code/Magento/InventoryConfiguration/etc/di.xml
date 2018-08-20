@@ -27,4 +27,5 @@
     <preference for="Magento\InventoryConfigurationApi\Api\GetNotifyStockQtyConfigurationValueInterface" type="Magento\InventoryConfiguration\Model\ConfigurationOptions\GetNotifyStockQtyConfigurationValue"/>
     <preference for="Magento\InventoryConfigurationApi\Api\GetAutoReturnToStockConfigurationValueInterface" type="Magento\InventoryConfiguration\Model\ConfigurationOptions\GetAutoReturnToStockConfigurationValue"/>
     <preference for="Magento\InventoryConfigurationApi\Api\GetStockThresholdQtyConfigurationValueInterface" type="Magento\InventoryConfiguration\Model\ConfigurationOptions\GetStockThresholdQtyConfigurationValue"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\SetManageStockStatusConfigurationValueInterface" type="Magento\InventoryConfiguration\Model\ConfigurationOptions\SetManageStockStatusConfigurationValue"/>
 </config>
