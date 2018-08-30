@@ -45,7 +45,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.manage_stock.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.manage_stock.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.manage_stock.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>
@@ -94,7 +94,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.min_qty.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.min_qty.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.min_qty.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>
@@ -246,7 +246,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.max_sale_qty.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.max_sale_qty.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.max_sale_qty.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>
@@ -296,7 +296,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.enable_qty_increments.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.enable_qty_increments.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.enable_qty_increments.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>
@@ -345,58 +345,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.qty_increments.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.qty_increments.valueFromConfig</link>
-                    </links>
-                    <exports>
-                        <link name="checked">${$.parentName}.value:disabled</link>
-                    </exports>
-                </settings>
-                <formElements>
-                    <checkbox>
-                        <settings>
-                            <description translate="true">Use Config Settings</description>
-                            <valueMap>
-                                <map name="false" xsi:type="string">0</map>
-                                <map name="true" xsi:type="string">1</map>
-                            </valueMap>
-                        </settings>
-                    </checkbox>
-                </formElements>
-            </field>
-        </container>
-        <container name="container_auto_return_to_stock" component="Magento_Ui/js/form/components/group" sortOrder="70">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="formElement" xsi:type="string">container</item>
-                    <item name="label" xsi:type="string" translate="true">Automatically Return Credit Memo Item to Stock</item>
-                    <item name="dataScope" xsi:type="string">auto_return_to_stock</item>
-                </item>
-            </argument>
-            <field name="value" formElement="select" sortOrder="10">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="rawOptions" xsi:type="boolean">true</item>
-                    </item>
-                </argument>
-                <settings>
-                    <dataType>text</dataType>
-                    <dataScope>value</dataScope>
-                    <label translate="true">Automatically Return Credit Memo Item to Stock</label>
-                </settings>
-                <formElements>
-                    <select>
-                        <settings>
-                            <options class="Magento\Config\Model\Config\Source\Yesno"/>
-                        </settings>
-                    </select>
-                </formElements>
-            </field>
-            <field name="use_config_value" component="Magento_InventoryConfigurationAdminUi/js/components/use-config-settings" formElement="checkbox">
-                <settings>
-                    <dataScope>use_config_value</dataScope>
-                    <links>
-                        <link name="linkedValue">${ $.provider }:data.inventory_configuration.auto_return_to_stock.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.auto_return_to_stock.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.qty_increments.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>
@@ -442,7 +391,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.stock_threshold_qty.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.stock_threshold_qty.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.stock_threshold_qty.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>

@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurationAdminUi\Plugin\InventoryAdminUi\Ui\SourceDataProvider;
 
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
-use Magento\InventoryConfigurationApi\Api\GetBackordersConfigurationValueInterface;
-use Magento\InventoryConfigurationApi\Api\GetNotifyStockQtyConfigurationValueInterface;
+use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 
 /**
  * Customize source form. Add configuration data
@@ -17,25 +17,17 @@ use Magento\InventoryConfigurationApi\Api\GetNotifyStockQtyConfigurationValueInt
 class SourceConfigurationPlugin
 {
     /**
-     * @var GetBackordersConfigurationValueInterface
+     * @var GetSourceConfigurationInterface
      */
-    private $getBackordersConfigurationValue;
+    private $getSourceConfiguration;
 
     /**
-     * @var GetNotifyStockQtyConfigurationValueInterface
-     */
-    private $getNotifyStockQtyConfigurationValue;
-
-    /**
-     * @param GetBackordersConfigurationValueInterface $getBackordersConfigurationValue
-     * @param GetNotifyStockQtyConfigurationValueInterface $getNotifyStockQtyConfigurationValue
+     * @param GetSourceConfigurationInterface $getSourceConfiguration
      */
     public function __construct(
-        GetBackordersConfigurationValueInterface $getBackordersConfigurationValue,
-        GetNotifyStockQtyConfigurationValueInterface $getNotifyStockQtyConfigurationValue
+        GetSourceConfigurationInterface $getSourceConfiguration
     ) {
-        $this->getBackordersConfigurationValue = $getBackordersConfigurationValue;
-        $this->getNotifyStockQtyConfigurationValue = $getNotifyStockQtyConfigurationValue;
+        $this->getSourceConfiguration = $getSourceConfiguration;
     }
 
     /**
@@ -46,10 +38,15 @@ class SourceConfigurationPlugin
     public function afterGetData(SourceDataProvider $subject, array $data): array
     {
         if ('inventory_source_form_data_source' === $subject->getName()) {
+            $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
             foreach ($data as $sourceCode => &$sourceData) {
+                $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode);
                 $sourceData['inventory_configuration'] = [
-                    'backorders' => $this->getBackordersConfigData($sourceCode),
-                    'notify_stock_qty' => $this->getNotifyStockQtyConfigData($sourceCode)
+                    'backorders' => $this->getBackordersConfigData($sourceConfiguration, $globalSourceConfiguration),
+                    'notify_stock_qty' => $this->getNotifyStockQtyConfigData(
+                        $sourceConfiguration,
+                        $globalSourceConfiguration
+                    )
                 ];
             }
         }
@@ -57,34 +54,40 @@ class SourceConfigurationPlugin
     }
 
     /**
-     * @param string $sourceCode
+     * @param SourceItemConfigurationInterface $sourceConfiguration
+     * @param SourceItemConfigurationInterface $globalSourceConfiguration
      * @return array
      */
-    private function getBackordersConfigData(string $sourceCode): array
-    {
-        $globalValue = $this->getBackordersConfigurationValue->forGlobal();
-        $stockValue = $this->getBackordersConfigurationValue->forSource($sourceCode);
+    private function getBackordersConfigData(
+        SourceItemConfigurationInterface $sourceConfiguration,
+        SourceItemConfigurationInterface $globalSourceConfiguration
+    ): array {
+        $globalValue = $globalSourceConfiguration->getBackorders();
+        $sourceValue = $sourceConfiguration->getBackorders();
 
         return [
-            'value' => $stockValue ?? $globalValue,
-            'use_config_value' => isset($stockValue) ? "0" : "1",
+            'value' => $sourceValue ?? $globalValue,
+            'use_config_value' => isset($sourceValue) ? "0" : "1",
             'default_value' => $globalValue
         ];
     }
 
     /**
-     * @param string $sourceCode
+     * @param SourceItemConfigurationInterface $sourceConfiguration
+     * @param SourceItemConfigurationInterface $globalSourceConfiguration
      * @return array
      */
-    private function getNotifyStockQtyConfigData(string $sourceCode): array
-    {
-        $globalValue = $this->getNotifyStockQtyConfigurationValue->forGlobal();
-        $stockValue = $this->getNotifyStockQtyConfigurationValue->forSource($sourceCode);
+    private function getNotifyStockQtyConfigData(
+        SourceItemConfigurationInterface $sourceConfiguration,
+        SourceItemConfigurationInterface $globalSourceConfiguration
+    ): array {
+        $globalValue = $globalSourceConfiguration->getNotifyStockQty();
+        $sourceValue = $sourceConfiguration->getNotifyStockQty();
 
         return [
-            'value' => $stockValue ?? $globalValue,
-            'use_config_value' => isset($stockValue) ? "0" : "1",
-            'valueFromConfig' => $globalValue
+            'value' => $sourceValue ?? $globalValue,
+            'use_config_value' => isset($sourceValue) ? "0" : "1",
+            'default_value' => $globalValue
         ];
     }
 }

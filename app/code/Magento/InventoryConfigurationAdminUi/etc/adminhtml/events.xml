@@ -6,7 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_inventory_source_save_after">
+        <observer name="save_source_configuration_data" instance="Magento\InventoryConfigurationAdminUi\Observer\SaveSourceConfigurationData"/>
+    </event>
     <event name="save_stock_controller_processor_after_save">
-        <observer name="save_stock_configuration_data" instance="Magento\InventoryConfigurationAdminUi\Observer\SaveStockConfiguration"/>
+        <observer name="save_stock_configuration_data" instance="Magento\InventoryConfigurationAdminUi\Observer\SaveStockConfigurationData"/>
     </event>
 </config>

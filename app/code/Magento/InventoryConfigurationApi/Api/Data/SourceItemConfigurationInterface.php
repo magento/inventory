@@ -14,6 +14,12 @@ use Magento\Framework\Api\ExtensibleDataInterface;
  */
 interface SourceItemConfigurationInterface extends ExtensibleDataInterface
 {
+    /**
+     * Default source configuration path
+     */
+    const XML_PATH_NOTIFY_STOCK_QTY = 'cataloginventory/item_options/notify_stock_qty';
+    const XML_PATH_BACKORDERS = 'cataloginventory/item_options/backorders';
+
     const BACKORDERS_NO = 0;
     const BACKORDERS_YES_NONOTIFY = 1;
     const BACKORDERS_YES_NOTIFY = 2;

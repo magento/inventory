@@ -39,7 +39,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.backorders.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.backorders.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.backorders.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>
@@ -80,7 +80,7 @@
                     <dataScope>use_config_value</dataScope>
                     <links>
                         <link name="linkedValue">${ $.provider }:data.inventory_configuration.notify_stock_qty.value</link>
-                        <link name="valueFromConfig">${ $.provider }:data.inventory_configuration.notify_stock_qty.valueFromConfig</link>
+                        <link name="defaultValue">${ $.provider }:data.inventory_configuration.notify_stock_qty.default_value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.value:disabled</link>

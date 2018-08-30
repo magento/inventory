@@ -12,7 +12,7 @@ use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 /**
  * @api
  */
-interface GetStockItemConfigurationInterface
+interface GetStockConfigurationInterface
 {
     /**
      * @param string $sku

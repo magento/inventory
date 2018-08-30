@@ -9,7 +9,9 @@
     <!-- Configuration query interfaces -->
     <preference for="Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetStockItemConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveStockItemConfiguration"/>
+<!--
     <preference for="Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\StockItemConfiguration"/>
+-->
     <!-- Product types -->
     <preference for="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface" type="Magento\InventoryConfiguration\Model\IsSourceItemManagementAllowedForProductType"/>
     <preference for="Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface" type="Magento\InventoryConfiguration\Model\GetAllowedProductTypesForSourceItemManagement"/>
@@ -17,4 +19,11 @@
         <plugin name="allow_negative_min_qty_in_config"
                 type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty\AllowNegativeMinQtyInConfigPlugin"/>
     </type>
+    <!-- Inventory Configuration -->
+    <preference for="Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\SourceItemConfiguration"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\StockItemConfiguration"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetSourceConfiguration"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveSourceConfiguration"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetStockConfiguration"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveStockConfiguration"/>
 </config>

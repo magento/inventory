@@ -14,7 +14,7 @@ use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
  *
  * @api
  */
-interface SaveStockItemConfigurationInterface
+interface SaveStockConfigurationInterface
 {
     /**
      * @param string $sku

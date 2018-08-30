@@ -128,6 +128,22 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
+    public function isQtyDecimal(): ?bool
+    {
+        return $this->getData(self::IS_QTY_DECIMAL);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setIsQtyDecimal(?bool $isQtyDecimal): void
+    {
+        $this->setData(self::IS_QTY_DECIMAL, $isQtyDecimal);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function isDecimalDivided(): ?bool
     {
         return $this->getData(self::IS_DECIMAL_DIVIDED);

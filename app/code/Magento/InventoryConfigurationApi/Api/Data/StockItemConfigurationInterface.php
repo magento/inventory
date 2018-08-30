@@ -14,6 +14,17 @@ use Magento\Framework\Api\ExtensibleDataInterface;
  */
 interface StockItemConfigurationInterface extends ExtensibleDataInterface
 {
+    /**
+     * Default source configuration path
+     */
+    const XML_PATH_MIN_QTY = 'cataloginventory/item_options/min_qty';
+    const XML_PATH_MIN_SALE_QTY = 'cataloginventory/item_options/min_sale_qty';
+    const XML_PATH_MAX_SALE_QTY = 'cataloginventory/item_options/max_sale_qty';
+    const XML_PATH_MANAGE_STOCK = 'cataloginventory/item_options/manage_stock';
+    const XML_PATH_ENABLE_QTY_INCREMENTS = 'cataloginventory/item_options/enable_qty_increments';
+    const XML_PATH_QTY_INCREMENTS = 'cataloginventory/item_options/qty_increments';
+    const XML_PATH_STOCK_THRESHOLD_QTY = 'cataloginventory/options/stock_threshold_qty';
+
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
@@ -24,6 +35,7 @@ interface StockItemConfigurationInterface extends ExtensibleDataInterface
     const ENABLE_QTY_INCREMENTS = 'enable_qty_increments';
     const MANAGE_STOCK = 'manage_stock';
     const LOW_STOCK_DATE = 'low_stock_date';
+    const IS_QTY_DECIMAL = 'is_qty_decimal';
     const IS_DECIMAL_DIVIDED = 'is_decimal_divided';
     const STOCK_STATUS_CHANGED_AUTO = 'stock_status_changed_auto';
     const STOCK_THRESHOLD_QTY = 'stock_threshold_qty';
@@ -105,6 +117,17 @@ interface StockItemConfigurationInterface extends ExtensibleDataInterface
      * @return void
      */
     public function setLowStockDate(?string $lowStockDate): void;
+
+    /**
+     * @return bool|null
+     */
+    public function isQtyDecimal(): ?bool;
+
+    /**
+     * @param bool|null $isQtyDecimal
+     * @return void
+     */
+    public function setIsQtyDecimal(?bool $isQtyDecimal): void;
 
     /**
      * @return bool|null

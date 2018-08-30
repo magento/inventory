@@ -9,7 +9,7 @@ namespace Magento\InventoryConfigurationApi\Api;
 
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 
-interface SaveSourceItemConfigurationInterface
+interface SaveSourceConfigurationInterface
 {
     /**
      * @param string $sku

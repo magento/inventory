@@ -10,7 +10,7 @@ define([
 
     return checkbox.extend({
         defaults: {
-            valueFromConfig: '',
+            defaultValue: '',
             linkedValue: ''
         },
 
@@ -20,7 +20,7 @@ define([
         initObservable: function () {
             return this
                 ._super()
-                .observe(['valueFromConfig', 'linkedValue']);
+                .observe(['defaultValue', 'linkedValue']);
         },
 
         /**
@@ -28,7 +28,7 @@ define([
          */
         'onCheckedChanged': function (newChecked) {
             if (newChecked) {
-                this.linkedValue(this.valueFromConfig());
+                this.linkedValue(this.defaultValue());
             }
 
             this._super(newChecked);
