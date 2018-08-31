@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\InventoryReservationsApi;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -19,9 +19,9 @@ use Magento\Framework\Exception\LocalizedException;
 class PreventAppendReservationOnNotManageItemsInStockPlugin
 {
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
      * @var StockConfigurationInterface
@@ -29,14 +29,14 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
     private $stockConfiguration;
 
     /**
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockItemConfiguration
      * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        GetStockConfigurationInterface $getStockItemConfiguration,
         StockConfigurationInterface $stockConfiguration
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getStockConfiguration = $getStockItemConfiguration;
         $this->stockConfiguration = $stockConfiguration;
     }
 
@@ -56,7 +56,7 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
 
         $reservationToAppend = [];
         foreach ($reservations as $reservation) {
-            $stockItemConfiguration = $this->getStockItemConfiguration->execute(
+            $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
                 $reservation->getSku(),
                 $reservation->getStockId()
             );

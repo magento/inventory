@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model;
 
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -21,7 +21,7 @@ use Magento\Framework\Exception\InputException;
 class GetProductSalableQty implements GetProductSalableQtyInterface
 {
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
     private $getStockItemConfiguration;
 
@@ -46,14 +46,14 @@ class GetProductSalableQty implements GetProductSalableQtyInterface
     private $getProductTypesBySkus;
 
     /**
-     * @param GetStockItemConfigurationInterface $getStockItemConfig
+     * @param GetStockConfigurationInterface $getStockItemConfig
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      */
     public function __construct(
-        GetStockItemConfigurationInterface $getStockItemConfig,
+        GetStockConfigurationInterface $getStockItemConfig,
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
@@ -77,7 +77,7 @@ class GetProductSalableQty implements GetProductSalableQtyInterface
             return 0;
         }
 
-        $stockItemConfig = $this->getStockItemConfiguration->execute($sku, $stockId);
+        $stockItemConfig = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
         $minQty = $stockItemConfig->getMinQty();
 
         $productQtyInStock = $stockItemData[GetStockItemDataInterface::QUANTITY]

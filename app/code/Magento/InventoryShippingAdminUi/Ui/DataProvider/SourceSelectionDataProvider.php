@@ -8,15 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryShippingAdminUi\Ui\DataProvider;
 
 use Magento\Framework\Api\Filter;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Sales\Model\OrderRepository;
-use Magento\Sales\Model\Order\Item;
-use Magento\Ui\DataProvider\AbstractDataProvider;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\Framework\App\RequestInterface;
-use Magento\InventoryShippingAdminUi\Ui\DataProvider\GetSourcesByStockIdSkuAndQty;
+use Magento\Sales\Model\Order\Item;
+use Magento\Sales\Model\OrderRepository;
+use Magento\Ui\DataProvider\AbstractDataProvider;
 
 class SourceSelectionDataProvider extends AbstractDataProvider
 {
@@ -36,9 +35,9 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     private $stockByWebsiteIdResolver;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
      * @var GetSourcesByStockIdSkuAndQty
@@ -57,7 +56,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
      * @param RequestInterface $request
      * @param OrderRepository $orderRepository
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockItemConfiguration
      * @param GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty
      * @param array $meta
      * @param array $data
@@ -70,7 +69,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         RequestInterface $request,
         OrderRepository $orderRepository,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        GetStockConfigurationInterface $getStockItemConfiguration,
         GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty,
         array $meta = [],
         array $data = []
@@ -79,7 +78,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         $this->request = $request;
         $this->orderRepository = $orderRepository;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getStockConfiguration = $getStockItemConfiguration;
         $this->getSourcesByStockIdSkuAndQty = $getSourcesByStockIdSkuAndQty;
     }
 
@@ -168,7 +167,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
      */
     private function isManageStock($itemSku, $stockId)
     {
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($itemSku, $stockId);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($itemSku, $stockId);
 
         return $stockItemConfiguration->isManageStock();
     }

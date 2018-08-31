@@ -113,7 +113,6 @@
                 </formElements>
             </field>
         </container>
-        <!-- TODO: What exactly value should be displayed with checked "Use config value"? If dynamicRows then need resolve problem with data -->
         <fieldset name="container_min_sale_qty" sortOrder="30">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -122,7 +121,7 @@
             </argument>
             <settings>
                 <label translate="true"/>
-                <dataScope>stock_data</dataScope>
+                <dataScope>min_sale_qty</dataScope>
             </settings>
             <field name="min_sale_qty" component="Magento_CatalogInventory/js/components/qty-validator-changer" sortOrder="0" formElement="input">
                 <argument name="data" xsi:type="array">
@@ -137,7 +136,7 @@
                     </validation>
                     <label translate="true">Minimum Qty Allowed in Shopping Cart</label>
                     <visible>false</visible>
-                    <dataScope>min_sale_qty</dataScope>
+                    <dataScope>value</dataScope>
 <!--                    <imports>
                         <link name="handleChanges">${$.provider}:data.product.stock_data.is_qty_decimal</link>
                     </imports>-->
@@ -159,7 +158,7 @@
                         <class name="admin__field-use-config">true</class>
                         <class name="admin__field-no-label">true</class>
                     </additionalClasses>
-                    <dataScope>use_config_min_sale_qty</dataScope>
+                    <dataScope>use_config_value</dataScope>
                 </settings>
                 <formElements>
                     <checkbox class="Magento\CatalogInventory\Ui\Component\Product\Form\Element\UseConfigSettings">
@@ -265,6 +264,49 @@
                 </formElements>
             </field>
         </container>
+        <field name="is_qty_decimal" sortOrder="600" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="rawOptions" xsi:type="boolean">true</item>
+                    <item name="value" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Qty Uses Decimals</label>
+                <dataScope>is_qty_decimal</dataScope>
+                <imports>
+                    <link name="visible">${ $.provider }:data.inventory_configuration.manage_stock.value</link>
+                </imports>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="is_decimal_divided" sortOrder="700" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="value" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Allow Multiple Boxes for Shipping</label>
+                <dataScope>is_decimal_divided</dataScope>
+                <imports>
+                    <link name="visible">${ $.provider }:data.inventory_configuration.manage_stock.value</link>
+                </imports>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
         <container name="container_enable_qty_increments" component="Magento_Ui/js/form/components/group" sortOrder="50">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

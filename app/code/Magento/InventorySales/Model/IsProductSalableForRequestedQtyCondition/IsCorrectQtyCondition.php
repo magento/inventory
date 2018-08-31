@@ -9,7 +9,7 @@ namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\Math\Division as MathDivision;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
@@ -25,7 +25,7 @@ use Magento\Framework\Phrase;
 class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
 {
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
     private $getStockItemConfiguration;
 
@@ -60,7 +60,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     private $productSalableResultFactory;
 
     public function __construct(
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        GetStockConfigurationInterface $getStockItemConfiguration,
         StockConfigurationInterface $configuration,
         GetReservationsQuantityInterface $getReservationsQuantity,
         GetStockItemDataInterface $getStockItemData,
@@ -83,7 +83,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
+        $stockItemConfiguration = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
 
         if ($this->isMinSaleQuantityCheckFailed($stockItemConfiguration, $requestedQty)) {
             return $this->createErrorResult(

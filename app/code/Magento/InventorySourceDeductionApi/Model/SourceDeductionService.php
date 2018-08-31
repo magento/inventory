@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySourceDeductionApi\Model;
 
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -28,9 +28,9 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     private $getSourceItemBySourceCodeAndSku;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
      * @var StockResolverInterface
@@ -40,18 +40,18 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     /**
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockItemConfiguration
      * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        GetStockConfigurationInterface $getStockItemConfiguration,
         StockResolverInterface $stockResolver
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getStockConfiguration = $getStockItemConfiguration;
         $this->stockResolver = $stockResolver;
     }
 
@@ -71,7 +71,7 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         foreach ($sourceDeductionRequest->getItems() as $item) {
             $itemSku = $item->getSku();
             $qty = $item->getQty();
-            $stockItemConfiguration = $this->getStockItemConfiguration->execute(
+            $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
                 $itemSku,
                 $stockId
             );

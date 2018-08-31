@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
@@ -40,14 +40,14 @@ class IsSalableWithReservationsConditionTest extends TestCase
     private $isProductSalableForRequestedQty;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
-     * @var SaveStockItemConfigurationInterface
+     * @var SaveStockConfigurationInterface
      */
-    private $saveStockItemConfiguration;
+    private $saveStockConfiguration;
 
     /**
      * @inheritdoc
@@ -61,11 +61,11 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
         $this->isProductSalableForRequestedQty
             = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
-        $this->getStockItemConfiguration = Bootstrap::getObjectManager()->get(
-            GetStockItemConfigurationInterface::class
+        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(
+            GetStockConfigurationInterface::class
         );
-        $this->saveStockItemConfiguration = Bootstrap::getObjectManager()->get(
-            SaveStockItemConfigurationInterface::class
+        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(
+            SaveStockConfigurationInterface::class
         );
     }
 
@@ -132,9 +132,9 @@ class IsSalableWithReservationsConditionTest extends TestCase
     public function testProductIsSalableWithUseConfigMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-        $stockItemConfiguration->setUseConfigMinQty(true);
-        $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockItemConfiguration->setMinQty(null);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         self::assertEquals(
             $isSalable,
@@ -178,10 +178,9 @@ class IsSalableWithReservationsConditionTest extends TestCase
     public function testProductIsSalableWithMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-        $stockItemConfiguration->setUseConfigMinQty(false);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(5);
-        $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         self::assertEquals(
             $isSalable,

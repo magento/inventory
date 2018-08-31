@@ -7,8 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
-use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -17,25 +16,17 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 class ManageStockCondition implements IsProductSalableInterface
 {
     /**
-     * @var StockConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $configuration;
+    private $getStockConfiguration;
 
     /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
-
-    /**
-     * @param StockConfigurationInterface $configuration
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
-        StockConfigurationInterface $configuration,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockConfigurationInterface $getStockItemConfiguration
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
-        $this->configuration = $configuration;
+        $this->getStockConfiguration = $getStockItemConfiguration;
     }
 
     /**
@@ -43,20 +34,11 @@ class ManageStockCondition implements IsProductSalableInterface
      */
     public function execute(string $sku, int $stockId): bool
     {
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-
-        $globalManageStock = $this->configuration->getManageStock();
-        $manageStock = false;
-        if ((
-                $stockItemConfiguration->isUseConfigManageStock() == 1 &&
-                $globalManageStock == 1
-            ) || (
-                $stockItemConfiguration->isUseConfigManageStock() == 0 &&
-                $stockItemConfiguration->isManageStock() == 1
-            )
-        ) {
-            $manageStock = true;
-        }
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+        $manageStock = $stockItemConfiguration->isManageStock() !== null
+            ? $stockItemConfiguration->isManageStock()
+            : $globalConfiguration->isManageStock();
 
         return !$manageStock;
     }

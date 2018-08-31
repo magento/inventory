@@ -7,23 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogAdminUi\Model;
 
-use Magento\CatalogInventory\Model\Configuration;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 
 /**
  * Check source items should be managed for given product sku
  */
 class CanManageSourceItemsBySku
 {
-    /**
-     * Provides manage stock global config value.
-     *
-     * @var ScopeConfigInterface
-     */
-    private $config;
-
     /**
      * Provides default stock id for current website in order to get correct stock configuration for product.
      *
@@ -34,23 +25,20 @@ class CanManageSourceItemsBySku
     /**
      * Provides stock item configuration for given product sku.
      *
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
     private $getStockItemConfiguration;
 
     /**
-     * @param ScopeConfigInterface $config
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $stockConfiguration
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        ScopeConfigInterface $config,
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        GetStockConfigurationInterface $stockConfiguration,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->config = $config;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getStockItemConfiguration = $stockConfiguration;
     }
 
     /**
@@ -59,15 +47,16 @@ class CanManageSourceItemsBySku
      */
     public function execute(string $sku = null): bool
     {
+        $globalConfiguration = $this->getStockItemConfiguration->forGlobal();
         if (null !== $sku) {
             $stockId = $this->defaultStockProvider->getId();
-            $itemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
+            $itemConfiguration = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
 
-            return $itemConfiguration->isUseConfigManageStock()
-                ? (bool)$this->config->getValue(Configuration::XML_PATH_MANAGE_STOCK)
-                : $itemConfiguration->isManageStock();
+            return $itemConfiguration->isManageStock() !== null
+                ? $itemConfiguration->isManageStock()
+                : $globalConfiguration->isManageStock();
         }
 
-        return (bool)$this->config->getValue(Configuration::XML_PATH_MANAGE_STOCK);
+        return $globalConfiguration->isManageStock();
     }
 }

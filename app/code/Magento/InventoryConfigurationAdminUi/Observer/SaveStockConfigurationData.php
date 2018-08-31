@@ -50,6 +50,14 @@ class SaveStockConfigurationData implements ObserverInterface
 
         $stockItemConfiguration = $this->stockItemConfigurationFactory->create();
 
+        if ($configOptions[StockItemConfigurationInterface::MANAGE_STOCK]['use_config_value']) {
+            $stockItemConfiguration->setManageStock(null);
+        } else {
+            $stockItemConfiguration->setManageStock(
+                (bool)$configOptions[StockItemConfigurationInterface::MANAGE_STOCK]['value']
+            );
+        }
+
         if ($configOptions[StockItemConfigurationInterface::MIN_QTY]['use_config_value']) {
             $stockItemConfiguration->setMinQty(null);
         } else {
@@ -97,6 +105,9 @@ class SaveStockConfigurationData implements ObserverInterface
                 (float)$configOptions[StockItemConfigurationInterface::STOCK_THRESHOLD_QTY]['value']
             );
         }
+
+        $stockItemConfiguration->setIsQtyDecimal((bool)$configOptions['is_qty_decimal']);
+        $stockItemConfiguration->setIsDecimalDivided((bool)$configOptions['is_decimal_divided']);
 
         $this->saveStockConfiguration->forStock($stockId, $stockItemConfiguration);
     }

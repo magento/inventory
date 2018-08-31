@@ -10,7 +10,7 @@ namespace Magento\InventorySales\Plugin\StockState;
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -39,29 +39,29 @@ class SuggestQtyPlugin
     private $storeManager;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
         GetProductSalableQtyInterface $getProductSalableQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockConfigurationInterface $getStockItemConfiguration
     ) {
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getStockConfiguration = $getStockItemConfiguration;
     }
 
     /**
@@ -90,7 +90,7 @@ class SuggestQtyPlugin
             $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
             $stockId = (int)$stock->getStockId();
 
-            $stockItemConfiguration = $this->getStockItemConfiguration->execute($productSku, $stockId);
+            $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
             $qtyIncrements = $stockItemConfiguration->getQtyIncrements();
 
             if ($qty <= 0 || $stockItemConfiguration->isManageStock() === false || $qtyIncrements < 2) {

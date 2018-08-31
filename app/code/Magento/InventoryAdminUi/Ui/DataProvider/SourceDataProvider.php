@@ -99,7 +99,9 @@ class SourceDataProvider extends DataProvider
                 $dataForSingle[$sourceCode] = [
                     'general' => $sourceGeneralData,
                 ];
-                return $dataForSingle;
+                $data = $dataForSingle;
+            } else {
+                $data = [];
             }
             $sessionData = $this->session->getSourceFormData(true);
             if (null !== $sessionData) {

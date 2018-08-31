@@ -38,17 +38,13 @@ class SourceConfigurationPlugin
     public function afterGetData(SourceDataProvider $subject, array $data): array
     {
         if ('inventory_source_form_data_source' === $subject->getName()) {
-            $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
-            foreach ($data as $sourceCode => &$sourceData) {
-                $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode);
-                $sourceData['inventory_configuration'] = [
-                    'backorders' => $this->getBackordersConfigData($sourceConfiguration, $globalSourceConfiguration),
-                    'notify_stock_qty' => $this->getNotifyStockQtyConfigData(
-                        $sourceConfiguration,
-                        $globalSourceConfiguration
-                    )
-                ];
+            if ($data) {
+                $data = $this->populateDataForExistingSource($data);
+            } else {
+                $data = $this->populateDataForNewSource();
             }
+
+
         }
         return $data;
     }
@@ -89,5 +85,51 @@ class SourceConfigurationPlugin
             'use_config_value' => isset($sourceValue) ? "0" : "1",
             'default_value' => $globalValue
         ];
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    private function populateDataForExistingSource(array $data): array
+    {
+        $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
+        foreach ($data as $sourceCode => &$sourceData) {
+            $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode);
+            $sourceData['inventory_configuration'] = [
+                'backorders' => $this->getBackordersConfigData($sourceConfiguration, $globalSourceConfiguration),
+                'notify_stock_qty' => $this->getNotifyStockQtyConfigData(
+                    $sourceConfiguration,
+                    $globalSourceConfiguration
+                )
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return array
+     */
+    private function populateDataForNewSource(): array
+    {
+        //todo: temporal solution. Need move this logic into inventory_source_form.xml
+        $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
+        $data[null] = [
+            'inventory_configuration' => [
+                'backorders' => [
+                    'value' => (int)$globalSourceConfiguration->getBackorders(),
+                    'use_config_value' => "1",
+                    'default_value' => (int)$globalSourceConfiguration->getBackorders()
+                ],
+                'notify_stock_qty' => [
+                    'value' => $globalSourceConfiguration->getNotifyStockQty(),
+                    'use_config_value' => "1",
+                    'default_value' => $globalSourceConfiguration->getNotifyStockQty()
+                ],
+            ],
+        ];
+
+        return $data;
     }
 }

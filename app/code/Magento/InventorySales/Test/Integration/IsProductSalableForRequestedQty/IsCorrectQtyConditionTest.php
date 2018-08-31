@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -20,12 +20,12 @@ use PHPUnit\Framework\TestCase;
 class IsCorrectQtyConditionTest extends TestCase
 {
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
     private $getStockItemConfig;
 
     /**
-     * @var SaveStockItemConfigurationInterface
+     * @var SaveStockConfigurationInterface
      */
     private $saveStockItemConfig;
 
@@ -35,14 +35,14 @@ class IsCorrectQtyConditionTest extends TestCase
     private $isProductSalableForRequestedQty;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
-     * @var SaveStockItemConfigurationInterface
+     * @var SaveStockConfigurationInterface
      */
-    private $saveStockItemConfiguration;
+    private $saveStockConfiguration;
 
     /**
      * @inheritdoc
@@ -51,15 +51,15 @@ class IsCorrectQtyConditionTest extends TestCase
     {
         parent::setUp();
 
-        $this->getStockItemConfig = Bootstrap::getObjectManager()->get(GetStockItemConfigurationInterface::class);
-        $this->saveStockItemConfig = Bootstrap::getObjectManager()->get(SaveStockItemConfigurationInterface::class);
+        $this->getStockItemConfig = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
+        $this->saveStockItemConfig = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
         $this->isProductSalableForRequestedQty
             = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
-        $this->getStockItemConfiguration = Bootstrap::getObjectManager()->get(
-            GetStockItemConfigurationInterface::class
+        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(
+            GetStockConfigurationInterface::class
         );
-        $this->saveStockItemConfiguration = Bootstrap::getObjectManager()->get(
-            SaveStockItemConfigurationInterface::class
+        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(
+            SaveStockConfigurationInterface::class
         );
     }
 
@@ -186,10 +186,9 @@ class IsCorrectQtyConditionTest extends TestCase
         bool $expectedResult
     ): void {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-        $stockItemConfiguration->setUseConfigMinSaleQty(false);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinSaleQty(7);
-        $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
         $this->assertEquals($expectedResult, $result->isSalable());
@@ -305,10 +304,9 @@ class IsCorrectQtyConditionTest extends TestCase
         bool $expectedResult
     ): void {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-        $stockItemConfiguration->setUseConfigMaxSaleQty(false);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMaxSaleQty(6);
-        $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
+        $this->saveStockConfiguration->execute($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
         $this->assertEquals($expectedResult, $result->isSalable());
@@ -429,12 +427,10 @@ class IsCorrectQtyConditionTest extends TestCase
         bool $expectedResult
     ): void {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-        $stockItemConfiguration->setUseConfigEnableQtyInc(false);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setEnableQtyIncrements(true);
-        $stockItemConfiguration->setUseConfigQtyIncrements(false);
         $stockItemConfiguration->setQtyIncrements(3);
-        $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
         $this->assertEquals($expectedResult, $result->isSalable());

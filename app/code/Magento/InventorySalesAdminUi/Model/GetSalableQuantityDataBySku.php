@@ -10,7 +10,7 @@ namespace Magento\InventorySalesAdminUi\Model;
 use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 
 /**
  * Get salable quantity data by sku
@@ -33,7 +33,7 @@ class GetSalableQuantityDataBySku
     private $getAssignedStockIdsBySku;
 
     /**
-     * @var GetStockItemConfigurationInterface
+     * @var GetStockConfigurationInterface
      */
     private $getStockItemConfiguration;
 
@@ -41,13 +41,13 @@ class GetSalableQuantityDataBySku
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param StockRepositoryInterface $stockRepository
      * @param GetAssignedStockIdsBySku $getAssignedStockIdsBySku
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
         GetProductSalableQtyInterface $getProductSalableQty,
         StockRepositoryInterface $stockRepository,
         GetAssignedStockIdsBySku $getAssignedStockIdsBySku,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockConfigurationInterface $getStockItemConfiguration
     ) {
         $this->getProductSalableQty = $getProductSalableQty;
         $this->stockRepository = $stockRepository;
@@ -67,7 +67,7 @@ class GetSalableQuantityDataBySku
             foreach ($stockIds as $stockId) {
                 $stockId = (int)$stockId;
                 $stock = $this->stockRepository->get($stockId);
-                $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
+                $stockItemConfiguration = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
                 $isManageStock = $stockItemConfiguration->isManageStock();
                 $stockInfo[] = [
                     'stock_name' => $stock->getName(),

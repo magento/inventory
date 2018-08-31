@@ -7,8 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
+use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
@@ -20,11 +21,6 @@ use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
  */
 class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQtyInterface
 {
-    /**
-     * @var GetStockItemConfigurationInterface
-     */
-    private $getStockItemConfiguration;
-
     /**
      * @var GetStockItemDataInterface
      */
@@ -41,21 +37,34 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
     private $productSalabilityErrorFactory;
 
     /**
-     * @param GetStockItemConfigurationInterface $getStockItemConfiguration
-     * @param GetStockItemDataInterface $getStockItemData
+     * @var GetSourceConfigurationInterface
+     */
+    private $getSourceConfiguration;
+
+    /**
+     * @var CollectionFactory
+     */
+    private $sourceItemCollectionFactory;
+
+    /**
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
+     * @param GetStockItemDataInterface $getStockItemData
+     * @param GetSourceConfigurationInterface $getSourceConfiguration
+     * @param CollectionFactory $sourceItemCollectionFactory
      */
     public function __construct(
-        GetStockItemConfigurationInterface $getStockItemConfiguration,
-        GetStockItemDataInterface $getStockItemData,
         ProductSalableResultInterfaceFactory $productSalableResultFactory,
-        ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
+        ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
+        GetStockItemDataInterface $getStockItemData,
+        GetSourceConfigurationInterface $getSourceConfiguration,
+        CollectionFactory $sourceItemCollectionFactory
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
-        $this->getStockItemData = $getStockItemData;
         $this->productSalableResultFactory = $productSalableResultFactory;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
+        $this->getSourceConfiguration = $getSourceConfiguration;
+        $this->sourceItemCollectionFactory = $sourceItemCollectionFactory;
+        $this->getStockItemData = $getStockItemData;
     }
 
     /**
@@ -63,26 +72,39 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
      */
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
+        //todo; Temporal solution. Should be reworked.
+        $sourceItemCollection = $this->sourceItemCollectionFactory->create();
+        $sourceItemCollection->addFieldToSelect('source_code');
+        $sourceItemCollection->addFieldToFilter('sku', ['eq' => $sku]);
+        $sourceItemCollection->getSelect()->join(
+            ['link' => $sourceItemCollection->getTable('inventory_source_stock_link')],
+            'main_table.source_code = link.source_code',
+            []
+        )->where('link.stock_id = ?', $stockId);
 
-        if ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY) {
-            $stockItemData = $this->getStockItemData->execute($sku, $stockId);
-            if (null === $stockItemData) {
-                return $this->productSalableResultFactory->create(['errors' => []]);
-            }
+        foreach ($sourceItemCollection as $sourceItem) {
+            $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceItem->getSourceCode());
 
-            $backOrderQty = $requestedQty - $stockItemData[GetStockItemDataInterface::QUANTITY];
-            if ($backOrderQty > 0) {
-                $errors = [
-                    $this->productSalabilityErrorFactory->create([
+            if ($sourceItemConfiguration->getBackorders() === SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY) {
+                $stockItemData = $this->getStockItemData->execute($sku, $stockId);
+                if (null === $stockItemData) {
+                    return $this->productSalableResultFactory->create(['errors' => []]);
+                }
+
+                $backOrderQty = $requestedQty - $stockItemData[GetStockItemDataInterface::QUANTITY];
+                if ($backOrderQty > 0) {
+                    $errors = [
+                        $this->productSalabilityErrorFactory->create([
                             'code' => 'back_order-not-enough',
                             'message' => __(
                                 'We don\'t have as many quantity as you requested, '
                                 . 'but we\'ll back order the remaining %1.',
                                 $backOrderQty * 1
-                            )])
-                ];
-                return $this->productSalableResultFactory->create(['errors' => $errors]);
+                            )
+                        ])
+                    ];
+                    return $this->productSalableResultFactory->create(['errors' => $errors]);
+                }
             }
         }
 
