@@ -18,9 +18,12 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
-use Magento\Sales\Model\Order\Item as OrderItem;
+use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
+/**
+ * Create compensation reservation for canceled order item.
+ */
 class CancelOrderItemObserver implements ObserverInterface
 {
     /**
@@ -91,61 +94,140 @@ class CancelOrderItemObserver implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
-        /** @var OrderItem $item */
-        $item = $observer->getEvent()->getItem();
-        $qty = $item->getQtyToCancel();
-        if ($this->canCancelOrderItem($item) && $qty) {
-            try {
-                $productSku = $this->getSkusByProductIds->execute(
-                    [$item->getProductId()]
-                )[$item->getProductId()];
-            } catch (NoSuchEntityException $e) {
-                /**
-                 * As it was decided the Inventory should not use data constraints depending on Catalog
-                 * (these two systems are not highly coupled, i.e. Magento does not sync data between them, so that
-                 * it's possible that SKU exists in Catalog, but does not exist in Inventory and vice versa)
-                 * it is necessary for Magento to have an ability to process placed orders even with
-                 * deleted or non-existing products
-                 */
-                return;
+        /** @var OrderItemInterface $orderItem */
+        $orderItem = $observer->getEvent()->getItem();
+        if ($this->canCancelOrderItem($orderItem)) {
+            $itemsToSell = $this->getItemsToSell($orderItem);
+
+            if (!empty($itemsToSell)) {
+                $websiteId = $orderItem->getStore()->getWebsiteId();
+                $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
+                $salesChannel = $this->salesChannelFactory->create([
+                    'data' => [
+                        'type' => SalesChannelInterface::TYPE_WEBSITE,
+                        'code' => $websiteCode,
+                    ]
+                ]);
+
+                /** @var SalesEventInterface $salesEvent */
+                $salesEvent = $this->salesEventFactory->create([
+                    'type' => SalesEventInterface::EVENT_ORDER_CANCELED,
+                    'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+                    'objectId' => (string)$orderItem->getOrderId(),
+                ]);
+
+                $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
             }
-
-            $itemToSell = $this->itemsToSellFactory->create([
-                'sku' => $productSku,
-                'qty' => (float)$qty
-            ]);
-
-            $websiteId = $item->getStore()->getWebsiteId();
-            $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
-            $salesChannel = $this->salesChannelFactory->create([
-                'data' => [
-                    'type' => SalesChannelInterface::TYPE_WEBSITE,
-                    'code' => $websiteCode
-                ]
-            ]);
-
-            /** @var SalesEventInterface $salesEvent */
-            $salesEvent = $this->salesEventFactory->create([
-                'type' => SalesEventInterface::EVENT_ORDER_CANCELED,
-                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => (string)$item->getOrderId()
-            ]);
-
-            $this->placeReservationsForSalesEvent->execute([$itemToSell], $salesChannel, $salesEvent);
         }
 
-        $this->priceIndexer->reindexRow($item->getProductId());
+        $this->priceIndexer->reindexRow($orderItem->getProductId());
     }
 
     /**
-     * @param OrderItem $orderItem
+     * Can cancel order item.
+     *
+     * @param OrderItemInterface $orderItem
      * @return bool
      */
-    private function canCancelOrderItem(OrderItem $orderItem): bool
+    private function canCancelOrderItem(OrderItemInterface $orderItem): bool
     {
+        $result = false;
+
         if ($orderItem->getId() && $orderItem->getProductId() && !$orderItem->isDummy()) {
-            return true;
+            $result = true;
         }
-        return false;
+
+        return $result;
+    }
+
+    /**
+     * Get items to sell from order item.
+     *
+     * @param OrderItemInterface $orderItem
+     * @return array
+     */
+    private function getItemsToSell(OrderItemInterface $orderItem): array
+    {
+        $itemToSell = $itemsToCancel = [];
+
+        if ($orderItem->getHasChildren()) {
+            $itemsToCancel = $this->getItemsToCancelFromChildren(
+                $orderItem->getChildrenItems(),
+                $orderItem->getQtyToCancel()
+            );
+        } else {
+            $itemsToCancel = $this->getItemsToCancelFromOrderItem($orderItem);
+        }
+
+        foreach ($itemsToCancel as $productSku => $qty) {
+            $itemToSell[] = $this->itemsToSellFactory->create([
+                'sku' => $productSku,
+                'qty' => (float)$qty
+            ]);
+        }
+
+        return $itemToSell;
+    }
+
+    /**
+     * Prepare cancel data from order item children products.
+     *
+     * @param array $childrenItems
+     * @param int|float $qtyToCancel
+     * @return array
+     */
+    private function getItemsToCancelFromChildren(array $childrenItems, $qtyToCancel): array
+    {
+        $result = [];
+
+        /** @var OrderItemInterface $childrenItem */
+        foreach ($childrenItems as $childrenItem) {
+            try {
+                $childrenSku = $childrenItem->getSku() ?: $this->getSkusByProductIds->execute(
+                    [$childrenItem->getProductId()]
+                )[$childrenItem->getProductId()];
+                $result[$childrenSku] = $qtyToCancel;
+            } catch (NoSuchEntityException $e) {
+                /**
+                 * As it was decided the Inventory should not use data constraints depending on Catalog
+                 * (these two systems are not highly coupled, i.e. Magento does not sync data between them,
+                 * so that it's possible that SKU exists in Catalog, but does not exist in Inventory
+                 * and vice versa) it is necessary for Magento to have an ability to process placed orders
+                 * even with deleted or non-existing products
+                 */
+                continue;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Prepare cancel data from order item.
+     *
+     * @param OrderItemInterface $orderItem
+     * @return array
+     */
+    private function getItemsToCancelFromOrderItem(OrderItemInterface $orderItem): array
+    {
+        $result = [];
+
+        try {
+            $sku = $orderItem->getSku() ?: $this->getSkusByProductIds->execute(
+                [$orderItem->getProductId()]
+            )[$orderItem->getProductId()];
+            $result[$sku] = $orderItem->getQtyToCancel();
+        } catch (NoSuchEntityException $e) {
+            /**
+             * As it was decided the Inventory should not use data constraints depending on Catalog
+             * (these two systems are not highly coupled, i.e. Magento does not sync data between them,
+             * so that it's possible that SKU exists in Catalog, but does not exist in Inventory
+             * and vice versa) it is necessary for Magento to have an ability to process placed orders
+             * even with deleted or non-existing products
+             */
+            $result = [];
+        }
+
+        return $result;
     }
 }
