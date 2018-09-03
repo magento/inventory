@@ -38,9 +38,9 @@ interface SourceItemInterface extends ExtensibleDataInterface
     /**
      * Get source item sku
      *
-     * @return string|null
+     * @return string
      */
-    public function getSku();
+    public function getSku(): string;
 
     /**
      * Set source item sku
@@ -53,9 +53,9 @@ interface SourceItemInterface extends ExtensibleDataInterface
     /**
      * Get source code
      *
-     * @return string|null
+     * @return string
      */
-    public function getSourceCode();
+    public function getSourceCode(): string;
 
     /**
      * Set source code
@@ -68,9 +68,9 @@ interface SourceItemInterface extends ExtensibleDataInterface
     /**
      * Get source item quantity
      *
-     * @return float|null
+     * @return float
      */
-    public function getQuantity();
+    public function getQuantity(): float;
 
     /**
      * Set source item quantity
@@ -83,9 +83,9 @@ interface SourceItemInterface extends ExtensibleDataInterface
     /**
      * Get source item status (One of self::STATUS_*)
      *
-     * @return int|null
+     * @return int
      */
-    public function getStatus();
+    public function getStatus(): int;
 
     /**
      * Set source item status (One of self::STATUS_*)

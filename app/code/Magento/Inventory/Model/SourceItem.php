@@ -30,9 +30,9 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getSku()
+    public function getSku(): string
     {
-        return $this->getData(self::SKU);
+        return (string)$this->getData(self::SKU);
     }
 
     /**
@@ -46,9 +46,9 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getSourceCode()
+    public function getSourceCode(): string
     {
-        return $this->getData(self::SOURCE_CODE);
+        return (string)$this->getData(self::SOURCE_CODE);
     }
 
     /**
@@ -62,9 +62,9 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getQuantity()
+    public function getQuantity(): float
     {
-        return $this->getData(self::QUANTITY);
+        return (float)$this->getData(self::QUANTITY);
     }
 
     /**
@@ -78,9 +78,9 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getStatus()
+    public function getStatus(): int
     {
-        return $this->getData(self::STATUS);
+        return (int)$this->getData(self::STATUS);
     }
 
     /**
