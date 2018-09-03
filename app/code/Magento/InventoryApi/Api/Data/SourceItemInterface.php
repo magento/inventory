@@ -48,7 +48,7 @@ interface SourceItemInterface extends ExtensibleDataInterface
      * @param string|null $sku
      * @return void
      */
-    public function setSku($sku);
+    public function setSku(?string $sku);
 
     /**
      * Get source code
@@ -63,7 +63,7 @@ interface SourceItemInterface extends ExtensibleDataInterface
      * @param string|null $sourceCode
      * @return void
      */
-    public function setSourceCode($sourceCode);
+    public function setSourceCode(?string $sourceCode);
 
     /**
      * Get source item quantity
@@ -78,7 +78,7 @@ interface SourceItemInterface extends ExtensibleDataInterface
      * @param float|null $quantity
      * @return void
      */
-    public function setQuantity($quantity);
+    public function setQuantity(?float $quantity);
 
     /**
      * Get source item status (One of self::STATUS_*)
@@ -93,7 +93,7 @@ interface SourceItemInterface extends ExtensibleDataInterface
      * @param int|null $status
      * @return void
      */
-    public function setStatus($status);
+    public function setStatus(?int $status);
 
     /**
      * Retrieve existing extension attributes object
