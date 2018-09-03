@@ -103,7 +103,7 @@ class SetDataToLegacyCatalogInventory
 
             if ($legacyStockItem->getManageStock()) {
                 $legacyStockItem->setIsInStock($isInStock);
-                $legacyStockItem->setQty((float)$sourceItem->getQuantity());
+                $legacyStockItem->setQty($sourceItem->getQuantity());
 
                 if (false === $this->stockStateProvider->verifyStock($legacyStockItem)) {
                     $isInStock = 0;
@@ -111,8 +111,8 @@ class SetDataToLegacyCatalogInventory
             }
 
             $this->setDataToLegacyStockItem->execute(
-                (string)$sourceItem->getSku(),
-                (float)$sourceItem->getQuantity(),
+                $sourceItem->getSku(),
+                $sourceItem->getQuantity(),
                 $isInStock
             );
             $productIds[] = $productId;
