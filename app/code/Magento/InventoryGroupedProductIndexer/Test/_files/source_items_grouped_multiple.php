@@ -11,21 +11,19 @@ use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
+$objectManager = Bootstrap::getObjectManager();
+
 /** @var DataObjectHelper $dataObjectHelper */
-$dataObjectHelper = Bootstrap::getObjectManager()->get(DataObjectHelper::class);
+$dataObjectHelper = $objectManager->get(DataObjectHelper::class);
 /** @var SourceItemInterfaceFactory $sourceItemFactory */
-$sourceItemFactory = Bootstrap::getObjectManager()->get(SourceItemInterfaceFactory::class);
+$sourceItemFactory = $objectManager->get(SourceItemInterfaceFactory::class);
 /** @var  SourceItemsSaveInterface $sourceItemsSave */
-$sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
+$sourceItemsSave = $objectManager->get(SourceItemsSaveInterface::class);
 
 /*
  * SKU          us-1    eu-1    eu-2    eu-3
  * simple_11    100     100     100     0
- * simple_21    100     100     0       0
- * simple_31    100     0       100     0
- * simple_12    100     0       0       0
- * simple_22    100     100     100     100
- * simple_32    100     0       0       0
+ * simple_22    100     100     0       0
  */
 
 $sourcesItemsData = [
@@ -68,14 +66,14 @@ $sourcesItemsData = [
     [
         SourceItemInterface::SOURCE_CODE => 'eu-2',
         SourceItemInterface::SKU => 'simple_22',
-        SourceItemInterface::QUANTITY => 100,
-        SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+        SourceItemInterface::QUANTITY => 0,
+        SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
     ],
     [
         SourceItemInterface::SOURCE_CODE => 'eu-3',
         SourceItemInterface::SKU => 'simple_22',
-        SourceItemInterface::QUANTITY => 100,
-        SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+        SourceItemInterface::QUANTITY => 0,
+        SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
     ],
 ];
 

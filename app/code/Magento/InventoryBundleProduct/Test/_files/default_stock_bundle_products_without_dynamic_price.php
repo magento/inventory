@@ -11,6 +11,7 @@ declare(strict_types=1);
  * However, if to create such a bundle product, it will be always out of stock.
  */
 
+use Magento\Bundle\Api\Data\LinkInterface;
 use Magento\Bundle\Api\Data\LinkInterfaceFactory;
 use Magento\Bundle\Api\Data\OptionInterfaceFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -23,10 +24,11 @@ use Magento\TestFramework\Helper\Bootstrap;
 Bootstrap::getInstance()->reinitialize();
 
 require __DIR__ . '/../../../../../../dev/tests/integration/testsuite/Magento/Catalog/_files/products.php';
+
 /** @var $objectManager \Magento\TestFramework\ObjectManager */
 $objectManager = Bootstrap::getObjectManager();
 /** @var ProductRepositoryInterface $productRepository */
-$productRepository = $objectManager->create(ProductRepositoryInterface::class);
+$productRepository = $objectManager->get(ProductRepositoryInterface::class);
 $sampleProduct = $productRepository->get('simple');
 /** @var $productBundleInStock Product */
 $productBundleInStock = $objectManager->create(Product::class);
@@ -48,7 +50,8 @@ $productBundleInStock->setTypeId(Type::TYPE_BUNDLE)
             [
                 'title' => 'Bundle Product Items',
                 'default_title' => 'Bundle Product Items',
-                'type' => 'select', 'required' => 1,
+                'type' => 'select',
+                'required' => 1,
                 'delete' => '',
             ],
         ]
@@ -77,7 +80,7 @@ if ($productBundleInStock->getBundleOptionsData()) {
             if (!empty($bundleLinks[$key])) {
                 foreach ($bundleLinks[$key] as $linkData) {
                     if (!(bool)$linkData['delete']) {
-                        /** @var \Magento\Bundle\Api\Data\LinkInterface$link */
+                        /** @var LinkInterface $link */
                         $link = $objectManager->create(LinkInterfaceFactory::class)->create(['data' => $linkData]);
                         $linkProduct = $productRepository->getById($linkData['product_id']);
                         $link->setSku($linkProduct->getSku());
@@ -119,7 +122,8 @@ $productBundleOutOfStock->setTypeId(Type::TYPE_BUNDLE)
             [
                 'title' => 'Bundle Product Items',
                 'default_title' => 'Bundle Product Items',
-                'type' => 'select', 'required' => 1,
+                'type' => 'select',
+                'required' => 1,
                 'delete' => '',
             ],
         ]
@@ -148,7 +152,7 @@ if ($productBundleOutOfStock->getBundleOptionsData()) {
             if (!empty($bundleLinks[$key])) {
                 foreach ($bundleLinks[$key] as $linkData) {
                     if (!(bool)$linkData['delete']) {
-                        /** @var \Magento\Bundle\Api\Data\LinkInterface$link */
+                        /** @var LinkInterface $link */
                         $link = $objectManager->create(LinkInterfaceFactory::class)->create(['data' => $linkData]);
                         $linkProduct = $productRepository->getById($linkData['product_id']);
                         $link->setSku($linkProduct->getSku());

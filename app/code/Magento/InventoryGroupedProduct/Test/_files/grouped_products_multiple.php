@@ -5,9 +5,10 @@
  */
 declare(strict_types=1);
 
+use Magento\Catalog\Api\Data\ProductLinkInterface;
 use Magento\Catalog\Api\Data\ProductLinkInterfaceFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Visibility;
@@ -15,7 +16,7 @@ use Magento\GroupedProduct\Model\Product\Type\Grouped;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Store\Model\Website;
 
-\Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
+Bootstrap::getInstance()->reinitialize();
 
 $website = Bootstrap::getObjectManager()->create(Website::class);
 $website->load('us_website', 'code');
@@ -27,8 +28,8 @@ $productLinkFactory = Bootstrap::getObjectManager()->get(ProductLinkInterfaceFac
 $productIds = ['11', '22'];
 
 foreach ($productIds as $productId) {
-    /** @var $product Product */
-    $product = Bootstrap::getObjectManager()->create(Product::class);
+    /** @var $product ProductInterface */
+    $product = Bootstrap::getObjectManager()->create(ProductInterface::class);
     $product->setTypeId(Type::TYPE_SIMPLE)
         ->setId($productId)
         ->setWebsiteIds($websiteIds)
@@ -43,8 +44,8 @@ foreach ($productIds as $productId) {
     $linkedProducts[] = $productRepository->save($product);
 }
 
-/** @var $groupedProductInStock Product */
-$groupedProductInStock = Bootstrap::getObjectManager()->create(Product::class);
+/** @var ProductInterface $groupedProductInStock */
+$groupedProductInStock = Bootstrap::getObjectManager()->create(ProductInterface::class);
 
 $groupedProductInStock->setTypeId(Grouped::TYPE_CODE)
     ->setId(1)
@@ -57,7 +58,7 @@ $groupedProductInStock->setTypeId(Grouped::TYPE_CODE)
     ->setStockData(['use_config_manage_stock' => 1, 'is_in_stock' => 1]);
 
 foreach ($linkedProducts as $linkedProduct) {
-    /** @var \Magento\Catalog\Api\Data\ProductLinkInterface $productLink */
+    /** @var ProductLinkInterface $productLink */
     $productLink = $productLinkFactory->create();
     $productLink->setSku($groupedProductInStock->getSku())
         ->setLinkType('associated')
@@ -72,8 +73,8 @@ $groupedProductInStock->setProductLinks($newLinks);
 
 $productRepository->save($groupedProductInStock);
 
-/** @var $groupedProductOutOfStock Product */
-$groupedProductOutOfStock = Bootstrap::getObjectManager()->create(Product::class);
+/** @var ProductInterface $groupedProductOutOfStock */
+$groupedProductOutOfStock = Bootstrap::getObjectManager()->create(ProductInterface::class);
 
 $groupedProductOutOfStock->setTypeId(Grouped::TYPE_CODE)
     ->setId(12)
@@ -86,7 +87,7 @@ $groupedProductOutOfStock->setTypeId(Grouped::TYPE_CODE)
     ->setStockData(['use_config_manage_stock' => 1, 'is_in_stock' => 0]);
 
 foreach ($linkedProducts as $linkedProduct) {
-    /** @var \Magento\Catalog\Api\Data\ProductLinkInterface $productLink */
+    /** @var ProductLinkInterface $productLink */
     $productLink = $productLinkFactory->create();
     $productLink->setSku($groupedProductOutOfStock->getSku())
         ->setLinkType('associated')

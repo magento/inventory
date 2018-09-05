@@ -12,6 +12,7 @@ use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 $objectManager = Bootstrap::getObjectManager();
+
 /** @var SourceItemRepositoryInterface $sourceItemRepository */
 $sourceItemRepository = $objectManager->get(SourceItemRepositoryInterface::class);
 /** @var SourceItemsDeleteInterface $sourceItemsDelete */
@@ -21,12 +22,7 @@ $searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);
 
 $searchCriteria = $searchCriteriaBuilder->addFilter(
     SourceItemInterface::SKU,
-    [
-        'simple_11',
-        'simple_22',
-        'grouped_in_stock',
-        'grouped_out_of_stock',
-    ],
+    ['simple_11', 'simple_22', 'grouped_in_stock', 'grouped_out_of_stock'],
     'in'
 )->create();
 $sourceItems = $sourceItemRepository->getList($searchCriteria)->getItems();

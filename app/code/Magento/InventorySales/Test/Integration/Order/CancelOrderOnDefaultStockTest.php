@@ -125,13 +125,13 @@ class CancelOrderOnDefaultStockTest extends TestCase
     /**
      * Cancel order with simple product.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/default_stock_simple_product.php
+     * @magentoDataFixture Magento/Catalog/_files/product_simple.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      */
     public function testCancelOrderWithInStockSimpleProduct(): void
     {
-        $sku = 'simple_in_stock';
+        $sku = 'simple';
         $quote = $this->getQuote();
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, 4, (int)$quote->getId());
