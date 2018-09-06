@@ -77,7 +77,7 @@ class GetStockConfiguration extends Action implements UiActionInterface
     public function execute()
     {
         $resultJson = $this->resultJsonFactory->create();
-        $sku = (string)$this->getRequest()->getParam('sku', null);
+        $sku = (string)$this->getRequest()->getParam('sku', '');
         $stockId = (int)$this->getRequest()->getParam('stockId', null);
 
         if ($stockId === null) {
@@ -217,9 +217,9 @@ class GetStockConfiguration extends Action implements UiActionInterface
         StockItemConfigurationInterface $stockConfiguration,
         StockItemConfigurationInterface $stockItemConfiguration = null
     ): ?float {
-        $stockItemValue = $stockItemConfiguration !== null || $stockItemConfiguration->getMinSaleQty() !== null
-            ? $stockItemConfiguration->getMinSaleQty()
-            : null;
+        $stockItemValue = $stockItemConfiguration === null || $stockItemConfiguration->getMinSaleQty() === null
+            ? null
+            : $stockItemConfiguration->getMinSaleQty();
         $stockValue = $stockConfiguration->getMinSaleQty();
 
         return $stockItemValue !== null ? $stockItemValue : $stockValue;
@@ -311,7 +311,7 @@ class GetStockConfiguration extends Action implements UiActionInterface
      */
     private function isDecimalDevided(
         StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $stockItemConfiguration
+        StockItemConfigurationInterface $stockItemConfiguration = null
     ): int {
         $itemConfiguration = $stockItemConfiguration === null || $stockItemConfiguration->isDecimalDivided() === null
             ? null
@@ -335,7 +335,7 @@ class GetStockConfiguration extends Action implements UiActionInterface
      * @param StockItemConfigurationInterface $stockItemConfiguration
      * @return string
      */
-    private function getEnableQtyIncrementsUseConfig(StockItemConfigurationInterface $stockItemConfiguration)
+    private function getEnableQtyIncrementsUseConfig(StockItemConfigurationInterface $stockItemConfiguration = null)
     {
         return $stockItemConfiguration === null || $stockItemConfiguration->isEnableQtyIncrements() === null
             ? '1'
@@ -357,7 +357,7 @@ class GetStockConfiguration extends Action implements UiActionInterface
      * @param StockItemConfigurationInterface $stockItemConfiguration
      * @return string
      */
-    private function getMaxSaleQtyUseConfig(StockItemConfigurationInterface $stockItemConfiguration)
+    private function getMaxSaleQtyUseConfig(StockItemConfigurationInterface $stockItemConfiguration = null)
     {
         return $stockItemConfiguration === null || $stockItemConfiguration->getMaxSaleQty() === null
             ? '1'
@@ -393,8 +393,8 @@ class GetStockConfiguration extends Action implements UiActionInterface
      */
     private function getMinSaleQtyUseConfig(StockItemConfigurationInterface $stockItemConfiguration = null)
     {
-        return $stockItemConfiguration !== null || $stockItemConfiguration->getMinSaleQty() !== null
-            ? '0'
-            : '1';
+        return $stockItemConfiguration === null || $stockItemConfiguration->getMinSaleQty() === null
+            ? '1'
+            : '0';
     }
 }

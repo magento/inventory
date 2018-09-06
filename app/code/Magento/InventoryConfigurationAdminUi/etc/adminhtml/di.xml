@@ -18,19 +18,23 @@
             <argument name="modifiers" xsi:type="array">
                 <item name="add_stock_list_to_advance_inventory" xsi:type="array">
                     <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\AddStockList</item>
-                    <item name="sortOrder" xsi:type="number">600</item>
+                    <item name="sortOrder" xsi:type="number">700</item>
                 </item>
                 <item name="remove_backorders" xsi:type="array">
                     <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\Backorders</item>
-                    <item name="sortOrder" xsi:type="number">700</item>
+                    <item name="sortOrder" xsi:type="number">800</item>
                 </item>
                 <item name="remove_notify_for_quantity_below" xsi:type="array">
                     <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\NotifyForQtyBelow</item>
-                    <item name="sortOrder" xsi:type="number">800</item>
+                    <item name="sortOrder" xsi:type="number">900</item>
                 </item>
                 <item name="source_item_configuration" xsi:type="array">
                     <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\SourceItemConfiguration</item>
-                    <item name="sortOrder" xsi:type="number">900</item>
+                    <item name="sortOrder" xsi:type="number">1000</item>
+                </item>
+                <item name="assigned_sources_grid_visibility" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\AssignedSourcesVisibility</item>
+                    <item name="sortOrder" xsi:type="number">1100</item>
                 </item>
             </argument>
         </arguments>
