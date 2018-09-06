@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="inventory_source_listing_columns">
+        <column name="notify_stock_qty" sortOrder="500">
+            <settings>
+                <controlVisibility>false</controlVisibility>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="backorders" sortOrder="501">
+            <settings>
+                <controlVisibility>false</controlVisibility>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="stock_ids" sortOrder="502">
+            <settings>
+                <controlVisibility>false</controlVisibility>
+                <visible>false</visible>
+            </settings>
+        </column>
+    </columns>
+</listing>

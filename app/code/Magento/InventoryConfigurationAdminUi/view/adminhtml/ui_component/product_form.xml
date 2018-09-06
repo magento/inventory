@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <modal name="advanced_inventory_modal">
+        <fieldset name="stock_data" component="Magento_InventoryConfigurationAdminUi/js/product/form/reload-stock-data">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="reloadUrl" xsi:type="url" path="inventoryConfiguration/stock/getStockConfiguration"/>
+                </item>
+            </argument>
+            <field name="stock_list" formElement="select" component="Magento_InventoryConfigurationAdminUi/js/product/form/stock-list" sortOrder="10">
+                <settings>
+                    <dataType>text</dataType>
+                    <label translate="true">Stock List</label>
+                    <dataScope>stock_list</dataScope>
+                    <listens>
+                        <link name="${$.namespace}.${$.namespace}.sources.assigned_sources:recordData">onAssignSourcesChanged</link>
+                    </listens>
+                </settings>
+            </field>
+        </fieldset>
+    </modal>
+    <fieldset name="sources" component="Magento_Ui/js/form/components/fieldset">
+        <container name="assign_sources_container">
+            <container name="advanced_inventory_button" component="Magento_InventoryConfigurationAdminUi/js/product/form/advanced-inventory-button">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="imports" xsi:type="array">
+                            <item name="onAssignSourcesChanged" xsi:type="string">${$.namespace}.${$.namespace}.sources.assigned_sources:recordData</item>
+                        </item>
+                    </item>
+                </argument>
+            </container>
+        </container>
+        <dynamicRows name="assigned_sources" component="Magento_Ui/js/dynamic-rows/dynamic-rows-grid">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="map" xsi:type="array">
+                        <item name="backorders" xsi:type="string">backorders</item>
+                        <item name="backorders_source" xsi:type="string">backorders</item>
+                        <item name="notify_stock_qty" xsi:type="string">notify_stock_qty</item>
+                        <item name="notify_stock_qty_source" xsi:type="string">notify_stock_qty</item>
+                        <item name="stock_ids" xsi:type="string">stock_ids</item>
+                    </item>
+                    <item name="identificationDRProperty" xsi:type="string">source_code</item>
+                </item>
+            </argument>
+            <container name="record" component="Magento_Ui/js/dynamic-rows/record">
+                <field name="notify_stock_qty" formElement="input" sortOrder="60">
+                    <settings>
+                        <dataType>text</dataType>
+                        <dataScope>notify_stock_qty</dataScope>
+                        <label translate="true">Notify Quantity</label>
+                        <imports>
+                            <link name="disabled">${$.parentName}.notify_stock_qty_use_default:checked</link>
+                        </imports>
+                    </settings>
+                </field>
+                <field name="notify_stock_qty_source" formElement="input" sortOrder="70">
+                    <settings>
+                        <visible>false</visible>
+                        <dataType>text</dataType>
+                        <dataScope>backorders_source</dataScope>
+                    </settings>
+                </field>
+                <field name="notify_stock_qty_use_default" component="Magento_InventoryConfigurationAdminUi/js/components/use-config-settings" formElement="checkbox" sortOrder="70">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="default" xsi:type="number">1</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataScope>notify_stock_qty_use_default</dataScope>
+                        <label translate="true">Notify Quantity Use default</label>
+                        <links>
+                            <link name="defaultValue">${$.provider}:${$.parentScope}.notify_stock_qty_source</link>
+                            <link name="linkedValue">${$.provider}:${$.parentScope}.notify_stock_qty</link>
+                        </links>
+                    </settings>
+                    <formElements>
+                        <checkbox>
+                            <settings>
+                                <valueMap>
+                                    <map name="false" xsi:type="string">0</map>
+                                    <map name="true" xsi:type="string">1</map>
+                                </valueMap>
+                            </settings>
+                        </checkbox>
+                    </formElements>
+                </field>
+                <field name="backorders" formElement="select" sortOrder="75">
+                    <settings>
+                        <dataType>text</dataType>
+                        <dataScope>backorders</dataScope>
+                        <label translate="true">Backorders</label>
+                        <imports>
+                            <link name="disabled">${$.parentName}.backorders_use_default:checked</link>
+                        </imports>
+                    </settings>
+                    <formElements>
+                        <select>
+                            <settings>
+                                <options class="Magento\InventoryConfigurationAdminUi\Model\Source\Backorders"/>
+                            </settings>
+                        </select>
+                    </formElements>
+                </field>
+                <field name="backorders_source" formElement="input" sortOrder="76">
+                    <settings>
+                        <visible>false</visible>
+                        <dataType>text</dataType>
+                        <dataScope>backorders_source</dataScope>
+                    </settings>
+                </field>
+                <field name="backorders_use_default" component="Magento_InventoryConfigurationAdminUi/js/components/use-config-settings" formElement="checkbox" sortOrder="77">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="default" xsi:type="number">1</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <dataScope>backorders_use_default</dataScope>
+                        <label translate="true">Backorders Use default</label>
+                        <links>
+                            <link name="defaultValue">${$.provider}:${$.parentScope}.backorders_source</link>
+                            <link name="linkedValue">${$.provider}:${$.parentScope}.backorders</link>
+                        </links>
+                    </settings>
+                    <formElements>
+                        <checkbox>
+                            <settings>
+                                <valueMap>
+                                    <map name="false" xsi:type="string">0</map>
+                                    <map name="true" xsi:type="string">1</map>
+                                </valueMap>
+                            </settings>
+                        </checkbox>
+                    </formElements>
+                </field>
+                <field name="stock_ids" formElement="input" sortOrder="78">
+                    <settings>
+                        <visible>false</visible>
+                        <dataType>text</dataType>
+                        <dataScope>stock_ids</dataScope>
+                    </settings>
+                </field>
+            </container>
+        </dynamicRows>
+    </fieldset>
+</form>

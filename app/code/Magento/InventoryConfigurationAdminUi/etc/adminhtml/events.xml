@@ -12,4 +12,8 @@
     <event name="save_stock_controller_processor_after_save">
         <observer name="save_stock_configuration_data" instance="Magento\InventoryConfigurationAdminUi\Observer\SaveStockConfigurationData"/>
     </event>
+    <event name="controller_action_catalog_product_save_entity_after">
+        <observer name="save_source_item_configuration_data" instance="Magento\InventoryConfigurationAdminUi\Observer\SaveSourceItemConfigurationData"/>
+        <observer name="save_stock_item_configuration_data" instance="Magento\InventoryConfigurationAdminUi\Observer\SaveStockItemConfigurationData"/>
+    </event>
 </config>

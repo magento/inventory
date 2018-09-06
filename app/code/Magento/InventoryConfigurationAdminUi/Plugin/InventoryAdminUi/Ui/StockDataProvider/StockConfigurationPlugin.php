@@ -244,7 +244,6 @@ class StockConfigurationPlugin
      */
     private function populateDataForNewStock(): array
     {
-        //todo: temporal solution. Need move this logic into inventory_stock_form.xml
         $globalStockConfiguration = $this->getStockConfiguration->forGlobal();
         $data[null] = [
             'inventory_configuration' => [

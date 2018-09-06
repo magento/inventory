@@ -137,9 +137,6 @@
                     <label translate="true">Minimum Qty Allowed in Shopping Cart</label>
                     <visible>false</visible>
                     <dataScope>value</dataScope>
-<!--                    <imports>
-                        <link name="handleChanges">${$.provider}:data.product.stock_data.is_qty_decimal</link>
-                    </imports>-->
                 </settings>
             </field>
             <field name="use_config_min_sale_qty" component="Magento_CatalogInventory/js/components/use-config-min-sale-qty" sortOrder="2" formElement="checkbox">

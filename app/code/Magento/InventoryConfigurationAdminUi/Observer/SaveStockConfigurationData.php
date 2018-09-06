@@ -106,8 +106,10 @@ class SaveStockConfigurationData implements ObserverInterface
             );
         }
 
-        $stockItemConfiguration->setIsQtyDecimal((bool)$configOptions['is_qty_decimal']);
-        $stockItemConfiguration->setIsDecimalDivided((bool)$configOptions['is_decimal_divided']);
+        $isQtyDecimal = (bool)$configOptions[StockItemConfigurationInterface::IS_QTY_DECIMAL];
+        $stockItemConfiguration->setIsQtyDecimal($isQtyDecimal);
+        $isDecimalDivided = (bool)$configOptions[StockItemConfigurationInterface::IS_DECIMAL_DIVIDED];
+        $stockItemConfiguration->setIsDecimalDivided($isDecimalDivided);
 
         $this->saveStockConfiguration->forStock($stockId, $stockItemConfiguration);
     }

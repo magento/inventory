@@ -43,8 +43,6 @@ class SourceConfigurationPlugin
             } else {
                 $data = $this->populateDataForNewSource();
             }
-
-
         }
         return $data;
     }
@@ -113,7 +111,6 @@ class SourceConfigurationPlugin
      */
     private function populateDataForNewSource(): array
     {
-        //todo: temporal solution. Need move this logic into inventory_source_form.xml
         $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
         $data[null] = [
             'inventory_configuration' => [

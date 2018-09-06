@@ -11,5 +11,28 @@
     </type>
     <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
         <plugin name="add_source_configuration_data" type="Magento\InventoryConfigurationAdminUi\Plugin\InventoryAdminUi\Ui\SourceDataProvider\SourceConfigurationPlugin" sortOrder="100"/>
+        <plugin name="add_source_configuration_data_to_source_listing" type="Magento\InventoryConfigurationAdminUi\Plugin\InventoryAdminUi\Ui\SourceDataProvider\SourceListingConfigurationPlugin" sortOrder="200"/>
     </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="add_stock_list_to_advance_inventory" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\AddStockList</item>
+                    <item name="sortOrder" xsi:type="number">600</item>
+                </item>
+                <item name="remove_backorders" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\Backorders</item>
+                    <item name="sortOrder" xsi:type="number">700</item>
+                </item>
+                <item name="remove_notify_for_quantity_below" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\NotifyForQtyBelow</item>
+                    <item name="sortOrder" xsi:type="number">800</item>
+                </item>
+                <item name="source_item_configuration" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Modifier\SourceItemConfiguration</item>
+                    <item name="sortOrder" xsi:type="number">900</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
