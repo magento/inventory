@@ -1,11 +1,16 @@
 {
-  "inventory_configuration": {
-    "column": {
-      "sku": true,
-      "source_code": true,
-      "stock_id": true,
-      "config_option": true,
-      "value": true
+  "inventory_source_configuration": {
+    "constraint": {
+      "PRIMARY": true,
+      "INV_SOURCE_CONFIGURATION_SOURCE_CODE_INV_SOURCE_SOURCE_CODE": true,
+      "INVENTORY_SOURCE_CONFIGURATION_SOURCE_CODE_SKU": true
+    }
+  },
+  "inventory_stock_configuration": {
+    "constraint": {
+      "PRIMARY": true,
+      "INVENTORY_STOCK_CONFIGURATION_STOCK_ID_INVENTORY_STOCK_STOCK_ID": true,
+      "INVENTORY_STOCK_CONFIGURATION_STOCK_ID_SKU": true
     }
   },
   "patch_list": {

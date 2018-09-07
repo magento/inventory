@@ -175,8 +175,12 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         float $requestedQty
     ) : bool {
         // Minimum Qty Allowed in Shopping Cart
-        $defaultValue = $stockConfiguration->getMinSaleQty() !== null ?: $globalConfiguration->getMinSaleQty();
-        $minSaleQty = $stockItemConfiguration->getMinSaleQty() !== null ?: $defaultValue;
+        $defaultValue = $stockConfiguration->getMinSaleQty() !== null
+            ? $stockConfiguration->getMinSaleQty()
+            : $globalConfiguration->getMinSaleQty();
+        $minSaleQty = $stockItemConfiguration->getMinSaleQty() !== null
+            ? $stockItemConfiguration->getMinSaleQty()
+            : $defaultValue;
         if ($minSaleQty && $requestedQty < $minSaleQty) {
             return true;
         }
@@ -197,8 +201,12 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         float $requestedQty
     ) : bool {
         // Maximum Qty Allowed in Shopping Cart
-        $defaultValue = $stockConfiguration->getMaxSaleQty() !== null ?: $globalConfiguration->getMaxSaleQty();
-        $maxSaleQty = $stockItemConfiguration->getMaxSaleQty() !== null ?: $defaultValue;
+        $defaultValue = $stockConfiguration->getMaxSaleQty() !== null
+            ? $stockConfiguration->getMaxSaleQty()
+            : $globalConfiguration->getMaxSaleQty();
+        $maxSaleQty = $stockItemConfiguration->getMaxSaleQty() !== null
+            ? $stockItemConfiguration->getMaxSaleQty()
+            : $defaultValue;
         if ($maxSaleQty && $requestedQty > $maxSaleQty) {
             return true;
         }
@@ -219,8 +227,12 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         float $requestedQty
     ) : bool {
         // Qty Increments
-        $defaultValue = $stockConfiguration->getQtyIncrements() !== null ?: $globalConfiguration->getQtyIncrements();
-        $qtyIncrements = $stockItemConfiguration->getQtyIncrements() !== null ?: $defaultValue;
+        $defaultValue = $stockConfiguration->getQtyIncrements() !== null
+            ? $stockConfiguration->getQtyIncrements()
+            : $globalConfiguration->getQtyIncrements();
+        $qtyIncrements = $stockItemConfiguration->getQtyIncrements() !== null
+            ? $stockItemConfiguration->getQtyIncrements()
+            : $defaultValue;
         if ($qtyIncrements !== (float)0 && $this->mathDivision->getExactDivision($requestedQty, $qtyIncrements) !== 0) {
             return true;
         }

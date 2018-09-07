@@ -84,12 +84,15 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
 
-        /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $minQty = $this->getMinQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
 
         $qtyWithReservation = $stockItemData[GetStockItemDataInterface::QUANTITY] +
             $this->getReservationsQuantity->execute($sku, $stockId);
-        $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
+        $qtyLeftInStock = $qtyWithReservation - $minQty - $requestedQty;
         $isEnoughQty = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE] && $qtyLeftInStock >= 0;
         if (!$isEnoughQty) {
             $errors = [
@@ -101,5 +104,23 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
         return $this->productSalableResultFactory->create(['errors' => []]);
+    }
+
+    /**
+     * @param StockItemConfigurationInterface $globalConfiguration
+     * @param StockItemConfigurationInterface $stockConfiguration
+     * @param StockItemConfigurationInterface $stockItemConfiguration
+     * @return float
+     */
+    private function getMinQty(
+        StockItemConfigurationInterface $globalConfiguration,
+        StockItemConfigurationInterface $stockConfiguration,
+        StockItemConfigurationInterface $stockItemConfiguration
+    ): float {
+        $defaultValue = $stockConfiguration->getMinQty() !== null
+            ? $stockConfiguration->getMinQty()
+            : $globalConfiguration->getMinQty();
+
+        return $stockItemConfiguration->getMinQty() !== null ? $stockItemConfiguration->getMinQty(): $defaultValue;
     }
 }

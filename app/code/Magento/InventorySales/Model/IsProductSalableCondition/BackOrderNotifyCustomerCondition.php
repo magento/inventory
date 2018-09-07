@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
@@ -81,11 +82,10 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             'main_table.source_code = link.source_code',
             []
         )->where('link.stock_id = ?', $stockId);
-
+        $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
         foreach ($sourceItemCollection as $sourceItem) {
-            $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceItem->getSourceCode());
-
-            if ($sourceItemConfiguration->getBackorders() === SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY) {
+            $backorders = $this->getBackorders($sku, $sourceItem, $globalSourceConfiguration);
+            if ($backorders === SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY) {
                 $stockItemData = $this->getStockItemData->execute($sku, $stockId);
                 if (null === $stockItemData) {
                     return $this->productSalableResultFactory->create(['errors' => []]);
@@ -109,5 +109,28 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
         }
 
         return $this->productSalableResultFactory->create(['errors' => []]);
+    }
+
+    /**
+     * @param string $sku
+     * @param SourceItemInterface $sourceItem
+     * @param SourceItemConfigurationInterface $globalConfiguration
+     * @return int
+     */
+    private function getBackorders(
+        string $sku,
+        SourceItemInterface $sourceItem,
+        SourceItemConfigurationInterface $globalConfiguration
+    ): int {
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceItem->getSourceCode());
+        $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceItem->getSourceCode());
+
+        $defaultValue = $sourceConfiguration->getBackorders() !== null
+            ? $sourceConfiguration->getBackorders()
+            : $globalConfiguration->getBackorders();
+
+        return $sourceItemConfiguration->getBackorders() !== null
+            ? $sourceItemConfiguration->getBackorders()
+            : $defaultValue;
     }
 }

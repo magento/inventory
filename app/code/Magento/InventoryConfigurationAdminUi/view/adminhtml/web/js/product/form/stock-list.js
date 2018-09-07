@@ -14,12 +14,12 @@ define([
                 list: []
             },
 
-        /**
-         * Dynamically build stock dropdown on "Advanced Inventory" panel from assigned to product sources.
-         *
-         * @param {Object} data
-         */
-        onAssignSourcesChanged: function (data) {
+            /**
+             * Dynamically build stock dropdown on "Advanced Inventory" panel from assigned to product sources.
+             *
+             * @param {Object} data
+             */
+            onAssignSourcesChanged: function (data) {
                 var stockIds = [],
                     assignedStocks = [],
                     sourceStockIds;
@@ -65,7 +65,7 @@ define([
                      }
                  });*/
                 registry.get(current.parentName).reload(data);
-            },
+            }
         }
     );
 });

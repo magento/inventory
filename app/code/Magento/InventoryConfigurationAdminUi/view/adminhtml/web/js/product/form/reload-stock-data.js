@@ -10,7 +10,7 @@ define([
     'use strict';
 
     /**
-     * Makes ajax request
+     * Makes ajax request for retrieving stock configuration.
      *
      * @param {Object} data
      * @param {String} url
@@ -65,7 +65,7 @@ define([
             },
 
             /**
-             * Updates data from server.
+             * Updates stock configuration data from server.
              */
             reload: function (data) {
                 var current = this;
@@ -73,7 +73,7 @@ define([
                 makeRequest(data, this.reloadUrl).then(function (response) {
                     current.source.set('data.product.stock_data', response);
                 });
-            },
+            }
         }
     );
 });

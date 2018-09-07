@@ -10,7 +10,9 @@ namespace Magento\InventorySalesFrontendUi\Plugin\Block\Stockqty;
 use Magento\CatalogInventory\Block\Stockqty\AbstractStockqty;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
@@ -22,7 +24,7 @@ class AbstractStockqtyPlugin
     /**
      * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
      * @var StockByWebsiteIdResolverInterface
@@ -51,7 +53,7 @@ class AbstractStockqtyPlugin
 
     /**
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteId
-     * @param GetStockConfigurationInterface $getStockItemConfig
+     * @param GetStockConfigurationInterface $getStockConfiguration
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param CollectionFactory $sourceItemCollectionFactory
@@ -59,13 +61,13 @@ class AbstractStockqtyPlugin
      */
     public function __construct(
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
-        GetStockConfigurationInterface $getStockItemConfig,
+        GetStockConfigurationInterface $getStockConfiguration,
         GetProductSalableQtyInterface $getProductSalableQty,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         CollectionFactory $sourceItemCollectionFactory,
         GetSourceConfigurationInterface $getSourceConfiguration
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfig;
+        $this->getStockConfiguration = $getStockConfiguration;
         $this->stockByWebsiteId = $stockByWebsiteId;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
@@ -90,7 +92,11 @@ class AbstractStockqtyPlugin
         $sku = $subject->getProduct()->getSku();
         $websiteId = (int)$subject->getProduct()->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
-        $stockItemConfig = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+        $minQty = $this->getMinQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
+        $thresholdQty = $this->getThresholdQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
         //todo; Temporal solution. Should be reworked.
         $sourceItemCollection = $this->sourceItemCollectionFactory->create();
         $sourceItemCollection->addFieldToSelect('source_code');
@@ -100,13 +106,13 @@ class AbstractStockqtyPlugin
             'main_table.source_code = link.source_code',
             []
         )->where('link.stock_id = ?', $stockId);
-
+        $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
         foreach ($sourceItemCollection as $sourceItem) {
-            $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceItem->getSourceCode());
-            if (($sourceItemConfiguration->getBackorders() === SourceItemConfigurationInterface::BACKORDERS_NO
-                    || $sourceItemConfiguration->getBackorders() !== SourceItemConfigurationInterface::BACKORDERS_NO
-                    && $stockItemConfig->getMinQty() < 0)
-                && $this->getProductSalableQty->execute($sku, $stockId) <= $stockItemConfig->getStockThresholdQty()) {
+            $backorders = $this->getBackorders($sku, $sourceItem, $globalSourceConfiguration);
+            if (($backorders === SourceItemConfigurationInterface::BACKORDERS_NO
+                    || $backorders !== SourceItemConfigurationInterface::BACKORDERS_NO
+                    && $minQty < 0)
+                && $this->getProductSalableQty->execute($sku, $stockId) <= $thresholdQty) {
                 return true;
             }
         }
@@ -127,5 +133,66 @@ class AbstractStockqtyPlugin
         $websiteId = (int)$subject->getProduct()->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
         return $this->getProductSalableQty->execute($sku, $stockId);
+    }
+
+    /**
+     * @param string $sku
+     * @param SourceItemInterface $sourceItem
+     * @param SourceItemConfigurationInterface $globalConfiguration
+     * @return int
+     */
+    private function getBackorders(
+        string $sku,
+        SourceItemInterface $sourceItem,
+        SourceItemConfigurationInterface $globalConfiguration
+    ): int {
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceItem->getSourceCode());
+        $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceItem->getSourceCode());
+
+        $defaultValue = $sourceConfiguration->getBackorders() !== null
+            ? $sourceConfiguration->getBackorders()
+            : $globalConfiguration->getBackorders();
+
+        return $sourceItemConfiguration->getBackorders() !== null
+            ? $sourceItemConfiguration->getBackorders()
+            : $defaultValue;
+    }
+
+    /**
+     * @param StockItemConfigurationInterface $globalConfiguration
+     * @param StockItemConfigurationInterface $stockConfiguration
+     * @param StockItemConfigurationInterface $stockItemConfiguration
+     * @return float
+     */
+    private function getMinQty(
+        StockItemConfigurationInterface $globalConfiguration,
+        StockItemConfigurationInterface $stockConfiguration,
+        StockItemConfigurationInterface $stockItemConfiguration
+    ): float {
+        $defaultValue = $stockConfiguration->getMinQty() !== null
+            ? $stockConfiguration->getMinQty()
+            : $globalConfiguration->getMinQty();
+
+        return $stockItemConfiguration->getMinQty() !== null ? $stockItemConfiguration->getMinQty() : $defaultValue;
+    }
+
+    /**
+     * @param StockItemConfigurationInterface $globalConfiguration
+     * @param StockItemConfigurationInterface $stockConfiguration
+     * @param StockItemConfigurationInterface $stockItemConfiguration
+     * @return float
+     */
+    private function getThresholdQty(
+        StockItemConfigurationInterface $globalConfiguration,
+        StockItemConfigurationInterface $stockConfiguration,
+        StockItemConfigurationInterface $stockItemConfiguration
+    ): float {
+        $defaultValue = $stockConfiguration->getStockThresholdQty() !== null
+            ? $stockConfiguration->getStockThresholdQty()
+            : $globalConfiguration->getStockThresholdQty();
+
+        return $stockItemConfiguration->getStockThresholdQty() !== null
+            ? $stockItemConfiguration->getStockThresholdQty()
+            : $defaultValue;
     }
 }

@@ -4,7 +4,14 @@
  * See COPYING.txt for license details.
  */
 
-include 'simple_product.php';
+use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+
+include __DIR__ . '/../../Catalog/_files/product_simple.php';;
+
+$productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+$product = $productRepository->get('simple');
 /** @var $product \Magento\Catalog\Model\Product */
-$product->setStockData(['use_config_manage_stock' => 0, 'min_sale_qty' => 3]);
+$product->getExtensionAttributes()->getStockItem()->setMinSaleQty(3);
+$product->getExtensionAttributes()->getStockItem()->setUseConfigMinSaleQty(0);
 $product->save();
