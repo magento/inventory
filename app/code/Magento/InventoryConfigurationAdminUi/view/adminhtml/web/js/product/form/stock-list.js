@@ -5,17 +5,21 @@
 define([
     'Magento_Ui/js/form/element/select',
     'uiRegistry',
-    'underscore',
-    'Magento_Ui/js/modal/confirm'
-], function (Element, registry, _, confirm) {
+    'underscore'
+], function (Element, registry, _) {
     'use strict';
 
     return Element.extend({
             defaults: {
-                list: [],
+                list: []
             },
 
-            onAssignSourcesChanged: function (data) {
+        /**
+         * Dynamically build stock dropdown on "Advanced Inventory" panel from assigned to product sources.
+         *
+         * @param {Object} data
+         */
+        onAssignSourcesChanged: function (data) {
                 var stockIds = [],
                     assignedStocks = [],
                     sourceStockIds;
@@ -24,7 +28,7 @@ define([
                     sourceStockIds = row['stock_ids'].split(',');
                     _.each(sourceStockIds, function (stockId) {
                         stockIds.push(Number(stockId));
-                    })
+                    });
                 });
 
                 stockIds = _.unique(stockIds);
@@ -38,15 +42,17 @@ define([
             },
 
             /**
-             * @inheritDoc
+             * @inheritdoc
              */
             onUpdate: function () {
-                this._super();
                 var current = this,
-                    data = {
-                        'sku': this.source.data.product.sku ? this.source.data.product.sku : null,
-                        'stockId': this.value()
-                    };
+                    data;
+
+                this._super();
+                data = {
+                    'sku': this.source.data.product.sku ? this.source.data.product.sku : null,
+                    'stockId': this.value()
+                };
                 //todo: implment confirmation modal window.
                 /* confirm({
                      content:  "Please confirm stock switching. All data that hasn\'t been saved will be lost.",

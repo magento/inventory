@@ -42,7 +42,6 @@ class BackOrderCondition implements IsProductSalableInterface
         GetStockConfigurationInterface $getStockItemConfiguration,
         GetSourceConfigurationInterface $getSourceConfiguration,
         CollectionFactory $sourceItemCollectionFactory
-
     ) {
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getSourceConfiguration = $getSourceConfiguration;

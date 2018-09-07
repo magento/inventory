@@ -111,7 +111,6 @@ class AbstractStockqtyPlugin
             }
         }
 
-
         return false;
     }
 

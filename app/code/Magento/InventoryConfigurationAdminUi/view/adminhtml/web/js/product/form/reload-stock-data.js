@@ -5,7 +5,7 @@
 define([
     'Magento_Ui/js/form/components/fieldset',
     'mageUtils',
-    'jquery',
+    'jquery'
 ], function (Fieldset, utils, $) {
     'use strict';
 
@@ -70,8 +70,8 @@ define([
             reload: function (data) {
                 var current = this;
 
-                makeRequest(data, this.reloadUrl).then(function (data) {
-                    current.source.set("data.product.stock_data", data);
+                makeRequest(data, this.reloadUrl).then(function (response) {
+                    current.source.set('data.product.stock_data', response);
                 });
             },
         }

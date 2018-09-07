@@ -106,7 +106,6 @@ class AddStockList extends AbstractModifier
             ]
         );
 
-
         return $meta;
     }
 

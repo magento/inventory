@@ -95,7 +95,8 @@ class SaveStockConfiguration implements SaveStockConfigurationInterface
             StockItemConfigurationInterface::LOW_STOCK_DATE => $stockItemConfiguration->getLowStockDate(),
             StockItemConfigurationInterface::IS_QTY_DECIMAL => $stockItemConfiguration->isQtyDecimal(),
             StockItemConfigurationInterface::IS_DECIMAL_DIVIDED => $stockItemConfiguration->isDecimalDivided(),
-            StockItemConfigurationInterface::STOCK_STATUS_CHANGED_AUTO => $stockItemConfiguration->getStockStatusChangedAuto(),
+            StockItemConfigurationInterface::STOCK_STATUS_CHANGED_AUTO =>
+                $stockItemConfiguration->getStockStatusChangedAuto(),
             StockItemConfigurationInterface::STOCK_THRESHOLD_QTY => $stockItemConfiguration->getStockThresholdQty(),
         ];
 

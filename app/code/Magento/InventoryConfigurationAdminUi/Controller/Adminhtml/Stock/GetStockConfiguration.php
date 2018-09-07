@@ -22,6 +22,8 @@ use Magento\Ui\Controller\UiActionInterface;
  */
 class GetStockConfiguration extends Action implements UiActionInterface
 {
+    const ADMIN_RESOURCE = 'Magento_Catalog::products';
+
     /**
      * @var JsonFactory
      */

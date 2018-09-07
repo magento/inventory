@@ -59,9 +59,9 @@ class SaveStockItemConfigurationData implements ObserverInterface
         $sku = $observer->getProduct()->getSku();
         $request = $observer->getController()->getRequest();
         $product = $request->getParam('product', []);
-        $stockData = $product['stock_data'];
+        $stockData = $product['stock_data'] ?? [];
 
-        if (empty($stockData['stock_id'])) {
+        if (!$stockData || empty($stockData['stock_id'])) {
             return;
         }
 
