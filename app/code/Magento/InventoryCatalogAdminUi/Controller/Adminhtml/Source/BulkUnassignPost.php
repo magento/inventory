@@ -106,6 +106,10 @@ class BulkUnassignPost extends Action
             $userId
         );
 
+        $this->messageManager->addSuccessMessage(
+            __('Your bulk operation request was successfully enqueued. You will receive a notification when done.')
+        );
+
         $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $result->setPath('catalog/product/index');
     }
