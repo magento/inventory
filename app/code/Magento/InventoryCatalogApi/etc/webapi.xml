@@ -7,20 +7,20 @@
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/inventory/bulk-product-source-assign" method="POST">
-        <service class="Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface" method="execute"/>
+    <route url="/V1/inventory/product-source-assign" method="POST">
+        <service class="Magento\InventoryCatalogApi\Api\SourceAssignInterface" method="execute"/>
         <resources>
             <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
-    <route url="/V1/inventory/bulk-product-source-unassign" method="POST">
-        <service class="Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface" method="execute"/>
+    <route url="/V1/inventory/product-source-unassign" method="POST">
+        <service class="Magento\InventoryCatalogApi\Api\SourceUnassignInterface" method="execute"/>
         <resources>
             <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
-    <route url="/V1/inventory/bulk-product-source-transfer" method="POST">
-        <service class="Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface" method="execute"/>
+    <route url="/V1/inventory/product-source-transfer" method="POST">
+        <service class="Magento\InventoryCatalogApi\Api\InventoryTransferInterface" method="execute"/>
         <resources>
             <resource ref="Magento_Catalog::products"/>
         </resources>

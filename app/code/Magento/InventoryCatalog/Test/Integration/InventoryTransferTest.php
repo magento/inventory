@@ -5,12 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Test\Integration\Bulk;
+namespace Magento\InventoryCatalog\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
-use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
+use Magento\InventoryCatalogApi\Api\InventoryTransferInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -18,9 +20,9 @@ use PHPUnit\Framework\TestCase;
 class InventoryTransferTest extends TestCase
 {
     /**
-     * @var BulkInventoryTransferInterface
+     * @var InventoryTransferInterface
      */
-    private $bulkInventoryTransfer;
+    private $inventoryTransfer;
 
     /**
      * @var SearchCriteriaBuilder
@@ -40,7 +42,7 @@ class InventoryTransferTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->bulkInventoryTransfer = Bootstrap::getObjectManager()->get(BulkInventoryTransferInterface::class);
+        $this->inventoryTransfer = Bootstrap::getObjectManager()->get(InventoryTransferInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
@@ -93,10 +95,8 @@ class InventoryTransferTest extends TestCase
      */
     public function testBulkInventoryTransferAndUnassign()
     {
-        $skus = ['SKU-1'];
-
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->bulkInventoryTransfer->execute($skus, 'eu-1', 'eu-2', true);
+        $this->inventoryTransfer->execute('SKU-1', 'eu-1', 'eu-2', true);
 
         $sourceItemCodes = $this->getSourceItemCodesBySku('SKU-1');
         self::assertNotContains(
@@ -120,10 +120,8 @@ class InventoryTransferTest extends TestCase
      */
     public function testBulkInventoryTransferToNewSource()
     {
-        $skus = ['SKU-1'];
-
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->bulkInventoryTransfer->execute($skus, 'eu-1', 'us-1', false);
+        $this->inventoryTransfer->execute('SKU-1', 'eu-1', 'us-1', false);
 
         $sourceItemCodes = $this->getSourceItemCodesBySku('SKU-1');
         self::assertContains(
@@ -153,23 +151,9 @@ class InventoryTransferTest extends TestCase
      */
     public function testBulkInventoryTransferFromUnassignedSourceSource()
     {
-        $skus = ['SKU-1'];
-
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->bulkInventoryTransfer->execute($skus, 'us-1', 'eu-1', false);
-
-        $sourceItemCodes = $this->getSourceItemCodesBySku('SKU-1');
-        self::assertNotContains(
-            'us-1',
-            $sourceItemCodes,
-            'Products are assigned to origin source even if they were not'
-        );
-
-        self::assertEquals(
-            5.5,
-            $this->getSourceItemQuantity('SKU-1', 'eu-1'),
-            'Destination source is changed even if origin source was not assigned'
-        );
+        self::expectException(NoSuchEntityException::class);
+        $this->inventoryTransfer->execute('SKU-1', 'us-1', 'eu-1', false);
     }
 
     /**
@@ -180,10 +164,8 @@ class InventoryTransferTest extends TestCase
      */
     public function testBulkInventoryTransferToAssignedSource()
     {
-        $skus = ['SKU-1'];
-
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->bulkInventoryTransfer->execute($skus, 'eu-1', 'eu-2', false);
+        $this->inventoryTransfer->execute('SKU-1', 'eu-1', 'eu-2', false);
 
         $sourceItemCodes = $this->getSourceItemCodesBySku('SKU-1');
         self::assertContains(
@@ -209,5 +191,18 @@ class InventoryTransferTest extends TestCase
             $this->getSourceItemQuantity('SKU-1', 'eu-2'),
             'Items were not correctly moved to destination source'
         );
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDbIsolation enabled
+     */
+    public function testNonSenseTRansfer()
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        self::expectException(LocalizedException::class);
+        $this->inventoryTransfer->execute('SKU-1', 'eu-1', 'eu-1', false);
     }
 }

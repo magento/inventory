@@ -5,21 +5,21 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Test\Integration\Bulk;
+namespace Magento\InventoryCatalog\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
-use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
+use Magento\InventoryCatalogApi\Api\SourceAssignInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class SourceUnassignTest extends TestCase
+class SourceAssignTest extends TestCase
 {
     /**
-     * @var BulkSourceUnassignInterface
+     * @var SourceAssignInterface
      */
-    private $bulkSourceUnassign;
+    private $sourceAssign;
 
     /**
      * @var SearchCriteriaBuilder
@@ -34,7 +34,7 @@ class SourceUnassignTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->bulkSourceUnassign = Bootstrap::getObjectManager()->get(BulkSourceUnassignInterface::class);
+        $this->sourceAssign = Bootstrap::getObjectManager()->get(SourceAssignInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
     }
@@ -61,40 +61,26 @@ class SourceUnassignTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
      * @magentoDbIsolation enabled
      */
-    public function testBulkSourceUnassignment()
+    public function testSourceAssignment()
     {
-        $skus = ['SKU-1', 'SKU-2', 'SKU-3', 'SKU-4'];
-        $sources = ['eu-1', 'eu-2', 'eu-3'];
-        $count = $this->bulkSourceUnassign->execute($skus, $sources);
+        $this->sourceAssign->execute('SKU-1', 'eu-1');
+        $this->sourceAssign->execute('SKU-2', 'eu-1');
 
-        self::assertEquals(
-            5, // Overall 5 deletions
-            $count,
-            'Products source un-assignment count do not match'
+        $sourceItemCodes = $this->getSourceItemCodesBySku('SKU-1');
+        self::assertContains(
+            'eu-1',
+            $sourceItemCodes,
+            'Mass source assignment failed with a single source item'
         );
 
-        foreach ($skus as $sku) {
-            $sourceItemCodes = $this->getSourceItemCodesBySku($sku);
-            foreach ($sources as $source) {
-                self::assertNotContains(
-                    $source,
-                    $sourceItemCodes,
-                    'Mass source un-assignment failed'
-                );
-            }
-        }
-
-        $skus = ['SKU-1', 'SKU-2', 'SKU-3', 'SKU-4'];
-        $sources = ['eu-1', 'eu-2', 'eu-3'];
-        $count = $this->bulkSourceUnassign->execute($skus, $sources);
-
-        self::assertEquals(
-            0, // If we run it the second time on the same entries we should have 0 modifications
-            $count,
-            'Products source un-assignment involved unexpected entries'
+        $sourceItemCodes = $this->getSourceItemCodesBySku('SKU-2');
+        self::assertContains(
+            'eu-1',
+            $sourceItemCodes,
+            'Mass source assignment failed with a single source item'
         );
     }
 }
