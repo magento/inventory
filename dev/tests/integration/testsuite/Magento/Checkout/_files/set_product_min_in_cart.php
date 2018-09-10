@@ -7,7 +7,7 @@
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 
-include __DIR__ . '/../../Catalog/_files/product_simple.php';;
+include __DIR__ . '/../../Catalog/_files/product_simple.php';
 
 $productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
 $product = $productRepository->get('simple');

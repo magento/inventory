@@ -112,7 +112,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
+     * @magentoConfigFixture default/cataloginventory/item_options/backorders 1
      */
     public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn()
     {
@@ -154,7 +154,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
+     * @magentoConfigFixture default/cataloginventory/item_options/manage_stock 0
      */
     public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
     {

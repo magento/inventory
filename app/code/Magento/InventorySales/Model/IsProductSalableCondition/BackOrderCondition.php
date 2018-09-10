@@ -69,14 +69,17 @@ class BackOrderCondition implements IsProductSalableInterface
             []
         )->where('link.stock_id = ?', $stockId);
         $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
+        $globalBackOrders = $globalSourceConfiguration->getBackorders();
+        $result = $globalBackOrders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0;
         foreach ($sourceItemCollection as $sourceItem) {
             $backOrders = $this->getBackorders($sku, $sourceItem, $globalSourceConfiguration);
             if ($backOrders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0) {
-                return true;
+                $result = true;
+                break;
             }
         }
 
-        return false;
+        return $result;
     }
 
     /**

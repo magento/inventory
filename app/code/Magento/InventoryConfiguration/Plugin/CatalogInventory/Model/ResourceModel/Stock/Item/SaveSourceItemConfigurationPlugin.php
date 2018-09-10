@@ -66,9 +66,12 @@ class SaveSourceItemConfigurationPlugin
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(ItemResourceModel $subject, ItemResourceModel $result, StockItemInterface $stockItem)
-    {
-        $productId = $stockItem->getData('product_id');
+    public function afterSave(
+        ItemResourceModel $subject,
+        ItemResourceModel $result,
+        StockItemInterface $stockItem
+    ): ItemResourceModel {
+        $productId = $stockItem->getProductId();
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
         $sourceItemConfiguration = $this->sourceItemConfigurationInterfaceFactory->create();

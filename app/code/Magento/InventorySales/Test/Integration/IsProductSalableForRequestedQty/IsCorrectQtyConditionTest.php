@@ -109,7 +109,7 @@ class IsCorrectQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/min_sale_qty 7
+     * @magentoConfigFixture default/cataloginventory/item_options/min_sale_qty 7
      *
      * @param string $sku
      * @param int $stockId
@@ -187,7 +187,9 @@ class IsCorrectQtyConditionTest extends TestCase
     ): void {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockItemConfiguration->setMinSaleQty(7);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $stockItemConfiguration->setMinSaleQty(7.00);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
@@ -224,7 +226,7 @@ class IsCorrectQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/max_sale_qty 6
+     * @magentoConfigFixture default/cataloginventory/item_options/max_sale_qty 6
      *
      * @param string $sku
      * @param int $stockId
@@ -305,8 +307,10 @@ class IsCorrectQtyConditionTest extends TestCase
     ): void {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockItemConfiguration->setMaxSaleQty(6);
-        $this->saveStockConfiguration->execute($sku, $stockId, $stockItemConfiguration);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $stockItemConfiguration->setMaxSaleQty(6.00);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
         $this->assertEquals($expectedResult, $result->isSalable());
@@ -344,8 +348,8 @@ class IsCorrectQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/enable_qty_increments 1
-     * @magentoConfigFixture current_store cataloginventory/item_options/qty_increments 3
+     * @magentoConfigFixture default/cataloginventory/item_options/enable_qty_increments 1
+     * @magentoConfigFixture default/cataloginventory/item_options/qty_increments 3
      *
      * @param string $sku
      * @param int $stockId
@@ -428,8 +432,10 @@ class IsCorrectQtyConditionTest extends TestCase
     ): void {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
         $stockItemConfiguration->setEnableQtyIncrements(true);
-        $stockItemConfiguration->setQtyIncrements(3);
+        $stockItemConfiguration->setQtyIncrements(3.00);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);

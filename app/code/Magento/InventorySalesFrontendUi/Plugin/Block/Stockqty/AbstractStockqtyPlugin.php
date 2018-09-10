@@ -107,17 +107,22 @@ class AbstractStockqtyPlugin
             []
         )->where('link.stock_id = ?', $stockId);
         $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
+        $globalBackOrders = $globalSourceConfiguration->getBackorders();
+        $result = ($globalBackOrders === SourceItemConfigurationInterface::BACKORDERS_NO
+            || $globalBackOrders !== SourceItemConfigurationInterface::BACKORDERS_NO
+            && $minQty < 0) && $this->getProductSalableQty->execute($sku, $stockId) <= $thresholdQty;
         foreach ($sourceItemCollection as $sourceItem) {
             $backorders = $this->getBackorders($sku, $sourceItem, $globalSourceConfiguration);
             if (($backorders === SourceItemConfigurationInterface::BACKORDERS_NO
                     || $backorders !== SourceItemConfigurationInterface::BACKORDERS_NO
                     && $minQty < 0)
                 && $this->getProductSalableQty->execute($sku, $stockId) <= $thresholdQty) {
-                return true;
+                $result = true;
+                break;
             }
         }
 
-        return false;
+        return $result;
     }
 
     /**
