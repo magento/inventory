@@ -336,7 +336,7 @@ class Source extends AbstractExtensibleModel implements SourceInterface
      */
     public function getCarrierLinks(): ? array
     {
-        return $this->getData(self::NAME);
+        return $this->getData(self::CARRIER_LINKS);
     }
 
     /**
