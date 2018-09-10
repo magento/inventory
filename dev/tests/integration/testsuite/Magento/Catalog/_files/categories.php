@@ -188,6 +188,8 @@ $category->setId(13)
 
 /** @var $product \Magento\Catalog\Model\Product */
 $product = $objectManager->create(\Magento\Catalog\Model\Product::class);
+$stockItem = $objectManager->create(\Magento\CatalogInventory\Api\Data\StockItemInterface::class);
+$stockItem->setUseConfigManageStock(false);
 $product->isObjectNew(true);
 $product->setTypeId(\Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
     ->setAttributeSetId($defaultAttributeSet)
@@ -200,7 +202,9 @@ $product->setTypeId(\Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
     ->setStockData(['use_config_manage_stock' => 0])
     ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
     ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
-    ->save();
+    ->getExtensionAttributes()->setStockItem($stockItem);
+
+$product->save();
 
 $categoryLinkManagement->assignProductToCategories(
     $product->getSku(),

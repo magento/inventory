@@ -82,6 +82,14 @@ class SaveStockItemConfigurationData implements ObserverInterface
             );
         }
 
+        if ($stockData['use_config_' . StockItemConfigurationInterface::MIN_QTY]) {
+            $stockItemConfiguration->setStockThresholdQty(null);
+        } else {
+            $stockItemConfiguration->setStockThresholdQty(
+                (float)$stockData[StockItemConfigurationInterface::STOCK_THRESHOLD_QTY]
+            );
+        }
+
         if ($stockData['use_config_' . StockItemConfigurationInterface::MIN_SALE_QTY]) {
             $stockItemConfiguration->setMinSaleQty(null);
         } else {
@@ -118,7 +126,6 @@ class SaveStockItemConfigurationData implements ObserverInterface
         $stockItemConfiguration->setIsQtyDecimal($isQtyDecimal);
         $isDecimalDivided = (bool)$stockData[StockItemConfigurationInterface::IS_DECIMAL_DIVIDED];
         $stockItemConfiguration->setIsDecimalDivided($isDecimalDivided);
-        $stockItemConfiguration->setStockThresholdQty(null);
 
         $this->saveStockConfiguration->forStockItem((string)$sku, (int)$stockData['stock_id'], $stockItemConfiguration);
     }
