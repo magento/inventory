@@ -75,6 +75,6 @@ class GetLowStockDatePlugin
 
         return $stockItemConfiguration->getLowStockDate() !== null
             ? $stockItemConfiguration->getLowStockDate()
-            : $defaultValue;
+            : (string) $defaultValue;
     }
 }
