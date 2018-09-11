@@ -90,19 +90,18 @@ class SuggestQtyPlugin
             $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
             $stockId = (int)$stock->getStockId();
 
-            $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
-            $qtyIncrements = $stockItemConfiguration->getQtyIncrements();
+            $qtyIncrements = $this->getQtyIncrements($productSku, $stockId);
+            $isManageStock = $this->getIsMangeStock($productSku, $stockId);
+            $minSaleQty = $this->getMinSaleQty($productSku, $stockId);
+            $maxSaleQty = $this->getMaxSaleQty($productSku, $stockId);
 
-            if ($qty <= 0 || $stockItemConfiguration->isManageStock() === false || $qtyIncrements < 2) {
+            if ($qty <= 0 || $isManageStock === false || $qtyIncrements < 2) {
                 throw new LocalizedException(__('Wrong condition.'));
             }
 
-            $minQty = max($stockItemConfiguration->getMinSaleQty(), $qtyIncrements);
+            $minQty = max($minSaleQty, $qtyIncrements);
             $divisibleMin = ceil($minQty / $qtyIncrements) * $qtyIncrements;
-            $maxQty = min(
-                $this->getProductSalableQty->execute($productSku, $stockId),
-                $stockItemConfiguration->getMaxSaleQty()
-            );
+            $maxQty = min($this->getProductSalableQty->execute($productSku, $stockId), $maxSaleQty);
             $divisibleMax = floor($maxQty / $qtyIncrements) * $qtyIncrements;
 
             if ($qty < $minQty || $qty > $maxQty || $divisibleMin > $divisibleMax) {
@@ -118,5 +117,85 @@ class SuggestQtyPlugin
         } catch (LocalizedException $e) {
             return $qty;
         }
+    }
+
+    /**
+     * @param $productSku
+     * @param int $stockId
+     * @return float
+     */
+    private function getQtyIncrements($productSku, int $stockId): float
+    {
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $defaultValue = $stockConfiguration->getQtyIncrements() !== null
+            ? $stockConfiguration->getQtyIncrements()
+            : $globalConfiguration->getQtyIncrements();
+
+        return $stockItemConfiguration->getQtyIncrements() !== null
+            ? $stockItemConfiguration->getQtyIncrements()
+            : $defaultValue;
+    }
+
+    /**
+     * @param $productSku
+     * @param int $stockId
+     * @return bool
+     */
+    private function getIsMangeStock($productSku, int $stockId): bool
+    {
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $defaultValue = $stockConfiguration->isManageStock() !== null
+            ? $stockConfiguration->isManageStock()
+            : $globalConfiguration->isManageStock();
+
+        return $stockItemConfiguration->isManageStock() !== null
+            ? $stockItemConfiguration->isManageStock()
+            : $defaultValue;
+    }
+
+    /**
+     * @param $productSku
+     * @param int $stockId
+     * @return float
+     */
+    private function getMinSaleQty($productSku, int $stockId): float
+    {
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $defaultValue = $stockConfiguration->getMinSaleQty() !== null
+            ? $stockConfiguration->getMinSaleQty()
+            : $globalConfiguration->getMinSaleQty();
+
+        return $stockItemConfiguration->getMinSaleQty() !== null
+            ? $stockItemConfiguration->getMinSaleQty()
+            : $defaultValue;
+    }
+
+    /**
+     * @param $productSku
+     * @param int $stockId
+     * @return float
+     */
+    private function getMaxSaleQty($productSku, int $stockId): float
+    {
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $defaultValue = $stockConfiguration->getMaxSaleQty() !== null
+            ? $stockConfiguration->getMaxSaleQty()
+            : $globalConfiguration->getMaxSaleQty();
+
+        return $stockItemConfiguration->getMaxSaleQty() !== null
+            ? $stockItemConfiguration->getMaxSaleQty()
+            : $defaultValue;
     }
 }

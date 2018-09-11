@@ -35,24 +35,24 @@ class GetSalableQuantityDataBySku
     /**
      * @var GetStockConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getStockConfiguration;
 
     /**
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param StockRepositoryInterface $stockRepository
      * @param GetAssignedStockIdsBySku $getAssignedStockIdsBySku
-     * @param GetStockConfigurationInterface $getStockItemConfiguration
+     * @param GetStockConfigurationInterface $getStockConfiguration
      */
     public function __construct(
         GetProductSalableQtyInterface $getProductSalableQty,
         StockRepositoryInterface $stockRepository,
         GetAssignedStockIdsBySku $getAssignedStockIdsBySku,
-        GetStockConfigurationInterface $getStockItemConfiguration
+        GetStockConfigurationInterface $getStockConfiguration
     ) {
         $this->getProductSalableQty = $getProductSalableQty;
         $this->stockRepository = $stockRepository;
         $this->getAssignedStockIdsBySku = $getAssignedStockIdsBySku;
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getStockConfiguration = $getStockConfiguration;
     }
 
     /**
@@ -67,8 +67,7 @@ class GetSalableQuantityDataBySku
             foreach ($stockIds as $stockId) {
                 $stockId = (int)$stockId;
                 $stock = $this->stockRepository->get($stockId);
-                $stockItemConfiguration = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
-                $isManageStock = $stockItemConfiguration->isManageStock();
+                $isManageStock = $this->getManageStock($sku, $stockId);
                 $stockInfo[] = [
                     'stock_name' => $stock->getName(),
                     'qty' => $isManageStock ? $this->getProductSalableQty->execute($sku, $stockId) : null,
@@ -77,5 +76,20 @@ class GetSalableQuantityDataBySku
             }
         }
         return $stockInfo;
+    }
+
+    private function getManageStock(string $sku, int $stockId)
+    {
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $defaultValue = $stockConfiguration->isManageStock() !== null
+            ? $stockConfiguration->isManageStock()
+            : $globalConfiguration->isManageStock();
+
+        return $stockItemConfiguration->isManageStock() !== null
+            ? $stockItemConfiguration->isManageStock()
+            : $defaultValue;
     }
 }

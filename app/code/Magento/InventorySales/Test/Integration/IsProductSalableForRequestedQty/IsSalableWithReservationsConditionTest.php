@@ -119,7 +119,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      *
-     * @magentoConfigFixture default_store cataloginventory/item_options/min_qty 5
+     * @magentoConfigFixture default/cataloginventory/item_options/min_qty 5
      *
      * @param string $sku
      * @param int $stockId
@@ -134,6 +134,8 @@ class IsSalableWithReservationsConditionTest extends TestCase
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(null);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $stockItemConfiguration->setIsDecimalDivided(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         self::assertEquals(
@@ -179,7 +181,9 @@ class IsSalableWithReservationsConditionTest extends TestCase
     {
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockItemConfiguration->setMinQty(5);
+        $stockItemConfiguration->setMinQty(5.00);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         self::assertEquals(

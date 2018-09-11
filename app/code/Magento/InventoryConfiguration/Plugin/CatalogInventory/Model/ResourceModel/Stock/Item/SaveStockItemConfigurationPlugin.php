@@ -12,7 +12,7 @@ use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterfaceFactory;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 
 /**
@@ -21,9 +21,9 @@ use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 class SaveStockItemConfigurationPlugin
 {
     /**
-     * @var StockItemConfigurationInterfaceFactory
+     * @var GetStockConfigurationInterface
      */
-    private $stockItemConfigurationInterfaceFactory;
+    private $getStockConfiguration;
 
     /**
      * @var SaveStockConfigurationInterface
@@ -41,18 +41,18 @@ class SaveStockItemConfigurationPlugin
     private $defaultStockProvider;
 
     /**
-     * @param StockItemConfigurationInterfaceFactory $stockItemConfigurationInterfaceFactory
+     * @param GetStockConfigurationInterface $getStockConfiguration
      * @param SaveStockConfigurationInterface $saveStockConfiguration
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        StockItemConfigurationInterfaceFactory $stockItemConfigurationInterfaceFactory,
+        GetStockConfigurationInterface $getStockConfiguration,
         SaveStockConfigurationInterface $saveStockConfiguration,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->stockItemConfigurationInterfaceFactory = $stockItemConfigurationInterfaceFactory;
+        $this->getStockConfiguration = $getStockConfiguration;
         $this->saveStockConfiguration = $saveStockConfiguration;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultStockProvider = $defaultStockProvider;
@@ -75,10 +75,13 @@ class SaveStockItemConfigurationPlugin
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
 
-        $stockItemConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
+            $productSku,
+            $this->defaultStockProvider->getId()
+        );
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)) {
             $stockItemConfiguration->setManageStock(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK) !== null) {
             $stockItemConfiguration->setManageStock(
                 (bool)$stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK)
             );
@@ -86,7 +89,7 @@ class SaveStockItemConfigurationPlugin
 
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MIN_QTY)) {
             $stockItemConfiguration->setMinQty(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::MIN_QTY) !== null) {
             $stockItemConfiguration->setMinQty(
                 (float)$stockItem->getData(StockItemConfigurationInterface::MIN_QTY)
             );
@@ -94,7 +97,7 @@ class SaveStockItemConfigurationPlugin
 
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MIN_QTY)) {
             $stockItemConfiguration->setStockThresholdQty(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::STOCK_THRESHOLD_QTY) !== null) {
             $stockItemConfiguration->setStockThresholdQty(
                 (float)$stockItem->getData(StockItemConfigurationInterface::STOCK_THRESHOLD_QTY)
             );
@@ -102,7 +105,7 @@ class SaveStockItemConfigurationPlugin
 
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MIN_SALE_QTY)) {
             $stockItemConfiguration->setMinSaleQty(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::MIN_SALE_QTY) !== null) {
             $stockItemConfiguration->setMinSaleQty(
                 (float)$stockItem->getData(StockItemConfigurationInterface::MIN_SALE_QTY)
             );
@@ -110,7 +113,7 @@ class SaveStockItemConfigurationPlugin
 
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MAX_SALE_QTY)) {
             $stockItemConfiguration->setMaxSaleQty(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::MAX_SALE_QTY) !== null) {
             $stockItemConfiguration->setMaxSaleQty(
                 (float)$stockItem->getData(StockItemConfigurationInterface::MAX_SALE_QTY)
             );
@@ -118,7 +121,7 @@ class SaveStockItemConfigurationPlugin
 
         if ($stockItem->getData('use_config_enable_qty_inc')) {
             $stockItemConfiguration->setEnableQtyIncrements(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS) !== null) {
             $stockItemConfiguration->setEnableQtyIncrements(
                 (bool)$stockItem->getData(StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS)
             );
@@ -126,18 +129,20 @@ class SaveStockItemConfigurationPlugin
 
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::QTY_INCREMENTS)) {
             $stockItemConfiguration->setQtyIncrements(null);
-        } else {
+        } elseif ($stockItem->getData(StockItemConfigurationInterface::QTY_INCREMENTS) !== null) {
             $stockItemConfiguration->setQtyIncrements(
                 (float)$stockItem->getData(StockItemConfigurationInterface::QTY_INCREMENTS)
             );
         }
 
-        $stockItemConfiguration->setIsQtyDecimal(
-            (bool)$stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL)
-        );
-        $stockItemConfiguration->setIsDecimalDivided(
-            (bool)$stockItem->getData(StockItemConfigurationInterface::IS_DECIMAL_DIVIDED)
-        );
+        $isQtyDecimal = $stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL) !== null
+            ? (bool)$stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL)
+            : (bool)$stockItemConfiguration->isQtyDecimal();
+        $stockItemConfiguration->setIsQtyDecimal($isQtyDecimal);
+        $isDecimalDivided = $stockItem->getData(StockItemConfigurationInterface::IS_DECIMAL_DIVIDED) !== null
+            ? (bool)$stockItem->getData(StockItemConfigurationInterface::IS_DECIMAL_DIVIDED)
+            : (bool)$stockItemConfiguration->isDecimalDivided();
+        $stockItemConfiguration->setIsDecimalDivided($isDecimalDivided);
 
         $this->saveStockConfiguration->forStockItem(
             $productSku,

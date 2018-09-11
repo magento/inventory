@@ -12,7 +12,7 @@ use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterfaceFactory;
+use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
 
 /**
@@ -20,11 +20,6 @@ use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
  */
 class SaveSourceItemConfigurationPlugin
 {
-    /**
-     * @var SourceItemConfigurationInterfaceFactory
-     */
-    private $sourceItemConfigurationInterfaceFactory;
-
     /**
      * @var SaveSourceConfigurationInterface
      */
@@ -41,18 +36,23 @@ class SaveSourceItemConfigurationPlugin
     private $defaultSourceProvider;
 
     /**
-     * @param SourceItemConfigurationInterfaceFactory $sourceItemConfigurationInterfaceFactory
+     * @var GetSourceConfigurationInterface
+     */
+    private $getSourceItemConfiguration;
+
+    /**
+     * @param GetSourceConfigurationInterface $getSourceConfiguration
      * @param SaveSourceConfigurationInterface $saveSourceConfiguration
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
-        SourceItemConfigurationInterfaceFactory $sourceItemConfigurationInterfaceFactory,
+        GetSourceConfigurationInterface $getSourceConfiguration,
         SaveSourceConfigurationInterface $saveSourceConfiguration,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         DefaultSourceProviderInterface $defaultSourceProvider
     ) {
-        $this->sourceItemConfigurationInterfaceFactory = $sourceItemConfigurationInterfaceFactory;
+        $this->getSourceItemConfiguration = $getSourceConfiguration;
         $this->saveSourceConfiguration = $saveSourceConfiguration;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultSourceProvider = $defaultSourceProvider;
@@ -74,18 +74,21 @@ class SaveSourceItemConfigurationPlugin
         $productId = $stockItem->getProductId();
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
-        $sourceItemConfiguration = $this->sourceItemConfigurationInterfaceFactory->create();
+        $sourceItemConfiguration = $this->getSourceItemConfiguration->forSourceItem(
+            $productSku,
+            $this->defaultSourceProvider->getCode()
+        );
 
         if ($stockItem->getData('use_config_' . SourceItemConfigurationInterface::BACKORDERS)) {
             $sourceItemConfiguration->setBackorders(null);
-        } else {
+        } elseif ($stockItem->getData(SourceItemConfigurationInterface::BACKORDERS) !== null) {
             $sourceItemConfiguration->setBackorders(
                 (int)$stockItem->getData(SourceItemConfigurationInterface::BACKORDERS)
             );
         }
         if ($stockItem->getData('use_config_' . SourceItemConfigurationInterface::NOTIFY_STOCK_QTY)) {
             $sourceItemConfiguration->setNotifyStockQty(null);
-        } else {
+        } elseif ($stockItem->getData(SourceItemConfigurationInterface::NOTIFY_STOCK_QTY) !== null) {
             $sourceItemConfiguration->setNotifyStockQty(
                 (float)$stockItem->getData(SourceItemConfigurationInterface::NOTIFY_STOCK_QTY)
             );

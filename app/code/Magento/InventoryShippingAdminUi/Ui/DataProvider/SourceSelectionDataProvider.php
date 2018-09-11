@@ -168,8 +168,16 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     private function isManageStock($itemSku, $stockId)
     {
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($itemSku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
 
-        return $stockItemConfiguration->isManageStock();
+        $defaultValue = $stockConfiguration->isManageStock() !== null
+            ? $stockConfiguration->isManageStock()
+            : $globalConfiguration->isManageStock();
+
+        return $stockItemConfiguration->isManageStock() !== null
+            ? $stockItemConfiguration->isManageStock()
+            : $defaultValue;
     }
 
     /**

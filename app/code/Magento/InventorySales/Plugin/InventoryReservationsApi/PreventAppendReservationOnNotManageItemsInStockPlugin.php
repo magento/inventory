@@ -56,12 +56,9 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
 
         $reservationToAppend = [];
         foreach ($reservations as $reservation) {
-            $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-                $reservation->getSku(),
-                $reservation->getStockId()
-            );
+            $isManageStock = $this->getIsManageStock($reservation);
 
-            if ($stockItemConfiguration->isManageStock()) {
+            if ($isManageStock) {
                 $reservationToAppend[] = $reservation;
             }
         }
@@ -69,5 +66,27 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
         if (!empty($reservationToAppend)) {
             $proceed($reservationToAppend);
         }
+    }
+
+    /**
+     * @param ReservationInterface $reservation
+     * @return bool
+     */
+    private function getIsManageStock(ReservationInterface $reservation): bool
+    {
+        $stockConfiguration = $this->getStockConfiguration->forStock($reservation->getStockId());
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
+            $reservation->getSku(),
+            $reservation->getStockId()
+        );
+        $defaultValue = $stockConfiguration->isManageStock() !== null
+            ? $stockConfiguration->isManageStock()
+            : $globalConfiguration->isManageStock();
+        $isManageStock = $stockItemConfiguration->isManageStock() !== null
+            ? $stockItemConfiguration->isManageStock()
+            : $defaultValue;
+
+        return $isManageStock;
     }
 }

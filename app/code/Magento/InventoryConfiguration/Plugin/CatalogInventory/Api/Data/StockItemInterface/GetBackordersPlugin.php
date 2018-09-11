@@ -64,18 +64,18 @@ class GetBackordersPlugin
 
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
-        $stockItemConfiguration = $this->getSourceConfiguration->forSourceItem(
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
             $productSku,
             $this->defaultSourceProvider->getCode()
         );
-        $stockConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
+        $sourceConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
         $globalConfiguration = $this->getSourceConfiguration->forGlobal();
-        $defaultValue = $stockConfiguration->getBackorders() !== null
-            ? $stockConfiguration->getBackorders()
+        $defaultValue = $sourceConfiguration->getBackorders() !== null
+            ? $sourceConfiguration->getBackorders()
             : $globalConfiguration->getBackorders();
 
-        return $stockItemConfiguration->getBackorders() !== null
-            ? $stockItemConfiguration->getBackorders()
+        return $sourceItemConfiguration->getBackorders() !== null
+            ? $sourceItemConfiguration->getBackorders()
             : $defaultValue;
     }
 }

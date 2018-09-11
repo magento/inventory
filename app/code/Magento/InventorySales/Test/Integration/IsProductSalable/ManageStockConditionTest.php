@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalable;
 
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -19,13 +21,22 @@ class ManageStockConditionTest extends TestCase
     private $isProductSalable;
 
     /**
-     * @inheritdoc
+     * @var GetStockConfigurationInterface
      */
+    private $getStockConfiguration;
+
+    /**
+     * @var SaveStockConfigurationInterface
+     */
+    private $saveStockConfiguration;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
+        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
     }
 
     /**
@@ -35,7 +46,6 @@ class ManageStockConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture default_store cataloginventory/item_options/manage_stock 0
      *
      * @param string $sku
      * @param int $stockId
@@ -48,6 +58,16 @@ class ManageStockConditionTest extends TestCase
      */
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, bool $expectedResult)
     {
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $stockConfiguration->setManageStock(!$expectedResult);
+        $stockConfiguration->setIsDecimalDivided(false);
+        $stockConfiguration->setIsQtyDecimal(false);
+        $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockItemConfiguration->setManageStock(null);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
         $isSalable = $this->isProductSalable->execute($sku, $stockId);
         self::assertEquals($expectedResult, $isSalable);
     }

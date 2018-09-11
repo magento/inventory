@@ -8,13 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\Order;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Registry;
-use Magento\Framework\Validation\ValidationException;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
@@ -22,11 +23,8 @@ use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -83,6 +81,16 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $orderManagement;
 
+    /**
+     * @var GetStockConfigurationInterface
+     */
+    private $getStockConfiguration;
+
+    /**
+     * @var SaveStockConfigurationInterface
+     */
+    private $saveStockConfiguration;
+
     protected function setUp()
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -95,6 +103,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
+        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
+        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
     }
 
     /**
@@ -150,7 +160,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
+     * @magentoConfigFixture default/cataloginventory/item_options/backorders 1
      */
     public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn()
     {
@@ -176,13 +186,15 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
+     * @magentoConfigFixture default/cataloginventory/item_options/manage_stock 0
      */
     public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
     {
         $sku = 'SKU-1';
         $quoteItemQty = 8;
-
+        $stockConfiguration = $this->getStockConfiguration->forStockItem($sku, $this->defaultStockProvider->getId());
+        $stockConfiguration->setManageStock(null);
+        $this->saveStockConfiguration->forStockItem($sku, $this->defaultStockProvider->getId(), $stockConfiguration);
         $cart = $this->getCart();
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());

@@ -71,12 +71,9 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         foreach ($sourceDeductionRequest->getItems() as $item) {
             $itemSku = $item->getSku();
             $qty = $item->getQty();
-            $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-                $itemSku,
-                $stockId
-            );
-
-            if (!$stockItemConfiguration->isManageStock()) {
+     
+            $isManageStock = $this->getIsManageStock($itemSku, $stockId);
+            if (!$isManageStock) {
                 //We don't need to Manage Stock
                 continue;
             }
@@ -95,5 +92,25 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         if (!empty($sourceItems)) {
             $this->sourceItemsSave->execute($sourceItems);
         }
+    }
+
+    /**
+     * @param string $sku
+     * @param int $stockId
+     * @return bool
+     */
+    private function getIsManageStock(string $sku, int $stockId): bool
+    {
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $globalConfiguration = $this->getStockConfiguration->forGlobal();
+
+        $defaultValue = $stockConfiguration->isManageStock() !== null
+            ? $stockConfiguration->isManageStock()
+            : $globalConfiguration->isManageStock();
+
+        return $stockItemConfiguration->isManageStock() !== null
+            ? $stockItemConfiguration->isManageStock()
+            : $defaultValue;
     }
 }

@@ -64,18 +64,18 @@ class GetNotifyStockQtyPlugin
 
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
-        $stockItemConfiguration = $this->getSourceConfiguration->forSourceItem(
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
             $productSku,
             $this->defaultSourceProvider->getCode()
         );
-        $stockConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
+        $sourceConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
         $globalConfiguration = $this->getSourceConfiguration->forGlobal();
-        $defaultValue = $stockConfiguration->getNotifyStockQty() !== null
-            ? $stockConfiguration->getNotifyStockQty()
+        $defaultValue = $sourceConfiguration->getNotifyStockQty() !== null
+            ? $sourceConfiguration->getNotifyStockQty()
             : $globalConfiguration->getNotifyStockQty();
 
-        return $stockItemConfiguration->getNotifyStockQty() !== null
-            ? $stockItemConfiguration->getNotifyStockQty()
+        return $sourceItemConfiguration->getNotifyStockQty() !== null
+            ? $sourceItemConfiguration->getNotifyStockQty()
             : $defaultValue;
     }
 }
