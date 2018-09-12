@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\StockManagement;
 
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
-use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +35,7 @@ class ReservationPlacingOnUseConfigManageStockSetToZeroTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoConfigFixture default/cataloginventory/item_options/manage_stock 0
      *
      * @magentoDbIsolation disabled
      */
@@ -41,6 +44,18 @@ class ReservationPlacingOnUseConfigManageStockSetToZeroTest extends TestCase
         $appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
         $reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
         $getReservationQuantity = Bootstrap::getObjectManager()->get(GetReservationsQuantityInterface::class);
+        $getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
+        $saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
+        $stockConfiguration = $getStockConfiguration->forStock(10);
+        $stockConfiguration->setIsQtyDecimal(false);
+        $stockConfiguration->setIsDecimalDivided(false);
+        $stockConfiguration->setManageStock(null);
+        $saveStockConfiguration->forStock(10, $stockConfiguration);
+        $stockItemConfiguration = $getStockConfiguration->forStockItem('SKU-4', 10);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $stockItemConfiguration->setManageStock(null);
+        $saveStockConfiguration->forStockItem('SKU-4', 10, $stockItemConfiguration);
 
         $appendReservations->execute(
             [

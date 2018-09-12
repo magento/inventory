@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
+use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +21,16 @@ class ManageStockConditionTest extends TestCase
     private $isProductSalableForRequestedQty;
 
     /**
+     * @var GetStockConfigurationInterface
+     */
+    private $getStockConfiguration;
+
+    /**
+     * @var SaveStockConfigurationInterface
+     */
+    private $saveStockConfiguration;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -27,6 +39,8 @@ class ManageStockConditionTest extends TestCase
 
         $this->isProductSalableForRequestedQty
             = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
+        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
+        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
     }
 
     /**
@@ -36,10 +50,10 @@ class ManageStockConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture default_store cataloginventory/item_options/manage_stock 0
      *
      * @param string $sku
      * @param int $stockId
+     * @param float $qty
      * @param bool $expectedResult
      * @return void
      *
@@ -49,7 +63,16 @@ class ManageStockConditionTest extends TestCase
      */
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, float $qty, bool $expectedResult)
     {
-
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $stockConfiguration->setManageStock(!$expectedResult);
+        $stockConfiguration->setIsDecimalDivided(false);
+        $stockConfiguration->setIsQtyDecimal(false);
+        $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+        $stockItemConfiguration->setManageStock(null);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
         $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
         self::assertEquals($expectedResult, $isSalable);
     }

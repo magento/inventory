@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurationAdminUi\Model\ResourceModel;
+namespace Magento\InventorySales\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Get stock ids related to given source code.
+ * Get all source codes assigned to given stock and product.
  */
-class GetStockIdsBySourceCode
+class GetSourceCodesBySkuAndStockId
 {
     /**
      * @var ResourceConnection
@@ -28,18 +28,24 @@ class GetStockIdsBySourceCode
     }
 
     /**
-     * @param string $sourceCode
+     * @param string $sku
+     * @param int $stockId
      * @return array
      */
-    public function execute(string $sourceCode): array
+    public function execute(string $sku, int $stockId): array
     {
         $connection = $this->resource->getConnection();
         $select = $connection->select()
             ->from(
                 $this->resource->getTableName('inventory_source_stock_link'),
-                'stock_id'
+                'source_code'
             )
-            ->where('source_code =?', $sourceCode);
+            ->where('stock_id =?', $stockId)
+            ->join(
+                ['source' => $this->resource->getTableName('inventory_source_item')],
+                'source.source_code = inventory_source_stock_link.source_code',
+                []
+            )->where('source.sku = ?', $sku);
 
         return $connection->fetchCol($select);
     }

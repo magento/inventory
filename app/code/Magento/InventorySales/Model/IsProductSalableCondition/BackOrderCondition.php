@@ -7,12 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
-use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventorySales\Model\ResourceModel\GetSourceCodesBySkuAndStockId;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -26,28 +25,28 @@ class BackOrderCondition implements IsProductSalableInterface
     private $getStockConfiguration;
 
     /**
-     * @var CollectionFactory
-     */
-    private $sourceItemCollectionFactory;
-
-    /**
      * @var GetSourceConfigurationInterface
      */
     private $getSourceConfiguration;
 
     /**
+     * @var GetSourceCodesBySkuAndStockId
+     */
+    private $getSourceCodesBySkuAndStockId;
+
+    /**
      * @param GetStockConfigurationInterface $getStockConfiguration
      * @param GetSourceConfigurationInterface $getSourceConfiguration
-     * @param CollectionFactory $sourceItemCollectionFactory
+     * @param GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
      */
     public function __construct(
         GetStockConfigurationInterface $getStockConfiguration,
         GetSourceConfigurationInterface $getSourceConfiguration,
-        CollectionFactory $sourceItemCollectionFactory
+        GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
     ) {
         $this->getStockConfiguration = $getStockConfiguration;
         $this->getSourceConfiguration = $getSourceConfiguration;
-        $this->sourceItemCollectionFactory = $sourceItemCollectionFactory;
+        $this->getSourceCodesBySkuAndStockId = $getSourceCodesBySkuAndStockId;
     }
 
     /**
@@ -59,20 +58,12 @@ class BackOrderCondition implements IsProductSalableInterface
         $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
         $globalConfiguration = $this->getStockConfiguration->forGlobal();
         $minQty = $this->getMinQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
-        //todo; Temporal solution. Should be reworked.
-        $sourceItemCollection = $this->sourceItemCollectionFactory->create();
-        $sourceItemCollection->addFieldToSelect('source_code');
-        $sourceItemCollection->addFieldToFilter('sku', ['eq' => $sku]);
-        $sourceItemCollection->getSelect()->join(
-            ['link' => $sourceItemCollection->getTable('inventory_source_stock_link')],
-            'main_table.source_code = link.source_code',
-            []
-        )->where('link.stock_id = ?', $stockId);
         $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
         $globalBackOrders = $globalSourceConfiguration->getBackorders();
         $result = $globalBackOrders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0;
-        foreach ($sourceItemCollection as $sourceItem) {
-            $backOrders = $this->getBackorders($sku, $sourceItem, $globalSourceConfiguration);
+        $sourceCodes = $this->getSourceCodesBySkuAndStockId->execute($sku, $stockId);
+        foreach ($sourceCodes as $sourceCode) {
+            $backOrders = $this->getBackorders($sku, $sourceCode, $globalSourceConfiguration);
             if ($backOrders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0) {
                 $result = true;
                 break;
@@ -84,17 +75,17 @@ class BackOrderCondition implements IsProductSalableInterface
 
     /**
      * @param string $sku
-     * @param SourceItemInterface $sourceItem
+     * @param string $sourceCode
      * @param SourceItemConfigurationInterface $globalConfiguration
      * @return int
      */
     private function getBackorders(
         string $sku,
-        SourceItemInterface $sourceItem,
+        string $sourceCode,
         SourceItemConfigurationInterface $globalConfiguration
     ): int {
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceItem->getSourceCode());
-        $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceItem->getSourceCode());
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceCode);
+        $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode);
 
         $defaultValue = $sourceConfiguration->getBackorders() !== null
             ? $sourceConfiguration->getBackorders()

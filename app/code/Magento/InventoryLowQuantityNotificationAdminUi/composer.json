@@ -10,8 +10,7 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-low-quantity-notification-api": "*",
-        "magento/module-inventory-low-quantity-notification": "*",
-        "magento/module-ui": "*"
+        "magento/module-inventory-low-quantity-notification": "*"
     },
     "type": "magento2-module",
     "license": [

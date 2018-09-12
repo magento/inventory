@@ -8,11 +8,15 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\Order;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryApi\Api\StockRepositoryInterface;
+use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -24,11 +28,8 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -95,6 +96,16 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      */
     private $storeManager;
 
+    /**
+     * @var GetSourceConfigurationInterface
+     */
+    private $getSourceConfiguration;
+
+    /**
+     * @var SaveSourceConfigurationInterface
+     */
+    private $saveSourceConfiguration;
+
     protected function setUp()
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -109,6 +120,8 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
+        $this->getSourceConfiguration = Bootstrap::getObjectManager()->get(GetSourceConfigurationInterface::class);
+        $this->saveSourceConfiguration = Bootstrap::getObjectManager()->get(SaveSourceConfigurationInterface::class);
     }
 
     /**
@@ -183,7 +196,6 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture store_for_global_website_store cataloginventory/item_options/backorders 1
      *
      * @magentoDbIsolation disabled
      */
@@ -192,6 +204,9 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $sku = 'SKU-2';
         $stockId = 30;
         $quoteItemQty = 6.5;
+        $sourceConfiguration = $this->getSourceConfiguration->forSource('us-1');
+        $sourceConfiguration->setBackorders(1);
+        $this->saveSourceConfiguration->forSource('us-1', $sourceConfiguration);
 
         $cart = $this->getCartByStockId($stockId);
         $product = $this->productRepository->get($sku);
@@ -217,7 +232,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
+     * @magentoConfigFixture default/cataloginventory/item_options/manage_stock 0
      *
      * @magentoDbIsolation disabled
      */

@@ -12,8 +12,11 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Registry;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\Quote\Api\CartManagementInterface;
@@ -91,6 +94,21 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $saveStockConfiguration;
 
+    /**
+     * @var GetSourceConfigurationInterface
+     */
+    private $getSourceConfiguration;
+
+    /**
+     * @var SaveSourceConfigurationInterface
+     */
+    private $saveSourceConfiguration;
+
+    /**
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
     protected function setUp()
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -105,6 +123,19 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
         $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
         $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
+        $this->getSourceConfiguration = Bootstrap::getObjectManager()->get(GetSourceConfigurationInterface::class);
+        $this->saveSourceConfiguration = Bootstrap::getObjectManager()->get(SaveSourceConfigurationInterface::class);
+        $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
+
+        $stockConfiguration = $this->getStockConfiguration->forStock($this->defaultStockProvider->getId());
+        $stockConfiguration->setManageStock(null);
+        $stockConfiguration->setIsQtyDecimal(false);
+        $stockConfiguration->setIsDecimalDivided(false);
+        $this->saveStockConfiguration->forStock($this->defaultStockProvider->getId(), $stockConfiguration);
+
+        $sourceConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
+        $sourceConfiguration->setBackorders(null);
+        $this->saveSourceConfiguration->forSource($this->defaultSourceProvider->getCode(), $sourceConfiguration);
     }
 
     /**
@@ -142,6 +173,28 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     {
         $sku = 'SKU-1';
         $quoteItemQty = 8.5;
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
+            $sku,
+            $this->defaultStockProvider->getId()
+        );
+        $stockItemConfiguration->setManageStock(null);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $this->saveStockConfiguration->forStockItem(
+            $sku,
+            $this->defaultStockProvider->getId(),
+            $stockItemConfiguration
+        );
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
+            $sku,
+            $this->defaultSourceProvider->getCode()
+        );
+        $sourceItemConfiguration->setBackorders(null);
+        $this->saveSourceConfiguration->forSourceItem(
+            $sku,
+            $this->defaultSourceProvider->getCode(),
+            $sourceItemConfiguration
+        );
 
         $cart = $this->getCart();
         $product = $this->productRepository->get($sku);

@@ -7,14 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalable;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
-use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -37,36 +35,28 @@ class BackorderConditionTest extends TestCase
     private $sourceItemsSave;
 
     /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
-    /**
      * @var IsProductSalableInterface
      */
     private $isProductSalable;
 
     /**
-     * @var StockItemRepositoryInterface
+     * @var GetSourceConfigurationInterface
      */
-    private $stockItemRepository;
+    private $getSourceConfiguration;
 
     /**
-     * @var StockItemCriteriaInterfaceFactory
+     * @var SaveSourceConfigurationInterface
      */
-    private $stockItemCriteriaFactory;
+    private $saveSourceConfiguration;
 
     protected function setUp()
     {
-        $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
-        $this->stockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);
-        $this->stockItemCriteriaFactory = Bootstrap::getObjectManager()->get(
-            StockItemCriteriaInterfaceFactory::class
-        );
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->getSourceConfiguration = Bootstrap::getObjectManager()->get(GetSourceConfigurationInterface::class);
+        $this->saveSourceConfiguration = Bootstrap::getObjectManager()->get(SaveSourceConfigurationInterface::class);
     }
 
     /**
@@ -80,16 +70,9 @@ class BackorderConditionTest extends TestCase
      */
     public function testBackorderedZeroQtyProductIsSalable()
     {
-        $product = $this->productRepository->get('SKU-2');
-        $stockItemSearchCriteria = $this->stockItemCriteriaFactory->create();
-        $stockItemSearchCriteria->setProductsFilter($product->getId());
-        $stockItemsCollection = $this->stockItemRepository->getList($stockItemSearchCriteria);
-
-        /** @var StockItemInterface $legacyStockItem */
-        $legacyStockItem = current($stockItemsCollection->getItems());
-        $legacyStockItem->setBackorders(1);
-        $legacyStockItem->setUseConfigBackorders(0);
-        $this->stockItemRepository->save($legacyStockItem);
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem('SKU-2', 'us-1');
+        $sourceItemConfiguration->setBackorders(1);
+        $this->saveSourceConfiguration->forSourceItem('SKU-2', 'us-1', $sourceItemConfiguration);
 
         $sourceItem = $this->getSourceItemBySku('SKU-2');
         $sourceItem->setQuantity(-15);
