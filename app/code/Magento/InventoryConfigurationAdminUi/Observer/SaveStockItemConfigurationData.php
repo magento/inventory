@@ -46,7 +46,9 @@ class SaveStockItemConfigurationData implements ObserverInterface
         StockItemConfigurationInterface::MIN_SALE_QTY => 'float',
         StockItemConfigurationInterface::MAX_SALE_QTY => 'float',
         StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS => 'bool',
-        StockItemConfigurationInterface::QTY_INCREMENTS => 'float'
+        StockItemConfigurationInterface::QTY_INCREMENTS => 'float',
+        StockItemConfigurationInterface::LOW_STOCK_DATE => 'string',
+
     ];
 
     /**
@@ -85,8 +87,7 @@ class SaveStockItemConfigurationData implements ObserverInterface
             if ($stockData['use_config_' . $field]) {
                 $stockItemConfiguration->$method(null);
             } else {
-                $value = $stockData[$field];
-                $value = settype($value, $type);
+                $value = $this->getValue($stockData[$field], $type);
                 $stockItemConfiguration->$method($value);
             }
         }
@@ -97,5 +98,27 @@ class SaveStockItemConfigurationData implements ObserverInterface
         $stockItemConfiguration->setIsDecimalDivided($isDecimalDivided);
 
         $this->saveStockConfiguration->forStockItem((string)$sku, (int)$stockData['stock_id'], $stockItemConfiguration);
+    }
+
+    /**
+     * @param mixed $value
+     * @param string $type
+     * @return mixed
+     */
+    private function getValue($value, $type)
+    {
+        switch ($type) {
+            case 'float':
+                $value = (float)$value;
+                break;
+            case 'bool':
+                $value = (bool)$value;
+                break;
+            case 'string':
+                $value = (string)$value;
+                break;
+        }
+
+        return $value;
     }
 }

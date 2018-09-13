@@ -52,6 +52,7 @@ class SaveStockItemConfigurationPlugin
         StockItemConfigurationInterface::MAX_SALE_QTY => 'float',
         StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS => 'bool',
         StockItemConfigurationInterface::QTY_INCREMENTS => 'float',
+        StockItemConfigurationInterface::LOW_STOCK_DATE => 'string',
     ];
 
     /**
@@ -98,8 +99,7 @@ class SaveStockItemConfigurationPlugin
             if ($stockItem->getData('use_config_' . $field)) {
                 $stockItemConfiguration->$method(null);
             } elseif ($stockItem->getData($field) !== null) {
-                $value = $stockItem->getData($field);
-                $value = settype($value, $type);
+                $value = $this->getValue($stockItem->getData($field), $type);
                 $stockItemConfiguration->$method($value);
             }
         }
@@ -120,5 +120,27 @@ class SaveStockItemConfigurationPlugin
         );
 
         return $result;
+    }
+
+    /**
+     * @param mixed $value
+     * @param string $type
+     * @return mixed
+     */
+    private function getValue($value, $type)
+    {
+        switch ($type) {
+            case 'float':
+                $value = (float)$value;
+                break;
+            case 'bool':
+                $value = (bool)$value;
+                break;
+            case 'string':
+                $value = (string)$value;
+                break;
+        }
+
+        return $value;
     }
 }

@@ -297,6 +297,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @magentoConfigFixture default/cataloginventory/item_options/manage_stock 0
      * @covers \Magento\Catalog\Model\Product::isSalable
      * @covers \Magento\Catalog\Model\Product::isSaleable
      * @covers \Magento\Catalog\Model\Product::isAvailable
@@ -592,6 +593,7 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      *
      * @magentoDataFixture Magento/Catalog/_files/product_simple_out_of_stock.php
      * @dataProvider productWithBackordersDataProvider
+     * @magentoDbIsolation disabled
      * @param int $qty
      * @param int $stockStatus
      * @param bool $expectedStockStatus
