@@ -45,6 +45,7 @@ class SaveStockItemConfigurationPlugin
      * @var array
      */
     private $fields = [
+        StockItemConfigurationInterface::MANAGE_STOCK => 'bool',
         StockItemConfigurationInterface::MIN_QTY => 'float',
         StockItemConfigurationInterface::STOCK_THRESHOLD_QTY => 'float',
         StockItemConfigurationInterface::MIN_SALE_QTY => 'float',
@@ -94,23 +95,18 @@ class SaveStockItemConfigurationPlugin
             $this->defaultStockProvider->getId()
         );
         foreach ($this->fields as $field => $type) {
-            $method = 'set' . SimpleDataObjectConverter::snakeCaseToUpperCamelCase($field);
-            if ($stockItem->getData('use_config_' . $field)) {
-                $stockItemConfiguration->$method(null);
-            } elseif ($stockItem->getData($field) !== null) {
-                $value = $this->getValue($stockItem->getData($field), $type);
-                $stockItemConfiguration->$method($value);
+            $setMethod = 'set' . SimpleDataObjectConverter::snakeCaseToUpperCamelCase($field);
+            $getMethod = 'get' . SimpleDataObjectConverter::snakeCaseToUpperCamelCase($field);
+            if ($stockItem->getData('use_config_' . $field) || $stockItem->getData('use_config_' . $field) === null) {
+                $stockItemConfiguration->$setMethod(null);
+            } else {
+                $value = $stockItem->getData($field) !== null
+                    ? $this->getValue($stockItem->getData($field), $type)
+                    : $stockItemConfiguration->$getMethod();
+                $stockItemConfiguration->$setMethod($value);
             }
         }
 
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)) {
-            $stockItemConfiguration->setManageStock(null);
-        } else {
-            $manageStock = $stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK) !== null
-                ? (bool)$stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK)
-                : false;
-            $stockItemConfiguration->setManageStock($manageStock);
-        }
         $isQtyDecimal = $stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL) !== null
             ? (bool)$stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL)
             : (bool)$stockItemConfiguration->isQtyDecimal();

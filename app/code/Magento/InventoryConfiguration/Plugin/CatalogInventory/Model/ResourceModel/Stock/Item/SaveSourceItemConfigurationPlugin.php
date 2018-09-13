@@ -79,19 +79,23 @@ class SaveSourceItemConfigurationPlugin
             $this->defaultSourceProvider->getCode()
         );
 
-        if ($stockItem->getData('use_config_' . SourceItemConfigurationInterface::BACKORDERS)) {
+        if ($stockItem->getData('use_config_' . SourceItemConfigurationInterface::BACKORDERS)
+            || $stockItem->getData('use_config_' . SourceItemConfigurationInterface::BACKORDERS) === null) {
             $sourceItemConfiguration->setBackorders(null);
-        } elseif ($stockItem->getData(SourceItemConfigurationInterface::BACKORDERS) !== null) {
-            $sourceItemConfiguration->setBackorders(
-                (int)$stockItem->getData(SourceItemConfigurationInterface::BACKORDERS)
-            );
+        } else {
+            $backorders = $stockItem->getData(SourceItemConfigurationInterface::BACKORDERS) !== null
+                ? (int)$stockItem->getData(SourceItemConfigurationInterface::BACKORDERS)
+                : (int)$sourceItemConfiguration->getBackorders();
+            $sourceItemConfiguration->setBackorders($backorders);
         }
-        if ($stockItem->getData('use_config_' . SourceItemConfigurationInterface::NOTIFY_STOCK_QTY)) {
+        if ($stockItem->getData('use_config_' . SourceItemConfigurationInterface::NOTIFY_STOCK_QTY)
+            || $stockItem->getData('use_config_' . SourceItemConfigurationInterface::NOTIFY_STOCK_QTY) === null) {
             $sourceItemConfiguration->setNotifyStockQty(null);
-        } elseif ($stockItem->getData(SourceItemConfigurationInterface::NOTIFY_STOCK_QTY) !== null) {
-            $sourceItemConfiguration->setNotifyStockQty(
-                (float)$stockItem->getData(SourceItemConfigurationInterface::NOTIFY_STOCK_QTY)
-            );
+        } else {
+            $notifyQty = $stockItem->getData(SourceItemConfigurationInterface::NOTIFY_STOCK_QTY) !== null
+                ? (float)$stockItem->getData(SourceItemConfigurationInterface::NOTIFY_STOCK_QTY)
+                : (float)$sourceItemConfiguration->getNotifyStockQty();
+            $sourceItemConfiguration->setNotifyStockQty($notifyQty);
         }
 
         $this->saveSourceConfiguration->forSourceItem(
