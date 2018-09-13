@@ -6,17 +6,16 @@
 
 namespace Magento\Indexer\Setup\Patch\Data;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Framework\Indexer\StateInterface;
 use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Indexer\ConfigInterface;
 use Magento\Indexer\Model\ResourceModel\Indexer\State\CollectionFactory;
-use Magento\Indexer\Model\Indexer\State;
 use Magento\Indexer\Model\Indexer\StateFactory;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchVersionInterface;
+use Magento\Framework\Indexer\IndexerRegistry;
 
 /**
  * Class InitializeIndexerState
@@ -55,8 +54,19 @@ class InitializeIndexerState implements DataPatchInterface, PatchVersionInterfac
     private $encoder;
 
     /**
+     * @var IndexerRegistry
+     */
+    private $indexerRegistry;
+
+    /**
      * PatchInitial constructor.
      * @param \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetup
+     * @param CollectionFactory $statesFactory
+     * @param StateFactory $stateFactory
+     * @param ConfigInterface $config
+     * @param EncryptorInterface $encryptor
+     * @param EncoderInterface $encoder
+     * @param IndexerRegistry $indexerRegistry
      */
     public function __construct(
         \Magento\Framework\Setup\ModuleDataSetupInterface $moduleDataSetup,
@@ -64,7 +74,8 @@ class InitializeIndexerState implements DataPatchInterface, PatchVersionInterfac
         StateFactory $stateFactory,
         ConfigInterface $config,
         EncryptorInterface $encryptor,
-        EncoderInterface $encoder
+        EncoderInterface $encoder,
+        IndexerRegistry $indexerRegistry = null
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->statesFactory = $statesFactory;
@@ -72,6 +83,7 @@ class InitializeIndexerState implements DataPatchInterface, PatchVersionInterfac
         $this->config = $config;
         $this->encryptor = $encryptor;
         $this->encoder = $encoder;
+        $this->indexerRegistry = $indexerRegistry ? : ObjectManager::getInstance()->get(IndexerRegistry::class);
     }
 
     /**
@@ -79,27 +91,11 @@ class InitializeIndexerState implements DataPatchInterface, PatchVersionInterfac
      */
     public function apply()
     {
-        /** @var State[] $stateIndexers */
-        $stateIndexers = [];
-        $states = $this->statesFactory->create();
-        foreach ($states->getItems() as $state) {
-            /** @var State $state */
-            $stateIndexers[$state->getIndexerId()] = $state;
-        }
-
         foreach ($this->config->getIndexers() as $indexerId => $indexerConfig) {
             $hash = $this->encryptor->hash($this->encoder->encode($indexerConfig), Encryptor::HASH_VERSION_MD5);
-            if (isset($stateIndexers[$indexerId])) {
-                $stateIndexers[$indexerId]->setHashConfig($hash);
-                $stateIndexers[$indexerId]->save();
-            } else {
-                /** @var State $state */
-                $state = $this->stateFactory->create();
-                $state->loadByIndexer($indexerId);
-                $state->setHashConfig($hash);
-                $state->setStatus(StateInterface::STATUS_INVALID);
-                $state->save();
-            }
+            $indexerState = $this->indexerRegistry->get($indexerId)->getState();
+            $indexerState->setHashConfig($hash);
+            $indexerState->save();
         }
     }
 

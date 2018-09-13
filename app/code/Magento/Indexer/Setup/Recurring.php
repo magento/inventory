@@ -6,6 +6,7 @@
 
 namespace Magento\Indexer\Setup;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Indexer\StateInterface;
@@ -14,9 +15,9 @@ use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Indexer\ConfigInterface;
-use Magento\Indexer\Model\Indexer\State;
 use Magento\Indexer\Model\Indexer\StateFactory;
 use Magento\Indexer\Model\ResourceModel\Indexer\State\CollectionFactory;
+use Magento\Framework\Indexer\IndexerRegistry;
 
 /**
  * @codeCoverageIgnore
@@ -52,6 +53,11 @@ class Recurring implements InstallSchemaInterface
     private $stateFactory;
 
     /**
+     * @var IndexerRegistry
+     */
+    private $indexerRegistry;
+
+    /**
      * Init
      *
      * @param CollectionFactory $statesFactory
@@ -59,19 +65,22 @@ class Recurring implements InstallSchemaInterface
      * @param ConfigInterface $config
      * @param EncryptorInterface $encryptor
      * @param EncoderInterface $encoder
+     * @param IndexerRegistry $indexerRegistry
      */
     public function __construct(
         CollectionFactory $statesFactory,
         StateFactory $stateFactory,
         ConfigInterface $config,
         EncryptorInterface $encryptor,
-        EncoderInterface $encoder
+        EncoderInterface $encoder,
+        IndexerRegistry $indexerRegistry = null
     ) {
         $this->statesFactory = $statesFactory;
         $this->stateFactory = $stateFactory;
         $this->config = $config;
         $this->encryptor = $encryptor;
         $this->encoder = $encoder;
+        $this->indexerRegistry = $indexerRegistry ? : ObjectManager::getInstance()->get(IndexerRegistry::class);
     }
 
     /**
@@ -79,33 +88,18 @@ class Recurring implements InstallSchemaInterface
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        /** @var State[] $stateIndexers */
-        $stateIndexers = [];
-        $states = $this->statesFactory->create();
-        foreach ($states->getItems() as $state) {
-            /** @var State $state */
-            $stateIndexers[$state->getIndexerId()] = $state;
-        }
-
         foreach ($this->config->getIndexers() as $indexerId => $indexerConfig) {
+
+            $indexerState = $this->indexerRegistry->get($indexerId)->getState();
             $expectedHashConfig = $this->encryptor->hash(
                 $this->encoder->encode($indexerConfig),
                 Encryptor::HASH_VERSION_MD5
             );
 
-            if (isset($stateIndexers[$indexerId])) {
-                if ($stateIndexers[$indexerId]->getHashConfig() != $expectedHashConfig) {
-                    $stateIndexers[$indexerId]->setStatus(StateInterface::STATUS_INVALID);
-                    $stateIndexers[$indexerId]->setHashConfig($expectedHashConfig);
-                    $stateIndexers[$indexerId]->save();
-                }
-            } else {
-                /** @var State $state */
-                $state = $this->stateFactory->create();
-                $state->loadByIndexer($indexerId);
-                $state->setHashConfig($expectedHashConfig);
-                $state->setStatus(StateInterface::STATUS_INVALID);
-                $state->save();
+            if ($indexerState->getHashConfig() != $expectedHashConfig) {
+                $indexerState->setStatus(StateInterface::STATUS_INVALID);
+                $indexerState->setHashConfig($expectedHashConfig);
+                $indexerState->save();
             }
         }
     }
