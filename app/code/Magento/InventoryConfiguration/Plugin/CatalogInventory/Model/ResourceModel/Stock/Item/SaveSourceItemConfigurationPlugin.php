@@ -9,6 +9,7 @@ namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\ResourceM
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
+use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
@@ -60,17 +61,17 @@ class SaveSourceItemConfigurationPlugin
 
     /**
      * @param ItemResourceModel $subject
-     * @param ItemResourceModel $result
+     * @param AbstractModel $result
      * @param StockItemInterface $stockItem
-     * @return ItemResourceModel
+     * @return AbstractModel
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(
         ItemResourceModel $subject,
-        ItemResourceModel $result,
+        AbstractModel $result,
         StockItemInterface $stockItem
-    ): ItemResourceModel {
+    ): AbstractModel {
         $productId = $stockItem->getProductId();
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];

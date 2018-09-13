@@ -72,7 +72,7 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             $itemSku = $item->getSku();
             $qty = $item->getQty();
      
-            $isManageStock = $this->getIsManageStock($itemSku, $stockId);
+            $isManageStock = $this->isManageStock($itemSku, $stockId);
             if (!$isManageStock) {
                 //We don't need to Manage Stock
                 continue;
@@ -99,7 +99,7 @@ class SourceDeductionService implements SourceDeductionServiceInterface
      * @param int $stockId
      * @return bool
      */
-    private function getIsManageStock(string $sku, int $stockId): bool
+    private function isManageStock(string $sku, int $stockId): bool
     {
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockConfiguration = $this->getStockConfiguration->forStock($stockId);

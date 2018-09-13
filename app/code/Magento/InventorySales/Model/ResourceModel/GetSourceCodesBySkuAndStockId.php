@@ -35,15 +35,16 @@ class GetSourceCodesBySkuAndStockId
     public function execute(string $sku, int $stockId): array
     {
         $connection = $this->resource->getConnection();
+        $sourceLinkTable = $this->resource->getTableName('inventory_source_stock_link');
         $select = $connection->select()
             ->from(
-                $this->resource->getTableName('inventory_source_stock_link'),
+                $sourceLinkTable,
                 'source_code'
             )
             ->where('stock_id =?', $stockId)
             ->join(
                 ['source' => $this->resource->getTableName('inventory_source_item')],
-                'source.source_code = inventory_source_stock_link.source_code',
+                'source.source_code = ' . $sourceLinkTable . '.source_code',
                 []
             )->where('source.sku = ?', $sku);
 

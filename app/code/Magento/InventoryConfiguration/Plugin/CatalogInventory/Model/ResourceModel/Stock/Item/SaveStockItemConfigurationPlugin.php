@@ -9,6 +9,8 @@ namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\ResourceM
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
+use Magento\Framework\Api\SimpleDataObjectConverter;
+use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
@@ -41,6 +43,19 @@ class SaveStockItemConfigurationPlugin
     private $defaultStockProvider;
 
     /**
+     * @var array
+     */
+    private $fields = [
+        StockItemConfigurationInterface::MANAGE_STOCK => 'bool',
+        StockItemConfigurationInterface::MIN_QTY => 'float',
+        StockItemConfigurationInterface::STOCK_THRESHOLD_QTY => 'float',
+        StockItemConfigurationInterface::MIN_SALE_QTY => 'float',
+        StockItemConfigurationInterface::MAX_SALE_QTY => 'float',
+        StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS => 'bool',
+        StockItemConfigurationInterface::QTY_INCREMENTS => 'float',
+    ];
+
+    /**
      * @param GetStockConfigurationInterface $getStockConfiguration
      * @param SaveStockConfigurationInterface $saveStockConfiguration
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
@@ -60,17 +75,17 @@ class SaveStockItemConfigurationPlugin
 
     /**
      * @param ItemResourceModel $subject
-     * @param ItemResourceModel $result
+     * @param AbstractModel $result
      * @param StockItemInterface $stockItem
-     * @return ItemResourceModel
+     * @return AbstractModel
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(
         ItemResourceModel $subject,
-        ItemResourceModel $result,
+        AbstractModel $result,
         StockItemInterface $stockItem
-    ): ItemResourceModel {
+    ): AbstractModel {
         $productId = $stockItem->getProductId();
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
@@ -79,60 +94,15 @@ class SaveStockItemConfigurationPlugin
             $productSku,
             $this->defaultStockProvider->getId()
         );
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)) {
-            $stockItemConfiguration->setManageStock(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK) !== null) {
-            $stockItemConfiguration->setManageStock(
-                (bool)$stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK)
-            );
-        }
-
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MIN_QTY)) {
-            $stockItemConfiguration->setMinQty(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::MIN_QTY) !== null) {
-            $stockItemConfiguration->setMinQty(
-                (float)$stockItem->getData(StockItemConfigurationInterface::MIN_QTY)
-            );
-        }
-
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MIN_QTY)) {
-            $stockItemConfiguration->setStockThresholdQty(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::STOCK_THRESHOLD_QTY) !== null) {
-            $stockItemConfiguration->setStockThresholdQty(
-                (float)$stockItem->getData(StockItemConfigurationInterface::STOCK_THRESHOLD_QTY)
-            );
-        }
-
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MIN_SALE_QTY)) {
-            $stockItemConfiguration->setMinSaleQty(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::MIN_SALE_QTY) !== null) {
-            $stockItemConfiguration->setMinSaleQty(
-                (float)$stockItem->getData(StockItemConfigurationInterface::MIN_SALE_QTY)
-            );
-        }
-
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MAX_SALE_QTY)) {
-            $stockItemConfiguration->setMaxSaleQty(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::MAX_SALE_QTY) !== null) {
-            $stockItemConfiguration->setMaxSaleQty(
-                (float)$stockItem->getData(StockItemConfigurationInterface::MAX_SALE_QTY)
-            );
-        }
-
-        if ($stockItem->getData('use_config_enable_qty_inc')) {
-            $stockItemConfiguration->setEnableQtyIncrements(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS) !== null) {
-            $stockItemConfiguration->setEnableQtyIncrements(
-                (bool)$stockItem->getData(StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS)
-            );
-        }
-
-        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::QTY_INCREMENTS)) {
-            $stockItemConfiguration->setQtyIncrements(null);
-        } elseif ($stockItem->getData(StockItemConfigurationInterface::QTY_INCREMENTS) !== null) {
-            $stockItemConfiguration->setQtyIncrements(
-                (float)$stockItem->getData(StockItemConfigurationInterface::QTY_INCREMENTS)
-            );
+        foreach ($this->fields as $field => $type) {
+            $method = 'set' . SimpleDataObjectConverter::snakeCaseToUpperCamelCase($field);
+            if ($stockItem->getData('use_config_' . $field)) {
+                $stockItemConfiguration->$method(null);
+            } elseif ($stockItem->getData($field) !== null) {
+                $value = $stockItem->getData($field);
+                $value = settype($value, $type);
+                $stockItemConfiguration->$method($value);
+            }
         }
 
         $isQtyDecimal = $stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL) !== null

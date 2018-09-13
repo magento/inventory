@@ -45,7 +45,6 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
      * @param \Closure $proceed
      * @param ReservationInterface[] $reservations
      *
-     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(AppendReservationsInterface $subject, \Closure $proceed, array $reservations)
@@ -56,7 +55,7 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
 
         $reservationToAppend = [];
         foreach ($reservations as $reservation) {
-            $isManageStock = $this->getIsManageStock($reservation);
+            $isManageStock = $this->isManageStock($reservation);
 
             if ($isManageStock) {
                 $reservationToAppend[] = $reservation;
@@ -72,7 +71,7 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
      * @param ReservationInterface $reservation
      * @return bool
      */
-    private function getIsManageStock(ReservationInterface $reservation): bool
+    private function isManageStock(ReservationInterface $reservation): bool
     {
         $stockConfiguration = $this->getStockConfiguration->forStock($reservation->getStockId());
         $globalConfiguration = $this->getStockConfiguration->forGlobal();

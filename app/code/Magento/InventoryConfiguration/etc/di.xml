@@ -34,9 +34,7 @@
         <plugin name="adapt_get_manage_stock" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetManageStockPlugin"/>
         <plugin name="adapt_get_use_config_manage_stock" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigManageStockPlugin"/>
         <plugin name="adapt_get_is_qty_decimal" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetIsQtyDecimalPlugin"/>
-        <plugin name="adapt_get_use_config_is_qty_decimal" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigIsQtyDecimalPlugin"/>
         <plugin name="adapt_get_is_decimal_divided" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetIsDecimalDividedPlugin"/>
-        <plugin name="adapt_get_use_config_is_decimal_divided" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigIsDecimalDividedPlugin"/>
         <plugin name="adapt_get_min_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetMinQtyPlugin"/>
         <plugin name="adapt_get_use_config_min_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigMinQtyPlugin"/>
         <plugin name="adapt_get_min_sale_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetMinSaleQtyPlugin"/>

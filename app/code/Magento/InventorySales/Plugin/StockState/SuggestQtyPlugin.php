@@ -91,7 +91,7 @@ class SuggestQtyPlugin
             $stockId = (int)$stock->getStockId();
 
             $qtyIncrements = $this->getQtyIncrements($productSku, $stockId);
-            $isManageStock = $this->getIsMangeStock($productSku, $stockId);
+            $isManageStock = $this->isMangeStock($productSku, $stockId);
             $minSaleQty = $this->getMinSaleQty($productSku, $stockId);
             $maxSaleQty = $this->getMaxSaleQty($productSku, $stockId);
 
@@ -144,7 +144,7 @@ class SuggestQtyPlugin
      * @param int $stockId
      * @return bool
      */
-    private function getIsMangeStock($productSku, int $stockId): bool
+    private function isMangeStock($productSku, int $stockId): bool
     {
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
         $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
