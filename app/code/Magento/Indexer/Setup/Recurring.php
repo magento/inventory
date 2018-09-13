@@ -89,7 +89,6 @@ class Recurring implements InstallSchemaInterface
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         foreach ($this->config->getIndexers() as $indexerId => $indexerConfig) {
-
             $indexerState = $this->indexerRegistry->get($indexerId)->getState();
             $expectedHashConfig = $this->encryptor->hash(
                 $this->encoder->encode($indexerConfig),
