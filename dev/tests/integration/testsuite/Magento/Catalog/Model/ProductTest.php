@@ -297,7 +297,6 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @magentoConfigFixture default/cataloginventory/item_options/manage_stock 0
      * @covers \Magento\Catalog\Model\Product::isSalable
      * @covers \Magento\Catalog\Model\Product::isSaleable
      * @covers \Magento\Catalog\Model\Product::isAvailable

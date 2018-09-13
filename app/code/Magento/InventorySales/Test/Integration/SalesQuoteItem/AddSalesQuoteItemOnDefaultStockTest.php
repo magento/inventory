@@ -173,6 +173,29 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
         $expectedQtyInCart2 = 5;
         $expectedQtyInCart3 = 5;
 
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
+            $productSku,
+            $this->defaultStockProvider->getId()
+        );
+        $stockItemConfiguration->setManageStock(null);
+        $stockItemConfiguration->setIsDecimalDivided(false);
+        $stockItemConfiguration->setIsQtyDecimal(false);
+        $this->saveStockConfiguration->forStockItem(
+            $productSku,
+            $this->defaultStockProvider->getId(),
+            $stockItemConfiguration
+        );
+        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
+            $productSku,
+            $this->defaultSourceProvider->getCode()
+        );
+        $sourceItemConfiguration->setBackorders(null);
+        $this->saveSourceConfiguration->forSourceItem(
+            $productSku,
+            $this->defaultSourceProvider->getCode(),
+            $sourceItemConfiguration
+        );
+
         $product = $this->getProductBySku($productSku);
         $quote = $this->getQuote();
 

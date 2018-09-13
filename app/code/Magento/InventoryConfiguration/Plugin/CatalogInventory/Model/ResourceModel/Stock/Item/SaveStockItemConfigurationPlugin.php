@@ -45,7 +45,6 @@ class SaveStockItemConfigurationPlugin
      * @var array
      */
     private $fields = [
-        StockItemConfigurationInterface::MANAGE_STOCK => 'bool',
         StockItemConfigurationInterface::MIN_QTY => 'float',
         StockItemConfigurationInterface::STOCK_THRESHOLD_QTY => 'float',
         StockItemConfigurationInterface::MIN_SALE_QTY => 'float',
@@ -104,6 +103,14 @@ class SaveStockItemConfigurationPlugin
             }
         }
 
+        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)) {
+            $stockItemConfiguration->setManageStock(null);
+        } else {
+            $manageStock = $stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK) !== null
+                ? (bool)$stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK)
+                : false;
+            $stockItemConfiguration->setManageStock($manageStock);
+        }
         $isQtyDecimal = $stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL) !== null
             ? (bool)$stockItem->getData(StockItemConfigurationInterface::IS_QTY_DECIMAL)
             : (bool)$stockItemConfiguration->isQtyDecimal();
