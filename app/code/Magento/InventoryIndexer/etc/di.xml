@@ -40,6 +40,10 @@
             <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
         </arguments>
     </type>
+    <!-- Stock -->
+    <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
+        <plugin name="create_stock_index_table" type="Magento\InventoryIndexer\Plugin\Inventory\Model\StockRepository\CreateStockTableAfterSaveStock"/>
+    </type>
     <!-- Source Item -->
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
         <plugin name="reindex_after_source_items_save" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceItemsSavePlugin"/>
