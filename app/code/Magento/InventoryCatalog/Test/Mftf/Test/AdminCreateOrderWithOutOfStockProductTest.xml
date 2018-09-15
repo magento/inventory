@@ -1,0 +1,36 @@
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AdminCreateOrderWithOutOfStockProductTest">
+        <annotations>
+            <features value="Multi-Source Inventory"/>
+            <stories value="Create an Order with Out of Stock Product via the Admin"/>
+            <title value="There should be only one error during adding product to order with out of stock status"/>
+            <description value="There should be only one error during adding product to order with out of stock status"/>
+            <severity value="MINOR"/>
+            <testCaseId value="MSI-1637"/>
+            <group value="msi"/>
+        </annotations>
+
+        <before>
+            <createData entity="ApiCategory" stepKey="createCategory"/>
+            <createData entity="ApiSimpleProductWithOutOfStockStatus" stepKey="createProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+        </after>
+
+        <actionGroup ref="navigateToNewOrderPageNewCustomer" stepKey="navigateToNewOrderPage" />
+        <actionGroup ref="addSimpleProductToOrder" stepKey="addSimpleProductToOrder">
+            <argument name="product" value="$$createProduct$$"/>
+        </actionGroup>
+        <waitForAjaxLoad time="30" stepKey="waitForAddSelectedProductsMessageVerifier"/>
+        <see userInput="The requested qty is not available" selector="AdminMessagesSection.error" stepKey="seeValidErrorMessage"/>
+        <dontSee userInput="This product is out of stock." selector="AdminMessagesSection.error" stepKey="dontSeeUnnecessaryErrorMessage"/>
+    </test>
+</tests>
