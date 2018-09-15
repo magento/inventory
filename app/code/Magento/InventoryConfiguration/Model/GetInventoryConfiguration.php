@@ -11,7 +11,6 @@ use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfiguration\Model\ResourceModel\GetSourceCodesBySkuAndStockId;
-use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\InventoryConfiguration\Model\GetSystemMinSaleQty;
 
 class GetInventoryConfiguration implements GetInventoryConfigurationInterface
@@ -70,14 +69,6 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
                 return false;
             }
         }
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShowDefaultNotificationMessage(): bool
-    {
-        // TODO: Implement isShowDefaultNotificationMessage() method.
     }
 
     /**

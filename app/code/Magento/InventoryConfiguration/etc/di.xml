@@ -45,5 +45,5 @@
         <plugin name="adapt_get_use_config_enable_qty_increments" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigEnableQtyIncrementsPlugin"/>
         <plugin name="adapt_get_low_stock_date" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetLowStockDatePlugin"/>
     </type>
-    <preference for="Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetInventoryConfigurationInterface"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetInventoryConfiguration"/>
 </config>
