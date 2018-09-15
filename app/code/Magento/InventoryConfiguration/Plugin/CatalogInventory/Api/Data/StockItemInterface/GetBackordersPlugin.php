@@ -9,16 +9,20 @@ namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockI
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 
 /**
  * Adapt "backorders" value for stock item configuration.
  */
 class GetBackordersPlugin
 {
+    /**
+     * @var GetInventoryConfigurationInterface
+     */
+    private $getInventoryConfiguration;
+
     /**
      * @var GetSkusByProductIdsInterface
      */
@@ -27,26 +31,21 @@ class GetBackordersPlugin
     /**
      * @var DefaultStockProviderInterface
      */
-    private $defaultSourceProvider;
+    private $defaultStockProvider;
 
     /**
-     * @var GetSourceConfigurationInterface
-     */
-    private $getSourceConfiguration;
-
-    /**
-     * @param GetSourceConfigurationInterface $getSourceConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        GetSourceConfigurationInterface $getSourceConfiguration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->getSourceConfiguration = $getSourceConfiguration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -64,18 +63,10 @@ class GetBackordersPlugin
 
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
-            $productSku,
-            $this->defaultSourceProvider->getCode()
-        );
-        $sourceConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
-        $globalConfiguration = $this->getSourceConfiguration->forGlobal();
-        $defaultValue = $sourceConfiguration->getBackorders() !== null
-            ? $sourceConfiguration->getBackorders()
-            : $globalConfiguration->getBackorders();
 
-        return $sourceItemConfiguration->getBackorders() !== null
-            ? $sourceItemConfiguration->getBackorders()
-            : $defaultValue;
+        return $this->getInventoryConfiguration->getBackorders(
+            $productSku,
+            $this->defaultStockProvider->getId()
+        );
     }
 }

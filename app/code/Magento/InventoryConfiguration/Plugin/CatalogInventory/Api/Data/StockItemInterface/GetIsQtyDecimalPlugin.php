@@ -11,7 +11,7 @@ use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 
 /**
  * Adapt "qty decimal" value for stock item configuration.
@@ -19,9 +19,9 @@ use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 class GetIsQtyDecimalPlugin
 {
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockConfiguration;
+    private $getInventoryConfiguration;
 
     /**
      * @var GetSkusByProductIdsInterface
@@ -34,16 +34,16 @@ class GetIsQtyDecimalPlugin
     private $defaultStockProvider;
 
     /**
-     * @param GetStockConfigurationInterface $getStockConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        GetStockConfigurationInterface $getStockConfiguration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->getStockConfiguration = $getStockConfiguration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultStockProvider = $defaultStockProvider;
     }
@@ -63,15 +63,9 @@ class GetIsQtyDecimalPlugin
 
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
+        return $this->getInventoryConfiguration->isQtyDecimal(
             $productSku,
             $this->defaultStockProvider->getId()
         );
-        $stockConfiguration = $this->getStockConfiguration->forStock($this->defaultStockProvider->getId());
-        $defaultValue = $stockConfiguration->isQtyDecimal() !== null ? $stockConfiguration->isQtyDecimal() : 0;
-
-        return $stockItemConfiguration->isQtyDecimal() !== null
-            ? $stockItemConfiguration->isQtyDecimal()
-            : $defaultValue;
     }
 }
