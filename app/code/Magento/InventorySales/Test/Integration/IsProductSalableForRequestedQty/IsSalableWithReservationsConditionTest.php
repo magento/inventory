@@ -230,4 +230,15 @@ class IsSalableWithReservationsConditionTest extends TestCase
         ]);
         $this->cleanupReservations->execute();
     }
+
+    /**
+     * @magentoDataFixture Magento/Quote/_files/is_not_salable_product.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_item_for_not_salable_product_on_default_source.php
+     */
+    public function testExecuteWithDisabledProduct()
+    {
+        $isSalable = $this->isProductSalableForRequestedQty->execute('simple-99', 1, 3)->isSalable();
+
+        self::assertFalse($isSalable);
+    }
 }
