@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfiguration\Model;
 
+use Magento\Inventory\Model\ResourceModel\IsProductDisabled;
 use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
@@ -44,24 +45,32 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     private $isSourceItemManagementAllowedForSku;
 
     /**
+     * @var IsProductDisabled
+     */
+    private $isProductDisabled;
+
+    /**
      * @param GetLegacyStockItem $getLegacyStockItem
      * @param StockItemConfigurationFactory $stockItemConfigurationFactory
      * @param IsProductAssignedToStockInterface $isProductAssignedToStock
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param IsSourceItemManagementAllowedForSku $isSourceItemManagementAllowedForSku
+     * @param IsProductDisabled $isProductDisabled
      */
     public function __construct(
         GetLegacyStockItem $getLegacyStockItem,
         StockItemConfigurationFactory $stockItemConfigurationFactory,
         IsProductAssignedToStockInterface $isProductAssignedToStock,
         DefaultStockProviderInterface $defaultStockProvider,
-        IsSourceItemManagementAllowedForSku $isSourceItemManagementAllowedForSku
+        IsSourceItemManagementAllowedForSku $isSourceItemManagementAllowedForSku,
+        IsProductDisabled $isProductDisabled
     ) {
         $this->getLegacyStockItem = $getLegacyStockItem;
         $this->stockItemConfigurationFactory = $stockItemConfigurationFactory;
         $this->isProductAssignedToStock = $isProductAssignedToStock;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
+        $this->isProductDisabled = $isProductDisabled;
     }
 
     /**
@@ -71,7 +80,9 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     {
         if ($this->defaultStockProvider->getId() !== $stockId
             && true === $this->isSourceItemManagementAllowedForSku->execute($sku)
-            && false === $this->isProductAssignedToStock->execute($sku, $stockId)) {
+            && false === $this->isProductAssignedToStock->execute($sku, $stockId)
+            && false === $this->isProductDisabled->execute($sku)
+        ) {
             throw new SkuIsNotAssignedToStockException(
                 __('The requested sku is not assigned to given stock.')
             );

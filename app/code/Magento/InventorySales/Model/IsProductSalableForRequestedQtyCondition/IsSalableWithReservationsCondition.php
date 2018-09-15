@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
+use Magento\Inventory\Model\ResourceModel\IsProductDisabled;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
@@ -47,24 +48,32 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
     private $productSalableResultFactory;
 
     /**
+     * @var IsProductDisabled
+     */
+    private $isProductDisabled;
+
+    /**
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
+     * @param IsProductDisabled $isProductDisabled
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory $productSalableResultFactory
+        ProductSalableResultInterfaceFactory $productSalableResultFactory,
+        IsProductDisabled $isProductDisabled
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->productSalableResultFactory = $productSalableResultFactory;
+        $this->isProductDisabled = $isProductDisabled;
     }
 
     /**
@@ -74,7 +83,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
-        if (null === $stockItemData) {
+        if (null === $stockItemData && false == $this->isProductDisabled->execute($sku)) {
             $errors = [
                 $this->productSalabilityErrorFactory->create([
                     'code' => 'is_salable_with_reservations-no_data',
