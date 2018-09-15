@@ -93,7 +93,6 @@ class SuggestQtyPlugin
             $qtyIncrements = $this->getInventoryConfiguration->getQtyIncrements($productSku, $stockId);
             $isManageStock = $this->getInventoryConfiguration->isManageStock($productSku, $stockId);
 
-
             if ($qty <= 0 || $isManageStock === false || $qtyIncrements < 2) {
                 throw new LocalizedException(__('Wrong condition.'));
             }

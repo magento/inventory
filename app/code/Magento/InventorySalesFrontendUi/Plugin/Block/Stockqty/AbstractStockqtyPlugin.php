@@ -71,7 +71,6 @@ class AbstractStockqtyPlugin
         $minQty = $this->getInventoryConfiguration->getMinQty($sku, $stockId);
         $stockThresholdQty = $this->getInventoryConfiguration->getStockThresholdQty($sku, $stockId);
 
-
         return ($backorders === SourceItemConfigurationInterface::BACKORDERS_NO
             || $backorders !== SourceItemConfigurationInterface::BACKORDERS_NO
             && $minQty < 0)
