@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\ResourceModel;
+namespace Magento\InventoryConfiguration\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 

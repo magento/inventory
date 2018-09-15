@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model;
 
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -21,9 +21,9 @@ use Magento\Framework\Exception\InputException;
 class GetProductSalableQty implements GetProductSalableQtyInterface
 {
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getInventoryConfiguration;
 
     /**
      * @var GetStockItemDataInterface
@@ -46,20 +46,20 @@ class GetProductSalableQty implements GetProductSalableQtyInterface
     private $getProductTypesBySkus;
 
     /**
-     * @param GetStockConfigurationInterface $getStockItemConfig
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      */
     public function __construct(
-        GetStockConfigurationInterface $getStockItemConfig,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         GetStockItemDataInterface $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         GetProductTypesBySkusInterface $getProductTypesBySkus
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfig;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
@@ -77,8 +77,7 @@ class GetProductSalableQty implements GetProductSalableQtyInterface
             return 0;
         }
 
-        $stockItemConfig = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
-        $minQty = $stockItemConfig->getMinQty();
+        $minQty = $this->getInventoryConfiguration->getMinQty($sku, $stockId);
 
         $productQtyInStock = $stockItemData[GetStockItemDataInterface::QUANTITY]
             + $this->getReservationsQuantity->execute($sku, $stockId)

@@ -7,12 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
-use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
-use Magento\InventorySales\Model\ResourceModel\GetSourceCodesBySkuAndStockId;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 
 /**
  * @inheritdoc
@@ -20,33 +17,17 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 class BackOrderCondition implements IsProductSalableInterface
 {
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockConfiguration;
+    private $getInventoryConfiguration;
 
     /**
-     * @var GetSourceConfigurationInterface
-     */
-    private $getSourceConfiguration;
-
-    /**
-     * @var GetSourceCodesBySkuAndStockId
-     */
-    private $getSourceCodesBySkuAndStockId;
-
-    /**
-     * @param GetStockConfigurationInterface $getStockConfiguration
-     * @param GetSourceConfigurationInterface $getSourceConfiguration
-     * @param GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      */
     public function __construct(
-        GetStockConfigurationInterface $getStockConfiguration,
-        GetSourceConfigurationInterface $getSourceConfiguration,
-        GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
+        GetInventoryConfigurationInterface $getInventoryConfiguration
     ) {
-        $this->getStockConfiguration = $getStockConfiguration;
-        $this->getSourceConfiguration = $getSourceConfiguration;
-        $this->getSourceCodesBySkuAndStockId = $getSourceCodesBySkuAndStockId;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
     }
 
     /**
@@ -54,63 +35,12 @@ class BackOrderCondition implements IsProductSalableInterface
      */
     public function execute(string $sku, int $stockId): bool
     {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-        $minQty = $this->getMinQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
-        $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
-        $globalBackOrders = $globalSourceConfiguration->getBackorders();
-        $result = $globalBackOrders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0;
-        $sourceCodes = $this->getSourceCodesBySkuAndStockId->execute($sku, $stockId);
-        foreach ($sourceCodes as $sourceCode) {
-            $backOrders = $this->getBackorders($sku, $sourceCode, $globalSourceConfiguration);
-            if ($backOrders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0) {
-                $result = true;
-                break;
-            }
+        $backorders = $this->getInventoryConfiguration->getBackorders($sku, $stockId);
+        $minQty = $this->getInventoryConfiguration->getMinQty($sku, $stockId);
+        if ($backorders !== SourceItemConfigurationInterface::BACKORDERS_NO && $minQty >= 0) {
+            return true;
         }
 
-        return $result;
-    }
-
-    /**
-     * @param string $sku
-     * @param string $sourceCode
-     * @param SourceItemConfigurationInterface $globalConfiguration
-     * @return int
-     */
-    private function getBackorders(
-        string $sku,
-        string $sourceCode,
-        SourceItemConfigurationInterface $globalConfiguration
-    ): int {
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceCode);
-        $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode);
-
-        $defaultValue = $sourceConfiguration->getBackorders() !== null
-            ? $sourceConfiguration->getBackorders()
-            : $globalConfiguration->getBackorders();
-
-        return $sourceItemConfiguration->getBackorders() !== null
-            ? $sourceItemConfiguration->getBackorders()
-            : $defaultValue;
-    }
-
-    /**
-     * @param StockItemConfigurationInterface $globalConfiguration
-     * @param StockItemConfigurationInterface $stockConfiguration
-     * @param StockItemConfigurationInterface $stockItemConfiguration
-     * @return float|null
-     */
-    private function getMinQty(
-        StockItemConfigurationInterface $globalConfiguration,
-        StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $stockItemConfiguration
-    ) {
-        $defaultValue = $stockConfiguration->getMinQty() !== null
-            ? $stockConfiguration->getMinQty()
-            : $globalConfiguration->getMinQty();
-
-        return $stockItemConfiguration->getMinQty() !== null ? $stockItemConfiguration->getMinQty() : $defaultValue;
+        return false;
     }
 }

@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\InventoryReservationsApi;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -19,9 +19,9 @@ use Magento\Framework\Exception\LocalizedException;
 class PreventAppendReservationOnNotManageItemsInStockPlugin
 {
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockConfiguration;
+    private $getInventoryConfiguration;
 
     /**
      * @var StockConfigurationInterface
@@ -29,14 +29,14 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
     private $stockConfiguration;
 
     /**
-     * @param GetStockConfigurationInterface $getStockItemConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
-        GetStockConfigurationInterface $getStockItemConfiguration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         StockConfigurationInterface $stockConfiguration
     ) {
-        $this->getStockConfiguration = $getStockItemConfiguration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->stockConfiguration = $stockConfiguration;
     }
 
@@ -45,6 +45,7 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
      * @param \Closure $proceed
      * @param ReservationInterface[] $reservations
      *
+     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(AppendReservationsInterface $subject, \Closure $proceed, array $reservations)
@@ -55,7 +56,10 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
 
         $reservationToAppend = [];
         foreach ($reservations as $reservation) {
-            $isManageStock = $this->isManageStock($reservation);
+            $isManageStock = $this->getInventoryConfiguration->isManageStock(
+                $reservation->getSku(),
+                $reservation->getStockId()
+            );
 
             if ($isManageStock) {
                 $reservationToAppend[] = $reservation;
@@ -65,27 +69,5 @@ class PreventAppendReservationOnNotManageItemsInStockPlugin
         if (!empty($reservationToAppend)) {
             $proceed($reservationToAppend);
         }
-    }
-
-    /**
-     * @param ReservationInterface $reservation
-     * @return bool
-     */
-    private function isManageStock(ReservationInterface $reservation): bool
-    {
-        $stockConfiguration = $this->getStockConfiguration->forStock($reservation->getStockId());
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-            $reservation->getSku(),
-            $reservation->getStockId()
-        );
-        $defaultValue = $stockConfiguration->isManageStock() !== null
-            ? $stockConfiguration->isManageStock()
-            : $globalConfiguration->isManageStock();
-        $isManageStock = $stockItemConfiguration->isManageStock() !== null
-            ? $stockItemConfiguration->isManageStock()
-            : $defaultValue;
-
-        return $isManageStock;
     }
 }

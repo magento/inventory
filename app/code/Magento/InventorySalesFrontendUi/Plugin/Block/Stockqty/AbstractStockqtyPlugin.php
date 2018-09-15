@@ -8,32 +8,24 @@ declare(strict_types=1);
 namespace Magento\InventorySalesFrontendUi\Plugin\Block\Stockqty;
 
 use Magento\CatalogInventory\Block\Stockqty\AbstractStockqty;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
-use Magento\InventorySales\Model\ResourceModel\GetSourceCodesBySkuAndStockId;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 class AbstractStockqtyPlugin
 {
-    /**
-     * @var GetStockConfigurationInterface
-     */
-    private $getStockConfiguration;
-
     /**
      * @var StockByWebsiteIdResolverInterface
      */
     private $stockByWebsiteId;
 
     /**
-     * @var GetProductSalableQtyInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getProductSalableQty;
+    private $getInventoryConfiguration;
 
     /**
      * @var IsSourceItemManagementAllowedForProductTypeInterface
@@ -41,37 +33,21 @@ class AbstractStockqtyPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
-     * @var GetSourceConfigurationInterface
-     */
-    private $getSourceConfiguration;
-
-    /**
-     * @var GetSourceCodesBySkuAndStockId
-     */
-    private $getSourceCodesBySkuAndStockId;
-
-    /**
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteId
-     * @param GetStockConfigurationInterface $getStockConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
-     * @param GetSourceConfigurationInterface $getSourceConfiguration
-     * @param GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
      */
     public function __construct(
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
-        GetStockConfigurationInterface $getStockConfiguration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         GetProductSalableQtyInterface $getProductSalableQty,
-        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        GetSourceConfigurationInterface $getSourceConfiguration,
-        GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
     ) {
-        $this->getStockConfiguration = $getStockConfiguration;
         $this->stockByWebsiteId = $stockByWebsiteId;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->getSourceConfiguration = $getSourceConfiguration;
-        $this->getSourceCodesBySkuAndStockId = $getSourceCodesBySkuAndStockId;
     }
 
     /**
@@ -88,11 +64,18 @@ class AbstractStockqtyPlugin
             return false;
         }
 
-        $sku = (string)$subject->getProduct()->getSku();
+        $sku = $subject->getProduct()->getSku();
         $websiteId = (int)$subject->getProduct()->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
+        $backorders = $this->getInventoryConfiguration->getBackorders($sku, $stockId);
+        $minQty = $this->getInventoryConfiguration->getMinQty($sku, $stockId);
+        $stockThresholdQty = $this->getInventoryConfiguration->getStockThresholdQty($sku, $stockId);
 
-        return $this->isMsgVisible($sku, $stockId);
+
+        return ($backorders === SourceItemConfigurationInterface::BACKORDERS_NO
+            || $backorders !== SourceItemConfigurationInterface::BACKORDERS_NO
+            && $minQty < 0)
+            && $this->getProductSalableQty->execute($sku, $stockId) <= $stockThresholdQty;
     }
 
     /**
@@ -108,99 +91,5 @@ class AbstractStockqtyPlugin
         $websiteId = (int)$subject->getProduct()->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
         return $this->getProductSalableQty->execute($sku, $stockId);
-    }
-
-    /**
-     * @param string $sku
-     * @param string $sourceCode
-     * @param SourceItemConfigurationInterface $globalConfiguration
-     * @return int
-     */
-    private function getBackorders(
-        string $sku,
-        string $sourceCode,
-        SourceItemConfigurationInterface $globalConfiguration
-    ): int {
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceCode);
-        $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode);
-
-        $defaultValue = $sourceConfiguration->getBackorders() !== null
-            ? $sourceConfiguration->getBackorders()
-            : $globalConfiguration->getBackorders();
-
-        return $sourceItemConfiguration->getBackorders() !== null
-            ? $sourceItemConfiguration->getBackorders()
-            : $defaultValue;
-    }
-
-    /**
-     * @param StockItemConfigurationInterface $globalConfiguration
-     * @param StockItemConfigurationInterface $stockConfiguration
-     * @param StockItemConfigurationInterface $stockItemConfiguration
-     * @return float
-     */
-    private function getMinQty(
-        StockItemConfigurationInterface $globalConfiguration,
-        StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $stockItemConfiguration
-    ): float {
-        $defaultValue = $stockConfiguration->getMinQty() !== null
-            ? $stockConfiguration->getMinQty()
-            : $globalConfiguration->getMinQty();
-
-        return $stockItemConfiguration->getMinQty() !== null ? $stockItemConfiguration->getMinQty() : $defaultValue;
-    }
-
-    /**
-     * @param StockItemConfigurationInterface $globalConfiguration
-     * @param StockItemConfigurationInterface $stockConfiguration
-     * @param StockItemConfigurationInterface $stockItemConfiguration
-     * @return float
-     */
-    private function getThresholdQty(
-        StockItemConfigurationInterface $globalConfiguration,
-        StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $stockItemConfiguration
-    ): float {
-        $defaultValue = $stockConfiguration->getStockThresholdQty() !== null
-            ? $stockConfiguration->getStockThresholdQty()
-            : $globalConfiguration->getStockThresholdQty();
-
-        return $stockItemConfiguration->getStockThresholdQty() !== null
-            ? $stockItemConfiguration->getStockThresholdQty()
-            : $defaultValue;
-    }
-
-    /**
-     * @param string $sku
-     * @param int $stockId
-     * @return bool
-     * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\InputException
-     */
-    private function isMsgVisible(string $sku, int $stockId): bool
-    {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-        $minQty = $this->getMinQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
-        $thresholdQty = $this->getThresholdQty($globalConfiguration, $stockConfiguration, $stockItemConfiguration);
-        $globalSourceConfiguration = $this->getSourceConfiguration->forGlobal();
-        $globalBackOrders = $globalSourceConfiguration->getBackorders();
-        $result = ($globalBackOrders === SourceItemConfigurationInterface::BACKORDERS_NO
-                || $globalBackOrders !== SourceItemConfigurationInterface::BACKORDERS_NO
-                && $minQty < 0) && $this->getProductSalableQty->execute($sku, $stockId) <= $thresholdQty;
-        $sourceCodes = $this->getSourceCodesBySkuAndStockId->execute($sku, $stockId);
-        foreach ($sourceCodes as $sourceCode) {
-            $backorders = $this->getBackorders($sku, $sourceCode, $globalSourceConfiguration);
-            if (($backorders === SourceItemConfigurationInterface::BACKORDERS_NO
-                    || $backorders !== SourceItemConfigurationInterface::BACKORDERS_NO
-                    && $minQty < 0)
-                && $this->getProductSalableQty->execute($sku, $stockId) <= $thresholdQty) {
-                $result = true;
-                break;
-            }
-        }
-        return $result;
     }
 }

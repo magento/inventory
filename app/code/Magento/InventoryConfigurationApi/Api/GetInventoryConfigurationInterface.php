@@ -10,71 +10,83 @@ namespace Magento\InventoryConfigurationApi\Api;
 interface GetInventoryConfigurationInterface
 {
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return bool
      */
-    public function isQtyDecimal(): bool;
+    public function isQtyDecimal(string $sku, int $stockId): bool;
 
     /**
-     * @return bool
-     */
-    public function isShowDefaultNotificationMessage(): bool;
-
-    /**
+     * @param string $sku
+     * @param int $stockId
      * @return float
      */
-    public function getMinQty(): float;
+    public function getMinQty(string $sku, int $stockId): float;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return float
      */
-    public function getMinSaleQty(): float;
+    public function getMinSaleQty(string $sku, int $stockId): float;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return float
      */
-    public function getMaxSaleQty(): float;
+    public function getMaxSaleQty(string $sku, int $stockId): float;
 
     /**
      * Retrieve backorders status
      *
+     * @param string $sku
+     * @param int $stockId
      * @return int
      */
-    public function getBackorders(): int;
-
-    /**
-     * @return float
-     */
-    public function getNotifyStockQty(): float;
+    public function getBackorders(string $sku, int $stockId): int;
 
     /**
      * Retrieve Quantity Increments data wrapper
      *
+     * @param string $sku
+     * @param int $stockId
      * @return float
      */
-    public function getQtyIncrements(): float;
+    public function getQtyIncrements(string $sku, int $stockId): float;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return bool
      */
-    public function isEnableQtyIncrements(): bool;
+    public function isEnableQtyIncrements(string $sku, int $stockId): bool;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return bool
      */
-    public function isManageStock(): bool;
+    public function isManageStock(string $sku, int $stockId): bool;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return string
      */
-    public function getLowStockDate(): string;
+    public function getLowStockDate(string $sku, int $stockId): string;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return bool
      */
-    public function isDecimalDivided(): bool;
+    public function isDecimalDivided(string $sku, int $stockId): bool;
 
     /**
+     * @param string $sku
+     * @param int $stockId
      * @return float
      */
-    public function getStockThresholdQty(): float;
+    public function getStockThresholdQty(string $sku, int $stockId): float;
 }

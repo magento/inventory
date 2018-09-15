@@ -9,8 +9,7 @@ namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\Math\Division as MathDivision;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
@@ -25,9 +24,9 @@ use Magento\Framework\Phrase;
 class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
 {
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockItemConfiguration;
+    private $getInventoryConfiguration;
 
     /**
      * @var GetReservationsQuantityInterface
@@ -60,7 +59,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     private $productSalableResultFactory;
 
     /**
-     * @param GetStockConfigurationInterface $getStockItemConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param StockConfigurationInterface $configuration
      * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param GetStockItemDataInterface $getStockItemData
@@ -69,7 +68,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
      */
     public function __construct(
-        GetStockConfigurationInterface $getStockItemConfiguration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         StockConfigurationInterface $configuration,
         GetReservationsQuantityInterface $getReservationsQuantity,
         GetStockItemDataInterface $getStockItemData,
@@ -77,7 +76,7 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
         ProductSalableResultInterfaceFactory $productSalableResultFactory
     ) {
-        $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->configuration = $configuration;
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
@@ -91,51 +90,32 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
      */
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
-        $stockItemConfiguration = $this->getStockItemConfiguration->forStockItem($sku, $stockId);
-        $stockConfiguration = $this->getStockItemConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockItemConfiguration->forGlobal();
-
-        $isMinSaleQuantityCheckFailed = $this->isMinSaleQuantityCheckFailed(
-            $stockItemConfiguration,
-            $stockConfiguration,
-            $globalConfiguration,
-            $requestedQty
-        );
-        if ($isMinSaleQuantityCheckFailed) {
+        $minSaleQty = $this->getInventoryConfiguration->getMinSaleQty($sku, $stockId);
+        if ($this->isMinSaleQuantityCheckFailed($minSaleQty, $requestedQty)) {
             return $this->createErrorResult(
                 'is_correct_qty-min_sale_qty',
                 __(
                     'The fewest you may purchase is %1',
-                    $stockItemConfiguration->getMinSaleQty()
+                    $minSaleQty
                 )
             );
         }
 
-        $isMaxSaleQuantityCheckFailed = $this->isMaxSaleQuantityCheckFailed(
-            $stockItemConfiguration,
-            $stockConfiguration,
-            $globalConfiguration,
-            $requestedQty
-        );
-        if ($isMaxSaleQuantityCheckFailed) {
+        $maxSaleQty = $this->getInventoryConfiguration->getMaxSaleQty($sku, $stockId);
+        if ($this->isMaxSaleQuantityCheckFailed($maxSaleQty, $requestedQty)) {
             return $this->createErrorResult(
                 'is_correct_qty-max_sale_qty',
                 __('The requested qty exceeds the maximum qty allowed in shopping cart')
             );
         }
 
-        $isQuantityIncrementCheckFailed = $this->isQuantityIncrementCheckFailed(
-            $stockItemConfiguration,
-            $stockConfiguration,
-            $globalConfiguration,
-            $requestedQty
-        );
-        if ($isQuantityIncrementCheckFailed) {
+        $qtyIncrements = $this->getInventoryConfiguration->getQtyIncrements($sku, $stockId);
+        if ($this->isQuantityIncrementCheckFailed($qtyIncrements, $requestedQty)) {
             return $this->createErrorResult(
                 'is_correct_qty-qty_increment',
                 __(
                     'You can buy this product only in quantities of %1 at a time.',
-                    $stockItemConfiguration->getQtyIncrements()
+                    $qtyIncrements
                 )
             );
         }
@@ -162,25 +142,15 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     }
 
     /**
-     * @param StockItemConfigurationInterface $stockItemConfiguration
-     * @param StockItemConfigurationInterface $stockConfiguration
-     * @param StockItemConfigurationInterface $globalConfiguration
+     * @param float $minSaleQty
      * @param float $requestedQty
      * @return bool
      */
     private function isMinSaleQuantityCheckFailed(
-        StockItemConfigurationInterface $stockItemConfiguration,
-        StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $globalConfiguration,
+        float $minSaleQty,
         float $requestedQty
     ) : bool {
         // Minimum Qty Allowed in Shopping Cart
-        $defaultValue = $stockConfiguration->getMinSaleQty() !== null
-            ? $stockConfiguration->getMinSaleQty()
-            : $globalConfiguration->getMinSaleQty();
-        $minSaleQty = $stockItemConfiguration->getMinSaleQty() !== null
-            ? $stockItemConfiguration->getMinSaleQty()
-            : $defaultValue;
         if ($minSaleQty && $requestedQty < $minSaleQty) {
             return true;
         }
@@ -188,25 +158,15 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     }
 
     /**
-     * @param StockItemConfigurationInterface $stockItemConfiguration
-     * @param StockItemConfigurationInterface $stockConfiguration
-     * @param StockItemConfigurationInterface $globalConfiguration
+     * @param float $maxSaleQty
      * @param float $requestedQty
      * @return bool
      */
     private function isMaxSaleQuantityCheckFailed(
-        StockItemConfigurationInterface $stockItemConfiguration,
-        StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $globalConfiguration,
+        float $maxSaleQty,
         float $requestedQty
     ) : bool {
         // Maximum Qty Allowed in Shopping Cart
-        $defaultValue = $stockConfiguration->getMaxSaleQty() !== null
-            ? $stockConfiguration->getMaxSaleQty()
-            : $globalConfiguration->getMaxSaleQty();
-        $maxSaleQty = $stockItemConfiguration->getMaxSaleQty() !== null
-            ? $stockItemConfiguration->getMaxSaleQty()
-            : $defaultValue;
         if ($maxSaleQty && $requestedQty > $maxSaleQty) {
             return true;
         }
@@ -214,25 +174,15 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     }
 
     /**
-     * @param StockItemConfigurationInterface $stockItemConfiguration
-     * @param StockItemConfigurationInterface $stockConfiguration
-     * @param StockItemConfigurationInterface $globalConfiguration
+     * @param float $qtyIncrements
      * @param float $requestedQty
      * @return bool
      */
     private function isQuantityIncrementCheckFailed(
-        StockItemConfigurationInterface $stockItemConfiguration,
-        StockItemConfigurationInterface $stockConfiguration,
-        StockItemConfigurationInterface $globalConfiguration,
+        float $qtyIncrements,
         float $requestedQty
     ) : bool {
         // Qty Increments
-        $defaultValue = $stockConfiguration->getQtyIncrements() !== null
-            ? $stockConfiguration->getQtyIncrements()
-            : $globalConfiguration->getQtyIncrements();
-        $qtyIncrements = $stockItemConfiguration->getQtyIncrements() !== null
-            ? $stockItemConfiguration->getQtyIncrements()
-            : $defaultValue;
         if ($qtyIncrements !== (float)0 && $this->mathDivision->getExactDivision($requestedQty, $qtyIncrements) !== 0) {
             return true;
         }

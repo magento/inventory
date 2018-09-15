@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -16,17 +17,25 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 class ManageStockCondition implements IsProductSalableInterface
 {
     /**
-     * @var GetStockConfigurationInterface
+     * @var StockConfigurationInterface
      */
-    private $getStockConfiguration;
+    private $configuration;
 
     /**
-     * @param GetStockConfigurationInterface $getStockItemConfiguration
+     * @var GetInventoryConfigurationInterface
+     */
+    private $getInventoryConfiguration;
+
+    /**
+     * @param StockConfigurationInterface $configuration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      */
     public function __construct(
-        GetStockConfigurationInterface $getStockItemConfiguration
+        StockConfigurationInterface $configuration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration
     ) {
-        $this->getStockConfiguration = $getStockItemConfiguration;
+        $this->configuration = $configuration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
     }
 
     /**
@@ -34,16 +43,6 @@ class ManageStockCondition implements IsProductSalableInterface
      */
     public function execute(string $sku, int $stockId): bool
     {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-        $defaultValue = $stockConfiguration->isManageStock() !== null
-            ? $stockConfiguration->isManageStock()
-            : $globalConfiguration->isManageStock();
-        $manageStock = $stockItemConfiguration->isManageStock() !== null
-            ? $stockItemConfiguration->isManageStock()
-            : $defaultValue;
-
-        return !$manageStock;
+        return $this->getInventoryConfiguration->isManageStock($sku, $stockId);
     }
 }

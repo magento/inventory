@@ -10,7 +10,7 @@ namespace Magento\InventorySales\Plugin\StockState;
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -39,29 +39,29 @@ class SuggestQtyPlugin
     private $storeManager;
 
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockConfiguration;
+    private $getInventoryConfiguration;
 
     /**
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
-     * @param GetStockConfigurationInterface $getStockItemConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      */
     public function __construct(
         GetProductSalableQtyInterface $getProductSalableQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager,
-        GetStockConfigurationInterface $getStockItemConfiguration
+        GetInventoryConfigurationInterface $getInventoryConfiguration
     ) {
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
-        $this->getStockConfiguration = $getStockItemConfiguration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
     }
 
     /**
@@ -90,18 +90,23 @@ class SuggestQtyPlugin
             $stock = $this->stockResolver->get(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
             $stockId = (int)$stock->getStockId();
 
-            $qtyIncrements = $this->getQtyIncrements($productSku, $stockId);
-            $isManageStock = $this->isMangeStock($productSku, $stockId);
-            $minSaleQty = $this->getMinSaleQty($productSku, $stockId);
-            $maxSaleQty = $this->getMaxSaleQty($productSku, $stockId);
+            $qtyIncrements = $this->getInventoryConfiguration->getQtyIncrements($productSku, $stockId);
+            $isManageStock = $this->getInventoryConfiguration->isManageStock($productSku, $stockId);
+
 
             if ($qty <= 0 || $isManageStock === false || $qtyIncrements < 2) {
                 throw new LocalizedException(__('Wrong condition.'));
             }
 
-            $minQty = max($minSaleQty, $qtyIncrements);
+            $minQty = max(
+                $this->getInventoryConfiguration->getMinSaleQty($productSku, $stockId),
+                $qtyIncrements
+            );
             $divisibleMin = ceil($minQty / $qtyIncrements) * $qtyIncrements;
-            $maxQty = min($this->getProductSalableQty->execute($productSku, $stockId), $maxSaleQty);
+            $maxQty = min(
+                $this->getProductSalableQty->execute($productSku, $stockId),
+                $this->getInventoryConfiguration->getMaxSaleQty($productSku, $stockId)
+            );
             $divisibleMax = floor($maxQty / $qtyIncrements) * $qtyIncrements;
 
             if ($qty < $minQty || $qty > $maxQty || $divisibleMin > $divisibleMax) {
@@ -117,85 +122,5 @@ class SuggestQtyPlugin
         } catch (LocalizedException $e) {
             return $qty;
         }
-    }
-
-    /**
-     * @param $productSku
-     * @param int $stockId
-     * @return float
-     */
-    private function getQtyIncrements($productSku, int $stockId): float
-    {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-
-        $defaultValue = $stockConfiguration->getQtyIncrements() !== null
-            ? $stockConfiguration->getQtyIncrements()
-            : $globalConfiguration->getQtyIncrements();
-
-        return $stockItemConfiguration->getQtyIncrements() !== null
-            ? $stockItemConfiguration->getQtyIncrements()
-            : $defaultValue;
-    }
-
-    /**
-     * @param $productSku
-     * @param int $stockId
-     * @return bool
-     */
-    private function isMangeStock($productSku, int $stockId): bool
-    {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-
-        $defaultValue = $stockConfiguration->isManageStock() !== null
-            ? $stockConfiguration->isManageStock()
-            : $globalConfiguration->isManageStock();
-
-        return $stockItemConfiguration->isManageStock() !== null
-            ? $stockItemConfiguration->isManageStock()
-            : $defaultValue;
-    }
-
-    /**
-     * @param $productSku
-     * @param int $stockId
-     * @return float
-     */
-    private function getMinSaleQty($productSku, int $stockId): float
-    {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-
-        $defaultValue = $stockConfiguration->getMinSaleQty() !== null
-            ? $stockConfiguration->getMinSaleQty()
-            : $globalConfiguration->getMinSaleQty();
-
-        return $stockItemConfiguration->getMinSaleQty() !== null
-            ? $stockItemConfiguration->getMinSaleQty()
-            : $defaultValue;
-    }
-
-    /**
-     * @param $productSku
-     * @param int $stockId
-     * @return float
-     */
-    private function getMaxSaleQty($productSku, int $stockId): float
-    {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($productSku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-
-        $defaultValue = $stockConfiguration->getMaxSaleQty() !== null
-            ? $stockConfiguration->getMaxSaleQty()
-            : $globalConfiguration->getMaxSaleQty();
-
-        return $stockItemConfiguration->getMaxSaleQty() !== null
-            ? $stockItemConfiguration->getMaxSaleQty()
-            : $defaultValue;
     }
 }

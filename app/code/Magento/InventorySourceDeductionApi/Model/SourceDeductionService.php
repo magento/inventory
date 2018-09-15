@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySourceDeductionApi\Model;
 
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -28,9 +28,9 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     private $getSourceItemBySourceCodeAndSku;
 
     /**
-     * @var GetStockConfigurationInterface
+     * @var GetInventoryConfigurationInterface
      */
-    private $getStockConfiguration;
+    private $getInventoryConfiguration;
 
     /**
      * @var StockResolverInterface
@@ -40,18 +40,18 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     /**
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku
-     * @param GetStockConfigurationInterface $getStockItemConfiguration
+     * @param GetInventoryConfigurationInterface $getInventoryConfiguration
      * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
-        GetStockConfigurationInterface $getStockItemConfiguration,
+        GetInventoryConfigurationInterface $getInventoryConfiguration,
         StockResolverInterface $stockResolver
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
-        $this->getStockConfiguration = $getStockItemConfiguration;
+        $this->getInventoryConfiguration = $getInventoryConfiguration;
         $this->stockResolver = $stockResolver;
     }
 
@@ -71,8 +71,8 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         foreach ($sourceDeductionRequest->getItems() as $item) {
             $itemSku = $item->getSku();
             $qty = $item->getQty();
-     
-            $isManageStock = $this->isManageStock($itemSku, $stockId);
+            $isManageStock = $this->getInventoryConfiguration->isManageStock($itemSku, $stockId);
+
             if (!$isManageStock) {
                 //We don't need to Manage Stock
                 continue;
@@ -92,25 +92,5 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         if (!empty($sourceItems)) {
             $this->sourceItemsSave->execute($sourceItems);
         }
-    }
-
-    /**
-     * @param string $sku
-     * @param int $stockId
-     * @return bool
-     */
-    private function isManageStock(string $sku, int $stockId): bool
-    {
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $globalConfiguration = $this->getStockConfiguration->forGlobal();
-
-        $defaultValue = $stockConfiguration->isManageStock() !== null
-            ? $stockConfiguration->isManageStock()
-            : $globalConfiguration->isManageStock();
-
-        return $stockItemConfiguration->isManageStock() !== null
-            ? $stockItemConfiguration->isManageStock()
-            : $defaultValue;
     }
 }
