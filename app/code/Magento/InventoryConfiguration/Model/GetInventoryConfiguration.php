@@ -146,6 +146,11 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
             }
         }
 
+        //TODO: tmp fix
+        if (empty($backOrders)) {
+            $backOrders[] = (int)$this->getSourceConfiguration->forGlobal()->getBackorders();
+        }
+
         return max($backOrders);
     }
 
