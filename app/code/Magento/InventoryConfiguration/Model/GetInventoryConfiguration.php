@@ -107,11 +107,11 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
     {
         $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
 
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getMaxSaleQty();
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getMinSaleQty();
         if (isset($stockItemConfiguration)) {
             return (float)$stockItemConfiguration;
         } else {
-            $stockConfiguration = $this->getStockConfiguration->forStock($stockId)->getMaxSaleQty();
+            $stockConfiguration = $this->getStockConfiguration->forStock($stockId)->getMinSaleQty();
             if (isset($stockConfiguration)) {
                 return (float)$stockConfiguration;
             } else {
