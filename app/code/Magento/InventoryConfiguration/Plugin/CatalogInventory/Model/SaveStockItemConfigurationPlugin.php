@@ -114,6 +114,19 @@ class SaveStockItemConfigurationPlugin
             : (bool)$stockItemConfiguration->isDecimalDivided();
         $stockItemConfiguration->setIsDecimalDivided($isDecimalDivided);
 
+        if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)
+            || $stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK) === null) {
+            $stockItemConfiguration->setManageStock(null);
+        } elseif ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK) === 0
+            && empty($stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK))) {
+            $stockItemConfiguration->setManageStock(false);
+        } else {
+            $isManageStock = $stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK) !== null
+                ? (bool)$stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK)
+                : (bool)$stockItemConfiguration->isManageStock();
+            $stockItemConfiguration->setManageStock($isManageStock);
+        }
+
         $this->saveStockConfiguration->forStockItem(
             $productSku,
             $this->defaultStockProvider->getId(),
