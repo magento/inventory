@@ -36,21 +36,29 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
     private $getSystemMinSaleQty;
 
     /**
+     * @var IsRequestedSkuAssignedToStock
+     */
+    private $isRequestedSkuAssignedToStock;
+
+    /**
      * @param GetSourceConfigurationInterface $getSourceConfiguration
      * @param GetStockConfigurationInterface $getStockConfiguration
      * @param GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId
      * @param \Magento\InventoryConfiguration\Model\GetSystemMinSaleQty $getSystemMinSaleQty
+     * @param IsRequestedSkuAssignedToStock $isRequestedSkuAssignedToStock
      */
     public function __construct(
         GetSourceConfigurationInterface $getSourceConfiguration,
         GetStockConfigurationInterface $getStockConfiguration,
         GetSourceCodesBySkuAndStockId $getSourceCodesBySkuAndStockId,
-        GetSystemMinSaleQty $getSystemMinSaleQty
+        GetSystemMinSaleQty $getSystemMinSaleQty,
+        IsRequestedSkuAssignedToStock $isRequestedSkuAssignedToStock
     ) {
         $this->getSourceConfiguration = $getSourceConfiguration;
         $this->getStockConfiguration = $getStockConfiguration;
         $this->getSourceCodesBySkuAndStockId = $getSourceCodesBySkuAndStockId;
         $this->getSystemMinSaleQty = $getSystemMinSaleQty;
+        $this->isRequestedSkuAssignedToStock = $isRequestedSkuAssignedToStock;
     }
 
     /**
@@ -58,6 +66,7 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function isQtyDecimal(string $sku, int $stockId): bool
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->isQtyDecimal();
         if (isset($stockItemConfiguration)) {
             return (bool)$stockItemConfiguration;
@@ -76,6 +85,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getMinQty(string $sku, int $stockId): float
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getMinQty();
         if (isset($stockItemConfiguration)) {
             return (float)$stockItemConfiguration;
@@ -94,6 +105,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getMinSaleQty(string $sku, int $stockId): float
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getMaxSaleQty();
         if (isset($stockItemConfiguration)) {
             return (float)$stockItemConfiguration;
@@ -112,6 +125,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getMaxSaleQty(string $sku, int $stockId): float
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getMaxSaleQty();
         if (isset($stockItemConfiguration)) {
             return (float)$stockItemConfiguration;
@@ -130,6 +145,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getBackorders(string $sku, int $stockId): int
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $backOrders = [];
         $sourceCodes = $this->getSourceCodesBySkuAndStockId->execute($sku, $stockId);
         foreach ($sourceCodes as $sourceCode) {
@@ -146,11 +163,6 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
             }
         }
 
-        //TODO: tmp fix
-        if (empty($backOrders)) {
-            $backOrders[] = (int)$this->getSourceConfiguration->forGlobal()->getBackorders();
-        }
-
         return max($backOrders);
     }
 
@@ -159,6 +171,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getQtyIncrements(string $sku, int $stockId): float
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getQtyIncrements();
         if (isset($stockItemConfiguration)) {
             return (float)$stockItemConfiguration;
@@ -177,6 +191,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function isEnableQtyIncrements(string $sku, int $stockId): bool
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->isEnableQtyIncrements();
         if (isset($stockItemConfiguration)) {
             return (bool)$stockItemConfiguration;
@@ -195,6 +211,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function isManageStock(string $sku, int $stockId): bool
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->isManageStock();
         if (isset($stockItemConfiguration)) {
             return (bool)$stockItemConfiguration;
@@ -213,6 +231,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getLowStockDate(string $sku, int $stockId): string
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getLowStockDate();
         if (isset($stockItemConfiguration)) {
             return (string)$stockItemConfiguration;
@@ -231,6 +251,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function isDecimalDivided(string $sku, int $stockId): bool
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->isDecimalDivided();
         if (isset($stockItemConfiguration)) {
             return (bool)$stockItemConfiguration;
@@ -249,6 +271,8 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
      */
     public function getStockThresholdQty(string $sku, int $stockId): float
     {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId)->getStockThresholdQty();
         if (isset($stockItemConfiguration)) {
             return (float)$stockItemConfiguration;
