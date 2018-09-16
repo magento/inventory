@@ -20,9 +20,9 @@
     <preference for="Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveSourceConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetStockConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveStockConfiguration"/>
-    <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
-        <plugin name="save_stock_item_configuration" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\ResourceModel\Stock\Item\SaveStockItemConfigurationPlugin"/>
-        <plugin name="save_source_item_configuration" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\ResourceModel\Stock\Item\SaveSourceItemConfigurationPlugin"/>
+    <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
+        <plugin name="save_stock_item_configuration" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\SaveStockItemConfigurationPlugin"/>
+        <plugin name="save_source_item_configuration" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\SaveSourceItemConfigurationPlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Api\Data\StockItemInterface">
         <plugin name="adapt_get_manage_stock" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetManageStockPlugin"/>

@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\ResourceModel\Stock\Item;
+namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model;
 
-use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
+use Magento\CatalogInventory\Api\Data\StockItemInterface;
+use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\Framework\Api\SimpleDataObjectConverter;
-use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
@@ -74,18 +74,16 @@ class SaveStockItemConfigurationPlugin
     }
 
     /**
-     * @param ItemResourceModel $subject
-     * @param ItemResourceModel $result
-     * @param AbstractModel $stockItem
-     * @return ItemResourceModel
+     * @param StockItemRepositoryInterface $subject
+     * @param StockItemInterface $stockItem
+     * @return void
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(
-        ItemResourceModel $subject,
-        ItemResourceModel $result,
-        AbstractModel $stockItem
-    ): ItemResourceModel {
+    public function beforeSave(
+        StockItemRepositoryInterface $subject,
+        StockItemInterface $stockItem
+    ): void {
         $productId = $stockItem->getProductId();
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
@@ -121,8 +119,6 @@ class SaveStockItemConfigurationPlugin
             $this->defaultStockProvider->getId(),
             $stockItemConfiguration
         );
-
-        return $result;
     }
 
     /**

@@ -86,6 +86,13 @@ interface GetInventoryConfigurationInterface
     /**
      * @param string $sku
      * @param int $stockId
+     * @return bool
+     */
+    public function isStockStatusChangedAuto(string $sku, int $stockId): bool;
+
+    /**
+     * @param string $sku
+     * @param int $stockId
      * @return float
      */
     public function getStockThresholdQty(string $sku, int $stockId): float;

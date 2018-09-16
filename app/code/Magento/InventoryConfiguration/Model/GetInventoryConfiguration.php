@@ -147,7 +147,7 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
     {
         $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
 
-        $backOrders = [];
+        $backOrders[] = (int)$this->getSourceConfiguration->forGlobal()->getBackorders();
         $sourceCodes = $this->getSourceCodesBySkuAndStockId->execute($sku, $stockId);
         foreach ($sourceCodes as $sourceCode) {
             $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem($sku, $sourceCode)->getBackorders();
@@ -157,8 +157,6 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
                 $sourceConfiguration = $this->getSourceConfiguration->forSource($sourceCode)->getBackorders();
                 if (isset($sourceConfiguration)) {
                     $backOrders[] = (int)$sourceConfiguration;
-                } else {
-                    $backOrders[] = (int)$this->getSourceConfiguration->forGlobal()->getBackorders();
                 }
             }
         }
@@ -262,6 +260,30 @@ class GetInventoryConfiguration implements GetInventoryConfigurationInterface
                 return (bool)$stockConfiguration;
             } else {
                 return (bool)$this->getStockConfiguration->forGlobal()->isDecimalDivided();
+            }
+        }
+    }
+
+    /**
+     * @inheritdoc
+     * TODO: Do we need implement plugin fot this option?
+     */
+    public function isStockStatusChangedAuto(string $sku, int $stockId): bool
+    {
+        $this->isRequestedSkuAssignedToStock->execute($sku, $stockId);
+
+        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
+            $sku,
+            $stockId
+        )->getStockStatusChangedAuto();
+        if (isset($stockItemConfiguration)) {
+            return (bool)$stockItemConfiguration;
+        } else {
+            $stockConfiguration = $this->getStockConfiguration->forStock($stockId)->getStockStatusChangedAuto();
+            if (isset($stockConfiguration)) {
+                return (bool)$stockConfiguration;
+            } else {
+                return (bool)$this->getStockConfiguration->forGlobal()->getStockStatusChangedAuto();
             }
         }
     }
