@@ -30,8 +30,9 @@
     <!-- Source Item Import Plugin -->
     <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
         <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter" />
+        <plugin name="source_config" type="Magento\InventoryImportExport\Plugin\Import\SourceItemConfigurationImporterPlugin" />
+        <plugin name="stock_config" type="Magento\InventoryImportExport\Plugin\Import\StockItemConfigurationImporterPlugin" />
     </type>
-
     <!-- Export -->
     <preference for="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface" type="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactory"/>
     <preference for="Magento\InventoryImportExport\Model\Export\ColumnProviderInterface" type="\Magento\InventoryImportExport\Model\Export\ColumnProvider"/>

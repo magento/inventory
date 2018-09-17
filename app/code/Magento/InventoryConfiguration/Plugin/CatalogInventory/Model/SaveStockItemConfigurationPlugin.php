@@ -117,7 +117,7 @@ class SaveStockItemConfigurationPlugin
         if ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)
             || $stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK) === null) {
             $stockItemConfiguration->setManageStock(null);
-        } elseif ($stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK) === 0
+        } elseif (!$stockItem->getData('use_config_' . StockItemConfigurationInterface::MANAGE_STOCK)
             && empty($stockItem->getData(StockItemConfigurationInterface::MANAGE_STOCK))) {
             $stockItemConfiguration->setManageStock(false);
         } else {

@@ -36,6 +36,8 @@ class GetSourceCodesBySkuAndStockId
     {
         $connection = $this->resource->getConnection();
         $sourceLinkTable = $this->resource->getTableName('inventory_source_stock_link');
+
+        //TODO: for test..
         $select = $connection->select()
             ->from(
                 $sourceLinkTable,
@@ -43,7 +45,7 @@ class GetSourceCodesBySkuAndStockId
             )
             ->where('stock_id =?', $stockId)
             ->join(
-                ['source' => $this->resource->getTableName('inventory_source_item')],
+                ['source' => $this->resource->getTableName('inventory_source_configuration')],
                 'source.source_code = ' . $sourceLinkTable . '.source_code',
                 []
             )->where('source.sku = ?', $sku);
