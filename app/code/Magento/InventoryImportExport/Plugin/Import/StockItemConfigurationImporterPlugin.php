@@ -107,7 +107,7 @@ class StockItemConfigurationImporterPlugin
             );
 
             $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-                $sku,
+                (string)$sku,
                 $this->defaultStockProvider->getId()
             );
             foreach ($this->fields as $field => $type) {
@@ -147,7 +147,7 @@ class StockItemConfigurationImporterPlugin
             }
 
             $this->saveStockConfiguration->forStockItem(
-                $sku,
+                (string)$sku,
                 $this->defaultStockProvider->getId(),
                 $stockItemConfiguration
             );

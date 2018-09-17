@@ -33,7 +33,7 @@ class GetStockConfigurationData
     public function execute(int $stockId, string $sku = null): array
     {
         $connection = $this->resourceConnection->getConnection();
-        $stockConfigurationTable = $this->resourceConnection->getTableName('inventory_stock_configuration');
+        $stockConfigurationTable = $connection->getTableName('inventory_stock_configuration');
 
         $select = $connection->select()
             ->from($stockConfigurationTable)

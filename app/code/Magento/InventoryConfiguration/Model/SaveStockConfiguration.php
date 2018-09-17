@@ -45,7 +45,7 @@ class SaveStockConfiguration implements SaveStockConfigurationInterface
         StockItemConfigurationInterface $stockItemConfiguration
     ): void {
         $connection = $this->resourceConnection->getConnection();
-        $stockConfigurationTable = $this->resourceConnection->getTableName('inventory_stock_configuration');
+        $stockConfigurationTable = $connection->getTableName('inventory_stock_configuration');
 
         $data = [
             'sku' => $sku,
@@ -75,7 +75,7 @@ class SaveStockConfiguration implements SaveStockConfigurationInterface
     public function forStock(int $stockId, StockItemConfigurationInterface $stockItemConfiguration): void
     {
         $connection = $this->resourceConnection->getConnection();
-        $stockConfigurationTable = $this->resourceConnection->getTableName('inventory_stock_configuration');
+        $stockConfigurationTable = $connection->getTableName('inventory_stock_configuration');
 
         $select = $connection->select()
             ->from($stockConfigurationTable)

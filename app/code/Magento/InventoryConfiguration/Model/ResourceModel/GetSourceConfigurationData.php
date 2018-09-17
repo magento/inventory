@@ -33,8 +33,7 @@ class GetSourceConfigurationData
     public function execute(string $sourceCode, string $sku = null): array
     {
         $connection = $this->resourceConnection->getConnection();
-        $sourceConfigurationTable = $this->resourceConnection
-            ->getTableName('inventory_source_configuration');
+        $sourceConfigurationTable = $connection->getTableName('inventory_source_configuration');
 
         $select = $connection->select()
             ->from($sourceConfigurationTable)

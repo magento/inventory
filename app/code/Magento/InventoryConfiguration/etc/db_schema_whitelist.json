@@ -1,22 +1,39 @@
 {
   "inventory_source_configuration": {
+    "column": {
+      "entity_id": true,
+      "sku": true,
+      "source_code": true,
+      "backorders": true,
+      "notify_stock_qty": true
+    },
     "constraint": {
       "PRIMARY": true,
       "INV_SOURCE_CONFIGURATION_SOURCE_CODE_INV_SOURCE_SOURCE_CODE": true,
-      "INVENTORY_SOURCE_CONFIGURATION_SOURCE_CODE_SKU": true
+      "INV_SOURCE_CONFIGURATION_SOURCE_CODE_SKU": true
     }
   },
   "inventory_stock_configuration": {
+    "column": {
+      "entity_id": true,
+      "sku": true,
+      "stock_id": true,
+      "min_qty": true,
+      "min_sale_qty": true,
+      "max_sale_qty": true,
+      "manage_stock": true,
+      "stock_status_changed_auto": true,
+      "qty_increments": true,
+      "enable_qty_increments": true,
+      "stock_threshold_qty": true,
+      "low_stock_date": true,
+      "is_qty_decimal": true,
+      "is_decimal_divided": true
+    },
     "constraint": {
       "PRIMARY": true,
-      "INVENTORY_STOCK_CONFIGURATION_STOCK_ID_INVENTORY_STOCK_STOCK_ID": true,
-      "INVENTORY_STOCK_CONFIGURATION_STOCK_ID_SKU": true
-    }
-  },
-  "patch_list": {
-    "column": {
-      "patch_id": true,
-      "patch_name": true
+      "INV_STOCK_CONFIGURATION_STOCK_ID_INV_STOCK_STOCK_ID": true,
+      "INV_STOCK_CONFIGURATION_STOCK_ID_SKU": true
     }
   }
 }

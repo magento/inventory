@@ -92,7 +92,7 @@ class SourceItemConfigurationImporterPlugin
             );
 
             $sourceItemConfiguration = $this->getSourceItemConfiguration->forSourceItem(
-                $sku,
+                (string)$sku,
                 $this->defaultSourceProvider->getCode()
             );
 
@@ -116,7 +116,7 @@ class SourceItemConfigurationImporterPlugin
             }
 
             $this->saveSourceConfiguration->forSourceItem(
-                $sku,
+                (string)$sku,
                 $this->defaultSourceProvider->getCode(),
                 $sourceItemConfiguration
             );
