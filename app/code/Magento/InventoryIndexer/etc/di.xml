@@ -40,6 +40,14 @@
             <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetRelatedParentIdsByChildrenIds">
+        <arguments>
+            <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
+        </arguments>
+        <arguments>
+            <argument name="relationTableName" xsi:type="string">catalog_product_relation</argument>
+        </arguments>
+    </type>
     <!-- Source Item -->
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
         <plugin name="reindex_after_source_items_save" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceItemsSavePlugin"/>

@@ -10,6 +10,7 @@ namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Source\SourceIt
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
 use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Model\ResourceModel\GetRelatedParentIdsByChildrenIds;
 
 /**
  * Clean cache for corresponding products after source item reindex.
@@ -27,15 +28,23 @@ class CacheFlush
     private $getProductIdsBySourceItemIds;
 
     /**
+     * @var GetRelatedParentIdsByChildrenIds
+     */
+    private $getRelatedParentIdsByChildrenIds;
+
+    /**
      * @param FlushCacheByProductIds $flushCacheByIds
      * @param GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
+     * @param GetRelatedParentIdsByChildrenIds $getRelatedParentIdsByChildrenIds
      */
     public function __construct(
         FlushCacheByProductIds $flushCacheByIds,
-        GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
+        GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds,
+        GetRelatedParentIdsByChildrenIds $getRelatedParentIdsByChildrenIds
     ) {
         $this->flushCacheByIds = $flushCacheByIds;
         $this->getProductIdsBySourceItemIds = $getProductIdsBySourceItemIds;
+        $this->getRelatedParentIdsByChildrenIds = $getRelatedParentIdsByChildrenIds;
     }
 
     /**
@@ -50,6 +59,9 @@ class CacheFlush
     public function afterExecuteList(SourceItemIndexer $subject, $result, array $sourceItemIds)
     {
         $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
-        $this->flushCacheByIds->execute($productIds);
+        $entityIds = array_unique(
+            array_merge($productIds, $this->getRelatedParentIdsByChildrenIds->execute($productIds))
+        );
+        $this->flushCacheByIds->execute($entityIds);
     }
 }
