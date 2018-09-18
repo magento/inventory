@@ -9,6 +9,8 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory": "*",
         "magento/module-inventory-catalog-api": "*",
+        "magento/module-catalog-inventory": "*",
+        "magento/module-inventory-configuration-api": "*",
         "magento/module-store": "*"
     },
     "suggest": {
