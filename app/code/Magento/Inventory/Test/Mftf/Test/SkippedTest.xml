@@ -8,6 +8,35 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AdminOrderCreatedWithConfigurableProductWithSwatchAttributeViaTheAdminTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
+    <test name="AdminOrderCreatedWithConfigurableProductWithTextAttributeViaTheAdminTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
+    <test name="AdminOrderCreatedWithSimpleProductViaTheAdminTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
+    <test name="AdminSourceSelectionAlgorithmSourcePriorityWithSimpleMsiProductTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
+
     <test name="TemporaryUpdateWithStartDateLessAndDateBiggerThanStartDateOfExistingUpdate">
         <annotations>
             <skip>
@@ -22,7 +51,6 @@
             </skip>
         </annotations>
     </test>
-
     <test name="EndToEndB2CLoggedInUserTest">
         <annotations>
             <skip>
