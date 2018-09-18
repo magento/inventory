@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty;
+namespace Magento\InventoryCatalogConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty;
 
 use Magento\CatalogInventory\Model\System\Config\Backend\Minqty;
 

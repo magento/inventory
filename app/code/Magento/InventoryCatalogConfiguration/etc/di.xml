@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\CatalogInventory\Model\System\Config\Backend\Minqty">
+        <plugin name="allow_negative_min_qty_in_config"
+                type="Magento\InventoryCatalogConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty\AllowNegativeMinQtyInConfigPlugin"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
+        <plugin name="save_inventory_configuration"
+                type="Magento\InventoryCatalogConfiguration\Plugin\CatalogInventory\Model\ResourceModel\Stock\SaveInventoryConfigurationPlugin"
+                sortOrder="20"/>
+    </type>
+    <type name="Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface">
+        <plugin name="set-data-to-legacy-catalog-inventory-at-source-item-configuration-save"
+                type="Magento\InventoryCatalogConfiguration\Plugin\InventoryConfigurationApi\SetDataToLegacyCatalogInventoryAtSourceItemConfigurationSavePlugin"/>
+    </type>
+    <type name="Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface">
+        <plugin name="set-data-to-legacy-catalog-inventory-at-stock-item-configuration-save"
+                type="Magento\InventoryCatalogConfiguration\Plugin\InventoryConfigurationApi\SetDataToLegacyCatalogInventoryAtStockItemConfigurationSavePlugin"/>
+    </type>
+    <type name="Magento\InventoryCatalogConfiguration\Plugin\InventoryConfigurationApi\SetDataToLegacyCatalogInventoryAtSourceItemConfigurationSavePlugin">
+        <arguments>
+            <argument name="saveSourceConfiguration" xsi:type="object">Magento\InventoryCatalogConfiguration\Model\SaveSourceItemConfigurationWithLegacySynchronization</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryCatalogConfiguration\Plugin\InventoryConfigurationApi\SetDataToLegacyCatalogInventoryAtStockItemConfigurationSavePlugin">
+        <arguments>
+            <argument name="saveStockConfiguration" xsi:type="object">Magento\InventoryCatalogConfiguration\Model\SaveStockItemConfigurationWithLegacySynchronization</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryCatalogConfiguration\Model\SaveSourceItemConfigurationWithLegacySynchronization">
+        <plugin name="set-data-to-legacy-catalog-inventory-at-source-item-configuration-save" disabled="true"/>
+    </type>
+    <type name="Magento\InventoryCatalogConfiguration\Model\SaveStockItemConfigurationWithLegacySynchronization">
+        <plugin name="set-data-to-legacy-catalog-inventory-at-stock-item-configuration-save" disabled="true"/>
+    </type>
+</config>

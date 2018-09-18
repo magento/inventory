@@ -5,30 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model;
+namespace Magento\InventoryCatalogConfiguration\Model;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
-use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
 
-/**
- * Save source item configuration for given product and default source after stock item was saved successfully.
- */
-class SaveSourceItemConfigurationPlugin
+class SaveSourceItemConfiguration
 {
     /**
      * @var SaveSourceConfigurationInterface
      */
     private $saveSourceConfiguration;
-
-    /**
-     * @var GetSkusByProductIdsInterface
-     */
-    private $getSkusByProductIds;
 
     /**
      * @var DefaultSourceProviderInterface
@@ -43,37 +33,26 @@ class SaveSourceItemConfigurationPlugin
     /**
      * @param GetSourceConfigurationInterface $getSourceConfiguration
      * @param SaveSourceConfigurationInterface $saveSourceConfiguration
-     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         GetSourceConfigurationInterface $getSourceConfiguration,
         SaveSourceConfigurationInterface $saveSourceConfiguration,
-        GetSkusByProductIdsInterface $getSkusByProductIds,
         DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->getSourceItemConfiguration = $getSourceConfiguration;
         $this->saveSourceConfiguration = $saveSourceConfiguration;
-        $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
-     * @param StockItemRepositoryInterface $subject
+     * @param string $sku
      * @param StockItemInterface $stockItem
-     * @return void
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeSave(
-        StockItemRepositoryInterface $subject,
-        StockItemInterface $stockItem
-    ): void {
-        $productId = $stockItem->getProductId();
-        $skus = $this->getSkusByProductIds->execute([$productId]);
-        $productSku = $skus[$productId];
+    public function execute(string $sku, StockItemInterface $stockItem): void
+    {
         $sourceItemConfiguration = $this->getSourceItemConfiguration->forSourceItem(
-            $productSku,
+            $sku,
             $this->defaultSourceProvider->getCode()
         );
 
@@ -97,7 +76,7 @@ class SaveSourceItemConfigurationPlugin
         }
 
         $this->saveSourceConfiguration->forSourceItem(
-            $productSku,
+            $sku,
             $this->defaultSourceProvider->getCode(),
             $sourceItemConfiguration
         );

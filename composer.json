@@ -177,6 +177,7 @@
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-catalog": "*",
         "magento/module-inventory-catalog-admin-ui": "*",
+        "magento/module-inventory-catalog-configuration": "*",
         "magento/module-inventory-catalog-search": "*",
         "magento/module-inventory-configurable-product-admin-ui": "*",
         "magento/module-inventory-configurable-product-indexer": "*",

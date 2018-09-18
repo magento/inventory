@@ -9,10 +9,6 @@
     <!-- Product types -->
     <preference for="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface" type="Magento\InventoryConfiguration\Model\IsSourceItemManagementAllowedForProductType"/>
     <preference for="Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface" type="Magento\InventoryConfiguration\Model\GetAllowedProductTypesForSourceItemManagement"/>
-    <type name="Magento\CatalogInventory\Model\System\Config\Backend\Minqty">
-        <plugin name="allow_negative_min_qty_in_config"
-                type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\System\Config\Backend\Minqty\AllowNegativeMinQtyInConfigPlugin"/>
-    </type>
     <!-- Inventory Configuration -->
     <preference for="Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\SourceItemConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\StockItemConfiguration"/>
@@ -20,30 +16,5 @@
     <preference for="Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveSourceConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetStockConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveStockConfiguration"/>
-    <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
-        <plugin name="save_stock_item_configuration" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\SaveStockItemConfigurationPlugin"/>
-        <plugin name="save_source_item_configuration" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Model\SaveSourceItemConfigurationPlugin"/>
-    </type>
-    <type name="Magento\CatalogInventory\Api\Data\StockItemInterface">
-        <plugin name="adapt_get_manage_stock" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetManageStockPlugin"/>
-        <plugin name="adapt_get_use_config_manage_stock" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigManageStockPlugin"/>
-        <plugin name="adapt_get_is_qty_decimal" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetIsQtyDecimalPlugin"/>
-        <plugin name="adapt_get_is_decimal_divided" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetIsDecimalDividedPlugin"/>
-        <plugin name="adapt_get_min_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetMinQtyPlugin"/>
-        <plugin name="adapt_get_use_config_min_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigMinQtyPlugin"/>
-        <plugin name="adapt_get_min_sale_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetMinSaleQtyPlugin"/>
-        <plugin name="adapt_get_use_config_min_sale_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigMinSaleQtyPlugin"/>
-        <plugin name="adapt_get_max_sale_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetMaxSaleQtyPlugin"/>
-        <plugin name="adapt_get_use_config_max_sale_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigMaxSaleQtyPlugin"/>
-        <plugin name="adapt_get_backorders" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetBackordersPlugin"/>
-        <plugin name="adapt_get_use_config_backorders" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigBackordersPlugin"/>
-        <plugin name="adapt_get_notify_stock_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetNotifyStockQtyPlugin"/>
-        <plugin name="adapt_get_use_config_notify_stock_qty" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigNotifyStockQtyPlugin"/>
-        <plugin name="adapt_get_qty_increments" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetQtyIncrementsPlugin"/>
-        <plugin name="adapt_get_use_config_qty_increments" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigQtyIncrementsPlugin"/>
-        <plugin name="adapt_get_enable_qty_increments" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetEnableQtyIncrementsPlugin"/>
-        <plugin name="adapt_get_use_config_enable_qty_increments" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetUseConfigEnableQtyIncrementsPlugin"/>
-        <plugin name="adapt_get_low_stock_date" type="Magento\InventoryConfiguration\Plugin\CatalogInventory\Api\Data\StockItemInterface\GetLowStockDatePlugin"/>
-    </type>
     <preference for="Magento\InventoryConfigurationApi\Api\GetInventoryConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetInventoryConfiguration"/>
 </config>

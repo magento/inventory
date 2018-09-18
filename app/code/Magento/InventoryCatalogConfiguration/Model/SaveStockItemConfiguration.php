@@ -5,21 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfiguration\Plugin\CatalogInventory\Model;
+namespace Magento\InventoryCatalogConfiguration\Model;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 
-/**
- * Save stock item configuration for given product and default stock after stock item was saved successfully.
- */
-class SaveStockItemConfigurationPlugin
+class SaveStockItemConfiguration
 {
     /**
      * @var GetStockConfigurationInterface
@@ -32,11 +27,6 @@ class SaveStockItemConfigurationPlugin
     private $saveStockConfiguration;
 
     /**
-     * @var GetSkusByProductIdsInterface
-     */
-    private $getSkusByProductIds;
-
-    /**
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
@@ -45,7 +35,6 @@ class SaveStockItemConfigurationPlugin
      * @var array
      */
     private $fields = [
-        StockItemConfigurationInterface::MANAGE_STOCK => 'bool',
         StockItemConfigurationInterface::MIN_QTY => 'float',
         StockItemConfigurationInterface::STOCK_THRESHOLD_QTY => 'float',
         StockItemConfigurationInterface::MIN_SALE_QTY => 'float',
@@ -58,38 +47,26 @@ class SaveStockItemConfigurationPlugin
     /**
      * @param GetStockConfigurationInterface $getStockConfiguration
      * @param SaveStockConfigurationInterface $saveStockConfiguration
-     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockConfigurationInterface $getStockConfiguration,
         SaveStockConfigurationInterface $saveStockConfiguration,
-        GetSkusByProductIdsInterface $getSkusByProductIds,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->getStockConfiguration = $getStockConfiguration;
         $this->saveStockConfiguration = $saveStockConfiguration;
-        $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
-     * @param StockItemRepositoryInterface $subject
+     * @param string $sku
      * @param StockItemInterface $stockItem
-     * @return void
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeSave(
-        StockItemRepositoryInterface $subject,
-        StockItemInterface $stockItem
-    ): void {
-        $productId = $stockItem->getProductId();
-        $skus = $this->getSkusByProductIds->execute([$productId]);
-        $productSku = $skus[$productId];
-
+    public function execute(string $sku, StockItemInterface $stockItem): void
+    {
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-            $productSku,
+            $sku,
             $this->defaultStockProvider->getId()
         );
         foreach ($this->fields as $field => $type) {
@@ -128,7 +105,7 @@ class SaveStockItemConfigurationPlugin
         }
 
         $this->saveStockConfiguration->forStockItem(
-            $productSku,
+            $sku,
             $this->defaultStockProvider->getId(),
             $stockItemConfiguration
         );
