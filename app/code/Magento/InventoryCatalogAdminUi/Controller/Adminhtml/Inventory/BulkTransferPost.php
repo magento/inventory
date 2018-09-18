@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Inventory;
 
+use Magento\AsynchronousOperations\Model\MassSchedule;
 use Magento\Backend\App\Action;
+use Magento\Backend\Model\Auth;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalogAdminUi\Model\BulkSessionProductsStorage;
-use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
 
 class BulkTransferPost extends Action
 {
@@ -26,44 +26,86 @@ class BulkTransferPost extends Action
     private $bulkSessionProductsStorage;
 
     /**
-     * @var BulkInventoryTransferInterface
+     * @var MassSchedule
      */
-    private $bulkInventoryTransfer;
+    private $massSchedule;
+
+    /**
+     * @var Auth
+     */
+    private $authSession;
 
     /**
      * @param Action\Context $context
-     * @param BulkInventoryTransferInterface $bulkInventoryTransfer
      * @param BulkSessionProductsStorage $bulkSessionProductsStorage
+     * @param MassSchedule $massSchedule
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
         Action\Context $context,
-        BulkInventoryTransferInterface $bulkInventoryTransfer,
-        BulkSessionProductsStorage $bulkSessionProductsStorage
+        BulkSessionProductsStorage $bulkSessionProductsStorage,
+        MassSchedule $massSchedule
     ) {
         parent::__construct($context);
 
         $this->bulkSessionProductsStorage = $bulkSessionProductsStorage;
-        $this->bulkInventoryTransfer = $bulkInventoryTransfer;
+        $this->massSchedule = $massSchedule;
+        $this->authSession = $context->getAuth();
+    }
+
+    /**
+     * @param array $skus
+     * @param string $originSource
+     * @param string $destinationSource
+     * @param bool $unassignSource
+     * @return array
+     */
+    private function createEntities(
+        array $skus,
+        string $originSource,
+        string $destinationSource,
+        bool $unassignSource
+    ): array {
+        $entities = [];
+
+        foreach ($skus as $sku) {
+            $entities[] = [
+                'sku' => $sku,
+                'originSource' => $originSource,
+                'destinationSource' => $destinationSource,
+                'unassignFromOrigin' => $unassignSource,
+            ];
+        }
+
+        return $entities;
     }
 
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\BulkException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute()
     {
         $originSource = $this->getRequest()->getParam('origin_source', '');
         $destinationSource = $this->getRequest()->getParam('destination_source', '');
 
+        $userId = (int) $this->authSession->getUser()->getId();
+
         $skus = $this->bulkSessionProductsStorage->getProductsSkus();
         $unassignSource = (bool) $this->getRequest()->getParam('unassign_origin_source', false);
 
-        try {
-            $this->bulkInventoryTransfer->execute($skus, $originSource, $destinationSource, $unassignSource);
-            $this->messageManager->addSuccessMessage(__('Bulk inventory transfer was successful.'));
-        } catch (ValidationException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-        }
+        $entities = $this->createEntities($skus, $originSource, $destinationSource, $unassignSource);
+        $this->massSchedule->publishMass(
+            'async.V1.inventory.product-source-transfer.POST',
+            $entities,
+            null,
+            $userId
+        );
+
+        $this->messageManager->addSuccessMessage(
+            __('Your bulk operation request was successfully enqueued. You will receive a notification when done.')
+        );
 
         $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $result->setPath('catalog/product/index');
