@@ -5,16 +5,15 @@
  */
 namespace Magento\CatalogInventory\Model\Quote\Item;
 
-use Magento\TestFramework\Helper\Bootstrap;
-use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\Option;
-use Magento\Framework\Event\Observer;
-use Magento\CatalogInventory\Model\StockState;
-use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator;
-use Magento\CatalogInventory\Observer\QuantityValidatorObserver;
-use Magento\Framework\Event;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\DataObject;
+use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\Option;
+use Magento\CatalogInventory\Model\StockState;
+use Magento\CatalogInventory\Observer\QuantityValidatorObserver;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\DataObject;
+use Magento\Framework\Event;
+use Magento\Framework\Event\Observer;
+use Magento\TestFramework\Helper\Bootstrap;
 
 /**
  * Class QuantityValidatorTest
@@ -107,7 +106,9 @@ class QuantityValidatorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @magentoDataFixture Magento/Checkout/_files/quote_with_bundle_product.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/quote_with_configurable_product.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/enable_qty_increments 1
+     * @magentoConfigFixture current_store cataloginventory/item_options/qty_increments 1
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
      */
@@ -118,41 +119,14 @@ class QuantityValidatorTest extends \PHPUnit\Framework\TestCase
         /** @var \Magento\Catalog\Api\ProductRepositoryInterface $productRepository */
         $productRepository = $this->objectManager->create(ProductRepositoryInterface::class);
         /** @var $product \Magento\Catalog\Model\Product */
-        $product = $productRepository->get('bundle-product');
+        $product = $productRepository->get('configurable');
         /* @var $quoteItem \Magento\Quote\Model\Quote\Item */
         $quoteItem = $this->_getQuoteItemIdByProductId($session->getQuote(), $product->getId());
-        $resultMock = $this->createPartialMock(
-            DataObject::class,
-            ['checkQtyIncrements', 'getMessage', 'getQuoteMessage', 'getHasError']
-        );
+        $quoteItem->setData('qty', 1.5);
         $this->observerMock->expects($this->once())->method('getEvent')->willReturn($this->eventMock);
         $this->eventMock->expects($this->once())->method('getItem')->willReturn($quoteItem);
-        $this->stockState->expects($this->any())->method('checkQtyIncrements')->willReturn($resultMock);
-        $this->optionInitializer->expects($this->any())->method('initialize')->willReturn($resultMock);
-        $resultMock->expects($this->any())->method('getHasError')->willReturn(true);
-        $this->setMockStockStateResultToQuoteItemOptions($quoteItem, $resultMock);
         $this->observer->execute($this->observerMock);
-        $this->assertCount(2, $quoteItem->getErrorInfos(), 'Expected 2 errors in QuoteItem');
-    }
-
-    /**
-     * Set mock of Stock State Result to Quote Item Options.
-     *
-     *
-     * @param \Magento\Quote\Model\Quote\Item $quoteItem
-     * @param \PHPUnit_Framework_MockObject_MockObject $resultMock
-     */
-    private function setMockStockStateResultToQuoteItemOptions($quoteItem, $resultMock)
-    {
-        if ($options = $quoteItem->getQtyOptions()) {
-            foreach ($options as $option) {
-                $option->setStockStateResult($resultMock);
-            }
-
-            return;
-        }
-
-        $this->fail('Test failed since Quote Item does not have Qty options.');
+        $this->assertCount(1, $quoteItem->getErrorInfos(), 'Expected 1 error in QuoteItem');
     }
 
     /**

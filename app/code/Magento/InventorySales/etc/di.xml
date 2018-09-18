@@ -159,4 +159,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator">
+        <plugin name="adapt_quantity_validator" type="Magento\InventorySales\Plugin\CatalogInventory\Quote\Item\QuantityValidator\AdaptQuantityValidator"/>
+    </type>
 </config>
