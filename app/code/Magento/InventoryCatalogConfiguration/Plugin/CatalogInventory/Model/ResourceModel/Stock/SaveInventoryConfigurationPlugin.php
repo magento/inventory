@@ -53,7 +53,6 @@ class SaveInventoryConfigurationPlugin
         SaveSourceItemConfiguration $saveSourceItemConfiguration,
         SaveStockItemConfiguration $saveStockItemConfiguration
     ) {
-
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->saveSourceItemConfiguration = $saveSourceItemConfiguration;
