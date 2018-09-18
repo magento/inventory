@@ -61,25 +61,21 @@ class SaveInventoryConfigurationPlugin
 
     /**
      * @param ItemResourceModel $subject
-     * @param callable $proceed
+     * @param ItemResourceModel $result
      * @param AbstractModel $stockItem
      * @return ItemResourceModel
-     * @throws NoSuchEntityException
      * @throws LocalizedException
-     *
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundSave(
+    public function afterSave(
         ItemResourceModel $subject,
-        callable $proceed,
+        ItemResourceModel $result,
         AbstractModel $stockItem
     ): ItemResourceModel {
-
         if ($stockItem->getStockId() !== $this->defaultStockProvider->getId()) {
             throw new LocalizedException(__('error'));
         }
-
-        $proceed($stockItem);
 
         $productId = $stockItem->getProductId();
         $skus = $this->getSkusByProductIds->execute([$productId]);
