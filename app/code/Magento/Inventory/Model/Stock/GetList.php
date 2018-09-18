@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\Source\Command;
+namespace Magento\Inventory\Model\Stock;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Inventory\Model\ResourceModel\Source\Collection;
-use Magento\Inventory\Model\ResourceModel\Source\CollectionFactory;
-use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
-use Magento\InventoryApi\Api\Data\SourceSearchResultsInterfaceFactory;
+use Magento\Inventory\Model\ResourceModel\Stock\Collection;
+use Magento\Inventory\Model\ResourceModel\Stock\CollectionFactory;
+use Magento\InventoryApi\Api\Data\StockSearchResultsInterface;
+use Magento\InventoryApi\Api\Data\StockSearchResultsInterfaceFactory;
 
 /**
  * @inheritdoc
@@ -28,12 +28,12 @@ class GetList implements GetListInterface
     /**
      * @var CollectionFactory
      */
-    private $sourceCollectionFactory;
+    private $stockCollectionFactory;
 
     /**
-     * @var SourceSearchResultsInterfaceFactory
+     * @var StockSearchResultsInterfaceFactory
      */
-    private $sourceSearchResultsFactory;
+    private $stockSearchResultsFactory;
 
     /**
      * @var SearchCriteriaBuilder
@@ -42,29 +42,29 @@ class GetList implements GetListInterface
 
     /**
      * @param CollectionProcessorInterface $collectionProcessor
-     * @param CollectionFactory $sourceCollectionFactory
-     * @param SourceSearchResultsInterfaceFactory $sourceSearchResultsFactory
+     * @param CollectionFactory $stockCollectionFactory
+     * @param StockSearchResultsInterfaceFactory $stockSearchResultsFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
-        CollectionFactory $sourceCollectionFactory,
-        SourceSearchResultsInterfaceFactory $sourceSearchResultsFactory,
+        CollectionFactory $stockCollectionFactory,
+        StockSearchResultsInterfaceFactory $stockSearchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->collectionProcessor = $collectionProcessor;
-        $this->sourceCollectionFactory = $sourceCollectionFactory;
-        $this->sourceSearchResultsFactory = $sourceSearchResultsFactory;
+        $this->stockCollectionFactory = $stockCollectionFactory;
+        $this->stockSearchResultsFactory = $stockSearchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute(SearchCriteriaInterface $searchCriteria = null): SourceSearchResultsInterface
+    public function execute(SearchCriteriaInterface $searchCriteria = null): StockSearchResultsInterface
     {
         /** @var Collection $collection */
-        $collection = $this->sourceCollectionFactory->create();
+        $collection = $this->stockCollectionFactory->create();
 
         if (null === $searchCriteria) {
             $searchCriteria = $this->searchCriteriaBuilder->create();
@@ -72,8 +72,8 @@ class GetList implements GetListInterface
             $this->collectionProcessor->process($searchCriteria, $collection);
         }
 
-        /** @var SourceSearchResultsInterface $searchResult */
-        $searchResult = $this->sourceSearchResultsFactory->create();
+        /** @var StockSearchResultsInterface $searchResult */
+        $searchResult = $this->stockSearchResultsFactory->create();
         $searchResult->setItems($collection->getItems());
         $searchResult->setTotalCount($collection->getSize());
         $searchResult->setSearchCriteria($searchCriteria);

@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Inventory\Model\Stock\Command\DeleteByIdInterface;
-use Magento\Inventory\Model\Stock\Command\GetInterface;
-use Magento\Inventory\Model\Stock\Command\GetListInterface;
-use Magento\Inventory\Model\Stock\Command\SaveInterface;
+use Magento\Inventory\Model\Stock\DeleteByIdInterface;
+use Magento\Inventory\Model\Stock\GetInterface;
+use Magento\Inventory\Model\Stock\GetListInterface;
+use Magento\Inventory\Model\Stock\SaveInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\Data\StockSearchResultsInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;

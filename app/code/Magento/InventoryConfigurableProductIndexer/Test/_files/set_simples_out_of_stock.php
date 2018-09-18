@@ -6,7 +6,7 @@
 declare(strict_types=1);
 
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\Inventory\Model\SourceItem\Command\SourceItemsSave;
+use Magento\Inventory\Model\SourceItem\SourceItemsSave;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
