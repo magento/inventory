@@ -85,6 +85,6 @@ class SaveInventoryConfigurationPlugin
 
         $this->saveStockItemConfiguration->execute($productSku, $stockItem);
 
-        return $subject;
+        return $result;
     }
 }
