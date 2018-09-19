@@ -30,22 +30,15 @@
             </skip>
         </annotations>
     </test>
-
+  
+    <test name="EndToEndB2CGuestUserTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
     <test name="EndToEndB2CLoggedInUserTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdvanceCatalogSearchConfigurableBySkuTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdvanceCatalogSearchConfigurableByShortDescriptionTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
@@ -59,6 +52,13 @@
             </skip>
         </annotations>
     </test>
+    <test name="AdvanceCatalogSearchConfigurableBySkuTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
     <test name="AdvanceCatalogSearchConfigurableByDescriptionTest">
         <annotations>
             <skip>
@@ -66,28 +66,7 @@
             </skip>
         </annotations>
     </test>
-    <test name="AdminShareStagingUpdateTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="StorefrontPurchaseProductCustomOptionsDifferentStoreViewsTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="EndToEndB2CGuestUserTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdminApplyTierPriceToProductTest">
+    <test name="AdvanceCatalogSearchConfigurableByShortDescriptionTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
