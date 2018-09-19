@@ -51,6 +51,7 @@
             </skip>
         </annotations>
     </test>
+
     <test name="EndToEndB2CLoggedInUserTest">
         <annotations>
             <skip>
