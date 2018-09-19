@@ -14,6 +14,8 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryCatalog\Model\DefaultSourceProvider;
+use Magento\InventoryCatalog\Model\IsSingleSourceMode;
 use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
 
 /**
@@ -37,18 +39,34 @@ class CopySourceItemsPlugin
     private $sourceItemsProcessor;
 
     /**
+     * @var IsSingleSourceMode
+     */
+    private $isSingleSourceMode;
+
+    /**
+     * @var DefaultSourceProvider
+     */
+    private $defaultSourceProvider;
+
+    /**
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param SourceItemsProcessor $sourceItemsProcessor
+     * @param IsSingleSourceMode $isSingleSourceMode
+     * @param DefaultSourceProvider $defaultSourceProvider
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        SourceItemsProcessor $sourceItemsProcessor
+        SourceItemsProcessor $sourceItemsProcessor,
+        IsSingleSourceMode $isSingleSourceMode,
+        DefaultSourceProvider $defaultSourceProvider
     ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->sourceItemsProcessor = $sourceItemsProcessor;
+        $this->isSingleSourceMode = $isSingleSourceMode;
+        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -57,14 +75,19 @@ class CopySourceItemsPlugin
      * @param Product $product
      * @return Product $result
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function afterCopy(
         Copier $subject,
         Product $result,
         Product $product
     ) {
-        $this->copySourceItems($product->getSku(), $result->getSku());
-        $result->setStatus(Status::STATUS_DISABLED);
+        if (!$this->isSingleSourceMode->execute()) {
+            $this->copySourceItems($product->getSku(), $result->getSku());
+            $result->setStatus(Status::STATUS_DISABLED);
+        } else {
+            $this->resetSourceItem($result->getSku());
+        }
 
         return $result;
     }
@@ -81,6 +104,30 @@ class CopySourceItemsPlugin
             ->addFilter(SourceItemInterface::SKU, $sku)
             ->create();
         return $this->sourceItemRepository->getList($searchCriteria)->getItems();
+    }
+
+    /**
+     * Reset Stock Item data for duplicated Product in Single Source Mode.
+     *
+     * @param string $productSku
+     * @return void
+     * @throws \Magento\Framework\Exception\InputException
+     */
+    private function resetSourceItem(string $productSku): void
+    {
+        $defaultSourceCode = $this->defaultSourceProvider->getCode();
+        $productItemData = [
+            [
+                SourceItemInterface::SKU => $productSku,
+                SourceItemInterface::SOURCE_CODE => $defaultSourceCode,
+                SourceItemInterface::QUANTITY => 0,
+                SourceItemInterface::STATUS => 0,
+            ],
+        ];
+        $this->sourceItemsProcessor->process(
+            $productSku,
+            $productItemData
+        );
     }
 
     /**
