@@ -28,17 +28,19 @@ $stockData = [
     'SKU-1' => [
         'qty' => 8.5,
         'is_in_stock' => true,
-        'manage_stock' => true
+        'manage_stock' => true,
+        'is_qty_decimal' => 1
     ],
     'SKU-2' => [
         'qty' => 5,
         'is_in_stock' => true,
-        'manage_stock' => true
+        'manage_stock' => true,
+        'is_qty_decimal' => 0
     ],
     'SKU-3' => [
         'qty' => 0,
         'is_in_stock' => false,
-        'manage_stock' => true
+        'manage_stock' => true,
     ],
     'SKU-4' => [
         'use_config_manage_stock' => false
@@ -47,7 +49,7 @@ $stockData = [
         'qty' => 0,
         'is_in_stock' => false,
         'manage_stock' => true
-    ],
+    ]
 ];
 $productsData = [
     1 => 'Orange',
