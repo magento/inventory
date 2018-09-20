@@ -10,6 +10,9 @@ namespace Magento\InventoryLowQuantityNotification\Plugin\InventoryCatalogApi;
 use Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\BulkConfigurationAssign;
 
+/**
+ * This plugin keeps consistency between SourceItem and SourceItemConfiguration while bulk assigning
+ */
 class BulkSourceAssignInterfacePlugin
 {
     /**

@@ -13,6 +13,9 @@ use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryLowQuantityNotification\Model\SourceItemConfiguration;
 
+/**
+ * Bulk configuration assign resource model
+ */
 class BulkConfigurationAssign
 {
     /**

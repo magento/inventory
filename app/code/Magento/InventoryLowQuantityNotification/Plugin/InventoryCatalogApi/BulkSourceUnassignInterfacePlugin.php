@@ -10,6 +10,9 @@ namespace Magento\InventoryLowQuantityNotification\Plugin\InventoryCatalogApi;
 use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\BulkConfigurationUnassign;
 
+/**
+ * This plugin keeps consistency between SourceItem and SourceItemConfiguration while bulk unassignment
+ */
 class BulkSourceUnassignInterfacePlugin
 {
     /**

@@ -11,6 +11,9 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\Delete;
 
+/**
+ * This plugin keeps consistency between SourceItem and SourceItemConfiguration while deleting
+ */
 class SourceItemsDeleteInterfacePlugin
 {
     /**

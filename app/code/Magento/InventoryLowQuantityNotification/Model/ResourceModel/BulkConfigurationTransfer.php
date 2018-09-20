@@ -12,6 +12,9 @@ use Magento\Framework\DB\Adapter\DuplicateException;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 
+/**
+ * Bulk configuration transfer resource model
+ */
 class BulkConfigurationTransfer
 {
     /**

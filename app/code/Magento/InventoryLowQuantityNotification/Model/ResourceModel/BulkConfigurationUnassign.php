@@ -9,6 +9,9 @@ namespace Magento\InventoryLowQuantityNotification\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 
+/**
+ * Bulk configuration unassign resource model
+ */
 class BulkConfigurationUnassign
 {
     /**

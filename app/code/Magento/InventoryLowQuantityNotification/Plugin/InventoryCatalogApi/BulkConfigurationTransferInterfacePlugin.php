@@ -11,6 +11,9 @@ use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\BulkConfigurationTransfer;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\BulkConfigurationUnassign;
 
+/**
+ * This plugin keeps consistency between SourceItem and SourceItemConfiguration while bulk transferring
+ */
 class BulkConfigurationTransferInterfacePlugin
 {
     /**
