@@ -31,7 +31,7 @@ class BulkSourceUnassignInterfacePlugin
     }
 
     /**
-     * Keep database consistency while bulk unassign items transfer
+     * Keep database consistency while bulk unassign items
      *
      * @param BulkSourceUnassignInterface $subject
      * @param callable $proceed
