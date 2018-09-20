@@ -49,6 +49,8 @@ class BulkConfigurationTransfer
     }
 
     /**
+     * Bulk transfer source items configurations from origin source to destination source
+     *
      * @param array $skus
      * @param string $originSource
      * @param string $destinationSource

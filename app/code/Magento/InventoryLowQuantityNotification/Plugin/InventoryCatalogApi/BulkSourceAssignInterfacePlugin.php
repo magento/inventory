@@ -31,6 +31,8 @@ class BulkSourceAssignInterfacePlugin
     }
 
     /**
+     * Keep database consistency while bulk assign items transfer
+     *
      * @param BulkSourceAssignInterface $subject
      * @param callable $proceed
      * @param array $skus

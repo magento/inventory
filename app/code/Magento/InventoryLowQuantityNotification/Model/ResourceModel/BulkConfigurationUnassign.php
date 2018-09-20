@@ -29,6 +29,8 @@ class BulkConfigurationUnassign
     }
 
     /**
+     * Bulk assign source items configurations from source items
+     *
      * @param array $skus
      * @param array $sources
      */

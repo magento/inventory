@@ -50,6 +50,8 @@ class BulkConfigurationAssign
     }
 
     /**
+     * Bulk assign source items configurations to source items
+     *
      * @param array $skus
      * @param array $sources
      */

@@ -40,6 +40,8 @@ class BulkConfigurationTransferInterfacePlugin
     }
 
     /**
+     * Keep database consistency while bulk source items transfer
+     *
      * @param BulkInventoryTransferInterface $subject
      * @param callable $proceed
      * @param array $skus

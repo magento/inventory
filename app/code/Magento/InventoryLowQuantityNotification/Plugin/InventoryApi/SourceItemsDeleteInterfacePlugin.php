@@ -31,6 +31,8 @@ class SourceItemsDeleteInterfacePlugin
     }
 
     /**
+     * Keep database consistency while a source item is removed
+     *
      * @param SourceItemsDeleteInterface $subject
      * @param callable $proceed
      * @param array $sourceItems
