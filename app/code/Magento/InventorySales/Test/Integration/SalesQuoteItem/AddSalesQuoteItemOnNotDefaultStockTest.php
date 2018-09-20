@@ -84,13 +84,10 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
      * @param string $sku
      * @param int $stockId
      * @param float $qty
+     * @param float $expectedQtyInCar
      *
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws CouldNotSaveException
-     * @throws InputException
-     * @throws ValidationException
-     *
      * @dataProvider productsInStockDataProvider
      *
      * @magentoDbIsolation disabled
@@ -98,7 +95,8 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     public function testAddInStockProductToQuote(
         string $sku,
         int $stockId,
-        float $qty
+        float $qty,
+        float $expectedQtyInCar
     ) {
         $quote = $this->getQuote($stockId);
         $product = $this->getProductBySku($sku);
@@ -107,7 +105,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
 
         /** @var CartItemInterface $quoteItem */
         $quoteItem = current($quote->getAllItems());
-        self::assertEquals($qty, $quoteItem->getQty());
+        self::assertEquals($expectedQtyInCar, $quoteItem->getQty());
     }
 
     /**
@@ -117,10 +115,10 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     public function productsInStockDataProvider(): array
     {
         return [
-            ['SKU-1', 10, 4],
-            ['SKU-1', 10, 2],
-            ['SKU-2', 30, 3],
-            ['SKU-2', 30, 1]
+            'Add integer quantity while decimal product quantity is enabled' => ['SKU-1', 10, 4, 4],
+            'Add decimal quantity while decimal product quantity is enabled' => ['SKU-1', 10, 4.5, 4.5],
+            'Add integer quantity while decimal product quantity is disabled' => ['SKU-2', 30, 4, 4],
+            'Add decimal quantity while decimal product quantity is disabled' => ['SKU-2', 30, 4.5, 4]
         ];
     }
 
@@ -173,7 +171,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
             ['SKU-1', 20, 6],
             ['SKU-1', 30, 9],
             ['SKU-2', 10, 1.5],
-            ['SKU-2', 30, 5.5],
+            ['SKU-2', 30, 6.5],
             ['SKU-3', 20, 1.9]
         ];
     }
