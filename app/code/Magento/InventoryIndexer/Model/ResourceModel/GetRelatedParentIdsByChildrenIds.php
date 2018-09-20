@@ -9,7 +9,7 @@ namespace Magento\InventoryIndexer\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 
-/*
+/**
  * Provides parent Product ids by related child Product ids.
  */
 class GetRelatedParentIdsByChildrenIds
