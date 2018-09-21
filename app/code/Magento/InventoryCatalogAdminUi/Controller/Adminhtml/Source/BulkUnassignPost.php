@@ -84,17 +84,28 @@ class BulkUnassignPost extends Action
     }
 
     /**
-     * @param array $skus
-     * @param array $sourceCodes
-     * @return void
-     * @throws ValidationException
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
-    private function runSynchronousOperation(array $skus, array $sourceCodes): void
+    public function execute()
     {
-        $count = $this->bulkSourceUnassign->execute($skus, $sourceCodes);
-        $this->messageManager->addSuccessMessage(__('Bulk operation was successful: %count unassignments.', [
-            'count' => $count
-        ]));
+        $sourceCodes = $this->getRequest()->getParam('sources', []);
+        $skus = $this->bulkSessionProductsStorage->getProductsSkus();
+
+        $async = $this->bulkOperationsConfig->isAsyncEnabled();
+
+        try {
+            if ($async) {
+                $this->runAsynchronousOperation($skus, $sourceCodes);
+            } else {
+                $this->runSynchronousOperation($skus, $sourceCodes);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $this->messageManager->addErrorMessage(__('Something went wrong during the operation.'));
+        }
+
+        $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        return $result->setPath('catalog/product/index');
     }
 
     /**
@@ -129,27 +140,16 @@ class BulkUnassignPost extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @param array $skus
+     * @param array $sourceCodes
+     * @return void
+     * @throws ValidationException
      */
-    public function execute()
+    private function runSynchronousOperation(array $skus, array $sourceCodes): void
     {
-        $sourceCodes = $this->getRequest()->getParam('sources', []);
-        $skus = $this->bulkSessionProductsStorage->getProductsSkus();
-
-        $async = $this->bulkOperationsConfig->isAsyncEnabled();
-
-        try {
-            if ($async) {
-                $this->runAsynchronousOperation($skus, $sourceCodes);
-            } else {
-                $this->runSynchronousOperation($skus, $sourceCodes);
-            }
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            $this->messageManager->addErrorMessage(__('Something went wrong during the operation.'));
-        }
-
-        $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        return $result->setPath('catalog/product/index');
+        $count = $this->bulkSourceUnassign->execute($skus, $sourceCodes);
+        $this->messageManager->addSuccessMessage(__('Bulk operation was successful: %count unassignments.', [
+            'count' => $count
+        ]));
     }
 }

@@ -22,33 +22,34 @@ use Magento\Catalog\Api\Data\ProductInterface;
 class SiblingSkuListInStockProvider
 {
     /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
      * @var SkuListInStockFactory
      */
     private $skuListInStockFactory;
 
     /**
-     * @var int
+     * @var ResourceConnection
      */
-    private $groupConcatMaxLen;
+    private $resourceConnection;
+
     /**
      * @var MetadataPool
      */
     private $metadataPool;
 
     /**
-     * @var string
+     * @var int
      */
-    private $tableNameSourceItem;
+    private $groupConcatMaxLen;
 
     /**
      * @var string
      */
     private $tableNameStockSourceLink;
+
+    /**
+     * @var string
+     */
+    private $tableNameSourceItem;
 
     /**
      * GetSkuListInStock constructor.
@@ -88,7 +89,6 @@ class SiblingSkuListInStockProvider
         $connection = $this->resourceConnection->getConnection();
         $sourceStockLinkTable = $this->resourceConnection->getTableName($this->tableNameStockSourceLink);
         $sourceItemTable = $this->resourceConnection->getTableName($this->tableNameSourceItem);
-
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
@@ -129,6 +129,7 @@ class SiblingSkuListInStockProvider
 
         $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
         $items = $connection->fetchAll($select);
+
         return $this->getStockIdToSkuList($items);
     }
 
@@ -141,6 +142,7 @@ class SiblingSkuListInStockProvider
     private function getStockIdToSkuList(array $items): array
     {
         $skuListInStockList = [];
+
         foreach ($items as $item) {
             /** @var SkuListInStock $skuListInStock */
             $skuListInStock = $this->skuListInStockFactory->create();
@@ -148,6 +150,7 @@ class SiblingSkuListInStockProvider
             $skuListInStock->setSkuList(explode(',', $item[SourceItemInterface::SKU]));
             $skuListInStockList[] = $skuListInStock;
         }
+
         return $skuListInStockList;
     }
 }

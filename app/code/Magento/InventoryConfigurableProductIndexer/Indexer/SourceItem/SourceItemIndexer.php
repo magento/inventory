@@ -18,19 +18,14 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 class SourceItemIndexer
 {
     /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
      * @var IndexNameBuilder
      */
     private $indexNameBuilder;
 
     /**
-     * @var IndexHandlerInterface
+     * @var ResourceConnection
      */
-    private $indexHandler;
+    private $resourceConnection;
 
     /**
      * @var IndexDataBySkuListProvider
@@ -38,19 +33,24 @@ class SourceItemIndexer
     private $indexDataBySkuListProvider;
 
     /**
+     * @var IndexHandlerInterface
+     */
+    private $indexHandler;
+
+    /**
      * @var IndexStructureInterface
      */
     private $indexStructure;
 
     /**
-     * @var SiblingSkuListInStockProvider
-     */
-    private $siblingSkuListInStockProvider;
-
-    /**
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
+
+    /**
+     * @var SiblingSkuListInStockProvider
+     */
+    private $siblingSkuListInStockProvider;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -81,6 +81,8 @@ class SourceItemIndexer
 
     /**
      * @param array $sourceItemIds
+     * @return void
+     * @throws \Magento\Framework\Exception\StateException
      */
     public function executeList(array $sourceItemIds)
     {
@@ -88,10 +90,10 @@ class SourceItemIndexer
 
         foreach ($skuListInStockList as $skuListInStock) {
             $stockId = $skuListInStock->getStockId();
-
             if ($this->defaultStockProvider->getId() === $stockId) {
                 continue;
             }
+
             $skuList = $skuListInStock->getSkuList();
 
             $mainIndexName = $this->indexNameBuilder
@@ -111,7 +113,6 @@ class SourceItemIndexer
                 $indexData,
                 ResourceConnection::DEFAULT_CONNECTION
             );
-
             $this->indexHandler->saveIndex(
                 $mainIndexName,
                 $indexData,
