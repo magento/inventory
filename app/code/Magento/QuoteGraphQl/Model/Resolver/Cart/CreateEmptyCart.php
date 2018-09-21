@@ -14,7 +14,6 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\GuestCartManagementInterface;
 use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
-use Magento\Quote\Model\QuoteIdMaskFactory;
 
 /**
  * @inheritdoc
@@ -25,6 +24,7 @@ class CreateEmptyCart implements ResolverInterface
      * @var CartManagementInterface
      */
     private $cartManagement;
+
     /**
      * @var GuestCartManagementInterface
      */
@@ -41,29 +41,21 @@ class CreateEmptyCart implements ResolverInterface
     private $userContext;
 
     /**
-     * @var QuoteIdMaskFactory
-     */
-    private $quoteIdMaskFactory;
-
-    /**
      * @param CartManagementInterface $cartManagement
      * @param GuestCartManagementInterface $guestCartManagement
      * @param UserContextInterface $userContext
      * @param QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedId
-     * @param QuoteIdMaskFactory $quoteIdMaskFactory
      */
     public function __construct(
         CartManagementInterface $cartManagement,
         GuestCartManagementInterface $guestCartManagement,
         UserContextInterface $userContext,
-        QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedId,
-        QuoteIdMaskFactory $quoteIdMaskFactory
+        QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedId
     ) {
         $this->cartManagement = $cartManagement;
         $this->guestCartManagement = $guestCartManagement;
         $this->userContext = $userContext;
         $this->quoteIdToMaskedId = $quoteIdToMaskedId;
-        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
     }
 
     /**
@@ -75,13 +67,7 @@ class CreateEmptyCart implements ResolverInterface
 
         if (0 !== $customerId && null !== $customerId) {
             $quoteId = $this->cartManagement->createEmptyCartForCustomer($customerId);
-            $maskedQuoteId = $this->quoteIdToMaskedId->execute((int)$quoteId);
-
-            if (empty($maskedQuoteId)) {
-                $quoteIdMask = $this->quoteIdMaskFactory->create();
-                $quoteIdMask->setQuoteId($quoteId)->save();
-                $maskedQuoteId = $quoteIdMask->getMaskedId();
-            }
+            $maskedQuoteId = $this->quoteIdToMaskedId->execute($quoteId);
         } else {
             $maskedQuoteId = $this->guestCartManagement->createEmptyCart();
         }
