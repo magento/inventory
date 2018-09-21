@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Math\Division as MathDivision;
 use Magento\Framework\Phrase;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
@@ -43,29 +42,21 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     private $productSalableResultFactory;
 
     /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
-    /**
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param MathDivision $mathDivision
      * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
-     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         MathDivision $mathDivision,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
-        ProductSalableResultInterfaceFactory $productSalableResultFactory,
-        ProductRepositoryInterface $productRepository
+        ProductSalableResultInterfaceFactory $productSalableResultFactory
     ) {
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->mathDivision = $mathDivision;
         $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->productSalableResultFactory = $productSalableResultFactory;
-        $this->productRepository = $productRepository;
     }
 
     /**
@@ -94,12 +85,10 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
         }
 
         if ($this->isQuantityIncrementCheckFailed($stockItemConfiguration, $requestedQty)) {
-            $product = $this->productRepository->get($sku);
             return $this->createErrorResult(
                 'is_correct_qty-qty_increment',
                 __(
-                    'You can buy %1 only in quantities of %2 at a time.',
-                    $product->getName(),
+                    'You can buy this product only in quantities of %1 at a time.',
                     $stockItemConfiguration->getQtyIncrements()
                 )
             );
