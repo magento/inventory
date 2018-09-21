@@ -123,9 +123,9 @@ class CheckQuoteItemQtyPlugin
         $result->setItemIsQtyDecimal($stockItem->getIsQtyDecimal());
         if (!$stockItem->getIsQtyDecimal()) {
             $result->setHasQtyOptionUpdate(true);
-            $itemQty = intval($itemQty);
+            $itemQty = (int)$itemQty;
             $result->setItemQty($itemQty);
-            $origQty = intval($origQty);
+            $origQty = (int)$origQty;
             $result->setOrigQty($origQty);
         }
 
