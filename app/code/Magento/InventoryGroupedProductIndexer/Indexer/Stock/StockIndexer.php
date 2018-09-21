@@ -21,19 +21,14 @@ use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
 class StockIndexer
 {
     /**
-     * @var GetAllStockIds
-     */
-    private $getAllStockIds;
-
-    /**
      * @var IndexStructureInterface
      */
     private $indexStructure;
 
     /**
-     * @var IndexHandlerInterface
+     * @var GetAllStockIds
      */
-    private $indexHandler;
+    private $getAllStockIds;
 
     /**
      * @var IndexNameBuilder
@@ -41,19 +36,24 @@ class StockIndexer
     private $indexNameBuilder;
 
     /**
+     * @var IndexHandlerInterface
+     */
+    private $indexHandler;
+
+    /**
      * @var IndexDataByStockIdProvider
      */
     private $indexDataByStockIdProvider;
 
     /**
-     * @var IndexTableSwitcherInterface
-     */
-    private $indexTableSwitcher;
-
-    /**
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
+
+    /**
+     * @var IndexTableSwitcherInterface
+     */
+    private $indexTableSwitcher;
 
     /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
@@ -82,26 +82,6 @@ class StockIndexer
         $this->indexDataByStockIdProvider = $indexDataByStockIdProvider;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
-    }
-
-    /**
-     * @return void
-     * @throws StateException
-     */
-    public function executeFull()
-    {
-        $stockIds = $this->getAllStockIds->execute();
-        $this->executeList($stockIds);
-    }
-
-    /**
-     * @param int $stockId
-     * @return void
-     * @throws StateException
-     */
-    public function executeRow(int $stockId)
-    {
-        $this->executeList([$stockId]);
     }
 
     /**
@@ -140,5 +120,25 @@ class StockIndexer
                 ResourceConnection::DEFAULT_CONNECTION
             );
         }
+    }
+
+    /**
+     * @return void
+     * @throws StateException
+     */
+    public function executeFull()
+    {
+        $stockIds = $this->getAllStockIds->execute();
+        $this->executeList($stockIds);
+    }
+
+    /**
+     * @param int $stockId
+     * @return void
+     * @throws StateException
+     */
+    public function executeRow(int $stockId)
+    {
+        $this->executeList([$stockId]);
     }
 }

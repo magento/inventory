@@ -21,16 +21,6 @@ use Magento\Catalog\Api\Data\ProductInterface;
 class SelectBuilder
 {
     /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
-     * @var IndexNameBuilder
-     */
-    private $indexNameBuilder;
-
-    /**
      * @var IndexNameResolverInterface
      */
     private $indexNameResolver;
@@ -39,6 +29,16 @@ class SelectBuilder
      * @var MetadataPool
      */
     private $metadataPool;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
+     * @var IndexNameBuilder
+     */
+    private $indexNameBuilder;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -68,18 +68,14 @@ class SelectBuilder
     public function execute(int $stockId): Select
     {
         $connection = $this->resourceConnection->getConnection();
-
         $indexName = $this->indexNameBuilder
             ->setIndexId(InventoryIndexer::INDEXER_ID)
             ->addDimension('stock_', (string)$stockId)
             ->setAlias(Alias::ALIAS_MAIN)
             ->build();
-
         $indexTableName = $this->indexNameResolver->resolveName($indexName);
-
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
-
         $select = $connection->select()
             ->from(
                 ['stock' => $indexTableName],
