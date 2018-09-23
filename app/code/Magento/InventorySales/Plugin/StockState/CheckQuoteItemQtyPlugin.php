@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\StockState;
 
 use Magento\CatalogInventory\Api\StockStateInterface;
+use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as ObjectFactory;
 use Magento\Framework\Exception\LocalizedException;
@@ -62,6 +63,11 @@ class CheckQuoteItemQtyPlugin
     private $backOrderNotifyCustomerCondition;
 
     /**
+     * @var StockRegistryProviderInterface
+     */
+    private $stockRegistryProvider;
+
+    /**
      * @param ObjectFactory $objectFactory
      * @param FormatInterface $format
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
@@ -78,7 +84,8 @@ class CheckQuoteItemQtyPlugin
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager,
-        BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition
+        BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition,
+        StockRegistryProviderInterface $stockRegistryProvider
     ) {
         $this->objectFactory = $objectFactory;
         $this->format = $format;
@@ -87,6 +94,7 @@ class CheckQuoteItemQtyPlugin
         $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
         $this->backOrderNotifyCustomerCondition = $backOrderNotifyCustomerCondition;
+        $this->stockRegistryProvider = $stockRegistryProvider;
     }
 
     /**
@@ -116,6 +124,16 @@ class CheckQuoteItemQtyPlugin
     ) {
         $result = $this->objectFactory->create();
         $result->setHasError(false);
+
+        $stockItem = $this->stockRegistryProvider->getStockItem($productId, $scopeId);
+        $result->setItemIsQtyDecimal($stockItem->getIsQtyDecimal());
+        if (!$stockItem->getIsQtyDecimal()) {
+            $result->setHasQtyOptionUpdate(true);
+            $itemQty = (int)$itemQty;
+            $result->setItemQty($itemQty);
+            $origQty = (int)$origQty;
+            $result->setOrigQty($origQty);
+        }
 
         $qty = $this->getNumber($itemQty);
 

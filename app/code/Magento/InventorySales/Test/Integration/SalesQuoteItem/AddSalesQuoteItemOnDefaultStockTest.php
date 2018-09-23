@@ -74,13 +74,16 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @dataProvider addInStockProductToQuoteDataProvider
+     *
+     * @param string $productSku
+     * @param float $productQty
+     * @param float $expectedQtyInCart
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function testAddInStockProductToQuote()
+    public function testAddInStockProductToQuote(string $productSku, float $productQty, float $expectedQtyInCart): void
     {
-        $productSku = 'SKU-1';
-        $productQty = 4;
-        $expectedQtyInCart = 4;
-
         $product = $this->getProductBySku($productSku);
         $quote = $this->getQuote();
 
@@ -89,6 +92,21 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
         /** @var CartItemInterface $quoteItem */
          $quoteItem = current($quote->getAllItems());
          self::assertEquals($expectedQtyInCart, $quoteItem->getQty());
+    }
+
+    /**
+     * Data Provider for testAddInStockProductToQuote.
+     *
+     * @return array
+     */
+    public function addInStockProductToQuoteDataProvider() : array
+    {
+        return [
+            'Add integer quantity while decimal product quantity is enabled' => ['SKU-1', 4, 4],
+            'Add decimal quantity while decimal product quantity is enabled' => ['SKU-1', 4.5, 4.5],
+            'Add integer quantity while decimal product quantity is disabled' => ['SKU-2', 4, 4],
+            'Add decimal quantity while decimal product quantity is disabled' => ['SKU-2', 4.5, 4],
+        ];
     }
 
     /**
