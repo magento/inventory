@@ -19,7 +19,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
             <skip>
-                <issueId value="MSI-1597"/>
+                <issueId value="MSI-1631"/>
             </skip>
         </annotations>
 

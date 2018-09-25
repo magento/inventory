@@ -18,9 +18,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="single_mode"/>
-            <skip>
-                <issueId value="MSI-1597"/>
-            </skip>
         </annotations>
 
         <before>
@@ -79,6 +76,7 @@
 
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton2"/>
 
+        <conditionalClick selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" dependentSelector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" visible="true" stepKey="confirmDefaultAttributeSetForConfigurableProduct"/>
         <waitForLoadingMaskToDisappear stepKey="waitUntilMaskDisappear1" />
         <waitForPageLoad stepKey="waitUntilPageIsReady1" />
 
