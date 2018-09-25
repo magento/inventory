@@ -15,6 +15,8 @@
         <item name="childrenFromMeta" xsi:type="boolean">true</item>
     </argument>
     <settings>
+        <ajaxSave>true</ajaxSave>
+        <ajaxSaveType>simple</ajaxSaveType>
         <reloadItem>product-details.attribute_set_id:value</reloadItem>
         <buttons>
             <button name="save" class="Magento\Catalog\Block\Adminhtml\Product\Edit\Button\Save"/>
