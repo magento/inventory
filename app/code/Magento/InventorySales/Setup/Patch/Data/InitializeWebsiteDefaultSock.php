@@ -5,13 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Setup\Patch\Schema;
+namespace Magento\InventorySales\Setup\Patch\Data;
 
-use Magento\Framework\Setup\Patch\SchemaPatchInterface;
+use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\InventorySales\Setup\Operation\AssignWebsiteToDefaultStock;
-use Magento\Store\Setup\Patch\Schema\InitializeStoresAndWebsites;
 
-class InitializeWebsiteDefaultSock implements SchemaPatchInterface
+class InitializeWebsiteDefaultSock implements DataPatchInterface
 {
     /**
      * @var AssignWebsiteToDefaultStock
@@ -38,9 +37,7 @@ class InitializeWebsiteDefaultSock implements SchemaPatchInterface
      */
     public static function getDependencies()
     {
-        return [
-            InitializeStoresAndWebsites::class
-        ];
+        return [];
     }
 
     /**
