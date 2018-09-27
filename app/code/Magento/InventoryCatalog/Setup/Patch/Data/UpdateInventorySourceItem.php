@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Setup\Patch\Schema;
+namespace Magento\InventoryCatalog\Setup\Patch\Data;
 
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Framework\Setup\Patch\SchemaPatchInterface;
+use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\InventoryCatalog\Setup\Operation\UpdateInventorySourceItem as Operation;
 
 /**
  * Patch Inventory Source Items with Inventory Stock Item Data
  */
-class UpdateInventorySourceItem implements SchemaPatchInterface
+class UpdateInventorySourceItem implements DataPatchInterface
 {
     /**
      * @var ModuleDataSetupInterface

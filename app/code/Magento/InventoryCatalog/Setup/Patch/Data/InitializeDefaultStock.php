@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Setup\Patch\Schema;
+namespace Magento\InventoryCatalog\Setup\Patch\Data;
 
-use Magento\Framework\Setup\Patch\SchemaPatchInterface;
+use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\InventoryCatalog\Setup\Operation\AssignDefaultSourceToDefaultStock;
 use Magento\InventoryCatalog\Setup\Operation\CreateDefaultSource;
 use Magento\InventoryCatalog\Setup\Operation\CreateDefaultStock;
 
 /**
- * Patch schema with information about default stock
+ * Patch data with information about default stock
  */
-class InitializeDefaultStock implements SchemaPatchInterface
+class InitializeDefaultStock implements DataPatchInterface
 {
     /**
      * @var CreateDefaultSource
