@@ -120,6 +120,14 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
             );
         }
 
+        $isDecimal = $this->getInventoryConfiguration->isQtyDecimal($sku, $stockId);
+        if ($this->isDecimalQtyCheckFailed($isDecimal, $requestedQty)) {
+            return $this->createErrorResult(
+                'is_correct_qty-is_qty_decimal',
+                __('You cannot use decimal quantity for this product.')
+            );
+        }
+
         return $this->productSalableResultFactory->create(['errors' => []]);
     }
 
@@ -142,6 +150,22 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
     }
 
     /**
+     * Check if decimal quantity is valid
+     *
+     * @param bool $isDecimal
+     * @param float $requestedQty
+     * @return bool
+     */
+    private function isDecimalQtyCheckFailed(
+        bool $isDecimal,
+        float $requestedQty
+    ): bool {
+        return (!$isDecimal && (floor($requestedQty) !== $requestedQty));
+    }
+
+    /**
+     * Check if min sale condition is satisfied
+     *
      * @param float $minSaleQty
      * @param float $requestedQty
      * @return bool
