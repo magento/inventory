@@ -7,10 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Setup\Patch\Schema;
 
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Setup\Patch\SchemaPatchInterface;
-use Magento\InventoryCatalog\Setup\Operation\AssignDefaultSourceToDefaultStock;
-use Magento\InventoryCatalog\Setup\Operation\CreateDefaultSource;
-use Magento\InventoryCatalog\Setup\Operation\CreateDefaultStock;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
+use Magento\InventoryCatalog\Model\DefaultSourceProvider;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 
 /**
  * Patch schema with information about default stock
@@ -18,33 +22,33 @@ use Magento\InventoryCatalog\Setup\Operation\CreateDefaultStock;
 class InitializeDefaultStock implements SchemaPatchInterface
 {
     /**
-     * @var CreateDefaultSource
+     * @var ResourceConnection
      */
-    private $createDefaultSource;
+    private $resource;
 
     /**
-     * @var CreateDefaultStock
+     * @var DefaultSourceProvider
      */
-    private $createDefaultStock;
+    private $defaultSourceProvider;
 
     /**
-     * @var AssignDefaultSourceToDefaultStock
+     * @var DefaultStockProviderInterface
      */
-    private $assignDefaultSourceToDefaultStock;
+    private $defaultStockProvider;
 
     /**
-     * @param CreateDefaultSource $createDefaultSource
-     * @param CreateDefaultStock $createDefaultStock
-     * @param AssignDefaultSourceToDefaultStock $assignDefaultSourceToDefaultStock
+     * @param ResourceConnection $resource
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        CreateDefaultSource $createDefaultSource,
-        CreateDefaultStock $createDefaultStock,
-        AssignDefaultSourceToDefaultStock $assignDefaultSourceToDefaultStock
+        ResourceConnection $resource,
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->createDefaultSource = $createDefaultSource;
-        $this->createDefaultStock = $createDefaultStock;
-        $this->assignDefaultSourceToDefaultStock = $assignDefaultSourceToDefaultStock;
+        $this->resource = $resource;
+        $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -52,9 +56,9 @@ class InitializeDefaultStock implements SchemaPatchInterface
      */
     public function apply()
     {
-        $this->createDefaultSource->execute();
-        $this->createDefaultStock->execute();
-        $this->assignDefaultSourceToDefaultStock->execute();
+        $this->createDefaultSource();
+        $this->createDefaultStock();
+        $this->createDefaultSourceStockLink();
 
         return $this;
     }
@@ -73,5 +77,51 @@ class InitializeDefaultStock implements SchemaPatchInterface
     public function getAliases()
     {
         return [];
+    }
+
+    /**
+     * @return void
+     */
+    private function createDefaultSource(): void
+    {
+        $connection = $this->resource->getConnection();
+        $sourceData = [
+            SourceInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
+            SourceInterface::NAME => 'Default Source',
+            SourceInterface::ENABLED => 1,
+            SourceInterface::DESCRIPTION => 'Default Source',
+            SourceInterface::LATITUDE => 0,
+            SourceInterface::LONGITUDE => 0,
+            SourceInterface::COUNTRY_ID => 'US',
+            SourceInterface::POSTCODE => '00000',
+        ];
+        $connection->insert($connection->getTableName('inventory_source'), $sourceData);
+    }
+
+    /**
+     * @return void
+     */
+    private function createDefaultStock(): void
+    {
+        $connection = $this->resource->getConnection();
+        $stockData = [
+            StockInterface::STOCK_ID => $this->defaultStockProvider->getId(),
+            StockInterface::NAME => 'Default Stock',
+        ];
+        $connection->insert($connection->getTableName('inventory_stock'), $stockData);
+    }
+
+    /**
+     * @return void
+     */
+    private function createDefaultSourceStockLink(): void
+    {
+        $connection = $this->resource->getConnection();
+        $stockSourceLinkData = [
+            StockSourceLinkInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
+            StockSourceLinkInterface::STOCK_ID => $this->defaultStockProvider->getId(),
+            StockSourceLinkInterface::PRIORITY => 1,
+        ];
+        $connection->insert($connection->getTableName('inventory_source_stock_link'), $stockSourceLinkData);
     }
 }
