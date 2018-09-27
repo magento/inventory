@@ -10,13 +10,14 @@ namespace Magento\InventoryShippingAdminUi\Ui\DataProvider;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryShipping\Model\GetAddressRequestFromOrder;
+use Magento\InventorySourceSelectionApi\Api\Data\AddressRequestInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\Order\Item;
 use Magento\Ui\DataProvider\AbstractDataProvider;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\InventoryShippingAdminUi\Ui\DataProvider\GetSourcesByStockIdSkuAndQty;
 
 class SourceSelectionDataProvider extends AbstractDataProvider
 {
@@ -46,21 +47,29 @@ class SourceSelectionDataProvider extends AbstractDataProvider
     private $getSourcesByStockIdSkuAndQty;
 
     /**
+     * @var GetAddressRequestFromOrder
+     */
+    private $getAddressRequestFromOrder;
+
+    /**
      * @var array
      */
     private $sources = [];
 
     /**
-     * @param string $name
-     * @param string $primaryFieldName
-     * @param string $requestFieldName
+     * SourceSelectionDataProvider constructor.
+     * @param $name
+     * @param $primaryFieldName
+     * @param $requestFieldName
      * @param RequestInterface $request
      * @param OrderRepository $orderRepository
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
-     * @param GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty
+     * @param \Magento\InventoryShippingAdminUi\Ui\DataProvider\GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty
+     * @param GetAddressRequestFromOrder $getAddressRequestFromOrder
      * @param array $meta
      * @param array $data
+     * @SuppressWarnings(PHPMD.LongVariable)
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -72,6 +81,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         GetSourcesByStockIdSkuAndQty $getSourcesByStockIdSkuAndQty,
+        GetAddressRequestFromOrder $getAddressRequestFromOrder,
         array $meta = [],
         array $data = []
     ) {
@@ -81,6 +91,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getSourcesByStockIdSkuAndQty = $getSourcesByStockIdSkuAndQty;
+        $this->getAddressRequestFromOrder = $getAddressRequestFromOrder;
     }
 
     /**
@@ -107,6 +118,8 @@ class SourceSelectionDataProvider extends AbstractDataProvider
         $websiteId = $order->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
+        $addressRequest = $this->getAddressRequestFromOrder->execute($order);
+
         foreach ($order->getAllItems() as $orderItem) {
             if ($orderItem->getIsVirtual()
                 || $orderItem->getLockedDoShip()
@@ -128,7 +141,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
                 'sku' => $sku,
                 'product' => $this->getProductName($orderItem),
                 'qtyToShip' => $qty,
-                'sources' => $this->getSources($stockId, $sku, $qty),
+                'sources' => $this->getSources($stockId, $sku, $qty, $addressRequest),
                 'isManageStock' => $this->isManageStock($sku, $stockId)
             ];
         }
@@ -148,12 +161,13 @@ class SourceSelectionDataProvider extends AbstractDataProvider
      * @param int $stockId
      * @param string $sku
      * @param float $qty
+     * @param AddressRequestInterface $addressRequest
      * @return array
      * @throws NoSuchEntityException
      */
-    private function getSources(int $stockId, string $sku, float $qty): array
+    private function getSources(int $stockId, string $sku, float $qty, AddressRequestInterface $addressRequest): array
     {
-        $sources = $this->getSourcesByStockIdSkuAndQty->execute($stockId, $sku, $qty);
+        $sources = $this->getSourcesByStockIdSkuAndQty->execute($stockId, $sku, $qty, $addressRequest);
         foreach ($sources as $source) {
             $this->sources[$source['sourceCode']] = $source['sourceName'];
         }

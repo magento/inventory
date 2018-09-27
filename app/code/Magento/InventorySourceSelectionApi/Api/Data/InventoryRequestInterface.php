@@ -29,18 +29,9 @@ interface InventoryRequestInterface
     public function getItems(): array;
 
     /**
-     * Set Stock Id
+     * Get address request
      *
-     * @param int $stockId
-     * @return void
+     * @return AddressRequestInterface
      */
-    public function setStockId(int $stockId): void;
-
-    /**
-     * Set Items
-     *
-     * @param \Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterface[] $items
-     * @return void
-     */
-    public function setItems(array $items): void;
+    public function getAddress(): AddressRequestInterface;
 }

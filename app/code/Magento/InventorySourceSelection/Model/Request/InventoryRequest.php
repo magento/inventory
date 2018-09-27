@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySourceSelection\Model\Request;
 
+use Magento\InventorySourceSelectionApi\Api\Data\AddressRequestInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
@@ -32,17 +33,27 @@ class InventoryRequest implements InventoryRequestInterface
     private $itemRequestFactory;
 
     /**
+     * @var AddressRequestInterface
+     */
+    private $address;
+
+    /**
+     * InventoryRequest constructor.
+     *
      * @param ItemRequestInterfaceFactory $itemRequestFactory
+     * @param AddressRequestInterface $address
      * @param int $stockId
-     * @param ItemRequestInterface[] $items
+     * @param array $items
      */
     public function __construct(
         ItemRequestInterfaceFactory $itemRequestFactory,
+        AddressRequestInterface $address,
         int $stockId,
         array $items
     ) {
         $this->stockId = $stockId;
         $this->itemRequestFactory = $itemRequestFactory;
+        $this->address = $address;
 
         //TODO: Temporary fix for resolving issue with webApi (https://github.com/magento-engcom/msi/issues/1524)
         foreach ($items as $item) {
@@ -76,16 +87,8 @@ class InventoryRequest implements InventoryRequestInterface
     /**
      * @inheritdoc
      */
-    public function setStockId(int $stockId): void
+    public function getAddress(): AddressRequestInterface
     {
-        $this->stockId = $stockId;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setItems(array $items): void
-    {
-        $this->items = $items;
+        return $this->address;
     }
 }

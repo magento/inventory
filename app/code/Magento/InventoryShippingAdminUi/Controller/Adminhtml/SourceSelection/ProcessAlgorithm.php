@@ -13,11 +13,15 @@ use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\InventorySourceSelectionApi\Api\Data\AddressRequestInterface;
+use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestAddressInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
 use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\Sales\Api\OrderItemRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * ProcessAlgorithm Controller
@@ -60,11 +64,27 @@ class ProcessAlgorithm extends Action
     private $sourceRepository;
 
     /**
+     * @var OrderItemRepositoryInterface
+     */
+    private $orderItemRepository;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * @var array
      */
     private $sources = [];
+    /**
+     * @var ItemRequestAddressInterfaceFactory
+     */
+    private $itemRequestAddressFactory;
 
     /**
+     * ProcessAlgorithm constructor.
+     *
      * @param Context $context
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param ItemRequestInterfaceFactory $itemRequestFactory
@@ -72,6 +92,9 @@ class ProcessAlgorithm extends Action
      * @param SourceSelectionServiceInterface $sourceSelectionService
      * @param GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode
      * @param SourceRepositoryInterface $sourceRepository
+     * @param OrderItemRepositoryInterface $orderItemRepository
+     * @param OrderRepositoryInterface $orderRepository
+     * @param ItemRequestAddressInterfaceFactory $itemRequestAddressFactory
      */
     public function __construct(
         Context $context,
@@ -81,6 +104,7 @@ class ProcessAlgorithm extends Action
         SourceSelectionServiceInterface $sourceSelectionService,
         GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
         SourceRepositoryInterface $sourceRepository
+
     ) {
         parent::__construct($context);
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
@@ -110,6 +134,10 @@ class ProcessAlgorithm extends Action
             $websiteId = $postRequest['websiteId'] ?? 1;
             $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
+            $orderItemId = (int) $requestData[0]['orderItem'];
+            $order = $this->orderRepository->get($orderItemId);
+            $address = $this->getItemRequestAddress((int) $order->getEntityId());
+
             $result = $requestItems = [];
             foreach ($requestData as $data) {
                 $requestItems[] = $this->itemRequestFactory->create([
@@ -119,7 +147,8 @@ class ProcessAlgorithm extends Action
             }
             $inventoryRequest = $this->inventoryRequestFactory->create([
                 'stockId' => $stockId,
-                'items'   => $requestItems
+                'items'   => $requestItems,
+                'addressRequest' => $address
             ]);
 
             $sourceSelectionResult = $this->sourceSelectionService->execute($inventoryRequest, $algorithmCode);

@@ -16,6 +16,9 @@ use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactor
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 
+/**
+ * Create inventory request from order
+ */
 class InventoryRequestFromOrderFactory
 {
     /**
@@ -39,27 +42,39 @@ class InventoryRequestFromOrderFactory
     private $getSkusByProductIds;
 
     /**
+     * @var GetAddressRequestFromOrder
+     */
+    private $getAddressRequestFromOrder;
+
+    /**
      * InventoryRequestFactory constructor.
+     *
      * @param ItemRequestInterfaceFactory $itemRequestFactory
      * @param InventoryRequestInterfaceFactory $inventoryRequestFactory
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
+     * @param GetAddressRequestFromOrder $getAddressRequestFromOrder
      */
     public function __construct(
         ItemRequestInterfaceFactory $itemRequestFactory,
         InventoryRequestInterfaceFactory $inventoryRequestFactory,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        GetSkusByProductIdsInterface $getSkusByProductIds
+        GetSkusByProductIdsInterface $getSkusByProductIds,
+        GetAddressRequestFromOrder $getAddressRequestFromOrder
     ) {
         $this->itemRequestFactory = $itemRequestFactory;
         $this->inventoryRequestFactory = $inventoryRequestFactory;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->getAddressRequestFromOrder = $getAddressRequestFromOrder;
     }
 
     /**
+     * Create inventory request from order
+     *
      * @param OrderInterface $order
      * @return InventoryRequestInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function create(OrderInterface $order) : InventoryRequestInterface
     {
@@ -91,7 +106,8 @@ class InventoryRequestFromOrderFactory
 
         return $this->inventoryRequestFactory->create([
             'stockId' => $stockId,
-            'items' => $requestItems
+            'items' => $requestItems,
+            'address' => $this->getAddressRequestFromOrder->execute($order)
         ]);
     }
 

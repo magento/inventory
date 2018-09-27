@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShippingAdminUi\Ui\DataProvider;
 
+use Magento\InventorySourceSelectionApi\Api\Data\AddressRequestInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
@@ -70,10 +71,12 @@ class GetSourcesByStockIdSkuAndQty
      * @param int $stockId
      * @param string $sku
      * @param float $qty
+     * @param AddressRequestInterface $addressRequest
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
-    public function execute(int $stockId, string $sku, float $qty): array
+    public function execute(int $stockId, string $sku, float $qty, AddressRequestInterface $addressRequest): array
     {
         $algorithmCode = $this->getDefaultSourceSelectionAlgorithmCode->execute();
 
@@ -83,7 +86,8 @@ class GetSourcesByStockIdSkuAndQty
         ]);
         $inventoryRequest = $this->inventoryRequestFactory->create([
             'stockId' => $stockId,
-            'items' => [$requestItem]
+            'items' => [$requestItem],
+            'address' => $addressRequest
         ]);
         $sourceSelectionResult = $this->sourceSelectionService->execute(
             $inventoryRequest,
