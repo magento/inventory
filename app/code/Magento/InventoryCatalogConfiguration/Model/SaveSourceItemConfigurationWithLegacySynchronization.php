@@ -15,6 +15,9 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 
+/**
+ * @inheritdoc
+ */
 class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSourceConfigurationInterface
 {
     /**
@@ -43,6 +46,8 @@ class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSource
     private $defaultSourceProvider;
 
     /**
+     * SaveSourceItemConfigurationWithLegacySynchronization constructor.
+     *
      * @param SaveSourceConfigurationInterface $saveSourceConfiguration
      * @param ResourceConnection $resourceConnection
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
@@ -91,6 +96,8 @@ class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSource
     }
 
     /**
+     * Update legacy stock item
+     *
      * @param string $sku
      * @param SourceItemConfigurationInterface $sourceItemConfiguration
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -122,7 +129,7 @@ class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSource
         $whereCondition[StockItemInterface::PRODUCT_ID . ' = ?'] = $productId;
 
         $connection->update(
-            $connection->getTableName('cataloginventory_stock_item'),
+            $this->resourceConnection->getTableName('cataloginventory_stock_item'),
             $data,
             $whereCondition
         );
