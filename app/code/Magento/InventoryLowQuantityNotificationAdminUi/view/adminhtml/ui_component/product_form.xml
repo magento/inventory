@@ -47,16 +47,6 @@
                             <link name="disabled">!${ $.provider }:data.product.stock_data.manage_stock</link>
                         </imports>
                     </settings>
-                    <formElements>
-                        <checkbox class="Magento\InventoryLowQuantityNotificationAdminUi\Ui\Component\Product\Form\Element\UseConfigSettings">
-                            <settings>
-                                <valueMap>
-                                    <map name="false" xsi:type="string">0</map>
-                                    <map name="true" xsi:type="string">1</map>
-                                </valueMap>
-                            </settings>
-                        </checkbox>
-                    </formElements>
                 </field>
             </container>
         </dynamicRows>
