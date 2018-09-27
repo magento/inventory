@@ -81,7 +81,7 @@ class SaveStockConfiguration implements SaveStockConfigurationInterface
             ->from($stockConfigurationTable)
             ->where('stock_id = ?', $stockId)
             ->where('sku IS NULL');
-        $isExistStockConfiguration = $this->resourceConnection->fetchOne($select);
+        $isExistStockConfiguration = $connection->fetchOne($select);
 
         $data = [
             'sku' => null,
