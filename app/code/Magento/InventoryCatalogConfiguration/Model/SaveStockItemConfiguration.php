@@ -41,6 +41,8 @@ class SaveStockItemConfiguration
         StockItemConfigurationInterface::MAX_SALE_QTY => 'float',
         StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS => 'bool',
         StockItemConfigurationInterface::QTY_INCREMENTS => 'float',
+        StockItemConfigurationInterface::IS_QTY_DECIMAL => 'bool',
+        StockItemConfigurationInterface::IS_DECIMAL_DIVIDED => 'bool',
         StockItemConfigurationInterface::LOW_STOCK_DATE => 'string',
     ];
 
@@ -72,7 +74,14 @@ class SaveStockItemConfiguration
         foreach ($this->fields as $field => $type) {
             $setMethod = 'set' . SimpleDataObjectConverter::snakeCaseToUpperCamelCase($field);
             $getMethod = 'get' . SimpleDataObjectConverter::snakeCaseToUpperCamelCase($field);
-            if ($stockItem->getData('use_config_' . $field) || $stockItem->getData('use_config_' . $field) === null) {
+
+            if ($field === 'enable_qty_increments') {
+                $useConfigFieldName = 'use_config_enable_qty_inc';
+            } else {
+                $useConfigFieldName = 'use_config_' . $field;
+            }
+
+            if ($stockItem->getData($useConfigFieldName) || $stockItem->getData($useConfigFieldName) === null) {
                 $stockItemConfiguration->$setMethod(null);
             } else {
                 $value = $stockItem->getData($field) !== null
