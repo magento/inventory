@@ -109,15 +109,18 @@ class IsCorrectQtyCondition implements IsProductSalableForRequestedQtyInterface
             );
         }
 
-        $qtyIncrements = $this->getInventoryConfiguration->getQtyIncrements($sku, $stockId);
-        if ($this->isQuantityIncrementCheckFailed($qtyIncrements, $requestedQty)) {
-            return $this->createErrorResult(
-                'is_correct_qty-qty_increment',
-                __(
-                    'You can buy this product only in quantities of %1 at a time.',
-                    $qtyIncrements
-                )
-            );
+        $isQtyIncrementEnabled = $this->getInventoryConfiguration->isEnableQtyIncrements($sku, $stockId);
+        if ($isQtyIncrementEnabled) {
+            $qtyIncrements = $this->getInventoryConfiguration->getQtyIncrements($sku, $stockId);
+            if ($this->isQuantityIncrementCheckFailed($qtyIncrements, $requestedQty)) {
+                return $this->createErrorResult(
+                    'is_correct_qty-qty_increment',
+                    __(
+                        'You can buy this product only in quantities of %1 at a time.',
+                        $qtyIncrements
+                    )
+                );
+            }
         }
 
         $isDecimal = $this->getInventoryConfiguration->isQtyDecimal($sku, $stockId);
