@@ -37,8 +37,8 @@
         <column xsi:type="smallint" name="enable_qty_increments" padding="5" unsigned="true" nullable="true" identity="false"/>
         <column xsi:type="decimal" name="stock_threshold_qty" scale="4" precision="12" unsigned="false" nullable="true"/>
         <column xsi:type="timestamp" name="low_stock_date" on_update="false" nullable="true"/>
-        <column xsi:type="smallint" name="is_qty_decimal" padding="5" unsigned="true" nullable="false" identity="false"/>
-        <column xsi:type="smallint" name="is_decimal_divided" padding="5" unsigned="true" nullable="false" identity="false"/>
+        <column xsi:type="smallint" name="is_qty_decimal" padding="5" unsigned="true" nullable="true" identity="false"/>
+        <column xsi:type="smallint" name="is_decimal_divided" padding="5" unsigned="true" nullable="true" identity="false"/>
         <constraint xsi:type="primary" name="PRIMARY">
             <column name="entity_id"/>
         </constraint>
