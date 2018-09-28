@@ -400,7 +400,6 @@ class IsCorrectQtyConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurationApi/Test/_files/stock_items_configuration.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoConfigFixture default/cataloginventory/item_options/enable_qty_increments 1
      * @magentoConfigFixture default/cataloginventory/item_options/qty_increments 3
@@ -433,25 +432,15 @@ class IsCorrectQtyConditionTest extends TestCase
     public function executeWithUseConfigQtyIncrementsDataProvider(): array
     {
         return [
-            ['SKU-1', 10, 1, false],
-            ['SKU-1', 10, 3, true],
-            ['SKU-1', 10, 6, true],
-            ['SKU-1', 10, 9, false],
             ['SKU-2', 10, 1, false],
             ['SKU-2', 10, 3, false],
             ['SKU-3', 10, 1, false],
             ['SKU-3', 10, 3, false],
-            ['SKU-1', 20, 1, false],
-            ['SKU-1', 20, 3, false],
             ['SKU-2', 20, 1, false],
             ['SKU-2', 20, 3, true],
             ['SKU-2', 20, 6, false],
             ['SKU-3', 20, 1, false],
             ['SKU-3', 20, 3, false],
-            ['SKU-1', 30, 1, false],
-            ['SKU-1', 30, 3, true],
-            ['SKU-1', 30, 6, true],
-            ['SKU-1', 30, 9, false],
             ['SKU-2', 30, 1, false],
             ['SKU-2', 30, 3, true],
             ['SKU-2', 30, 6, false],
