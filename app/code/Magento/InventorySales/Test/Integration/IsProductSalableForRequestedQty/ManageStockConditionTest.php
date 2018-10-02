@@ -60,20 +60,31 @@ class ManageStockConditionTest extends TestCase
      * @dataProvider executeWithManageStockFalseDataProvider
      *
      * @magentoDbIsolation disabled
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, float $qty, bool $expectedResult)
     {
+        $oldStockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
         $stockConfiguration->setManageStock(!$expectedResult);
         $stockConfiguration->setIsDecimalDivided(false);
         $stockConfiguration->setIsQtyDecimal(false);
         $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setManageStock(null);
         $stockItemConfiguration->setIsQtyDecimal(false);
         $stockItemConfiguration->setIsDecimalDivided(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
+
         $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
+
+        // Clean up
+        $this->saveStockConfiguration->forStock($stockId, $oldStockConfiguration);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
         self::assertEquals($expectedResult, $isSalable);
     }
 

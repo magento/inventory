@@ -234,6 +234,8 @@ class IsCorrectQtyConditionTest extends TestCase
         int $requestedQty,
         bool $expectedResult
     ): void {
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setIsDecimalDivided(false);
@@ -242,7 +244,11 @@ class IsCorrectQtyConditionTest extends TestCase
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
-        $this->assertEquals($expectedResult, $result->isSalable());
+
+        // Clean up
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
+        self::assertEquals($expectedResult, $result->isSalable());
     }
 
     /**
@@ -358,6 +364,8 @@ class IsCorrectQtyConditionTest extends TestCase
         int $requestedQty,
         bool $expectedResult
     ): void {
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setIsDecimalDivided(false);
@@ -366,7 +374,11 @@ class IsCorrectQtyConditionTest extends TestCase
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
-        $this->assertEquals($expectedResult, $result->isSalable());
+
+        // Clean up
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
+        self::assertEquals($expectedResult, $result->isSalable());
     }
 
     /**
@@ -476,6 +488,8 @@ class IsCorrectQtyConditionTest extends TestCase
         int $requestedQty,
         bool $expectedResult
     ): void {
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setIsDecimalDivided(false);
@@ -485,7 +499,11 @@ class IsCorrectQtyConditionTest extends TestCase
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
         $result = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty);
-        $this->assertEquals($expectedResult, $result->isSalable());
+
+        // Clean up
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
+        self::assertEquals($expectedResult, $result->isSalable());
     }
 
     /**

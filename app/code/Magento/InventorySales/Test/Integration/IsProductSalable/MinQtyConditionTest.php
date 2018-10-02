@@ -58,21 +58,33 @@ class MinQtyConditionTest extends TestCase
      * @dataProvider executeWithMinQtyDataProvider
      *
      * @magentoDbIsolation disabled
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function testExecuteWithMinQty(string $sku, int $stockId, bool $expectedResult)
     {
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
         $minQty = !$expectedResult ? 5 : null;
+
+        $oldStockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
         $stockConfiguration->setMinQty($minQty);
         $stockConfiguration->setIsDecimalDivided(false);
         $stockConfiguration->setIsQtyDecimal(false);
         $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(null);
         $stockItemConfiguration->setIsQtyDecimal(false);
         $stockItemConfiguration->setIsDecimalDivided(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
+
         $isSalable = $this->isProductSalable->execute($sku, $stockId);
+
+        // Clean up
+        $this->saveStockConfiguration->forStock($stockId, $oldStockConfiguration);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
         self::assertEquals($expectedResult, $isSalable);
     }
 
@@ -110,22 +122,34 @@ class MinQtyConditionTest extends TestCase
      * @dataProvider executeWithManageStockFalseAndMinQty
      *
      * @magentoDbIsolation disabled
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function testExecuteWithManageStockFalseAndMinQty(string $sku, int $stockId, bool $expectedResult)
     {
-        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $oldStockConfiguration = $this->getStockConfiguration->forStock($stockId);
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         $minQty = !$expectedResult ? 5 : null;
+
+        $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
         $stockConfiguration->setMinQty($minQty);
         $stockConfiguration->setManageStock(!$expectedResult);
         $stockConfiguration->setIsDecimalDivided(false);
         $stockConfiguration->setIsQtyDecimal(false);
         $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(null);
         $stockItemConfiguration->setIsQtyDecimal(false);
         $stockItemConfiguration->setIsDecimalDivided(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
+
         $isSalable = $this->isProductSalable->execute($sku, $stockId);
+
+        // Clean up
+        $this->saveStockConfiguration->forStock($stockId, $oldStockConfiguration);
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
         self::assertEquals($expectedResult, $isSalable);
     }
 
