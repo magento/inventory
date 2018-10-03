@@ -16,6 +16,9 @@
         <constraint xsi:type="primary" name="PRIMARY">
             <column name="entity_id"/>
         </constraint>
+        <constraint xsi:type="foreign" name="INV_SOURCE_CONFIGURATION_SOURCE_CODE_INV_SOURCE_SOURCE_CODE"
+                    table="inventory_source_configuration" column="source_code" referenceTable="inventory_source"
+                    referenceColumn="source_code" onDelete="CASCADE"/>
         <constraint xsi:type="unique" name="INVENTORY_SOURCE_CONFIGURATION_SOURCE_CODE_SKU">
             <column name="source_code"/>
             <column name="sku"/>
@@ -39,6 +42,9 @@
         <constraint xsi:type="primary" name="PRIMARY">
             <column name="entity_id"/>
         </constraint>
+        <constraint xsi:type="foreign" name="INVENTORY_STOCK_CONFIGURATION_STOCK_ID_INVENTORY_STOCK_STOCK_ID"
+                    table="inventory_stock_configuration" column="stock_id" referenceTable="inventory_stock"
+                    referenceColumn="stock_id" onDelete="CASCADE"/>
         <constraint xsi:type="unique" name="INVENTORY_STOCK_CONFIGURATION_STOCK_ID_SKU">
             <column name="stock_id"/>
             <column name="sku"/>
