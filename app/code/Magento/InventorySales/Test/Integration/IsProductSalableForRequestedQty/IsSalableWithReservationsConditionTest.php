@@ -128,9 +128,12 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @dataProvider productIsSalableWithUseConfigMinQtyDataProvider
      *
      * @magentoDbIsolation disabled
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function testProductIsSalableWithUseConfigMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(null);
@@ -138,10 +141,12 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $stockItemConfiguration->setIsDecimalDivided(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
-        self::assertEquals(
-            $isSalable,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable()
-        );
+        $isSalableResult = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
+
+        // Clean up
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
+        self::assertEquals($isSalable, $isSalableResult);
     }
 
     /**
@@ -176,9 +181,12 @@ class IsSalableWithReservationsConditionTest extends TestCase
      * @dataProvider productIsSalableWithMinQtyDataProvider
      *
      * @magentoDbIsolation disabled
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function testProductIsSalableWithMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
+        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(5.00);
@@ -186,10 +194,12 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $stockItemConfiguration->setIsQtyDecimal(false);
         $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockItemConfiguration);
 
-        self::assertEquals(
-            $isSalable,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable()
-        );
+        $isSalableResult = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
+
+        // Clean up
+        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
+
+        self::assertEquals($isSalable, $isSalableResult);
     }
 
     /**

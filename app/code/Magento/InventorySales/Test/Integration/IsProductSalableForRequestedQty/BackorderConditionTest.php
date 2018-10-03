@@ -76,7 +76,8 @@ class BackorderConditionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      *
-     * @magentoDbIsolation disabled
+     * @magentoDbIsolation enabled
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function testBackorderedZeroQtyProductIsSalable()
     {
@@ -95,6 +96,7 @@ class BackorderConditionTest extends TestCase
     /**
      * @param string $sku
      * @return SourceItemInterface
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     private function getSourceItemBySku(string $sku): SourceItemInterface
     {
