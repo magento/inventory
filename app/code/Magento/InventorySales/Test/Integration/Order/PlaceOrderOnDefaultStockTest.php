@@ -14,6 +14,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Registry;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterfaceFactory;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterfaceFactory;
 use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
@@ -109,6 +111,16 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $defaultSourceProvider;
 
+    /**
+     * @var StockItemConfigurationInterfaceFactory
+     */
+    private $stockItemConfigurationInterfaceFactory;
+
+    /**
+     * @var SourceItemConfigurationInterfaceFactory
+     */
+    private $sourceItemConfigurationInterfaceFactory;
+
     protected function setUp()
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -126,16 +138,12 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->getSourceConfiguration = Bootstrap::getObjectManager()->get(GetSourceConfigurationInterface::class);
         $this->saveSourceConfiguration = Bootstrap::getObjectManager()->get(SaveSourceConfigurationInterface::class);
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
-
-        $stockConfiguration = $this->getStockConfiguration->forStock($this->defaultStockProvider->getId());
-        $stockConfiguration->setManageStock(null);
-        $stockConfiguration->setIsQtyDecimal(false);
-        $stockConfiguration->setIsDecimalDivided(false);
-        $this->saveStockConfiguration->forStock($this->defaultStockProvider->getId(), $stockConfiguration);
-
-        $sourceConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
-        $sourceConfiguration->setBackorders(null);
-        $this->saveSourceConfiguration->forSource($this->defaultSourceProvider->getCode(), $sourceConfiguration);
+        $this->stockItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
+            StockItemConfigurationInterfaceFactory::class
+        );
+        $this->sourceItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
+            SourceItemConfigurationInterfaceFactory::class
+        );
     }
 
     /**
@@ -316,6 +324,21 @@ class PlaceOrderOnDefaultStockTest extends TestCase
 
     protected function tearDown()
     {
+        $stocksIdsToClean = [$this->defaultStockProvider->getId(), 20];
+        $skusToClean = ['SKU-1', 'SKU-2'];
+
+        $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
+
+        foreach ($stocksIdsToClean as $stockId) {
+            $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+            foreach ($skusToClean as $sku) {
+                $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockConfiguration);
+            }
+        }
+
+        $sourceItemConfiguration = $this->sourceItemConfigurationInterfaceFactory->create();
+        $this->saveSourceConfiguration->forSource($this->defaultSourceProvider->getCode(), $sourceItemConfiguration);
+
         $this->cleanupReservations->execute();
     }
 }

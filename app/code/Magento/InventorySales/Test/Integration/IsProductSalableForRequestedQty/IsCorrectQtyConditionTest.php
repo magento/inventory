@@ -547,11 +547,11 @@ class IsCorrectQtyConditionTest extends TestCase
         $stocksIdsToClean = [10, 20, 30];
         $skusToClean = ['SKU-1', 'SKU-2', 'SKU-3'];
 
-        foreach ($stocksIdsToClean as $stockId) {
-            foreach ($skusToClean as $sku) {
-                $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
+        $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
 
-                $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+        foreach ($stocksIdsToClean as $stockId) {
+            $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+            foreach ($skusToClean as $sku) {
                 $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockConfiguration);
             }
         }
