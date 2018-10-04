@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+/** @noinspection PhpDocMissingThrowsInspection */
 declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\Order;
@@ -12,14 +13,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Registry;
-use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterfaceFactory;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterfaceFactory;
-use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -33,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @magentoAppIsolation enabled
+ * @magentoDbIsolation disabled
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
 {
@@ -86,41 +82,6 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $orderManagement;
 
-    /**
-     * @var GetStockConfigurationInterface
-     */
-    private $getStockConfiguration;
-
-    /**
-     * @var SaveStockConfigurationInterface
-     */
-    private $saveStockConfiguration;
-
-    /**
-     * @var GetSourceConfigurationInterface
-     */
-    private $getSourceConfiguration;
-
-    /**
-     * @var SaveSourceConfigurationInterface
-     */
-    private $saveSourceConfiguration;
-
-    /**
-     * @var DefaultSourceProviderInterface
-     */
-    private $defaultSourceProvider;
-
-    /**
-     * @var StockItemConfigurationInterfaceFactory
-     */
-    private $stockItemConfigurationInterfaceFactory;
-
-    /**
-     * @var SourceItemConfigurationInterfaceFactory
-     */
-    private $sourceItemConfigurationInterfaceFactory;
-
     protected function setUp()
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -133,17 +94,6 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
-        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
-        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
-        $this->getSourceConfiguration = Bootstrap::getObjectManager()->get(GetSourceConfigurationInterface::class);
-        $this->saveSourceConfiguration = Bootstrap::getObjectManager()->get(SaveSourceConfigurationInterface::class);
-        $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
-        $this->stockItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
-            StockItemConfigurationInterfaceFactory::class
-        );
-        $this->sourceItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
-            SourceItemConfigurationInterfaceFactory::class
-        );
     }
 
     /**
@@ -158,11 +108,14 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $quoteItemQty = 4;
 
         $cart = $this->getCart();
+        /** @noinspection PhpUnhandledExceptionInspection */
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        /** @noinspection PhpUndefinedMethodInspection */
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNotNull($orderId);
@@ -181,36 +134,17 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     {
         $sku = 'SKU-1';
         $quoteItemQty = 8.5;
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-            $sku,
-            $this->defaultStockProvider->getId()
-        );
-        $stockItemConfiguration->setManageStock(null);
-        $stockItemConfiguration->setIsDecimalDivided(false);
-        $stockItemConfiguration->setIsQtyDecimal(false);
-        $this->saveStockConfiguration->forStockItem(
-            $sku,
-            $this->defaultStockProvider->getId(),
-            $stockItemConfiguration
-        );
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
-            $sku,
-            $this->defaultSourceProvider->getCode()
-        );
-        $sourceItemConfiguration->setBackorders(null);
-        $this->saveSourceConfiguration->forSourceItem(
-            $sku,
-            $this->defaultSourceProvider->getCode(),
-            $sourceItemConfiguration
-        );
 
         $cart = $this->getCart();
+        /** @noinspection PhpUnhandledExceptionInspection */
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        /** @noinspection PhpUndefinedMethodInspection */
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
 
         self::expectException(LocalizedException::class);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNull($orderId);
@@ -229,11 +163,14 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $quoteItemQty = 8.5;
 
         $cart = $this->getCart();
+        /** @noinspection PhpUnhandledExceptionInspection */
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        /** @noinspection PhpUndefinedMethodInspection */
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNotNull($orderId);
@@ -253,15 +190,16 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     {
         $sku = 'SKU-1';
         $quoteItemQty = 8;
-        $stockConfiguration = $this->getStockConfiguration->forStockItem($sku, $this->defaultStockProvider->getId());
-        $stockConfiguration->setManageStock(null);
-        $this->saveStockConfiguration->forStockItem($sku, $this->defaultStockProvider->getId(), $stockConfiguration);
+
         $cart = $this->getCart();
+        /** @noinspection PhpUnhandledExceptionInspection */
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        /** @noinspection PhpUndefinedMethodInspection */
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNotNull($orderId);
@@ -290,11 +228,15 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private function deleteOrderById(int $orderId)
     {
+        /** @noinspection PhpDeprecationInspection */
         $this->registry->unregister('isSecureArea');
+        /** @noinspection PhpDeprecationInspection */
         $this->registry->register('isSecureArea', true);
         $this->orderManagement->cancel($orderId);
         $this->orderRepository->delete($this->orderRepository->get($orderId));
+        /** @noinspection PhpDeprecationInspection */
         $this->registry->unregister('isSecureArea');
+        /** @noinspection PhpDeprecationInspection */
         $this->registry->register('isSecureArea', false);
     }
 
@@ -324,21 +266,6 @@ class PlaceOrderOnDefaultStockTest extends TestCase
 
     protected function tearDown()
     {
-        $stocksIdsToClean = [$this->defaultStockProvider->getId(), 20];
-        $skusToClean = ['SKU-1', 'SKU-2'];
-
-        $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
-
-        foreach ($stocksIdsToClean as $stockId) {
-            $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
-            foreach ($skusToClean as $sku) {
-                $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockConfiguration);
-            }
-        }
-
-        $sourceItemConfiguration = $this->sourceItemConfigurationInterfaceFactory->create();
-        $this->saveSourceConfiguration->forSource($this->defaultSourceProvider->getCode(), $sourceItemConfiguration);
-
         $this->cleanupReservations->execute();
     }
 }

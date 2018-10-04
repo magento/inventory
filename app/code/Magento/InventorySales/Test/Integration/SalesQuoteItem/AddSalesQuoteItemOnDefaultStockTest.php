@@ -3,6 +3,9 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+/** @noinspection PhpDocMissingThrowsInspection */
+/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\SalesQuoteItem;
@@ -11,12 +14,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryConfigurationApi\Api\GetSourceConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface;
-use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Model\Quote;
@@ -25,6 +23,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @magentoAppIsolation enabled
+ * @magentoDbIsolation disabled
  */
 class AddSalesQuoteItemOnDefaultStockTest extends TestCase
 {
@@ -44,31 +44,6 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
     private $defaultStockProvider;
 
     /**
-     * @var GetStockConfigurationInterface
-     */
-    private $getStockConfiguration;
-
-    /**
-     * @var SaveStockConfigurationInterface
-     */
-    private $saveStockConfiguration;
-
-    /**
-     * @var GetSourceConfigurationInterface
-     */
-    private $getSourceConfiguration;
-
-    /**
-     * @var SaveSourceConfigurationInterface
-     */
-    private $saveSourceConfiguration;
-
-    /**
-     * @var DefaultSourceProviderInterface
-     */
-    private $defaultSourceProvider;
-
-    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -79,22 +54,6 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
         $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->cleanupReservations->execute();
-
-        $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
-        $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
-        $this->getSourceConfiguration = Bootstrap::getObjectManager()->get(GetSourceConfigurationInterface::class);
-        $this->saveSourceConfiguration = Bootstrap::getObjectManager()->get(SaveSourceConfigurationInterface::class);
-        $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
-
-        $stockConfiguration = $this->getStockConfiguration->forStock($this->defaultStockProvider->getId());
-        $stockConfiguration->setManageStock(null);
-        $stockConfiguration->setIsQtyDecimal(false);
-        $stockConfiguration->setIsDecimalDivided(false);
-        $this->saveStockConfiguration->forStock($this->defaultStockProvider->getId(), $stockConfiguration);
-
-        $sourceConfiguration = $this->getSourceConfiguration->forSource($this->defaultSourceProvider->getCode());
-        $sourceConfiguration->setBackorders(null);
-        $this->saveSourceConfiguration->forSource($this->defaultSourceProvider->getCode(), $sourceConfiguration);
     }
 
     /**
@@ -106,28 +65,7 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
     {
         $productSku = 'SKU-1';
         $productQty = 6;
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-            $productSku,
-            $this->defaultStockProvider->getId()
-        );
-        $stockItemConfiguration->setManageStock(null);
-        $stockItemConfiguration->setIsDecimalDivided(false);
-        $stockItemConfiguration->setIsQtyDecimal(false);
-        $this->saveStockConfiguration->forStockItem(
-            $productSku,
-            $this->defaultStockProvider->getId(),
-            $stockItemConfiguration
-        );
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
-            $productSku,
-            $this->defaultSourceProvider->getCode()
-        );
-        $sourceItemConfiguration->setBackorders(null);
-        $this->saveSourceConfiguration->forSourceItem(
-            $productSku,
-            $this->defaultSourceProvider->getCode(),
-            $sourceItemConfiguration
-        );
+
         $product = $this->getProductBySku($productSku);
         $quote = $this->getQuote();
 
@@ -172,29 +110,6 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
         $expectedQtyInCart1 = 3;
         $expectedQtyInCart2 = 5;
         $expectedQtyInCart3 = 5;
-
-        $stockItemConfiguration = $this->getStockConfiguration->forStockItem(
-            $productSku,
-            $this->defaultStockProvider->getId()
-        );
-        $stockItemConfiguration->setManageStock(null);
-        $stockItemConfiguration->setIsDecimalDivided(false);
-        $stockItemConfiguration->setIsQtyDecimal(false);
-        $this->saveStockConfiguration->forStockItem(
-            $productSku,
-            $this->defaultStockProvider->getId(),
-            $stockItemConfiguration
-        );
-        $sourceItemConfiguration = $this->getSourceConfiguration->forSourceItem(
-            $productSku,
-            $this->defaultSourceProvider->getCode()
-        );
-        $sourceItemConfiguration->setBackorders(null);
-        $this->saveSourceConfiguration->forSourceItem(
-            $productSku,
-            $this->defaultSourceProvider->getCode(),
-            $sourceItemConfiguration
-        );
 
         $product = $this->getProductBySku($productSku);
         $quote = $this->getQuote();
