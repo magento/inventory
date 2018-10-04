@@ -9,12 +9,12 @@ namespace Magento\InventoryCatalogConfiguration\Plugin\CatalogInventory\Model\Re
 
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryCatalogConfiguration\Model\SaveSourceItemConfiguration;
 use Magento\InventoryCatalogConfiguration\Model\SaveStockItemConfiguration;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\Framework\App\ResourceConnection;
 
 /**
  * Save inventory configuration for given product and default source/stock after stock item was saved successfully.
@@ -42,49 +42,67 @@ class SaveInventoryConfigurationPlugin
     private $saveStockItemConfiguration;
 
     /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param SaveSourceItemConfiguration $saveSourceItemConfiguration
      * @param SaveStockItemConfiguration $saveStockItemConfiguration
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
         GetSkusByProductIdsInterface $getSkusByProductIds,
         DefaultStockProviderInterface $defaultStockProvider,
         SaveSourceItemConfiguration $saveSourceItemConfiguration,
-        SaveStockItemConfiguration $saveStockItemConfiguration
+        SaveStockItemConfiguration $saveStockItemConfiguration,
+        ResourceConnection $resourceConnection
     ) {
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->saveSourceItemConfiguration = $saveSourceItemConfiguration;
         $this->saveStockItemConfiguration = $saveStockItemConfiguration;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
      * @param ItemResourceModel $subject
-     * @param ItemResourceModel $result
+     * @param callable $proceed
      * @param AbstractModel $stockItem
      * @return ItemResourceModel
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(
+    public function aroundSave(
         ItemResourceModel $subject,
-        ItemResourceModel $result,
+        callable $proceed,
         AbstractModel $stockItem
     ): ItemResourceModel {
-        if ($stockItem->getStockId() !== $this->defaultStockProvider->getId()) {
-            throw new LocalizedException(__('error'));
+        $connection = $this->resourceConnection->getConnection();
+        $connection->beginTransaction();
+        try {
+            $proceed($stockItem);
+
+            if ($stockItem->getStockId() !== $this->defaultStockProvider->getId()) {
+                throw new LocalizedException(__('error'));
+            }
+
+            $productId = $stockItem->getProductId();
+            $skus = $this->getSkusByProductIds->execute([$productId]);
+            $productSku = $skus[$productId];
+
+            $this->saveSourceItemConfiguration->execute($productSku, $stockItem);
+
+            $this->saveStockItemConfiguration->execute($productSku, $stockItem);
+
+            $connection->commit();
+
+            return $subject;
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
         }
-
-        $productId = $stockItem->getProductId();
-        $skus = $this->getSkusByProductIds->execute([$productId]);
-        $productSku = $skus[$productId];
-
-        $this->saveSourceItemConfiguration->execute($productSku, $stockItem);
-
-        $this->saveStockItemConfiguration->execute($productSku, $stockItem);
-
-        return $result;
     }
 }

@@ -13,7 +13,7 @@
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
         <plugin name="save_inventory_configuration"
                 type="Magento\InventoryCatalogConfiguration\Plugin\CatalogInventory\Model\ResourceModel\Stock\SaveInventoryConfigurationPlugin"
-                sortOrder="20"/>
+                sortOrder="10"/>
     </type>
     <type name="Magento\InventoryConfigurationApi\Api\SaveSourceConfigurationInterface">
         <plugin name="set-data-to-legacy-catalog-inventory-at-source-item-configuration-save"
