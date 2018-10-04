@@ -70,30 +70,92 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
         $connection = $this->resourceConnection->getConnection();
         $stockConfigurationTable = $this->resourceConnection->getTableName('inventory_stock_configuration');
 
-        $data = [
-            'sku' => $sku,
-            'stock_id' => $stockId,
-            StockItemConfigurationInterface::MIN_QTY => $stockItemConfiguration->getMinQty(),
-            StockItemConfigurationInterface::MIN_SALE_QTY => $stockItemConfiguration->getMinSaleQty(),
-            StockItemConfigurationInterface::MAX_SALE_QTY => $stockItemConfiguration->getMaxSaleQty(),
-            StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS => $stockItemConfiguration->isEnableQtyIncrements(),
-            StockItemConfigurationInterface::QTY_INCREMENTS => $stockItemConfiguration->getQtyIncrements(),
-            StockItemConfigurationInterface::MANAGE_STOCK => $stockItemConfiguration->isManageStock(),
-            StockItemConfigurationInterface::LOW_STOCK_DATE => $stockItemConfiguration->getLowStockDate(),
-            StockItemConfigurationInterface::IS_QTY_DECIMAL => $stockItemConfiguration->isQtyDecimal(),
-            StockItemConfigurationInterface::IS_DECIMAL_DIVIDED => $stockItemConfiguration->isDecimalDivided(),
-            StockItemConfigurationInterface::STOCK_STATUS_CHANGED_AUTO =>
-                $stockItemConfiguration->getStockStatusChangedAuto(),
-            StockItemConfigurationInterface::STOCK_THRESHOLD_QTY => $stockItemConfiguration->getStockThresholdQty(),
+        $columnsSql = $this->buildColumnsSqlPart([
+            'sku',
+            'stock_id',
+            StockItemConfigurationInterface::MIN_QTY,
+            StockItemConfigurationInterface::MIN_SALE_QTY,
+            StockItemConfigurationInterface::MAX_SALE_QTY,
+            StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS,
+            StockItemConfigurationInterface::QTY_INCREMENTS,
+            StockItemConfigurationInterface::MANAGE_STOCK,
+            StockItemConfigurationInterface::LOW_STOCK_DATE,
+            StockItemConfigurationInterface::IS_QTY_DECIMAL,
+            StockItemConfigurationInterface::IS_DECIMAL_DIVIDED,
+            StockItemConfigurationInterface::STOCK_STATUS_CHANGED_AUTO,
+            StockItemConfigurationInterface::STOCK_THRESHOLD_QTY
+        ]);
+
+        $onDuplicateSql = $this->buildOnDuplicateSqlPart([
+            StockItemConfigurationInterface::MIN_QTY,
+            StockItemConfigurationInterface::MIN_SALE_QTY,
+            StockItemConfigurationInterface::MAX_SALE_QTY,
+            StockItemConfigurationInterface::ENABLE_QTY_INCREMENTS,
+            StockItemConfigurationInterface::QTY_INCREMENTS,
+            StockItemConfigurationInterface::MANAGE_STOCK,
+            StockItemConfigurationInterface::LOW_STOCK_DATE,
+            StockItemConfigurationInterface::IS_QTY_DECIMAL,
+            StockItemConfigurationInterface::IS_DECIMAL_DIVIDED,
+            StockItemConfigurationInterface::STOCK_STATUS_CHANGED_AUTO,
+            StockItemConfigurationInterface::STOCK_THRESHOLD_QTY
+        ]);
+
+        $bind = [
+            $sku,
+            $stockId,
+            $stockItemConfiguration->getMinQty(),
+            $stockItemConfiguration->getMinSaleQty(),
+            $stockItemConfiguration->getMaxSaleQty(),
+            $stockItemConfiguration->isEnableQtyIncrements(),
+            $stockItemConfiguration->getQtyIncrements(),
+            $stockItemConfiguration->isManageStock(),
+            $stockItemConfiguration->getLowStockDate(),
+            $stockItemConfiguration->isQtyDecimal(),
+            $stockItemConfiguration->isDecimalDivided(),
+            $stockItemConfiguration->getStockStatusChangedAuto(),
+            $stockItemConfiguration->getStockThresholdQty()
         ];
-        $connection->insertOnDuplicate(
+
+        $insertSql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s %s',
             $stockConfigurationTable,
-            $data
+            $columnsSql,
+            '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            $onDuplicateSql
         );
+
+        $connection->query($insertSql, $bind);
 
         if ($stockId === $this->defaultStockProvider->getId()) {
             $this->updateLegacyStockItem($sku, $stockItemConfiguration);
         }
+    }
+
+    /**
+     * @param array $columns
+     * @return string
+     */
+    private function buildColumnsSqlPart(array $columns): string
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $processedColumns = array_map([$connection, 'quoteIdentifier'], $columns);
+        $sql = implode(', ', $processedColumns);
+        return $sql;
+    }
+
+    /**
+     * @param array $fields
+     * @return string
+     */
+    private function buildOnDuplicateSqlPart(array $fields): string
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $processedFields = [];
+        foreach ($fields as $field) {
+            $processedFields[] = sprintf('%1$s = VALUES(%1$s)', $connection->quoteIdentifier($field));
+        }
+        $sql = 'ON DUPLICATE KEY UPDATE ' . implode(', ', $processedFields);
+        return $sql;
     }
 
     /**

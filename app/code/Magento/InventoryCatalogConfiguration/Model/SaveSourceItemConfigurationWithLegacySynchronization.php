@@ -79,20 +79,65 @@ class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSource
         $connection = $this->resourceConnection->getConnection();
         $sourceConfigurationTable = $this->resourceConnection->getTableName('inventory_source_configuration');
 
-        $data = [
-            'sku' => $sku,
-            'source_code' => $sourceCode,
-            SourceItemConfigurationInterface::BACKORDERS => $sourceItemConfiguration->getBackorders(),
-            SourceItemConfigurationInterface::NOTIFY_STOCK_QTY => $sourceItemConfiguration->getNotifyStockQty()
+        $columnsSql = $this->buildColumnsSqlPart([
+            'sku',
+            'source_code',
+            SourceItemConfigurationInterface::BACKORDERS,
+            SourceItemConfigurationInterface::NOTIFY_STOCK_QTY
+        ]);
+
+        $onDuplicateSql = $this->buildOnDuplicateSqlPart([
+            SourceItemConfigurationInterface::BACKORDERS,
+            SourceItemConfigurationInterface::NOTIFY_STOCK_QTY,
+        ]);
+
+        $bind = [
+            $sku,
+            $sourceCode,
+            $sourceItemConfiguration->getBackorders(),
+            $sourceItemConfiguration->getNotifyStockQty()
         ];
-        $connection->insertOnDuplicate(
+
+        $insertSql = sprintf(
+            'INSERT INTO %s (%s) VALUES %s %s',
             $sourceConfigurationTable,
-            $data
+            $columnsSql,
+            '(?, ?, ?, ?)',
+            $onDuplicateSql
         );
+
+        $connection->query($insertSql, $bind);
 
         if ($sourceCode === $this->defaultSourceProvider->getCode()) {
             $this->updateLegacyStockItem($sku, $sourceItemConfiguration);
         }
+    }
+
+    /**
+     * @param array $columns
+     * @return string
+     */
+    private function buildColumnsSqlPart(array $columns): string
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $processedColumns = array_map([$connection, 'quoteIdentifier'], $columns);
+        $sql = implode(', ', $processedColumns);
+        return $sql;
+    }
+
+    /**
+     * @param array $fields
+     * @return string
+     */
+    private function buildOnDuplicateSqlPart(array $fields): string
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $processedFields = [];
+        foreach ($fields as $field) {
+            $processedFields[] = sprintf('%1$s = VALUES(%1$s)', $connection->quoteIdentifier($field));
+        }
+        $sql = 'ON DUPLICATE KEY UPDATE ' . implode(', ', $processedFields);
+        return $sql;
     }
 
     /**
