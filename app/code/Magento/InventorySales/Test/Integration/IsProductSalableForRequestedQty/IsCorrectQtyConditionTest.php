@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterfaceFactory;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
@@ -45,6 +46,11 @@ class IsCorrectQtyConditionTest extends TestCase
     private $saveStockConfiguration;
 
     /**
+     * @var StockItemConfigurationInterfaceFactory
+     */
+    private $stockItemConfigurationInterfaceFactory;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -60,6 +66,9 @@ class IsCorrectQtyConditionTest extends TestCase
         );
         $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(
             SaveStockConfigurationInterface::class
+        );
+        $this->stockItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
+            StockItemConfigurationInterfaceFactory::class
         );
     }
 
@@ -139,7 +148,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithDecimalQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 2.5, true],
             ['SKU-1', 10, 2, true],
             ['SKU-2', 30, 2.5, false],
@@ -184,7 +193,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithUseConfigMinSaleQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, false],
             ['SKU-1', 10, 7, true],
             ['SKU-1', 10, 8, true],
@@ -256,7 +265,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithMinSaleQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, false],
             ['SKU-1', 10, 7, true],
             ['SKU-1', 10, 8, true],
@@ -311,7 +320,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithUseConfigMaxSaleQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, true],
             ['SKU-1', 10, 6, true],
             ['SKU-1', 10, 7, false],
@@ -386,7 +395,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithMaxSaleQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, true],
             ['SKU-1', 10, 6, true],
             ['SKU-1', 10, 7, false],
@@ -443,7 +452,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithUseConfigQtyIncrementsDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-2', 10, 1, false],
             ['SKU-2', 10, 3, false],
             ['SKU-3', 10, 1, false],
@@ -511,7 +520,7 @@ class IsCorrectQtyConditionTest extends TestCase
      */
     public function executeWithQtyIncrementsDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, false],
             ['SKU-1', 10, 3, true],
             ['SKU-1', 10, 6, true],
@@ -531,5 +540,20 @@ class IsCorrectQtyConditionTest extends TestCase
             ['SKU-3', 30, 1, false],
             ['SKU-3', 30, 3, false],
         ];
+    }
+
+    protected function tearDown()
+    {
+        $stocksIdsToClean = [10, 20, 30];
+        $skusToClean = ['SKU-1', 'SKU-2', 'SKU-3'];
+
+        $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
+
+        foreach ($stocksIdsToClean as $stockId) {
+            $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+            foreach ($skusToClean as $sku) {
+                $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockConfiguration);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterfaceFactory;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
@@ -31,6 +32,11 @@ class ManageStockConditionTest extends TestCase
     private $saveStockConfiguration;
 
     /**
+     * @var StockItemConfigurationInterfaceFactory
+     */
+    private $stockItemConfigurationInterfaceFactory;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -41,6 +47,9 @@ class ManageStockConditionTest extends TestCase
             = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
         $this->getStockConfiguration = Bootstrap::getObjectManager()->get(GetStockConfigurationInterface::class);
         $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(SaveStockConfigurationInterface::class);
+        $this->stockItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
+            StockItemConfigurationInterfaceFactory::class
+        );
     }
 
     /**
@@ -64,9 +73,6 @@ class ManageStockConditionTest extends TestCase
      */
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, float $qty, bool $expectedResult)
     {
-        $oldStockConfiguration = $this->getStockConfiguration->forStock($stockId);
-        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-
         $stockConfiguration = $this->getStockConfiguration->forStock($stockId);
         $stockConfiguration->setManageStock(!$expectedResult);
         $stockConfiguration->setIsDecimalDivided(false);
@@ -81,10 +87,6 @@ class ManageStockConditionTest extends TestCase
 
         $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
 
-        // Clean up
-        $this->saveStockConfiguration->forStock($stockId, $oldStockConfiguration);
-        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
-
         self::assertEquals($expectedResult, $isSalable);
     }
 
@@ -93,7 +95,7 @@ class ManageStockConditionTest extends TestCase
      */
     public function executeWithManageStockFalseDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, true],
             ['SKU-1', 20, 1, false],
             ['SKU-1', 30, 1, true],
@@ -104,5 +106,20 @@ class ManageStockConditionTest extends TestCase
             ['SKU-3', 20, 1, false],
             ['SKU-3', 30, 1, true],
         ];
+    }
+
+    protected function tearDown()
+    {
+        $stocksIdsToClean = [10, 20, 30];
+        $skusToClean = ['SKU-1', 'SKU-2', 'SKU-3'];
+
+        $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
+
+        foreach ($stocksIdsToClean as $stockId) {
+            $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+            foreach ($skusToClean as $sku) {
+                $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockConfiguration);
+            }
+        }
     }
 }

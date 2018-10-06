@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterfaceFactory;
 use Magento\InventoryConfigurationApi\Api\GetStockConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
@@ -50,6 +51,11 @@ class IsSalableWithReservationsConditionTest extends TestCase
     private $saveStockConfiguration;
 
     /**
+     * @var StockItemConfigurationInterfaceFactory
+     */
+    private $stockItemConfigurationInterfaceFactory;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -66,6 +72,9 @@ class IsSalableWithReservationsConditionTest extends TestCase
         );
         $this->saveStockConfiguration = Bootstrap::getObjectManager()->get(
             SaveStockConfigurationInterface::class
+        );
+        $this->stockItemConfigurationInterfaceFactory = Bootstrap::getObjectManager()->get(
+            StockItemConfigurationInterfaceFactory::class
         );
     }
 
@@ -98,7 +107,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
      */
     public function productIsSalableDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 1, true],
             ['SKU-1', 20, 1, false],
             ['SKU-1', 30, 1, true],
@@ -132,8 +141,6 @@ class IsSalableWithReservationsConditionTest extends TestCase
      */
     public function testProductIsSalableWithUseConfigMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
-        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(null);
@@ -143,9 +150,6 @@ class IsSalableWithReservationsConditionTest extends TestCase
 
         $isSalableResult = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
 
-        // Clean up
-        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
-
         self::assertEquals($isSalable, $isSalableResult);
     }
 
@@ -154,7 +158,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
      */
     public function productIsSalableWithUseConfigMinQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 3, true],
             ['SKU-1', 10, 4, false],
             ['SKU-1', 30, 3, true],
@@ -185,8 +189,6 @@ class IsSalableWithReservationsConditionTest extends TestCase
      */
     public function testProductIsSalableWithMinQty(string $sku, int $stockId, float $qty, bool $isSalable)
     {
-        $oldStockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
-
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockConfiguration->forStockItem($sku, $stockId);
         $stockItemConfiguration->setMinQty(5.00);
@@ -196,9 +198,6 @@ class IsSalableWithReservationsConditionTest extends TestCase
 
         $isSalableResult = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
 
-        // Clean up
-        $this->saveStockConfiguration->forStockItem($sku, $stockId, $oldStockItemConfiguration);
-
         self::assertEquals($isSalable, $isSalableResult);
     }
 
@@ -207,7 +206,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
      */
     public function productIsSalableWithMinQtyDataProvider(): array
     {
-        return [
+        return [ // Update tear down if you add more stock ids or skus
             ['SKU-1', 10, 3, true],
             ['SKU-1', 10, 4, false],
             ['SKU-1', 30, 3, true],
@@ -242,5 +241,20 @@ class IsSalableWithReservationsConditionTest extends TestCase
             $this->reservationBuilder->setStockId(10)->setSku('SKU-1')->setQuantity(8.5)->build(),
         ]);
         $this->cleanupReservations->execute();
+    }
+
+    protected function tearDown()
+    {
+        $stocksIdsToClean = [10, 20, 30];
+        $skusToClean = ['SKU-1', 'SKU-2', 'SKU-3'];
+
+        $stockConfiguration = $this->stockItemConfigurationInterfaceFactory->create();
+
+        foreach ($stocksIdsToClean as $stockId) {
+            $this->saveStockConfiguration->forStock($stockId, $stockConfiguration);
+            foreach ($skusToClean as $sku) {
+                $this->saveStockConfiguration->forStockItem($sku, $stockId, $stockConfiguration);
+            }
+        }
     }
 }

@@ -3,17 +3,16 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+/** @noinspection PhpDocMissingThrowsInspection */
+/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\SalesQuoteItem;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
@@ -28,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @magentoAppIsolation enabled
+ * @magentoDbIsolation disabled
  */
 class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
 {
@@ -85,15 +86,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
      * @param int $stockId
      * @param float $qty
      *
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     * @throws CouldNotSaveException
-     * @throws InputException
-     * @throws ValidationException
-     *
      * @dataProvider productsInStockDataProvider
-     *
-     * @magentoDbIsolation disabled
      */
     public function testAddInStockProductToQuote(
         string $sku,
@@ -138,15 +131,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
      * @param int $stockId
      * @param float $qty
      *
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     * @throws CouldNotSaveException
-     * @throws InputException
-     * @throws ValidationException
-     *
      * @dataProvider notSalableProductsDataProvider
-     *
-     * @magentoDbIsolation disabled
      */
     public function testAddOutOffStockProductToQuote(
         string $sku,
@@ -181,7 +166,6 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     /**
      * @param string $sku
      * @return ProductInterface
-     * @throws NoSuchEntityException
      */
     private function getProductBySku(string $sku): ProductInterface
     {
@@ -191,7 +175,6 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     /**
      * @param int $stockId
      * @return Quote
-     * @throws NoSuchEntityException
      */
     private function getQuote(int $stockId): Quote
     {
