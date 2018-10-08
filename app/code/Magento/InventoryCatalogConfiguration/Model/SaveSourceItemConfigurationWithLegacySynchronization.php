@@ -156,7 +156,6 @@ class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSource
 
         if ($sourceItemConfiguration->getBackorders() === null) {
             $data[StockItemInterface::USE_CONFIG_BACKORDERS] = 1;
-            $data[StockItemInterface::BACKORDERS] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_BACKORDERS] = 0;
             $data[StockItemInterface::BACKORDERS] = $sourceItemConfiguration->getBackorders();
@@ -164,7 +163,6 @@ class SaveSourceItemConfigurationWithLegacySynchronization implements SaveSource
 
         if ($sourceItemConfiguration->getNotifyStockQty() === null) {
             $data[StockItemInterface::USE_CONFIG_NOTIFY_STOCK_QTY] = 1;
-            $data[StockItemInterface::NOTIFY_STOCK_QTY] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_NOTIFY_STOCK_QTY] = 0;
             $data[StockItemInterface::NOTIFY_STOCK_QTY] = $sourceItemConfiguration->getNotifyStockQty();

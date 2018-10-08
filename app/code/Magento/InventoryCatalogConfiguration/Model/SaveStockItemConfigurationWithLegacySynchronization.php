@@ -172,7 +172,6 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
 
         if ($stockItemConfiguration->getMinQty() === null) {
             $data[StockItemInterface::USE_CONFIG_MIN_QTY] = 1;
-            $data[StockItemInterface::MIN_QTY] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_MIN_QTY] = 0;
             $data[StockItemInterface::MIN_QTY] = $stockItemConfiguration->getMinQty();
@@ -180,7 +179,6 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
 
         if ($stockItemConfiguration->getMinSaleQty() === null) {
             $data[StockItemInterface::USE_CONFIG_MIN_SALE_QTY] = 1;
-            $data[StockItemInterface::MIN_SALE_QTY] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_MIN_SALE_QTY] = 0;
             $data[StockItemInterface::MIN_SALE_QTY] = $stockItemConfiguration->getMinSaleQty();
@@ -188,7 +186,6 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
 
         if ($stockItemConfiguration->getMaxSaleQty() === null) {
             $data[StockItemInterface::USE_CONFIG_MAX_SALE_QTY] = 1;
-            $data[StockItemInterface::MAX_SALE_QTY] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_MAX_SALE_QTY] = 0;
             $data[StockItemInterface::MAX_SALE_QTY] = $stockItemConfiguration->getMaxSaleQty();
@@ -196,7 +193,6 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
 
         if ($stockItemConfiguration->isEnableQtyIncrements() === null) {
             $data[StockItemInterface::USE_CONFIG_ENABLE_QTY_INC] = 1;
-            $data[StockItemInterface::ENABLE_QTY_INCREMENTS] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_ENABLE_QTY_INC] = 0;
             $data[StockItemInterface::ENABLE_QTY_INCREMENTS] = $stockItemConfiguration->isEnableQtyIncrements();
@@ -204,7 +200,6 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
 
         if ($stockItemConfiguration->getQtyIncrements() === null) {
             $data[StockItemInterface::USE_CONFIG_QTY_INCREMENTS] = 1;
-            $data[StockItemInterface::QTY_INCREMENTS] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_QTY_INCREMENTS] = 0;
             $data[StockItemInterface::QTY_INCREMENTS] = $stockItemConfiguration->getQtyIncrements();
@@ -212,7 +207,6 @@ class SaveStockItemConfigurationWithLegacySynchronization implements SaveStockCo
 
         if ($stockItemConfiguration->isManageStock() === null) {
             $data[StockItemInterface::USE_CONFIG_MANAGE_STOCK] = 1;
-            $data[StockItemInterface::MANAGE_STOCK] = null;
         } else {
             $data[StockItemInterface::USE_CONFIG_MANAGE_STOCK] = 0;
             $data[StockItemInterface::MANAGE_STOCK] = $stockItemConfiguration->isManageStock();
