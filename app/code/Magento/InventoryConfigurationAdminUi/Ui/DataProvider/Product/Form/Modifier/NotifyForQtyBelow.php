@@ -10,6 +10,7 @@ namespace Magento\InventoryConfigurationAdminUi\Ui\DataProvider\Product\Form\Mod
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\Framework\Stdlib\ArrayManager;
 use Magento\CatalogInventory\Ui\DataProvider\Product\Form\Modifier\AdvancedInventory as AdvancedInventoryModifier;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
  * Remove "Notify For Quantity Below" field from "Advanced Inventory" modal panel.
@@ -22,11 +23,20 @@ class NotifyForQtyBelow extends AbstractModifier
     private $arrayManager;
 
     /**
-     * @param ArrayManager $arrayManager
+     * @var IsSingleSourceModeInterface
      */
-    public function __construct(ArrayManager $arrayManager)
-    {
+    private $isSingleSourceMode;
+
+    /**
+     * @param ArrayManager $arrayManager
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
+     */
+    public function __construct(
+        ArrayManager $arrayManager,
+        IsSingleSourceModeInterface $isSingleSourceMode
+    ) {
         $this->arrayManager = $arrayManager;
+        $this->isSingleSourceMode = $isSingleSourceMode;
     }
 
     /**
@@ -49,7 +59,7 @@ class NotifyForQtyBelow extends AbstractModifier
             'children'
         );
 
-        if (null === $stockDataPath) {
+        if (null === $stockDataPath || $this->isSingleSourceMode->execute()) {
             return $meta;
         }
 
