@@ -30,5 +30,5 @@ interface DeleteByIdInterface
      * @throws CouldNotDeleteException
      * @throws NoSuchEntityException
      */
-    public function execute(int $stockId);
+    public function execute(int $stockId): void;
 }

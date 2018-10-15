@@ -30,7 +30,7 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
     /**
      * @inheritdoc
      */
-    public function getSourceCode()
+    public function getSourceCode(): ?string
     {
         return $this->getData(self::SOURCE_CODE);
     }
@@ -38,7 +38,7 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
     /**
      * @inheritdoc
      */
-    public function setSourceCode($sourceCode)
+    public function setSourceCode(?string $sourceCode): void
     {
         $this->setData(self::SOURCE_CODE, $sourceCode);
     }
@@ -46,15 +46,16 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
     /**
      * @inheritdoc
      */
-    public function getStockId()
+    public function getStockId(): ?int
     {
-        return $this->getData(self::STOCK_ID);
+        $stockId = $this->getData(self::STOCK_ID);
+        return $stockId !== null ? (int)$stockId : null;
     }
 
     /**
      * @inheritdoc
      */
-    public function setStockId($stockId)
+    public function setStockId(?int $stockId): void
     {
         $this->setData(self::STOCK_ID, $stockId);
     }
@@ -62,15 +63,16 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
     /**
      * @inheritdoc
      */
-    public function getPriority()
+    public function getPriority(): ?int
     {
-        return $this->getData(self::PRIORITY);
+        $priority = $this->getData(self::PRIORITY);
+        return $priority !== null ? (int)$priority : null;
     }
 
     /**
      * @inheritdoc
      */
-    public function setPriority($priority)
+    public function setPriority(?int $priority): void
     {
         $this->setData(self::PRIORITY, $priority);
     }
@@ -78,7 +80,7 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
     /**
      * @inheritdoc
      */
-    public function getExtensionAttributes()
+    public function getExtensionAttributes(): ?StockSourceLinkExtensionInterface
     {
         $extensionAttributes = $this->_getExtensionAttributes();
         if (null === $extensionAttributes) {
@@ -91,7 +93,7 @@ class StockSourceLink extends AbstractExtensibleModel implements StockSourceLink
     /**
      * @inheritdoc
      */
-    public function setExtensionAttributes(StockSourceLinkExtensionInterface $extensionAttributes)
+    public function setExtensionAttributes(StockSourceLinkExtensionInterface $extensionAttributes): void
     {
         $this->_setExtensionAttributes($extensionAttributes);
     }

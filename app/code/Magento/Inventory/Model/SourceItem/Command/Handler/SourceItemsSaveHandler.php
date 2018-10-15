@@ -60,7 +60,7 @@ class SourceItemsSaveHandler
      * @throws ValidationException
      * @throws CouldNotSaveException
      */
-    public function execute(array $sourceItems)
+    public function execute(array $sourceItems): void
     {
         if (empty($sourceItems)) {
             throw new InputException(__('Input data is empty'));

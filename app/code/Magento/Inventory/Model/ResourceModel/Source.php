@@ -11,6 +11,7 @@ use Exception;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
+use Magento\Framework\Model\ResourceModel\PredefinedId;
 use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Framework\Model\ResourceModel\PredefinedId;
@@ -28,7 +29,7 @@ class Source extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    const TABLE_NAME_SOURCE = 'inventory_source';
+    public const TABLE_NAME_SOURCE = 'inventory_source';
     /**#@-*/
 
     /**

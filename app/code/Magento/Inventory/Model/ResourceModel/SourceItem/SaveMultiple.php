@@ -37,7 +37,7 @@ class SaveMultiple
      * @param SourceItemInterface[] $sourceItems
      * @return void
      */
-    public function execute(array $sourceItems)
+    public function execute(array $sourceItems): void
     {
         if (!count($sourceItems)) {
             return;
@@ -76,8 +76,7 @@ class SaveMultiple
     {
         $connection = $this->resourceConnection->getConnection();
         $processedColumns = array_map([$connection, 'quoteIdentifier'], $columns);
-        $sql = implode(', ', $processedColumns);
-        return $sql;
+        return implode(', ', $processedColumns);
     }
 
     /**
@@ -86,8 +85,7 @@ class SaveMultiple
      */
     private function buildValuesSqlPart(array $sourceItems): string
     {
-        $sql = rtrim(str_repeat('(?, ?, ?, ?), ', count($sourceItems)), ', ');
-        return $sql;
+        return rtrim(str_repeat('(?, ?, ?, ?), ', count($sourceItems)), ', ');
     }
 
     /**
@@ -119,7 +117,6 @@ class SaveMultiple
         foreach ($fields as $field) {
             $processedFields[] = sprintf('%1$s = VALUES(%1$s)', $connection->quoteIdentifier($field));
         }
-        $sql = 'ON DUPLICATE KEY UPDATE ' . implode(', ', $processedFields);
-        return $sql;
+        return 'ON DUPLICATE KEY UPDATE ' . implode(', ', $processedFields);
     }
 }

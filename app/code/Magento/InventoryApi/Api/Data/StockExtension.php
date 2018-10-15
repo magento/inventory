@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api\Data;
 
+use Magento\Framework\Api\AbstractSimpleObject;
+
 /**
  * TODO: temporal fix of extension classes generation during installation
  * Extension class for @see \Magento\InventoryApi\Api\Data\StockInterface
  */
-class StockExtension extends \Magento\Framework\Api\AbstractSimpleObject implements StockExtensionInterface
+class StockExtension extends AbstractSimpleObject implements StockExtensionInterface
 {
     /**
      * @inheritdoc

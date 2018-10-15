@@ -37,7 +37,7 @@ class DeleteMultiple
      * @param StockSourceLinkInterface[] $links
      * @return void
      */
-    public function execute(array $links)
+    public function execute(array $links): void
     {
         if (!count($links)) {
             return;
