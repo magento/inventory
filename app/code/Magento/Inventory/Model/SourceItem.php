@@ -30,15 +30,17 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getSku()
+    public function getSku(): ? string
     {
-        return $this->getData(self::SKU);
+        return $this->getData(self::SKU) === null ?
+            null:
+            (string)$this->getData(self::SKU);
     }
 
     /**
      * @inheritdoc
      */
-    public function setSku($sku)
+    public function setSku(?string $sku)
     {
         $this->setData(self::SKU, $sku);
     }
@@ -46,15 +48,17 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getSourceCode()
+    public function getSourceCode(): ? string
     {
-        return $this->getData(self::SOURCE_CODE);
+        return $this->getData(self::SOURCE_CODE) === null ?
+            null:
+            (string)$this->getData(self::SOURCE_CODE);
     }
 
     /**
      * @inheritdoc
      */
-    public function setSourceCode($sourceCode)
+    public function setSourceCode(?string $sourceCode)
     {
         $this->setData(self::SOURCE_CODE, $sourceCode);
     }
@@ -62,15 +66,17 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getQuantity()
+    public function getQuantity(): ? float
     {
-        return $this->getData(self::QUANTITY);
+        return $this->getData(self::QUANTITY) === null ?
+            null:
+            (float)$this->getData(self::QUANTITY);
     }
 
     /**
      * @inheritdoc
      */
-    public function setQuantity($quantity)
+    public function setQuantity(?float $quantity)
     {
         $this->setData(self::QUANTITY, $quantity);
     }
@@ -78,15 +84,17 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     /**
      * @inheritdoc
      */
-    public function getStatus()
+    public function getStatus(): ? int
     {
-        return $this->getData(self::STATUS);
+        return $this->getData(self::STATUS) === null ?
+            null:
+            (int)$this->getData(self::STATUS);
     }
 
     /**
      * @inheritdoc
      */
-    public function setStatus($status)
+    public function setStatus(?int $status)
     {
         $this->setData(self::STATUS, $status);
     }
