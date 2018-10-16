@@ -33,12 +33,13 @@ class InvalidateAfterStockSourceLinksSavePlugin
     /**
      * @param StockSourceLinksSaveInterface $subject
      * @param void $result
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(
         StockSourceLinksSaveInterface $subject,
         $result
-    ) {
+    ): void {
         $indexer = $this->indexerRegistry->get(InventoryIndexer::INDEXER_ID);
         if ($indexer->isValid()) {
             $indexer->invalidate();

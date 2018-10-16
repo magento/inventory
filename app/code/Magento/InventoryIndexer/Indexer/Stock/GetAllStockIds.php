@@ -40,8 +40,6 @@ class GetAllStockIds
         $select = $connection->select()->from($stockTable, StockSourceLink::STOCK_ID);
 
         $stockIds = $connection->fetchCol($select);
-        $stockIds = array_map('intval', $stockIds);
-
-        return $stockIds;
+        return array_map('intval', $stockIds);
     }
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
@@ -22,9 +23,9 @@ class IndexStructure implements IndexStructureInterface
     /**
      * Constants for represent fields in index table
      */
-    const SKU = 'sku';
-    const QUANTITY = 'quantity';
-    const IS_SALABLE = 'is_salable';
+    public const SKU = 'sku';
+    public const QUANTITY = 'quantity';
+    public const IS_SALABLE = 'is_salable';
     /**#@-*/
 
     /**
@@ -76,11 +77,13 @@ class IndexStructure implements IndexStructureInterface
 
     /**
      * Create the index table
-     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
+     *
+     * @param AdapterInterface $connection
      * @param string $tableName
      * @return void
+     * @throws \Zend_Db_Exception
      */
-    private function createTable(\Magento\Framework\DB\Adapter\AdapterInterface $connection, string $tableName)
+    private function createTable(AdapterInterface $connection, string $tableName): void
     {
         $table = $connection->newTable(
             $this->resourceConnection->getTableName($tableName)

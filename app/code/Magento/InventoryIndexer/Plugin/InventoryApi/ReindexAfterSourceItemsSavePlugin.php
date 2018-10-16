@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
+use Magento\Framework\Exception\StateException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
@@ -39,16 +40,17 @@ class ReindexAfterSourceItemsSavePlugin
 
     /**
      * @param SourceItemsSaveInterface $subject
-     * @param void $result
+     * @param null $result
      * @param SourceItemInterface[] $sourceItems
      * @return void
+     * @throws StateException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(
         SourceItemsSaveInterface $subject,
         $result,
         array $sourceItems
-    ) {
+    ): void {
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         if (count($sourceItemIds)) {
             $this->sourceItemIndexer->executeList($sourceItemIds);

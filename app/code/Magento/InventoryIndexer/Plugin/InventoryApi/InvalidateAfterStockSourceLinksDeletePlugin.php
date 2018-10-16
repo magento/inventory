@@ -39,7 +39,7 @@ class InvalidateAfterStockSourceLinksDeletePlugin
     public function afterExecute(
         StockSourceLinksDeleteInterface $subject,
         $result
-    ) {
+    ): void {
         $indexer = $this->indexerRegistry->get(InventoryIndexer::INDEXER_ID);
         if ($indexer->isValid()) {
             $indexer->invalidate();

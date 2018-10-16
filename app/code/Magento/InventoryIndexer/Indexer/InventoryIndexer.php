@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer;
 
+use Magento\Framework\Exception\StateException;
 use Magento\Framework\Indexer\ActionInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
@@ -20,7 +21,7 @@ class InventoryIndexer implements ActionInterface
     /**
      * Indexer ID in configuration
      */
-    const INDEXER_ID = 'inventory';
+    public const INDEXER_ID = 'inventory';
 
     /**
      * @var SourceItemIndexer
@@ -38,6 +39,7 @@ class InventoryIndexer implements ActionInterface
 
     /**
      * @inheritdoc
+     * @throws StateException
      */
     public function executeFull()
     {
@@ -46,6 +48,7 @@ class InventoryIndexer implements ActionInterface
 
     /**
      * @inheritdoc
+     * @throws StateException
      */
     public function executeRow($sourceItemId)
     {
@@ -54,6 +57,7 @@ class InventoryIndexer implements ActionInterface
 
     /**
      * @inheritdoc
+     * @throws StateException
      */
     public function executeList(array $sourceItemIds)
     {

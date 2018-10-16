@@ -34,7 +34,7 @@ class SkuListInStock
      * @param int $stockId
      * @return void
      */
-    public function setStockId(int $stockId)
+    public function setStockId(int $stockId): void
     {
         $this->stockId = $stockId;
     }
@@ -51,7 +51,7 @@ class SkuListInStock
      * @param array $skuList
      * @return void
      */
-    public function setSkuList(array $skuList)
+    public function setSkuList(array $skuList): void
     {
         $this->skuList = $skuList;
     }

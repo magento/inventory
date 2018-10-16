@@ -19,9 +19,9 @@ interface GetStockItemDataInterface
     /**
      * Constants for represent fields in result array
      */
-    const SKU = 'sku';
-    const QUANTITY = 'quantity';
-    const IS_SALABLE = 'is_salable';
+    public const SKU = 'sku';
+    public const QUANTITY = 'quantity';
+    public const IS_SALABLE = 'is_salable';
     /**#@-*/
 
     /**
