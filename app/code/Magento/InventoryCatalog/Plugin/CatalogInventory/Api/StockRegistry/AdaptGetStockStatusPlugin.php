@@ -9,6 +9,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\Data\StockStatusInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -48,6 +50,11 @@ class AdaptGetStockStatusPlugin
     private $stockResolver;
 
     /**
+     * @var array
+     */
+    private $stockStatuses = [];
+
+    /**
      * @param IsProductSalableInterface $isProductSalable
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
@@ -74,6 +81,8 @@ class AdaptGetStockStatusPlugin
      * @param int $productId
      * @param int $scopeId
      * @return StockStatusInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetStockStatus(
@@ -82,6 +91,12 @@ class AdaptGetStockStatusPlugin
         $productId,
         $scopeId = null
     ): StockStatusInterface {
+        $key = 'stock_status_' . $productId . '_' . $scopeId;
+
+        if (array_key_exists($key, $this->stockStatuses)) {
+            return $this->stockStatuses[$key];
+        }
+
         $websiteCode = null === $scopeId
             ? $this->storeManager->getWebsite()->getCode()
             : $this->storeManager->getWebsite($scopeId)->getCode();
@@ -97,6 +112,8 @@ class AdaptGetStockStatusPlugin
 
         $stockStatus->setStockStatus($status);
         $stockStatus->setQty($qty);
+        $this->stockStatuses[$key] = $stockStatus;
+
         return $stockStatus;
     }
 }
