@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Search\Adapter\Mysql\ConditionManager;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
@@ -20,6 +21,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Adapt stock status filter to multi stocks
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AdaptStockStatusFilterPlugin
 {
@@ -77,17 +79,19 @@ class AdaptStockStatusFilterPlugin
      * @param string $type
      * @param bool $showOutOfStockFlag
      * @return Select
+     * @throws LocalizedException
      * @throws \InvalidArgumentException
+     * @throws \Zend_Db_Select_Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundApply(
         StockStatusFilter $subject,
         callable $proceed,
         Select $select,
-        $stockValues,
-        $type,
-        $showOutOfStockFlag
-    ) {
+        array $stockValues,
+        string $type,
+        bool $showOutOfStockFlag
+    ): Select {
         if ($type !== StockStatusFilter::FILTER_JUST_ENTITY
             && $type !== StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
         ) {
@@ -109,8 +113,9 @@ class AdaptStockStatusFilterPlugin
     /**
      * @param Select $select
      * @param string $mainTableAlias
+     * @return void
      */
-    private function addProductEntityJoin(Select $select, $mainTableAlias)
+    private function addProductEntityJoin(Select $select, string $mainTableAlias): void
     {
         $select->joinInner(
             ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -122,8 +127,9 @@ class AdaptStockStatusFilterPlugin
     /**
      * @param Select $select
      * @param string $mainTableAlias
+     * @return void
      */
-    private function addSubProductEntityJoin(Select $select, $mainTableAlias)
+    private function addSubProductEntityJoin(Select $select, string $mainTableAlias): void
     {
         $select->joinInner(
             ['sub_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -136,8 +142,9 @@ class AdaptStockStatusFilterPlugin
      * @param Select $select
      * @param bool $showOutOfStockFlag
      * @return void
+     * @throws LocalizedException
      */
-    private function addInventoryStockJoin(Select $select, $showOutOfStockFlag)
+    private function addInventoryStockJoin(Select $select, bool $showOutOfStockFlag): void
     {
         $select->joinInner(
             ['stock_index' => $this->getStockTableName()],
@@ -154,8 +161,9 @@ class AdaptStockStatusFilterPlugin
      * @param Select $select
      * @param bool $showOutOfStockFlag
      * @return void
+     * @throws LocalizedException
      */
-    private function addSubProductInventoryStockJoin(Select $select, bool $showOutOfStockFlag)
+    private function addSubProductInventoryStockJoin(Select $select, bool $showOutOfStockFlag): void
     {
         $select->joinInner(
             ['sub_product_stock_index' => $this->getStockTableName()],
@@ -174,8 +182,9 @@ class AdaptStockStatusFilterPlugin
      *
      * @param Select $select
      * @return string|null
+     * @throws \Zend_Db_Select_Exception
      */
-    private function extractTableAliasFromSelect(Select $select)
+    private function extractTableAliasFromSelect(Select $select): ?string
     {
         $fromArr = array_filter(
             $select->getPart(Select::FROM),
@@ -189,6 +198,7 @@ class AdaptStockStatusFilterPlugin
 
     /**
      * @return string
+     * @throws LocalizedException
      */
     private function getStockTableName(): string
     {

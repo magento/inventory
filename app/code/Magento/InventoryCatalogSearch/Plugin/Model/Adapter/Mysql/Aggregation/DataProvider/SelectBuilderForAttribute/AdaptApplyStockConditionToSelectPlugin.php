@@ -11,6 +11,8 @@ use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\DataProvider\SelectBui
 ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolver;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -65,7 +67,8 @@ class AdaptApplyStockConditionToSelectPlugin
      * @param callable $proceed
      * @param Select $select
      * @return Select
-     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(

@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalogSearch\Plugin\Model\Search\FilterMapper\TermDr
 use Magento\CatalogSearch\Model\Search\FilterMapper\TermDropdownStrategy\ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -65,7 +66,7 @@ class AdaptApplyStockConditionToSelectPlugin
      * @param string $stockAlias
      * @param Select $select
      * @return void
-     *
+     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
@@ -74,7 +75,7 @@ class AdaptApplyStockConditionToSelectPlugin
         string $alias,
         string $stockAlias,
         Select $select
-    ) {
+    ): void {
         $select->joinInner(
             ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
             sprintf('product.entity_id = %s.source_id', $alias),
