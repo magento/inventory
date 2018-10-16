@@ -140,7 +140,7 @@ class StockDataProvider extends DataProvider
                 ];
                 $data = $dataForSingle;
             } else {
-                $data = [];
+                $data = ['totalRecords' => 0];
             }
         } elseif ('inventory_stock_listing_data_stock' === $this->name) {
             if ($data['totalRecords'] > 0) {
