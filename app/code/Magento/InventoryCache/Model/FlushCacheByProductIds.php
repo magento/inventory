@@ -51,7 +51,7 @@ class FlushCacheByProductIds
      * @param array $productIds
      * @return void
      */
-    public function execute(array $productIds)
+    public function execute(array $productIds): void
     {
         if ($productIds) {
             $this->cacheContext->registerEntities($this->productCacheTag, $productIds);

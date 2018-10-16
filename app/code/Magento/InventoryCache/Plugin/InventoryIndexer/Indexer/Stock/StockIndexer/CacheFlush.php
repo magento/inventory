@@ -48,7 +48,7 @@ class CacheFlush
      * @throws \Exception in case product entity type hasn't been initialize.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecuteList(StockIndexer $subject, callable $proceed, array $stockIds)
+    public function aroundExecuteList(StockIndexer $subject, callable $proceed, array $stockIds): void
     {
         $beforeReindexProductIds = $this->getProductIdsByStockIds->execute($stockIds);
         $proceed($stockIds);
