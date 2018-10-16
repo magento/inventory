@@ -80,7 +80,7 @@ class SelectBuilder
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
-        $select = $connection->select()
+        return $connection->select()
             ->from(
                 ['stock' => $indexTableName],
                 [
@@ -102,7 +102,5 @@ class SelectBuilder
                 []
             )
             ->group(['parent_product_entity.sku']);
-
-        return $select;
     }
 }
