@@ -7,22 +7,24 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminCreateOrderWithSimpleProductFromTestSourceWithBackordersTest">
         <annotations>
-            <features value="Multi-Source Inventory"/>
             <stories value="Sales-Backorder"/>
             <title value="Admin user set negative 'Out-of-Stock Threshold' in combination with backorders for Simple product on Test source"/>
             <description value="You should be able to create order from Test Source with backorders in combination with negative out of stock threshold."/>
-            <testCaseId value="1466"/>
+            <testCaseId value="MSI-1466"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
+
         <before>
+            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="magentoCLI1"/>
+
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="_minimalSource" stepKey="customSource"/>
-            <createData entity="BasicMsiStock1" stepKey="customStock"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="customStock"/>
             <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource"/>
@@ -50,7 +52,8 @@
             <actionGroup ref="FillMainProductFormInMultiSourceModeActionGroup" stepKey="fillMainProductFieldsInAdmin">
                 <argument name="product" value="SimpleMsiProduct"/>
             </actionGroup>
-            <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" stepKey="searchAndSelectCategory"/>
+            <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
+            <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToProduct">
                 <argument name="sourceCode" value="$$customSource.source[name]$$"/>
             </actionGroup>
@@ -69,7 +72,6 @@
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
             <waitForPageLoad time="30" stepKey="waitProductWillSave"/>
         </before>
-
         <after>
             <comment userInput="Disable source, as it can brake single source mode tests." stepKey="disableCustomSourceComment"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
@@ -111,7 +113,7 @@
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
-        <waitForPageLoad stepKey="waitForGuestCheckoutPageLoad"/>
+        <waitForPageLoad time="60" stepKey="waitForGuestCheckoutPageLoad"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.email}}" userInput="{{CustomerEntityOne.email}}" stepKey="enterEmail"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.firstName}}" userInput="{{CustomerEntityOne.firstname}}" stepKey="enterFirstName"/>
         <fillField selector="{{CheckoutShippingGuestInfoSection.lastName}}" userInput="{{CustomerEntityOne.lastname}}" stepKey="enterLastName"/>

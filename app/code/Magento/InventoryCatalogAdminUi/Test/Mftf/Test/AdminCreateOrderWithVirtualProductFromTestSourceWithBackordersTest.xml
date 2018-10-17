@@ -7,22 +7,22 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminCreateOrderWithVirtualProductFromTestSourceWithBackordersTest">
         <annotations>
-            <features value="Multi-Source Inventory"/>
             <stories value="Sales-Backorder"/>
             <title value="Admin user set negative 'Out-of-Stock Threshold' in combination with backorders for virtual product on Test source"/>
             <description value="You should be able to create order from Test Source with backorders in combination with negative out of stock threshold."/>
-            <testCaseId value="1476"/>
+            <testCaseId value="MSI-1476"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
+
         <before>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="_minimalSource" stepKey="customSource"/>
-            <createData entity="BasicMsiStock1" stepKey="customStock"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="customStock"/>
             <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource"/>
@@ -69,7 +69,6 @@
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
             <waitForPageLoad time="30" stepKey="waitProductWillSave"/>
         </before>
-
         <after>
             <comment userInput="Disable source, as it can brake single source mode tests." stepKey="disableCustomSourceComment"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
@@ -114,19 +113,19 @@
         <waitForPageLoad stepKey="waitForGuestCheckoutPageLoad"/>
         <fillField selector="{{CheckoutShippingSection.email}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
         <waitForPageLoad stepKey="waitAfterEnterEmail"/>
-        <fillField selector="#billing-new-address-form-checkmo-form input[name=firstname]" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
+        <fillField selector=".billing-address-form input[name=firstname]" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
         <waitForPageLoad stepKey="waitAfterEnterFirstName"/>
-        <fillField selector="#billing-new-address-form-checkmo-form input[name=lastname]" userInput="{{MsiCustomer1.lastname}}" stepKey="enterLastName"/>
+        <fillField selector=".billing-address-form input[name=lastname]" userInput="{{MsiCustomer1.lastname}}" stepKey="enterLastName"/>
         <waitForPageLoad stepKey="waitAfterEnterLastName"/>
-        <fillField selector="#billing-new-address-form-checkmo-form input[name='street[0]']" userInput="{{CustomerAddressSimple.street[0]}}" stepKey="enterStreet"/>
+        <fillField selector=".billing-address-form input[name='street[0]']" userInput="{{CustomerAddressSimple.street[0]}}" stepKey="enterStreet"/>
         <waitForPageLoad stepKey="waitAfterEnterStreet"/>
-        <fillField selector="#billing-new-address-form-checkmo-form input[name=city]" userInput="{{CustomerAddressSimple.city}}" stepKey="enterCity"/>
+        <fillField selector=".billing-address-form input[name=city]" userInput="{{CustomerAddressSimple.city}}" stepKey="enterCity"/>
         <waitForPageLoad stepKey="waitAfterEnterCity"/>
-        <selectOption selector="#billing-new-address-form-checkmo-form select[name=region_id]" userInput="{{CustomerAddressSimple.state}}" stepKey="selectRegion"/>
+        <selectOption selector=".billing-address-form select[name=region_id]" userInput="{{CustomerAddressSimple.state}}" stepKey="selectRegion"/>
         <waitForPageLoad stepKey="waitAfterEnterRegionId"/>
-        <fillField selector="#billing-new-address-form-checkmo-form input[name=postcode]" userInput="{{CustomerAddressSimple.postcode}}" stepKey="enterPostcode"/>
+        <fillField selector=".billing-address-form input[name=postcode]" userInput="{{CustomerAddressSimple.postcode}}" stepKey="enterPostcode"/>
         <waitForPageLoad stepKey="waitAfterEnterPostcode"/>
-        <fillField selector="#billing-new-address-form-checkmo-form input[name=telephone]" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
+        <fillField selector=".billing-address-form input[name=telephone]" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
         <waitForPageLoad stepKey="waitAfterEnterTelephone"/>
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="updateCustomerBillingAddress"/>
 
