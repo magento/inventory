@@ -12,7 +12,10 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
 
-class PreventDisablingDefaultSourcePlugin
+/**
+ * Remove notice from enable field for non-default sources
+ */
+class RemoveNoticeFromEnableFieldForNoneDefaultSourcePlugin
 {
     /**
      * @var DefaultSourceProviderInterface
@@ -46,31 +49,16 @@ class PreventDisablingDefaultSourcePlugin
         $meta
     ): array {
         $isFormComponent = SourceDataProvider::SOURCE_FORM_NAME === $subject->getName();
-
-        if ($isFormComponent) {
-            if ($this->isDefaultSource()) {
-                $meta['general']['children']['enabled'] = [
-                    'arguments' => [
-                        'data' => [
-                            'config' => [
-                                'disabled' => true,
-                            ]
+        if ($isFormComponent && !$this->isDefaultSource()) {
+            $meta['general']['children']['enabled'] = [
+                'arguments' => [
+                    'data' => [
+                        'config' => [
+                            'notice' => null,
                         ]
                     ]
-                ];
-            }
-
-            if (!$this->isNewSource()) {
-                $meta['general']['children']['source_code'] = [
-                    'arguments' => [
-                        'data' => [
-                            'config' => [
-                                'disabled' => true,
-                            ]
-                        ]
-                    ]
-                ];
-            }
+                ]
+            ];
         }
 
         return $meta;
@@ -83,14 +71,7 @@ class PreventDisablingDefaultSourcePlugin
     {
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         $currentSourceCode = $this->request->getParam(SourceItemInterface::SOURCE_CODE);
-        return $defaultSourceCode === $currentSourceCode;
-    }
 
-    /**
-     * @return bool
-     */
-    private function isNewSource(): bool
-    {
-        return $this->request->getParam(SourceItemInterface::SOURCE_CODE) === null;
+        return $defaultSourceCode === $currentSourceCode;
     }
 }

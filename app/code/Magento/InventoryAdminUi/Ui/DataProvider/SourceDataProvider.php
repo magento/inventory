@@ -16,6 +16,7 @@ use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
+use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
 /**
  * @api
@@ -40,6 +41,11 @@ class SourceDataProvider extends DataProvider
     private $session;
 
     /**
+     * @var PoolInterface
+     */
+    private $pool;
+
+    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -50,6 +56,7 @@ class SourceDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchResultFactory $searchResultFactory
      * @param Session $session
+     * @param PoolInterface $pool
      * @param array $meta
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
@@ -65,6 +72,7 @@ class SourceDataProvider extends DataProvider
         SourceRepositoryInterface $sourceRepository,
         SearchResultFactory $searchResultFactory,
         Session $session,
+        PoolInterface $pool,
         array $meta = [],
         array $data = []
     ) {
@@ -82,6 +90,7 @@ class SourceDataProvider extends DataProvider
         $this->sourceRepository = $sourceRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->session = $session;
+        $this->pool = $pool;
     }
 
     /**
