@@ -12,6 +12,7 @@
         <element name="addNewStock" type="button" selector="#add" timeout="30"/>
         <element name="multicheckDropdown" type="button" selector="div[data-role='grid-wrapper'] th.data-grid-multicheck-cell button.action-multicheck-toggle"/>
         <element name="multicheckOption" type="button" selector="//div[@data-role='grid-wrapper']//th[contains(@class, data-grid-multicheck-cell)]//li//span[text() = '{{label}}']" parameterized="true"/>
+        <element name="clearAllFilters" type="button" selector=".admin__data-grid-header-row .admin__data-grid-filters-current button.action-clear"/>
     </section>
     <section name="AdminManageStockGridFilterControls">
         <element name="idFrom" type="input" selector=".admin__data-grid-filters-wrap input[name='stock_id[from]']"/>

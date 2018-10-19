@@ -24,6 +24,8 @@
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheManageStockPageToCleanUpBefore"/>
             <waitForPageLoad stepKey="waitPageToCleanUpBefore" />
             <waitForLoadingMaskToDisappear stepKey="waitLoadMaskToCleanUpBefore" />
+            <conditionalClick selector="{{AdminManageStockGridControls.clearAllFilters}}" dependentSelector="{{AdminManageStockGridControls.clearAllFilters}}" visible="true" stepKey="clearAllFiltersOnStockGrid"/>
+            <waitForLoadingMaskToDisappear stepKey="waitLoadMaskAfterClearFilters"/>
             <click selector="{{AdminManageStockGridControls.multicheckDropdown}}" stepKey="openDropdownToSelectAllToCleanUpBefore"/>
             <click selector="{{AdminManageStockGridControls.multicheckOption('Select All')}}" stepKey="selectAllToCleanUpBefore"/>
             <click selector="//button[@class='action-select']" stepKey="massActionsToCleanUpBefore"/>
