@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryAdminUi\Model\Source;
 
 /**
- * Prepare region data. Specified for form structure
+ * Prepare source coordinates data (latitude and longitude). Specified for form structure
  */
-class SourceRegionDataProcessor
+class SourceCoordinatesDataProcessor
 {
     /**
      * @param array $data
@@ -18,12 +18,12 @@ class SourceRegionDataProcessor
      */
     public function execute(array $data): array
     {
-        if (!isset($data['region_id']) || '' === $data['region_id']) {
-            $data['region_id'] = null;
+        if (!isset($data['latitude']) || '' === $data['latitude']) {
+            $data['latitude'] = null;
         }
 
-        if (null !== $data['region_id'] || !isset($data['region']) || '' === trim($data['region'])) {
-            $data['region'] = null;
+        if (!isset($data['longitude']) || '' === $data['longitude']) {
+            $data['longitude'] = null;
         }
 
         return $data;
