@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationsApi\Model;
 
-use Magento\InventoryReservationsApi\Model\ReservationInterface;
-
 /**
  * Domain service used to append Reservations to keep track of quantity deductions before the related SourceItems
  * are updated.

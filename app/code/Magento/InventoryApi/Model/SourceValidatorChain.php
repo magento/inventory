@@ -11,7 +11,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Model\SourceValidatorInterface;
 
 /**
  * Chain of validators. Extension point for new validators via di configuration

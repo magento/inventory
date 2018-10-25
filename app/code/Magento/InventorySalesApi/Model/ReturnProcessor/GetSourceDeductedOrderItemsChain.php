@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventorySalesApi\Model\ReturnProcessor;
 
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\InventorySalesApi\Model\ReturnProcessor\GetSourceDeductedOrderItemsInterface;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItemsResultFactory;
 use Magento\Framework\Exception\InputException;
 

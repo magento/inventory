@@ -16,7 +16,6 @@ use Magento\Ui\DataProvider\AbstractDataProvider;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\InventoryShippingAdminUi\Ui\DataProvider\GetSourcesByStockIdSkuAndQty;
 
 class SourceSelectionDataProvider extends AbstractDataProvider
 {

@@ -17,7 +17,6 @@ use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationInterface;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;

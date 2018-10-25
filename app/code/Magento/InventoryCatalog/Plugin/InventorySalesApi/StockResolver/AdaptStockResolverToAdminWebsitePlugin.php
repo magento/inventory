@@ -12,7 +12,6 @@ use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 
 /**
