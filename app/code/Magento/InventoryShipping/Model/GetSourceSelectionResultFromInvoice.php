@@ -12,11 +12,11 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventoryShipping\Model\SourceSelectionResult\InvoiceItemsToSelectionRequestItemsMapper;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface;
-use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
 use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
+use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
 
 /**
  * Creates instance of InventoryRequestInterface by given InvoiceInterface object.
