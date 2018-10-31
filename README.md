@@ -5,6 +5,9 @@
 <h2>Welcome</h2>
 Welcome to Magento 2 installation! We're glad you chose to install Magento 2, a cutting-edge, feature-rich eCommerce solution that gets results.
 
+## What's going on?
+To dive right in, check out our **[ZenHub Board for Current Milestone](https://app.zenhub.com/workspace/o/magento-engcom/msi/boards?milestones=MSI%20Part%20II%232018-10-22&activeFilters=milestones&repos=91593797)**
+
 ## Magento system requirements
 [Magento system requirements](http://devdocs.magento.com/guides/v2.3/install-gde/system-requirements2.html)
 
