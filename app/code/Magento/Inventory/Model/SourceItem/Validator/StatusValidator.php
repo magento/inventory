@@ -55,7 +55,7 @@ class StatusValidator implements SourceItemValidatorInterface
         }
 
         $errors = [];
-        if (!in_array((int)$value, array_values($this->allowedSourceItemStatuses), true)) {
+        if (!\in_array((int)$value, array_values($this->allowedSourceItemStatuses), true)) {
             $errors[] = __(
                 '"%field" should a known status.',
                 ['field' => SourceItemInterface::STATUS]

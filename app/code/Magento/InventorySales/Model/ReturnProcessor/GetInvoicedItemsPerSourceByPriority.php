@@ -167,8 +167,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
      */
     private function isValidItem(OrderItemModel $orderItem, array $returnToStockItems): bool
     {
-        return (in_array($orderItem->getId(), $returnToStockItems)
-                || in_array($orderItem->getParentItemId(), $returnToStockItems))
+        return (\in_array($orderItem->getId(), $returnToStockItems)
+                || \in_array($orderItem->getParentItemId(), $returnToStockItems))
                 && $orderItem->getIsVirtual()
                 && !$orderItem->isDummy();
     }

@@ -39,7 +39,7 @@ class DeleteMultiple
      */
     public function execute(array $sourceItems)
     {
-        if (!count($sourceItems)) {
+        if (!\count($sourceItems)) {
             return;
         }
         $connection = $this->resourceConnection->getConnection();

@@ -78,7 +78,7 @@ class ApplyStockConditionToSelectTest extends TestCase
 
         $result = $select->query()->fetchAll();
 
-        self::assertEquals($expectedSize, count($result));
+        self::assertEquals($expectedSize, \count($result));
     }
 
     /**

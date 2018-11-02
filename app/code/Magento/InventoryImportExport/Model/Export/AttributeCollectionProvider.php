@@ -47,7 +47,7 @@ class AttributeCollectionProvider
      */
     public function get(): Collection
     {
-        if (count($this->collection) === 0) {
+        if (\count($this->collection) === 0) {
             /** @var \Magento\Eav\Model\Entity\Attribute $sourceCodeAttribute */
             $sourceCodeAttribute = $this->attributeFactory->create();
             $sourceCodeAttribute->setId(SourceItemInterface::SOURCE_CODE);

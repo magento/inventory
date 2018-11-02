@@ -51,7 +51,7 @@ class GetUnassignedSalesChannelsForStock
 
         foreach ($assignedSalesChannels as $salesChannel) {
             if ($salesChannel->getType() === SalesChannel::TYPE_WEBSITE
-                && !in_array($salesChannel->getCode(), $newWebsiteCodes, true)
+                && !\in_array($salesChannel->getCode(), $newWebsiteCodes, true)
             ) {
                 $result[] = $salesChannel;
             }

@@ -30,7 +30,7 @@ class ColumnProvider implements ColumnProviderInterface
             return $columns;
         }
 
-        if (count($filters[Export::FILTER_ELEMENT_SKIP]) === count($columns)) {
+        if (\count($filters[Export::FILTER_ELEMENT_SKIP]) === \count($columns)) {
             throw new LocalizedException(__('There is no data for the export.'));
         }
 

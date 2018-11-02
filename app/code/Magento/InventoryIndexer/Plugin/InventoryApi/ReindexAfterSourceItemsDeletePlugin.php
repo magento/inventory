@@ -48,7 +48,7 @@ class ReindexAfterSourceItemsDeletePlugin
 
         $proceed($sourceItems);
 
-        if (count($sourceCodes)) {
+        if (\count($sourceCodes)) {
             $this->sourceIndexer->executeList($sourceCodes);
         }
     }

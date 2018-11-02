@@ -23,7 +23,7 @@ class IntFilter implements FilterProcessorInterface
      */
     public function process(Collection $collection, string $columnName, $value): void
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $from = $value[0] ?? null;
             $to = $value[1] ?? null;
 

@@ -204,7 +204,7 @@ class SourceSelectionDataProvider extends AbstractDataProvider
                 if (isset($productOptions['attributes_info'])) {
                     $options = array_merge($options, $productOptions['attributes_info']);
                 }
-                if (count($options)) {
+                if (\count($options)) {
                     foreach ($options as $option) {
                         $name .= '<dd>' . $option['label'] . ': ' . $option['value'] .'</dd>';
                     }

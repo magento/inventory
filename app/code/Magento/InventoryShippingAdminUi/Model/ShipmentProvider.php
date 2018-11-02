@@ -48,6 +48,6 @@ class ShipmentProvider implements ShipmentProviderInterface
             }
         }
 
-        return count($shipmentItems) > 0 ? $shipmentItems : [];
+        return \count($shipmentItems) > 0 ? $shipmentItems : [];
     }
 }

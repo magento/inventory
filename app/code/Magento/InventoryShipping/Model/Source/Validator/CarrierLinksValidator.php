@@ -52,14 +52,14 @@ class CarrierLinksValidator implements SourceValidatorInterface
             return $this->buildValidationResult($errors);
         }
 
-        if (!is_array($carrierLinks)) {
+        if (!\is_array($carrierLinks)) {
             $errors[] = __('"%field" must be list of SourceCarrierLinkInterface.', [
                 'field' => SourceInterface::CARRIER_LINKS
             ]);
             return $this->buildValidationResult($errors);
         }
 
-        if (count($carrierLinks) && $source->isUseDefaultCarrierConfig()) {
+        if (\count($carrierLinks) && $source->isUseDefaultCarrierConfig()) {
             $errors[] = __('You can\'t configure "%field" because you have chosen Global Shipping configuration.', [
                 'field' => SourceInterface::CARRIER_LINKS
             ]);

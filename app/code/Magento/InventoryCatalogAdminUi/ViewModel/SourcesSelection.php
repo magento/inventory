@@ -90,6 +90,6 @@ class SourcesSelection implements ArgumentInterface
      */
     public function getProductsCount(): int
     {
-        return count($this->bulkSessionProductsStorage->getProductsSkus());
+        return \count($this->bulkSessionProductsStorage->getProductsSkus());
     }
 }

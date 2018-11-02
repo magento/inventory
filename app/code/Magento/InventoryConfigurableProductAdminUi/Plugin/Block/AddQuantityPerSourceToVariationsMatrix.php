@@ -51,7 +51,7 @@ class AddQuantityPerSourceToVariationsMatrix
         Matrix $subject,
         $result
     ) {
-        if ($this->isSingleSourceMode->execute() === false && is_array($result)) {
+        if ($this->isSingleSourceMode->execute() === false && \is_array($result)) {
             foreach ($result as $key => $variation) {
                 $result[$key]['quantityPerSource'] = $this->getQuantityInformationPerSource->execute($variation['sku']);
             }

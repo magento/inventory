@@ -83,7 +83,5 @@ class NewShipmentLoadBefore implements ObserverInterface
                 'sales/order/index'
             );
         }
-
-        return;
     }
 }

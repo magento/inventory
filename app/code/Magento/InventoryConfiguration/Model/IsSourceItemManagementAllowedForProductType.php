@@ -33,6 +33,6 @@ class IsSourceItemManagementAllowedForProductType implements IsSourceItemManagem
      */
     public function execute(string $productType): bool
     {
-        return in_array($productType, array_keys(array_filter($this->stockConfiguration->getIsQtyTypeIds())), true);
+        return \array_key_exists($productType, array_filter($this->stockConfiguration->getIsQtyTypeIds()));
     }
 }

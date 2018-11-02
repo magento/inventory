@@ -42,7 +42,7 @@ class PreventDeletingAssignedToSalesChannelsStockPlugin
     public function beforeDeleteById(StockRepositoryInterface $subject, int $stockId)
     {
         $assignSalesChannels = $this->assignedSalesChannelsForStock->execute($stockId);
-        if (count($assignSalesChannels)) {
+        if (\count($assignSalesChannels)) {
             throw new CouldNotDeleteException(__('Stock has at least one sale channel and could not be deleted.'));
         }
     }

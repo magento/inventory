@@ -89,7 +89,7 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
             ];
         } else {
             $sources = $controller->getRequest()->getParam('sources', []);
-            if (isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])) {
+            if (isset($sources['assigned_sources']) && \is_array($sources['assigned_sources'])) {
                 $assignedSources = $sources['assigned_sources'];
             }
         }

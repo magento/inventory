@@ -134,7 +134,7 @@ class PreventAssignSourcesToDefaultStockTest extends WebapiAbstract
         }
         $actualErrors = [];
         foreach ($errorDetails->$wrappedErrorsNode->$wrappedErrorNode as $error) {
-            if (is_object($error)) {
+            if (\is_object($error)) {
                 $actualErrors[] = $error->message;
             } else {
                 $actualErrors[] = $error;

@@ -81,7 +81,7 @@ class AssignSourceCodeToShipmentPlugin
             $stockId = $this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
             $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute((int)$stockId);
             //TODO: need ro rebuild this logic | create separate service
-            if (!empty($sources) && count($sources) == 1) {
+            if (!empty($sources) && \count($sources) == 1) {
                 $sourceCode = $sources[0]->getSourceCode();
             } else {
                 $sourceCode = $this->defaultSourceProvider->getCode();

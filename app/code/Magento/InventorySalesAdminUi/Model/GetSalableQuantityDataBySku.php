@@ -63,7 +63,7 @@ class GetSalableQuantityDataBySku
     {
         $stockInfo = [];
         $stockIds = $this->getAssignedStockIdsBySku->execute($sku);
-        if (count($stockIds)) {
+        if (\count($stockIds)) {
             foreach ($stockIds as $stockId) {
                 $stockId = (int)$stockId;
                 $stock = $this->stockRepository->get($stockId);

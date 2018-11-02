@@ -48,7 +48,7 @@ class SalesChannels
         if ('inventory_stock_form_data_source' === $subject->getName()) {
             foreach ($data as &$stockData) {
                 $salesChannelsData = $this->getSalesChannelsDataForStock($stockData['general']);
-                if (count($salesChannelsData)) {
+                if (\count($salesChannelsData)) {
                     $stockData['sales_channels'] = $salesChannelsData;
                 }
             }
@@ -56,7 +56,7 @@ class SalesChannels
         } elseif (isset($data['totalRecords']) && $data['totalRecords'] > 0) {
             foreach ($data['items'] as &$stockData) {
                 $salesChannelsData = $this->getSalesChannelsDataForStock($stockData);
-                if (count($salesChannelsData)) {
+                if (\count($salesChannelsData)) {
                     $stockData['sales_channels'] = $salesChannelsData;
                 }
             }

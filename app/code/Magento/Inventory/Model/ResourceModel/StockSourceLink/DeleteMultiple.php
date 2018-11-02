@@ -39,7 +39,7 @@ class DeleteMultiple
      */
     public function execute(array $links)
     {
-        if (!count($links)) {
+        if (!\count($links)) {
             return;
         }
 

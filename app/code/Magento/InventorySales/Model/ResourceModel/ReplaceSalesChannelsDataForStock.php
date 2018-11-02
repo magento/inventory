@@ -43,7 +43,7 @@ class ReplaceSalesChannelsDataForStock implements ReplaceSalesChannelsForStockIn
 
         $connection->delete($tableName, ['stock_id = ?' => $stockId]);
 
-        if (count($salesChannels)) {
+        if (\count($salesChannels)) {
             $salesChannelsToInsert = [];
             foreach ($salesChannels as $salesChannel) {
                 $salesChannelsToInsert[] = [

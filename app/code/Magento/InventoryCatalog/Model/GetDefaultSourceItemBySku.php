@@ -59,6 +59,6 @@ class GetDefaultSourceItemBySku
             ->create();
 
         $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-        return count($sourceItems) ? reset($sourceItems) : null;
+        return \count($sourceItems) ? reset($sourceItems) : null;
     }
 }

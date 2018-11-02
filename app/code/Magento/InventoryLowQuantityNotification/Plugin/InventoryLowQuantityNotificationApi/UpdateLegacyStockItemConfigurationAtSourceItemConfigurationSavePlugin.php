@@ -157,7 +157,7 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
      */
     private function buildValuesSqlPart(array $sourceItemConfigurations): string
     {
-        $sql = rtrim(str_repeat('(?, ?, ?, ?), ', count($sourceItemConfigurations)), ', ');
+        $sql = rtrim(str_repeat('(?, ?, ?, ?), ', \count($sourceItemConfigurations)), ', ');
         return $sql;
     }
 
@@ -169,14 +169,14 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
     {
         $bind = [];
         foreach ($sourceItemConfigurations as $sourceItemConfiguration) {
-            $bind = array_merge($bind, [
+            $bind[] = [
                 $this->defaultStockProvider->getId(),
                 $sourceItemConfiguration[StockItemInterface::PRODUCT_ID],
                 $sourceItemConfiguration[StockItemInterface::NOTIFY_STOCK_QTY],
                 $sourceItemConfiguration[StockItemInterface::USE_CONFIG_NOTIFY_STOCK_QTY],
-            ]);
+            ];
         }
-        return $bind;
+        return array_merge(...$bind);
     }
 
     /**

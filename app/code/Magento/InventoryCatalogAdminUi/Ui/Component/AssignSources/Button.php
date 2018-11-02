@@ -48,7 +48,7 @@ class Button extends Container
         if ($stockId === $this->defaultStockProvider->getId()) {
             $config = $this->getData('config');
             $config['disabled'] = true;
-            $config['notice'] = __("<strong>NOTE</strong>: Assign sources is disabled for default stock");
+            $config['notice'] = __('<strong>NOTE</strong>: Assign sources is disabled for default stock');
             $this->setData('config', $config);
         }
     }

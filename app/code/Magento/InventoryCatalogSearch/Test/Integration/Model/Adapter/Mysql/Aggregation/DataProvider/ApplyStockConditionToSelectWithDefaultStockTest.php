@@ -52,6 +52,6 @@ class ApplyStockConditionToSelectWithDefaultStockTest extends TestCase
         )->distinct();
 
         $this->applyStockConditionToSelect->execute($select);
-        self::assertEquals(3, count($select->query()->fetchAll()));
+        self::assertEquals(3, \count($select->query()->fetchAll()));
     }
 }

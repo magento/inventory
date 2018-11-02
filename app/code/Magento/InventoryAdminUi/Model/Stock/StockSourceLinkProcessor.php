@@ -104,10 +104,10 @@ class StockSourceLinkProcessor
             unset($linksForDelete[$sourceCode]);
         }
 
-        if (count($linksForSave) > 0) {
+        if (\count($linksForSave) > 0) {
             $this->stockSourceLinksSave->execute($linksForSave);
         }
-        if (count($linksForDelete) > 0) {
+        if (\count($linksForDelete) > 0) {
             $this->stockSourceLinksDelete->execute($linksForDelete);
         }
     }

@@ -155,12 +155,12 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
 
         try {
             $requiredConditionsErrors = $this->processRequiredConditions($sku, $stockId, $requestedQty);
-            if (count($requiredConditionsErrors)) {
+            if (\count($requiredConditionsErrors)) {
                 return $this->productSalableResultFactory->create(['errors' => $requiredConditionsErrors]);
             }
 
             $sufficientConditionsErrors = $this->processSufficientConditions($sku, $stockId, $requestedQty);
-            if (count($sufficientConditionsErrors)) {
+            if (\count($sufficientConditionsErrors)) {
                 return $this->productSalableResultFactory->create(['errors' => $sufficientConditionsErrors]);
             }
         } catch (SkuIsNotAssignedToStockException $e) {

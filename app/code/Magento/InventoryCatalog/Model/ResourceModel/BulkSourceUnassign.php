@@ -71,7 +71,7 @@ class BulkSourceUnassign
         ]);
 
         // Legacy stock update
-        if (in_array($this->defaultSourceProvider->getCode(), $sourceCodes)) {
+        if (\in_array($this->defaultSourceProvider->getCode(), $sourceCodes)) {
             $this->bulkZeroLegacyStockItem->execute($skus);
         }
 

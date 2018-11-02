@@ -89,7 +89,7 @@ class SaveSalesChannelsLinksPlugin
         try {
             $this->replaceSalesChannelsOnStock->execute($salesChannels, $stockId);
 
-            if (count($unAssignedSalesChannels)) {
+            if (\count($unAssignedSalesChannels)) {
                 $mergedSalesChannels = array_merge(
                     $unAssignedSalesChannels,
                     $this->getAssignedSalesChannelsForStock->execute($this->defaultStockProvider->getId())

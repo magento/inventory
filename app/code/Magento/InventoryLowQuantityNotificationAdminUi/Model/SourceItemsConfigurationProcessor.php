@@ -91,7 +91,7 @@ class SourceItemsConfigurationProcessor
             $sourceItemConfigurations[] = $sourceItemConfiguration;
         }
 
-        if (count($sourceItemConfigurations) > 0) {
+        if (\count($sourceItemConfigurations) > 0) {
             $this->deleteSourceItemsConfiguration($sourceItemConfigurations);
             $this->sourceItemConfigurationsSave->execute($sourceItemConfigurations);
         }

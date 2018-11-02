@@ -111,7 +111,7 @@ class InlineEdit extends Action implements HttpPostActionInterface
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $resultJson->setData([
             'messages' => $errorMessages,
-            'error' => count($errorMessages),
+            'error' => \count($errorMessages),
         ]);
 
         return $resultJson;

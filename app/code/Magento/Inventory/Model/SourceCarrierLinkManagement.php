@@ -77,7 +77,7 @@ class SourceCarrierLinkManagement implements SourceCarrierLinkManagementInterfac
         $this->deleteCurrentCarrierLinks($source);
 
         $carrierLinks = $source->getCarrierLinks();
-        if (null !== $carrierLinks && count($carrierLinks)) {
+        if (null !== $carrierLinks && \count($carrierLinks)) {
             $this->saveNewCarrierLinks($source);
         }
     }

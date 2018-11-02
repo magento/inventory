@@ -80,7 +80,7 @@ class ApplyStockConditionToSelectTest extends TestCase
 
         $this->applyStockConditionToSelect->execute($select);
 
-        self::assertEquals($expectedSize, count($select->query()->fetchAll()));
+        self::assertEquals($expectedSize, \count($select->query()->fetchAll()));
     }
 
     /**

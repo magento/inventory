@@ -51,7 +51,7 @@ class SalesChannelsValidator implements StockValidatorInterface
         $salesChannels = $extensionAttributes->getSalesChannels();
 
         $errors = [];
-        if (is_array($salesChannels)) {
+        if (\is_array($salesChannels)) {
             foreach ($salesChannels as $salesChannel) {
                 $type = (string)$salesChannel->getType();
                 if ('' === trim($type)) {

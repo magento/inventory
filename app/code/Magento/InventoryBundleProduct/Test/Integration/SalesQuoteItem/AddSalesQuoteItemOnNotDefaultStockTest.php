@@ -126,7 +126,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
 
         self::expectException(LocalizedException::class);
         $quote->addProduct($product, $this->getBuyRequest($product, $productQty));
-        $quoteItemCount = count($quote->getAllItems());
+        $quoteItemCount = \count($quote->getAllItems());
         self::assertEquals($expectedItemsInCart, $quoteItemCount);
     }
 

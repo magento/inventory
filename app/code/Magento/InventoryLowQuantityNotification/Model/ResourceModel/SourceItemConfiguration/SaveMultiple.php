@@ -36,7 +36,7 @@ class SaveMultiple
      */
     public function execute(array $sourceItemConfigurations)
     {
-        if (!count($sourceItemConfigurations)) {
+        if (!\count($sourceItemConfigurations)) {
             return;
         }
         $connection = $this->resourceConnection->getConnection();
@@ -83,7 +83,7 @@ class SaveMultiple
      */
     private function buildValuesSqlPart(array $sourceItemConfigurations): string
     {
-        $sql = rtrim(str_repeat('(?, ?, ?), ', count($sourceItemConfigurations)), ', ');
+        $sql = rtrim(str_repeat('(?, ?, ?), ', \count($sourceItemConfigurations)), ', ');
         return $sql;
     }
 
@@ -95,13 +95,13 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($sourceItemConfigurations as $sourceItemConfiguration) {
-            $bind = array_merge($bind, [
+            $bind[] = [
                 $sourceItemConfiguration->getSourceCode(),
                 $sourceItemConfiguration->getSku(),
                 $sourceItemConfiguration->getNotifyStockQty()
-            ]);
+            ];
         }
-        return $bind;
+        return array_merge(...$bind);
     }
 
     /**

@@ -65,7 +65,7 @@ class DeleteButton implements ButtonProviderInterface
     {
         $stockId = (int)$this->request->getParam(StockInterface::STOCK_ID);
         $assignSalesChannels = $this->assignedSalesChannelsForStock->execute($stockId);
-        if ($stockId === $this->defaultStockProvider->getId() || count($assignSalesChannels)) {
+        if ($stockId === $this->defaultStockProvider->getId() || \count($assignSalesChannels)) {
             return [];
         }
 

@@ -45,7 +45,7 @@ class GetAssignedStockIdForWebsite implements GetAssignedStockIdForWebsiteInterf
 
         $result = $connection->fetchCol($select);
 
-        if (count($result) === 0) {
+        if (\count($result) === 0) {
             return null;
         }
         return (int)reset($result);

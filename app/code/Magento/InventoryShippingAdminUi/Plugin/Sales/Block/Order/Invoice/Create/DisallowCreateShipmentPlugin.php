@@ -51,7 +51,7 @@ class DisallowCreateShipmentPlugin
             $websiteId = $subject->getOrder()->getStore()->getWebsiteId();
             $stockId = $this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
             $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute((int)$stockId);
-            if (count($sources) > 1) {
+            if (\count($sources) > 1) {
                 return false;
             }
         } catch (LocalizedException $e) {

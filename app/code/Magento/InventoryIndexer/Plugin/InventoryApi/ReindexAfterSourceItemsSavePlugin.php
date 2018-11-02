@@ -50,7 +50,7 @@ class ReindexAfterSourceItemsSavePlugin
         array $sourceItems
     ) {
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
-        if (count($sourceItemIds)) {
+        if (\count($sourceItemIds)) {
             $this->sourceItemIndexer->executeList($sourceItemIds);
         }
     }

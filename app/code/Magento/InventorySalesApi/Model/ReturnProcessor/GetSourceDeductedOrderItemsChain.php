@@ -36,7 +36,7 @@ class GetSourceDeductedOrderItemsChain implements GetSourceDeductedOrderItemsInt
         foreach ($sourceDeductedItemsSelector as $selector) {
             if (!$selector instanceof GetSourceDeductedOrderItemsInterface) {
                 throw new InputException(
-                    __('%1 doesn\'t implement GetSourceDeductedOrderItemsInterface', get_class($selector))
+                    __('%1 doesn\'t implement GetSourceDeductedOrderItemsInterface', \get_class($selector))
                 );
             }
         }

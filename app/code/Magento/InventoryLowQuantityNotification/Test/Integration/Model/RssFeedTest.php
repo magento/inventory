@@ -93,7 +93,7 @@ class RssFeedTest extends TestCase
 
         $data = $this->dataProvider->getRssData();
 
-        $this->assertEquals($expectedCount, count($data['entries']));
+        $this->assertEquals($expectedCount, \count($data['entries']));
     }
 
     /**
@@ -130,7 +130,7 @@ class RssFeedTest extends TestCase
 
         $data = $this->dataProvider->getRssData();
 
-        $this->assertEquals($expectedCount, count($data['entries']));
+        $this->assertEquals($expectedCount, \count($data['entries']));
     }
 
     /**

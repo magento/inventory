@@ -85,7 +85,7 @@ class StockResolverTest extends WebapiAbstract
 
         $this->assertEquals(10, $stockData['stock_id']);
         $this->assertEquals('EU-stock', $stockData['name']);
-        $this->assertEquals(1, count($stockData['extension_attributes']['sales_channels']));
+        $this->assertEquals(1, \count($stockData['extension_attributes']['sales_channels']));
         $this->assertEquals(
             [
                 'type' => 'website',
@@ -125,7 +125,7 @@ class StockResolverTest extends WebapiAbstract
 
         $this->assertEquals($stockId, $stockData['stock_id']);
         $this->assertEquals('US-stock', $stockData['name']);
-        $this->assertEquals(1, count($stockData['extension_attributes']['sales_channels']));
+        $this->assertEquals(1, \count($stockData['extension_attributes']['sales_channels']));
         $this->assertEquals(
             [
                 'type' => 'website',
@@ -162,7 +162,7 @@ class StockResolverTest extends WebapiAbstract
 
         $this->assertEquals($stockId, $stockData['stock_id']);
         $this->assertEquals('US-stock', $stockData['name']);
-        $this->assertEquals(1, count($stockData['extension_attributes']['sales_channels']));
+        $this->assertEquals(1, \count($stockData['extension_attributes']['sales_channels']));
         $this->assertEquals(
             [
                 'type' => 'website',

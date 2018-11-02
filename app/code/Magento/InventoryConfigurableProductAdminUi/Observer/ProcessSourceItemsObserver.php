@@ -63,7 +63,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
             $productsData = json_decode($configurableMatrix, true);
             foreach ($productsData as $key => $productData) {
                 if (isset($productData['quantity_per_source'])) {
-                    $quantityPerSource = is_array($productData['quantity_per_source'])
+                    $quantityPerSource = \is_array($productData['quantity_per_source'])
                         ? $productData['quantity_per_source']
                         : [];
 

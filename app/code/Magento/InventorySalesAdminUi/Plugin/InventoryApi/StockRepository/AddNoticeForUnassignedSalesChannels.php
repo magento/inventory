@@ -59,7 +59,7 @@ class AddNoticeForUnassignedSalesChannels
     ): int {
         $unAssignedSalesChannels = $this->getUnassignedSalesChannelsForStock($stock);
 
-        if (count($unAssignedSalesChannels)) {
+        if (\count($unAssignedSalesChannels)) {
             $this->messageManager->addNoticeMessage(
                 __('All unassigned sales channels will be assigned to the Default Stock')
             );
@@ -89,7 +89,7 @@ class AddNoticeForUnassignedSalesChannels
 
         foreach ($assignedSalesChannels as $salesChannel) {
             if ($salesChannel->getType() === SalesChannelInterface::TYPE_WEBSITE
-                && !in_array($salesChannel->getCode(), $newWebsiteCodes, true)
+                && !\in_array($salesChannel->getCode(), $newWebsiteCodes, true)
             ) {
                 $result[] = $salesChannel;
             }

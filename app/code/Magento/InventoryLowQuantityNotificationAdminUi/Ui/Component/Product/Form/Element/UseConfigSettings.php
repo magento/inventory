@@ -62,7 +62,7 @@ class UseConfigSettings extends Checkbox
             && $config['valueFromConfig'] instanceof ValueSourceInterface
         ) {
             $keyInConfiguration = $config['valueFromConfig']->getValue($config['keyInConfiguration']);
-            if (!empty($config['unserialized']) && is_string($keyInConfiguration)) {
+            if (!empty($config['unserialized']) && \is_string($keyInConfiguration)) {
                 if ($this->jsonValidator->isValid($keyInConfiguration)) {
                     $keyInConfiguration = $this->serializer->unserialize($keyInConfiguration);
                 }

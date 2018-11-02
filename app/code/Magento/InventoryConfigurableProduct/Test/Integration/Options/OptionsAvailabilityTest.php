@@ -79,7 +79,7 @@ class OptionsAvailabilityTest extends TestCase
         $this->configurableView->setProduct($configurableProduct);
         $result = $this->serializer->unserialize($this->configurableView->getJsonConfig());
         $attributes = reset($result['attributes']);
-        $actual = count($attributes['options'] ?? []);
+        $actual = \count($attributes['options'] ?? []);
 
         $this->assertEquals(
             $expected,

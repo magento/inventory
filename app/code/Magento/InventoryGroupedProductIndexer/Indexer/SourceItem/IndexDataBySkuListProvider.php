@@ -47,7 +47,7 @@ class IndexDataBySkuListProvider
     public function execute(int $stockId, array $skuList): ArrayIterator
     {
         $select = $this->selectBuilder->execute($stockId);
-        if (count($skuList)) {
+        if (\count($skuList)) {
             $select->where('stock.' . IndexStructure::SKU . ' IN (?)', $skuList);
         }
         $connection = $this->resourceConnection->getConnection();
