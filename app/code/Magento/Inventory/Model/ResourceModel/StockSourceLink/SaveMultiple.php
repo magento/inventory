@@ -98,13 +98,13 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($links as $link) {
-            $bind = array_merge($bind, [
+            $bind[] =  [
                 $link->getSourceCode(),
                 $link->getStockId(),
                 $link->getPriority(),
-            ]);
+            ];
         }
-        return $bind;
+        return array_merge(...$bind);
     }
 
     /**

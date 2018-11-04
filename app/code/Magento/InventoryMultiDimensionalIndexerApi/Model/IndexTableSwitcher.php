@@ -92,11 +92,11 @@ class IndexTableSwitcher implements IndexTableSwitcherInterface
                     'newName' => $replicaTableName,
                 ]
             ];
-            $toRename = array_merge($toRename, $renameBatch);
+            $toRename[] = $renameBatch;
         }
 
         if (!empty($toRename)) {
-            $connection->renameTablesBatch($toRename);
+            $connection->renameTablesBatch(array_merge(...$toRename));
         }
     }
 }

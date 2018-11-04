@@ -98,14 +98,14 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($sourceItems as $sourceItem) {
-            $bind = array_merge($bind, [
+            $bind[] = [
                 $sourceItem->getSourceCode(),
                 $sourceItem->getSku(),
                 $sourceItem->getQuantity(),
                 $sourceItem->getStatus(),
-            ]);
+            ];
         }
-        return $bind;
+        return array_merge(...$bind);
     }
 
     /**

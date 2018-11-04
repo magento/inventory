@@ -95,13 +95,13 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($sourceItemConfigurations as $sourceItemConfiguration) {
-            $bind = array_merge($bind, [
+            $bind[] = [
                 $sourceItemConfiguration->getSourceCode(),
                 $sourceItemConfiguration->getSku(),
                 $sourceItemConfiguration->getNotifyStockQty()
-            ]);
+            ];
         }
-        return $bind;
+        return array_merge(...$bind);
     }
 
     /**
