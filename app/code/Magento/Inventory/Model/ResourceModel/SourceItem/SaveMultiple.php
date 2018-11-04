@@ -96,7 +96,7 @@ class SaveMultiple
      */
     private function getSqlBindData(array $sourceItems): array
     {
-        $bind = [];
+        $bind = [[]];
         foreach ($sourceItems as $sourceItem) {
             $bind[] = [
                 $sourceItem->getSourceCode(),

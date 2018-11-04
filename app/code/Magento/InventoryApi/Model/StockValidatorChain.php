@@ -55,7 +55,7 @@ class StockValidatorChain implements StockValidatorInterface
      */
     public function validate(StockInterface $stock): ValidationResult
     {
-        $errors = [];
+        $errors = [[]];
         foreach ($this->validators as $validator) {
             $validationResult = $validator->validate($stock);
 

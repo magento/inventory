@@ -167,7 +167,7 @@ class UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin
      */
     private function getSqlBindData(array $sourceItemConfigurations): array
     {
-        $bind = [];
+        $bind = [[]];
         foreach ($sourceItemConfigurations as $sourceItemConfiguration) {
             $bind[] = [
                 $this->defaultStockProvider->getId(),

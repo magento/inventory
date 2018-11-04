@@ -73,7 +73,7 @@ class IndexTableSwitcher implements IndexTableSwitcherInterface
      */
     private function switchTable(AdapterInterface $connection, array $tableNames)
     {
-        $toRename = [];
+        $toRename = [[]];
         foreach ($tableNames as $tableName) {
             $outdatedTableName = $tableName . $this->outdatedTableSuffix;
             $replicaTableName = $tableName . $this->replicaTableSuffix;

@@ -55,7 +55,7 @@ class SourceItemValidatorChain implements SourceItemValidatorInterface
      */
     public function validate(SourceItemInterface $sourceItem): ValidationResult
     {
-        $errors = [];
+        $errors = [[]];
         foreach ($this->validators as $validator) {
             $validationResult = $validator->validate($sourceItem);
 

@@ -55,7 +55,7 @@ class BulkInventoryTransferValidatorChain implements BulkInventoryTransferValida
      */
     public function validate(array $skus, string $originSource, string $destinationSource): ValidationResult
     {
-        $errors = [];
+        $errors = [[]];
         foreach ($this->validators as $validator) {
             $validationResult = $validator->validate($skus, $originSource, $destinationSource);
 

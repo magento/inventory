@@ -55,7 +55,7 @@ class BulkSourceAssignValidatorChain implements BulkSourceAssignValidatorInterfa
      */
     public function validate(array $skus, array $sourceCodes): ValidationResult
     {
-        $errors = [];
+        $errors = [[]];
         foreach ($this->validators as $validator) {
             $validationResult = $validator->validate($skus, $sourceCodes);
 
