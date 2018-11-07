@@ -98,7 +98,7 @@ class Bulk extends \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bu
         }
 
         if (!empty($children)) {
-            $config[$name]['children'] = $config[$name]['children'] ?? [[]];
+            $config[$name]['children'] = [$config[$name]['children'] ?? []];
             foreach ($children as $child) {
                 $config[$name]['children'][] = $this->generateJsonConfig($child, $provider);
             }
