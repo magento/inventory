@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontQuantityIncrementsForSimpleProductTest">
+        <annotations>
+            <stories value=""/>
+            <title value="Enable Qty Increments  applied to Simple product on product page and checked on frontend"/>
+            <description value="Enable Qty Increments  applied to Simple product on product page and checked on frontend"/>
+            <testCaseId value="MSI-1854"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <createData entity="FullSource1" stepKey="createSource1"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock1"/>
+
+            <createData entity="SimpleMsiProduct" stepKey="simpleProduct1"/>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory1"/>
+
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
+                <requiredEntity createDataKey="createStock1"/>
+                <requiredEntity createDataKey="createSource1"/>
+            </createData>
+
+            <createData entity="SimpleMsiProduct" stepKey="linkSimpleProduct1">
+                <requiredEntity createDataKey="simpleCategory1"/>
+            </createData>
+
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+        </before>
+        <after>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+
+            <deleteData createDataKey="simpleProduct1" stepKey="deleteCategory1"/>
+            <deleteData createDataKey="simpleCategory1" stepKey="deleteProduct1"/>
+        </after>
+
+        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct1">
+            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        </actionGroup>
+        <click selector="{{AdminGridRow.editByValue('$$simpleProduct1.product[name]$$')}}" stepKey="clickOnEditForDefaultStock1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" stepKey="searchAndSelectCategory"/>
+
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
+        </actionGroup>
+
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
+
+        <click selector="button[data-index='advanced_inventory_button']" stepKey="clickOnAdvancedInventory1"/>
+        <waitForPageLoad time="10" stepKey="waitForPageLoad2"/>
+
+        <click selector="div[data-index='use_config_enable_qty_increments'] input[name='product[stock_data][use_config_enable_qty_inc]']" stepKey="clickOnUSeConfigSetting1"/>
+        <waitForPageLoad time="10" stepKey="waitForPageLoad3"/>
+
+        <selectOption selector="select[name='product[stock_data][enable_qty_increments]']" userInput="Yes" stepKey="selectEnableQtyIncrements1"/>
+        <waitForPageLoad time="10" stepKey="waitForPageLoad4"/>
+
+        <click selector="input[name='product[stock_data][use_config_qty_increments]']" stepKey="clickOnUseConfigSettings2"/>
+        <waitForPageLoad time="10" stepKey="waitForPageLoad5"/>
+
+        <fillField selector="input[name='product[stock_data][qty_increments]']" userInput="5" stepKey="fillQtyIncrements1"/>
+
+        <click selector=".product_form_product_form_advanced_inventory_modal .page-actions button" stepKey="clickOnDone1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
+
+        <click selector="{{AdminProductSEOSection.sectionHeader}}" stepKey="openSeoSection1"/>
+        <fillField userInput="{{SimpleMsiProduct.urlKey}}" selector="{{AdminProductSEOSection.urlKeyInput}}" stepKey="fillProductUrlKey1"/>
+
+        <click selector="{{AdminGridMainControls.save}}" stepKey="clickOnSaveWebSite1"/>
+
+        <amOnPage url="{{SimpleMsiProduct.urlKey}}.html" stepKey="goToSimpleProductPage"/>
+        <see selector=".pricing" userInput="$$simpleProduct1.product[name]$$ is available to buy in increments of 5" stepKey="seeQuantityMessage1"/>
+
+        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>
+        <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time." stepKey="seeErrorMessage1"/>
+
+        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="12" stepKey="fillQuantity1"/>
+        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart2"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
+        <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time." stepKey="seeErrorMessage2"/>
+
+        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="5" stepKey="fillQuantity2"/>
+        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart3"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad9"/>
+        <dontSeeElement selector="#qty-error" stepKey="dontSeeErrorMessage1"/>
+        <see selector="{{StorefrontCategoryMainSection.SuccessMsg}}" userInput="You added $$simpleProduct1.product[name]$$ to your shopping cart." stepKey="addedProductToCart1"/>
+
+        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="10" stepKey="fillQuantity3"/>
+        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart4"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad10"/>
+        <dontSeeElement selector="#qty-error" stepKey="dontSeeErrorMessage2"/>
+        <see selector="{{StorefrontCategoryMainSection.SuccessMsg}}" userInput="You added $$simpleProduct1.product[name]$$ to your shopping cart." stepKey="addedProductToCart2"/>
+
+        <click selector="{{StorefrontMinicartSection.showCart}}" stepKey="openMiniCart1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad11"/>
+        <seeInField selector=".details-qty .cart-item-qty" userInput="15" stepKey="seeQtyInField1"/>
+    </test>
+</tests>
