@@ -54,8 +54,13 @@ class AssignWebsiteToDefaultStockTest extends TestCase
         $this->websiteResource = Bootstrap::getObjectManager()->get(WebsiteResource::class);
     }
 
+    /**
+     * @magentoDbIsolation enabled
+     */
     public function testThatMainWebsiteIsAssignedToDefaultStock()
     {
+        try {
+
         $websiteCode = $this->storeManager->getWebsite()->getCode();
 
         $defaultStockId = $this->defaultStockProvider->getId();
@@ -68,7 +73,14 @@ class AssignWebsiteToDefaultStockTest extends TestCase
 
         $salesChannel = reset($salesChannels);
         self::assertEquals($websiteCode, $salesChannel->getCode());
-        self::assertEquals(SalesChannelInterface::TYPE_WEBSITE, $salesChannel->getType());
+        self::assertEquals(SalesChannelInterface::TYPE_WEBSITE, $salesChannel->getType());} catch (
+            \Exception $e
+        ) {
+            echo $e->getMessage();
+            var_dump($e->getTrace());
+            exit();
+        }
+
     }
 
     /**
