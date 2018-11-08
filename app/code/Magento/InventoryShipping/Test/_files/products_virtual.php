@@ -78,12 +78,6 @@ foreach ($productData as $sku => $stockData) {
         $websiteLink = $productWebsiteLinkFactory->create();
         $websiteLink->setSku($sku);
         $websiteLink->setWebsiteId($website->getId());
-        try {
-            $productWebsiteLinkRepository->save($websiteLink);
-        } catch (\Exception $exception) {
-            var_dump($website->getData());
-            exit;
-        }
     }
 }
 
