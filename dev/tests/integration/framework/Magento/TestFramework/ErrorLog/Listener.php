@@ -5,6 +5,7 @@
  */
 namespace Magento\TestFramework\ErrorLog;
 
+use Magento\Store\Model\WebsiteRepository;
 use Magento\TestFramework\Helper;
 
 class Listener implements \PHPUnit\Framework\TestListener
@@ -97,6 +98,14 @@ class Listener implements \PHPUnit\Framework\TestListener
                 $test->getTestResultObject()->addError($test, $e, 0);
             }
         }
+        /** @var WebsiteRepository $websiteRepository  */
+        $websiteRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
+            ->get(WebsiteRepository::class);
+        $websites = $websiteRepository->getList();
+
+        if  (count($websites)> 2) {
+            echo $test->getName();
+        };
     }
 
     /**
