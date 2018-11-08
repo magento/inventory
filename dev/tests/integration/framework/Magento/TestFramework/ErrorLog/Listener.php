@@ -7,6 +7,7 @@ namespace Magento\TestFramework\ErrorLog;
 
 use Magento\Store\Model\WebsiteRepository;
 use Magento\TestFramework\Helper;
+use Magento\TestFramework\ObjectManager;
 
 class Listener implements \PHPUnit\Framework\TestListener
 {
@@ -104,7 +105,9 @@ class Listener implements \PHPUnit\Framework\TestListener
         $websites = $websiteRepository->getList();
 
         if  (count($websites)> 2) {
-            echo $test->getName();
+            echo '(( '.$test->getName() . ' ))';
+        } else {
+            echo '| '.$test->getName() . ' |';
         };
     }
 
