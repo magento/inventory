@@ -58,7 +58,7 @@ class File extends LoggerAbstract
      */
     public function logStats($type, $sql, $bind = [], $result = null)
     {
-
+        echo $sql;
     }
 
     /**
