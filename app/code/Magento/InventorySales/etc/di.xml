@@ -164,6 +164,13 @@
             </argument>
         </arguments>
     </type>
+    <preference for="Magento\Framework\DB\LoggerInterface" type="Magento\Framework\DB\Logger\File"/>
+    <type name="Magento\Framework\DB\Logger\File">
+        <arguments>
+            <argument name="logAllQueries" xsi:type="boolean">true</argument>
+            <argument name="debugFile" xsi:type="string">log/sql.log</argument>
+        </arguments>
+    </type>
     <!-- StockItemConfiguration -->
     <type name="Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface">
         <plugin name="load_stock_item_is_in_stock"

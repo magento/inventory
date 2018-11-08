@@ -50,13 +50,7 @@ class File extends LoggerAbstract
      */
     public function log($str)
     {
-        $str = '## ' . date('Y-m-d H:i:s') . "\r\n" . $str;
-
-        $stream = $this->dir->openFile($this->debugFile, 'a');
-        $stream->lock();
-        $stream->write($str);
-        $stream->unlock();
-        $stream->close();
+        echo  $str;
     }
 
     /**
@@ -64,10 +58,7 @@ class File extends LoggerAbstract
      */
     public function logStats($type, $sql, $bind = [], $result = null)
     {
-        $stats = $this->getStats($type, $sql, $bind, $result);
-        if ($stats) {
-            $this->log($stats);
-        }
+
     }
 
     /**
@@ -75,6 +66,6 @@ class File extends LoggerAbstract
      */
     public function critical(\Exception $e)
     {
-        $this->log("EXCEPTION \n$e\n\n");
+        echo 'critical ' .  $e->getMessage();
     }
 }
