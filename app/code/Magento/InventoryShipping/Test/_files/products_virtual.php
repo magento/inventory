@@ -81,8 +81,8 @@ foreach ($productData as $sku => $stockData) {
         try {
             $productWebsiteLinkRepository->save($websiteLink);
         } catch (\Exception $exception) {
-            foreach ($websites as $website) {
-                var_dump($website->getData());
+            foreach ($websites as $website1) {
+                var_dump($website1->getData());
             }
             exit;
         }
