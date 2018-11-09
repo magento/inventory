@@ -77,7 +77,6 @@ class AssignWebsiteToDefaultStockTest extends TestCase
             \Exception $e
         ) {
             echo $e->getMessage();
-            var_dump($e->getTrace());
             exit();
         }
 
