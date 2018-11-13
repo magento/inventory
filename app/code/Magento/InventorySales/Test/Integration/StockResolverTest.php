@@ -48,7 +48,7 @@ class StockResolverTest extends TestCase
         $this->stockRepository = $this->objectManager->get(StockRepositoryInterface::class);
         $this->salesChannelFactory = $this->objectManager->get(SalesChannelInterfaceFactory::class);
         $this->stockResolverInterface = $this->objectManager->get(StockResolverInterface::class);
-        $this->objectManager->get(\Magento\Framework\DB\Logger\File::class)->setLog(true);
+        $_SESSION["mysql_log"]=true;
     }
 
     /**

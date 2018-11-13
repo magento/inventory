@@ -14,7 +14,6 @@ use Magento\Framework\Filesystem\Directory\WriteInterface;
  */
 class File extends LoggerAbstract
 {
-    private $log;
     /**
      * @var WriteInterface
      */
@@ -59,7 +58,8 @@ class File extends LoggerAbstract
      */
     public function logStats($type, $sql, $bind = [], $result = null)
     {
-        if ($this->log) {
+        $log = $_SESSION["mysql_log"] ?? false;
+        if ($log) {
             echo $sql;
         }
     }
@@ -70,13 +70,5 @@ class File extends LoggerAbstract
     public function critical(\Exception $e)
     {
         echo 'critical ' .  $e->getMessage();
-    }
-
-    /**
-     * @param mixed $log
-     */
-    public function setLog($log): void
-    {
-        $this->log = $log;
     }
 }
