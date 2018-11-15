@@ -92,7 +92,9 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
         $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
 
         $isEnoughQty = true;
-        if((bool)$qtyWithReservation) $isEnoughQty = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE] && $qtyLeftInStock >= 0;
+        if((bool)$qtyWithReservation){
+            $isEnoughQty = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE] && $qtyLeftInStock >= 0;
+        }
 
         if (!$isEnoughQty) {
             $errors = [
