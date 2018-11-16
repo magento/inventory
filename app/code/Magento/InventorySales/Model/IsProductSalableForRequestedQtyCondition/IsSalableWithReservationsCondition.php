@@ -84,6 +84,10 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
 
+        if(!(bool)$stockItemData['is_salable']){
+            $stockItemData['quantity'] = 0;
+        }
+
         /** @var StockItemConfigurationInterface $stockItemConfiguration */
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
 
