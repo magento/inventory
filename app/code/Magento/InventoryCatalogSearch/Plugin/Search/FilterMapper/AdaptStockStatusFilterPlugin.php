@@ -95,7 +95,6 @@ class AdaptStockStatusFilterPlugin
         }
 
         $mainTableAlias = $this->extractTableAliasFromSelect($select);
-        //$this->addProductEntityJoin($select, $mainTableAlias);
         $this->addInventoryStockJoin($select, $showOutOfStockFlag);
 
         if ($type === StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS) {
@@ -104,19 +103,6 @@ class AdaptStockStatusFilterPlugin
         }
 
         return $select;
-    }
-
-    /**
-     * @param Select $select
-     * @param string $mainTableAlias
-     */
-    private function addProductEntityJoin(Select $select, $mainTableAlias)
-    {
-        $select->joinInner(
-            ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            sprintf('product.entity_id = %s.entity_id', $mainTableAlias),
-            []
-        );
     }
 
     /**
