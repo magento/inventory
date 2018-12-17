@@ -69,7 +69,7 @@ class IsSalableOptionSelectBuilder
 
         $select->joinInner(
             ['stock' => $stockTable],
-            'stock.sku = entity.sku',
+            'stock.product_id = entity.entity_id',
             []
         )->where(
             'stock.is_salable = ?',

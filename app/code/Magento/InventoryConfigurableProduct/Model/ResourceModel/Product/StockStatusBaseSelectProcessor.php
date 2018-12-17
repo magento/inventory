@@ -74,7 +74,7 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
             /** @var Select $select */
             $select->join(
                 ['stock' => $stockTable],
-                sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
+                sprintf('stock.product_id = %s.entity_id', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
                 []
             )->where('stock.is_salable = ?', 1);
         }
