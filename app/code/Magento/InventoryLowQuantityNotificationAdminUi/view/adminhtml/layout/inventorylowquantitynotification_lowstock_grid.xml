@@ -12,7 +12,7 @@
                 <arguments>
                     <argument name="id" xsi:type="string">gridLowstock</argument>
                     <argument name="use_ajax" xsi:type="string">0</argument>
-                    <argument name="dataSource" xsi:type="object">Magento\InventoryLowQuantityNotification\Model\ResourceModel\LowQuantityCollection</argument>
+                    <argument name="dataSource" xsi:type="object" shared="false">Magento\InventoryLowQuantityNotification\Model\ResourceModel\LowQuantityCollection</argument>
                 </arguments>
                 <block class="Magento\Backend\Block\Widget\Grid\Export" name="adminhtml.block.report.product.inventory.lowstock.export" as="grid.export">
                     <arguments>
