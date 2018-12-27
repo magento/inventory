@@ -59,11 +59,11 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
         $productTable = $this->resource->getTableName('catalog_product_entity');
 
         $select = $connection->select()
-                             ->from(
-                                 $productTable,
-                                 [ProductInterface::SKU, ProductInterface::TYPE_ID]
-                             )->where(
-                ProductInterface::SKU . ' IN (?)',
+             ->from(
+                 $productTable,
+                 [ProductInterface::SKU, ProductInterface::TYPE_ID]
+             )->where(
+ProductInterface::SKU . ' IN (?)',
                 $skus
             );
 
