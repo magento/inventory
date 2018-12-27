@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Magento\InventoryCatalog\Model;
 
@@ -17,7 +17,7 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 class GetProductIdsBySkus implements GetProductIdsBySkusInterface
 {
     /**
-     * @var array
+     * @var int[]
      */
     private $productIdsBySkus = [];
 
@@ -40,21 +40,32 @@ class GetProductIdsBySkus implements GetProductIdsBySkusInterface
      */
     public function execute(array $skus): array
     {
-        $cacheKey = hash('md5', implode(',', $skus));
+        $result = [];
 
-        if (!isset($this->productIdsBySkus[$cacheKey])) {
-            $idsBySkus = $this->productResource->getProductsIdsBySkus($skus);
-            $notFoundedSkus = array_diff($skus, array_keys($idsBySkus));
-
-            if (!empty($notFoundedSkus)) {
-                throw new NoSuchEntityException(
-                    __('Following products with requested skus were not found: %1', implode($notFoundedSkus, ', '))
-                );
+        foreach ($skus as $index => $sku) {
+            if (!isset($this->idsBySku[$sku])) {
+                continue;
             }
 
-            $this->productIdsBySkus[$cacheKey] = $idsBySkus;
+            unset($skus[$index]);
+            $result[$sku] = $this->productIdsBySkus[$sku];
         }
 
-        return $this->productIdsBySkus[$cacheKey];
+        if (empty($skus)) {
+            return $result;
+        }
+
+        $result = array_replace($result, $this->productResource->getProductsIdsBySkus($skus));
+        $notFoundSkus = array_diff($skus, array_keys($result));
+
+        if (!empty($notFoundSkus)) {
+            throw new NoSuchEntityException(
+                __('Following products with requested skus were not found: %1', implode($notFoundSkus, ', '))
+            );
+        }
+
+        $this->productIdsBySkus = array_replace($this->productIdsBySkus, $result);
+
+        return $result;
     }
 }

@@ -22,6 +22,11 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
     private $resource;
 
     /**
+     * @var string[]
+     */
+    private $typeBySku = [];
+
+    /**
      * @param ResourceConnection $resource
      */
     public function __construct(
@@ -35,22 +40,38 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
      */
     public function execute(array $skus): array
     {
+        $result = [];
+
+        foreach ($skus as $index => $sku) {
+            if (!isset($this->typeBySku[$sku])) {
+                continue;
+            }
+
+            unset($skus[$index]);
+            $result[$sku] = $this->typeBySku[$sku];
+        }
+
+        if (empty($skus)) {
+            return $result;
+        }
+
         $connection = $this->resource->getConnection();
         $productTable = $this->resource->getTableName('catalog_product_entity');
 
         $select = $connection->select()
-            ->from(
-                $productTable,
-                [ProductInterface::SKU, ProductInterface::TYPE_ID]
-            )->where(
+                             ->from(
+                                 $productTable,
+                                 [ProductInterface::SKU, ProductInterface::TYPE_ID]
+                             )->where(
                 ProductInterface::SKU . ' IN (?)',
                 $skus
             );
 
-        $result = [];
         foreach ($connection->fetchPairs($select) as $sku => $productType) {
             $result[$this->getResultKey((string)$sku, $skus)] = (string)$productType;
         }
+
+        $this->typeBySku = array_replace($this->typeBySku, $result);
 
         return $result;
     }
