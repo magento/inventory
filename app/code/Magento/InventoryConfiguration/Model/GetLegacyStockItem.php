@@ -68,7 +68,7 @@ class GetLegacyStockItem
      */
     public function execute(string $sku): StockItemInterface
     {
-        if($this->stockItemBySku[$sku]) {
+        if ($this->stockItemBySku[$sku]) {
             return $this->stockItemBySku[$sku];
         }
 
@@ -96,6 +96,8 @@ class GetLegacyStockItem
 
         $stockItems = $stockItemCollection->getItems();
         $stockItem = reset($stockItems);
+        $this->stockItemBySku[$sku] = $stockItem;
+
         return $stockItem;
     }
 }

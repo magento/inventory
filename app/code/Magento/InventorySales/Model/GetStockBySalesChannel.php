@@ -53,7 +53,7 @@ class GetStockBySalesChannel implements GetStockBySalesChannelInterface
     {
         $cacheKey = $salesChannel->getCode() . '_'. $salesChannel->getType();
 
-        if(isset($this->stockBySalesChannel[$cacheKey])) {
+        if (isset($this->stockBySalesChannel[$cacheKey])) {
             return $this->stockBySalesChannel[$cacheKey];
         }
 

@@ -17,7 +17,7 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 class GetProductIdsBySkus implements GetProductIdsBySkusInterface
 {
     /**
-     * @var int[]
+     * @var array
      */
     private $productIdsBySkus = [];
 
@@ -43,7 +43,7 @@ class GetProductIdsBySkus implements GetProductIdsBySkusInterface
         $result = [];
 
         foreach ($skus as $index => $sku) {
-            if (!isset($this->idsBySku[$sku])) {
+            if (!isset($this->productIdsBySkus[$sku])) {
                 continue;
             }
 
