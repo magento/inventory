@@ -153,7 +153,7 @@
                         <validation>
                             <rule name="required-entry" xsi:type="boolean">true</rule>
                             <rule name="less-than-equals-to" xsi:type="number">99999999</rule>
-                            <rule name="validate-number" xsi:type="boolean">true</rule>
+                            <rule name="validate-digits" xsi:type="boolean">true</rule>
                         </validation>
                         <disabled>true</disabled>
                         <imports>
