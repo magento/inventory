@@ -20,6 +20,7 @@ use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Framework\Exception\LocalizedException;
 
 $objectManager = Bootstrap::getObjectManager();
 /** @var ProductInterfaceFactory $productFactory */
