@@ -140,5 +140,4 @@
         <plugin name="adapt_verify_stock_to_negative_min_qty"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Spi\StockStateProvider\AdaptVerifyStockToNegativeMinQtyPlugin"/>
     </type>
-    <type name="Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface" shared="false"/>
 </config>
