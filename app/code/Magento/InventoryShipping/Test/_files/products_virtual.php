@@ -69,23 +69,18 @@ foreach ($productData as $sku => $stockData) {
         ->setStockData($stockData)
         ->setStatus(Status::STATUS_ENABLED);
     $productRepository->save($product);
-    $websitesStr = '';
+
     foreach ($websites as $website) {
-        $websitesStr .= 'Code: ' . $website->getCode() . ', Name: '. $website->getName() . '; ';
+        if ($website->getCode() === 'admin') {
+            continue;
+        }
 
-
-//        if ($website->getCode() === 'admin') {
-//            continue;
-//        }
-//
-//        /** @var ProductWebsiteLinkInterface $websiteLink */
-//        $websiteLink = $productWebsiteLinkFactory->create();
-//        $websiteLink->setSku($sku);
-//        $websiteLink->setWebsiteId($website->getId());
-//        $productWebsiteLinkRepository->save($websiteLink);
+        /** @var ProductWebsiteLinkInterface $websiteLink */
+        $websiteLink = $productWebsiteLinkFactory->create();
+        $websiteLink->setSku($sku);
+        $websiteLink->setWebsiteId($website->getId());
+        $productWebsiteLinkRepository->save($websiteLink);
     }
-
-    throw new LocalizedException(__('Websites: %1', $websitesStr));
 }
 
 /** @var Manager $moduleManager */
