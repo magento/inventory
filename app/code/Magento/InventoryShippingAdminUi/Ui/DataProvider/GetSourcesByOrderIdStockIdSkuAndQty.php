@@ -53,11 +53,6 @@ class GetSourcesByOrderIdStockIdSkuAndQty
     private $sourceSelectionResultToArray;
 
     /**
-     * @var array
-     */
-    private $sources = [];
-
-    /**
      * GetSourcesByStockIdSkuAndQty constructor.
      *
      * @param ItemRequestInterfaceFactory $itemRequestFactory
