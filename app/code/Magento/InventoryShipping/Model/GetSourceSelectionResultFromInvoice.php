@@ -11,17 +11,13 @@ use Magento\Framework\App\ObjectManager;
 use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
-use Magento\InventorySourceSelectionApi\Exception\UndefinedInventoryRequestBuilderException;
 use Magento\InventorySourceSelectionApi\Model\GetInventoryRequestFromOrderBuilder;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\InvoiceItemInterface;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
 use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
-use Magento\Sales\Api\Data\OrderItemInterface;
-use Traversable;
 
 /**
  * Creates instance of InventoryRequestInterface by given InvoiceInterface object.
@@ -94,11 +90,9 @@ class GetSourceSelectionResultFromInvoice
      *
      * @param InvoiceInterface $invoice
      * @return SourceSelectionResultInterface
-     * @throws UndefinedInventoryRequestBuilderException
      */
     public function execute(InvoiceInterface $invoice): SourceSelectionResultInterface
     {
-        /** @var OrderInterface $order */
         $order = $invoice->getOrder();
         $websiteId = (int) $order->getStore()->getWebsiteId();
         $stockId = (int) $this->stockByWebsiteIdResolver->execute($websiteId)->getStockId();
@@ -119,7 +113,7 @@ class GetSourceSelectionResultFromInvoice
     /**
      * Get selection request items
      *
-     * @param InvoiceItemInterface[]|Traversable $invoiceItems
+     * @param InvoiceItemInterface[]|iterable $invoiceItems
      * @return array
      */
     private function getSelectionRequestItems(iterable $invoiceItems): array
@@ -133,31 +127,20 @@ class GetSourceSelectionResultFromInvoice
             }
 
             $itemSku = $this->getSkuFromOrderItem->execute($orderItem);
-            $qty = $this->castQty($invoiceItem->getOrderItem(), $invoiceItem->getQty());
+            $qty = (int)$invoiceItem->getQty();
+
+            if ($invoiceItem->getOrderItem()->getIsQtyDecimal()) {
+                $qty = (float)$invoiceItem->getQty();
+            }
+
+            $qty = $qty > 0 ? $qty : 0;
 
             $selectionRequestItems[] = $this->itemRequestFactory->create([
                 'sku' => $itemSku,
                 'qty' => $qty,
             ]);
         }
+
         return $selectionRequestItems;
-    }
-
-    /**
-     * Cast qty value
-     *
-     * @param OrderItemInterface $item
-     * @param string|int|float $qty
-     * @return float
-     */
-    private function castQty(OrderItemInterface $item, $qty): float
-    {
-        if ($item->getIsQtyDecimal()) {
-            $qty = (float) $qty;
-        } else {
-            $qty = (int) $qty;
-        }
-
-        return $qty > 0 ? $qty : 0;
     }
 }

@@ -9,7 +9,6 @@ namespace Magento\InventoryShippingAdminUi\Controller\Adminhtml\SourceSelection;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\ResultFactory;
@@ -17,7 +16,6 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterfaceFactory;
-use Magento\InventorySourceSelectionApi\Exception\UndefinedInventoryRequestBuilderException;
 use Magento\InventorySourceSelectionApi\Model\GetInventoryRequestFromOrderBuilder;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
 use Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface;
@@ -80,6 +78,7 @@ class ProcessAlgorithm extends Action implements HttpPostActionInterface
      * @param GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode
      * @param SourceRepositoryInterface $sourceRepository
      * @param GetInventoryRequestFromOrderBuilder|null $getInventoryRequestFromOrderBuilder
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         Context $context,
@@ -123,11 +122,9 @@ class ProcessAlgorithm extends Action implements HttpPostActionInterface
     /**
      * @inheritdoc
      * @throws NoSuchEntityException
-     * @throws UndefinedInventoryRequestBuilderException
      */
     public function execute(): ResultInterface
     {
-        /** @var Page $result */
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $request = $this->getRequest();
         $postRequest = $request->getPost()->toArray();

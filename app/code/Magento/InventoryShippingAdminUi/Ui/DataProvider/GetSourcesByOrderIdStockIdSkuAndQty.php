@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryShippingAdminUi\Ui\DataProvider;
 
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryShippingAdminUi\Model\SourceSelectionResultToArray;
 use Magento\InventorySourceSelectionApi\Exception\UndefinedInventoryRequestBuilderException;
 use Magento\InventorySourceSelectionApi\Model\GetInventoryRequestFromOrderBuilder;
 use Magento\InventorySourceSelectionApi\Api\Data\ItemRequestInterfaceFactory;
@@ -47,6 +48,11 @@ class GetSourcesByOrderIdStockIdSkuAndQty
     private $getInventoryRequestFromOrderBuilder;
 
     /**
+     * @var SourceSelectionResultToArray
+     */
+    private $sourceSelectionResultToArray;
+
+    /**
      * @var array
      */
     private $sources = [];
@@ -59,6 +65,7 @@ class GetSourcesByOrderIdStockIdSkuAndQty
      * @param GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode
      * @param GetInventoryRequestFromOrderBuilder $getInventoryRequestFromOrderBuilder
      * @param SourceRepositoryInterface $sourceRepository
+     * @param SourceSelectionResultToArray $sourceSelectionResultToArray
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
@@ -66,13 +73,15 @@ class GetSourcesByOrderIdStockIdSkuAndQty
         SourceSelectionServiceInterface $sourceSelectionService,
         GetDefaultSourceSelectionAlgorithmCodeInterface $getDefaultSourceSelectionAlgorithmCode,
         GetInventoryRequestFromOrderBuilder $getInventoryRequestFromOrderBuilder,
-        SourceRepositoryInterface $sourceRepository
+        SourceRepositoryInterface $sourceRepository,
+        SourceSelectionResultToArray $sourceSelectionResultToArray
     ) {
         $this->itemRequestFactory = $itemRequestFactory;
         $this->sourceSelectionService = $sourceSelectionService;
         $this->getDefaultSourceSelectionAlgorithmCode = $getDefaultSourceSelectionAlgorithmCode;
         $this->sourceRepository = $sourceRepository;
         $this->getInventoryRequestFromOrderBuilder = $getInventoryRequestFromOrderBuilder;
+        $this->sourceSelectionResultToArray = $sourceSelectionResultToArray;
     }
 
     /**
@@ -99,38 +108,6 @@ class GetSourcesByOrderIdStockIdSkuAndQty
         $inventoryRequestBuilder = $this->getInventoryRequestFromOrderBuilder->execute($algorithmCode);
         $inventoryRequest = $inventoryRequestBuilder->execute($stockId, $orderId, [$requestItem]);
 
-        $sourceSelectionResult = $this->sourceSelectionService->execute(
-            $inventoryRequest,
-            $algorithmCode
-        );
-
-        $result = [];
-        foreach ($sourceSelectionResult->getSourceSelectionItems() as $item) {
-            $sourceCode = $item->getSourceCode();
-            $result[] = [
-                'sourceName' => $this->getSourceName($sourceCode),
-                'sourceCode' => $sourceCode,
-                'qtyAvailable' => $item->getQtyAvailable(),
-                'qtyToDeduct' => $item->getQtyToDeduct()
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get source name by code
-     *
-     * @param string $sourceCode
-     * @return mixed
-     * @throws NoSuchEntityException
-     */
-    private function getSourceName(string $sourceCode): string
-    {
-        if (!isset($this->sources[$sourceCode])) {
-            $this->sources[$sourceCode] = $this->sourceRepository->get($sourceCode)->getName();
-        }
-
-        return $this->sources[$sourceCode];
+        return $this->sourceSelectionResultToArray->execute($inventoryRequest, $algorithmCode);
     }
 }
