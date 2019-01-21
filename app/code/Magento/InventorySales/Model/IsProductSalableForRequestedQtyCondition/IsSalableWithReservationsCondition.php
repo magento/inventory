@@ -83,21 +83,17 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
+        
+        if ((bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE]) {
+            /** @var StockItemConfigurationInterface $stockItemConfiguration */
+            $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
 
-        if(!(bool)$stockItemData['is_salable']){
-            $stockItemData['quantity'] = 0;
-        }
-
-        /** @var StockItemConfigurationInterface $stockItemConfiguration */
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
-
-        $qtyWithReservation = $stockItemData[GetStockItemDataInterface::QUANTITY] +
-            $this->getReservationsQuantity->execute($sku, $stockId);
-        $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
-
-        $isEnoughQty = true;
-        if((bool)$qtyWithReservation){
-            $isEnoughQty = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE] && $qtyLeftInStock >= 0;
+            $qtyWithReservation = $stockItemData[GetStockItemDataInterface::QUANTITY] +
+                $this->getReservationsQuantity->execute($sku, $stockId);
+            $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
+            $isEnoughQty = $qtyLeftInStock >= 0;
+        } else {
+            $isEnoughQty = false;
         }
 
         if (!$isEnoughQty) {
