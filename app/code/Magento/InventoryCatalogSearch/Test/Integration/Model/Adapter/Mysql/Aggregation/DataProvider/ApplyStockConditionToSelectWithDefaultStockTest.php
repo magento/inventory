@@ -12,6 +12,7 @@ ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use Magento\Framework\Exception\LocalizedException;
 
 class ApplyStockConditionToSelectWithDefaultStockTest extends TestCase
 {
@@ -45,11 +46,15 @@ class ApplyStockConditionToSelectWithDefaultStockTest extends TestCase
     public function testExecute()
     {
         $connection = $this->resource->getConnection();
-        $select = $connection->select();
-        $select->from(
-            ['main_table' => $this->resource->getTableName('catalog_product_index_eav')],
-            ['main_table.entity_id', 'main_table.value']
-        )->distinct();
+        $catalogProductIndexEavSelect = $connection->select();
+        $catalogProductIndexEavSelect->from(['main_table' => $this->resource->getTableName('catalog_product_index_eav')]);
+        $catalogProductIndexEav = serialize($connection->fetchAll($catalogProductIndexEavSelect));
+
+        $cataloginventoryStockStatusSlct = $connection->select();
+        $cataloginventoryStockStatusSlct->from(['main_table' => $this->resource->getTableName('cataloginventory_stock_status')]);
+        $cataloginventoryStockStatus = serialize($connection->fetchAll($cataloginventoryStockStatusSlct));
+
+        throw new LocalizedException(__('CatalogProductIndxEav: %1; cataloginventoryStockStatus: %2', $catalogProductIndexEav, $cataloginventoryStockStatus));
 
         $this->applyStockConditionToSelect->execute($select);
         self::assertEquals(3, count($select->query()->fetchAll()));
