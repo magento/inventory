@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryCatalog\Model\LocalCache\GetProductIdsBySkusCache;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
@@ -22,12 +23,20 @@ class GetProductIdsBySkus implements GetProductIdsBySkusInterface
     private $productResource;
 
     /**
+     * @var GetProductIdsBySkusCache
+     */
+    private $getProductIdsBySkusCache;
+
+    /**
      * @param ProductResourceModel $productResource
+     * @param GetProductIdsBySkusCache $getProductIdsBySkusCache
      */
     public function __construct(
-        ProductResourceModel $productResource
+        ProductResourceModel $productResource,
+        GetProductIdsBySkusCache $getProductIdsBySkusCache
     ) {
         $this->productResource = $productResource;
+        $this->getProductIdsBySkusCache = $getProductIdsBySkusCache;
     }
 
     /**
@@ -35,15 +44,21 @@ class GetProductIdsBySkus implements GetProductIdsBySkusInterface
      */
     public function execute(array $skus): array
     {
-        $idsBySkus = $this->productResource->getProductsIdsBySkus($skus);
-        $notFoundedSkus = array_diff($skus, array_keys($idsBySkus));
+        $cacheKey = hash('md5', implode(',', $skus));
 
-        if (!empty($notFoundedSkus)) {
-            throw new NoSuchEntityException(
-                __('Following products with requested skus were not found: %1', implode($notFoundedSkus, ', '))
-            );
+        if (null === $this->getProductIdsBySkusCache->get($cacheKey)) {
+            $idsBySkus = $this->productResource->getProductsIdsBySkus($skus);
+            $notFoundedSkus = array_diff($skus, array_keys($idsBySkus));
+
+            if (!empty($notFoundedSkus)) {
+                throw new NoSuchEntityException(
+                    __('Following products with requested skus were not found: %1', implode($notFoundedSkus, ', '))
+                );
+            }
+
+            $this->getProductIdsBySkusCache->set($cacheKey, $idsBySkus);
         }
 
-        return $idsBySkus;
+        return $this->getProductIdsBySkusCache->get($cacheKey);
     }
 }
