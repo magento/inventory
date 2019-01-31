@@ -69,7 +69,6 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
 
     /**
      * @inheritdoc
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
@@ -83,7 +82,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
-        
+
         if ((bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE]) {
             /** @var StockItemConfigurationInterface $stockItemConfiguration */
             $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
@@ -91,20 +90,18 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
             $qtyWithReservation = $stockItemData[GetStockItemDataInterface::QUANTITY] +
                 $this->getReservationsQuantity->execute($sku, $stockId);
             $qtyLeftInStock = $qtyWithReservation - $stockItemConfiguration->getMinQty() - $requestedQty;
-            $isEnoughQty = $qtyLeftInStock >= 0;
-        } else {
-            $isEnoughQty = false;
+
+            if ($qtyLeftInStock < 0) {
+                $errors = [
+                    $this->productSalabilityErrorFactory->create([
+                        'code' => 'is_salable_with_reservations-not_enough_qty',
+                        'message' => __('The requested qty is not available')
+                    ])
+                ];
+                return $this->productSalableResultFactory->create(['errors' => $errors]);
+            }
         }
 
-        if (!$isEnoughQty) {
-            $errors = [
-                $this->productSalabilityErrorFactory->create([
-                    'code' => 'is_salable_with_reservations-not_enough_qty',
-                    'message' => __('The requested qty is not available')
-                ])
-            ];
-            return $this->productSalableResultFactory->create(['errors' => $errors]);
-        }
         return $this->productSalableResultFactory->create(['errors' => []]);
     }
 }
