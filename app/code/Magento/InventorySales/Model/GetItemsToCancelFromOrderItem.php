@@ -113,7 +113,11 @@ class GetItemsToCancelFromOrderItem
                 );
                 if ($bundleSelectionAttributes) {
                     $shippedQty = $bundleSelectionAttributes['qty'] * $orderItem->getQtyShipped();
-                    $qty = $item->getQtyOrdered() - max($shippedQty, $item->getQtyInvoiced()) - $item->getQtyCanceled();
+
+                    $invoicedQty = $bundleSelectionAttributes['qty'] * $item->getParentItem()->getQtyInvoiced();
+                    $canceledQty = $bundleSelectionAttributes['qty'] * $item->getParentItem()->getQtyCanceled();
+                    $qty = $item->getQtyOrdered() - max($shippedQty, $invoicedQty) - $canceledQty;
+                    
                     $itemSku = $this->getSkuFromOrderItem->execute($item);
                     $itemsToCancel[] = $this->itemsToSellFactory->create([
                         'sku' => $itemSku,
