@@ -11,6 +11,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Model\Indexer\Source\SourceItemProcessor;
 
 /**
  * Reindex after source items save plugin
@@ -28,13 +29,23 @@ class ReindexAfterSourceItemsSavePlugin
     private $sourceItemIndexer;
 
     /**
+     * @var $sourceItemProcessor
+     */
+    private $sourceItemProcessor;
+
+    /**
      * @param GetSourceItemIds $getSourceItemIds
      * @param SourceItemIndexer $sourceItemIndexer
+     * @param SourceItemProcessor $sourceItemProcessor
      */
-    public function __construct(GetSourceItemIds $getSourceItemIds, SourceItemIndexer $sourceItemIndexer)
-    {
+    public function __construct(
+        GetSourceItemIds $getSourceItemIds,
+        SourceItemIndexer $sourceItemIndexer,
+        SourceItemProcessor $sourceItemProcessor
+    ) {
         $this->getSourceItemIds = $getSourceItemIds;
         $this->sourceItemIndexer = $sourceItemIndexer;
+        $this->sourceItemProcessor = $sourceItemProcessor;
     }
 
     /**
@@ -50,8 +61,10 @@ class ReindexAfterSourceItemsSavePlugin
         array $sourceItems
     ) {
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
-        if (count($sourceItemIds)) {
+        if (count($sourceItemIds) && !$this->sourceItemProcessor->isIndexerScheduled()) {
             $this->sourceItemIndexer->executeList($sourceItemIds);
+            return;
         }
+        $this->sourceItemProcessor->markIndexerAsInvalid();
     }
 }
