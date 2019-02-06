@@ -69,7 +69,9 @@ class SalableQuantity extends AbstractModifier
             return $data;
         }
 
-        $data[$product->getId()]['salable_quantity'] = $this->getSalableQuantityDataBySku->execute($product->getSku());
+        $data[$product->getId()]['salable_quantity'] = $this->getSalableQuantityDataBySku->execute([
+            $product->getSku()
+        ])[$product->getSku()];
         return $data;
     }
 

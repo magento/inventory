@@ -13,6 +13,7 @@ use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
+use Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface;
 
 /**
  * Add grid column with salable quantity data
@@ -35,11 +36,17 @@ class SalableQuantity extends Column
     private $getSalableQuantityDataBySku;
 
     /**
+     * @var GetAllowedProductTypesForSourceItemManagementInterface
+     */
+    private $getAllowedProductTypesForSourceItemManagement;
+
+    /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param GetSalableQuantityDataBySku $getSalableQuantityDataBySku
+     * @param GetAllowedProductTypesForSourceItemManagementInterface $getAllowedProductTypesForSourceItemManagement
      * @param array $components
      * @param array $data
      */
@@ -49,6 +56,7 @@ class SalableQuantity extends Column
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         IsSingleSourceModeInterface $isSingleSourceMode,
         GetSalableQuantityDataBySku $getSalableQuantityDataBySku,
+        GetAllowedProductTypesForSourceItemManagementInterface $getAllowedProductTypesForSourceItemManagement,
         array $components = [],
         array $data = []
     ) {
@@ -56,6 +64,7 @@ class SalableQuantity extends Column
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->getSalableQuantityDataBySku = $getSalableQuantityDataBySku;
+        $this->getAllowedProductTypesForSourceItemManagement = $getAllowedProductTypesForSourceItemManagement;
     }
 
     /**
@@ -64,14 +73,25 @@ class SalableQuantity extends Column
     public function prepareDataSource(array $dataSource)
     {
         if ($dataSource['data']['totalRecords'] > 0) {
-            foreach ($dataSource['data']['items'] as &$row) {
-                $row['salable_quantity'] =
-                    $this->isSourceItemManagementAllowedForProductType->execute($row['type_id']) === true
-                    ? $this->getSalableQuantityDataBySku->execute($row['sku'])
-                    : [];
+            $skus = [];
+            $allowedProductTypes = $this->getAllowedProductTypesForSourceItemManagement->execute();
+            foreach ($dataSource['data']['items'] as $key => $item) {
+                if (in_array($item['type_id'], $allowedProductTypes)) {
+                    $skus[] = $item['sku'];
+                    continue;
+                }
+                $dataSource['data']['items'][$key]['salable_quantity'] = [];
+            }
+            unset($item);
+            $salableQuantityBySkus = $this->getSalableQuantityDataBySku->execute($skus);
+
+            foreach ($dataSource['data']['items'] as &$item) {
+                if (!isset($item['salable_quantity'])) {
+                    $item['salable_quantity'] = $salableQuantityBySkus[$item['sku']];
+                }
             }
         }
-        unset($row);
+        unset($item);
 
         return $dataSource;
     }
