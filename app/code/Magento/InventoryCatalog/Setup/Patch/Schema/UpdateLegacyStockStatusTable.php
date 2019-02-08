@@ -170,13 +170,13 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
 
     /**
      * @param AdapterInterface $connection
-     * @param                  $tableName
+     * @param string $tableName
      *
-     * @return string
+     * @throws \Zend_Db_Exception
      */
     protected function _createLegacyIndexTable($connection, $tableName)
     {
-        $connection->newTable($tableName)
+        $table = $connection->newTable($tableName)
             ->addColumn(
                 'product_id',
                 Table::TYPE_INTEGER,
@@ -229,23 +229,41 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
                 [
                     'nullable' => false,
                 ]
+            )
+            ->setComment('Cataloginventory Stock')
+            ->setOption('charset', 'utf8')
+            ->setOption('type', 'InnoDB')
+            ->addIndex(
+                $connection->getIndexName(
+                    $tableName,
+                    [
+                        'product_id',
+                        'website_id',
+                        'stock_id',
+                    ],
+                    AdapterInterface::INDEX_TYPE_PRIMARY
+                ),
+                [
+                    'product_id',
+                    'website_id',
+                    'stock_id',
+                ],
+                ['type' => AdapterInterface::INDEX_TYPE_PRIMARY]
+            )->addIndex(
+                $connection->getIndexName($tableName, ['stock_id']),
+                ['stock_id']
+            )->addIndex(
+                $connection->getIndexName($tableName, ['website_id']),
+                ['website_id']
+            )->addIndex(
+                $connection->getIndexName($tableName, ['is_salable']),
+                ['is_salable']
+            )->addIndex(
+                $connection->getIndexName($tableName, ['sku']),
+                ['sku']
             );
 
-        return "
-        CREATE TABLE `{$tableName}` (
-            `product_id` INT(10) UNSIGNED NOT NULL COMMENT 'Product Id',
-            `website_id` SMALLINT(5) UNSIGNED NOT NULL COMMENT 'Website Id',
-            `stock_id` SMALLINT(5) UNSIGNED NOT NULL COMMENT 'Stock Id',
-            `quantity` DECIMAL(12,4) NOT NULL DEFAULT '0.0000' COMMENT 'Qty',
-            `is_salable` SMALLINT(5) UNSIGNED NOT NULL COMMENT 'Is salable',
-            `sku` VARCHAR(64) NOT NULL COMMENT 'Sku',
-            PRIMARY KEY (`product_id`,`website_id`,`stock_id`),
-            KEY `CATALOGINVENTORY_STOCK_STATUS_STOCK_ID` (`stock_id`),
-            KEY `CATALOGINVENTORY_STOCK_STATUS_WEBSITE_ID` (`website_id`),
-            KEY `CATALOGINVENTORY_STOCK_STATUS_SALABLE_STATUS` (`is_salable`),
-            KEY `CATALOGINVENTORY_STOCK_STATUS_SKU` (`sku`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cataloginventory Stock'
-        ";
+        $connection->createTable($table);
     }
 
     /**
