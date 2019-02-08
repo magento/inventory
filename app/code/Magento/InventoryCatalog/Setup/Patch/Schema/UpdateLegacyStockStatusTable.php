@@ -84,8 +84,10 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
         // Check if there exists a view for the legacy stock status.
         $legacyStockView = $connection->query($this->_fetchLegacyViewQuery(), [$viewToLegacyIndex])->fetch();
         if ($legacyStockView) {
+            // Drop old version of view
             $connection->query("DROP VIEW {$viewToLegacyIndex}");
-            $connection->query($this->_createLegacyIndexTable($connection, $viewToLegacyIndex));
+            // Create legacy table index
+            $this->_createLegacyIndexTable($connection, $viewToLegacyIndex);
             // Copy data from legacy table
             $this->_copyLegacyData($legacyStockStatusTable, $viewToLegacyIndex, $connection);
         }
