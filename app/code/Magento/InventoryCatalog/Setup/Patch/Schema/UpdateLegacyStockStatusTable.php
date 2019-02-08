@@ -79,7 +79,6 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
         $defaultStockId = $this->defaultStockProvider->getId();
         $viewToLegacyIndex = $this->stockIndexTableNameResolver->execute($defaultStockId);
         $legacyStockStatusTable = $this->schemaSetup->getTable('cataloginventory_stock_status');
-        $productTable = $this->schemaSetup->getTable('catalog_product_entity');
         $connection = $this->schemaSetup->getConnection();
 
         // Check if there exists a view for the legacy stock status.
@@ -88,8 +87,7 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
             $connection->query("DROP VIEW {$viewToLegacyIndex}");
             $connection->query($this->_createLegacyIndexTable($connection, $viewToLegacyIndex));
             // Copy data from legacy table
-            $connection->query($this->_copyLegacyData($legacyStockStatusTable, $viewToLegacyIndex));
-
+            $this->_copyLegacyData($legacyStockStatusTable, $viewToLegacyIndex, $connection);
         }
         $this->schemaSetup->endSetup();
         return $this;
@@ -130,6 +128,7 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
 
     /**
      * @param string $targetTable
+     * @param string $event
      *
      * @return string
      */
@@ -146,31 +145,38 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
     }
 
     /**
-     * @param string $legacyTable
-     * @param string $legacyIndexTable
-     *
-     * @return string
+     * @param string           $legacyTable
+     * @param string           $legacyIndexTable
+     * @param AdapterInterface $connection
      */
-    protected function _copyLegacyData($legacyTable, $legacyIndexTable)
+    protected function _copyLegacyData($legacyTable, $legacyIndexTable, $connection)
     {
-        return "
-        INSERT INTO {$legacyIndexTable}
-        SELECT product_id,
-               website_id,
-               stock_id,
-               qty,
-               stock_status,
-               sku
-        FROM {$legacyTable} as stock_table
-        JOIN catalog_product_entity ON (
-             catalog_product_entity.entity_id = stock_table.product_id
-        )
-        ";
+        $select = $connection->select()
+            ->from(
+                [
+                    'inventory_stock_status' => $legacyTable,
+                ],
+                [
+                    'product_id',
+                    'website_id',
+                    'stock_id',
+                    'qty',
+                    'stock_status',
+                    'sku',
+                ]
+            )->join(
+                ['catalog_product_entity' => $connection->getTableName('catalog_product_entity')],
+                'catalog_product_entity.entity_id = inventory_stock_status.product_id'
+            );
+
+        $select->insertFromSelect(
+            $legacyIndexTable
+        );
     }
 
     /**
      * @param AdapterInterface $connection
-     * @param string $tableName
+     * @param string           $tableName
      *
      * @throws \Zend_Db_Exception
      */
