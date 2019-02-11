@@ -1,6 +1,6 @@
 # InventoryInStorePickupApi module
 
-The `InventoryInStorePickupApi` module provides Inventory Management service contracts. 
+The `InventoryInStorePickupApi` module provides service contracts for In-Store Pickup functionality.
 
 This module is part of the new inventory infrastructure. The
 [Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
@@ -14,7 +14,7 @@ is provided by a 3rd-party module, the module cannot be deleted or disabled.
 ## Extensibility
 
 The `InventoryInStorePickupApi` module contains extension points and APIs that 3rd-party developers
-can use to provide custom inventory source selection algorithm functionality.
+can use to provide customization of In-Store Pickup functionality
 
 ### Public APIs
 
