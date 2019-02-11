@@ -8,7 +8,9 @@ use Magento\Framework\Setup\Patch\SchemaPatchInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
-use Magento\Framework\DB\Ddl\{Table, TriggerFactory, Trigger};
+use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\DB\Ddl\Trigger;
+use Magento\Framework\DB\Ddl\TriggerFactory;
 
 /**
  * Optimization for MySQL View Default Stock
