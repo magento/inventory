@@ -49,7 +49,7 @@
             </group>
         </section>
         <section id="carriers" translate="label" type="text" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Shipping Methods</label>
+            <label>Delivery Methods</label>
             <tab>sales</tab>
             <resource>Magento_Shipping::carriers</resource>
         </section>
