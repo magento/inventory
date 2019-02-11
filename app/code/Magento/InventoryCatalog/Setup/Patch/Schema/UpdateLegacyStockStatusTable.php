@@ -141,10 +141,23 @@ class UpdateLegacyStockStatusTable implements SchemaPatchInterface
         switch ($event) {
             case Trigger::EVENT_INSERT:
             case Trigger::EVENT_UPDATE:
-                return "INSERT INTO {$targetTable} VALUES(NEW.product_id, NEW.website_id, NEW.stock_id, NEW.qty, NEW.stock_status, (SELECT sku FROM catalog_product_entity WHERE entity_id = NEW.product_id)) ON DUPLICATE KEY UPDATE quantity = NEW.qty, is_salable = NEW.stock_status;";
+                $selectGetSku = "(SELECT sku FROM catalog_product_entity WHERE entity_id = NEW.product_id)";
+                return sprintf(
+                    "INSERT INTO %s VALUES(%s) %s",
+                    $targetTable,
+                    sprintf(
+                        "NEW.product_id, NEW.website_id, NEW.stock_id, NEW.qty, NEW.stock_status, %s",
+                        $selectGetSku
+                    ),
+                    "ON DUPLICATE KEY UPDATE quantity = NEW.qty, is_salable = NEW.stock_status;"
+                );
 
             case Trigger::EVENT_DELETE:
-                return "DELETE FROM {$targetTable} WHERE product_id = OLD.product_id AND  website_id = OLD.website_id AND stock_id = OLD.stock_id;";
+                return sprintf(
+                    "DELETE FROM %s %s",
+                    $targetTable,
+                    "WHERE product_id = OLD.product_id AND  website_id = OLD.website_id AND stock_id = OLD.stock_id;"
+                );
         }
     }
 
