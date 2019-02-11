@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <config>
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesFromPostcode"
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesFromPostcodeInterface"
                 type="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesFromPostcode"/>
 </config>
