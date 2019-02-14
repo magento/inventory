@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="load_in_store_pickup_on_get_list" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetListPlugin"/>
+        <plugin name="load_in_store_pickup_on_get" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetPlugin"/>
+        <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
+    </type>
+</config>
+
+

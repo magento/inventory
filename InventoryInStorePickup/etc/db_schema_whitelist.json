@@ -1,0 +1,7 @@
+{
+  "inventory_source": {
+    "column": {
+      "in_store_pickup": true
+    }
+  }
+}
