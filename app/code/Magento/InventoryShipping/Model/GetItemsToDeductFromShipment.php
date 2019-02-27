@@ -14,6 +14,7 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Api\OrderItemRepositoryInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Shipment\Item;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterface;
@@ -55,19 +56,24 @@ class GetItemsToDeductFromShipment
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
      * @param Json $jsonSerializer
      * @param ItemToDeductInterfaceFactory $itemToDeduct
+     * @param OrderItemRepositoryInterface|null $orderItemRepository
+     * @param SearchCriteriaBuilder|null $searchCriteriaBuilder
      */
     public function __construct(
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
         Json $jsonSerializer,
         ItemToDeductInterfaceFactory $itemToDeduct,
-        OrderItemRepositoryInterface $orderItemRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        OrderItemRepositoryInterface $orderItemRepository = null,
+        SearchCriteriaBuilder $searchCriteriaBuilder = null
     ) {
         $this->jsonSerializer = $jsonSerializer;
         $this->itemToDeduct = $itemToDeduct;
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
         $this->orderItemRepository = $orderItemRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+
+        $this->orderItemRepository = $orderItemRepository ?: ObjectManager::getInstance()->get(OrderItemRepositoryInterface::class);
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder ?: ObjectManager::getInstance()->get(SearchCriteriaBuilder::class);
     }
 
     /**
