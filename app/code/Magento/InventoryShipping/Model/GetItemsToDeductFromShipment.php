@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Model;
 
-use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
@@ -41,11 +40,6 @@ class GetItemsToDeductFromShipment
      * @var OrderItemRepositoryInterface
      */
     private $orderItemRepository;
-
-    /**
-     * @var SearchCriteria
-     */
-    private $searchCriteria;
 
     /**
      * @var SearchCriteriaBuilder
