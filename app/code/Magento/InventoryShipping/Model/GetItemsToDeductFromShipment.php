@@ -66,8 +66,10 @@ class GetItemsToDeductFromShipment
         $this->orderItemRepository = $orderItemRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
 
-        $this->orderItemRepository = $orderItemRepository ?: ObjectManager::getInstance()->get(OrderItemRepositoryInterface::class);
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder ?: ObjectManager::getInstance()->get(SearchCriteriaBuilder::class);
+        $this->orderItemRepository = $orderItemRepository ?:
+            ObjectManager::getInstance()->get(OrderItemRepositoryInterface::class);
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder ?:
+            ObjectManager::getInstance()->get(SearchCriteriaBuilder::class);
     }
 
     /**
