@@ -86,6 +86,9 @@ class GetItemsToDeductFromShipment
 
         /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
         foreach ($shipment->getAllItems() as $shipmentItem) {
+            if (!$shipmentItem->getOrderItemId() || !isset($orderItems[$shipmentItem->getOrderItemId()])) {
+                continue;
+            }
             $orderItem = $orderItems[$shipmentItem->getOrderItemId()];
             if ($orderItem->getHasChildren()) {
                 if (!$orderItem->isDummy(true)) {
