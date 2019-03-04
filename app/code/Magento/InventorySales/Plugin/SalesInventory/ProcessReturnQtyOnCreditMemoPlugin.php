@@ -90,7 +90,7 @@ class ProcessReturnQtyOnCreditMemoPlugin
 
             if ($this->isValidItem($itemSku, $orderItem->getProductType())) {
                 $qty = (float)$item->getQty();
-                $processedQty = $orderItem->getQtyCanceled() - $orderItem->getQtyRefunded();
+                $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
                 $items[$itemSku] = [
                     'qty' => ($items[$itemSku]['qty'] ?? 0) + $qty,
                     'processedQty' => ($items[$itemSku]['processedQty'] ?? 0) + (float)$processedQty
@@ -111,10 +111,10 @@ class ProcessReturnQtyOnCreditMemoPlugin
 
     /**
      * @param string $sku
-     * @param string $typeId
+     * @param string|null $typeId
      * @return bool
      */
-    private function isValidItem(string $sku, string $typeId): bool
+    private function isValidItem(string $sku, ?string $typeId): bool
     {
         //TODO: https://github.com/magento-engcom/msi/issues/1761
         // If product type located in table sales_order_item is "grouped" replace it with "simple"
@@ -122,9 +122,9 @@ class ProcessReturnQtyOnCreditMemoPlugin
             $typeId = 'simple';
         }
 
-        $productType = $this->getProductTypesBySkus->execute(
+        $productType = $typeId ?: $this->getProductTypesBySkus->execute(
             [$sku]
-        )[$sku] ?? $typeId;
+        )[$sku];
 
         return $this->isSourceItemManagementAllowedForProductType->execute($productType);
     }
