@@ -30,14 +30,14 @@
         <click selector="{{AdminProductGridActionSection.addSimpleProduct}}" stepKey="clickAddSimpleProduct"/>
 
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource">
-            <argument name="sourceCode" value="default"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
         <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignSource">
-            <argument name="sourceCode" value="default"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
         <comment userInput="Reassign of the same source should be possible." stepKey="reassignShouldBePossible"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="reassignSource">
-            <argument name="sourceCode" value="default"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
     </test>
 </tests>
