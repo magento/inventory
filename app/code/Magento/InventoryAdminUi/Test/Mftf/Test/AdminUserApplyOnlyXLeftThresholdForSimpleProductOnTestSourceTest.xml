@@ -66,7 +66,7 @@
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditCreatedProduct"/>
             <waitForPageLoad time="30" stepKey="waitForCreatedProductPageLoad"/>
-            <click selector="{{AdminProductSourcesGrid.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
+            <click selector="{{AdminProductSourcesGrid.unassignSourceByRowIndex('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>

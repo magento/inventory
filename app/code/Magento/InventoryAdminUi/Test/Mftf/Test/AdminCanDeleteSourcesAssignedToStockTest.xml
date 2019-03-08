@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <createData entity="BasicMsiStock1" stepKey="createStock1"/>
             <createData entity="FullSource1" stepKey="createSource1"/>
@@ -65,7 +65,7 @@
         <see selector="{{AdminProductSourcesGrid.rowByIndex('3')}}" userInput="$$createSource4.source[source_code]$$" stepKey="seeSource4CodeInGrid1"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('3')}}" userInput="$$createSource4.source[name]$$" stepKey="seeSource4NameInGrid1"/>
 
-        <click selector="{{AdminProductSourcesGrid.rowDeleteByCode($$createSource2.source[source_code]$$)}}" stepKey="clickOnDeleteForSource2"/>
+        <click selector="{{AdminProductSourcesGrid.unassignSourceByCode($$createSource2.source[source_code]$$)}}" stepKey="clickOnDeleteForSource2"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[source_code]$$" stepKey="seeSource1CodeInGrid2"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSource1NameInGrid2"/>
         <dontSee selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource2.source[source_code]$$" stepKey="seeSource2CodeInGrid2"/>
@@ -85,7 +85,7 @@
         <see selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" userInput="$$createSource4.source[source_code]$$" stepKey="seeSource4CodeInGrid3"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" userInput="$$createSource4.source[name]$$" stepKey="seeSource4NameInGrid3"/>
 
-        <click selector="{{AdminProductSourcesGrid.rowDeleteByCode($$createSource1.source[source_code]$$)}}" stepKey="clickOnDeleteForSource4"/>
+        <click selector="{{AdminProductSourcesGrid.unassignSourceByCode($$createSource1.source[source_code]$$)}}" stepKey="clickOnDeleteForSource4"/>
         <dontSee selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[source_code]$$" stepKey="seeSource1CodeInGrid4"/>
         <dontSee selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSource1NameInGrid4"/>
         <dontSee selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource2.source[source_code]$$" stepKey="seeSource2CodeInGrid4"/>
