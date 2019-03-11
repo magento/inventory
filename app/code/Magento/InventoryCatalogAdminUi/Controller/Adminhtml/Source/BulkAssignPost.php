@@ -119,7 +119,7 @@ class BulkAssignPost extends Action
         }
 
         $this->massSchedule->publishMass(
-            'async.V1.inventory.bulk-product-source-assign.POST',
+            'async.magento.inventorycatalogapi.api.bulksourceassigninterface.execute.post',
             $operations,
             null,
             $userId

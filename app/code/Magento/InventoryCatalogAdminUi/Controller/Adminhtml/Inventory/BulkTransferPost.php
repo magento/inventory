@@ -131,7 +131,7 @@ class BulkTransferPost extends Action
         }
 
         $this->massSchedule->publishMass(
-            'async.V1.inventory.bulk-product-source-transfer.POST',
+            'async.magento.inventorycatalogapi.api.bulkinventorytransferinterface.execute.post',
             $operations,
             null,
             $userId
