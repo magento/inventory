@@ -1,0 +1,13 @@
+{
+  "inventory_pickup_point_order": {
+    "column": {
+      "order_id": true,
+      "source_code": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "INV_ISP_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+      "INV_ISP_ORDER_SOURCE_CODE_INV_SOURCE_SOURCE_CODE": true
+    }
+  }
+}
