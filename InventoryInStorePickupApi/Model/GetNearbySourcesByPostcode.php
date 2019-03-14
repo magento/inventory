@@ -7,18 +7,19 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetDistanceProviderCodeInterface;
-use Magento\InventoryInStorePickupApi\Api\GetNearbySourcesFromPostcodeInterface;
+use Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface;
 
 /**
- * Get latitude and longitude object from address
+ * Get nearby sources of a given zip code.
  *
  * @api
  */
-class GetNearbySourcesFromPostcode implements GetNearbySourcesFromPostcodeInterface
+class GetNearbySourcesByPostcode implements GetNearbySourcesByPostcodeInterface
 {
     /**
-     * @var GetNearbySourcesFromPostcodeInterface[]
+     * @var GetNearbySourcesByPostcodeInterface[]
      */
     private $providers;
 
@@ -28,20 +29,21 @@ class GetNearbySourcesFromPostcode implements GetNearbySourcesFromPostcodeInterf
     private $getDistanceProviderCode;
 
     /**
-     * GetNearbySourcesFromPostcode constructor.
-     *
      * @param GetDistanceProviderCodeInterface $getDistanceProviderCode
-     * @param GetNearbySourcesFromPostcodeInterface[] $providers
-     * @SuppressWarnings(PHPMD.LongVariable)
+     * @param GetNearbySourcesByPostcodeInterface[] $providers
      */
     public function __construct(
         GetDistanceProviderCodeInterface $getDistanceProviderCode,
         array $providers
     ) {
         foreach ($providers as $providerCode => $provider) {
-            if (!($provider instanceof GetNearbySourcesFromPostcodeInterface)) {
+            if (!($provider instanceof GetNearbySourcesByPostcodeInterface)) {
                 throw new \InvalidArgumentException(
-                    'LatLng provider ' . $providerCode . ' must implement ' . GetNearbySourcesFromPostcodeInterface::class
+                    sprintf(
+                        "Nearby Sources provider %s must implement %s",
+                        $providerCode,
+                        GetNearbySourcesByPostcodeInterface::class
+                    )
                 );
             }
         }
@@ -53,7 +55,7 @@ class GetNearbySourcesFromPostcode implements GetNearbySourcesFromPostcodeInterf
     /**
      * @inheritdoc
      */
-    public function execute(string $country, string $zipcode, int $radius)
+    public function execute(string $country, string $postcode, int $radius): array
     {
         $code = $this->getDistanceProviderCode->execute();
         if (!isset($this->providers[$code])) {
@@ -62,7 +64,6 @@ class GetNearbySourcesFromPostcode implements GetNearbySourcesFromPostcodeInterf
             );
         }
 
-        return $this->providers[$code]->execute($country, $zipcode, $radius);
+        return $this->providers[$code]->execute($country, $postcode, $radius);
     }
-
 }
