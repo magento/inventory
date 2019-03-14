@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Api;
 
 /**
- * Get nearby sources of a given zip code, based on the given radius in KM
+ * Get nearby sources of a given zip code, based on the given radius in KM.
  *
  * @api
  */
-interface GetNearbySourcesFromPostcodeInterface
+interface GetNearbySourcesByPostcodeInterface
 {
     /**
      * Get nearby sources to a given postcode code, based on the given radius in KM
@@ -20,7 +20,9 @@ interface GetNearbySourcesFromPostcodeInterface
      * @param string $country
      * @param string $postcode
      * @param int $radius
-     * @return array
+     * @return \Magento\InventoryApi\Api\Data\SourceInterface[]
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(string $country, string $postcode, int $radius);
+    public function execute(string $country, string $postcode, int $radius): array;
 }
