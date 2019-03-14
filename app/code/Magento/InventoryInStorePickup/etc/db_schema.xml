@@ -9,7 +9,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="inventory_pickup_point_order" resource="default" engine="innodb">
         <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Order ID" />
-        <column xsi:type="varchar" name="source_code" nullable="false" comment="Pickup Point ID"/>
+        <column xsi:type="varchar" name="pickup_point_id" nullable="false" comment="Pickup Point ID"/>
         <constraint xsi:type="foreign" referenceId="INV_ISP_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID" table="inventory_pickup_point_order" column="order_id" referenceTable="sales_order"  referenceColumn="entity_id" onDelete="CASCADE"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="order_id"/>
