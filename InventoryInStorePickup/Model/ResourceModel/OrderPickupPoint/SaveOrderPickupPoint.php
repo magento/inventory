@@ -16,7 +16,7 @@ use Magento\Framework\App\ResourceConnection;
 class SaveOrderPickupPoint
 {
     const ORDER_ID        = 'order_id';
-    const PICKUP_POINT_ID = 'source_code';
+    const PICKUP_POINT_ID = 'pickup_point_id';
 
     /**
      * @var \Magento\Framework\App\ResourceConnection

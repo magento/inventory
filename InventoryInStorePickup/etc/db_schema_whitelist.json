@@ -2,7 +2,7 @@
   "inventory_pickup_point_order": {
     "column": {
       "order_id": true,
-      "source_code": true
+      "pickup_point_id": true
     },
     "constraint": {
       "PRIMARY": true,
