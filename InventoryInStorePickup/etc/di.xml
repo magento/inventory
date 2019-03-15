@@ -10,4 +10,14 @@
         <plugin name="get_pickup_point_for_order" type="Magento\InventoryInStorePickup\Plugin\Sales\Order\GetPickupPointForOrderPlugin"/>
         <plugin name="save_pickup_point_for_order" type="Magento\InventoryInStorePickup\Plugin\Sales\Order\SavePickupPointForOrderPlugin"/>
     </type>
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface"
+            type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
+
+    <type name="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="offline" xsi:type="object">Magento\InventoryInStorePickup\Model\DistanceProvider\Offline\GetNearbySourcesByPostcode</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
