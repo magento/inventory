@@ -10,13 +10,12 @@ namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupPoint;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Class SaveOrderPickupPoint.
  * Save Order Pickup Point
  */
 class SaveOrderPickupPoint
 {
-    const ORDER_ID        = 'order_id';
-    const PICKUP_POINT_ID = 'pickup_point_id';
+    private const ORDER_ID        = 'order_id';
+    private const PICKUP_POINT_ID = 'pickup_point_id';
 
     /**
      * @var \Magento\Framework\App\ResourceConnection

@@ -13,7 +13,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
- * Class GetPickupPointForOrderPlugin.
  * Set Pickup Point Identifier to Order Entity.
  */
 class GetPickupPointForOrderPlugin

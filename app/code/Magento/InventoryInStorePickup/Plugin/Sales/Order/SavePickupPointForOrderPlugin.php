@@ -11,6 +11,9 @@ use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupPoint\SaveOrde
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
+/**
+ * Save Pickup Point Identifier, related to the Order Entity.
+ */
 class SavePickupPointForOrderPlugin
 {
     /**

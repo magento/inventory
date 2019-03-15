@@ -9,7 +9,6 @@
     <module name="Magento_InventoryInStorePickup" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Sales" />
-            <module name="Magento_Inventory" />
         </sequence>
     </module>
 </config>
