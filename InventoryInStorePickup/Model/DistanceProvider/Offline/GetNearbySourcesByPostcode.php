@@ -72,7 +72,8 @@ class GetNearbySourcesByPostcode implements GetNearbySourcesByPostcodeInterface
         $query = $connection->select()
             ->from($sourceTable)
             ->columns(['*', $this->createDistanceColumn($lat, $lng) . ' AS distance'])
-            ->having('distance <= ?', $radius);
+            ->having('distance <= ?', $radius)
+            ->order('distance ASC');
 
         $rows = $connection->fetchAll($query);
         $results = [];
