@@ -12,6 +12,14 @@
         <plugin name="load_in_store_pickup_on_get" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetPlugin"/>
         <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
     </type>
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface"
+                type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
+
+    <type name="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="offline" xsi:type="object">Magento\InventoryInStorePickup\Model\DistanceProvider\Offline\GetNearbySourcesByPostcode</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
-
-
