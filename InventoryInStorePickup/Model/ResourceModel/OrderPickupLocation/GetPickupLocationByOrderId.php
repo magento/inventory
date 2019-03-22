@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupPoint;
+namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation;
 
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Get Pickup Point identifier by order identifier.
+ * Get Pickup Location identifier by order identifier.
  */
-class GetPickupPointByOrderId
+class GetPickupLocationByOrderId
 {
     private const ORDER_ID        = 'order_id';
-    private const PICKUP_POINT_ID = 'pickup_point_id';
+    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
      * @var \Magento\Framework\App\ResourceConnection
@@ -23,7 +23,7 @@ class GetPickupPointByOrderId
     private $connection;
 
     /**
-     * GetPickupPointByOrderId constructor.
+     * GetPickupLocationByOrderId constructor.
      *
      * @param \Magento\Framework\App\ResourceConnection $connection
      */
@@ -34,7 +34,7 @@ class GetPickupPointByOrderId
     }
 
     /**
-     * Fetch pickup point identifier by order identifier.
+     * Fetch pickup location identifier by order identifier.
      *
      * @param int $orderId
      *
@@ -43,11 +43,11 @@ class GetPickupPointByOrderId
     public function execute(int $orderId):?string
     {
         $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_point_order');
+        $table = $this->connection->getTableName('inventory_pickup_location_order');
 
         $select = $connection->select()
              ->from($table, [
-                     self::PICKUP_POINT_ID => self::PICKUP_POINT_ID
+                     self::PICKUP_LOCATION_CODE => self::PICKUP_LOCATION_CODE
              ])
              ->where(self::ORDER_ID . '= ?', $orderId)
              ->limit(1);
