@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupPoint;
+namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation;
 
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Save Order Pickup Point
+ * Save Order Pickup Location
  */
-class SaveOrderPickupPoint
+class SaveOrderPickupLocation
 {
     private const ORDER_ID        = 'order_id';
-    private const PICKUP_POINT_ID = 'pickup_point_id';
+    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
      * @var \Magento\Framework\App\ResourceConnection
@@ -23,7 +23,7 @@ class SaveOrderPickupPoint
     private $connection;
 
     /**
-     * GetPickupPointByOrderId constructor.
+     * GetPickupLocationByOrderId constructor.
      *
      * @param \Magento\Framework\App\ResourceConnection $connection
      */
@@ -34,21 +34,21 @@ class SaveOrderPickupPoint
     }
 
     /**
-     * Fetch pickup point identifier by order identifier.
+     * Fetch pickup location identifier by order identifier.
      *
      * @param int $orderId
-     * @param string $pickupPointId
+     * @param string $pickupLocationCode
      *
      * @return void
      */
-    public function execute(int $orderId, string $pickupPointId):void
+    public function execute(int $orderId, string $pickupLocationCode):void
     {
         $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_point_order');
+        $table = $this->connection->getTableName('inventory_pickup_location_order');
 
         $data = [
             self::ORDER_ID => $orderId,
-            self::PICKUP_POINT_ID => $pickupPointId
+            self::PICKUP_LOCATION_CODE => $pickupLocationCode
         ];
 
         $connection->insertOnDuplicate($table, $data);

@@ -7,15 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\Sales\Order;
 
-use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupPoint\GetPickupPointByOrderId;
+use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation\GetPickupLocationByOrderId;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
- * Set Pickup Point Identifier to Order Entity.
+ * Set Pickup Location identifier to Order Entity.
  */
-class GetPickupPointForOrderPlugin
+class GetPickupLocationForOrderPlugin
 {
     /**
      * @var OrderExtensionFactory
@@ -23,22 +23,22 @@ class GetPickupPointForOrderPlugin
     private $orderExtensionFactory;
 
     /**
-     * @var GetPickupPointByOrderId
+     * @var GetPickupLocationByOrderId
      */
-    private $getPickupPointByOrderId;
+    private $getPickupLocationByOrderId;
 
     /**
-     * GetPickupPointForOrderPlugin constructor.
+     * GetPickupLocationForOrderPlugin constructor.
      *
-     * @param OrderExtensionFactory   $orderExtensionFactory
-     * @param GetPickupPointByOrderId $getPickupPointByOrderId
+     * @param OrderExtensionFactory      $orderExtensionFactory
+     * @param GetPickupLocationByOrderId $getPickupLocationByOrderId
      */
     public function __construct(
         OrderExtensionFactory $orderExtensionFactory,
-        GetPickupPointByOrderId $getPickupPointByOrderId
+        GetPickupLocationByOrderId $getPickupLocationByOrderId
     ) {
         $this->orderExtensionFactory = $orderExtensionFactory;
-        $this->getPickupPointByOrderId = $getPickupPointByOrderId;
+        $this->getPickupLocationByOrderId = $getPickupLocationByOrderId;
     }
 
     /**
@@ -58,14 +58,14 @@ class GetPickupPointForOrderPlugin
             $extension = $this->orderExtensionFactory->create();
         }
 
-        if ($extension->getPickupPointId()) {
+        if ($extension->getPickupLocationCode()) {
             return $order;
         }
 
-        $pickupPointId = $this->getPickupPointByOrderId->execute((int)$order->getEntityId());
+        $pickupLocationCode = $this->getPickupLocationByOrderId->execute((int)$order->getEntityId());
 
-        if ($pickupPointId) {
-            $extension->setPickupPointId($pickupPointId);
+        if ($pickupLocationCode) {
+            $extension->setPickupLocationCode($pickupLocationCode);
         }
 
         $order->setExtensionAttributes($extension);

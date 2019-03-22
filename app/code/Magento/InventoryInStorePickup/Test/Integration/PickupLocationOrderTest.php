@@ -15,7 +15,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class PickupPointOrderTest extends TestCase
+class PickupLocationOrderTest extends TestCase
 {
     /** @var ObjectManagerInterface */
     private $objectManager;
@@ -52,7 +52,7 @@ class PickupPointOrderTest extends TestCase
      *
      * @magentoDbIsolation disabled
      */
-    public function testPickupPointSaveWithOrder()
+    public function testPickupLocationSaveWithOrder()
     {
         $sourceId = 'eu-1';
 
@@ -70,16 +70,16 @@ class PickupPointOrderTest extends TestCase
             $extension = $this->orderExtensionFactory->create();
         }
 
-        $extension->setPickupPointId($sourceId);
+        $extension->setPickupLocationCode($sourceId);
         $createdOrder->setExtensionAttributes($extension);
 
         $this->orderRepository->save($createdOrder);
 
         // Remove value to re-load from DB during 'get'.
-        $extension->setPickupPointId(null);
+        $extension->setPickupLocationCode(null);
 
         $order = $this->orderRepository->get($orderId);
 
-        $this->assertEquals($order->getExtensionAttributes()->getPickupPointId(), $sourceId);
+        $this->assertEquals($order->getExtensionAttributes()->getPickupLocationCode(), $sourceId);
     }
 }
