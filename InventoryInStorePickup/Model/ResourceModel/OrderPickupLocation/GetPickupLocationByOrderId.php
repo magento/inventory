@@ -14,7 +14,8 @@ use Magento\Framework\App\ResourceConnection;
  */
 class GetPickupLocationByOrderId
 {
-    private const ORDER_ID        = 'order_id';
+    private const ORDER_ID = 'order_id';
+
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
@@ -23,8 +24,6 @@ class GetPickupLocationByOrderId
     private $connection;
 
     /**
-     * GetPickupLocationByOrderId constructor.
-     *
      * @param \Magento\Framework\App\ResourceConnection $connection
      */
     public function __construct(
@@ -40,15 +39,13 @@ class GetPickupLocationByOrderId
      *
      * @return string|null
      */
-    public function execute(int $orderId):?string
+    public function execute(int $orderId): ?string
     {
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_pickup_location_order');
 
         $select = $connection->select()
-             ->from($table, [
-                     self::PICKUP_LOCATION_CODE => self::PICKUP_LOCATION_CODE
-             ])
+             ->from($table, [self::PICKUP_LOCATION_CODE => self::PICKUP_LOCATION_CODE])
              ->where(self::ORDER_ID . '= ?', $orderId)
              ->limit(1);
 

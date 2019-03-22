@@ -22,8 +22,6 @@ class SavePickupLocationForOrderPlugin
     private $saveOrderPickupLocation;
 
     /**
-     * SavePickupLocationForOrderPlugin constructor.
-     *
      * @param SaveOrderPickupLocation $saveOrderPickupLocation
      */
     public function __construct(SaveOrderPickupLocation $saveOrderPickupLocation)
@@ -32,9 +30,11 @@ class SavePickupLocationForOrderPlugin
     }
 
     /**
+     * Save Order to Pickup Location relation when saving the order.
+     *
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Magento\Sales\Api\Data\OrderInterface      $result
-     * @param \Magento\Sales\Api\Data\OrderInterface      $entity
+     * @param \Magento\Sales\Api\Data\OrderInterface $result
+     * @param \Magento\Sales\Api\Data\OrderInterface $entity
      *
      * @return \Magento\Sales\Api\Data\OrderInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
