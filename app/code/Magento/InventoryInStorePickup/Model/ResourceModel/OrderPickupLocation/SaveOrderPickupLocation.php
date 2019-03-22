@@ -14,7 +14,7 @@ use Magento\Framework\App\ResourceConnection;
  */
 class SaveOrderPickupLocation
 {
-    private const ORDER_ID        = 'order_id';
+    private const ORDER_ID  = 'order_id';
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
@@ -41,7 +41,7 @@ class SaveOrderPickupLocation
      *
      * @return void
      */
-    public function execute(int $orderId, string $pickupLocationCode):void
+    public function execute(int $orderId, string $pickupLocationCode): void
     {
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_pickup_location_order');

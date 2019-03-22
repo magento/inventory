@@ -28,9 +28,7 @@ class GetPickupLocationForOrderPlugin
     private $getPickupLocationByOrderId;
 
     /**
-     * GetPickupLocationForOrderPlugin constructor.
-     *
-     * @param OrderExtensionFactory      $orderExtensionFactory
+     * @param OrderExtensionFactory $orderExtensionFactory
      * @param GetPickupLocationByOrderId $getPickupLocationByOrderId
      */
     public function __construct(
@@ -42,16 +40,16 @@ class GetPickupLocationForOrderPlugin
     }
 
     /**
+     * Add Pickup Location Code extension attribute when loading Order with OrderRepository.
+     *
      * @param OrderRepositoryInterface $orderRepository
-     * @param OrderInterface           $order
+     * @param OrderInterface $order
      *
      * @return OrderInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGet(
-        OrderRepositoryInterface $orderRepository,
-        OrderInterface $order
-    ):OrderInterface {
+    public function afterGet(OrderRepositoryInterface $orderRepository, OrderInterface $order): OrderInterface
+    {
         $extension = $order->getExtensionAttributes();
 
         if (empty($extension)) {
