@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\DistanceProvider\Offline;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface;
 
@@ -72,6 +73,7 @@ class GetNearbySourcesByPostcode implements GetNearbySourcesByPostcodeInterface
         $query = $connection->select()
             ->from($sourceTable)
             ->columns(['*', $this->createDistanceColumn($lat, $lng) . ' AS distance'])
+            ->where(SourceInterface::ENABLED)
             ->having('distance <= ?', $radius);
 
         $rows = $connection->fetchAll($query);
