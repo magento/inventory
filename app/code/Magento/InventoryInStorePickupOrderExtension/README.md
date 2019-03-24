@@ -5,7 +5,7 @@ The module provide fix for `\Magento\Sales\Model\OrderRepository` *getList* meth
 This module is abandoned and will be removed as soon as support of Magento 2.3.1 will be ended for `InStorePickup` feature.
  
 Please check links for more details:
-* [Origina issue in Core Repository](https://github.com/magento/magento2/issues/8035)  
+* [Original issue in Core Repository](https://github.com/magento/magento2/issues/8035)  
 * [Issue in MSI Repository](https://github.com/magento-engcom/msi/issues/2099)
 
 ## Installation details

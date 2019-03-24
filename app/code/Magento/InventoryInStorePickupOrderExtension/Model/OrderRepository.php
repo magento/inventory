@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupOrderExtension\Model;
 
@@ -23,11 +24,11 @@ use Magento\Tax\Api\OrderTaxManagementInterface;
 
 /**
  * Replace for Order Repository in case to add Extension Attributes Join.
+ *
  * Class is available to fix incompatibility with Magneto 2.3.1.
- * Please check original issue in core repository for more details https://github.com/magento/magento2/pull/21797.
  *
- * @deprecated The class will be removed when support of InStorePickup module will be end for Magneto 2.3.1.
- *
+ * @see Please check original issue in core repository for more details https://github.com/magento/magento2/pull/21797.
+ * @deprecated The class will be removed when support of InStorePickup module will end for Magneto 2.3.1.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class OrderRepository extends \Magento\Sales\Model\OrderRepository
@@ -68,15 +69,15 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     private $extensionAttributesJoinProcessor;
 
     /**
-     * @param Metadata                                   $metadata
-     * @param OrderSearchResultInterfaceFactory          $searchResultFactory
-     * @param CollectionProcessorInterface|null          $collectionProcessor
-     * @param OrderExtensionFactory|null                 $orderExtensionFactory
-     * @param OrderTaxManagementInterface|null           $orderTaxManagement
+     * @param Metadata $metadata
+     * @param OrderSearchResultInterfaceFactory $searchResultFactory
+     * @param CollectionProcessorInterface|null $collectionProcessor
+     * @param OrderExtensionFactory|null $orderExtensionFactory
+     * @param OrderTaxManagementInterface|null $orderTaxManagement
      * @param PaymentAdditionalInfoInterfaceFactory|null $paymentAdditionalInfoFactory
-     * @param JsonSerializer|null                        $serializer
-     * @param ShippingAssignmentBuilder|null             $shippingAssignmentBuilder
-     * @param JoinProcessorInterface|null                $extensionAttributesJoinProcessor
+     * @param JsonSerializer|null $serializer
+     * @param ShippingAssignmentBuilder|null $shippingAssignmentBuilder
+     * @param JoinProcessorInterface|null $extensionAttributesJoinProcessor
      */
     public function __construct(
         Metadata $metadata,
@@ -116,7 +117,10 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
-     * @inheritdoc
+     * Set order tax details to extension attributes.
+     *
+     * @param OrderInterface $order
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function setOrderTaxDetails(OrderInterface $order)
     {
@@ -136,7 +140,9 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
-     * @inheritdoc
+     * Set additional info to the order.
+     *
+     * @param OrderInterface $order
      */
     private function setPaymentAdditionalInfo(OrderInterface $order): void
     {
@@ -179,6 +185,8 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
+     * Set shipping assignments to extension attributes.
+     *
      * @inheritdoc
      */
     private function setShippingAssignments(OrderInterface $order)
