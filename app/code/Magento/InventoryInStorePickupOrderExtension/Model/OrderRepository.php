@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -9,8 +9,6 @@ namespace Magento\InventoryInStorePickupOrderExtension\Model;
 use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
 use Magento\Payment\Api\Data\PaymentAdditionalInfoInterface;
 use Magento\Payment\Api\Data\PaymentAdditionalInfoInterfaceFactory;
@@ -70,9 +68,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     private $extensionAttributesJoinProcessor;
 
     /**
-     * OrderRepository constructor.
-     *
-     * @param Metadata                                                  $metadata
+     * @param Metadata                                   $metadata
      * @param OrderSearchResultInterfaceFactory          $searchResultFactory
      * @param CollectionProcessorInterface|null          $collectionProcessor
      * @param OrderExtensionFactory|null                 $orderExtensionFactory
@@ -89,7 +85,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
         OrderExtensionFactory $orderExtensionFactory = null,
         OrderTaxManagementInterface $orderTaxManagement = null,
         PaymentAdditionalInfoInterfaceFactory $paymentAdditionalInfoFactory = null,
-        Json $serializer = null,
+        JsonSerializer $serializer = null,
         ShippingAssignmentBuilder $shippingAssignmentBuilder = null,
         JoinProcessorInterface $extensionAttributesJoinProcessor = null
     ) {
@@ -120,12 +116,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
-     * Set order tax details to extension attributes.
-     *
-     * @param OrderInterface $order
-     *
-     * @return void
-     * @throws NoSuchEntityException
+     * @inheritdoc
      */
     private function setOrderTaxDetails(OrderInterface $order)
     {
@@ -145,10 +136,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
-     * Set additional info to the order.
-     *
-     * @param OrderInterface $order
-     * @return void
+     * @inheritdoc
      */
     private function setPaymentAdditionalInfo(OrderInterface $order): void
     {
@@ -173,12 +161,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
-     * Find entities by criteria
-     *
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     *
-     * @return \Magento\Sales\Api\Data\OrderSearchResultInterface
-     * @throws NoSuchEntityException
+     * @inheritdoc
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
@@ -196,10 +179,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     }
 
     /**
-     * Set shipping assignments to extension attributes.
-     *
-     * @param OrderInterface $order
-     * @return void
+     * @inheritdoc
      */
     private function setShippingAssignments(OrderInterface $order)
     {
