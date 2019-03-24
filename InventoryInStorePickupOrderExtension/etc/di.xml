@@ -7,5 +7,4 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Sales\Api\OrderRepositoryInterface" type="Magento\InventoryInStorePickupOrderExtension\Model\OrderRepository" />
-    <preference for="Magento\Sales\Model\OrderRepository" type="Magento\InventoryInStorePickupOrderExtension\Model\OrderRepository" />
 </config>
