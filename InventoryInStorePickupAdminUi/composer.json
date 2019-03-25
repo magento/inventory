@@ -3,7 +3,9 @@
     "description": "N/A",
     "require": {
         "php": "~7.1.3||~7.2.0",
-        "magento/framework": "*"
+        "magento/framework": "*",
+        "magento/module-ui": "*",
+        "magento/module-inventory-in-store-pickup-api": "*"
     },
     "type": "magento2-module",
     "license": [
