@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="inventory_pickup_location_order" resource="default" engine="innodb">
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Order ID" />
+        <column xsi:type="varchar" name="pickup_location_code" nullable="false" comment="Pickup Location Code"/>
+        <constraint xsi:type="foreign" referenceId="INVENTORY_PICKUP_LOCATION_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID" table="inventory_pickup_location_order" column="order_id" referenceTable="sales_order"  referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="order_id"/>
+        </constraint>
+    </table>
+</schema>
