@@ -5,10 +5,13 @@
  * See COPYING.txt for license details.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="get_pickup_location_for_order" type="Magento\InventoryInStorePickup\Plugin\Sales\Order\GetPickupLocationForOrderPlugin"/>
+        <plugin name="save_pickup_location_for_order" type="Magento\InventoryInStorePickup\Plugin\Sales\Order\SavePickupLocationForOrderPlugin"/>
+    </type>
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface"
-                type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
+            type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
 
     <type name="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode">
         <arguments>
