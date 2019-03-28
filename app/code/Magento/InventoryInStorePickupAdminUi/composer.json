@@ -6,7 +6,8 @@
         "magento/framework": "*",
         "magento/module-ui": "*",
         "magento/module-inventory-in-store-pickup-api": "*",
-        "magento/module-inventory-admin-ui": "*"
+        "magento/module-inventory-admin-ui": "*",
+        "magento/module-sales": "*"
     },
     "type": "magento2-module",
     "license": [

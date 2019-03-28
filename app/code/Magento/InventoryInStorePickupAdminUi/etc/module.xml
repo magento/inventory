@@ -10,6 +10,7 @@
         <sequence>
             <module name="Magento_InventoryInStorePickup" />
             <module name="Magento_Shipping" />
+            <module name="Magento_Sales" />
         </sequence>
     </module>
 </config>
