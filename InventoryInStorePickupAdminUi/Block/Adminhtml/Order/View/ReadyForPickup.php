@@ -24,6 +24,36 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     protected $_blockGroup = 'Magento_Sales';
 
     /**
+     * @var \Magento\Sales\Block\Adminhtml\Order\View
+     */
+    private $viewBlock;
+
+    /**
+     * @var \Magento\InventoryInStorePickup\Model\Order\IsReadyForPickup
+     */
+    private $isReadyForPickup;
+
+    /**
+     * ReadyForPickup constructor.
+     *
+     * @param \Magento\Backend\Block\Widget\Context                        $context
+     * @param \Magento\Sales\Block\Adminhtml\Order\View                    $viewBlock
+     * @param \Magento\InventoryInStorePickup\Model\Order\IsReadyForPickup $isReadyForPickup
+     * @param array                                                        $data
+     */
+    public function __construct(
+        \Magento\Backend\Block\Widget\Context $context,
+        \Magento\Sales\Block\Adminhtml\Order\View $viewBlock,
+        \Magento\InventoryInStorePickup\Model\Order\IsReadyForPickup $isReadyForPickup,
+        array $data = []
+    ) {
+        $this->viewBlock = $viewBlock;
+        $this->isReadyForPickup = $isReadyForPickup;
+
+        parent::__construct($context, $data);
+    }
+
+    /**
      *  Rendering Ready for Pickup button
      */
     protected function _construct()
@@ -32,7 +62,7 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
         $this->_controller = 'adminhtml_order';
         $this->_mode = 'view';
 
-        if ($this->isEmailsSendingAllowed()) {/* TODO: add is order ready check */
+        if ($this->isDisplayButton()) {
             $message = __('Are you sure you want to notify the customer that order is ready for pickup?');
             $this->addButton(
                 'ready_for_pickup',
@@ -55,5 +85,14 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     private function isEmailsSendingAllowed():bool
     {
         return $this->_authorization->isAllowed(self::ADMIN_SALES_EMAIL_RESOURCE);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDisplayButton():bool
+    {
+        return $this->isEmailsSendingAllowed()
+            && $this->isReadyForPickup->execute((int)$this->viewBlock->getOrderId());
     }
 }

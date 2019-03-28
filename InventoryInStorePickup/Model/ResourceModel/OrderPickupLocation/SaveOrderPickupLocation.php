@@ -23,8 +23,6 @@ class SaveOrderPickupLocation
     private $connection;
 
     /**
-     * GetPickupLocationByOrderId constructor.
-     *
      * @param \Magento\Framework\App\ResourceConnection $connection
      */
     public function __construct(

@@ -12,7 +12,7 @@ use Magento\Framework\App\ResourceConnection;
 /**
  * Get Pickup Location identifier by order identifier.
  */
-class GetPickupLocationByOrderId
+class GetPickupLocationCodeByOrderId
 {
     private const ORDER_ID = 'order_id';
 
