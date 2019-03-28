@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\Sales\Order;
 
-use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation\GetPickupLocationByOrderId;
+use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation\GetPickupLocationCodeByOrderId;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -23,17 +23,17 @@ class GetPickupLocationForOrderPlugin
     private $orderExtensionFactory;
 
     /**
-     * @var GetPickupLocationByOrderId
+     * @var GetPickupLocationCodeByOrderId
      */
     private $getPickupLocationByOrderId;
 
     /**
-     * @param OrderExtensionFactory $orderExtensionFactory
-     * @param GetPickupLocationByOrderId $getPickupLocationByOrderId
+     * @param OrderExtensionFactory          $orderExtensionFactory
+     * @param GetPickupLocationCodeByOrderId $getPickupLocationByOrderId
      */
     public function __construct(
         OrderExtensionFactory $orderExtensionFactory,
-        GetPickupLocationByOrderId $getPickupLocationByOrderId
+        GetPickupLocationCodeByOrderId $getPickupLocationByOrderId
     ) {
         $this->orderExtensionFactory = $orderExtensionFactory;
         $this->getPickupLocationByOrderId = $getPickupLocationByOrderId;
