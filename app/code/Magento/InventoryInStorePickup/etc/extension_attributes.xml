@@ -13,4 +13,7 @@
             </join>
         </attribute>
     </extension_attributes>
+    <extension_attributes for="Magento\InventoryApi\Api\Data\SourceInterface">
+        <attribute code="in_store_pickup" type="boolean" />
+    </extension_attributes>
 </config>

@@ -15,4 +15,7 @@
             <column name="order_id"/>
         </constraint>
     </table>
+    <table name="inventory_source">
+        <column xsi:type="smallint" name="in_store_pickup" padding="5" unsigned="true" nullable="false" identity="false" default="1"/>
+    </table>
 </schema>
