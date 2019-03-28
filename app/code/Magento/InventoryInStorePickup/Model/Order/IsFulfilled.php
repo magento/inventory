@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\Order;
 
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
-class IsReadyForPickup
+class IsFulfilled
 {
     /**
      * @var \Magento\Sales\Api\OrderRepositoryInterface
