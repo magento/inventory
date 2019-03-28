@@ -11,7 +11,7 @@
   },
   "inventory_source": {
     "column": {
-       "in_store_pickup": true
+       "is_pickup_location_active": true
     }
   }
 }

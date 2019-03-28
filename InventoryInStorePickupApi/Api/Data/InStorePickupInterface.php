@@ -17,7 +17,7 @@ interface InStorePickupInterface extends \Magento\Framework\Api\ExtensibleDataIn
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case
      */
-    const IN_STORE_PICKUP_CODE = 'in_store_pickup';
+    const IN_STORE_PICKUP_CODE = 'is_pickup_location_active';
 
     /**
      * Retrieve existing extension attributes object or create a new one.
