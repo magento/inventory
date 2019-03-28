@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View;
 
+use Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order\NotifyPickup;
+use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
+
 /**
  * TODO: is it possible to replace with UI Component?
  *
@@ -14,8 +17,6 @@ namespace Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View;
  */
 class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
 {
-    const ADMIN_SALES_EMAIL_RESOURCE = 'Magento_Sales::emails';
-
     /**
      * Block group
      *
@@ -29,22 +30,22 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     private $viewBlock;
 
     /**
-     * @var \Magento\InventoryInStorePickup\Model\Order\IsReadyForPickup
+     * @var \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface
      */
     private $isReadyForPickup;
 
     /**
      * ReadyForPickup constructor.
      *
-     * @param \Magento\Backend\Block\Widget\Context                        $context
-     * @param \Magento\Sales\Block\Adminhtml\Order\View                    $viewBlock
-     * @param \Magento\InventoryInStorePickup\Model\Order\IsReadyForPickup $isReadyForPickup
-     * @param array                                                        $data
+     * @param \Magento\Backend\Block\Widget\Context                                 $context
+     * @param \Magento\Sales\Block\Adminhtml\Order\View                             $viewBlock
+     * @param \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface $isReadyForPickup
+     * @param array                                                                 $data
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
         \Magento\Sales\Block\Adminhtml\Order\View $viewBlock,
-        \Magento\InventoryInStorePickup\Model\Order\IsReadyForPickup $isReadyForPickup,
+        IsOrderReadyForPickupInterface $isReadyForPickup,
         array $data = []
     ) {
         $this->viewBlock = $viewBlock;
@@ -72,7 +73,7 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
                     'onclick' => sprintf(
                         "confirmSetLocation('%s', '%s')",
                         $message,
-                        $this->getUrl('*/*/notifyPickup')
+                        $this->viewBlock->getUrl('sales/*/notifyPickup')
                     )
                 ]
             );
@@ -84,7 +85,7 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
      */
     private function isEmailsSendingAllowed():bool
     {
-        return $this->_authorization->isAllowed(self::ADMIN_SALES_EMAIL_RESOURCE);
+        return $this->_authorization->isAllowed(NotifyPickup::ADMIN_RESOURCE);
     }
 
     /**

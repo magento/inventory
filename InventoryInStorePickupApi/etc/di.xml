@@ -8,5 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface"
-                type="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode"/>
+            type="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode"/>
+    <preference for="\Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface"
+            type="\Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
 </config>
