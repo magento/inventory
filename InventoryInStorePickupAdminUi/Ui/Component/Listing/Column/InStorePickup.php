@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Ui\Component\Listing\Column;
 
-use Magento\InventoryInStorePickupApi\Api\Data\InStorePickupInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 
 /**
@@ -27,9 +28,9 @@ class InStorePickup extends Column
             && $dataSource['data']['totalRecords'] > 0
         ) {
             foreach ($dataSource['data']['items'] as &$row) {
-                $row[InStorePickupInterface::IN_STORE_PICKUP_CODE] =
-                    isset($row[InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE]) ?
-                        $row[InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE] :
+                $row[PickupLocationInterface::IN_STORE_PICKUP_CODE] =
+                    isset($row[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE]) ?
+                        $row[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE] :
                         "";
             }
         }

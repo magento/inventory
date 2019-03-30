@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\InStorePickupInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 class LoadInStorePickupOnGetPlugin
 {
@@ -25,10 +25,10 @@ class LoadInStorePickupOnGetPlugin
         SourceRepositoryInterface $subject,
         SourceInterface $source
     ):SourceInterface {
-        $pickupAvailable = $source->getData(InStorePickupInterface::IN_STORE_PICKUP_CODE);
+        $pickupAvailable = $source->getData(PickupLocationInterface::IN_STORE_PICKUP_CODE);
 
         $extensionAttributes = $source->getExtensionAttributes();
-        $extensionAttributes->setInStorePickup($pickupAvailable);
+        $extensionAttributes->setIsPickupLocationActive($pickupAvailable);
 
         $source->setExtensionAttributes($extensionAttributes);
 

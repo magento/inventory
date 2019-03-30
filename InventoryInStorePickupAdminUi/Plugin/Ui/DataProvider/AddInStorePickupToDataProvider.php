@@ -8,7 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupAdminUi\Plugin\Ui\DataProvider;
 
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
-use Magento\InventoryInStorePickupApi\Api\Data\InStorePickupInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 class AddInStorePickupToDataProvider
 {
@@ -49,11 +50,11 @@ class AddInStorePickupToDataProvider
      * @return array
      */
     private function convertExtensionAttributeBooleanToIntStr(array $item):array {
-        if (isset($item[InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY]) &&
-            isset($item[InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE])
+        if (isset($item[SourceInterface::EXTENSION_ATTRIBUTES_KEY]) &&
+            isset($item[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE])
         ) {
-            $item[InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE] =
-                (string)(int)$item[InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE];
+            $item[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE] =
+                (string)(int)$item[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE];
         }
 
         return $item;
