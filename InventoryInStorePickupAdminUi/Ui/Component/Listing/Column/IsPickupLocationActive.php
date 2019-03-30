@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Ui\Component\Listing\Column;
 
-use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 
 class IsPickupLocationActive extends Column
 {
     /**
-     * Prepare data source by moving from extension_attributes to child of item so that it is accessible in listing grid.
+     * Move extension attribute value to row data.
      *
      * @param array $dataSource
      * @return array
@@ -26,12 +26,10 @@ class IsPickupLocationActive extends Column
         ) {
             foreach ($dataSource['data']['items'] as &$row) {
                 $row[PickupLocationInterface::IN_STORE_PICKUP_CODE] =
-                    isset($row[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE]) ?
-                        $row[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE] :
-                        "";
+                    $row[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]
+                    [PickupLocationInterface::IN_STORE_PICKUP_CODE] ?? '';
             }
         }
-        unset($row);
 
         return $dataSource;
     }

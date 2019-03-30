@@ -25,7 +25,6 @@
                         <item name="label" xsi:type="string" translate="true">Disabled</item>
                     </option>
                 </options>
-                <visible>false</visible>
             </settings>
         </column>
     </columns>
