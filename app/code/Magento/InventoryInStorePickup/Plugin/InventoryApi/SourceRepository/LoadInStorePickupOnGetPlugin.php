@@ -20,6 +20,7 @@ class LoadInStorePickupOnGetPlugin
      * @param SourceInterface $source
      *
      * @return SourceInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGet(
         SourceRepositoryInterface $subject,
