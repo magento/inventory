@@ -7,7 +7,7 @@
 -->
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <fieldset name="general" sortOrder="10">
-        <field name="in_store_pickup" formElement="checkbox" sortOrder="70">
+        <field name="is_pickup_location_active" formElement="checkbox" sortOrder="70">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="default" xsi:type="number">1</item>
@@ -16,7 +16,7 @@
             <settings>
                 <dataScope>extension_attributes.is_pickup_location_active</dataScope>
                 <dataType>boolean</dataType>
-                <label translate="true">Supports In-Store Pickup</label>
+                <label translate="true">Eligible for in-store pickup</label>
             </settings>
             <formElements>
                 <checkbox>
