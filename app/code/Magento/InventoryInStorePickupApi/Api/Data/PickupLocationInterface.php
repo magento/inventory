@@ -12,5 +12,5 @@ namespace Magento\InventoryInStorePickupApi\Api\Data;
  */
 interface PickupLocationInterface
 {
-    const IN_STORE_PICKUP_CODE = 'is_pickup_location_active';
+    const IS_PICKUP_LOCATION_ACTIVE = 'is_pickup_location_active';
 }

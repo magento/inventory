@@ -25,7 +25,7 @@ class LoadInStorePickupOnGetPlugin
         SourceRepositoryInterface $subject,
         SourceInterface $source
     ):SourceInterface {
-        $pickupAvailable = $source->getData(PickupLocationInterface::IN_STORE_PICKUP_CODE);
+        $pickupAvailable = $source->getData(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE);
 
         $extensionAttributes = $source->getExtensionAttributes();
         $extensionAttributes->setIsPickupLocationActive((bool)$pickupAvailable);
