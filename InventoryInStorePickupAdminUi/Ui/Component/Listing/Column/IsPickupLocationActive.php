@@ -11,10 +11,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 
-/**
- * Add grid column for in-store pickup. Prepare data
- */
-class InStorePickup extends Column
+class IsPickupLocationActive extends Column
 {
     /**
      * Prepare data source by moving from extension_attributes to child of item so that it is accessible in listing grid.
