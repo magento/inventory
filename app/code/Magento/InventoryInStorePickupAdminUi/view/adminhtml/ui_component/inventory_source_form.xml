@@ -14,7 +14,7 @@
                 </item>
             </argument>
             <settings>
-                <dataScope>extension_attributes.in_store_pickup</dataScope>
+                <dataScope>extension_attributes.is_pickup_location_active</dataScope>
                 <dataType>boolean</dataType>
                 <label translate="true">Supports In-Store Pickup</label>
             </settings>

@@ -9,7 +9,8 @@ namespace Magento\InventoryInStorePickup\Observer\Source;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
-use Magento\InventoryInStorePickupApi\Api\Data\InStorePickupInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Populate source with In-Store pickup status during saving via controller
@@ -27,14 +28,15 @@ class PopulateWithInStorePickupObserver implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
+        /** @var SourceInterface $source */
         $source = $observer->getEvent()->getSource();
         $request = $observer->getEvent()->getRequest();
         $requestData = $request->getParams();
 
         $extensionAttributes = $source->getExtensionAttributes();
 
-        if (isset($requestData['general'][InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE])) {
-            $extensionAttributes->setInStorePickup($requestData['general'][InStorePickupInterface::EXTENSION_ATTRIBUTES_KEY][InStorePickupInterface::IN_STORE_PICKUP_CODE]);
+        if (isset($requestData['general'][SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE])) {
+            $extensionAttributes->setIsPickupLocationActive($requestData['general'][SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE]);
             $source->setExtensionAttributes($extensionAttributes);
         }
 
