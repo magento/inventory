@@ -7,16 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Plugin\Ui\DataProvider;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
-class AddInStorePickupToDataProvider
+class ConvertBooleanToStringPlugin
 {
     /**
      * Convert the extension attribute boolean (true|false) to string integer value ("1"|"0") to match expected type.
-     * If we pass (true|false) to UI Component for it to be recognised the return value will end up being string
-     * ("true"|"false") which evaluates to (true), therefore adjust value to match other non extension attribute values.
+     * Ui DataProvider does not support this for Extension Attributes   .
+     * @see \Magento\Ui\DataProvider\SearchResultFactory::createAttributes
      *
      * @param SourceDataProvider $subject
      * @param array $result
@@ -29,13 +28,13 @@ class AddInStorePickupToDataProvider
     ): array {
         if (array_key_exists('items', $result)) {
             foreach ($result['items'] as $key => $item) {
-                $result['items'][$key] = $this->convertExtensionAttributeBooleanToIntStr($item);
+                $result['items'][$key] = $this->convertBooleanToString($item);
             }
         } else {
             // Single attribute returned in:
             // \Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider::getData
             foreach ($result as $key => $item) {
-                $result[$key]['general'] = $this->convertExtensionAttributeBooleanToIntStr($item['general']);
+                $result[$key]['general'] = $this->convertBooleanToString($item['general']);
             }
         }
 
@@ -49,12 +48,14 @@ class AddInStorePickupToDataProvider
      *
      * @return array
      */
-    private function convertExtensionAttributeBooleanToIntStr(array $item):array {
-        if (isset($item[SourceInterface::EXTENSION_ATTRIBUTES_KEY]) &&
-            isset($item[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE])
-        ) {
-            $item[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE] =
-                (string)(int)$item[SourceInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IN_STORE_PICKUP_CODE];
+    private function convertBooleanToString(array $item):array
+    {
+        if (isset($item[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY])) {
+            foreach ($item[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY] as $code => $value) {
+                if (is_bool($value)) {
+                    $item[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][$code] = (string)(int)$value;
+                }
+            }
         }
 
         return $item;

@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 class LoadInStorePickupOnGetListPlugin
@@ -25,19 +25,12 @@ class LoadInStorePickupOnGetListPlugin
         SourceRepositoryInterface $subject,
         SourceSearchResultsInterface $sourceSearchResults
     ):SourceSearchResultsInterface {
-        $sources = [];
-
         foreach ($sourceSearchResults->getItems() as $source) {
-            $pickupAvailable = $source->getData(PickupLocationInterface::IN_STORE_PICKUP_CODE);
-
             $extensionAttributes = $source->getExtensionAttributes();
-            $extensionAttributes->setIsPickupLocationActive($pickupAvailable);
 
-            $source->setExtensionAttributes($extensionAttributes);
-
-            $sources[] = $source;
+            $pickupAvailable = $source->getData(PickupLocationInterface::IN_STORE_PICKUP_CODE);
+            $extensionAttributes->setIsPickupLocationActive((bool)$pickupAvailable);
         }
-        $sourceSearchResults->setItems($sources);
 
         return $sourceSearchResults;
     }
