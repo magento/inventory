@@ -25,9 +25,9 @@ class IsPickupLocationActive extends Column
             && $dataSource['data']['totalRecords'] > 0
         ) {
             foreach ($dataSource['data']['items'] as &$row) {
-                $row[PickupLocationInterface::IN_STORE_PICKUP_CODE] =
+                $row[PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] =
                     $row[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]
-                    [PickupLocationInterface::IN_STORE_PICKUP_CODE] ?? '';
+                    [PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] ?? '';
             }
         }
 

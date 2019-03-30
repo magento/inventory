@@ -28,7 +28,7 @@ class LoadInStorePickupOnGetListPlugin
         foreach ($sourceSearchResults->getItems() as $source) {
             $extensionAttributes = $source->getExtensionAttributes();
 
-            $pickupAvailable = $source->getData(PickupLocationInterface::IN_STORE_PICKUP_CODE);
+            $pickupAvailable = $source->getData(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE);
             $extensionAttributes->setIsPickupLocationActive((bool)$pickupAvailable);
         }
 
