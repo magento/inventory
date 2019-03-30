@@ -19,6 +19,7 @@ class SaveInStorePickupPlugin
      * @param SourceInterface $source
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(
         SourceRepositoryInterface $subject,

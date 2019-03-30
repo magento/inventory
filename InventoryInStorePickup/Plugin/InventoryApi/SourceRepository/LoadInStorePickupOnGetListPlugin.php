@@ -20,6 +20,7 @@ class LoadInStorePickupOnGetListPlugin
      * @param SourceSearchResultsInterface $sourceSearchResults
      *
      * @return SourceSearchResultsInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetList(
         SourceRepositoryInterface $subject,
