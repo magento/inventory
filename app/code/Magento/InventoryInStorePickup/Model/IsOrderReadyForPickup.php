@@ -35,6 +35,7 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
      */
     public function execute(int $orderId):bool
     {
+        /*TODO: add $order->canShip() check */
         return $this->isFulfilled->execute($orderId);
     }
 }

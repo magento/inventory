@@ -63,8 +63,11 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
         $this->_controller = 'adminhtml_order';
         $this->_mode = 'view';
 
+        /* TODO: always display but throw warnings? */
         if ($this->isDisplayButton()) {
-            $message = __('Are you sure you want to notify the customer that order is ready for pickup?');
+            $message = __(
+                'Are you sure you want to notify the customer that order is ready for pickup and create shipment?'
+            );
             $this->addButton(
                 'ready_for_pickup',
                 [
