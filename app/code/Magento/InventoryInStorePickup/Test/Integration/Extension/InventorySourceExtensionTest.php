@@ -30,7 +30,7 @@ class InventorySourceExtensionTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      */
-    public function testSaveSourcesWithActivePickupLocation()
+    public function testGetListOfSourcesWithPickupLocationExtensionAfterSave()
     {
         $pickupLocationConfig = [
             'default' => false,
@@ -65,7 +65,7 @@ class InventorySourceExtensionTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
      */
-    public function testSaveSourceWithActivePickupLocation()
+    public function testGetSourceWithPickupLocationExtensionAfterSave()
     {
         $sourceCode = 'source-code-1';
 
