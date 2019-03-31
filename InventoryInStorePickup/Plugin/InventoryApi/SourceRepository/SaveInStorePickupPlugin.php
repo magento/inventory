@@ -27,7 +27,7 @@ class SaveInStorePickupPlugin
     ):array {
         $extensionAttributes = $source->getExtensionAttributes();
 
-        if ($extensionAttributes->getIsPickupLocationActive() !== null) {
+        if ($extensionAttributes !== null && $extensionAttributes->getIsPickupLocationActive() !== null) {
             $source->setIsPickupLocationActive($extensionAttributes->getIsPickupLocationActive());
         }
 
