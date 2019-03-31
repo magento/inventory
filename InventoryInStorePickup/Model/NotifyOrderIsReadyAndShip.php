@@ -47,6 +47,7 @@ class NotifyOrderIsReadyAndShip implements NotifyOrderIsReadyAndShipInterface
         }
 
         /* TODO: send email */
+        /* TODO: add order comment? */
 
         return $this->shipOrder->execute($orderId);
     }
