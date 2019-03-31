@@ -25,4 +25,10 @@
             </argument>
         </arguments>
     </type>
+
+    <preference for="\Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface"
+            type="\Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyAndShip"/>
+    <preference for="\Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface"
+            type="\Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
+
 </config>
