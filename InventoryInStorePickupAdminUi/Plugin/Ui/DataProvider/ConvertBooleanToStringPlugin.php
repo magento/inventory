@@ -10,11 +10,15 @@ namespace Magento\InventoryInStorePickupAdminUi\Plugin\Ui\DataProvider;
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
 
+/**
+ * @deprecated Need to be removed when issue will be resolved in core.
+ * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/22067.
+ */
 class ConvertBooleanToStringPlugin
 {
     /**
      * Convert the extension attribute boolean (true|false) to string integer value ("1"|"0") to match expected type.
-     * Ui DataProvider does not support this for Extension Attributes   .
+     * Ui DataProvider does not support this for Extension Attributes.
      * @see \Magento\Ui\DataProvider\SearchResultFactory::createAttributes
      *
      * @param SourceDataProvider $subject
@@ -28,13 +32,13 @@ class ConvertBooleanToStringPlugin
     ): array {
         if (array_key_exists('items', $result)) {
             foreach ($result['items'] as $key => $item) {
-                $result['items'][$key] = $this->convertBooleanToString($item);
+                $result['items'][$key] = $this->convertDataItemExtensionFieldsBoolValueToString($item);
             }
         } else {
             // Single attribute returned in:
             // \Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider::getData
             foreach ($result as $key => $item) {
-                $result[$key]['general'] = $this->convertBooleanToString($item['general']);
+                $result[$key]['general'] = $this->convertDataItemExtensionFieldsBoolValueToString($item['general']);
             }
         }
 
@@ -48,7 +52,7 @@ class ConvertBooleanToStringPlugin
      *
      * @return array
      */
-    private function convertBooleanToString(array $item):array
+    private function convertDataItemExtensionFieldsBoolValueToString(array $item):array
     {
         if (isset($item[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY])) {
             foreach ($item[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY] as $code => $value) {
