@@ -16,7 +16,7 @@
             <settings>
                 <dataScope>extension_attributes.is_pickup_location_active</dataScope>
                 <dataType>boolean</dataType>
-                <label translate="true">Eligible for in-store pickup</label>
+                <label translate="true">Use as Pickup Location</label>
             </settings>
             <formElements>
                 <checkbox>

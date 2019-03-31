@@ -11,7 +11,7 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
 
 /**
- * @deprecated Need to be removed when issue will be resolved in core.
+ * @TODO Remove when issue will be resolved in core.
  * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/22067.
  */
 class ConvertBooleanToStringPlugin
@@ -25,6 +25,7 @@ class ConvertBooleanToStringPlugin
      * @param array $result
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetData(
         SourceDataProvider $subject,
