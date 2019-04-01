@@ -30,26 +30,26 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     private $viewBlock;
 
     /**
-     * @var \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface
+     * @var \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton
      */
-    private $isReadyForPickup;
+    private $isDisplayButton;
 
     /**
      * ReadyForPickup constructor.
      *
-     * @param \Magento\Backend\Block\Widget\Context                                 $context
-     * @param \Magento\Sales\Block\Adminhtml\Order\View                             $viewBlock
-     * @param \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface $isReadyForPickup
-     * @param array                                                                 $data
+     * @param \Magento\Backend\Block\Widget\Context                                      $context
+     * @param \Magento\Sales\Block\Adminhtml\Order\View                                  $viewBlock
+     * @param \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton $isDisplayButton
+     * @param array                                                                      $data
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
         \Magento\Sales\Block\Adminhtml\Order\View $viewBlock,
-        IsOrderReadyForPickupInterface $isReadyForPickup,
+        \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton $isDisplayButton,
         array $data = []
     ) {
         $this->viewBlock = $viewBlock;
-        $this->isReadyForPickup = $isReadyForPickup;
+        $this->isDisplayButton = $isDisplayButton;
 
         parent::__construct($context, $data);
     }
@@ -63,7 +63,6 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
         $this->_controller = 'adminhtml_order';
         $this->_mode = 'view';
 
-        /* TODO: always display but throw warnings? */
         if ($this->isDisplayButton()) {
             $message = __(
                 'Are you sure you want to notify the customer that order is ready for pickup and create shipment?'
@@ -97,6 +96,6 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     private function isDisplayButton():bool
     {
         return $this->isEmailsSendingAllowed()
-            && $this->isReadyForPickup->execute((int)$this->viewBlock->getOrderId());
+            && $this->isDisplayButton->execute($this->viewBlock->getOrder());
     }
 }
