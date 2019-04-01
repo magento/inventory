@@ -16,6 +16,6 @@
         </constraint>
     </table>
     <table name="inventory_source">
-        <column xsi:type="smallint" name="in_store_pickup" padding="5" unsigned="true" nullable="false" identity="false" default="1"/>
+        <column xsi:type="boolean" name="is_pickup_location_active" nullable="false" default="0"/>
     </table>
 </schema>

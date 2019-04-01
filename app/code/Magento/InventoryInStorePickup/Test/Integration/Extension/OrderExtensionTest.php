@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Integration;
+namespace Magento\InventoryInStorePickup\Test\Integration\Extension;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\ObjectManagerInterface;
@@ -15,7 +15,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class PickupLocationOrderTest extends TestCase
+class OrderExtensionTest extends TestCase
 {
     /** @var ObjectManagerInterface */
     private $objectManager;

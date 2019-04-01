@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 class SaveInStorePickupPlugin
 {
@@ -19,6 +19,7 @@ class SaveInStorePickupPlugin
      * @param SourceInterface $source
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(
         SourceRepositoryInterface $subject,
@@ -26,10 +27,10 @@ class SaveInStorePickupPlugin
     ):array {
         $extensionAttributes = $source->getExtensionAttributes();
 
-        if ($extensionAttributes->getInStorePickup() !== null) {
-            $source->setInStorePickup($extensionAttributes->getInStorePickup());
+        if ($extensionAttributes !== null && $extensionAttributes->getIsPickupLocationActive() !== null) {
+            $source->setIsPickupLocationActive($extensionAttributes->getIsPickupLocationActive());
         }
-        
+
         return [$source];
     }
 }

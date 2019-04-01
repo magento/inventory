@@ -7,25 +7,24 @@
 -->
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <columns name="inventory_source_listing_columns">
-        <column name="in_store_pickup"
+        <column name="is_pickup_location_active"
                 component="Magento_Ui/js/grid/columns/select"
-                class="Magento\InventoryInStorePickupAdminUi\Ui\Component\Listing\Column\InStorePickup"
+                class="Magento\InventoryInStorePickupAdminUi\Ui\Component\Listing\Column\IsPickupLocationActive"
                 sortOrder="55">
             <settings>
                 <dataType>select</dataType>
                 <filter>select</filter>
-                <label translate="true">Supports In-Store Pickup</label>
+                <label translate="true">Pickup Location</label>
                 <options>
                     <option name="0" xsi:type="array">
                         <item name="value" xsi:type="number">1</item>
-                        <item name="label" xsi:type="string" translate="true">Supported</item>
+                        <item name="label" xsi:type="string" translate="true">Active</item>
                     </option>
                     <option name="1" xsi:type="array">
                         <item name="value" xsi:type="number">0</item>
                         <item name="label" xsi:type="string" translate="true">Disabled</item>
                     </option>
                 </options>
-                <visible>false</visible>
             </settings>
         </column>
     </columns>
