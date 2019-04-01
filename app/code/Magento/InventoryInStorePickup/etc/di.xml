@@ -30,5 +30,9 @@
             type="\Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyAndShip"/>
     <preference for="\Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface"
             type="\Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
-
+    <type name="\Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender">
+        <arguments>
+            <argument name="identityContainer" xsi:type="object">\Magento\InventoryInStorePickup\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
+        </arguments>
+    </type>
 </config>
