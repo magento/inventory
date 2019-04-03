@@ -29,9 +29,9 @@ class IsFulfilled
     /**
      * IsReadyForPickup constructor.
      *
-     * @param \Magento\Sales\Api\OrderRepositoryInterface             $orderRepository
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Magento\InventoryApi\Api\SourceItemRepositoryInterface $sourceItemRepository
-     * @param \Magento\Framework\Api\SearchCriteriaBuilderFactory     $searchCriteriaBuilder
+     * @param \Magento\Framework\Api\SearchCriteriaBuilderFactory $searchCriteriaBuilder
      */
     public function __construct(
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
@@ -48,7 +48,7 @@ class IsFulfilled
      *
      * @return bool
      */
-    public function execute(int $orderId):bool
+    public function execute(int $orderId): bool
     {
         $order = $this->orderRepository->get($orderId);
 
@@ -68,11 +68,11 @@ class IsFulfilled
     /**
      * @param string $sku
      * @param string $sourceCode
-     * @param float  $qtyOrdered
+     * @param float $qtyOrdered
      *
      * @return bool
      */
-    private function isItemFulfilled(string $sku, string $sourceCode, float $qtyOrdered):bool
+    private function isItemFulfilled(string $sku, string $sourceCode, float $qtyOrdered): bool
     {
         $searchCriteria = $this->searchCriteriaBuilderFactory
             ->create()

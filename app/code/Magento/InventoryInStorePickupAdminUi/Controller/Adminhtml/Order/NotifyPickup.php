@@ -45,10 +45,10 @@ class NotifyPickup extends \Magento\Backend\App\Action
     /**
      * NotifyPickup constructor.
      *
-     * @param \Magento\Backend\App\Action\Context                                       $context
+     * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface $notifyOrderIsReadyAndShip
-     * @param \Magento\Sales\Api\OrderRepositoryInterface                               $orderRepository
-     * @param \Psr\Log\LoggerInterface                                                  $logger
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -68,7 +68,7 @@ class NotifyPickup extends \Magento\Backend\App\Action
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
-    public function execute():\Magento\Framework\Controller\ResultInterface
+    public function execute(): \Magento\Framework\Controller\ResultInterface
     {
         $order = $this->initOrder();
 
@@ -97,9 +97,9 @@ class NotifyPickup extends \Magento\Backend\App\Action
     /**
      * Initialize order model instance
      *
+     * @return \Magento\Sales\Api\Data\OrderInterface|false
      * @see \Magento\Sales\Controller\Adminhtml\Order::_initOrder
      *
-     * @return \Magento\Sales\Api\Data\OrderInterface|false
      */
     private function initOrder()
     {

@@ -35,8 +35,8 @@ class ReadyForPickupNotifier extends \Magento\Sales\Model\AbstractNotifier
     protected $sender;
 
     /**
-     * @param CollectionFactory                                                      $historyCollectionFactory
-     * @param Logger                                                                 $logger
+     * @param CollectionFactory $historyCollectionFactory
+     * @param Logger $logger
      * @param \Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender $sender
      */
     public function __construct(

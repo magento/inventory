@@ -14,5 +14,5 @@ interface IsOrderReadyForPickupInterface
      *
      * @return bool
      */
-    public function execute(int $orderId):bool;
+    public function execute(int $orderId): bool;
 }
