@@ -18,5 +18,5 @@ interface NotifyOrderIsReadyAndShipInterface
      * @throws \Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function execute(int $orderId):?int;
+    public function execute(int $orderId): ?int;
 }

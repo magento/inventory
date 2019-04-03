@@ -28,7 +28,7 @@ class GetPickupLocationForOrderPlugin
     private $getPickupLocationByOrderId;
 
     /**
-     * @param OrderExtensionFactory          $orderExtensionFactory
+     * @param OrderExtensionFactory $orderExtensionFactory
      * @param GetPickupLocationCodeByOrderId $getPickupLocationByOrderId
      */
     public function __construct(

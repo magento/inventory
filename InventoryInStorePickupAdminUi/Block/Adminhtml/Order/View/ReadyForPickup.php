@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View;
 
 use Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order\NotifyPickup;
-use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
 
 /**
  * TODO: is it possible to replace with UI Component?
@@ -37,10 +36,10 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     /**
      * ReadyForPickup constructor.
      *
-     * @param \Magento\Backend\Block\Widget\Context                                      $context
-     * @param \Magento\Sales\Block\Adminhtml\Order\View                                  $viewBlock
+     * @param \Magento\Backend\Block\Widget\Context $context
+     * @param \Magento\Sales\Block\Adminhtml\Order\View $viewBlock
      * @param \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton $isDisplayButton
-     * @param array                                                                      $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
@@ -85,7 +84,7 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     /**
      * @return bool
      */
-    private function isEmailsSendingAllowed():bool
+    private function isEmailsSendingAllowed(): bool
     {
         return $this->_authorization->isAllowed(NotifyPickup::ADMIN_RESOURCE);
     }
@@ -93,7 +92,7 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     /**
      * @return bool
      */
-    private function isDisplayButton():bool
+    private function isDisplayButton(): bool
     {
         return $this->isEmailsSendingAllowed()
             && $this->isDisplayButton->execute($this->viewBlock->getOrder());

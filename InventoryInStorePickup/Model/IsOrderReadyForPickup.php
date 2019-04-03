@@ -27,7 +27,7 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
      * IsReadyForPickup constructor.
      *
      * @param \Magento\InventoryInStorePickup\Model\Order\IsFulfilled $isFulfilled
-     * @param \Magento\Sales\Api\OrderRepositoryInterface             $orderRepository
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         IsFulfilled $isFulfilled,
@@ -42,7 +42,7 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
      *
      * @return bool
      */
-    public function execute(int $orderId):bool
+    public function execute(int $orderId): bool
     {
         return $this->canShip($orderId) && $this->isFulfilled->execute($orderId);
     }
@@ -52,7 +52,7 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
      *
      * @return bool
      */
-    private function canShip(int $orderId):bool
+    private function canShip(int $orderId): bool
     {
         $order = $this->orderRepository->get($orderId);
         if ($order instanceof \Magento\Sales\Model\Order) {

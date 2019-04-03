@@ -14,7 +14,7 @@ class IsDisplayReadyForPickupButton
      *
      * @return bool
      */
-    public function execute(\Magento\Sales\Model\Order $order):bool
+    public function execute(\Magento\Sales\Model\Order $order): bool
     {
         return $order->getExtensionAttributes()->getPickupLocationCode()
             && $order->canShip();

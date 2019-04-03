@@ -26,12 +26,12 @@ class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
     /**
      * ReadyForPickupSender constructor.
      *
-     * @param \Magento\Sales\Model\Order\Email\Container\Template          $templateContainer
+     * @param \Magento\Sales\Model\Order\Email\Container\Template $templateContainer
      * @param \Magento\Sales\Model\Order\Email\Container\IdentityInterface $identityContainer
-     * @param \Magento\Sales\Model\Order\Email\SenderBuilderFactory        $senderBuilderFactory
-     * @param \Psr\Log\LoggerInterface                                     $logger
-     * @param \Magento\Sales\Model\Order\Address\Renderer                  $addressRenderer
-     * @param \Magento\Framework\Event\ManagerInterface                    $eventManager
+     * @param \Magento\Sales\Model\Order\Email\SenderBuilderFactory $senderBuilderFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Sales\Model\Order\Address\Renderer $addressRenderer
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
      */
     public function __construct(
         \Magento\Sales\Model\Order\Email\Container\Template $templateContainer,
@@ -51,7 +51,7 @@ class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
      *
      * @return bool
      */
-    public function send(\Magento\Sales\Model\Order $order):bool
+    public function send(\Magento\Sales\Model\Order $order): bool
     {
         return $this->checkAndSend($order);
     }
