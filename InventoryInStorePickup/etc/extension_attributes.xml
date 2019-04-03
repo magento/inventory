@@ -14,6 +14,6 @@
         </attribute>
     </extension_attributes>
     <extension_attributes for="Magento\InventoryApi\Api\Data\SourceInterface">
-        <attribute code="in_store_pickup" type="boolean" />
+        <attribute code="is_pickup_location_active" type="boolean"/>
     </extension_attributes>
 </config>
