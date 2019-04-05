@@ -28,22 +28,37 @@ class Inventory extends \Magento\Backend\Block\Widget implements \Magento\Backen
      * @since 101.0.0
      */
     protected $disabledFields = [];
+    /**
+     * @var \Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface
+     */
+    private $singleSourceMode;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\CatalogInventory\Model\Source\Backorders $backorders
-     * @param \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration
-     * @param array $data
+     * @param \Magento\Backend\Block\Template\Context                        $context
+     * @param \Magento\CatalogInventory\Model\Source\Backorders              $backorders
+     * @param \Magento\CatalogInventory\Api\StockConfigurationInterface      $stockConfiguration
+     * @param \Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface $singleSourceMode
+     * @param array                                                          $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\CatalogInventory\Model\Source\Backorders $backorders,
         \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration,
+        \Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface $singleSourceMode,
         array $data = []
     ) {
         $this->_backorders = $backorders;
         $this->stockConfiguration = $stockConfiguration;
+        $this->singleSourceMode = $singleSourceMode;
         parent::__construct($context, $data);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSingleSourceMode(): bool
+    {
+        return $this->singleSourceMode->execute();
     }
 
     /**
