@@ -7,16 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model;
 
-use Magento\InventoryInStorePickup\Model\Order\IsFulfilled;
+use Magento\InventoryInStorePickup\Model\Order\CanBeFulfilled;
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 
 class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
 {
     /**
-     * @var \Magento\InventoryInStorePickup\Model\Order\IsFulfilled
+     * @var \Magento\InventoryInStorePickup\Model\Order\CanBeFulfilled
      */
-    private $isFulfilled;
+    private $canBeFulfilled;
 
     /**
      * @var \Magento\Sales\Api\OrderRepositoryInterface
@@ -24,16 +26,14 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
     private $orderRepository;
 
     /**
-     * IsReadyForPickup constructor.
-     *
-     * @param \Magento\InventoryInStorePickup\Model\Order\IsFulfilled $isFulfilled
+     * @param \Magento\InventoryInStorePickup\Model\Order\CanBeFulfilled $canBeFulfilled
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      */
     public function __construct(
-        IsFulfilled $isFulfilled,
+        CanBeFulfilled $canBeFulfilled,
         OrderRepositoryInterface $orderRepository
     ) {
-        $this->isFulfilled = $isFulfilled;
+        $this->canBeFulfilled = $canBeFulfilled;
         $this->orderRepository = $orderRepository;
     }
 
@@ -44,18 +44,19 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
      */
     public function execute(int $orderId): bool
     {
-        return $this->canShip($orderId) && $this->isFulfilled->execute($orderId);
+        $order = $this->orderRepository->get($orderId);
+
+        return $this->canShip($order) && $this->canBeFulfilled->execute($order);
     }
 
     /**
-     * @param int $orderId
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
      *
      * @return bool
      */
-    private function canShip(int $orderId): bool
+    private function canShip(OrderInterface $order): bool
     {
-        $order = $this->orderRepository->get($orderId);
-        if ($order instanceof \Magento\Sales\Model\Order) {
+        if ($order instanceof Order) {
             return $order->canShip();
         }
 

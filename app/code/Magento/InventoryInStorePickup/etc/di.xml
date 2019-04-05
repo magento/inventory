@@ -26,8 +26,8 @@
         </arguments>
     </type>
 
-    <preference for="\Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface"
-            type="\Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyAndShip"/>
+    <preference for="\Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface"
+            type="\Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
     <preference for="\Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface"
             type="\Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
     <type name="\Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender">

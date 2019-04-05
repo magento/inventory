@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
-use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface;
+use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
 use Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException;
 
-class NotifyOrderIsReadyAndShip implements NotifyOrderIsReadyAndShipInterface
+class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterface
 {
     /**
      * @var \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface
@@ -62,20 +62,11 @@ class NotifyOrderIsReadyAndShip implements NotifyOrderIsReadyAndShipInterface
             throw new OrderIsNotReadyForPickupException();
         }
 
-        $this->emailNotifier->notify($this->getOrder($orderId));
+        /** @noinspection PhpParamsInspection */
+        $this->emailNotifier->notify($this->orderRepository->get($orderId));
 
         /* TODO: add order comment? */
 
         return (int)$this->shipOrder->execute($orderId);
-    }
-
-    /**
-     * @param int $orderId
-     *
-     * @return \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order
-     */
-    private function getOrder(int $orderId)
-    {
-        return $this->orderRepository->get($orderId);
     }
 }
