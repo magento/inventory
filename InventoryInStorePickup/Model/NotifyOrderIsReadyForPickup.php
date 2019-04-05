@@ -56,7 +56,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     /**
      * {@inheritdoc}
      */
-    public function execute(int $orderId): ?int
+    public function execute(int $orderId): void
     {
         if (!$this->isOrderReadyForPickup->execute($orderId)) {
             throw new OrderIsNotReadyForPickupException();
@@ -67,6 +67,6 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
 
         /* TODO: add order comment? */
 
-        return (int)$this->shipOrder->execute($orderId);
+        $this->shipOrder->execute($orderId);
     }
 }
