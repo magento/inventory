@@ -12,11 +12,9 @@ interface NotifyOrderIsReadyForPickupInterface
     /**
      * @param int $orderId
      *
-     * @return int|null Id of created Shipment
-     *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function execute(int $orderId): ?int;
+    public function execute(int $orderId): void;
 }
