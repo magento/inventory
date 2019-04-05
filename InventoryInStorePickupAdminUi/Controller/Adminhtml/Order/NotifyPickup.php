@@ -7,9 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order;
 
+use Magento\Backend\App\Action;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface;
+use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -18,7 +22,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order
  */
-class NotifyPickup extends \Magento\Backend\App\Action
+class NotifyPickup extends Action
 {
     /**
      * Authorization level of a basic admin session
@@ -28,9 +32,9 @@ class NotifyPickup extends \Magento\Backend\App\Action
     const ADMIN_RESOURCE = 'Magento_Sales::emails';
 
     /**
-     * @var \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface
+     * @var \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface
      */
-    private $notifyOrderIsReadyAndShip;
+    private $notifyOrderIsReadyForPickup;
 
     /**
      * @var \Magento\Sales\Api\OrderRepositoryInterface
@@ -46,17 +50,17 @@ class NotifyPickup extends \Magento\Backend\App\Action
      * NotifyPickup constructor.
      *
      * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyAndShipInterface $notifyOrderIsReadyAndShip
+     * @param \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        NotifyOrderIsReadyAndShipInterface $notifyOrderIsReadyAndShip,
+        Action\Context $context,
+        NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
-        $this->notifyOrderIsReadyAndShip = $notifyOrderIsReadyAndShip;
+        $this->notifyOrderIsReadyForPickup = $notifyOrderIsReadyForPickup;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
 
@@ -67,16 +71,19 @@ class NotifyPickup extends \Magento\Backend\App\Action
      * Notify user
      *
      * @return \Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(): \Magento\Framework\Controller\ResultInterface
+    public function execute(): ResultInterface
     {
         $order = $this->initOrder();
 
         if ($order) {
             try {
-                $this->notifyOrderIsReadyAndShip->execute((int)$order->getEntityId());
+                $this->notifyOrderIsReadyForPickup->execute((int)$order->getEntityId());
                 $this->messageManager->addSuccessMessage(__('The customer have been notified and shipment created.'));
-            } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage(__('We can\'t notify the customer right now.'));
@@ -97,25 +104,23 @@ class NotifyPickup extends \Magento\Backend\App\Action
     /**
      * Initialize order model instance
      *
-     * @return \Magento\Sales\Api\Data\OrderInterface|false
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @see \Magento\Sales\Controller\Adminhtml\Order::_initOrder
-     *
      */
-    private function initOrder()
+    private function initOrder(): OrderInterface
     {
         $id = $this->getRequest()->getParam('order_id');
         try {
             $order = $this->orderRepository->get($id);
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('This order no longer exists.'));
-            $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
-
-            return false;
-        } catch (InputException $e) {
-            $this->messageManager->addErrorMessage(__('This order no longer exists.'));
-            $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
-
-            return false;
+        } catch (LocalizedException $e) {
+            if ($e instanceof NoSuchEntityException || $e instanceof InputException) {
+                $this->messageManager->addErrorMessage(__('This order no longer exists.'));
+                $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
+            }
+            throw $e;
         }
 
         return $order;

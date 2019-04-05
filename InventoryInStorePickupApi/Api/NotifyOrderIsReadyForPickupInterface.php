@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api;
 
-interface NotifyOrderIsReadyAndShipInterface
+interface NotifyOrderIsReadyForPickupInterface
 {
     /**
      * @param int $orderId

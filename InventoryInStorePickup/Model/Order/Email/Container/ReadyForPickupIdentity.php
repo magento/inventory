@@ -15,12 +15,12 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     /**
      * Configuration paths
      */
-    const XML_PATH_EMAIL_COPY_METHOD    = 'storepickup_email/order_ready_for_pickup/copy_method';
-    const XML_PATH_EMAIL_COPY_TO        = 'storepickup_email/order_ready_for_pickup/copy_to';
-    const XML_PATH_EMAIL_IDENTITY       = 'storepickup_email/order_ready_for_pickup/identity';
-    const XML_PATH_EMAIL_GUEST_TEMPLATE = 'storepickup_email/order_ready_for_pickup/guest_template';
-    const XML_PATH_EMAIL_TEMPLATE       = 'storepickup_email/order_ready_for_pickup/template';
-    const XML_PATH_EMAIL_ENABLED        = 'storepickup_email/order_ready_for_pickup/enabled';
+    private const XML_PATH_EMAIL_COPY_METHOD    = 'storepickup_email/order_ready_for_pickup/copy_method';
+    private const XML_PATH_EMAIL_COPY_TO        = 'storepickup_email/order_ready_for_pickup/copy_to';
+    private const XML_PATH_EMAIL_IDENTITY       = 'storepickup_email/order_ready_for_pickup/identity';
+    private const XML_PATH_EMAIL_GUEST_TEMPLATE = 'storepickup_email/order_ready_for_pickup/guest_template';
+    private const XML_PATH_EMAIL_TEMPLATE       = 'storepickup_email/order_ready_for_pickup/template';
+    private const XML_PATH_EMAIL_ENABLED        = 'storepickup_email/order_ready_for_pickup/enabled';
 
     /**
      * @return bool

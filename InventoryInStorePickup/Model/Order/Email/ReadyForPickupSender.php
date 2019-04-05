@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\Order\Email;
 
 use Magento\Framework\DataObject;
+use Magento\Sales\Model\Order;
 
 /**
  * Class ReadyForPickupSender
@@ -51,7 +52,7 @@ class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
      *
      * @return bool
      */
-    public function send(\Magento\Sales\Model\Order $order): bool
+    public function send(Order $order): bool
     {
         return $this->checkAndSend($order);
     }
@@ -59,15 +60,15 @@ class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
     /**
      * Prepare email template with variables
      *
-     * @param \Magento\Sales\Model\ $order
+     * @param \Magento\Sales\Model\Order $order
      *
      * @return void
      */
-    protected function prepareTemplate(\Magento\Sales\Model\Order $order)
+    protected function prepareTemplate(Order $order)
     {
         $transport = [
-            'order'                    => $order,
-            'store'                    => $order->getStore(),
+            'order' => $order,
+            'store' => $order->getStore(),
             'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
         ];
         $transportObject = new DataObject($transport);

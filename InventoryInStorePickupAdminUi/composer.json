@@ -7,7 +7,8 @@
         "magento/module-ui": "*",
         "magento/module-inventory-in-store-pickup-api": "*",
         "magento/module-inventory-admin-ui": "*",
-        "magento/module-sales": "*"
+        "magento/module-sales": "*",
+        "magento/module-backend": "*"
     },
     "type": "magento2-module",
     "license": [
