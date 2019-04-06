@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
+use InvalidArgumentException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetDistanceProviderCodeInterface;
 use Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface;
@@ -38,7 +39,7 @@ class GetNearbySourcesByPostcode implements GetNearbySourcesByPostcodeInterface
     ) {
         foreach ($providers as $providerCode => $provider) {
             if (!($provider instanceof GetNearbySourcesByPostcodeInterface)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     sprintf(
                         "Nearby Sources provider %s must implement %s",
                         $providerCode,

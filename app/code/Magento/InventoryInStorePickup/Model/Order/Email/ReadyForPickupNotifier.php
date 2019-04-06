@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\Order\Email;
 
+use Magento\Sales\Model\AbstractNotifier;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\ResourceModel\Order\Status\History\CollectionFactory;
 use Psr\Log\LoggerInterface as Logger;
@@ -17,7 +18,7 @@ use Psr\Log\LoggerInterface as Logger;
  * @package Magento\InventoryInStorePickup\Model\Order\Email
  * TODO: probaly remove this class
  */
-class ReadyForPickupNotifier extends \Magento\Sales\Model\AbstractNotifier
+class ReadyForPickupNotifier extends AbstractNotifier
 {
     /**
      * @var CollectionFactory
@@ -25,7 +26,7 @@ class ReadyForPickupNotifier extends \Magento\Sales\Model\AbstractNotifier
     protected $historyCollectionFactory;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var Logger
      */
     protected $logger;
 
@@ -37,7 +38,7 @@ class ReadyForPickupNotifier extends \Magento\Sales\Model\AbstractNotifier
     /**
      * @param CollectionFactory $historyCollectionFactory
      * @param Logger $logger
-     * @param \Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender $sender
+     * @param ReadyForPickupSender $sender
      */
     public function __construct(
         CollectionFactory $historyCollectionFactory,

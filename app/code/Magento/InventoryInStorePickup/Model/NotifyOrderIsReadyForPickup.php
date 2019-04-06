@@ -7,45 +7,48 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model;
 
+use Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
 use Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\ShipOrderInterface;
 
 class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterface
 {
     /**
-     * @var \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface
+     * @var IsOrderReadyForPickupInterface
      */
     private $isOrderReadyForPickup;
 
     /**
-     * @var \Magento\Sales\Api\ShipOrderInterface
+     * @var ShipOrderInterface
      */
     private $shipOrder;
 
     /**
-     * @var \Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier
+     * @var ReadyForPickupNotifier
      */
     private $emailNotifier;
 
     /**
-     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     * @var OrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
      * NotifyOrderIsReadyAndShip constructor.
      *
-     * @param \Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface $isOrderReadyForPickup
-     * @param \Magento\Sales\Api\ShipOrderInterface $shipOrder
-     * @param \Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier $emailNotifier
-     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
+     * @param ShipOrderInterface $shipOrder
+     * @param ReadyForPickupNotifier $emailNotifier
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         IsOrderReadyForPickupInterface $isOrderReadyForPickup,
-        \Magento\Sales\Api\ShipOrderInterface $shipOrder,
+        ShipOrderInterface $shipOrder,
         Order\Email\ReadyForPickupNotifier $emailNotifier,
-        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->isOrderReadyForPickup = $isOrderReadyForPickup;
         $this->shipOrder = $shipOrder;

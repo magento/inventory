@@ -7,14 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException;
+
 interface NotifyOrderIsReadyForPickupInterface
 {
     /**
      * @param int $orderId
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws NoSuchEntityException
+     * @throws OrderIsNotReadyForPickupException
+     * @throws LocalizedException
      */
     public function execute(int $orderId): void;
 }
