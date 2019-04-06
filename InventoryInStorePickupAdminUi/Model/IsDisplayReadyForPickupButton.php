@@ -9,6 +9,9 @@ namespace Magento\InventoryInStorePickupAdminUi\Model;
 
 use Magento\Sales\Model\Order;
 
+/**
+ * Check if 'Notify Order is Ready for Pickup' button should be rendered
+ */
 class IsDisplayReadyForPickupButton
 {
     /**

@@ -16,7 +16,7 @@ use Magento\Sales\Block\Adminhtml\Order\View;
 /**
  * TODO: is it possible to replace with UI Component?
  *
- * @package Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View
+ * Render 'Notify Order is Ready for Pickup' button on order view page
  */
 class ReadyForPickup extends Container
 {

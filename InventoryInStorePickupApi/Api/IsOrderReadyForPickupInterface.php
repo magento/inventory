@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api;
 
+/**
+ * Check if customer can pickup the order in the pickup location
+ */
 interface IsOrderReadyForPickupInterface
 {
     /**

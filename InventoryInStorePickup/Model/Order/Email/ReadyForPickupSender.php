@@ -18,9 +18,6 @@ use Magento\Sales\Model\Order\Email\SenderBuilderFactory;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class ReadyForPickupSender
- *
- * @package Magento\InventoryInStorePickup\Model\Order\Email
  * TODO: refactor
  * TODO: Implement asynchronous email sending
  */
@@ -32,8 +29,6 @@ class ReadyForPickupSender extends Sender
     private $eventManager;
 
     /**
-     * ReadyForPickupSender constructor.
-     *
      * @param Template $templateContainer
      * @param IdentityInterface $identityContainer
      * @param SenderBuilderFactory $senderBuilderFactory
@@ -55,6 +50,9 @@ class ReadyForPickupSender extends Sender
     }
 
     /**
+     * Send order-specific email.
+     * This method is not declared anywhere in parent/interface, but Magento calls it
+     *
      * @param Order $order
      *
      * @return bool
@@ -92,5 +90,4 @@ class ReadyForPickupSender extends Sender
 
         parent::prepareTemplate($order);
     }
-
 }

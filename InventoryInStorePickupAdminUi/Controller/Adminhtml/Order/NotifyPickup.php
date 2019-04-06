@@ -70,7 +70,7 @@ class NotifyPickup extends Action
     }
 
     /**
-     * Notify user
+     * Notify customer by email
      *
      * @return ResultInterface
      * @throws InputException

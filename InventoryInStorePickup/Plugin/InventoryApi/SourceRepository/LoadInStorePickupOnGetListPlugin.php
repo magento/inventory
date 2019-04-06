@@ -21,8 +21,6 @@ class LoadInStorePickupOnGetListPlugin
     private $extensionAttributesFactory;
 
     /**
-     * LoadInStorePickupOnGetListPlugin constructor.
-     *
      * @param ExtensionAttributesFactory $extensionAttributesFactory
      */
     public function __construct(ExtensionAttributesFactory $extensionAttributesFactory)

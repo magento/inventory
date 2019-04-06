@@ -14,6 +14,9 @@ use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
 
+/**
+ * Send an email to the customer and ship the order to reserve pickup location`s QTY
+ */
 class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterface
 {
     /**
@@ -37,8 +40,6 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     private $orderRepository;
 
     /**
-     * NotifyOrderIsReadyAndShip constructor.
-     *
      * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
@@ -57,7 +58,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function execute(int $orderId): void
     {
