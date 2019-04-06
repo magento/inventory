@@ -16,18 +16,18 @@ use Magento\Sales\Model\Order;
 class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
 {
     /**
-     * @var \Magento\InventoryInStorePickup\Model\Order\CanBeFulfilled
+     * @var CanBeFulfilled
      */
     private $canBeFulfilled;
 
     /**
-     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     * @var OrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
-     * @param \Magento\InventoryInStorePickup\Model\Order\CanBeFulfilled $canBeFulfilled
-     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param CanBeFulfilled $canBeFulfilled
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         CanBeFulfilled $canBeFulfilled,
@@ -50,7 +50,7 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
     }
 
     /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @param OrderInterface $order
      *
      * @return bool
      */

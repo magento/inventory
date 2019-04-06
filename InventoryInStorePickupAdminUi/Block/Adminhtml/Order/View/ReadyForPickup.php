@@ -7,14 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View;
 
+use Magento\Backend\Block\Widget\Context;
+use Magento\Backend\Block\Widget\Form\Container;
 use Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order\NotifyPickup;
+use Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton;
+use Magento\Sales\Block\Adminhtml\Order\View;
 
 /**
  * TODO: is it possible to replace with UI Component?
  *
  * @package Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View
  */
-class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
+class ReadyForPickup extends Container
 {
     /**
      * Block group
@@ -24,27 +28,27 @@ class ReadyForPickup extends \Magento\Backend\Block\Widget\Form\Container
     protected $_blockGroup = 'Magento_Sales';
 
     /**
-     * @var \Magento\Sales\Block\Adminhtml\Order\View
+     * @var View
      */
     private $viewBlock;
 
     /**
-     * @var \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton
+     * @var IsDisplayReadyForPickupButton
      */
     private $isDisplayButton;
 
     /**
      * ReadyForPickup constructor.
      *
-     * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Sales\Block\Adminhtml\Order\View $viewBlock
-     * @param \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton $isDisplayButton
+     * @param Context $context
+     * @param View $viewBlock
+     * @param IsDisplayReadyForPickupButton $isDisplayButton
      * @param array $data
      */
     public function __construct(
-        \Magento\Backend\Block\Widget\Context $context,
-        \Magento\Sales\Block\Adminhtml\Order\View $viewBlock,
-        \Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton $isDisplayButton,
+        Context $context,
+        View $viewBlock,
+        IsDisplayReadyForPickupButton $isDisplayButton,
         array $data = []
     ) {
         $this->viewBlock = $viewBlock;

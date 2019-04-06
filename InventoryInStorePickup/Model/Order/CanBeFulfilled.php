@@ -7,35 +7,37 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\Order;
 
+use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
 class CanBeFulfilled
 {
     /**
-     * @var \Magento\InventoryApi\Api\SourceItemRepositoryInterface
+     * @var SourceItemRepositoryInterface
      */
     private $sourceItemRepository;
 
     /**
-     * @var \Magento\Framework\Api\SearchCriteriaBuilderFactory
+     * @var SearchCriteriaBuilderFactory
      */
     private $searchCriteriaBuilderFactory;
 
     /**
-     * @param \Magento\InventoryApi\Api\SourceItemRepositoryInterface $sourceItemRepository
-     * @param \Magento\Framework\Api\SearchCriteriaBuilderFactory $searchCriteriaBuilder
+     * @param SourceItemRepositoryInterface $sourceItemRepository
+     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilder
      */
     public function __construct(
-        \Magento\InventoryApi\Api\SourceItemRepositoryInterface $sourceItemRepository,
-        \Magento\Framework\Api\SearchCriteriaBuilderFactory $searchCriteriaBuilder
+        SourceItemRepositoryInterface $sourceItemRepository,
+        SearchCriteriaBuilderFactory $searchCriteriaBuilder
     ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilder;
     }
 
     /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @param OrderInterface $order
      *
      * @return bool
      */

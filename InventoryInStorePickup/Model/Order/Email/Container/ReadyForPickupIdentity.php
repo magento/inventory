@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\Order\Email\Container;
 
 use Magento\Sales\Model\Order\Email\Container\Container;
 use Magento\Sales\Model\Order\Email\Container\IdentityInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class ReadyForPickupIdentity extends Container implements IdentityInterface
 {
@@ -29,7 +30,7 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     {
         return $this->scopeConfig->isSetFlag(
             self::XML_PATH_EMAIL_ENABLED,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            ScopeInterface::SCOPE_STORE,
             $this->getStore()->getStoreId()
         );
     }

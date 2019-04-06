@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order;
 
+use Exception;
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
@@ -32,30 +34,30 @@ class NotifyPickup extends Action
     const ADMIN_RESOURCE = 'Magento_Sales::emails';
 
     /**
-     * @var \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface
+     * @var NotifyOrderIsReadyForPickupInterface
      */
     private $notifyOrderIsReadyForPickup;
 
     /**
-     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     * @var OrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
      * NotifyPickup constructor.
      *
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup
-     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param Context $context
+     * @param NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup
+     * @param OrderRepositoryInterface $orderRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        Action\Context $context,
+        Context $context,
         NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
@@ -70,10 +72,10 @@ class NotifyPickup extends Action
     /**
      * Notify user
      *
-     * @return \Magento\Framework\Controller\ResultInterface
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ResultInterface
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function execute(): ResultInterface
     {
@@ -85,7 +87,7 @@ class NotifyPickup extends Action
                 $this->messageManager->addSuccessMessage(__('The customer have been notified and shipment created.'));
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->messageManager->addErrorMessage(__('We can\'t notify the customer right now.'));
                 $this->logger->critical($e);
             }
@@ -104,10 +106,10 @@ class NotifyPickup extends Action
     /**
      * Initialize order model instance
      *
-     * @return \Magento\Sales\Api\Data\OrderInterface
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return OrderInterface
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @see \Magento\Sales\Controller\Adminhtml\Order::_initOrder
      */
     private function initOrder(): OrderInterface

@@ -8,7 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\Order\Email;
 
 use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Address\Renderer;
+use Magento\Sales\Model\Order\Email\Container\IdentityInterface;
+use Magento\Sales\Model\Order\Email\Container\Template;
+use Magento\Sales\Model\Order\Email\Sender;
+use Magento\Sales\Model\Order\Email\SenderBuilderFactory;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ReadyForPickupSender
@@ -17,30 +24,30 @@ use Magento\Sales\Model\Order;
  * TODO: refactor
  * TODO: Implement asynchronous email sending
  */
-class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
+class ReadyForPickupSender extends Sender
 {
     /**
-     * @var \Magento\Framework\Event\ManagerInterface
+     * @var ManagerInterface
      */
     private $eventManager;
 
     /**
      * ReadyForPickupSender constructor.
      *
-     * @param \Magento\Sales\Model\Order\Email\Container\Template $templateContainer
-     * @param \Magento\Sales\Model\Order\Email\Container\IdentityInterface $identityContainer
-     * @param \Magento\Sales\Model\Order\Email\SenderBuilderFactory $senderBuilderFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Sales\Model\Order\Address\Renderer $addressRenderer
-     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param Template $templateContainer
+     * @param IdentityInterface $identityContainer
+     * @param SenderBuilderFactory $senderBuilderFactory
+     * @param LoggerInterface $logger
+     * @param Renderer $addressRenderer
+     * @param ManagerInterface $eventManager
      */
     public function __construct(
-        \Magento\Sales\Model\Order\Email\Container\Template $templateContainer,
-        \Magento\Sales\Model\Order\Email\Container\IdentityInterface $identityContainer,
-        \Magento\Sales\Model\Order\Email\SenderBuilderFactory $senderBuilderFactory,
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Sales\Model\Order\Address\Renderer $addressRenderer,
-        \Magento\Framework\Event\ManagerInterface $eventManager
+        Template $templateContainer,
+        IdentityInterface $identityContainer,
+        SenderBuilderFactory $senderBuilderFactory,
+        LoggerInterface $logger,
+        Renderer $addressRenderer,
+        ManagerInterface $eventManager
     ) {
         parent::__construct($templateContainer, $identityContainer, $senderBuilderFactory, $logger, $addressRenderer);
 
@@ -48,7 +55,7 @@ class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
     }
 
     /**
-     * @param \Magento\Sales\Model\Order $order
+     * @param Order $order
      *
      * @return bool
      */
@@ -60,7 +67,7 @@ class ReadyForPickupSender extends \Magento\Sales\Model\Order\Email\Sender
     /**
      * Prepare email template with variables
      *
-     * @param \Magento\Sales\Model\Order $order
+     * @param Order $order
      *
      * @return void
      */

@@ -7,14 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Model;
 
+use Magento\Sales\Model\Order;
+
 class IsDisplayReadyForPickupButton
 {
     /**
-     * @param \Magento\Sales\Model\Order $order
+     * @param Order $order
      *
      * @return bool
      */
-    public function execute(\Magento\Sales\Model\Order $order): bool
+    public function execute(Order $order): bool
     {
         return $order->getExtensionAttributes()->getPickupLocationCode()
             && $order->canShip();
