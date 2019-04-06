@@ -60,12 +60,12 @@ class GetNearbySourcesByPostcodeTest extends TestCase
     public function executeDataProvider(): array
     {
         return [
-            ['DE', '81671', 500,  ['eu-3', 'eu-disabled']],
+            ['DE', '81671', 500,  ['eu-3']],
             ['FR', '56290', 1000, ['eu-1', 'eu-2']],
-            ['FR', '84490', 1000, ['eu-2', 'eu-1', 'eu-3', 'eu-disabled']],
+            ['FR', '84490', 1000, ['eu-2', 'eu-1', 'eu-3']],
             ['IT', '12022', 350,  ['eu-2']],
             ['IT', '39030', 350,  ['eu-3']],
-            ['DE', '26419', 750,  ['eu-disabled', 'eu-1', 'eu-3']],
+            ['DE', '26419', 750,  ['eu-1', 'eu-3']],
         ];
     }
 }

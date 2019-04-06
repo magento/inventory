@@ -5,11 +5,37 @@
  */
 declare(strict_types=1);
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\DB\Ddl\Table;
 
-/** @var ResourceConnection $resource */
-$resource = Bootstrap::getObjectManager()->get(ResourceConnection::class);
+/** @var SchemaSetupInterface $resource */
+$installer = Bootstrap::getObjectManager()->get(SchemaSetupInterface::class);
+
+$installer->startSetup();
+$tableName = $installer->getTable('inventory_geoname');
+
+if (!$installer->getConnection()->isTableExists($tableName)) {
+    $table = $installer->getConnection()
+        ->newTable($tableName)
+        ->addColumn(
+            'id',
+            Table::TYPE_INTEGER,
+            null,
+            [
+                Table::OPTION_NULLABLE => false, Table::OPTION_IDENTITY => true, Table::OPTION_UNSIGNED => true
+            ]
+        )
+        ->addColumn('country_code', Table::TYPE_TEXT, Table::DEFAULT_TEXT_SIZE)
+        ->addColumn('postcode', Table::TYPE_INTEGER, Table::DEFAULT_TEXT_SIZE)
+        ->addColumn('city', Table::TYPE_TEXT, Table::DEFAULT_TEXT_SIZE)
+        ->addColumn('region', Table::TYPE_TEXT, Table::DEFAULT_TEXT_SIZE)
+        ->addColumn('province', Table::TYPE_INTEGER, Table::DEFAULT_TEXT_SIZE)
+        ->addColumn('latitude', Table::TYPE_TEXT, Table::DEFAULT_TEXT_SIZE)
+        ->addColumn('longitude', Table::TYPE_TEXT, Table::DEFAULT_TEXT_SIZE);
+
+    $installer->getConnection()->createTable($table);
+}
 
 $sql = "
 INSERT INTO `%s` (`country_code`, `postcode`, `city`, `region`, `province`, `latitude`, `longitude`)
@@ -216,7 +242,5 @@ VALUES
 	('US', '19195', 'Philadelphia', 'Pennsylvania', '101', 39.9525, -75.1645);
 ";
 
-$connection = $resource->getConnection();
-$tableName = $connection->getTableName('inventory_geoname');
-
-$connection->query(sprintf($sql, $tableName))->execute();
+$installer->getConnection()->query(sprintf($sql, $tableName))->execute();
+$installer->endSetup();
