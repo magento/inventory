@@ -46,9 +46,8 @@ class IsFulfillable
      */
     public function execute(OrderInterface $order): bool
     {
-        if ($order->getExtensionAttributes()
-            && $sourceCode = $order->getExtensionAttributes()->getPickupLocationCode()
-        ) {
+        if ($order->getExtensionAttributes() && $order->getExtensionAttributes()->getPickupLocationCode()) {
+            $sourceCode = $order->getExtensionAttributes()->getPickupLocationCode();
             foreach ($order->getItems() as $item) {
                 if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
                     return false;
