@@ -9,6 +9,7 @@ namespace Magento\InventoryConfiguration\Model;
 
 use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryConfiguration\Model\ResourceModel\IsManageStockActive;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
@@ -43,6 +44,10 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
      * @var IsSourceItemManagementAllowedForSkuInterface
      */
     private $isSourceItemManagementAllowedForSku;
+    /**
+     * @var IsManageStockActive
+     */
+    private $isManageStockActive;
 
     /**
      * @param GetLegacyStockItem $getLegacyStockItem
@@ -50,19 +55,22 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
      * @param IsProductAssignedToStockInterface $isProductAssignedToStock
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
+     * @param IsManageStockActive $isManageStockActive
      */
     public function __construct(
         GetLegacyStockItem $getLegacyStockItem,
         StockItemConfigurationFactory $stockItemConfigurationFactory,
         IsProductAssignedToStockInterface $isProductAssignedToStock,
         DefaultStockProviderInterface $defaultStockProvider,
-        IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
+        IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
+        IsManageStockActive $isManageStockActive
     ) {
         $this->getLegacyStockItem = $getLegacyStockItem;
         $this->stockItemConfigurationFactory = $stockItemConfigurationFactory;
         $this->isProductAssignedToStock = $isProductAssignedToStock;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
+        $this->isManageStockActive = $isManageStockActive;
     }
 
     /**
@@ -72,7 +80,8 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     {
         if ($this->defaultStockProvider->getId() !== $stockId
             && true === $this->isSourceItemManagementAllowedForSku->execute($sku)
-            && false === $this->isProductAssignedToStock->execute($sku, $stockId)) {
+            && false === $this->isProductAssignedToStock->execute($sku, $stockId)
+            && true === (bool) $this->isManageStockActive->execute($sku)) {
             throw new SkuIsNotAssignedToStockException(
                 __('The requested sku is not assigned to given stock.')
             );
