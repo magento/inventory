@@ -12,7 +12,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
-class CanBeFulfilled
+class IsFulfillable
 {
     /**
      * @var SourceItemRepositoryInterface
@@ -47,7 +47,7 @@ class CanBeFulfilled
             && $sourceCode = $order->getExtensionAttributes()->getPickupLocationCode()
         ) {
             foreach ($order->getItems() as $item) {
-                if (!$this->canItemBeFulfilled($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
+                if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
                     return false;
                 }
             }
@@ -65,7 +65,7 @@ class CanBeFulfilled
      *
      * @return bool
      */
-    private function canItemBeFulfilled(string $sku, string $sourceCode, float $qtyOrdered): bool
+    private function isItemFulfillable(string $sku, string $sourceCode, float $qtyOrdered): bool
     {
         $searchCriteria = $this->searchCriteriaBuilderFactory
             ->create()
