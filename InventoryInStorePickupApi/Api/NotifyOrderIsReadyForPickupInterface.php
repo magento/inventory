@@ -9,7 +9,6 @@ namespace Magento\InventoryInStorePickupApi\Api;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException;
 
 interface NotifyOrderIsReadyForPickupInterface
 {
@@ -17,7 +16,6 @@ interface NotifyOrderIsReadyForPickupInterface
      * @param int $orderId
      *
      * @throws NoSuchEntityException
-     * @throws OrderIsNotReadyForPickupException
      * @throws LocalizedException
      */
     public function execute(int $orderId): void;

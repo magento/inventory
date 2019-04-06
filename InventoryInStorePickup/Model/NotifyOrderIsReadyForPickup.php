@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
-use Magento\InventoryInStorePickupApi\Exception\OrderIsNotReadyForPickupException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
 
@@ -62,7 +62,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     public function execute(int $orderId): void
     {
         if (!$this->isOrderReadyForPickup->execute($orderId)) {
-            throw new OrderIsNotReadyForPickupException();
+            throw new LocalizedException(__('The order is not ready for pickup'));
         }
 
         /** @noinspection PhpParamsInspection */
