@@ -10,4 +10,8 @@
         <plugin name="disable_bundle_type"
                 type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
     </type>
+    <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
+        <plugin sortOrder="1" name="magentoInventoryBundleProductCollection"
+                type="Magento\InventoryBundleProduct\Plugin\Model\ResourceModel\Selection\CollectionPlugin"/>
+    </type>
 </config>
