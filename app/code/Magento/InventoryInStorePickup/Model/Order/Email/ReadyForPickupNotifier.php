@@ -13,10 +13,8 @@ use Magento\Sales\Model\ResourceModel\Order\Status\History\CollectionFactory;
 use Psr\Log\LoggerInterface as Logger;
 
 /**
- * Class ReadyForPickupNotifier
- *
- * @package Magento\InventoryInStorePickup\Model\Order\Email
- * TODO: probaly remove this class
+*  Sends email to customer
+ * TODO: remove this class with asynchronous mailing implementation
  */
 class ReadyForPickupNotifier extends AbstractNotifier
 {

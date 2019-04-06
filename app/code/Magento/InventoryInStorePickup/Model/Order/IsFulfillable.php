@@ -12,6 +12,9 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
+/**
+ * Check if order can be fulfilled: if its pickup location has enough QTY
+ */
 class IsFulfillable
 {
     /**

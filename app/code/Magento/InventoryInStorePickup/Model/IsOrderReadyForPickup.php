@@ -13,6 +13,9 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 
+/**
+ * Check if order can be shipped and the pickup location has enough QTY
+ */
 class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
 {
     /**
