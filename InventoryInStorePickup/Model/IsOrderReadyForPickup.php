@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model;
 
-use Magento\InventoryInStorePickup\Model\Order\CanBeFulfilled;
+use Magento\InventoryInStorePickup\Model\Order\IsFulfillable;
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -16,9 +16,9 @@ use Magento\Sales\Model\Order;
 class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
 {
     /**
-     * @var CanBeFulfilled
+     * @var IsFulfillable
      */
-    private $canBeFulfilled;
+    private $isFulfillable;
 
     /**
      * @var OrderRepositoryInterface
@@ -26,14 +26,14 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
     private $orderRepository;
 
     /**
-     * @param CanBeFulfilled $canBeFulfilled
+     * @param IsFulfillable $isFulfillable
      * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
-        CanBeFulfilled $canBeFulfilled,
+        IsFulfillable $isFulfillable,
         OrderRepositoryInterface $orderRepository
     ) {
-        $this->canBeFulfilled = $canBeFulfilled;
+        $this->isFulfillable = $isFulfillable;
         $this->orderRepository = $orderRepository;
     }
 
@@ -46,7 +46,7 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
     {
         $order = $this->orderRepository->get($orderId);
 
-        return $this->canShip($order) && $this->canBeFulfilled->execute($order);
+        return $this->canShip($order) && $this->isFulfillable->execute($order);
     }
 
     /**
