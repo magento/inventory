@@ -10,6 +10,7 @@
         <sequence>
             <module name="Magento_Inventory"/>
             <module name="Magento_InventoryInStorePickupApi"/>
+            <module name="Magento_InventoryDistanceBasedSourceSelection" />
             <module name="Magento_Sales" />
         </sequence>
     </module>

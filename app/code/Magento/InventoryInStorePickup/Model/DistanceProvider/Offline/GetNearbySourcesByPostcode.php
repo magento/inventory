@@ -74,7 +74,8 @@ class GetNearbySourcesByPostcode implements GetNearbySourcesByPostcodeInterface
             ->from($sourceTable)
             ->columns(['*', $this->createDistanceColumn($lat, $lng) . ' AS distance'])
             ->where(SourceInterface::ENABLED)
-            ->having('distance <= ?', $radius);
+            ->having('distance <= ?', $radius)
+            ->order('distance ASC');
 
         $rows = $connection->fetchAll($query);
         $results = [];
@@ -93,13 +94,13 @@ class GetNearbySourcesByPostcode implements GetNearbySourcesByPostcodeInterface
      * @param float $longitude
      * @return string
      */
-    private function createDistanceColumn(float $latitude, float $longitude)
+    private function createDistanceColumn(float $latitude, float $longitude): string
     {
         return '(' . self::EARTH_RADIUS_KM . ' * ACOS('
-            . 'COS(RADIANS(' . (float)$latitude . ')) * '
+            . 'COS(RADIANS(' . $latitude . ')) * '
             . 'COS(RADIANS(latitude)) * '
-            . 'COS(RADIANS(longitude) - RADIANS(' . (float)$longitude . ')) + '
-            . 'SIN(RADIANS(' . (float)$latitude . ')) * '
+            . 'COS(RADIANS(longitude) - RADIANS(' . $longitude . ')) + '
+            . 'SIN(RADIANS(' . $latitude . ')) * '
             . 'SIN(RADIANS(latitude))'
             . '))';
     }
