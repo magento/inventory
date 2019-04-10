@@ -15,6 +15,7 @@ use Magento\Sales\Block\Adminhtml\Order\View;
 
 /**
  * TODO: is it possible to replace with UI Component?
+ * @api
  * @see https://github.com/magento-engcom/msi/issues/2161
  *
  * Render 'Notify Order is Ready for Pickup' button on order view page
