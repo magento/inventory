@@ -11,20 +11,23 @@ use Magento\Sales\Model\Order\Email\Container\Container;
 use Magento\Sales\Model\Order\Email\Container\IdentityInterface;
 use Magento\Store\Model\ScopeInterface;
 
+/**
+ * @inheritdoc
+ */
 class ReadyForPickupIdentity extends Container implements IdentityInterface
 {
     /**
      * Configuration paths
      */
-    private const XML_PATH_EMAIL_COPY_METHOD    = 'storepickup_email/order_ready_for_pickup/copy_method';
-    private const XML_PATH_EMAIL_COPY_TO        = 'storepickup_email/order_ready_for_pickup/copy_to';
-    private const XML_PATH_EMAIL_IDENTITY       = 'storepickup_email/order_ready_for_pickup/identity';
+    private const XML_PATH_EMAIL_COPY_METHOD = 'storepickup_email/order_ready_for_pickup/copy_method';
+    private const XML_PATH_EMAIL_COPY_TO = 'storepickup_email/order_ready_for_pickup/copy_to';
+    private const XML_PATH_EMAIL_IDENTITY = 'storepickup_email/order_ready_for_pickup/identity';
     private const XML_PATH_EMAIL_GUEST_TEMPLATE = 'storepickup_email/order_ready_for_pickup/guest_template';
-    private const XML_PATH_EMAIL_TEMPLATE       = 'storepickup_email/order_ready_for_pickup/template';
-    private const XML_PATH_EMAIL_ENABLED        = 'storepickup_email/order_ready_for_pickup/enabled';
+    private const XML_PATH_EMAIL_TEMPLATE = 'storepickup_email/order_ready_for_pickup/template';
+    private const XML_PATH_EMAIL_ENABLED = 'storepickup_email/order_ready_for_pickup/enabled';
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isEnabled()
     {
@@ -36,9 +39,7 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     }
 
     /**
-     * Return email copy_to list
-     *
-     * @return array|bool
+     * @inheritdoc
      */
     public function getEmailCopyTo()
     {
@@ -51,9 +52,7 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     }
 
     /**
-     * Return copy method
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function getCopyMethod()
     {
@@ -61,9 +60,7 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     }
 
     /**
-     * Return guest template id
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function getGuestTemplateId()
     {
@@ -71,9 +68,7 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     }
 
     /**
-     * Return template id
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function getTemplateId()
     {
@@ -81,9 +76,7 @@ class ReadyForPickupIdentity extends Container implements IdentityInterface
     }
 
     /**
-     * Return email identity
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function getEmailIdentity()
     {

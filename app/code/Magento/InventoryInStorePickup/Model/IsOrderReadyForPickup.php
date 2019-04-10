@@ -53,8 +53,9 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
     }
 
     /**
-     * @param OrderInterface $order
+     * Retrieve order shipment availability.
      *
+     * @param OrderInterface $order
      * @return bool
      */
     private function canShip(OrderInterface $order): bool

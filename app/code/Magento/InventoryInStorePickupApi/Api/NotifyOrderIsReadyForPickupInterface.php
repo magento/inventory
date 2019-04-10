@@ -16,8 +16,9 @@ use Magento\Framework\Exception\NoSuchEntityException;
 interface NotifyOrderIsReadyForPickupInterface
 {
     /**
-     * @param int $orderId
+     * Send an email to the customer and ship the order to reserve pickup location`s QTY.
      *
+     * @param int $orderId
      * @throws NoSuchEntityException
      * @throws LocalizedException
      */

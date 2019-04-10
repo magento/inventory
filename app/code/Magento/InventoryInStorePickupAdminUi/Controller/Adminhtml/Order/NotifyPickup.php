@@ -20,9 +20,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class NotifyPickup
- *
- * @package Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order
+ * Notify Customer of order pickup availability.
  */
 class NotifyPickup extends Action
 {
@@ -49,8 +47,6 @@ class NotifyPickup extends Action
     private $logger;
 
     /**
-     * NotifyPickup constructor.
-     *
      * @param Context $context
      * @param NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup
      * @param OrderRepositoryInterface $orderRepository
