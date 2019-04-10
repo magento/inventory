@@ -40,8 +40,9 @@ class IsFulfillable
     }
 
     /**
-     * @param OrderInterface $order
+     * Check if items are ordered form the Pickup location and verify that each item has enough quantity.
      *
+     * @param OrderInterface $order
      * @return bool
      */
     public function execute(OrderInterface $order): bool
@@ -61,10 +62,11 @@ class IsFulfillable
     }
 
     /**
+     * Check if Pickup Location source has enough item qty.
+     *
      * @param string $sku
      * @param string $sourceCode
      * @param float $qtyOrdered
-     *
      * @return bool
      */
     private function isItemFulfillable(string $sku, string $sourceCode, float $qtyOrdered): bool
