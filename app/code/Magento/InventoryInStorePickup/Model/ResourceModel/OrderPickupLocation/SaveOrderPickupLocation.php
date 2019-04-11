@@ -18,14 +18,12 @@ class SaveOrderPickupLocation
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
-     * @var \Magento\Framework\App\ResourceConnection
+     * @var ResourceConnection
      */
     private $connection;
 
     /**
-     * GetPickupLocationByOrderId constructor.
-     *
-     * @param \Magento\Framework\App\ResourceConnection $connection
+     * @param ResourceConnection $connection
      */
     public function __construct(
         ResourceConnection $connection

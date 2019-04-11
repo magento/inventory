@@ -12,19 +12,19 @@ use Magento\Framework\App\ResourceConnection;
 /**
  * Get Pickup Location identifier by order identifier.
  */
-class GetPickupLocationByOrderId
+class GetPickupLocationCodeByOrderId
 {
     private const ORDER_ID = 'order_id';
 
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
-     * @var \Magento\Framework\App\ResourceConnection
+     * @var ResourceConnection
      */
     private $connection;
 
     /**
-     * @param \Magento\Framework\App\ResourceConnection $connection
+     * @param ResourceConnection $connection
      */
     public function __construct(
         ResourceConnection $connection
