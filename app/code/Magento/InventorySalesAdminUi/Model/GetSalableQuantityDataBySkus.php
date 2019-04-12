@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventorySalesAdminUi\Model\ResourceModel\GetSalableQuantityData;
+use Magento\Framework\App\ResourceConnection;
 
 /**
  * Get salable quantity data by SKUs
@@ -17,34 +16,26 @@ use Magento\InventorySalesAdminUi\Model\ResourceModel\GetSalableQuantityData;
 class GetSalableQuantityDataBySkus
 {
     /**
-     * @var StockRepositoryInterface
-     */
-    private $stockRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
      * @var GetSalableQuantityData
      */
     private $getSalableQuantityData;
 
     /**
+     * @var ResourceConnection
+     */
+    private $resource;
+
+    /**
      * GetSalableQuantityDataBySkus constructor.
-     * @param StockRepositoryInterface $stockRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param GetSalableQuantityData $getSalableQuantityData
+     * @param ResourceConnection $resource
      */
     public function __construct(
-        StockRepositoryInterface $stockRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        GetSalableQuantityData $getSalableQuantityData
+        GetSalableQuantityData $getSalableQuantityData,
+        ResourceConnection $resource
     ) {
-        $this->stockRepository = $stockRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->getSalableQuantityData = $getSalableQuantityData;
+        $this->resource = $resource;
     }
 
     /**
@@ -57,21 +48,37 @@ class GetSalableQuantityDataBySkus
      */
     public function execute(array $skus): array
     {
-        $stocks = $this->stockRepository->getList($this->searchCriteriaBuilder->create())->getItems();
+        $stocks = $this->getStockItems();
 
         $salableQuantity = [];
         foreach ($stocks as $stock) {
-            $salableQuantityPerStock = $this->getSalableQuantityData->execute((int) $stock->getStockId(), $skus);
+            $salableQuantityPerStock = $this->getSalableQuantityData->execute((int) $stock['stock_id'], $skus);
 
             foreach ($salableQuantityPerStock as $salableItem) {
                 $salableQuantity[$salableItem['sku']][] = [
-                    'stock_name' => $stock->getName(),
-                    'qty' => (float)$salableItem['salable_quantity'],
+                    'stock_name' => $stock['name'],
+                    'qty' => (float) $salableItem['salable_quantity'],
                     'manage_stock' => (bool) $salableItem['is_salable']
                 ];
             }
         }
 
         return $salableQuantity;
+    }
+
+    /**
+     * @return array
+     */
+    private function getStockItems(): array
+    {
+        /** @var \Magento\Framework\DB\Adapter\Pdo\Mysql $connection */
+        $connection = $this->resource->getConnection();
+
+        $select = $connection->select()
+            ->from(
+                ['stock_table' => $connection->getTableName('inventory_stock')]
+            );
+
+        return $connection->fetchAll($select);
     }
 }

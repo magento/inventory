@@ -9,7 +9,6 @@ namespace Magento\InventorySalesAdminUi\Ui\Component\Listing\Column;
 
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
-use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySkus;
 use Magento\Ui\Component\Listing\Columns\Column;
@@ -70,8 +69,7 @@ class SalableQuantityBulk extends Column
                 $row['salable_quantity'] = $salableQuantity[$row['sku']] ?? [];
             }
         }
-        unset($row);
-        unset($salableQuantity);
+        unset($row, $salableQuantity);
 
         return $dataSource;
     }
