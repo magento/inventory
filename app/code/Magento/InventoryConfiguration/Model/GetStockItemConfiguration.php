@@ -67,20 +67,27 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
 
     /**
      * @inheritdoc
+     * @todo Need to make Manage_to_stock setting as catalog attribute
      */
     public function execute(string $sku, int $stockId): StockItemConfigurationInterface
     {
+        $result = true;
         if ($this->defaultStockProvider->getId() !== $stockId
             && true === $this->isSourceItemManagementAllowedForSku->execute($sku)
             && false === $this->isProductAssignedToStock->execute($sku, $stockId)) {
-            throw new SkuIsNotAssignedToStockException(
-                __('The requested sku is not assigned to given stock.')
-            );
+            $result = false;
         }
-
+        $stockItem = $this->getLegacyStockItem->execute($sku);
+        if(!$result){
+            if($stockItem->getManageStock() !== 0){
+                throw new SkuIsNotAssignedToStockException(
+                    __('The requested sku is not assigned to given stock.')
+                );
+            }
+        }
         return $this->stockItemConfigurationFactory->create(
             [
-                'stockItem' => $this->getLegacyStockItem->execute($sku)
+                'stockItem' => $stockItem
             ]
         );
     }
