@@ -18,7 +18,7 @@ class PickupLocation implements PickupLocationInterface
     private $extensionAttributes;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $sourceCode;
 
@@ -93,7 +93,7 @@ class PickupLocation implements PickupLocationInterface
     private $openHours;
 
     /**
-     * @param string|null $sourceCode
+     * @param string $sourceCode
      * @param string|null $name
      * @param string|null $fax
      * @param string|null $contactName
@@ -111,7 +111,7 @@ class PickupLocation implements PickupLocationInterface
      * @param PickupLocationExtensionInterface|null $extensionAttributes
      */
     public function __construct(
-        ?string $sourceCode = null,
+        string $sourceCode,
         ?string $name = null,
         ?string $fax = null,
         ?string $contactName = null,
@@ -149,7 +149,7 @@ class PickupLocation implements PickupLocationInterface
     /**
      * @inheritdoc
      */
-    public function getSourceCode(): ?string
+    public function getSourceCode(): string
     {
         return $this->sourceCode;
     }
