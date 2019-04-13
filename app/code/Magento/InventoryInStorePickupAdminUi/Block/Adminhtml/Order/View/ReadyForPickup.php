@@ -66,23 +66,25 @@ class ReadyForPickup extends Container
         $this->_controller = 'adminhtml_order';
         $this->_mode = 'view';
 
-        if ($this->isDisplayButton()) {
-            $message = __(
-                'Are you sure you want to notify the customer that order is ready for pickup and create shipment?'
-            );
-            $this->addButton(
-                'ready_for_pickup',
-                [
-                    'label'   => __('Notify Order is Ready for Pickup'),
-                    'class'   => 'action-default ready-for-pickup',
-                    'onclick' => sprintf(
-                        "confirmSetLocation('%s', '%s')",
-                        $message,
-                        $this->viewBlock->getUrl('sales/*/notifyPickup')
-                    )
-                ]
-            );
+        if (!$this->isDisplayButton()) {
+            return;
         }
+
+        $message = __(
+            'Are you sure you want to notify the customer that order is ready for pickup and create shipment?'
+        );
+        $this->addButton(
+            'ready_for_pickup',
+            [
+                'label'   => __('Notify Order is Ready for Pickup'),
+                'class'   => 'action-default ready-for-pickup',
+                'onclick' => sprintf(
+                    "confirmSetLocation('%s', '%s')",
+                    $message,
+                    $this->viewBlock->getUrl('sales/*/notifyPickup')
+                )
+            ]
+        );
     }
 
     /**

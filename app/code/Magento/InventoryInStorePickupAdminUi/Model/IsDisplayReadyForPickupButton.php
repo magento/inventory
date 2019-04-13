@@ -21,7 +21,12 @@ class IsDisplayReadyForPickupButton
      */
     public function execute(Order $order): bool
     {
-        return $order->getExtensionAttributes()->getPickupLocationCode()
+        $extensionAttributes = $order->getExtensionAttributes();
+        if ($extensionAttributes === null) {
+            return false;
+        }
+
+        return $extensionAttributes->getPickupLocationCode()
             && $order->canShip();
     }
 }

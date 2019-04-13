@@ -47,18 +47,23 @@ class IsFulfillable
      */
     public function execute(OrderInterface $order): bool
     {
-        if ($order->getExtensionAttributes() && $order->getExtensionAttributes()->getPickupLocationCode()) {
-            $sourceCode = $order->getExtensionAttributes()->getPickupLocationCode();
-            foreach ($order->getItems() as $item) {
-                if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
-                    return false;
-                }
-            }
-
-            return true;
+        $extensionAttributes = $order->getExtensionAttributes();
+        if (!$extensionAttributes) {
+            return false;
         }
 
-        return false;
+        $sourceCode = $extensionAttributes->getPickupLocationCode();
+        if (!$sourceCode) {
+            return false;
+        }
+
+        foreach ($order->getItems() as $item) {
+            if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
