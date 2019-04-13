@@ -93,8 +93,14 @@ class PickupLocation implements PickupLocationInterface
     private $openHours;
 
     /**
+     * @var string|null
+     */
+    private $email;
+
+    /**
      * @param string $sourceCode
      * @param string|null $name
+     * @param string|null $email
      * @param string|null $fax
      * @param string|null $contactName
      * @param string|null $description
@@ -113,6 +119,7 @@ class PickupLocation implements PickupLocationInterface
     public function __construct(
         string $sourceCode,
         ?string $name = null,
+        ?string $email = null,
         ?string $fax = null,
         ?string $contactName = null,
         ?string $description = null,
@@ -130,6 +137,7 @@ class PickupLocation implements PickupLocationInterface
     ) {
         $this->sourceCode = $sourceCode;
         $this->name = $name;
+        $this->email = $email;
         $this->fax = $fax;
         $this->contactName = $contactName;
         $this->description = $description;
@@ -160,6 +168,14 @@ class PickupLocation implements PickupLocationInterface
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
     }
 
     /**
