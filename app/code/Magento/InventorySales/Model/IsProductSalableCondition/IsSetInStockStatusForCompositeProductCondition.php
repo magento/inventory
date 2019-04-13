@@ -43,7 +43,7 @@ class IsSetInStockStatusForCompositeProductCondition implements IsProductSalable
      */
     public function execute(string $sku, int $stockId): bool
     {
-        if ($this->isSourceItemManagementAllowedForSku->execute($sku)) {
+        if (!$this->isSourceItemManagementAllowedForSku->execute($sku)) {
             return true;
         }
 
