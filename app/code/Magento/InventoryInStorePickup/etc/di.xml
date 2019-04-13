@@ -17,7 +17,7 @@
     </type>
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface"
             type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
-
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
     <type name="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode">
         <arguments>
             <argument name="providers" xsi:type="array">
