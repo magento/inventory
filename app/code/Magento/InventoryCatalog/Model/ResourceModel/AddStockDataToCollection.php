@@ -12,6 +12,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 
 /**
  * Add Stock data to collection
@@ -29,16 +30,24 @@ class AddStockDataToCollection
     private $defaultStockProvider;
 
     /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfiguration;
+
+    /**
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param StockConfigurationInterface $configuration
      */
     public function __construct(
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        DefaultStockProviderInterface $defaultStockProvider = null,
+        StockConfigurationInterface $configuration
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider ?: ObjectManager::getInstance()
             ->get(DefaultStockProviderInterface::class);
+        $this->stockConfiguration = $configuration;
     }
 
     /**
@@ -51,6 +60,7 @@ class AddStockDataToCollection
     {
         if ($stockId === $this->defaultStockProvider->getId()) {
             $isSalableColumnName = 'stock_status';
+
             $resource = $collection->getResource();
             $collection->getSelect()
                 ->join(
@@ -68,7 +78,7 @@ class AddStockDataToCollection
             );
             $isSalableColumnName = IndexStructure::IS_SALABLE;
             $collection->getSelect()
-                ->join(
+                ->joinLeft(
                     ['stock_status_index' => $stockIndexTableName],
                     'product.sku = stock_status_index.' . IndexStructure::SKU,
                     [$isSalableColumnName]
@@ -76,8 +86,19 @@ class AddStockDataToCollection
         }
 
         if ($isFilterInStock) {
+            $globalManageStock = (int)$this->stockConfiguration->getManageStock();
+            $stockSettingsCondition = '(legacy_stock_item.use_config_manage_stock = 0 AND legacy_stock_item.manage_stock = 0)';
+            if (0 === $globalManageStock) {
+                $stockSettingsCondition .= ' OR legacy_stock_item.use_config_manage_stock = 1';
+            }
             $collection->getSelect()
-                ->where('stock_status_index.' . $isSalableColumnName . ' = ?', 1);
+                ->join(
+                    ['legacy_stock_item' => $resource->getTable('cataloginventory_stock_item')],
+                    sprintf('%s.entity_id = legacy_stock_item.product_id', Collection::MAIN_TABLE_ALIAS),
+                    ['use_config_manage_stock', 'manage_stock']
+                );
+            $collection->getSelect()
+                ->where('(stock_status_index.' . $isSalableColumnName . ' = ?) OR (' . $stockSettingsCondition . ')', 1);
         }
     }
 }

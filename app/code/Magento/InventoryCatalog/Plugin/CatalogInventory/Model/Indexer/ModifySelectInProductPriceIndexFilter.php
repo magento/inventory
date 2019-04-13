@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Indexer;
 
+use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\IndexTableStructure;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Model\Indexer\ProductPriceIndexFilter;
@@ -76,6 +77,7 @@ class ModifySelectInProductPriceIndexFilter
             return;
         }
 
+        $globalManageStock = (int)$this->stockConfiguration->getManageStock();
         foreach ($this->getWebsiteIdsFromProducts($entityIds) as $websiteId) {
             $stock = $this->stockByWebsiteIdResolver->execute($websiteId);
             $stockTable = $this->stockIndexTableNameResolver->execute((int)$stock->getStockId());
@@ -93,8 +95,16 @@ class ModifySelectInProductPriceIndexFilter
                     ['inventory_stock' => $stockTable],
                     'inventory_stock.sku = product_entity.sku',
                     []
+                )->join(
+                    ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                    'product_entity.entity_id = legacy_stock_item.product_id',
+                    ['use_config_manage_stock', 'manage_stock']
                 );
-                $select->where('inventory_stock.is_salable = 0 OR inventory_stock.is_salable IS NULL');
+                $stockSettingsCondition = '(legacy_stock_item.use_config_manage_stock = 0 AND legacy_stock_item.manage_stock = 1)';
+                if (1 === $globalManageStock) {
+                    $stockSettingsCondition .= ' OR legacy_stock_item.use_config_manage_stock = 1';
+                }
+                $select->where('(inventory_stock.is_salable = 0 OR inventory_stock.is_salable IS NULL) AND '.$stockSettingsCondition);
             }
 
             $select->where('price_index.website_id = ?', $websiteId);

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Plugin\Search\FilterMapper;
 
+use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
@@ -18,6 +19,7 @@ use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 
 /**
  * Adapt stock status filter to multi stocks
@@ -56,12 +58,18 @@ class AdaptStockStatusFilterPlugin
     private $defaultStockProvider;
 
     /**
+     * @var StockConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param ConditionManager $conditionManager
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param ResourceConnection $resourceConnection
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
         ConditionManager $conditionManager,
@@ -69,7 +77,8 @@ class AdaptStockStatusFilterPlugin
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         ResourceConnection $resourceConnection,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        DefaultStockProviderInterface $defaultStockProvider = null,
+        StockConfigurationInterface $stockConfiguration
     ) {
         $this->conditionManager = $conditionManager;
         $this->storeManager = $storeManager;
@@ -78,6 +87,7 @@ class AdaptStockStatusFilterPlugin
         $this->resourceConnection = $resourceConnection;
         $this->defaultStockProvider = $defaultStockProvider ?: ObjectManager::getInstance()
             ->get(DefaultStockProviderInterface::class);
+        $this->stockConfiguration = $stockConfiguration;
     }
 
     /**
@@ -158,15 +168,25 @@ class AdaptStockStatusFilterPlugin
      */
     private function addInventoryStockJoin(Select $select, $showOutOfStockFlag)
     {
-        $select->joinInner(
+        $select->joinLeft(
             ['stock_index' => $this->getStockTableName()],
             'stock_index.sku = product.sku',
             []
         );
         if ($showOutOfStockFlag === false) {
+            $globalManageStock = (int)$this->stockConfiguration->getManageStock();
+            $stockSettingsCondition = '(legacy_stock_item.use_config_manage_stock = 0 AND legacy_stock_item.manage_stock = 0)';
+            if (0 === $globalManageStock) {
+                $stockSettingsCondition .= ' OR legacy_stock_item.use_config_manage_stock = 1';
+            }
+            $select->join(
+                ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                'product.entity_id = legacy_stock_item.product_id',
+                ['use_config_manage_stock', 'manage_stock']
+            );
             $condition = $this->conditionManager
                 ->generateCondition('stock_index.' . IndexStructure::IS_SALABLE, '=', 1);
-            $select->where($condition);
+            $select->where($condition . ' OR ' . $stockSettingsCondition);
         }
     }
 
