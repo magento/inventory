@@ -26,6 +26,13 @@ interface PickupLocationInterface extends ExtensibleDataInterface
     public function getName(): ?string;
 
     /**
+     * Get Pickup Location contact email
+     *
+     * @return string|null
+     */
+    public function getEmail(): ?string;
+
+    /**
      * Get Fax contact info.
      *
      * @return string|null
