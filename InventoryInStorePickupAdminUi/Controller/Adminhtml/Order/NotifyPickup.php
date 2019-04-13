@@ -69,34 +69,31 @@ class NotifyPickup extends Action
      * Notify customer by email
      *
      * @return ResultInterface
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
      */
     public function execute(): ResultInterface
     {
-        $order = $this->initOrder();
-
-        if ($order) {
-            try {
-                $this->notifyOrderIsReadyForPickup->execute((int)$order->getEntityId());
-                $this->messageManager->addSuccessMessage(__('The customer have been notified and shipment created.'));
-            } catch (LocalizedException $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
-            } catch (Exception $e) {
-                $this->messageManager->addErrorMessage(__('We can\'t notify the customer right now.'));
-                $this->logger->critical($e);
-            }
-
-            return $this->resultRedirectFactory->create()->setPath(
-                'sales/order/view',
-                [
-                    'order_id' => $order->getEntityId()
-                ]
-            );
+        try {
+            $order = $this->initOrder();
+        } catch (LocalizedException $e) {
+            return $this->resultRedirectFactory->create()->setPath('sales/*/');
         }
 
-        return $this->resultRedirectFactory->create()->setPath('sales/*/');
+        try {
+            $this->notifyOrderIsReadyForPickup->execute((int)$order->getEntityId());
+            $this->messageManager->addSuccessMessage(__('The customer have been notified and shipment created.'));
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+        } catch (Exception $e) {
+            $this->messageManager->addErrorMessage(__('We can\'t notify the customer right now.'));
+            $this->logger->critical($e);
+        }
+
+        return $this->resultRedirectFactory->create()->setPath(
+            'sales/order/view',
+            [
+                'order_id' => $order->getEntityId(),
+            ]
+        );
     }
 
     /**
