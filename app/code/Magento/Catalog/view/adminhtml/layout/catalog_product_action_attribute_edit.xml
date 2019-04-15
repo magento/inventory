@@ -13,7 +13,9 @@
         <referenceContainer name="left">
             <block class="Magento\Catalog\Block\Adminhtml\Product\Edit\Action\Attribute\Tabs" name="attributes_tabs">
                 <block class="Magento\Catalog\Block\Adminhtml\Product\Edit\Action\Attribute\Tab\Attributes" name="tab_attributes"/>
-                <block class="Magento\Catalog\Block\Adminhtml\Product\Edit\Action\Attribute\Tab\Inventory" name="tab_inventory" template="Magento_Catalog::catalog/product/edit/action/inventory.phtml"/>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Edit\Action\Attribute\Tab\Inventory" name="tab_inventory" template="Magento_Catalog::catalog/product/edit/action/inventory.phtml">
+                    <uiComponent name="product_attribute_edit_action_inventory"  />
+                </block>
                 <block class="Magento\Catalog\Block\Adminhtml\Product\Edit\Action\Attribute\Tab\Websites" name="tab_websites" template="Magento_Catalog::catalog/product/edit/action/websites.phtml"/>
                 <action method="addTab">
                     <argument name="name" xsi:type="string">attributes</argument>
