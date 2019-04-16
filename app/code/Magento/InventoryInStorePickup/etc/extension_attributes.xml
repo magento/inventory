@@ -15,5 +15,7 @@
     </extension_attributes>
     <extension_attributes for="Magento\InventoryApi\Api\Data\SourceInterface">
         <attribute code="is_pickup_location_active" type="boolean"/>
+        <attribute code="front_name" type="string"/>
+        <attribute code="open_hours" type="string[]"/>
     </extension_attributes>
 </config>
