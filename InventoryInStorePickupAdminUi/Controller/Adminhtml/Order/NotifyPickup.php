@@ -101,7 +101,6 @@ class NotifyPickup extends Action
      *
      * @return OrderInterface
      * @throws InputException
-     * @throws LocalizedException
      * @throws NoSuchEntityException
      * @see \Magento\Sales\Controller\Adminhtml\Order::_initOrder
      */
@@ -110,11 +109,9 @@ class NotifyPickup extends Action
         $id = $this->getRequest()->getParam('order_id');
         try {
             $order = $this->orderRepository->get($id);
-        } catch (LocalizedException $e) {
-            if ($e instanceof NoSuchEntityException || $e instanceof InputException) {
-                $this->messageManager->addErrorMessage(__('This order no longer exists.'));
-                $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
-            }
+        } catch (NoSuchEntityException|InputException $e) {
+            $this->messageManager->addErrorMessage(__('This order no longer exists.'));
+            $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
             throw $e;
         }
 
