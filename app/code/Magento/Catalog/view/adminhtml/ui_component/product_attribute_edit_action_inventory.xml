@@ -79,7 +79,7 @@
                 <settings>
                     <dataScope>use_config_manage_stock</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:${ $.parentScope }.manage_stock</link>
+                        <link name="linkedValue">${$.parentName}.manage_stock</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.manage_stock:disabled</link>
@@ -98,26 +98,39 @@
                 </formElements>
             </field>
         </container>
-        <field name="qty" component="Magento_CatalogInventory/js/components/qty-validator-changer" sortOrder="200" formElement="input">
+        <fieldset name="container_qty" component="Magento_Ui/js/form/components/group" sortOrder="200">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                </item>
+            </argument>
             <settings>
-                <scopeLabel>[GLOBAL]</scopeLabel>
-                <validation>
-                    <rule name="less-than-equals-to" xsi:type="number">99999999</rule>
-                    <rule name="validate-number" xsi:type="boolean">true</rule>
-                </validation>
-                <label translate="true">Qty</label>
-                <disabled>true</disabled>
                 <visible>false</visible>
-                <dataScope>quantity_and_stock_status.qty</dataScope>
-                <links>
-                    <link name="value">ns = ${ $.ns }, index = qty, group = quantity_and_stock_status_qty:value</link>
-                </links>
-                <imports>
-                    <link name="handleChanges">${$.provider}:data.product.inventory.is_qty_decimal</link>
-                    <link name="visible">${$.provider}:data.product.inventory.manage_stock</link>
-                </imports>
+                <label translate="true">Qty</label>
+                <dataScope>inventory</dataScope>
             </settings>
-        </field>
+            <field name="qty" component="Magento_CatalogInventory/js/components/qty-validator-changer" sortOrder="200" formElement="input">
+                <settings>
+                    <label translate="true">Qty</label>
+                    <scopeLabel>[GLOBAL]</scopeLabel>
+                    <validation>
+                        <rule name="less-than-equals-to" xsi:type="number">99999999</rule>
+                        <rule name="validate-number" xsi:type="boolean">true</rule>
+                    </validation>
+                    <dataScope>inventory</dataScope>
+                    <disabled>true</disabled>
+                    <visible>false</visible>
+                    <dataScope>quantity_and_stock_status_qty</dataScope>
+                    <links>
+                        <link name="value">ns = ${ $.ns }, index = qty, group = quantity_and_stock_status_qty:value</link>
+                    </links>
+                    <imports>
+                        <link name="handleChanges">${$.parentName}.container_is_qty_decimal.is_qty_decimal</link>
+                        <link name="visible">${$.parentName}.container_manage_stock.manage_stock:value</link>
+                    </imports>
+                </settings>
+            </field>
+        </fieldset>
         <container name="container_min_qty" component="Magento_Ui/js/form/components/group" sortOrder="300">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -156,7 +169,7 @@
                 <settings>
                     <dataScope>use_config_min_qty</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:data.product.inventory.min_qty</link>
+                        <link name="linkedValue">${$.parentName}.min_qty</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.min_qty:disabled</link>
@@ -182,6 +195,9 @@
                     <item name="label" xsi:type="string" translate="true">Minimum Qty Allowed in Shopping Cart</item>
                     <item name="dataScope" xsi:type="string">inventory</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="visible" xsi:type="string">${$.parentName}.container_manage_stock.manage_stock:value</item>
+                    </item>
                 </item>
             </argument>
             <field name="min_sale_qty" component="Magento_CatalogInventory/js/components/qty-validator-changer" sortOrder="0" formElement="input">
@@ -199,7 +215,7 @@
                     <visible>false</visible>
                     <dataScope>min_sale_qty</dataScope>
                     <imports>
-                        <link name="handleChanges">${$.provider}:data.product.inventory.is_qty_decimal</link>
+                        <link name="handleChanges">${$.parentName}.container_is_qty_decimal.is_qty_decimal</link>
                     </imports>
                 </settings>
             </field>
@@ -282,6 +298,9 @@
                     <item name="label" xsi:type="string" translate="true">Maximum Qty Allowed in Shopping Cart</item>
                     <item name="dataScope" xsi:type="string">inventory</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="visible" xsi:type="string">${$.parentName}.container_manage_stock.manage_stock:value</item>
+                    </item>
                 </item>
             </argument>
             <field name="max_sale_qty" formElement="input">
@@ -310,7 +329,7 @@
                 <settings>
                     <dataScope>use_config_max_sale_qty</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:data.product.inventory.max_sale_qty</link>
+                        <link name="linkedValue">${$.parentName}.max_sale_qty</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.max_sale_qty:disabled</link>
@@ -330,6 +349,17 @@
             </field>
         </container>
         <container name="container_is_qty_decimal" component="Magento_Ui/js/form/components/group" sortOrder="600">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="label" xsi:type="string" translate="true">Qty Uses Decimals</item>
+                    <item name="dataScope" xsi:type="string">inventory</item>
+                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="visible" xsi:type="string">${$.parentName}.container_manage_stock.manage_stock:value</item>
+                    </item>
+                </item>
+            </argument>
             <field name="is_qty_decimal" sortOrder="600" formElement="select">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
@@ -341,9 +371,6 @@
                     <scopeLabel>[GLOBAL]</scopeLabel>
                     <label translate="true">Qty Uses Decimals</label>
                     <dataScope>inventory.is_qty_decimal</dataScope>
-                    <imports>
-                        <link name="visible">${$.provider}:data.product.inventory.manage_stock</link>
-                    </imports>
                 </settings>
                 <formElements>
                     <select>
@@ -355,6 +382,17 @@
             </field>
         </container>
         <container name="container_is_decimal_divided" component="Magento_Ui/js/form/components/group" sortOrder="700">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Multiple Boxes for Shipping</item>
+                    <item name="dataScope" xsi:type="string">inventory</item>
+                    <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="visible" xsi:type="string">${$.parentName}.container_manage_stock.manage_stock:value</item>
+                    </item>
+                </item>
+            </argument>
             <field name="is_decimal_divided" sortOrder="700" formElement="select">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
@@ -365,9 +403,6 @@
                     <scopeLabel>[GLOBAL]</scopeLabel>
                     <label translate="true">Allow Multiple Boxes for Shipping</label>
                     <dataScope>inventory.is_decimal_divided</dataScope>
-                    <imports>
-                        <link name="visible">${$.provider}:${$.parentScope}.manage_stock</link>
-                    </imports>
                 </settings>
                 <formElements>
                     <select>
@@ -386,10 +421,7 @@
                     <item name="dataScope" xsi:type="string">inventory</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
                     <item name="imports" xsi:type="array">
-                        <item name="visible" xsi:type="string">${$.provider}:${$.parentScope}.manage_stock</item>
-                    </item>
-                    <item name="exports" xsi:type="array">
-                        <item name="visible" xsi:type="string">${$.name}.backorders:visible</item>
+                        <item name="visible" xsi:type="string">${$.parentName}.container_manage_stock.manage_stock:value</item>
                     </item>
                 </item>
             </argument>
@@ -424,7 +456,7 @@
                 <settings>
                     <dataScope>use_config_backorders</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:data.product.inventory.backorders</link>
+                        <link name="linkedValue">${$.parentName}.backorders.backorders</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.backorders:disabled</link>
@@ -446,16 +478,13 @@
         <fieldset name="container_notify_stock_qty" component="Magento_Ui/js/form/components/group" sortOrder="900">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Notify for Quantity Below</item>
-                    <item name="dataScope" xsi:type="string">inventory</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
-                    <item name="imports" xsi:type="array">
-                        <item name="visible" xsi:type="string">${$.provider}:data.product.inventory.manage_stock</item>
-                    </item>
                 </item>
             </argument>
             <settings>
+                <label translate="true">Notify for Quantity Below</label>
                 <visible>false</visible>
+                <dataScope>inventory</dataScope>
             </settings>
             <field name="notify_stock_qty" formElement="input">
                 <argument name="data" xsi:type="array">
@@ -485,7 +514,7 @@
                 <settings>
                     <dataScope>use_config_notify_stock_qty</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:data.product.inventory.notify_stock_qty</link>
+                        <link name="linkedValue">${$.parentName}.notify_stock_qty</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.notify_stock_qty:disabled</link>
@@ -511,6 +540,9 @@
                     <item name="label" xsi:type="string" translate="true">Enable Qty Increments</item>
                     <item name="dataScope" xsi:type="string">inventory</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="visible" xsi:type="string">${$.parentName}.container_manage_stock.manage_stock:value</item>
+                    </item>
                 </item>
             </argument>
             <field name="enable_qty_increments" formElement="select">
@@ -544,7 +576,7 @@
                 <settings>
                     <dataScope>use_config_enable_qty_inc</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:data.product.inventory.enable_qty_increments</link>
+                        <link name="linkedValue">${$.parentName}.enable_qty_increments</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.enable_qty_increments:disabled</link>
@@ -571,7 +603,7 @@
                     <item name="dataScope" xsi:type="string">inventory</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
                     <item name="imports" xsi:type="array">
-                        <item name="visible" xsi:type="string">${$.provider}:data.product.inventory.enable_qty_increments</item>
+                        <item name="visible" xsi:type="string">${$.parentName}.container_enable_qty_increments.enable_qty_increments:value</item>
                     </item>
                 </item>
             </argument>
@@ -590,7 +622,7 @@
                     <label translate="true">Qty Increments</label>
                     <dataScope>qty_increments</dataScope>
                     <imports>
-                        <link name="handleChanges">${$.provider}:data.product.inventory.is_qty_decimal</link>
+                        <link name="handleChanges">${$.parentName}.container_is_qty_decimal.is_qty_decimal</link>
                     </imports>
                 </settings>
             </field>
@@ -605,7 +637,7 @@
                 <settings>
                     <dataScope>use_config_qty_increments</dataScope>
                     <links>
-                        <link name="linkedValue">${$.provider}:data.product.inventory.qty_increments</link>
+                        <link name="linkedValue">>${$.parentName}.container_qty_increments.qty_increments:value</link>
                     </links>
                     <exports>
                         <link name="checked">${$.parentName}.qty_increments:disabled</link>
@@ -627,16 +659,13 @@
         <fieldset name="container_is_in_stock"  component="Magento_Ui/js/form/components/group" sortOrder="1200">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Stock Status</item>
-                    <item name="dataScope" xsi:type="string">quantity_and_stock_status</item>
                     <item name="scopeLabel" xsi:type="string">[GLOBAL]</item>
-                    <item name="imports" xsi:type="array">
-                        <item name="visible" xsi:type="string">false</item>
-                    </item>
                 </item>
             </argument>
             <settings>
                 <visible>false</visible>
+                <label translate="true">Stock Status</label>
+                <dataScope>quantity_and_stock_status</dataScope>
             </settings>
             <field name="is_in_stock" formElement="select">
                 <argument name="data" xsi:type="array">
