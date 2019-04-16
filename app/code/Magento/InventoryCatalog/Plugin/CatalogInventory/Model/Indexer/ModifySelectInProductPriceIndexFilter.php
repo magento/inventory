@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Indexer;
 
-use Magento\Catalog\Model\ResourceModel\Product\Collection;
+//use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\IndexTableStructure;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Model\Indexer\ProductPriceIndexFilter;
@@ -95,7 +95,7 @@ class ModifySelectInProductPriceIndexFilter
                     ['inventory_stock' => $stockTable],
                     'inventory_stock.sku = product_entity.sku',
                     []
-                )->join(
+                )->joinLeft(
                     ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
                     'product_entity.entity_id = legacy_stock_item.product_id',
                     ['use_config_manage_stock', 'manage_stock']
@@ -104,7 +104,7 @@ class ModifySelectInProductPriceIndexFilter
                 if (1 === $globalManageStock) {
                     $stockSettingsCondition .= ' OR legacy_stock_item.use_config_manage_stock = 1';
                 }
-                $select->where('(inventory_stock.is_salable = 0 OR inventory_stock.is_salable IS NULL) AND '.$stockSettingsCondition);
+                $select->where('(inventory_stock.is_salable = 0 OR inventory_stock.is_salable IS NULL) AND (' . $stockSettingsCondition . ')');
             }
 
             $select->where('price_index.website_id = ?', $websiteId);
