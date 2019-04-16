@@ -21,14 +21,26 @@ class IsPickupLocationActive extends Column
      */
     public function prepareDataSource(array $dataSource):array
     {
-        if (isset($dataSource['data']['totalRecords'])
-            && $dataSource['data']['totalRecords'] > 0
-        ) {
-            foreach ($dataSource['data']['items'] as &$row) {
-                $row[PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] =
-                    $row[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]
-                    [PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] ?? '';
-            }
+        if (!isset($dataSource['data']['totalRecords'])) {
+            return $dataSource;
+        }
+
+        if ((int)$dataSource['data']['totalRecords'] === 0) {
+            return $dataSource;
+        }
+
+        return $this->normalizeData($dataSource);
+    }
+
+    /**
+     * @param array $dataSource
+     * @return array
+     */
+    private function normalizeData(array $dataSource):array
+    {
+        foreach ($dataSource['data']['items'] as &$row) {
+            $row[PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] =
+                $row[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] ?? '';
         }
 
         return $dataSource;
