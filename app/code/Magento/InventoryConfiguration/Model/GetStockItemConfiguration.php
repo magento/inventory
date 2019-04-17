@@ -70,8 +70,7 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
      */
     public function execute(string $sku, int $stockId): StockItemConfigurationInterface
     {
-        if ($this->defaultStockProvider->getId() !== $stockId
-            && true === $this->isSourceItemManagementAllowedForSku->execute($sku)
+        if (true === $this->isSourceItemManagementAllowedForSku->execute($sku)
             && false === $this->isProductAssignedToStock->execute($sku, $stockId)) {
             throw new SkuIsNotAssignedToStockException(
                 __('The requested sku is not assigned to given stock.')
