@@ -7,6 +7,13 @@ namespace Magento\InventoryInStorePickupApi\Api\Data;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
 
+/**
+ * Represents sources projection on In-Store Pickup context.
+ * Realisation must follow immutable DTO concept.
+ * Partial immutability done according to restriction of current Extension Attributes implementation.
+ *
+ * @api
+ */
 interface PickupLocationInterface extends ExtensibleDataInterface
 {
     const IS_PICKUP_LOCATION_ACTIVE = 'is_pickup_location_active';

@@ -41,6 +41,36 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Wrong mapping provided for Magento\InventoryApi\Api\Data\SourceInterface
+     */
+    public function testWrongMappingForSource()
+    {
+        $source = $this->sourceRepository->get($this->sourceCode);
+        $map = $this->getMap();
+        $map['fail_field'] = 'fail_field';
+        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        $mapper = $this->objectManager->create(Mapper::class, ['map' => $map]);
+        $mapper->map($source);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Wrong mapping provided for Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface
+     */
+    public function testWrongMappingForPickupLocation()
+    {
+        $source = $this->sourceRepository->get($this->sourceCode);
+        $map = $this->getMap();
+        $map['name'] = 'fail_field';
+        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        $mapper = $this->objectManager->create(Mapper::class, ['map' => $map]);
+        $mapper->map($source);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
      */
     public function testMapPickupLocation()
     {
