@@ -80,13 +80,13 @@ class CreateFromSource
                 $methodName = $this->getSetterMethodName($this->getExtensionAttributeFieldName($pickupLocationField));
 
                 if (!method_exists($pickupLocationExtension, $methodName)) {
-                    $this->throwException(PickupLocationInterface::class);
+                    $this->throwException(PickupLocationInterface::class, $pickupLocationField);
                 }
                 $pickupLocationExtension->{$methodName}($value);
             } else {
                 $methodName = $this->getGetterMethodName($pickupLocationField);
                 if (!in_array($methodName, $pickupLocationMethods)) {
-                    $this->throwException(PickupLocationInterface::class);
+                    $this->throwException(PickupLocationInterface::class, $pickupLocationField);
                 }
                 $data[SimpleDataObjectConverter::snakeCaseToCamelCase($pickupLocationField)] = $value;
             }
@@ -116,7 +116,7 @@ class CreateFromSource
             }
 
             if (!method_exists($entity, $methodName)) {
-                $this->throwException(SourceInterface::class);
+                $this->throwException(SourceInterface::class, $sourceField);
             }
 
             $mappedData[$pickupLocationField] = $entity->{$methodName}();
@@ -128,13 +128,16 @@ class CreateFromSource
     /**
      * Wrapper for throwing Invalid Argument Exception.
      *
-     * @throws \InvalidArgumentException
      * @param string $className
+     * @param string $fieldName
+     *
      * @return void
      */
-    private function throwException(string $className): void
+    private function throwException(string $className, string $fieldName): void
     {
-        throw new \InvalidArgumentException("Wrong mapping provided for " . $className);
+        $message = "Wrong mapping provided for %s. Field '%s' is not found.";
+
+        throw new \InvalidArgumentException(sprintf($message, $className, $fieldName));
     }
 
     /**
