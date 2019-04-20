@@ -10,6 +10,10 @@ namespace Magento\InventoryInStorePickup\Model;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
+/**
+ * @inheritdoc
+ * @codeCoverageIgnore
+ */
 class PickupLocation implements PickupLocationInterface
 {
     /**

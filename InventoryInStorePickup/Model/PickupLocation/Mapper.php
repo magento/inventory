@@ -11,6 +11,10 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
+/**
+ * Create projection of sources on In-Store Pickup context.
+ * Data transfer from source to projection will be done according to provided fields mapping.
+ */
 class Mapper
 {
     /**

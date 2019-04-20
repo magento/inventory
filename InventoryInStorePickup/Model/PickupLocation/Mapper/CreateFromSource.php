@@ -10,29 +10,33 @@ namespace Magento\InventoryInStorePickup\Model\PickupLocation\Mapper;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryInStorePickup\Model\PickupLocationFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterfaceFactory;
 
+/**
+ * Create Pickup Location based on Source.
+ * Transport data from Source to Pickup Location according to provided mapping.
+ */
 class CreateFromSource
 {
     /**
-     * @var \Magento\InventoryInStorePickup\Model\PickupLocationFactory
+     * @var PickupLocationInterfaceFactory
      */
     private $pickupLocationFactory;
 
     /**
-     * @var \Magento\Framework\Api\ExtensionAttributesFactory
+     * @var ExtensionAttributesFactory
      */
     private $extensionAttributesFactory;
 
     /**
      * CreateFromSource constructor.
      *
-     * @param \Magento\InventoryInStorePickup\Model\PickupLocationFactory $pickupLocationFactory
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionAttributesFactory
+     * @param PickupLocationInterfaceFactory $pickupLocationFactory
+     * @param ExtensionAttributesFactory $extensionAttributesFactory
      */
     public function __construct(
-        PickupLocationFactory $pickupLocationFactory,
+        PickupLocationInterfaceFactory $pickupLocationFactory,
         ExtensionAttributesFactory $extensionAttributesFactory
     ) {
         $this->pickupLocationFactory = $pickupLocationFactory;
@@ -40,37 +44,97 @@ class CreateFromSource
     }
 
     /**
-     * @param \Magento\InventoryApi\Api\Data\SourceInterface $source
-     * @param array $map
-     *
-     * @return \Magento\InventoryInStorePickup\Model\PickupLocation
+     * @param SourceInterface $source
+     * @param array $map  May contains references to fields in extension attributes.
+     * Please use format 'extension_attributes.field_name' to do so. E.g.
+     * [
+     *      "extension_attributes.source_field" => "pickup_location_field"
+     *      "extension_attributes.source_field" => "extension_attributes.pickup_location_extension_field",
+     * ]
+     * @throws \InvalidArgumentException
+     * @return PickupLocationInterface
      */
-    public function execute(SourceInterface $source, array $map)
+    public function execute(SourceInterface $source, array $map): PickupLocationInterface
     {
-        $data = [];
+        $mappedData = $this->extractDataFromSource($source, $map);
+        $data = $this->preparePickupLocationFields($mappedData);
+
+        return $this->pickupLocationFactory->create($data);
+    }
+
+    /**
+     * @param array $mappedData
+     *
+     * @return array
+     */
+    private function preparePickupLocationFields(array $mappedData): array
+    {
         $pickupLocationExtension = $this->extensionAttributesFactory->create(PickupLocationInterface::class);
+        $pickupLocationMethods = get_class_methods(PickupLocationInterface::class);
+        $data = [
+            'extensionAttributes' => $pickupLocationExtension
+        ];
 
-        foreach ($map as $sourceField => $pickupLocationField) {
-            if ($this->isExtensionAttributeField($sourceField)) {
-                $fieldValue = $source->getExtensionAttributes()->{$this->getGetterMethodName(
-                    $this->getExtensionAttributeFieldName($sourceField)
-                )}();
-            } else {
-                $fieldValue = $source->{$this->getGetterMethodName($sourceField)}();
-            }
-
+        foreach ($mappedData as $pickupLocationField => $value) {
             if ($this->isExtensionAttributeField($pickupLocationField)) {
-                $pickupLocationExtension->{$this->getSetterMethodName(
-                        $this->getExtensionAttributeFieldName($pickupLocationField)
-                    )}($fieldValue);
+                $methodName = $this->getSetterMethodName($this->getExtensionAttributeFieldName($pickupLocationField));
+
+                if (!method_exists($pickupLocationExtension, $methodName)) {
+                    $this->throwException(PickupLocationInterface::class);
+                }
+                $pickupLocationExtension->{$methodName}($value);
             } else {
-                $data[SimpleDataObjectConverter::snakeCaseToCamelCase($pickupLocationField)] = $fieldValue;
+                $methodName = $this->getGetterMethodName($pickupLocationField);
+                if (!in_array($methodName, $pickupLocationMethods)) {
+                    $this->throwException(PickupLocationInterface::class);
+                }
+                $data[SimpleDataObjectConverter::snakeCaseToCamelCase($pickupLocationField)] = $value;
             }
         }
 
-        $data['extensionAttributes'] = $pickupLocationExtension;
+        return $data;
+    }
 
-        return $this->pickupLocationFactory->create($data);
+    /**
+     * Extract values from Source according to the provided map.
+     *
+     * @param \Magento\InventoryApi\Api\Data\SourceInterface $source
+     * @param string[] $map
+     *
+     * @return array
+     */
+    private function extractDataFromSource(SourceInterface $source, array $map): array
+    {
+        $mappedData = [];
+        foreach ($map as $sourceField => $pickupLocationField) {
+            if ($this->isExtensionAttributeField($sourceField)) {
+                $methodName = $this->getGetterMethodName($this->getExtensionAttributeFieldName($sourceField));
+                $entity = $source->getExtensionAttributes();
+            } else {
+                $methodName = $this->getGetterMethodName($sourceField);
+                $entity = $source;
+            }
+
+            if (!method_exists($entity, $methodName)) {
+                $this->throwException(SourceInterface::class);
+            }
+
+            $mappedData[$pickupLocationField] = $entity->{$methodName}();
+        }
+
+        return $mappedData;
+    }
+
+    /**
+     * Wrapper for throwing Invalid Argument Exception.
+     *
+     * @throws \InvalidArgumentException
+     * @param string $className
+     * @return void
+     */
+    private function throwException(string $className): void
+    {
+        throw new \InvalidArgumentException("Wrong mapping provided for " . $className);
     }
 
     /**
@@ -78,7 +142,7 @@ class CreateFromSource
      *
      * @return string
      */
-    private function getExtensionAttributeFieldName($fieldName): string
+    private function getExtensionAttributeFieldName(string $fieldName): string
     {
         $field = explode('.', $fieldName);
 
@@ -92,7 +156,7 @@ class CreateFromSource
      *
      * @return bool
      */
-    private function isExtensionAttributeField($fieldName): bool
+    private function isExtensionAttributeField(string $fieldName): bool
     {
         return strpos($fieldName, 'extension_attributes.') === 0;
     }
