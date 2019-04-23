@@ -88,33 +88,31 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
      */
     public function process(Select $select)
     {
-        if (!$this->stockConfig->isShowOutOfStock()) {
-            $websiteCode = $this->storeManager->getWebsite()->getCode();
-            $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-            $stockId = (int)$stock->getStockId();
-            if ($stockId === $this->defaultStockProvider->getId()) {
-                $stockTable = $this->resourceConnection->getTableName('cataloginventory_stock_status');
-                $isSalableColumnName = 'stock_status';
+        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+        $stockId = (int)$stock->getStockId();
+        if ($stockId === $this->defaultStockProvider->getId()) {
+            $stockTable = $this->resourceConnection->getTableName('cataloginventory_stock_status');
+            $isSalableColumnName = 'stock_status';
 
-                /** @var Select $select */
-                $select->join(
-                    ['stock' => $stockTable],
-                    sprintf('stock.product_id = %s.entity_id', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
-                    []
-                );
-            } else {
-                $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-                $isSalableColumnName = IndexStructure::IS_SALABLE;
+            /** @var Select $select */
+            $select->join(
+                ['stock' => $stockTable],
+                sprintf('stock.product_id = %s.entity_id', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
+                []
+            );
+        } else {
+            $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
+            $isSalableColumnName = IndexStructure::IS_SALABLE;
 
-                /** @var Select $select */
-                $select->join(
-                    ['stock' => $stockTable],
-                    sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
-                    []
-                );
-            }
-            $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
+            /** @var Select $select */
+            $select->join(
+                ['stock' => $stockTable],
+                sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
+                []
+            );
         }
+        $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
 
         return $select;
     }
