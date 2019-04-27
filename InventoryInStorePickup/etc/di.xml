@@ -18,13 +18,8 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface"
             type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
-    <type name="Magento\InventoryInStorePickupApi\Model\GetNearbySourcesByPostcode">
-        <arguments>
-            <argument name="providers" xsi:type="array">
-                <item name="offline" xsi:type="object">Magento\InventoryInStorePickup\Model\DistanceProvider\Offline\GetNearbySourcesByPostcode</item>
-            </argument>
-        </arguments>
-    </type>
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\AddressInterface" type="Magento\InventoryInStorePickup\Model\Address" />
 
     <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface"
             type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
