@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Api;
 
 use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Get nearby sources of a given zip code, based on the given radius in KM.
@@ -21,7 +20,7 @@ interface GetNearbyPickupLocationsInterface
      * @param AddressInterface $address
      * @param int $radius
      * @param int $stockId
-     * @return PickupLocationInterface[]
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface[]
      */
     public function execute(AddressInterface $address, int $radius, int $stockId): array;
 }
