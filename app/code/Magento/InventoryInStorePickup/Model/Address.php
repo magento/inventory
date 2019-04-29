@@ -16,7 +16,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
 class Address implements AddressInterface
 {
     /**
-     * @var string|null
+     * @var string
      */
     private $country;
 
@@ -36,16 +36,16 @@ class Address implements AddressInterface
     private $city;
 
     /***
-     * @param string|null $country
+     * @param string $country
      * @param string|null $postcode
      * @param string|null $region
      * @param string|null $city
      */
     public function __construct(
-        ?string $country,
-        ?string $postcode,
-        ?string $region,
-        ?string $city
+        string $country,
+        ?string $postcode = null,
+        ?string $region = null,
+        ?string $city = null
     ) {
         $this->country = $country;
         $this->postcode = $postcode;
@@ -56,7 +56,7 @@ class Address implements AddressInterface
     /**
      * @inheritdoc
      */
-    public function getCountry(): ?string
+    public function getCountry(): string
     {
         return $this->country;
     }

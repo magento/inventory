@@ -17,9 +17,9 @@ interface AddressInterface
     /**
      * Requested country
      *
-     * @return string|null
+     * @return string
      */
-    public function getCountry(): ?string;
+    public function getCountry(): string;
 
     /**
      * Requested postcode
