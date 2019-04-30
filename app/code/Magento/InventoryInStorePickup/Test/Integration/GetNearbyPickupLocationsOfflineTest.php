@@ -88,9 +88,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'DE',
-                    'postcode' => '81671',
-                    'region' => null,
-                    'city' => null,
+                    'postcode' => '81671'
                 ],
                 500,
                 10,
@@ -99,9 +97,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'FR',
-                    'postcode' => null,
-                    'region' => 'Bretagne',
-                    'city' => null
+                    'region' => 'Bretagne'
                 ],
                 1000,
                 10,
@@ -110,8 +106,6 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'FR',
-                    'postcode' => null,
-                    'region' => null,
                     'city' => 'Saint-Saturnin-lès-Apt'
                 ],
                 1000,
@@ -121,9 +115,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'IT',
-                    'postcode' => '12022',
-                    'region' => null,
-                    'city' => null
+                    'postcode' => '12022'
                     ],
                 350,
                 10,
@@ -144,8 +136,6 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                 [
                     'country' => 'DE',
                     'postcode' => '86559',
-                    'region' => null,
-                    'city' => null
                 ],
                 750,
                 30,
@@ -154,9 +144,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'US',
-                    'postcode' => null,
-                    'region' => 'Kansas',
-                    'city' => null
+                    'region' => 'Kansas'
                 ],
                 1000,
                 20,
