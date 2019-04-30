@@ -13,4 +13,10 @@
             <resource ref="Magento_InventoryApi::inStorePickup"/>
         </resources>
     </route>
+    <route url="/V1/inventory/in-store-pickup/get-pickup-locations" method="GET">
+        <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::inStorePickup"/>
+        </resources>
+    </route>
 </routes>

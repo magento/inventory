@@ -43,7 +43,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      * @param array $addressData
      * @param int $radius
      * @param int $stockId
-     * @param array $sortedSourceCodes
+     * @param string[] $sortedSourceCodes
      *
      * @dataProvider executeDataProvider
      * @magentoAppArea frontend
@@ -77,7 +77,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      *      ]
      *      Radius (in KM),
      *      Stock Id,
-     *      Expected Pickup Locations Codes[]
+     *      Expected Source Codes[]
      * ]
      *
      * @return array
