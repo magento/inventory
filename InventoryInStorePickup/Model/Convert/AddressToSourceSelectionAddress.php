@@ -39,7 +39,7 @@ class AddressToSourceSelectionAddress
     public function execute(AddressInterface $address): SourceSelectionAddressInterface
     {
         $data = [
-            'country' => $address->getCountry() ?? '',
+            'country' => $address->getCountry(),
             'postcode' => $address->getPostcode() ?? '',
             'region' => $address->getRegion() ?? '',
             'city' => $address->getCity() ??'',
