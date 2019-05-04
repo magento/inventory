@@ -115,7 +115,8 @@ class CheckQuoteItemQtyPlugin
         $origQty,
         $scopeId = null
     ) {
-        $result = $this->objectFactory->create();
+        $result = $proceed($productId, $itemQty, $qtyToCheck, $origQty, $scopeId = null);
+
         $result->setHasError(false);
 
         $qty = $this->getNumber($itemQty);
