@@ -5,6 +5,7 @@
  */
 declare(strict_types=1);
 
+use Magento\InventoryInStorePickup\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;
@@ -28,6 +29,7 @@ $cartId = $cartManagement->createEmptyCart();
 $cart = $cartRepository->get($cartId);
 $cart->setCustomerEmail('admin@example.com');
 $cart->setCustomerIsGuest(true);
+//TODO
 $store = $storeRepository->get('store_for_eu_website');
 $cart->setStoreId($store->getId());
 $storeManager->setCurrentStore($store->getCode());
@@ -52,8 +54,8 @@ $cart->setReservedOrderId('in_store_pickup_test_order');
 $cart->setBillingAddress($address);
 $cart->setShippingAddress($address);
 $cart->getPayment()->setMethod('checkmo');
-/** Will be replaced with 'In Store Pickup' delivery method */
-$cart->getShippingAddress()->setShippingMethod('flatrate_flatrate');
+
+$cart->getShippingAddress()->setShippingMethod('in_store_pickup');
 $cart->getShippingAddress()->setCollectShippingRates(true);
 $cart->getShippingAddress()->collectShippingRates();
 $cartRepository->save($cart);
