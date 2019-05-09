@@ -60,30 +60,33 @@ class GetIsAnyPickupLocationAvailable
      * @param int|null $websiteId
      *
      * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(?int $websiteId = null): bool
     {
-        if (!isset($this->isAvailable[$websiteId])) {
-            $this->isAvailable[$websiteId] = $this->checkPickupLocationsAvailability($websiteId);
+        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
+
+        if (!isset($this->isAvailable[$websiteCode])) {
+            $this->isAvailable[$websiteCode] = $this->checkPickupLocationsAvailability($websiteCode);
         }
 
-        return $this->isAvailable[$websiteId];
+        return $this->isAvailable[$websiteCode];
     }
 
     /**
-     * Check if at least one pickup location availble for provided website id.
+     * Check if at least one pickup location available for provided website id.
      *
-     * @param int|null $websiteId
+     * @param string $websiteCode
      *
      * @return bool
      */
-    private function checkPickupLocationsAvailability(?int $websiteId): bool
+    private function checkPickupLocationsAvailability(string $websiteCode): bool
     {
         $result = false;
         try {
             $stock = $this->stockResolver->execute(
                 SalesChannelInterface::TYPE_WEBSITE,
-                $this->storeManager->getWebsite($websiteId)->getCode()
+                $websiteCode
             );
 
             $result = count($this->getPickupLocations->execute((int)$stock->getStockId())) > 0;
