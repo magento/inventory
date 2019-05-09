@@ -34,9 +34,6 @@
                     <label>Handling Fee</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
-                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Displayed Error Message</label>
-                </field>
             </group>
         </section>
     </system>
