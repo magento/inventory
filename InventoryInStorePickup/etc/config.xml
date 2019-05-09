@@ -22,5 +22,18 @@
                 <name>Store pickup</name>
             </ident_storepickup>
         </trans_email>
+        <carriers>
+            <in_store>
+                <active>0</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Magento\InventoryInStorePickup\Model\Carrier\InStorePickup</model>
+                <name>Pick in Store</name>
+                <title>In-Store Delivery</title>
+                <price>0.00</price>
+                <specificerrmsg>In-Store Delivery is not available. To use this delivery method, please contact us.</specificerrmsg>
+                <handling_type>F</handling_type>
+                <handling_fee>0.00</handling_fee>
+            </in_store>
+        </carriers>
     </default>
 </config>
