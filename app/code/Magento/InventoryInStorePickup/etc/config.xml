@@ -30,7 +30,6 @@
                 <name>Pick in Store</name>
                 <title>In-Store Delivery</title>
                 <price>0.00</price>
-                <specificerrmsg>In-Store Delivery is not available. To use this delivery method, please contact us.</specificerrmsg>
                 <handling_type>F</handling_type>
                 <handling_fee>0.00</handling_fee>
             </in_store>
