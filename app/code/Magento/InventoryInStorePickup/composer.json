@@ -9,7 +9,8 @@
         "magento/module-inventory-api": "*",
         "magento/module-sales": "*",
         "magento/module-store": "*",
-        "magento/module-inventory-source-selection-api": "*"
+        "magento/module-inventory-source-selection-api": "*",
+        "magento/module-shipping": "*"
     },
     "type": "magento2-module",
     "license": [
