@@ -187,7 +187,7 @@ class PickupLocation implements PickupLocationInterface
      */
     public function getFax(): ?string
     {
-        return $this->name;
+        return $this->fax;
     }
 
     /**
