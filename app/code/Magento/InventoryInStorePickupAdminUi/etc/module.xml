@@ -12,6 +12,7 @@
             <module name="Magento_Shipping" />
             <module name="Magento_Sales" />
             <module name="Magento_Backend" />
+            <module name="Magento_Config" />
         </sequence>
     </module>
 </config>

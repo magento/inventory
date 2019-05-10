@@ -16,6 +16,8 @@
             <module name="Magento_InventoryDistanceBasedSourceSelectionApi" />
             <module name="Magento_InventorySourceSelectionApi" />
             <module name="Magento_Shipping" />
+            <module name="Magento_Quote" />
+            <module name="Magento_InventorySalesApi" />
         </sequence>
     </module>
 </config>
