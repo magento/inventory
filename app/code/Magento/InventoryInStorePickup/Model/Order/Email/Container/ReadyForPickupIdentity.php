@@ -8,13 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\Order\Email\Container;
 
 use Magento\Sales\Model\Order\Email\Container\Container;
-use Magento\Sales\Model\Order\Email\Container\IdentityInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
  * @inheritdoc
  */
-class ReadyForPickupIdentity extends Container implements IdentityInterface
+class ReadyForPickupIdentity extends Container
 {
     /**
      * Configuration paths
