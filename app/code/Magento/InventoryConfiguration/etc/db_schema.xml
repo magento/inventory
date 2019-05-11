@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="inventory_configuration" resource="default" engine="innodb">
+        <column xsi:type="varchar" name="sku" nullable="true" length="64" comment=""/>
+        <column xsi:type="varchar" name="source_code" nullable="true" length="255"/>
+        <column xsi:type="int" name="stock_id" padding="10" unsigned="true" nullable="true" identity="false"/>
+        <column xsi:type="varchar" name="config_option" nullable="false" length="64"/>
+        <column xsi:type="varchar" name="value" nullable="false" length="255"/>
+        <!-- TODO define constraints and indexes, if needed -->
+    </table>
+</schema>
