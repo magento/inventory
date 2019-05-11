@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\Carrier\Command;
 
+use Magento\InventoryInStorePickupApi\Model\Carrier\GetShippingPriceInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
 /**
