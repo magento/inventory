@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurationApi\Api\Data;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
+
 /**
  * @api
  */
-interface StockItemConfigurationInterface extends \Magento\Framework\Api\ExtensibleDataInterface
+interface StockItemConfigurationInterface extends ExtensibleDataInterface
 {
     const BACKORDERS_NO = 0;
     const BACKORDERS_YES_NONOTIFY = 1;
@@ -64,11 +66,6 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
      */
     public function isQtyDecimal(): bool;
 
-    /**
-     * @param bool $isQtyDecimal
-     * @return void
-     */
-    public function setIsQtyDecimal(bool $isQtyDecimal): void;
 
     /**
      * @return bool
@@ -81,21 +78,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function isUseConfigMinQty(): bool;
 
     /**
-     * @param bool $useConfigMinQty
-     * @return void
-     */
-    public function setUseConfigMinQty(bool $useConfigMinQty): void;
-
-    /**
      * @return float
      */
     public function getMinQty(): float;
-
-    /**
-     * @param float $minQty
-     * @return void
-     */
-    public function setMinQty(float $minQty): void;
 
     /**
      * @return bool
@@ -103,21 +88,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function isUseConfigMinSaleQty(): bool;
 
     /**
-     * @param bool $useConfigMinSaleQty
-     * @return void
-     */
-    public function setUseConfigMinSaleQty(bool $useConfigMinSaleQty): void;
-
-    /**
      * @return float
      */
     public function getMinSaleQty(): float;
-
-    /**
-     * @param float $minSaleQty
-     * @return void
-     */
-    public function setMinSaleQty(float $minSaleQty): void;
 
     /**
      * @return bool
@@ -125,32 +98,14 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function isUseConfigMaxSaleQty(): bool;
 
     /**
-     * @param bool $useConfigMaxSaleQty
-     * @return void
-     */
-    public function setUseConfigMaxSaleQty(bool $useConfigMaxSaleQty): void;
-
-    /**
      * @return float
      */
     public function getMaxSaleQty(): float;
 
     /**
-     * @param float $maxSaleQty
-     * @return void
-     */
-    public function setMaxSaleQty(float $maxSaleQty): void;
-
-    /**
      * @return bool
      */
     public function isUseConfigBackorders(): bool;
-
-    /**
-     * @param bool $useConfigBackorders
-     * @return void
-     */
-    public function setUseConfigBackorders(bool $useConfigBackorders): void;
 
     /**
      * Retrieve backorders status
@@ -160,21 +115,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function getBackorders(): int;
 
     /**
-     * @param int $backOrders
-     * @return void
-     */
-    public function setBackorders(int $backOrders): void;
-
-    /**
      * @return bool
      */
     public function isUseConfigNotifyStockQty(): bool;
-
-    /**
-     * @param bool $useConfigNotifyStockQty
-     * @return void
-     */
-    public function setUseConfigNotifyStockQty(bool $useConfigNotifyStockQty): void;
 
     /**
      * @return float
@@ -182,21 +125,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function getNotifyStockQty(): float;
 
     /**
-     * @param float $notifyStockQty
-     * @return void
-     */
-    public function setNotifyStockQty(float $notifyStockQty): void;
-
-    /**
      * @return bool
      */
     public function isUseConfigQtyIncrements(): bool;
-
-    /**
-     * @param bool $useConfigQtyIncrements
-     * @return void
-     */
-    public function setUseConfigQtyIncrements(bool $useConfigQtyIncrements): void;
 
     /**
      * Retrieve Quantity Increments data wrapper
@@ -206,21 +137,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function getQtyIncrements(): float;
 
     /**
-     * @param float $qtyIncrements
-     * @return void
-     */
-    public function setQtyIncrements(float $qtyIncrements): void;
-
-    /**
      * @return bool
      */
     public function isUseConfigEnableQtyInc(): bool;
-
-    /**
-     * @param bool $useConfigEnableQtyInc
-     * @return void
-     */
-    public function setUseConfigEnableQtyInc(bool $useConfigEnableQtyInc): void;
 
     /**
      * @return bool
@@ -228,21 +147,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function isEnableQtyIncrements(): bool;
 
     /**
-     * @param $enableQtyIncrements
-     * @return void
-     */
-    public function setEnableQtyIncrements(bool $enableQtyIncrements): void;
-
-    /**
      * @return bool
      */
     public function isUseConfigManageStock(): bool;
-
-    /**
-     * @param bool $useConfigManageStock
-     * @return void
-     */
-    public function setUseConfigManageStock(bool $useConfigManageStock): void;
 
     /**
      * @return bool
@@ -250,21 +157,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function isManageStock(): bool;
 
     /**
-     * @param bool $manageStock
-     * @return void
-     */
-    public function setManageStock(bool $manageStock): void;
-
-    /**
      * @return string
      */
     public function getLowStockDate(): string;
-
-    /**
-     * @param string $lowStockDate
-     * @return void
-     */
-    public function setLowStockDate(string $lowStockDate): void;
 
     /**
      * @return bool
@@ -272,21 +167,9 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
     public function isDecimalDivided(): bool;
 
     /**
-     * @param bool $isDecimalDivided
-     * @return void
-     */
-    public function setIsDecimalDivided(bool $isDecimalDivided): void;
-
-    /**
      * @return int
      */
     public function getStockStatusChangedAuto(): bool;
-
-    /**
-     * @param int $stockStatusChangedAuto
-     * @return void
-     */
-    public function setStockStatusChangedAuto(int $stockStatusChangedAuto): void;
 
     /**
      * @return float
@@ -299,14 +182,4 @@ interface StockItemConfigurationInterface extends \Magento\Framework\Api\Extensi
      * @return \Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationExtensionInterface|null
      */
     public function getExtensionAttributes(): ?StockItemConfigurationExtensionInterface;
-
-    /**
-     * Set an extension attributes object
-     *
-     * @param \Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationExtensionInterface $extensionAttributes
-     * @return void
-     */
-    public function setExtensionAttributes(
-        \Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationExtensionInterface $extensionAttributes
-    ): void;
 }

@@ -81,14 +81,6 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setIsQtyDecimal(bool $isQtyDecimal): void
-    {
-        $this->stockItem->setIsQtyDecimal($isQtyDecimal);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isShowDefaultNotificationMessage(): bool
     {
         return $this->stockItem->getShowDefaultNotificationMessage();
@@ -105,25 +97,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setUseConfigMinQty(bool $useConfigMinQty): void
-    {
-        $this->stockItem = $this->stockItem->setUseConfigMinQty($useConfigMinQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getMinQty(): float
     {
         return $this->stockItem->getMinQty();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setMinQty(float $minQty): void
-    {
-        $this->stockItem->setMinQty($minQty);
     }
 
     /**
@@ -137,25 +113,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setUseConfigMinSaleQty(bool $useConfigMinSaleQty): void
-    {
-        $this->stockItem->setUseConfigMinSaleQty($useConfigMinSaleQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getMinSaleQty(): float
     {
         return $this->stockItem->getMinSaleQty();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setMinSaleQty(float $minSaleQty): void
-    {
-        $this->stockItem->setMinSaleQty($minSaleQty);
     }
 
     /**
@@ -169,25 +129,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setUseConfigMaxSaleQty(bool $useConfigMaxSaleQty): void
-    {
-        $this->stockItem->setUseConfigMaxSaleQty($useConfigMaxSaleQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getMaxSaleQty(): float
     {
         return $this->stockItem->getMaxSaleQty();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setMaxSaleQty(float $maxSaleQty): void
-    {
-        $this->stockItem->setMaxSaleQty($maxSaleQty);
     }
 
     /**
@@ -201,25 +145,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setUseConfigBackorders(bool $useConfigBackorders): void
-    {
-        $this->stockItem->setUseConfigBackorders($useConfigBackorders);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getBackorders(): int
     {
         return $this->stockItem->getBackorders();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setBackorders(int $backOrders): void
-    {
-        $this->stockItem->setBackorders($backOrders);
     }
 
     /**
@@ -233,14 +161,6 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setUseConfigNotifyStockQty(bool $useConfigNotifyStockQty): void
-    {
-        $this->stockItem->setUseConfigNotifyStockQty($useConfigNotifyStockQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getNotifyStockQty(): float
     {
         return $this->stockItem->getNotifyStockQty();
@@ -249,25 +169,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setNotifyStockQty(float $notifyStockQty): void
-    {
-        $this->stockItem->setNotifyStockQty($notifyStockQty);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isUseConfigQtyIncrements(): bool
     {
         return (bool)$this->stockItem->getUseConfigQtyIncrements();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setUseConfigQtyIncrements(bool $useConfigQtyIncrements): void
-    {
-        $this->stockItem->setUseConfigQtyIncrements($useConfigQtyIncrements);
     }
 
     /**
@@ -285,25 +189,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setQtyIncrements(float $qtyIncrements): void
-    {
-        $this->stockItem->setQtyIncrements($qtyIncrements);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isUseConfigEnableQtyInc(): bool
     {
         return (bool)$this->stockItem->getUseConfigEnableQtyInc();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setUseConfigEnableQtyInc(bool $useConfigEnableQtyInc): void
-    {
-        $this->stockItem->setUseConfigEnableQtyInc($useConfigEnableQtyInc);
     }
 
     /**
@@ -317,14 +205,6 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setEnableQtyIncrements(bool $enableQtyIncrements): void
-    {
-        $this->stockItem->setEnableQtyIncrements($enableQtyIncrements);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isUseConfigManageStock(): bool
     {
         return (bool)$this->stockItem->getUseConfigManageStock();
@@ -333,25 +213,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setUseConfigManageStock(bool $useConfigManageStock): void
-    {
-        $this->stockItem->setUseConfigManageStock($useConfigManageStock);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isManageStock(): bool
     {
         return (bool)$this->stockItem->getManageStock();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setManageStock(bool $manageStock): void
-    {
-        $this->stockItem->setManageStock($manageStock);
     }
 
     /**
@@ -366,14 +230,6 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setLowStockDate(string $lowStockDate): void
-    {
-        $this->stockItem->setLowStockDate($lowStockDate);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function isDecimalDivided(): bool
     {
         return (bool)$this->stockItem->getIsDecimalDivided();
@@ -382,25 +238,9 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
     /**
      * @inheritdoc
      */
-    public function setIsDecimalDivided(bool $isDecimalDivided): void
-    {
-        $this->stockItem->setIsDecimalDivided($isDecimalDivided);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getStockStatusChangedAuto(): bool
     {
         return (bool)$this->stockItem->getStockStatusChangedAuto();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setStockStatusChangedAuto(int $stockStatusChangedAuto): void
-    {
-        $this->stockItem->setStockStatusChangedAuto($stockStatusChangedAuto);
     }
 
     /**
@@ -425,13 +265,5 @@ class StockItemConfiguration extends AbstractExtensibleModel implements StockIte
             $this->setExtensionAttributes($extensionAttributes);
         }
         return $extensionAttributes;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setExtensionAttributes(StockItemConfigurationExtensionInterface $extensionAttributes): void
-    {
-        $this->_setExtensionAttributes($extensionAttributes);
     }
 }
