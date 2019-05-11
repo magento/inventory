@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\Carrier\Command;
+namespace Magento\InventoryInStorePickupApi\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
 

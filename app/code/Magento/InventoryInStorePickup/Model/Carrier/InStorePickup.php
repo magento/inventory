@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model\Carrier;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\InventoryInStorePickup\Model\Carrier\Command\GetFreeBoxes;
 use Magento\InventoryInStorePickup\Model\Carrier\Command\GetIsAnyPickupLocationAvailable;
-use Magento\InventoryInStorePickup\Model\Carrier\Command\GetShippingPriceInterface;
+use Magento\InventoryInStorePickupApi\Model\Carrier\GetShippingPriceInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\Method;
@@ -106,7 +106,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      */
     public function collectRates(RateRequest $request)
     {
-        if (!$this->isActive()) {
+        if (!$this->isActive() || !$this->processAdditionalValidation($request)) {
             return null;
         }
 
@@ -174,13 +174,5 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         }
 
         return $shippingPrice;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isActive()
-    {
-        return parent::isActive() && $this->getIsAnyPickupLocationAvailable->execute();
     }
 }
