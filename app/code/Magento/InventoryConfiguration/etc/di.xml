@@ -7,9 +7,11 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Configuration query interfaces -->
+    <preference for="Magento\InventoryConfigurationApi\Api\GetBackorderStatusConfigurationValueInterface" type="Magento\InventoryConfiguration\Model\GetBackorderStatusConfigurationValue"/>
     <preference for="Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\GetStockItemConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\SaveStockItemConfiguration"/>
     <preference for="Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface" type="Magento\InventoryConfiguration\Model\StockItemConfiguration"/>
+    <preference for="Magento\InventoryConfigurationApi\Api\SetBackorderStatusConfigurationValueInterface" type="Magento\InventoryConfiguration\Model\SetBackorderStatusConfigurationValue"/>
     <!-- Product types -->
     <preference for="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface" type="Magento\InventoryConfiguration\Model\IsSourceItemManagementAllowedForProductType"/>
     <preference for="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface" type="Magento\InventoryConfiguration\Model\IsSourceItemManagementAllowedForSku"/>
