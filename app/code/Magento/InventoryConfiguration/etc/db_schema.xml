@@ -12,7 +12,7 @@
         <column xsi:type="varchar" name="source_code" nullable="true" length="255"/>
         <column xsi:type="int" name="stock_id" padding="10" unsigned="true" nullable="true" identity="false"/>
         <column xsi:type="varchar" name="config_option" nullable="false" length="64"/>
-        <column xsi:type="varchar" name="value" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="value" nullable="true" length="255"/>
         <!-- TODO define constraints and indexes, if needed -->
     </table>
 </schema>
