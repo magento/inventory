@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\Convert;
 
-use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface as PickupLocationsRequestAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface as SourceSelectionAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
@@ -17,14 +17,12 @@ use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 class AddressToSourceSelectionAddress
 {
     /**
-     * @var \Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory
+     * @var AddressInterfaceFactory
      */
     private $addressInterfaceFactory;
 
     /**
-     * AddressToSourceSelectionAddress constructor.
-     *
-     * @param \Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory $addressInterfaceFactory
+     * @param AddressInterfaceFactory $addressInterfaceFactory
      */
     public function __construct(AddressInterfaceFactory $addressInterfaceFactory)
     {
@@ -32,11 +30,11 @@ class AddressToSourceSelectionAddress
     }
 
     /**
-     * @param \Magento\InventoryInStorePickupApi\Api\Data\AddressInterface $address
+     * @param PickupLocationsRequestAddressInterface $address
      *
-     * @return \Magento\InventorySourceSelectionApi\Api\Data\AddressInterface
+     * @return SourceSelectionAddressInterface
      */
-    public function execute(AddressInterface $address): SourceSelectionAddressInterface
+    public function execute(PickupLocationsRequestAddressInterface $address): SourceSelectionAddressInterface
     {
         $data = [
             'country' => $address->getCountry(),

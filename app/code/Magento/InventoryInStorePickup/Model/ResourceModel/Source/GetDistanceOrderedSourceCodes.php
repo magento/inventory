@@ -12,21 +12,19 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
 
 /**
- * Get Source Codes, ordered by distance to request coordinates.
+ * Get Source Codes, ordered by distance to request coordinates using Haversine formula (Great Circle Distance) database query.
  */
 class GetDistanceOrderedSourceCodes
 {
     private const EARTH_RADIUS_KM = 6372.797;
 
     /**
-     * @var \Magento\Framework\App\ResourceConnection
+     * @var ResourceConnection
      */
     private $resourceConnection;
 
     /**
-     * GetDistanceOrderedSourceCodes constructor.
-     *
-     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(ResourceConnection $resourceConnection)
     {
@@ -34,7 +32,7 @@ class GetDistanceOrderedSourceCodes
     }
 
     /**
-     * @param \Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface $latLng
+     * @param LatLngInterface $latLng
      * @param int $radius
      *
      * @return string[]
