@@ -107,6 +107,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($source->getStreet(), $pickupLocation->getStreet());
         $this->assertEquals($source->getPostcode(), $pickupLocation->getPostcode());
         $this->assertEquals($source->getPhone(), $pickupLocation->getPhone());
+        $this->assertEquals($source->getFax(), $pickupLocation->getFax());
         $this->assertInstanceOf(PickupLocationExtensionInterface::class, $pickupLocation->getExtensionAttributes());
     }
 
@@ -173,6 +174,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($source->getStreet(), $pickupLocation->getStreet());
         $this->assertEquals($source->getPostcode(), $pickupLocation->getPostcode());
         $this->assertEquals($source->getPhone(), $pickupLocation->getPhone());
+        $this->assertEquals($source->getFax(), $pickupLocation->getFax());
         $this->assertEquals(['open', 'hours'], $pickupLocation->getOpenHours());
     }
 

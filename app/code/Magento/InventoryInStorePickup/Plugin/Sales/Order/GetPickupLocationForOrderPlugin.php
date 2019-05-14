@@ -52,7 +52,7 @@ class GetPickupLocationForOrderPlugin
     {
         $extension = $order->getExtensionAttributes();
 
-        if (empty($extension)) {
+        if (null === $extension) {
             $extension = $this->orderExtensionFactory->create();
         }
 

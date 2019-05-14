@@ -187,7 +187,7 @@ class PickupLocation implements PickupLocationInterface
      */
     public function getFax(): ?string
     {
-        return $this->name;
+        return $this->fax;
     }
 
     /**
@@ -289,7 +289,7 @@ class PickupLocation implements PickupLocationInterface
     /**
      * @inheritdoc
      */
-    public function setExtensionAttributes(?PickupLocationExtensionInterface $extensionAttributes)
+    public function setExtensionAttributes(?PickupLocationExtensionInterface $extensionAttributes): void
     {
         $this->extensionAttributes = $extensionAttributes;
     }
