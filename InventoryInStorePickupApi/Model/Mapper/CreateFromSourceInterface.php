@@ -11,7 +11,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Create Pickup Location based on Source (Service Provider Interface - SPI).
+ * Create Pickup Location based on Source.
  * Transport data from Source to Pickup Location according to provided mapping.
  *
  * @api

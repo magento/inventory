@@ -7,7 +7,7 @@
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/inventory/in-store-pickup/get-nearby-pickup-locations" method="POST">
+    <route url="/V1/inventory/in-store-pickup/get-nearby-pickup-locations" method="GET">
         <service class="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" method="execute"/>
         <resources>
             <resource ref="Magento_InventoryApi::inStorePickup"/>
