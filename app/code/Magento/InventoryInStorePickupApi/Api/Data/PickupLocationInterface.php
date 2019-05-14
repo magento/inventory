@@ -139,7 +139,7 @@ interface PickupLocationInterface extends ExtensibleDataInterface
      *
      * @return void
      */
-    public function setExtensionAttributes(?PickupLocationExtensionInterface $extensionAttributes);
+    public function setExtensionAttributes(?PickupLocationExtensionInterface $extensionAttributes): void;
 
     /**
      * Get Extension Attributes of Pickup Location.
