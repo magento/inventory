@@ -14,60 +14,60 @@ use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\Convert\AddressToSourceSelectionAddress;
-use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrderedSourceCodes;
 use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper;
 
 /**
- * Find nearest Pickup Locations by postal code using Haversine formula (Great Circle Distance) database query.
+ * @inheritdoc
  */
 class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
 {
     /**
-     * @var \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper
+     * @var Mapper
      */
     private $mapper;
 
     /**
-     * @var \Magento\InventoryInStorePickup\Model\Convert\AddressToSourceSelectionAddress
+     * @var AddressToSourceSelectionAddress
      */
     private $addressToSourceSelectionAddress;
 
     /**
-     * @var \Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface
+     * @var GetLatLngFromAddressInterface
      */
     private $getLatLngFromAddress;
 
     /**
-     * @var \Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrderedSourceCodes
+     * @var GetDistanceOrderedSourceCodes
      */
     private $getDistanceOrderedSourceCodes;
 
     /**
-     * @var \Magento\InventoryApi\Api\GetStockSourceLinksInterface
+     * @var GetStockSourceLinksInterface
      */
     private $getStockSourceLinks;
 
     /**
-     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
 
     /**
-     * @var \Magento\InventoryApi\Api\SourceRepositoryInterface
+     * @var SourceRepositoryInterface
      */
     private $sourceRepository;
 
     /**
-     * @param \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper
-     * @param \Magento\InventoryInStorePickup\Model\Convert\AddressToSourceSelectionAddress $addressToSourceSelectionAddress
-     * @param \Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface $getLatLngFromAddress
-     * @param \Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes
-     * @param \Magento\InventoryApi\Api\GetStockSourceLinksInterface $getStockSourceLinks
-     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param \Magento\InventoryApi\Api\SourceRepositoryInterface $sourceRepository
+     * @param Mapper $mapper
+     * @param AddressToSourceSelectionAddress $addressToSourceSelectionAddress
+     * @param GetLatLngFromAddressInterface $getLatLngFromAddress
+     * @param GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes
+     * @param GetStockSourceLinksInterface $getStockSourceLinks
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SourceRepositoryInterface $sourceRepository
      */
     public function __construct(
         Mapper $mapper,

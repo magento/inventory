@@ -10,8 +10,8 @@ namespace Magento\InventoryInStorePickup\Test\Integration\PickupLocation;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtension;
+use Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
@@ -49,7 +49,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $source = $this->sourceRepository->get($this->sourceCode);
         $map = $this->getMap();
         $map['source_fail_field'] = 'fail_field';
-        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        /** @var  Mapper $mapper */
         $mapper = $this->objectManager->create(Mapper::class, ['map' => $map]);
         $mapper->map($source);
     }
@@ -64,7 +64,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $source = $this->sourceRepository->get($this->sourceCode);
         $map = $this->getMap();
         $map['name'] = 'extension_attributes.fail_field';
-        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        /** @var  Mapper $mapper */
         $mapper = $this->objectManager->create(Mapper::class, ['map' => $map]);
         $mapper->map($source);
     }
@@ -79,7 +79,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $source = $this->sourceRepository->get($this->sourceCode);
         $map = $this->getMap();
         $map['name'] = 'fail_field';
-        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        /** @var  Mapper $mapper */
         $mapper = $this->objectManager->create(Mapper::class, ['map' => $map]);
         $mapper->map($source);
     }
@@ -90,7 +90,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testMapPickupLocation()
     {
         $source = $this->sourceRepository->get($this->sourceCode);
-        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        /** @var  Mapper $mapper */
         $mapper = $this->objectManager->create(Mapper::class, ['map' => $this->getMap()]);
         $pickupLocation = $mapper->map($source);
 
@@ -145,7 +145,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                                    ->willReturn($pickupLocationExtension);
 
         $createFromSource = $this->objectManager->create(
-            Mapper\CreateFromSource::class,
+            CreateFromSourceInterface::class,
             ['extensionAttributesFactory' => $extensionAttributesFactory]
         );
 
@@ -153,7 +153,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $map['extension_attributes.open_hours'] = 'open_hours';
         $map['extension_attributes.some_attribute'] = 'extension_attributes.pickup_location_attribute';
 
-        /** @var  \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper $mapper */
+        /** @var  Mapper $mapper */
         $mapper = $this->objectManager->create(
             Mapper::class,
             ['map' => $map, 'createFromSource' => $createFromSource]

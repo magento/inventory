@@ -20,7 +20,7 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\AddressInterface" type="Magento\InventoryInStorePickup\Model\Address" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToStockOrderedByPriority" />
 
     <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface"
             type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
@@ -31,4 +31,5 @@
             <argument name="identityContainer" xsi:type="object">\Magento\InventoryInStorePickup\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
         </arguments>
     </type>
+    <preference for="Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource" />
 </config>
