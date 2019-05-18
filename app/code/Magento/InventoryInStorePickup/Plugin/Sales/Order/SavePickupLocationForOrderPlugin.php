@@ -32,11 +32,11 @@ class SavePickupLocationForOrderPlugin
     /**
      * Save Order to Pickup Location relation when saving the order.
      *
-     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
-     * @param \Magento\Sales\Api\Data\OrderInterface $result
-     * @param \Magento\Sales\Api\Data\OrderInterface $entity
+     * @param OrderRepositoryInterface $orderRepository
+     * @param OrderInterface $result
+     * @param OrderInterface $entity
      *
-     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @return OrderInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(
@@ -46,7 +46,7 @@ class SavePickupLocationForOrderPlugin
     ) {
         $extension = $result->getExtensionAttributes();
 
-        if (!empty($extension) && $extension->getPickupLocationCode()) {
+        if (null !== $extension && $extension->getPickupLocationCode()) {
             $this->saveOrderPickupLocation->execute((int)$result->getEntityId(), $extension->getPickupLocationCode());
         }
 
