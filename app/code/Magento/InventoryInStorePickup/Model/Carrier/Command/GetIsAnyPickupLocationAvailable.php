@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\Carrier\Command;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickup\Model\GetPickupLocations;
+use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -20,7 +20,7 @@ use Magento\Store\Model\StoreManagerInterface;
 class GetIsAnyPickupLocationAvailable
 {
     /**
-     * @var GetPickupLocations
+     * @var GetPickupLocationsAssignedToStockOrderedByPriorityInterface
      */
     private $getPickupLocations;
 
@@ -42,12 +42,12 @@ class GetIsAnyPickupLocationAvailable
     private $isAvailable = [];
 
     /**
-     * @param GetPickupLocations $getPickupLocations
+     * @param GetPickupLocationsAssignedToStockOrderedByPriorityInterface $getPickupLocations
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        GetPickupLocations $getPickupLocations,
+        GetPickupLocationsAssignedToStockOrderedByPriorityInterface $getPickupLocations,
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager
     ) {
