@@ -31,11 +31,14 @@
             </formElements>
         </field>
     </fieldset>
-    <fieldset name="pickup_location" sortOrder="100">
+    <fieldset name="pickup_location" sortOrder="100" component="Magento_InventoryInStorePickupAdminUi/js/form/components/fieldset">
         <settings>
             <collapsible>true</collapsible>
             <label translate="true">Pickup Location</label>
             <dataScope>general</dataScope>
+            <imports>
+                <link name="visible">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
+            </imports>
         </settings>
         <field name="frontend_name">
             <settings>
