@@ -92,11 +92,6 @@ class PickupLocation implements PickupLocationInterface
     private $phone;
 
     /**
-     * @var string[]|null
-     */
-    private $openHours;
-
-    /**
      * @var string|null
      */
     private $email;
@@ -117,7 +112,6 @@ class PickupLocation implements PickupLocationInterface
      * @param string|null $street
      * @param string|null $postcode
      * @param string|null $phone
-     * @param string[]|null $openHours
      * @param PickupLocationExtensionInterface|null $extensionAttributes
      */
     public function __construct(
@@ -136,7 +130,6 @@ class PickupLocation implements PickupLocationInterface
         ?string $street = null,
         ?string $postcode = null,
         ?string $phone = null,
-        ?array $openHours = null,
         ?PickupLocationExtensionInterface $extensionAttributes = null
     ) {
         $this->sourceCode = $sourceCode;
@@ -154,7 +147,6 @@ class PickupLocation implements PickupLocationInterface
         $this->street = $street;
         $this->postcode = $postcode;
         $this->phone = $phone;
-        $this->openHours = $openHours;
         $this->extensionAttributes = $extensionAttributes;
     }
 
@@ -276,14 +268,6 @@ class PickupLocation implements PickupLocationInterface
     public function getPhone(): ?string
     {
         return $this->phone;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOpenHours(): ?array
-    {
-        return $this->openHours;
     }
 
     /**

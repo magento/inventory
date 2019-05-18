@@ -128,13 +128,6 @@ interface PickupLocationInterface extends ExtensibleDataInterface
     public function getPhone(): ?string;
 
     /**
-     * Get Pickup Location open hours.
-     *
-     * @return string[]|null
-     */
-    public function getOpenHours(): ?array;
-
-    /**
      * Set Extension Attributes for Pickup Location.
      *
      * @param \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface|null $extensionAttributes
