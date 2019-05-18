@@ -51,16 +51,16 @@ class GetActiveStorePickupOrdersBySource
     }
 
     /**
-     * @param string $sourceCode
+     * @param string $pickupLocationCode
      *
      * @return OrderSearchResultInterface
      */
-    public function execute(string $sourceCode): OrderSearchResultInterface
+    public function execute(string $pickupLocationCode): OrderSearchResultInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(
                 self::PICKUP_LOCATION_CODE,
-                $sourceCode
+                $pickupLocationCode
             )
             ->addFilter(
                 OrderInterface::STATE,
