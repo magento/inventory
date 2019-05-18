@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickupApi\Api;
 use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
 
 /**
- * Get nearby sources of a given zip code, based on the given radius in KM.
+ * Find nearest Pickup Locations by requested address, radius, and affiliation to stock.
  *
  * @api
  */

@@ -20,7 +20,7 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\AddressInterface" type="Magento\InventoryInStorePickup\Model\Address" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToStockOrderedByPriority" />
     <preference for="Magento\InventoryInStorePickupApi\Model\Carrier\GetShippingPriceInterface" type="Magento\InventoryInStorePickup\Model\Carrier\Command\GetShippingPrice" />
 
     <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface"
@@ -32,25 +32,5 @@
             <argument name="identityContainer" xsi:type="object">\Magento\InventoryInStorePickup\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
         </arguments>
     </type>
-
-    <type name="Magento\InventoryInStorePickup\Model\PickupLocation\Mapper">
-        <arguments>
-            <argument name="map" xsi:type="array">
-                <item name="source_code" xsi:type="string">source_code</item>
-                <item name="email" xsi:type="string">email</item>
-                <item name="fax" xsi:type="string">fax</item>
-                <item name="contact_name" xsi:type="string">contact_name</item>
-                <item name="description" xsi:type="string">description</item>
-                <item name="latitude" xsi:type="string">latitude</item>
-                <item name="longitude" xsi:type="string">longitude</item>
-                <item name="country_id" xsi:type="string">country_id</item>
-                <item name="region_id" xsi:type="string">region_id</item>
-                <item name="region" xsi:type="string">region</item>
-                <item name="city" xsi:type="string">city</item>
-                <item name="street" xsi:type="string">street</item>
-                <item name="postcode" xsi:type="string">postcode</item>
-                <item name="phone" xsi:type="string">phone</item>
-            </argument>
-        </arguments>
-    </type>
+    <preference for="Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource" />
 </config>

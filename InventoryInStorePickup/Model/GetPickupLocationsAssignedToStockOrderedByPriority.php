@@ -7,14 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
-use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper;
+use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface;
 
 /**
  * @inheritdoc
  */
-class GetPickupLocations implements GetPickupLocationsInterface
+class GetPickupLocationsAssignedToStockOrderedByPriority implements GetPickupLocationsAssignedToStockOrderedByPriorityInterface
 {
     /**
      * @var GetSourcesAssignedToStockOrderedByPriorityInterface
@@ -27,8 +28,6 @@ class GetPickupLocations implements GetPickupLocationsInterface
     private $mapper;
 
     /**
-     * GetPickupLocationsAssignedToStockOrderedByPriority constructor.
-     *
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @param Mapper $mapper
      */
@@ -42,7 +41,7 @@ class GetPickupLocations implements GetPickupLocationsInterface
 
     /**
      * @inheritdoc
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function execute(int $stockId): array
     {

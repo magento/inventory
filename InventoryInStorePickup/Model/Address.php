@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model;
 use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
 
 /**
- * @inheritdoc
+ * {@inheritdoc}
  * @codeCoverageIgnore
  */
 class Address implements AddressInterface
@@ -35,7 +35,7 @@ class Address implements AddressInterface
      */
     private $city;
 
-    /***
+    /**
      * @param string $country
      * @param string|null $postcode
      * @param string|null $region

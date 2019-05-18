@@ -12,7 +12,7 @@ namespace Magento\InventoryInStorePickupApi\Api;
  *
  * @api
  */
-interface GetPickupLocationsInterface
+interface GetPickupLocationsAssignedToStockOrderedByPriorityInterface
 {
     /**
      * @param int $stockId

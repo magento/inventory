@@ -7,21 +7,23 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
-use Magento\InventoryInStorePickup\Model\GetPickupLocations as GetPickupLocationsService;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToStockOrderedByPriority;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class GetPickupLocations extends TestCase
+class GetPickupLocationsAssignedToStockOrderedByPriorityTest extends TestCase
 {
     /**
-     * @var GetPickupLocationsService
+     * @var GetPickupLocationsAssignedToStockOrderedByPriority
      */
     private $getPickupLocations;
 
     protected function setUp()
     {
-        $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocationsService::class);
+        $this->getPickupLocations = Bootstrap::getObjectManager()->get(
+            GetPickupLocationsAssignedToStockOrderedByPriority::class
+        );
     }
 
     /**
