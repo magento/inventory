@@ -13,7 +13,7 @@
     "column": {
        "is_pickup_location_active": true,
        "frontend_name": true,
-       "open_hours": true
+       "frontend_description": true
     }
   }
 }
