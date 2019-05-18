@@ -12,12 +12,12 @@ use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface;
 
 /**
- * Create Pickup Location based on Source.
- * Transport data from Source to Pickup Location according to provided mapping.
+ * @inheritdoc
  */
-class CreateFromSource
+class CreateFromSource implements CreateFromSourceInterface
 {
     /**
      * @var PickupLocationInterfaceFactory
@@ -44,15 +44,8 @@ class CreateFromSource
     }
 
     /**
-     * @param SourceInterface $source
-     * @param array $map  May contains references to fields in extension attributes.
-     * Please use format 'extension_attributes.field_name' to do so. E.g.
-     * [
-     *      "extension_attributes.source_field" => "pickup_location_field"
-     *      "extension_attributes.source_field" => "extension_attributes.pickup_location_extension_field",
-     * ]
+     * @inheritdoc
      * @throws \InvalidArgumentException
-     * @return PickupLocationInterface
      */
     public function execute(SourceInterface $source, array $map): PickupLocationInterface
     {

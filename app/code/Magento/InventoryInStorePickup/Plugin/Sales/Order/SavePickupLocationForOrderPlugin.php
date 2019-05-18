@@ -46,7 +46,7 @@ class SavePickupLocationForOrderPlugin
     ) {
         $extension = $result->getExtensionAttributes();
 
-        if (!empty($extension) && $extension->getPickupLocationCode()) {
+        if (null !== $extension && $extension->getPickupLocationCode()) {
             $this->saveOrderPickupLocation->execute((int)$result->getEntityId(), $extension->getPickupLocationCode());
         }
 
