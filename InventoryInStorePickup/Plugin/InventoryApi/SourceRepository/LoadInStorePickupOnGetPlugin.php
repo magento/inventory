@@ -20,8 +20,6 @@ class LoadInStorePickupOnGetPlugin
     private $extensionAttributesFactory;
 
     /**
-     * LoadInStorePickupOnGetPlugin constructor.
-     *
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionAttributesFactory
      */
     public function __construct(ExtensionAttributesFactory $extensionAttributesFactory)

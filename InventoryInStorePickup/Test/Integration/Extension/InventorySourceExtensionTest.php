@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Test\Integration\Extension;
 
 use Magento\Framework\ObjectManagerInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -43,7 +44,7 @@ class InventorySourceExtensionTest extends TestCase
 
         $searchResult = $this->sourceRepository->getList();
 
-        /** @var \Magento\InventoryApi\Api\Data\SourceInterface $item */
+        /** @var SourceInterface $item */
         foreach ($searchResult->getItems() as $item) {
             $item->getExtensionAttributes()->setIsPickupLocationActive(
                 $pickupLocationConfig[$item->getSourceCode()]

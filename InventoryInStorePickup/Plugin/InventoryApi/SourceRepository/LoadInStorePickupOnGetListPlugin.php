@@ -16,14 +16,12 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 class LoadInStorePickupOnGetListPlugin
 {
     /**
-     * @var \Magento\Framework\Api\ExtensionAttributesFactory
+     * @var ExtensionAttributesFactory
      */
     private $extensionAttributesFactory;
 
     /**
-     * LoadInStorePickupOnGetListPlugin constructor.
-     *
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionAttributesFactory
+     * @param ExtensionAttributesFactory $extensionAttributesFactory
      */
     public function __construct(ExtensionAttributesFactory $extensionAttributesFactory)
     {
