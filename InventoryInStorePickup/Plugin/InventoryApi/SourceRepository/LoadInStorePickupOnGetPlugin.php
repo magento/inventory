@@ -7,31 +7,32 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
-use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\DataObject;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickup\Model\Source\SetExtensionAttributes;
 
 class LoadInStorePickupOnGetPlugin
 {
     /**
-     * @var \Magento\Framework\Api\ExtensionAttributesFactory
+     * @var SetExtensionAttributes
      */
-    private $extensionAttributesFactory;
+    private $setExtensionAttributes;
 
     /**
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionAttributesFactory
+     * @param SetExtensionAttributes $setExtensionAttributes
      */
-    public function __construct(ExtensionAttributesFactory $extensionAttributesFactory)
-    {
-        $this->extensionAttributesFactory = $extensionAttributesFactory;
+    public function __construct(
+        SetExtensionAttributes $setExtensionAttributes
+    ) {
+        $this->setExtensionAttributes = $setExtensionAttributes;
     }
 
     /**
      * Enrich the given Source Objects with the In-Store pickup attribute
      *
      * @param SourceRepositoryInterface $subject
-     * @param SourceInterface $source
+     * @param SourceInterface|DataObject $source
      *
      * @return SourceInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -39,17 +40,8 @@ class LoadInStorePickupOnGetPlugin
     public function afterGet(
         SourceRepositoryInterface $subject,
         SourceInterface $source
-    ):SourceInterface {
-        $pickupAvailable = $source->getData(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE);
-
-        $extensionAttributes = $source->getExtensionAttributes();
-
-        if ($extensionAttributes === null) {
-            $extensionAttributes = $this->extensionAttributesFactory->create(SourceInterface::class);
-            $source->setExtensionAttributes($extensionAttributes);
-        }
-
-        $extensionAttributes->setIsPickupLocationActive((bool)$pickupAvailable);
+    ): SourceInterface {
+        $this->setExtensionAttributes->execute($source);
 
         return $source;
     }
