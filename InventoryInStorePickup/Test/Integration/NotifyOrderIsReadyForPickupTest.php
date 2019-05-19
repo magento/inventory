@@ -129,14 +129,11 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
      */
     public function dataProvider(): array
     {
-        // TODO: should be revised after @Oleksandr Kravchuk will merge PR with in_store_pickup shipping method
-        // in fact - current data provider exections are not correct according to expected logic
-
         return [
             ['eu-1', null],
-            ['eu-2', 'Could not save a shipment, see error log for details'],
-            ['eu-3', null],
-            ['eu-disabled', null],
+            ['eu-2', 'The order is not ready for pickup'],
+            ['eu-3', 'The order is not ready for pickup'],
+            ['eu-disabled', 'The order is not ready for pickup'],
             ['us-1', 'The order is not ready for pickup'],
         ];
     }

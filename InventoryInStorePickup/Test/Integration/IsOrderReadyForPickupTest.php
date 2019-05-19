@@ -121,14 +121,7 @@ class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
             ['eu-1', true],
             ['eu-2', false],
             ['eu-3', false],
-
-            /**
-             * correct statement - but in fact "false positive" due to bug
-             * @see \Magento\InventoryInStorePickup\Model\Order\IsFulfillable::isItemFulfillable
-             * Search criteria does not contain "isEnabled" filter for sources
-             */
             ['eu-disabled', false],
-
             ['us-1', false],
         ];
     }
