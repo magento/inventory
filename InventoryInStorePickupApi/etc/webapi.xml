@@ -10,13 +10,13 @@
     <route url="/V1/inventory/in-store-pickup/get-nearby-pickup-locations" method="GET">
         <service class="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::inStorePickup"/>
+            <resource ref="Magento_InventoryInStorePickupApi::inStorePickup"/>
         </resources>
     </route>
     <route url="/V1/inventory/in-store-pickup/pickup-locations-assigned-to-stock-ordered-by-priority/:stockId" method="GET">
         <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::inStorePickup"/>
+            <resource ref="Magento_InventoryInStorePickupApi::inStorePickup"/>
         </resources>
     </route>
 </routes>

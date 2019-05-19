@@ -21,7 +21,7 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\AddressInterface" type="Magento\InventoryInStorePickup\Model\Address" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToStockOrderedByPriority" />
-    <preference for="Magento\InventoryInStorePickupApi\Model\Carrier\GetShippingPriceInterface" type="Magento\InventoryInStorePickup\Model\Carrier\Command\GetShippingPrice" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface" type="Magento\InventoryInStorePickup\Model\GetIsAnyPickupLocationAvailable"/>
 
     <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface"
             type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>

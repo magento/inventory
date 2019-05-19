@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetFreePackagesInterface" type="Magento\InventoryInStorePickupCheckout\Model\Carrier\Command\GetFreePackages" />
+    <preference for="Magento\InventoryInStorePickupCheckoutApi\Api\Data\ShippingPriceRequestInterface" type="Magento\InventoryInStorePickupCheckout\Model\Carrier\ShippingPriceRequest" />
+    <preference for="Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetShippingPriceInterface" type="Magento\InventoryInStorePickupCheckout\Model\Carrier\Command\GetShippingPrice" />
+    <preference for="Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetShippingPriceRequestInterface" type="Magento\InventoryInStorePickupCheckout\Model\Carrier\Command\GetShippingPriceRequest" />
+
+    <type name="Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Validation\RequestValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="sales_channel" xsi:type="object">Magento\InventoryInStorePickupCheckout\Model\Carrier\Validation\SalesChannelValidator</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

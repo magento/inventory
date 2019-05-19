@@ -5,13 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\Carrier;
+namespace Magento\InventoryInStorePickupCheckoutApi\Model\Carrier;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\InventoryInStorePickup\Model\Carrier\Command\GetFreeBoxes;
-use Magento\InventoryInStorePickup\Model\Carrier\Command\GetIsAnyPickupLocationAvailable;
-use Magento\InventoryInStorePickupApi\Model\Carrier\GetShippingPriceInterface;
+use Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetFreePackagesInterface;
+use Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetShippingPriceInterface;
+use Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetShippingPriceRequestInterface;
+use Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Validation\RequestValidatorInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateResult\Error;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\Method;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
@@ -22,11 +24,13 @@ use Psr\Log\LoggerInterface;
 
 /**
  * In-Store Pickup Delivery Method Model.
+ *
+ * @api
  */
 class InStorePickup extends AbstractCarrier implements CarrierInterface
 {
     private const CARRIER_CODE = 'in_store';
-    private const METHOD_CODE = 'pickup';
+    private const METHOD_CODE  = 'pickup';
 
     /**
      * @var bool
@@ -44,31 +48,35 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
     private $rateMethodFactory;
 
     /**
-     * @var GetIsAnyPickupLocationAvailable
-     */
-    private $getIsAnyPickupLocationAvailable;
-
-    /**
      * @var GetShippingPriceInterface
      */
     private $getShippingPrice;
 
     /**
-     * @var GetFreeBoxes
+     * @var RequestValidatorInterface
      */
-    private $getFreeBoxes;
+    private $requestValidator;
 
     /**
-     * InStorePickup constructor.
-     *
+     * @var GetFreePackagesInterface
+     */
+    private $getFreePackages;
+
+    /**
+     * @var GetShippingPriceRequestInterface
+     */
+    private $getShippingPriceRequest;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
      * @param LoggerInterface $logger
      * @param ResultFactory $rateResultFactory
      * @param MethodFactory $rateMethodFactory
-     * @param GetIsAnyPickupLocationAvailable $getIsAnyPickupLocationAvailable
-     * @param GetFreeBoxes $getFreeBoxes
      * @param GetShippingPriceInterface $getShippingPrice
+     * @param RequestValidatorInterface $requestValidator
+     * @param GetFreePackagesInterface $getFreePackages
+     * @param GetShippingPriceRequestInterface $getShippingPriceRequest
      * @param array $data
      */
     public function __construct(
@@ -77,16 +85,19 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         LoggerInterface $logger,
         ResultFactory $rateResultFactory,
         MethodFactory $rateMethodFactory,
-        GetIsAnyPickupLocationAvailable $getIsAnyPickupLocationAvailable,
-        GetFreeBoxes $getFreeBoxes,
         GetShippingPriceInterface $getShippingPrice,
+        RequestValidatorInterface $requestValidator,
+        GetFreePackagesInterface $getFreePackages,
+        GetShippingPriceRequestInterface $getShippingPriceRequest,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
-        $this->getIsAnyPickupLocationAvailable = $getIsAnyPickupLocationAvailable;
-        $this->getFreeBoxes = $getFreeBoxes;
         $this->getShippingPrice = $getShippingPrice;
+        $this->requestValidator = $requestValidator;
+        $this->getFreePackages = $getFreePackages;
+        $this->getShippingPriceRequest = $getShippingPriceRequest;
+
         $this->_code = self::CARRIER_CODE;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
@@ -97,8 +108,30 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      */
     public function processAdditionalValidation(\Magento\Framework\DataObject $request)
     {
-        /** @var \Magento\Quote\Model\Quote\Address\RateRequest $request */
-        return $this->getIsAnyPickupLocationAvailable->execute((int)$request->getWebsiteId());
+        /** @var RateRequest $request */
+        $validationResult = $this->requestValidator->validate($request);
+
+        if (!$validationResult->isValid()) {
+            $this->debug($validationResult->getErrors());
+
+            return $this->createErrorResult();
+        }
+
+        return $validationResult->isValid();
+    }
+
+    /**
+     * @return Error
+     */
+    private function createErrorResult(): Error
+    {
+        return $this->_rateErrorFactory->create(
+            [
+                'data' => [
+                    'error_message' => $this->getConfigData('specificerrmsg')
+                ]
+            ]
+        );
     }
 
     /**
@@ -106,19 +139,23 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      */
     public function collectRates(RateRequest $request)
     {
-        if (!$this->isActive() || !$this->processAdditionalValidation($request)) {
+        if (!$this->isActive()) {
             return null;
         }
 
-        $freeBoxes = $this->getFreeBoxes->execute($request);
-        $shippingPrice = $this->getFinalShippingPrice($request, $freeBoxes);
+        $freeBoxes = $this->getFreePackages->execute($request);
+        $shippingPriceRequest = $this->getShippingPriceRequest->execute(
+            $request,
+            (float)$this->getConfigData('price'),
+            $freeBoxes
+        );
+
+        $shippingPrice = $this->getShippingPrice->execute($shippingPriceRequest, $request);
 
         $result = $this->rateResultFactory->create();
 
-        if ($shippingPrice !== null) {
-            $method = $this->createResultMethod($shippingPrice);
-            $result->append($method);
-        }
+        $method = $this->createResultMethod($shippingPrice);
+        $result->append($method);
 
         return $result;
     }
@@ -153,26 +190,5 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
     public function getAllowedMethods()
     {
         return [$this->_code => $this->getConfigData('name')];
-    }
-
-    /**
-     * @param \Magento\Quote\Model\Quote\Address\RateRequest $request
-     * @param float $freeBoxes
-     *
-     * @return float|null
-     */
-    private function getFinalShippingPrice(RateRequest $request, float $freeBoxes): ?float
-    {
-        $shippingPrice = null;
-        $configPrice = (float)$this->getConfigData('price');
-        $shippingPrice = $this->getShippingPrice->execute($request, $configPrice, $freeBoxes);
-
-        $shippingPrice = $this->getFinalPriceWithHandlingFee($shippingPrice);
-
-        if ($shippingPrice !== null && $request->getPackageQty() == $freeBoxes) {
-            $shippingPrice = 0.0;
-        }
-
-        return $shippingPrice;
     }
 }

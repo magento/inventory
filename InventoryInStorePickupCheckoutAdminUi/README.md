@@ -1,6 +1,6 @@
 # InventoryInStorePickupAdminUi module
 
-The `InventoryInStorePickupAdminUi` module extends the Magento Admin UI to add Inventory In-Store Pickup functionality.
+The `InventoryInStorePickupCheckoutAdminUi` module extends the Magento Admin UI to add Inventory In-Store Pickup functionality for Checkout purposes.
 
 This module is part of the new inventory infrastructure. The
 [Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
@@ -13,7 +13,7 @@ is provided by a 3rd-party system or if you run a headless version of Magento.
 
 ## Extensibility
 
-The `InventoryInStorePickupAdminUi` module contains several extension points.
+The `InventoryInStorePickupCheckoutAdminUi` module contains several extension points.
 
 ### Layouts
 
