@@ -10,6 +10,8 @@ namespace Magento\InventoryInStorePickup\Model\Order;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 
 /**
@@ -28,15 +30,23 @@ class IsFulfillable
     private $searchCriteriaBuilderFactory;
 
     /**
+     * @var SourceRepositoryInterface
+     */
+    private $sourceRepository;
+
+    /**
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilder
+     * @param SourceRepositoryInterface $sourceRepository
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilder
+        SearchCriteriaBuilderFactory $searchCriteriaBuilder,
+        SourceRepositoryInterface $sourceRepository
     ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilder;
+        $this->sourceRepository = $sourceRepository;
     }
 
     /**
@@ -87,8 +97,12 @@ class IsFulfillable
             /** @var SourceItemInterface $sourceItem */
             $sourceItem = current($sourceItems->getItems());
 
+            /** @var SourceInterface $source */
+            $source = $this->sourceRepository->get($sourceItem->getSourceCode());
+
             return bccomp((string)$sourceItem->getQuantity(), (string)$qtyOrdered, 1) >= 0 &&
-                $sourceItem->getStatus() === SourceItemInterface::STATUS_IN_STOCK;
+                $sourceItem->getStatus() === SourceItemInterface::STATUS_IN_STOCK &&
+                $source->isEnabled();
         }
 
         return false;
