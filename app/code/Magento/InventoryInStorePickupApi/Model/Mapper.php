@@ -5,15 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\PickupLocation;
+namespace Magento\InventoryInStorePickupApi\Model;
 
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface;
 
 /**
  * Create projection of sources on In-Store Pickup context.
  * Data transfer from source to projection will be done according to provided fields mapping.
+ *
+ * @api
  */
 class Mapper
 {
@@ -25,16 +27,16 @@ class Mapper
     private $map;
 
     /**
-     * @var \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource
+     * @var CreateFromSourceInterface
      */
     private $createFromSource;
 
     /**
-     * @param \Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource $createFromSource
+     * @param CreateFromSourceInterface $createFromSource
      * @param array $map
      */
     public function __construct(
-        CreateFromSource $createFromSource,
+        CreateFromSourceInterface $createFromSource,
         array $map = []
     ) {
         $this->map = $map;
@@ -42,9 +44,9 @@ class Mapper
     }
 
     /**
-     * @param \Magento\InventoryApi\Api\Data\SourceInterface $source
+     * @param SourceInterface $source
      *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface
+     * @return PickupLocationInterface
      */
     public function map(SourceInterface $source): PickupLocationInterface
     {
