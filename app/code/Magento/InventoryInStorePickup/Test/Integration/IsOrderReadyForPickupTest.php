@@ -119,19 +119,7 @@ class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['eu-1', true],
-
-            /**
-             * correct statement - but in fact "false positive" due to bug
-             * @see \Magento\InventoryInStorePickup\Model\Order\IsFulfillable::isItemFulfillable
-             * `bccomp` function should compare with scale = 1 or higher
-             */
             ['eu-2', false],
-
-            /**
-             * correct statement - but in fact "false positive" due to bug
-             * @see \Magento\InventoryInStorePickup\Model\Order\IsFulfillable::isItemFulfillable
-             * There is not check on source status - in_stock/out_of_stock
-             */
             ['eu-3', false],
 
             /**

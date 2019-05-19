@@ -87,7 +87,8 @@ class IsFulfillable
             /** @var SourceItemInterface $sourceItem */
             $sourceItem = current($sourceItems->getItems());
 
-            return bccomp((string)$sourceItem->getQuantity(), (string)$qtyOrdered) >= 0;
+            return bccomp((string)$sourceItem->getQuantity(), (string)$qtyOrdered, 1) >= 0 &&
+                $sourceItem->getStatus() === SourceItemInterface::STATUS_IN_STOCK;
         }
 
         return false;
