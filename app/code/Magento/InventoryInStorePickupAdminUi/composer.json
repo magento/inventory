@@ -8,9 +8,7 @@
         "magento/module-inventory-in-store-pickup-api": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-sales": "*",
-        "magento/module-backend": "*",
-        "magento/module-config": "*",
-        "magento/module-shipping": "*"
+        "magento/module-backend": "*"
     },
     "type": "magento2-module",
     "license": [

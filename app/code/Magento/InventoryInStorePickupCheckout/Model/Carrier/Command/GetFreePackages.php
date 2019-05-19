@@ -5,23 +5,25 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\Carrier\Command;
+namespace Magento\InventoryInStorePickupCheckout\Model\Carrier\Command;
+
+use Magento\InventoryInStorePickupCheckoutApi\Model\Carrier\Command\GetFreePackagesInterface;
+use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Item\AbstractItem;
 
 /**
- * Calculate and return number of items with free delivery.
+ * @inheritdoc
  */
-class GetFreeBoxes
+class GetFreePackages implements GetFreePackagesInterface
 {
     /**
-     * @param \Magento\Quote\Model\Quote\Address\RateRequest $request
-     *
-     * @return float
+     * @inheritdoc
      */
-    public function execute(\Magento\Quote\Model\Quote\Address\RateRequest $request): float
+    public function execute(RateRequest $request): float
     {
         $freeBoxes = 0.0;
         if ($request->getAllItems()) {
-            /** @var \Magento\Quote\Model\Quote\Item\AbstractItem $item */
+            /** @var AbstractItem $item */
             foreach ($request->getAllItems() as $item) {
                 if ($item->getProduct()->isVirtual() || $item->getParentItem()) {
                     continue;
@@ -39,10 +41,11 @@ class GetFreeBoxes
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @param AbstractItem $item
+     *
      * @return float
      */
-    private function getFreeBoxesCountFromChildren(\Magento\Quote\Model\Quote\Item\AbstractItem $item): float
+    private function getFreeBoxesCountFromChildren(AbstractItem $item): float
     {
         $freeBoxes = 0.0;
         foreach ($item->getChildren() as $child) {
