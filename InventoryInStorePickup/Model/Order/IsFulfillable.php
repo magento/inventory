@@ -96,10 +96,7 @@ class IsFulfillable
         if ($sourceItems->getTotalCount()) {
             /** @var SourceItemInterface $sourceItem */
             $sourceItem = current($sourceItems->getItems());
-
-            // TODO: rebuild to use extension attributes
-            /** @var SourceInterface $source */
-            $source = $this->sourceRepository->get($sourceItem->getSourceCode());
+            $source = $this->sourceRepository->get($sourceCode);
 
             return bccomp((string)$sourceItem->getQuantity(), (string)$qtyOrdered, 1) >= 0 &&
                 $sourceItem->getStatus() === SourceItemInterface::STATUS_IN_STOCK &&
