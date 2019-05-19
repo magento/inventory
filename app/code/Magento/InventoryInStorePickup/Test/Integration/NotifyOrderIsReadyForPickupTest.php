@@ -11,6 +11,9 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
+use Magento\Sales\Api\Data\ShipmentItemInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderExtensionInterface;
@@ -24,6 +27,9 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
 
     /** @var OrderRepositoryInterface */
     private $orderRepository;
+
+    /** @var ShipmentRepositoryInterface */
+    private $shipmentRepository;
 
     /** @var SearchCriteriaBuilder */
     private $searchCriteriaBuilder;
@@ -42,6 +48,7 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->objectManager = Bootstrap::getObjectManager();
 
         $this->orderRepository = $this->objectManager->get(OrderRepositoryInterface::class);
+        $this->shipmentRepository = $this->objectManager->get(ShipmentRepositoryInterface::class);
         $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
         $this->notifyOrderIsReadyForPickupService = $this->objectManager->get(NotifyOrderIsReadyForPickupInterface::class);
         $this->orderExtensionFactory = $this->objectManager->get(OrderExtensionFactory::class);
@@ -77,10 +84,21 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $orderId = (int)$createdOrder->getEntityId();
 
         if ($expectedException !== null) {
+            // set expected exception before service execution;
             $this->expectExceptionMessage($expectedException);
         }
 
         $this->notifyOrderIsReadyForPickupService->execute($orderId);
+
+        /** @var ShipmentInterface $createdShipment */
+        $createdShipment = $this->getCreatedShipment($orderId);
+        /** @var ShipmentItemInterface $shipmentItem */
+        $shipmentItem = current($createdShipment->getItems());
+
+        // assert created shipment;
+        $this->assertTrue((bool)$createdShipment);
+        $this->assertEquals('SKU-1', $shipmentItem->getSku());
+        $this->assertEquals('3.5', $shipmentItem->getQty());
     }
 
     /**
@@ -96,6 +114,23 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
         /** @var OrderInterface $createdOrder */
         $createdOrder = current($this->orderRepository->getList($searchCriteria)->getItems());
         return $createdOrder;
+    }
+
+    /**
+     * Get Created Shipment
+     *
+     * @param int $orderId
+     *
+     * @return ShipmentInterface
+     */
+    private function getCreatedShipment(int $orderId): ShipmentInterface
+    {
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('order_id', $orderId)
+            ->create();
+        /** @var ShipmentInterface $createdShipment */
+        $createdShipment = current($this->shipmentRepository->getList($searchCriteria)->getItems());
+        return $createdShipment;
     }
 
     /**
