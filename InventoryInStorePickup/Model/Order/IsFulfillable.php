@@ -10,9 +10,9 @@ namespace Magento\InventoryInStorePickup\Model\Order;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
-use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Check if order can be fulfilled: if its pickup location has enough QTY
@@ -83,6 +83,7 @@ class IsFulfillable
      * @param string $sourceCode
      * @param float $qtyOrdered
      * @return bool
+     * @throws NoSuchEntityException
      */
     private function isItemFulfillable(string $sku, string $sourceCode, float $qtyOrdered): bool
     {
