@@ -97,6 +97,7 @@ class IsFulfillable
             /** @var SourceItemInterface $sourceItem */
             $sourceItem = current($sourceItems->getItems());
 
+            // TODO: rebuild to use extension attributes
             /** @var SourceInterface $source */
             $source = $this->sourceRepository->get($sourceItem->getSourceCode());
 
