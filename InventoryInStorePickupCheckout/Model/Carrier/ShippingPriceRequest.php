@@ -11,7 +11,8 @@ use Magento\InventoryInStorePickupCheckoutApi\Api\Data\ShippingPriceRequestExten
 use Magento\InventoryInStorePickupCheckoutApi\Api\Data\ShippingPriceRequestInterface;
 
 /**
- * @inheritdoc
+ * {@inheritdoc}
+ * @codeCoverageIgnore
  */
 class ShippingPriceRequest implements ShippingPriceRequestInterface
 {

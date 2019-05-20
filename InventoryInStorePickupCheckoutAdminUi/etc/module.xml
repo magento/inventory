@@ -9,6 +9,7 @@
     <module name="Magento_InventoryInStorePickupCheckoutAdminUi" setup_version="1.0.0">
         <sequence>
             <module name="Magento_InventoryInStorePickupCheckoutApi"/>
+            <module name="Magento_Config" />
         </sequence>
     </module>
 </config>
