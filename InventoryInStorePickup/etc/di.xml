@@ -40,4 +40,8 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryApi\Model\SourceValidatorChain">
+        <plugin name="store-pickup-set-frontend-name"
+                type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceValidatorChain\SetFrontendName" />
+    </type>
 </config>
