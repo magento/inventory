@@ -72,8 +72,9 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
      *
      * @param string $sourceId
      * @param string|null $expectedException
+     * @throws
      */
-    public function testIsOrderReadyForPickUp(string $sourceId, ?string $expectedException)
+    public function testExecute(string $sourceId, ?string $expectedException)
     {
         $createdOrder = $this->getCreatedOrder();
         $this->setPickupLocation($createdOrder, $sourceId);
@@ -99,6 +100,7 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue((bool)$createdShipment);
         $this->assertEquals('SKU-1', $shipmentItem->getSku());
         $this->assertEquals('3.5', $shipmentItem->getQty());
+        $this->assertEquals($sourceId, $createdShipment->getExtensionAttributes()->getSourceCode());
     }
 
     /**
