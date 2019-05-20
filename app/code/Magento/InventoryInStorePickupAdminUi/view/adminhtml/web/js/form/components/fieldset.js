@@ -15,19 +15,20 @@ define([
     return Fieldset.extend(ko).extend(
         {
             /**
-             * Convert visible value from string ('1', '0') to bool (true, false)
+             * Convert `visible` value from string ('1', '0') to bool (true, false)
              */
             initialize: function () {
                 this._super();
-
-                let visible = ko.observable(this.visible());
+                
+                // eslint-disable-next-line vars-on-top
+                var visible = ko.observable(this.visible());
 
                 this.visible = ko.computed({
                     read: function () {
                         return visible();
                     },
                     write: function (value) {
-                        visible(Boolean(parseInt(value)));
+                        visible(Boolean(parseInt(value, 0)));
                     },
                     owner: this
                 });
