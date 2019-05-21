@@ -19,6 +19,7 @@ interface NotifyOrderIsReadyForPickupInterface
      * Send an email to the customer and ship the order to reserve pickup location`s QTY.
      *
      * @param int $orderId
+     *
      * @throws NoSuchEntityException
      * @throws LocalizedException
      */
