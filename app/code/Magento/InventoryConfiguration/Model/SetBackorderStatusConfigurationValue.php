@@ -19,6 +19,9 @@ class SetBackorderStatusConfigurationValue implements SetBackorderStatusConfigur
      */
     private $resourceConnection;
 
+    /**
+     * @var WriterInterface
+     */
     private $configWriter;
 
     public function __construct(

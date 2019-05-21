@@ -7,10 +7,32 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfiguration\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetBackorderStatusConfigurationValueInterface;
 
 class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigurationValueInterface
 {
+    /**
+     * @var ResourceConnection;
+     */
+    private $resourceConnection;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    public function __construct(
+        ResourceConnection $resourceConnection,
+        ScopeConfigInterface $scopeConfig
+    ) {
+        $this->resourceConnection = $resourceConnection;
+        $this->scopeConfig = $scopeConfig;
+    }
+
     /**
      * @param string $sku
      * @param string $sourceCode
@@ -18,7 +40,18 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
      */
     public function forSourceItem(string $sku, string $sourceCode): ?int
     {
-        // TODO: Implement forSourceItem() method.
+        $connection = $this->resourceConnection->getConnection();
+        $configurationTable = $this->resourceConnection->getTableName('inventory_configuration');
+        $select = $connection->select()
+            ->from($configurationTable)
+            ->where('sku = ?', $sku)
+            ->where('source_code = ?', $sourceCode)
+            ->where('config_option = ?', SourceItemConfigurationInterface::BACKORDERS);
+        $data = $connection->fetchRow($select);
+        if ($data === false || $data['value'] === null) {
+            return $this->forSource($sourceCode);
+        }
+        return (int)$data['value'];
     }
 
     /**
@@ -27,7 +60,18 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
      */
     public function forSource(string $sourceCode): ?int
     {
-        // TODO: Implement forSource() method.
+        $connection = $this->resourceConnection->getConnection();
+        $configurationTable = $this->resourceConnection->getTableName('inventory_configuration');
+        $select = $connection->select()
+            ->from($configurationTable)
+            ->where('sku IS NULL')
+            ->where('source_code = ?', $sourceCode)
+            ->where('config_option = ?', SourceItemConfigurationInterface::BACKORDERS);
+        $data = $connection->fetchRow($select);
+        if ($data === false || $data['value'] === null) {
+            return $this->forGlobal();
+        }
+        return (int)$data['value'];
     }
 
     /**
@@ -36,6 +80,9 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
      */
     public function forGlobal(): int
     {
-        // TODO: Implement forGlobal() method.
+        // TODO if config value is missing, null is casted to int thus becomes 0
+        return (int)$this->scopeConfig->getValue(
+            SourceItemConfigurationInterface::XML_PATH_BACKORDERS
+        );
     }
 }
