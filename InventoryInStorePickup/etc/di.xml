@@ -44,4 +44,15 @@
         <plugin name="store-pickup-set-frontend-name"
                 type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceValidatorChain\SetFrontendName" />
     </type>
+    <type name="Magento\InventoryInStorePickup\Model\SourceSelection\GetActiveStorePickupOrdersBySource">
+        <arguments>
+            <argument name="statesToFilter" xsi:type="array">
+                <item xsi:type="const" name="complete">Magento\Sales\Model\Order::STATE_COMPLETE</item>
+                <item xsi:type="const" name="closed">Magento\Sales\Model\Order::STATE_CLOSED</item>
+                <item xsi:type="const" name="canceled">Magento\Sales\Model\Order::STATE_CANCELED</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface"
+            type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
 </config>
