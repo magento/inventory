@@ -99,7 +99,7 @@ class IsFulfillable
             $sourceItem = current($sourceItems->getItems());
             $source = $this->sourceRepository->get($sourceCode);
 
-            return bccomp((string)$sourceItem->getQuantity(), (string)$qtyOrdered, 1) >= 0 &&
+            return bccomp((string)$sourceItem->getQuantity(), (string)$qtyOrdered, 4) >= 0 &&
                 $sourceItem->getStatus() === SourceItemInterface::STATUS_IN_STOCK &&
                 $source->isEnabled();
         }
