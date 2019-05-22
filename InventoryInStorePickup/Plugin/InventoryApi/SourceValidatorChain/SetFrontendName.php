@@ -28,7 +28,7 @@ class SetFrontendName
             return;
         }
 
-        $frontendName = trim($source->getExtensionAttributes()->getFrontendName());
+        $frontendName = trim($source->getExtensionAttributes()->getFrontendName() ?? '');
 
         if ($frontendName === '') {
             $source->getExtensionAttributes()->setFrontendName($source->getName());

@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 
 /**
  * Create projection of sources on In-Store Pickup context.
@@ -32,15 +34,36 @@ class Mapper
     private $createFromSource;
 
     /**
+     * @var PreProcessorInterface[]
+     */
+    private $preProcessors;
+
+    /**
      * @param CreateFromSourceInterface $createFromSource
-     * @param array $map
+     * @param string[] $map
+     * @param PreProcessorInterface[] $preProcessors
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         CreateFromSourceInterface $createFromSource,
-        array $map = []
+        array $map = [],
+        array $preProcessors = []
     ) {
-        $this->map = $map;
         $this->createFromSource = $createFromSource;
+        $this->map = $map;
+
+        foreach ($preProcessors as $preProcessor) {
+            if (!$preProcessor instanceof PreProcessorInterface) {
+                throw new LocalizedException(
+                    __(
+                        'Source Data PreProcessor must implement %1.',
+                        PreProcessorInterface::class
+                    )
+                );
+            }
+        }
+        $this->preProcessors = $preProcessors;
     }
 
     /**
@@ -50,6 +73,6 @@ class Mapper
      */
     public function map(SourceInterface $source): PickupLocationInterface
     {
-        return $this->createFromSource->execute($source, $this->map);
+        return $this->createFromSource->execute($source, $this->map, $this->preProcessors);
     }
 }
