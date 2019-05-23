@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
-use Magento\Framework\Exception\LocalizedException;
+use InvalidArgumentException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface;
@@ -42,8 +42,7 @@ class Mapper
      * @param CreateFromSourceInterface $createFromSource
      * @param string[] $map
      * @param PreProcessorInterface[] $preProcessors
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         CreateFromSourceInterface $createFromSource,
@@ -55,9 +54,9 @@ class Mapper
 
         foreach ($preProcessors as $preProcessor) {
             if (!$preProcessor instanceof PreProcessorInterface) {
-                throw new LocalizedException(
-                    __(
-                        'Source Data PreProcessor must implement %1.',
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Source Data PreProcessor must implement %s.',
                         PreProcessorInterface::class
                     )
                 );
