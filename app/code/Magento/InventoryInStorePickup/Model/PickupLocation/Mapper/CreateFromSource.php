@@ -67,7 +67,7 @@ class CreateFromSource implements CreateFromSourceInterface
     private function preProcessData(SourceInterface $source, array $data, array $preProcessors)
     {
         foreach ($preProcessors as $field => $processor) {
-            if (isset($data[$field])) {
+            if (array_key_exists($field, $data)) {
                 $data[$field] = $processor->process($source, $data[$field]);
             }
         }
