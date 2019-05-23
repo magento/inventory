@@ -9,20 +9,20 @@ namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickup\Model\Source\SetExtensionAttributes;
+use Magento\InventoryInStorePickup\Model\Source\InitPickupLocationExtensionAttributes;
 
 class LoadInStorePickupOnGetListPlugin
 {
     /**
-     * @var SetExtensionAttributes
+     * @var InitPickupLocationExtensionAttributes
      */
     private $setExtensionAttributes;
 
     /**
-     * @param SetExtensionAttributes $setExtensionAttributes
+     * @param InitPickupLocationExtensionAttributes $setExtensionAttributes
      */
     public function __construct(
-        SetExtensionAttributes $setExtensionAttributes
+        InitPickupLocationExtensionAttributes $setExtensionAttributes
     ) {
         $this->setExtensionAttributes = $setExtensionAttributes;
     }

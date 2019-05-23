@@ -16,7 +16,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 /**
  * Set store-pickup related source extension attributes
  */
-class SetExtensionAttributes
+class InitPickupLocationExtensionAttributes
 {
     /**
      * @var ExtensionAttributesFactory
@@ -31,10 +31,13 @@ class SetExtensionAttributes
         $this->extensionAttributesFactory = $extensionAttributesFactory;
     }
     /**
-     * @param SourceInterface|DataObject $source
+     * @param SourceInterface $source
      */
     public function execute(SourceInterface $source): void
     {
+        if (!$source instanceof DataObject) {
+            return;
+        }
         $pickupAvailable = $source->getData(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE);
         $frontendName = $source->getData(PickupLocationInterface::FRONTEND_NAME);
         $frontendDescription = $source->getData(PickupLocationInterface::FRONTEND_DESCRIPTION);
