@@ -39,7 +39,7 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     * @magentoDbIsolation enabled
      */
     public function testForSourceItem()
     {
@@ -53,7 +53,7 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     * @magentoDbIsolation enabled
      */
     public function testForSourceItemWithFallbackOnSource()
     {
@@ -67,7 +67,7 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     * @magentoDbIsolation enabled
      */
     public function testForSourceItemWithFallbackOnGlobal()
     {
@@ -79,7 +79,7 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     * @magentoDbIsolation enabled
      */
     public function testForSource()
     {
@@ -92,7 +92,7 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     * @magentoDbIsolation enabled
      */
     public function testForSourceWithFallbackOnGlobal()
     {
@@ -103,7 +103,7 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     * @magentoDbIsolation enabled
      */
     public function testForGlobal()
     {
