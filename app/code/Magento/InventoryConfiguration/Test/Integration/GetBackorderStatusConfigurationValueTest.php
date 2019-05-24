@@ -15,8 +15,6 @@ use PHPUnit\Framework\TestCase;
 
 class GetBackorderStatusConfigurationValueTest extends TestCase
 {
-    // TODO implement integration tests
-
     /**
      * @var SetBackorderStatusConfigurationValueInterface
      */
@@ -40,6 +38,9 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
         );
     }
 
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     */
     public function testForSourceItem()
     {
         $this->setBackorderStatusConfigurationValue->forSourceItem(
@@ -49,10 +50,11 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
         );
         $backorders = $this->getBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1');
         self::assertEquals(SourceItemConfigurationInterface::BACKORDERS_YES_NONOTIFY, $backorders);
-        // reset values
-        $this->setBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1', null);
     }
 
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     */
     public function testForSourceItemWithFallbackOnSource()
     {
         $this->setBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1', null);
@@ -62,11 +64,23 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
         );
         $backorders = $this->getBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1');
         self::assertEquals(SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY, $backorders);
-        // reset values
-        $this->setBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1', null);
-        $this->setBackorderStatusConfigurationValue->forSource('eu-1', null);
     }
 
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     */
+    public function testForSourceItemWithFallbackOnGlobal()
+    {
+        $this->setBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1', null);
+        $this->setBackorderStatusConfigurationValue->forSource('eu-1', null);
+        $this->setBackorderStatusConfigurationValue->forGlobal(SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY);
+        $backorders = $this->getBackorderStatusConfigurationValue->forSourceItem('SKU-1', 'eu-1');
+        self::assertEquals(SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY, $backorders);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     */
     public function testForSource()
     {
         $this->setBackorderStatusConfigurationValue->forSource(
@@ -75,10 +89,22 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
         );
         $backorders = $this->getBackorderStatusConfigurationValue->forSource('eu-1');
         self::assertEquals(SourceItemConfigurationInterface::BACKORDERS_YES_NONOTIFY, $backorders);
-        // reset values
-        $this->setBackorderStatusConfigurationValue->forSource('eu-1', null);
     }
 
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     */
+    public function testForSourceWithFallbackOnGlobal()
+    {
+        $this->setBackorderStatusConfigurationValue->forSource('eu-1', null);
+        $this->setBackorderStatusConfigurationValue->forGlobal(SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY);
+        $backorders = $this->getBackorderStatusConfigurationValue->forSource('eu-1');
+        self::assertEquals(SourceItemConfigurationInterface::BACKORDERS_YES_NOTIFY, $backorders);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfiguration/Test/_files/inventory_configuration.php
+     */
     public function testForGlobal()
     {
         $this->setBackorderStatusConfigurationValue->forGlobal(SourceItemConfigurationInterface::BACKORDERS_YES_NONOTIFY);

@@ -80,7 +80,7 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
      */
     public function forGlobal(): int
     {
-        // TODO if config value is missing, null is casted to int thus becomes 0
+        // FIXME if config value is missing, null casted to int gives 0, that's a different semantic from missing value
         return (int)$this->scopeConfig->getValue(
             SourceItemConfigurationInterface::XML_PATH_BACKORDERS
         );
