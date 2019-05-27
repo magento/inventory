@@ -2,12 +2,12 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="LoggedInCustomerCreatedOrderWithSimpleProductOnTestStockFromHomepage">
+    <test name="ReorderOfTheOrderWithSimpleProductOnTestStockFromAdmin">
         <annotations>
-            <stories value="Logged In Customer created Order with Simple product on Test stock from Homepage"/>
-            <title value="Logged In Customer created Order with Simple product on Test stock from Homepage"/>
-            <description value="/scenarios/1408755"/>
-            <testCaseId value="MSI-2055"/>
+            <stories value="Reorder of the Order with Simple product on Test stock from Admin"/>
+            <title value="Reorder of the Order with Simple product on Test stock from Admin"/>
+            <description value="/scenarios/1482457"/>
+            <testCaseId value="MSI-2192"/>
             <severity value="BLOCKER"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -101,6 +101,12 @@
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
         <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 5" stepKey="orderedQuantity"/>
 
+        <!-- Admin reorder-->
+        <comment userInput="As Admin, reorder the order" stepKey="reorderComment"/>
+        <click selector="{{AdminOrderDetailsMainActionsSection.reorder}}" stepKey="clickReorderButton"/>
+        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
+
+
         <!--Admin Area Check source quantity and salable quantity-->
         <comment userInput="Admin - Check Source quantity and salable quantity after order placed" stepKey="AdminCheckQuantityAfterOrderPlaced"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
@@ -109,11 +115,7 @@
             <argument name="value" value="$$simpleProduct.sku$$"/>
         </actionGroup>
         <see selector="{{AdminProductGridSection.productQtyPerSource('1',$$createSource.source[name]$$)}}" userInput="100" stepKey="checkProductSourceQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',$$createStock.stock[name]$$)}}" userInput="95" stepKey="checkSalableQtyAfterPlaceOrder"/>
-
-        <!--Admin area Reorder-->
-        <comment userInput="Admin - Reorder" stepKey="ReorderFromAdmin"/>
-
+        <see selector="{{AdminProductGridSection.productSalableQty('1',$$createStock.stock[name]$$)}}" userInput="90" stepKey="checkSalableQtyAfterPlaceOrder"/>
 
     </test>
 </tests>
