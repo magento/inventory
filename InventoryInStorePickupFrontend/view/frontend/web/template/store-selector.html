@@ -1,0 +1,26 @@
+<div id="store-selector">
+    <each if="!quoteIsVirtual" args="getRegion('customer-email')" render="" />
+
+    <div class="step-title" data-bind="i18n: 'Store'" data-role="title"></div>
+    <div
+        id="checkout-step-store-selector"
+        class="step-content"
+        data-role="content"
+    >
+        Store selector content goes here.
+
+        <form class="form-continue" data-bind="submit: setPickupInformation" novalidate="novalidate">
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button
+                        data-role="opc-continue"
+                        type="submit"
+                        class="button action continue primary"
+                    >
+                        <span><!-- ko i18n: 'Next'--><!-- /ko --></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

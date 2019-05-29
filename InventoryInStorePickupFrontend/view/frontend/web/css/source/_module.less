@@ -1,0 +1,96 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+//
+//
+//  ---------------------------------------------
+@checkout-delivery-method-selector-action__border-color: @color-gray76;
+@checkout-delivery-method-selector-action__background: @color-white;
+
+& when (@media-common = true) {
+    #store-pickup {
+        &.selected-shipping {
+            ~ #store-selector {
+                display: none;
+            }
+        }
+
+        &.selected-store-pickup {
+            ~ #shipping,
+            ~ #opc-shipping_method {
+                display: none !important;
+            }
+        }
+    }
+
+    #delivery-method-selector {
+        .lib-vendor-prefix-display(flex);
+
+        .action {
+            .lib-button-l();
+
+            &.selected {
+                background: @checkout-delivery-method-selector-action__background;
+            }
+        }
+
+        .action-select-shipping {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .action-select-store-pickup {
+            // border-color: @checkout-delivery-method-selector-action__border-color;
+            border-left: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    #store-selector {
+        .form-login {
+            border-bottom: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-continue {
+            .actions-toolbar {
+                .action {
+                    &.primary {
+                        &:extend(.abs-button-l all);
+                        margin: @indent__base 0 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break)
+    when
+    (@extremum = 'min')
+    and
+    (@break = @screen__m) {
+    #store-selector {
+        .form-continue {
+            .actions-toolbar {
+                > .primary {
+                    float: right;
+                }
+
+                .action {
+                    &.primary {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}
