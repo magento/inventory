@@ -700,13 +700,10 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
     {
         $totalPaid = $this->getTotalPaid();
         //check if total paid is less than grandtotal
-        //TODO: If paid less or exact that grand total
         $checkAmtTotalPaid = $totalPaid <= $this->getGrandTotal();
         //case when amount is due for invoice
-        //TODO: If this is partial invoice
         $hasDueAmount = $this->canInvoice() && ($checkAmtTotalPaid);
         //case when paid amount is refunded and order has creditmemo created
-        //TODO: If everything has been refunded.
         $creditmemos = ($this->getCreditmemosCollection() === false) ?
              true : (count($this->getCreditmemosCollection()) > 0);
         $paidAmtIsRefunded = $this->getTotalRefunded() == $totalPaid && $creditmemos;
