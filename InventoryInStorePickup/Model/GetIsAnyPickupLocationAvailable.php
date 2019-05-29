@@ -45,22 +45,10 @@ class GetIsAnyPickupLocationAvailable implements GetIsAnyPickupLocationAvailable
      */
     public function execute(SalesChannelInterface $salesChannel): bool
     {
-        return $this->checkPickupLocationsAvailability($salesChannel);
-    }
-
-    /**
-     * Check if at least one pickup location available for provided Sales Channel.
-     *
-     * @param SalesChannelInterface $salesChannel
-     *
-     * @return bool
-     */
-    private function checkPickupLocationsAvailability(SalesChannelInterface $salesChannel): bool
-    {
         $result = false;
+
         try {
             $stock = $this->getStockBySalesChannel->execute($salesChannel);
-
             $result = count($this->getPickupLocations->execute((int)$stock->getStockId())) > 0;
         } catch (NoSuchEntityException $exception) {
             return $result;

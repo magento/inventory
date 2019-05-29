@@ -29,7 +29,7 @@ $cartId = $cartManagement->createEmptyCart();
 $cart = $cartRepository->get($cartId);
 $cart->setCustomerEmail('admin@example.com');
 $cart->setCustomerIsGuest(true);
-//TODO
+
 $store = $storeRepository->get('store_for_eu_website');
 $cart->setStoreId($store->getId());
 $storeManager->setCurrentStore($store->getCode());
