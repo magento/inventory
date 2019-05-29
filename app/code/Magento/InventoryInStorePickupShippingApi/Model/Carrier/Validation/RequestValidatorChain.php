@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorInterface;
@@ -31,8 +30,6 @@ class RequestValidatorChain implements RequestValidatorInterface
     /**
      * @param ValidationResultFactory $validationResultFactory
      * @param array $validators
-     *
-     * @throws LocalizedException
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
@@ -42,10 +39,12 @@ class RequestValidatorChain implements RequestValidatorInterface
 
         foreach ($validators as $validator) {
             if (!$validator instanceof RequestValidatorInterface) {
-                throw new LocalizedException(
-                    __(
-                        'In-Store Pickup Carrier Rate Request Validator must implement %1.',
-                        RequestValidatorInterface::class
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'In-Store Pickup Carrier Rate Request Validator must implement %s.' .
+                        '%s has been received instead.',
+                        RequestValidatorInterface::class,
+                        get_class($validator)
                     )
                 );
             }
