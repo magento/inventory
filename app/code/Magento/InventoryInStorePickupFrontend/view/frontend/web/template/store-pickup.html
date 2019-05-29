@@ -1,0 +1,20 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<li
+    id="store-pickup"
+    data-bind="fadeVisible: isVisible()"
+    css="'selected-shipping': !isSelected(), 'selected-store-pickup': isSelected()"
+>
+    <render args="deliveryMethodSelectorTemplate"/>
+
+    <!-- ko if: isSelected -->
+        <!-- ko foreach: getRegion('store-selector') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+    <!--/ko-->
+</li>
+
