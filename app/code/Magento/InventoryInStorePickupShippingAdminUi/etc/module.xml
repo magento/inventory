@@ -6,10 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Magento_InventoryInStorePickupApi" setup_version="1.0.0">
+    <module name="Magento_InventoryInStorePickupShippingAdminUi" setup_version="1.0.0">
         <sequence>
-            <module name="Magento_InventoryApi"/>
-            <module name="Magento_InventorySalesApi" />
+            <module name="Magento_InventoryInStorePickupShippingApi"/>
+            <module name="Magento_Config" />
         </sequence>
     </module>
 </config>
