@@ -1,11 +1,9 @@
 {
-    "name": "magento/module-inventory-in-store-pickup-api",
+    "name": "magento/module-inventory-in-store-pickup-shipping-admin-ui",
     "description": "N/A",
     "require": {
         "php": "~7.1.3||~7.2.0",
-        "magento/framework": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/framework": "*"
     },
     "type": "magento2-module",
     "license": [
@@ -17,7 +15,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Magento\\InventoryInStorePickupApi\\": ""
+            "Magento\\InventoryInStorePickupShippingAdminUi\\": ""
         }
     }
 }

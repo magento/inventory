@@ -39,7 +39,7 @@ $sourcesItemsData = [
     [
         SourceItemInterface::SOURCE_CODE => 'eu-2',
         SourceItemInterface::SKU => 'SKU-1',
-        SourceItemInterface::QUANTITY => 3,
+        SourceItemInterface::QUANTITY => 3.5,
         SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
     ],
     [
