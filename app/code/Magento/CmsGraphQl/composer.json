@@ -8,6 +8,11 @@
         "magento/module-cms": "*",
         "magento/module-widget": "*"
     },
+    "suggest": {
+        "magento/module-graph-ql": "*",
+        "magento/module-graph-ql-cache": "*",
+        "magento/module-store-graph-ql": "*"
+    },
     "license": [
         "OSL-3.0",
         "AFL-3.0"

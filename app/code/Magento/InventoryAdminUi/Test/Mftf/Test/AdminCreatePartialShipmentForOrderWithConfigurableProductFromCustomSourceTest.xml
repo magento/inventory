@@ -13,7 +13,7 @@
             <stories value="Sales-Shipments"/>
             <title value="Admin user created partial shipment for order with Configurable product from Test source and Main Website."/>
             <description value="You should be able to create partial shipment for order from Custom Source."/>
-            <testCaseId value="MSI-1140"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735290/scenarios/1583130"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -218,9 +218,9 @@
         <see selector="{{AdminGridRow.rowOne}}" userInput="{{colorProductAttribute1.name}}"
              stepKey="seeProductNameInGrid"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="100" stepKey="seeProductPriceInGrid"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createSource1.source[name]$$ : 97"
+        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createSource1.source[name]$$: 97"
              stepKey="seeProductQuantityInGridSouce1"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createStock.stock[name]$$ : 95"
+        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createStock.stock[name]$$: 95"
              stepKey="seeProductSalableQuantityInGridSouce"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="Enabled" stepKey="seeProductStatusInGrid"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="Main Website" stepKey="seeProductWebsiteInGrid"/>

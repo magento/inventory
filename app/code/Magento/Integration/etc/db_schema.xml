@@ -9,7 +9,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="oauth_consumer" resource="default" engine="innodb" comment="OAuth Consumers">
         <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
-                comment="Entity Id"/>
+                comment="Entity ID"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="0"
@@ -107,7 +107,7 @@
                 comment="Oauth consumer"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Creation Time"/>
-        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="0"
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Update Time"/>
         <column xsi:type="smallint" name="setup_type" padding="5" unsigned="true" nullable="false" identity="false"
                 default="0" comment="Integration type - manual or config file"/>
