@@ -16,8 +16,6 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Setup\CategorySetup;
-use Magento\Framework\Registry;
-use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
 
@@ -30,53 +28,27 @@ $installer = Bootstrap::getObjectManager()->create(CategorySetup::class);
 /** @var Website $website */
 $website = Bootstrap::getObjectManager()->create(Website::class);
 $website->load('us_website', 'code');
-$websiteIds = [$website->getId()];
+$websiteIds = [1, $website->getId()];
 
 $attributeSetId = $installer->getAttributeSetId('catalog_product', 'Default');
-$productId = 10;
 
 /** @var $product Product */
 $product = Bootstrap::getObjectManager()->create(Product::class);
 $product->setTypeId(Type::TYPE_SIMPLE)
-    ->setId($productId)
     ->setAttributeSetId($attributeSetId)
     ->setWebsiteIds($websiteIds)
-    ->setName('Simple product ' . $productId)
-    ->setSku('simple_' . $productId)
-    ->setPrice($productId)
+    ->setName('Simple product bundle option')
+    ->setSku('simple_product_bundle_option')
+    ->setPrice(10)
     ->setVisibility(Visibility::VISIBILITY_BOTH)
     ->setStatus(Status::STATUS_ENABLED)
     ->setStockData(['use_config_manage_stock' => 1, 'qty' => 100, 'is_qty_decimal' => 0, 'is_in_stock' => 1]);
 
 $product = $productRepository->save($product);
 
-// Remove any previously created product with the same id.
-/** @var Registry $registry */
-$registry = Bootstrap::getObjectManager()->get(Registry::class);
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', true);
-try {
-    $productToDelete = $productRepository->getById(1);
-    $productRepository->delete($productToDelete);
-
-    /** @var QuoteItem $itemResource */
-    $itemResource = Bootstrap::getObjectManager()->get(QuoteItem::class);
-    $itemResource->getConnection()->delete(
-        $itemResource->getMainTable(),
-        'product_id = ' . $productToDelete->getId()
-    );
-} catch (\Exception $e) {
-    // Nothing to remove
-}
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', false);
-
-$bundleProductId = 3;
-
 /** @var Product $bundleProduct */
 $bundleProduct = Bootstrap::getObjectManager()->create(Product::class);
 $bundleProduct->setTypeId(Type::TYPE_BUNDLE)
-    ->setId($bundleProductId)
     ->setWebsiteIds($websiteIds)
     ->setAttributeSetId(4)
     ->setName('Bundle Product')
@@ -149,8 +121,7 @@ if ($bundleProduct->getBundleOptionsData()) {
 $bundleProduct->save();
 
 /** @var CategoryLinkManagementInterface $categoryLinkManagement */
-$categoryLinkManagement = Bootstrap::getObjectManager()
-                                    ->create(CategoryLinkManagementInterface::class);
+$categoryLinkManagement = Bootstrap::getObjectManager()->create(CategoryLinkManagementInterface::class);
 
 $categoryLinkManagement->assignProductToCategories(
     $bundleProduct->getSku(),

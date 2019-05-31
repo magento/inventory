@@ -13,22 +13,20 @@ use Magento\TestFramework\Helper\Bootstrap;
 $objectManager = Bootstrap::getObjectManager();
 
 /** @var Registry $registry */
-$registry = $objectManager->get(Registry::class);
+$registry = Bootstrap::getObjectManager()->get(Registry::class);
 
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
 
 /** @var ProductRepositoryInterface $productRepository */
-$productRepository = Bootstrap::getObjectManager()
-    ->get(ProductRepositoryInterface::class);
+$productRepository = $objectManager->create(ProductRepositoryInterface::class);
 
-foreach (['simple_product_bundle_option', 'bundle'] as $sku) {
-    try {
-        $product = $productRepository->get($sku, false, null, true);
-        $productRepository->delete($product);
-    } catch (NoSuchEntityException $e) {
-        //Product already removed
-    }
+try {
+    $firstProduct = $productRepository->get('simple-product', false, null, true);
+    $productRepository->delete($firstProduct);
+} catch (NoSuchEntityException $exception) {
+    //Product already removed
 }
+
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', false);
