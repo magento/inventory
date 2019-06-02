@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
 use Magento\InventoryInStorePickup\Model\GetIsAnyPickupLocationAvailable;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -23,15 +22,9 @@ class GetIsAnyPickupLocationAvailableTest extends TestCase
      */
     private $getIsPickupLocationAvailable;
 
-    /**
-     * @var SalesChannelInterfaceFactory
-     */
-    private $salesChannelFactory;
-
     public function setUp()
     {
         $this->getIsPickupLocationAvailable = Bootstrap::getObjectManager()->get(GetIsAnyPickupLocationAvailable::class);
-        $this->salesChannelFactory = Bootstrap::getObjectManager()->get(SalesChannelInterfaceFactory::class);
     }
 
     /**
@@ -47,10 +40,7 @@ class GetIsAnyPickupLocationAvailableTest extends TestCase
      */
     public function testExecuteWithAvailableLocations()
     {
-        $salesChannel = $this->salesChannelFactory->create();
-        $salesChannel->setType(SalesChannelInterface::TYPE_WEBSITE);
-        $salesChannel->setCode('eu_website');
-        $result = $this->getIsPickupLocationAvailable->execute($salesChannel);
+        $result = $this->getIsPickupLocationAvailable->execute(SalesChannelInterface::TYPE_WEBSITE, 'eu_website');
         $this->assertTrue($result);
     }
 
@@ -66,10 +56,7 @@ class GetIsAnyPickupLocationAvailableTest extends TestCase
      */
     public function testExecuteWithoutAvailableLocations()
     {
-        $salesChannel = $this->salesChannelFactory->create();
-        $salesChannel->setType(SalesChannelInterface::TYPE_WEBSITE);
-        $salesChannel->setCode('eu_website');
-        $result = $this->getIsPickupLocationAvailable->execute($salesChannel);
+        $result = $this->getIsPickupLocationAvailable->execute(SalesChannelInterface::TYPE_WEBSITE, 'eu_website');
         $this->assertFalse($result);
     }
 }
