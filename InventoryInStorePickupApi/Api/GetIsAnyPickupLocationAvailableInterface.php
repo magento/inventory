@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api;
 
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-
 /**
  * Provide information if at least one Pickup Location available for Sales Channel.
  *
@@ -17,9 +15,10 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 interface GetIsAnyPickupLocationAvailableInterface
 {
     /**
-     * @param SalesChannelInterface $salesChannel
+     * @param string $salesChannelType
+     * @param string $salesChannelCode
      *
      * @return bool
      */
-    public function execute(SalesChannelInterface $salesChannel): bool;
+    public function execute(string $salesChannelType, string $salesChannelCode): bool;
 }

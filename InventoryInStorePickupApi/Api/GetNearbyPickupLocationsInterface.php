@@ -19,8 +19,15 @@ interface GetNearbyPickupLocationsInterface
     /**
      * @param AddressInterface $address
      * @param int $radius
-     * @param int $stockId
+     * @param string $salesChannelType
+     * @param string $salesChannelCode
+     *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface[]
      */
-    public function execute(AddressInterface $address, int $radius, int $stockId): array;
+    public function execute(
+        AddressInterface $address,
+        int $radius,
+        string $salesChannelType,
+        string $salesChannelCode
+    ): array;
 }
