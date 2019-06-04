@@ -16,19 +16,28 @@ interface GetBackorderStatusConfigurationValueInterface
     /**
      * @param string $sku
      * @param string $sourceCode
-     * @return ?int
+     * @return int|null
      */
     public function forSourceItem(string $sku, string $sourceCode): ?int;
 
     /**
      * @param string $sourceCode
-     * @return ?int
+     * @return int|null
      */
     public function forSource(string $sourceCode): ?int;
 
     /**
      * @param string $sourceCode
-     * @return int
+     * @return int|null
      */
     public function forGlobal(): int;
+
+    /**
+     * Method bound to web API.
+     *
+     * @param string|null $sku
+     * @param string|null $sourceCode
+     * @return int|null
+     */
+    public function execute(string $sku = null, string $sourceCode = null): ?int;
 }

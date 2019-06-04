@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryConfiguration\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryConfigurationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetBackorderStatusConfigurationValueInterface;
@@ -34,9 +33,7 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
     }
 
     /**
-     * @param string $sku
-     * @param string $sourceCode
-     * @return ?int
+     * @inheritDoc
      */
     public function forSourceItem(string $sku, string $sourceCode): ?int
     {
@@ -55,8 +52,7 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
     }
 
     /**
-     * @param string $sourceCode
-     * @return ?int
+     * @inheritDoc
      */
     public function forSource(string $sourceCode): ?int
     {
@@ -75,8 +71,7 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
     }
 
     /**
-     * @param string $sourceCode
-     * @return int
+     * @inheritDoc
      */
     public function forGlobal(): int
     {
@@ -84,5 +79,22 @@ class GetBackorderStatusConfigurationValue implements GetBackorderStatusConfigur
         return (int)$this->scopeConfig->getValue(
             SourceItemConfigurationInterface::XML_PATH_BACKORDERS
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(string $sku = null, string $sourceCode = null): ?int
+    {
+        if ($sku !== null && $sourceCode !== null) {
+            return $this->forSourceItem($sku, $sourceCode);
+        }
+
+        if ($sourceCode !== null)
+        {
+            return $this->forSource($sourceCode);
+        }
+
+        return $this->forGlobal();
     }
 }

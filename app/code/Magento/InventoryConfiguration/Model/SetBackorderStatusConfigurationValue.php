@@ -33,10 +33,7 @@ class SetBackorderStatusConfigurationValue implements SetBackorderStatusConfigur
     }
 
     /**
-     * @param string $sku
-     * @param string $sourceCode Backorder
-     * @param int $backorderStatus if NULL is set that means fallback to Source configuration would be used
-     * @return void
+     * @inheritDoc
      */
     public function forSourceItem(string $sku, string $sourceCode, ?int $backorderStatus): void
     {
@@ -75,9 +72,7 @@ class SetBackorderStatusConfigurationValue implements SetBackorderStatusConfigur
     }
 
     /**
-     * @param string $sourceCode
-     * @param int $backorderStatus if NULL is set that means fallback to Global configuration would be used
-     * @return void
+     * @inheritDoc
      */
     public function forSource(string $sourceCode, ?int $backorderStatus): void
     {
@@ -116,8 +111,7 @@ class SetBackorderStatusConfigurationValue implements SetBackorderStatusConfigur
     }
 
     /**
-     * @param int $backorderStatus Backorder configuration applied globally
-     * @return void
+     * @inheritDoc
      */
     public function forGlobal(int $backorderStatus): void
     {
@@ -126,5 +120,30 @@ class SetBackorderStatusConfigurationValue implements SetBackorderStatusConfigur
             SourceItemConfigurationInterface::XML_PATH_BACKORDERS,
             $backorderStatus
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(string $sku = null, string $sourceCode = null, string $backorderStatus = null): void
+    {
+        if ($sku !== null && $sourceCode !== null) {
+            $this->forSourceItem($sku, $sourceCode, is_numeric($backorderStatus) ? (int)$backorderStatus : null);
+            return;
+        }
+
+        if ($sourceCode !== null)
+        {
+            $this->forSource($sourceCode, is_numeric($backorderStatus) ? (int)$backorderStatus : null);
+            return;
+        }
+
+        if (!is_numeric($backorderStatus)) {
+            throw new \Magento\Framework\Exception\CouldNotSaveException(
+                __('Backorder status should be a numeric value to be saved in global scope')
+            );
+        }
+
+        $this->forGlobal((int)$backorderStatus);
     }
 }

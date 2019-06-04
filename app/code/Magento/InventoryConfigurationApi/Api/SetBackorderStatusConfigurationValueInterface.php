@@ -33,4 +33,13 @@ interface SetBackorderStatusConfigurationValueInterface
      * @return void
      */
     public function forGlobal(int $backorderStatus): void;
+
+    /**
+     * Method bound to web API.
+     *
+     * @param string|null $sku
+     * @param string|null $sourceCode
+     * @return void
+     */
+    public function execute(string $sku = null, string $sourceCode = null, string $backorderStatus  = null): void;
 }

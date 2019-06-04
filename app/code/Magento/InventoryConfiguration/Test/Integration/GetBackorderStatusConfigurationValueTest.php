@@ -92,6 +92,8 @@ class GetBackorderStatusConfigurationValueTest extends TestCase
     }
 
     /**
+     * TODO Is this test redundant given there is already testForSourceItemWithFallbackOnGlobal()?
+     *
      * @magentoDbIsolation enabled
      */
     public function testForSourceWithFallbackOnGlobal()
