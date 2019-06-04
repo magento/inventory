@@ -12,14 +12,14 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Webapi\Rest\Request;
 use Magento\Integration\Api\CustomerTokenServiceInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\Store\Api\WebsiteRepositoryInterface;
-use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\Framework\Webapi\Rest\Request;
+use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
  * Base class for order placement.
@@ -41,7 +41,7 @@ abstract class OrderPlacementBase extends WebapiAbstract
     private $customerToken;
 
     /**
-     * Registered, guest customer cart id.
+     * Registered or guest customer cart id.
      *
      * @var string
      */
@@ -118,64 +118,24 @@ abstract class OrderPlacementBase extends WebapiAbstract
     }
 
     /**
-     * Add simple product to cart.
+     * Add simple, virtual or downloadable product to cart.
      *
      * @param string $sku
      * @param int $qty
      * @return void
      */
-    public function addSimpleProduct(string $sku, $qty = 1): void
+    public function addProduct(string $sku, $qty = 1): void
     {
         $serviceInfo = $this->getAddProductServiceInfo();
 
-        $simpleProduct = [
+        $product = [
             'cartItem' => [
                 'sku' => $sku,
                 'qty' => $qty,
                 'quote_id' => $this->cartId,
             ],
         ];
-        $this->_webApiCall($serviceInfo, $simpleProduct, null, $this->storeViewCode);
-    }
-
-    /**
-     * Add virtual product to cart.
-     *
-     * @param string $sku
-     * @param int $qty
-     * @return void
-     */
-    public function addVirtualProduct(string $sku, int $qty = 1): void
-    {
-        $serviceInfo = $this->getAddProductServiceInfo();
-        $virtualProduct = [
-            'cartItem' => [
-                'sku' => $sku,
-                'qty' => $qty,
-                'quote_id' => $this->cartId,
-            ]
-        ];
-        $this->_webApiCall($serviceInfo, $virtualProduct, null, $this->storeViewCode);
-    }
-
-    /**
-     * Add downloadable product to cart.
-     *
-     * @param string $sku
-     * @param int $qty
-     * @return void
-     */
-    public function addDownloadableProduct(string $sku, int $qty = 1): void
-    {
-        $serviceInfo = $this->getAddProductServiceInfo();
-        $downloadableProduct = [
-            'cartItem' => [
-                'sku' => $sku,
-                'qty' => $qty,
-                'quote_id' => $this->cartId,
-            ]
-        ];
-        $this->_webApiCall($serviceInfo, $downloadableProduct, null, $this->storeViewCode);
+        $this->_webApiCall($serviceInfo, $product, null, $this->storeViewCode);
     }
 
     /**
@@ -453,7 +413,7 @@ abstract class OrderPlacementBase extends WebapiAbstract
      * @param string $websiteCode
      * @return void
      */
-    public function assignProductsToCustomWebsite(array $skus, string $websiteCode): void
+    public function assignProductsToWebsite(array $skus, string $websiteCode): void
     {
         $websiteRepository = $this->objectManager->get(WebsiteRepositoryInterface::class);
         $websiteId = $websiteRepository->get($websiteCode)->getId();

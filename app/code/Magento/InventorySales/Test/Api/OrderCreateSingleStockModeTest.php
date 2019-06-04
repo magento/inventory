@@ -29,9 +29,9 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
         $this->_markTestAsRestOnly();
         $this->getCustomerToken('customer@example.com', 'password');
         $this->createCustomerCart();
-        $this->addSimpleProduct('simple-product');
-        $this->addVirtualProduct('virtual-product');
-        $this->addDownloadableProduct('downloadable-product');
+        $this->addProduct('simple-product');
+        $this->addProduct('virtual-product');
+        $this->addProduct('downloadable-product');
         $this->addConfigurableProduct('configurable');
         $this->addBundleProduct('bundle');
         $this->estimateShippingCosts();
@@ -67,13 +67,13 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
             'simple_product_bundle_option'
         ];
         $this->assignCustomerToCustomWebsite('customer@example.com', $websiteCode);
-        $this->assignProductsToCustomWebsite($products, $websiteCode);
+        $this->assignProductsToWebsite($products, $websiteCode);
         $this->setStoreView('store_for_eu_website');
         $this->getCustomerToken('customer@example.com', 'password');
         $this->createCustomerCart();
-        $this->addSimpleProduct('simple-product');
-        $this->addVirtualProduct('virtual-product');
-        $this->addDownloadableProduct('downloadable-product');
+        $this->addProduct('simple-product');
+        $this->addProduct('virtual-product');
+        $this->addProduct('downloadable-product');
         $this->addConfigurableProduct('configurable');
         $this->addBundleProduct('bundle');
         $this->estimateShippingCosts();
@@ -97,9 +97,9 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
     {
         $this->_markTestAsRestOnly();
         $this->createCustomerCart();
-        $this->addSimpleProduct('simple-product');
-        $this->addVirtualProduct('virtual-product');
-        $this->addDownloadableProduct('downloadable-product');
+        $this->addProduct('simple-product');
+        $this->addProduct('virtual-product');
+        $this->addProduct('downloadable-product');
         $this->addConfigurableProduct('configurable');
         $this->addBundleProduct('bundle');
         $this->estimateShippingCosts();
@@ -133,12 +133,12 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
             'bundle',
             'simple_product_bundle_option'
         ];
-        $this->assignProductsToCustomWebsite($products, $websiteCode);
+        $this->assignProductsToWebsite($products, $websiteCode);
         $this->setStoreView('store_for_eu_website');
         $this->createCustomerCart();
-        $this->addSimpleProduct('simple-product');
-        $this->addVirtualProduct('virtual-product');
-        $this->addDownloadableProduct('downloadable-product');
+        $this->addProduct('simple-product');
+        $this->addProduct('virtual-product');
+        $this->addProduct('downloadable-product');
         $this->addConfigurableProduct('configurable');
         $this->addBundleProduct('bundle');
         $this->estimateShippingCosts();
