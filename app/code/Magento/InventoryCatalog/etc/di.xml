@@ -140,4 +140,8 @@
         <plugin name="adapt_verify_stock_to_negative_min_qty"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Spi\StockStateProvider\AdaptVerifyStockToNegativeMinQtyPlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="is_salable_product_multistock"
+                type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product"/>
+    </type>
 </config>
