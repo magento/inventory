@@ -19,6 +19,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
@@ -61,6 +62,11 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
     private $sourceRepository;
 
     /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param Mapper $mapper
      * @param AddressToSourceSelectionAddress $addressToSourceSelectionAddress
      * @param GetLatLngFromAddressInterface $getLatLngFromAddress
@@ -68,6 +74,7 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
      * @param GetStockSourceLinksInterface $getStockSourceLinks
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SourceRepositoryInterface $sourceRepository
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         Mapper $mapper,
@@ -76,7 +83,8 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes,
         GetStockSourceLinksInterface $getStockSourceLinks,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        SourceRepositoryInterface $sourceRepository
+        SourceRepositoryInterface $sourceRepository,
+        StockResolverInterface $stockResolver
     ) {
         $this->mapper = $mapper;
         $this->addressToSourceSelectionAddress = $addressToSourceSelectionAddress;
@@ -85,20 +93,27 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         $this->getStockSourceLinks = $getStockSourceLinks;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sourceRepository = $sourceRepository;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
      * @inheritdoc
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(AddressInterface $address, int $radius, int $stockId): array
-    {
+    public function execute(
+        AddressInterface $address,
+        int $radius,
+        string $salesChannelType,
+        string $salesChannelCode
+    ): array {
         $sourceSelectionAddress = $this->addressToSourceSelectionAddress->execute($address);
         $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
 
         $codes = $this->getDistanceOrderedSourceCodes->execute($latLng, $radius);
 
+        $stock = $this->stockResolver->execute($salesChannelType, $salesChannelCode);
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
+            ->addFilter(StockSourceLinkInterface::STOCK_ID, $stock->getStockId())
             ->addFilter(StockSourceLinkInterface::SOURCE_CODE, $codes, 'in')
             ->create();
         $searchResult = $this->getStockSourceLinks->execute($searchCriteria);
