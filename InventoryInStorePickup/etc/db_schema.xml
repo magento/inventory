@@ -17,5 +17,7 @@
     </table>
     <table name="inventory_source">
         <column xsi:type="boolean" name="is_pickup_location_active" nullable="false" default="0"/>
+        <column xsi:type="varchar" name="frontend_name" nullable="true" default=""/>
+        <column xsi:type="text" name="frontend_description" nullable="true" />
     </table>
 </schema>
