@@ -30,6 +30,17 @@
         </arguments>
     </type>
     <preference for="Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource" />
+    <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
+        <arguments>
+            <argument name="map" xsi:type="array">
+                <item name="extension_attributes.frontend_name" xsi:type="string">name</item>
+                <item name="extension_attributes.frontend_description" xsi:type="string">description</item>
+            </argument>
+            <argument name="preProcessors" xsi:type="array">
+                <item name="extension_attributes.frontend_name" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendName</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryInStorePickup\Model\SourceSelection\GetActiveStorePickupOrdersBySource">
         <arguments>
             <argument name="statesToFilter" xsi:type="array">

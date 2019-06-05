@@ -34,21 +34,22 @@ class InventorySourceExtensionTest extends TestCase
     public function testGetListOfSourcesWithPickupLocationExtensionAfterSave()
     {
         $pickupLocationConfig = [
-            'default' => false,
-            'eu-1' => true,
-            'eu-2' => true,
-            'eu-3' => false,
-            'eu-disabled' => false,
-            'us-1' => true,
+            'default' => ['active' => false, 'name' => 'default', 'desc' => 'default'],
+            'eu-1' => ['active' => true, 'name' => '', 'desc' => ''],
+            'eu-2' => ['active' => true, 'name' => 'zzz', 'desc' => ''],
+            'eu-3' => ['active' => false, 'name' => '', 'desc' => 'zzz1'],
+            'eu-disabled' => ['active' => false, 'name' => '', 'desc' => ''],
+            'us-1' => ['active' => true, 'name' => '666', 'desc' => ''],
         ];
 
         $searchResult = $this->sourceRepository->getList();
 
         /** @var SourceInterface $item */
         foreach ($searchResult->getItems() as $item) {
-            $item->getExtensionAttributes()->setIsPickupLocationActive(
-                $pickupLocationConfig[$item->getSourceCode()]
-            );
+            $item->getExtensionAttributes()
+                 ->setIsPickupLocationActive($pickupLocationConfig[$item->getSourceCode()]['active'])
+                 ->setFrontendDescription($pickupLocationConfig[$item->getSourceCode()]['desc'])
+                 ->setFrontendName($pickupLocationConfig[$item->getSourceCode()]['name']);
             $this->sourceRepository->save($item);
         }
 
@@ -57,7 +58,10 @@ class InventorySourceExtensionTest extends TestCase
         $pickupLocationsStatus = [];
 
         foreach ($searchResult->getItems() as $item) {
-            $pickupLocationsStatus[$item->getSourceCode()] = $item->getExtensionAttributes()->getIsPickupLocationActive();
+            $extension = $item->getExtensionAttributes();
+            $pickupLocationsStatus[$item->getSourceCode()]['active'] = $extension->getIsPickupLocationActive();
+            $pickupLocationsStatus[$item->getSourceCode()]['name'] = $extension->getFrontendName();
+            $pickupLocationsStatus[$item->getSourceCode()]['desc'] = $extension->getFrontendDescription();
         }
 
         $this->assertEquals($pickupLocationConfig, $pickupLocationsStatus);
@@ -71,10 +75,15 @@ class InventorySourceExtensionTest extends TestCase
         $sourceCode = 'source-code-1';
 
         $source = $this->sourceRepository->get($sourceCode);
-        $source->getExtensionAttributes()->setIsPickupLocationActive(true);
+        $source->getExtensionAttributes()
+               ->setIsPickupLocationActive(true)
+               ->setFrontendName('zzz')
+               ->setFrontendDescription('666');
         $this->sourceRepository->save($source);
 
         $source = $this->sourceRepository->get($sourceCode);
         $this->assertEquals(true, $source->getExtensionAttributes()->getIsPickupLocationActive());
+        $this->assertEquals('zzz', $source->getExtensionAttributes()->getFrontendName());
+        $this->assertEquals('666', $source->getExtensionAttributes()->getFrontendDescription());
     }
 }
