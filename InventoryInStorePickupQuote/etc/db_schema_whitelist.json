@@ -1,0 +1,12 @@
+{
+  "inventory_pickup_location_quote_address": {
+    "column": {
+      "address_id": true,
+      "pickup_location_code": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "INVENTORY_PICKUP_LOCATION_QUOTE_ADDRESS_ADDRESS_ID_QUOTE_ADDRESS_ADDRESS_ID": true
+    }
+  }
+}
