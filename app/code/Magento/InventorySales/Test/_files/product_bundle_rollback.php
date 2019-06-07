@@ -22,7 +22,7 @@ $registry->register('isSecureArea', true);
 $productRepository = Bootstrap::getObjectManager()
     ->get(ProductRepositoryInterface::class);
 
-foreach (['simple_10', 'bundle'] as $sku) {
+foreach (['simple_product_bundle_option', 'bundle'] as $sku) {
     try {
         $product = $productRepository->get($sku, false, null, true);
         $productRepository->delete($product);

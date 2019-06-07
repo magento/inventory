@@ -16,7 +16,7 @@ class OrderCreateMultiStockModeBundleProductTest extends OrderPlacementBase
      * Create order with bundle product - registered customer, default stock, default website.
      *
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/source_items_bundle_default_source.php
      */
     public function testCustomerPlaceOrderDefaultWebsiteDefaultStock()
@@ -46,7 +46,7 @@ class OrderCreateMultiStockModeBundleProductTest extends OrderPlacementBase
      *
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/source_items_bundle_default_source.php
      */
     public function testCustomerPlaceOrderCustomWebsiteDefaultStock()

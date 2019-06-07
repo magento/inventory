@@ -19,8 +19,8 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_simple.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      *
      * @return void
      */
@@ -48,8 +48,8 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_simple.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      *
      * @return void
      */
@@ -88,8 +88,8 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_simple.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      *
      * @return void
      */
@@ -115,8 +115,8 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_simple.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      *
      * @return void
      */
