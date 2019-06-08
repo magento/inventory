@@ -18,7 +18,7 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface" type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\Data\AddressInterface" type="Magento\InventoryInStorePickup\Model\Address" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface" type="Magento\InventoryInStorePickup\Model\SearchCriteria" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToSalesChannel" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface" type="Magento\InventoryInStorePickup\Model\GetIsAnyPickupLocationAvailable"/>
 
