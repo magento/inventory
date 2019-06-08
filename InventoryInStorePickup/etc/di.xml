@@ -29,7 +29,6 @@
             <argument name="identityContainer" xsi:type="object">\Magento\InventoryInStorePickup\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
         </arguments>
     </type>
-    <preference for="Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\CreateFromSource" />
     <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
         <arguments>
             <argument name="map" xsi:type="array">

@@ -6,6 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventoryInStorePickupApi\Api\MapperInterface" type="Magento\InventoryInStorePickupApi\Model\Mapper" />
     <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
         <arguments>
             <argument name="map" xsi:type="array">

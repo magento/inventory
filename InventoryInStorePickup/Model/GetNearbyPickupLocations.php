@@ -18,7 +18,7 @@ use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrdered
 use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface;
-use Magento\InventoryInStorePickupApi\Model\Mapper;
+use Magento\InventoryInStorePickupApi\Api\MapperInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
@@ -27,7 +27,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
 {
     /**
-     * @var Mapper
+     * @var MapperInterface
      */
     private $mapper;
 
@@ -67,7 +67,7 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
     private $stockResolver;
 
     /**
-     * @param Mapper $mapper
+     * @param MapperInterface $mapper
      * @param AddressToSourceSelectionAddress $addressToSourceSelectionAddress
      * @param GetLatLngFromAddressInterface $getLatLngFromAddress
      * @param GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes
@@ -77,7 +77,7 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
      * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        Mapper $mapper,
+        MapperInterface $mapper,
         AddressToSourceSelectionAddress $addressToSourceSelectionAddress,
         GetLatLngFromAddressInterface $getLatLngFromAddress,
         GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes,
