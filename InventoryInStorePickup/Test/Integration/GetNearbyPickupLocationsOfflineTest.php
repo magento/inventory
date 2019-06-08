@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
-use Magento\InventoryInStorePickup\Model\AddressFactory;
 use Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -25,14 +25,14 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
     private $getNearbyPickupLocations;
 
     /**
-     * @var AddressFactory
+     * @var SearchCriteriaInterfaceFactory
      */
-    private $addressFactory;
+    private $searchCriteriaFactory;
 
     protected function setUp()
     {
         $this->getNearbyPickupLocations = Bootstrap::getObjectManager()->get(GetNearbyPickupLocations::class);
-        $this->addressFactory = Bootstrap::getObjectManager()->get(AddressFactory::class);
+        $this->searchCriteriaFactory = Bootstrap::getObjectManager()->get(SearchCriteriaInterfaceFactory::class);
     }
 
     /**
@@ -47,9 +47,8 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
-     * @param array $addressData
-     * @param int $radius
-     * @param int $stockId
+     * @param array $searchCriteriaData
+     * @param string $salesChannelCode
      * @param string[] $sortedSourceCodes
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -59,17 +58,30 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      * @magentoDbIsolation disabled
      */
     public function testExecute(
-        array $addressData,
-        int $radius,
+        array $searchCriteriaData,
         string $salesChannelCode,
         array $sortedSourceCodes
     ) {
-        $address = $this->addressFactory->create($addressData);
+        $searchCriteria = $this->searchCriteriaFactory->create();
+
+        $searchCriteria->setRadius($searchCriteriaData['radius']);
+        $searchCriteria->setCountry($searchCriteriaData['country']);
+
+        if (isset($searchCriteriaData['postcode'])) {
+            $searchCriteria->setPostcode($searchCriteriaData['postcode']);
+        }
+
+        if (isset($searchCriteriaData['city'])) {
+            $searchCriteria->setCity($searchCriteriaData['city']);
+        }
+
+        if (isset($searchCriteriaData['region'])) {
+            $searchCriteria->setRegion($searchCriteriaData['region']);
+        }
 
         /** @var PickupLocationInterface[] $sources */
         $pickupLocations = $this->getNearbyPickupLocations->execute(
-            $address,
-            $radius,
+            $searchCriteria,
             SalesChannelInterface::TYPE_WEBSITE,
             $salesChannelCode
         );
@@ -82,13 +94,13 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
 
     /**
      * [
-     *      Address[
+     *      SearchCriteria[
      *          Country,
      *          Postcode,
      *          Region,
-     *          City
+     *          City,
+     *          Radius (in KM)
      *      ]
-     *      Radius (in KM),
      *      Sales Channel Code,
      *      Expected Source Codes[]
      * ]
@@ -101,36 +113,36 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'DE',
-                    'postcode' => '81671'
+                    'postcode' => '81671',
+                    'radius' => 500
                 ],
-                500,
                 'eu_website',
                 ['eu-3']
             ],
             [
                 [
                     'country' => 'FR',
-                    'region' => 'Bretagne'
+                    'region' => 'Bretagne',
+                    'radius' => 1000
                 ],
-                1000,
                 'eu_website',
                 ['eu-1']
             ],
             [
                 [
                     'country' => 'FR',
-                    'city' => 'Saint-Saturnin-lès-Apt'
+                    'city' => 'Saint-Saturnin-lès-Apt',
+                    'radius' => 1000
                 ],
-                1000,
                 'global_website',
                 ['eu-1', 'eu-3']
             ],
             [
                 [
                     'country' => 'IT',
-                    'postcode' => '12022'
-                    ],
-                350,
+                    'postcode' => '12022',
+                    'radius' => 350
+                ],
                 'eu_website',
                 []
             ],
@@ -139,9 +151,9 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'country' => 'IT',
                     'postcode' => '39030',
                     'region' => 'Trentino-Alto Adige',
-                    'city' => 'Rasun Di Sotto'
+                    'city' => 'Rasun Di Sotto',
+                    'radius' => 350
                 ],
-                350,
                 'eu_website',
                 ['eu-3']
             ],
@@ -149,17 +161,17 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                 [
                     'country' => 'DE',
                     'postcode' => '86559',
+                    'radius' => 750
                 ],
-                750,
                 'global_website',
                 ['eu-3', 'eu-1']
             ],
             [
                 [
                     'country' => 'US',
-                    'region' => 'Kansas'
+                    'region' => 'Kansas',
+                    'radius' => 1000
                 ],
-                1000,
                 'us_website',
                 ['us-1']
             ]
