@@ -12,16 +12,16 @@ namespace Magento\InventoryInStorePickupApi\Api\Data;
  *
  * @api
  */
-interface SearchCriteriaInterface
+interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaInterface
 {
     /**
      * Add radius to the Search Request.
      *
      * @param int $radius in KM.
      *
-     * @return void
+     * @return SearchCriteriaInterface
      */
-    public function setRadius(int $radius): void;
+    public function setRadius(int $radius): self;
 
     /**
      * @return int
@@ -33,9 +33,9 @@ interface SearchCriteriaInterface
      *
      * @param string $country
      *
-     * @return void
+     * @return SearchCriteriaInterface
      */
-    public function setCountry(string $country): void;
+    public function setCountry(string $country): self;
 
     /**
      * Requested country
@@ -50,9 +50,9 @@ interface SearchCriteriaInterface
      *
      * @param string|null $postcode
      *
-     * @return void
+     * @return SearchCriteriaInterface
      */
-    public function setPostcode(?string $postcode): void;
+    public function setPostcode(?string $postcode): self;
 
     /**
      * Requested postcode
@@ -67,9 +67,9 @@ interface SearchCriteriaInterface
      *
      * @param string|null $region
      *
-     * @return void
+     * @return SearchCriteriaInterface
      */
-    public function setRegion(?string $region): void;
+    public function setRegion(?string $region): self;
 
     /**
      * Requested region
@@ -84,9 +84,9 @@ interface SearchCriteriaInterface
      *
      * @param string|null $city
      *
-     * @return void
+     * @return SearchCriteriaInterface
      */
-    public function setCity(?string $city): void;
+    public function setCity(?string $city): self;
 
     /**
      * Requested city
