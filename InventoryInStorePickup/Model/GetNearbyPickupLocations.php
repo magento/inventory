@@ -16,9 +16,9 @@ use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInt
 use Magento\InventoryInStorePickup\Model\Convert\ToSourceSelectionAddress;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrderedSourceCodes;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface;
 use Magento\InventoryInStorePickupApi\Api\MapperInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
@@ -123,6 +123,10 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         }
 
         $searchCriteriaSource = $this->searchCriteriaBuilder
+            ->setPageSize($searchCriteria->getPageSize() ?? false)
+            ->setCurrentPage($searchCriteria->getCurrentPage() ?? 1)
+            ->setSortOrders($searchCriteria->getSortOrders() ?? [])
+            ->setFilterGroups($searchCriteria->getFilterGroups())
             ->addFilter(SourceInterface::SOURCE_CODE, $stockCodes, 'in')
             ->addFilter(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE, true)
             ->create();
@@ -134,9 +138,11 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
             $results[] = $this->mapper->map($source);
         }
 
-        usort($results, function (PickupLocationInterface $left, PickupLocationInterface $right) use ($codes) {
-            return array_search($left->getSourceCode(), $codes) <=> array_search($right->getSourceCode(), $codes);
-        });
+        if (empty($searchCriteria->getSortOrders())) {
+            usort($results, function (PickupLocationInterface $left, PickupLocationInterface $right) use ($codes) {
+                return array_search($left->getSourceCode(), $codes) <=> array_search($right->getSourceCode(), $codes);
+            });
+        }
 
         return $results;
     }

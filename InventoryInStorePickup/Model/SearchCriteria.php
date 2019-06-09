@@ -12,39 +12,20 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 /**
  * @inheritdoc
  */
-class SearchCriteria implements SearchCriteriaInterface
+class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements SearchCriteriaInterface
 {
-    /**
-     * @var int
-     */
-    private $radius;
-
-    /**
-     * @var string
-     */
-    private $country;
-
-    /**
-     * @var string|null
-     */
-    private $region;
-
-    /**
-     * @var string|null
-     */
-    private $postcode;
-
-    /**
-     * @var string|null
-     */
-    private $city;
+    private const RADIUS = 'radius';
+    private const COUNTRY = 'country';
+    private const POSTCODE = 'postcode';
+    private const REGION = 'region';
+    private const CITY = 'city';
 
     /**
      * @inheritdoc
      */
-    public function setRadius(int $radius): void
+    public function setRadius(int $radius): SearchCriteriaInterface
     {
-        $this->radius = $radius;
+        return $this->setData(self::RADIUS, $radius);
     }
 
     /**
@@ -52,15 +33,15 @@ class SearchCriteria implements SearchCriteriaInterface
      */
     public function getRadius(): int
     {
-        return $this->radius;
+        return (int)$this->_get(self::RADIUS);
     }
 
     /**
      * @inheritdoc
      */
-    public function setCountry(string $country): void
+    public function setCountry(string $country): SearchCriteriaInterface
     {
-        $this->country = $country;
+        return $this->setData(self::COUNTRY, $country);
     }
 
     /**
@@ -68,15 +49,15 @@ class SearchCriteria implements SearchCriteriaInterface
      */
     public function getCountry(): string
     {
-        return $this->country;
+        return (string)$this->_get(self::COUNTRY);
     }
 
     /**
      * @inheritdoc
      */
-    public function setPostcode(?string $postcode): void
+    public function setPostcode(?string $postcode): SearchCriteriaInterface
     {
-        $this->postcode = $postcode;
+        return $this->setData(self::POSTCODE, $postcode);
     }
 
     /**
@@ -84,15 +65,15 @@ class SearchCriteria implements SearchCriteriaInterface
      */
     public function getPostcode(): ?string
     {
-        return $this->postcode;
+        return $this->_get(self::POSTCODE);
     }
 
     /**
      * @inheritdoc
      */
-    public function setRegion(?string $region): void
+    public function setRegion(?string $region): SearchCriteriaInterface
     {
-        $this->region = $region;
+        return $this->setData(self::REGION, $region);
     }
 
     /**
@@ -100,15 +81,15 @@ class SearchCriteria implements SearchCriteriaInterface
      */
     public function getRegion(): ?string
     {
-        return $this->region;
+        return $this->_get(self::REGION);
     }
 
     /**
      * @inheritdoc
      */
-    public function setCity(?string $city): void
+    public function setCity(?string $city): SearchCriteriaInterface
     {
-        $this->city = $city;
+        return $this->setData(self::CITY, $city);
     }
 
     /**
@@ -116,6 +97,6 @@ class SearchCriteria implements SearchCriteriaInterface
      */
     public function getCity(): ?string
     {
-        return $this->city;
+        return $this->_get(self::CITY);
     }
 }

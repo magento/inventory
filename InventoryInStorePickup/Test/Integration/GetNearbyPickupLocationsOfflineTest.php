@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
+use Magento\Framework\Api\SortOrder;
+use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteriaBuilder;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -25,14 +27,20 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
     private $getNearbyPickupLocations;
 
     /**
-     * @var SearchCriteriaInterfaceFactory
+     * @var SearchCriteriaBuilder
      */
-    private $searchCriteriaFactory;
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var SortOrderBuilder
+     */
+    private $sortOrderBuilder;
 
     protected function setUp()
     {
         $this->getNearbyPickupLocations = Bootstrap::getObjectManager()->get(GetNearbyPickupLocations::class);
-        $this->searchCriteriaFactory = Bootstrap::getObjectManager()->get(SearchCriteriaInterfaceFactory::class);
+        $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
+        $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);
     }
 
     /**
@@ -62,22 +70,22 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
         string $salesChannelCode,
         array $sortedSourceCodes
     ) {
-        $searchCriteria = $this->searchCriteriaFactory->create();
-
-        $searchCriteria->setRadius($searchCriteriaData['radius']);
-        $searchCriteria->setCountry($searchCriteriaData['country']);
+        $this->searchCriteriaBuilder->setRadius($searchCriteriaData['radius'])
+                                    ->setCountry($searchCriteriaData['country']);
 
         if (isset($searchCriteriaData['postcode'])) {
-            $searchCriteria->setPostcode($searchCriteriaData['postcode']);
+            $this->searchCriteriaBuilder->setPostcode($searchCriteriaData['postcode']);
         }
 
         if (isset($searchCriteriaData['city'])) {
-            $searchCriteria->setCity($searchCriteriaData['city']);
+            $this->searchCriteriaBuilder->setCity($searchCriteriaData['city']);
         }
 
         if (isset($searchCriteriaData['region'])) {
-            $searchCriteria->setRegion($searchCriteriaData['region']);
+            $this->searchCriteriaBuilder->setRegion($searchCriteriaData['region']);
         }
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
 
         /** @var PickupLocationInterface[] $sources */
         $pickupLocations = $this->getNearbyPickupLocations->execute(
@@ -176,5 +184,85 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                 ['us-1']
             ]
         ];
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
+     *
+     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @magentoAppArea frontend
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteWithPaging()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->setRadius(750)
+                                                      ->setCountry('DE')
+                                                      ->setPostcode('86559')
+                                                      ->setPageSize(1)
+                                                      ->setCurrentPage(1)
+                                                      ->create();
+
+        /** @var PickupLocationInterface[] $sources */
+        $pickupLocations = $this->getNearbyPickupLocations->execute(
+            $searchCriteria,
+            SalesChannelInterface::TYPE_WEBSITE,
+            'global_website'
+        );
+
+        $this->assertCount(1, $pickupLocations);
+        $this->assertEquals('eu-1', current($pickupLocations)->getSourceCode());
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
+     *
+     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @magentoAppArea frontend
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteWithSortOrderDifferentThanDistance()
+    {
+        $sortOrder = $this->sortOrderBuilder->setField('source_code')
+                                            ->setDirection(SortOrder::SORT_ASC)
+                                            ->create();
+        $searchCriteria = $this->searchCriteriaBuilder->setRadius(750)
+                                                      ->setCountry('DE')
+                                                      ->setPostcode('86559')
+                                                      ->setSortOrders([$sortOrder])
+                                                      ->create();
+
+        /** @var PickupLocationInterface[] $sources */
+        $pickupLocations = $this->getNearbyPickupLocations->execute(
+            $searchCriteria,
+            SalesChannelInterface::TYPE_WEBSITE,
+            'global_website'
+        );
+
+        $sortedSourceCodes = ['eu-1', 'eu-3'];
+
+        $this->assertCount(count($sortedSourceCodes), $pickupLocations);
+        foreach ($sortedSourceCodes as $key => $code) {
+            $this->assertEquals($code, $pickupLocations[$key]->getSourceCode());
+        }
     }
 }
