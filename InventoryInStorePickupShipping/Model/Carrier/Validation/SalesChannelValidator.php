@@ -68,39 +68,19 @@ class SalesChannelValidator implements RequestValidatorInterface
         $errors = [];
 
         try {
-            $salesChannel = $this->getSalesChannel((int)$rateRequest->getWebsiteId());
-            $isAnyPickupLocationAvailable = $this->getIsAnyPickupLocationAvailable->execute($salesChannel);
+            $website = $this->websiteRepository->getById((int)$rateRequest->getWebsiteId());
+            $isAnyPickupLocationAvailable = $this->getIsAnyPickupLocationAvailable->execute(
+                SalesChannelInterface::TYPE_WEBSITE,
+                $website->getCode()
+            );
 
             if (!$isAnyPickupLocationAvailable) {
-                $errors[] = __('No Pickup Locations available for Sales Channel %1.', $salesChannel->getCode());
+                $errors[] = __('No Pickup Locations available for Sales Channel %1.', $website->getCode());
             }
         } catch (NoSuchEntityException $exception) {
             $errors[] = __('Can not resolve Sales Channel for Website with id %1.', $rateRequest->getWebsiteId());
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
-    }
-
-    /**
-     * Get Sales Channel for provided website id.
-     *
-     * @param int $websiteId
-     *
-     * @return SalesChannelInterface
-     * @throws NoSuchEntityException
-     */
-    private function getSalesChannel(int $websiteId): SalesChannelInterface
-    {
-        $website = $this->websiteRepository->getById($websiteId);
-        $salesChannel = $this->salesChannelInterfaceFactory->create(
-            [
-                'data' => [
-                    SalesChannelInterface::CODE => $website->getCode(),
-                    SalesChannelInterface::TYPE => SalesChannelInterface::TYPE_WEBSITE
-                ]
-            ]
-        );
-
-        return $salesChannel;
     }
 }

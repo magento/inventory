@@ -7,25 +7,24 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
-use Magento\Framework\Api\ExtensionAttributesFactory;
-use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickup\Model\Source\InitPickupLocationExtensionAttributes;
 
 class LoadInStorePickupOnGetListPlugin
 {
     /**
-     * @var ExtensionAttributesFactory
+     * @var InitPickupLocationExtensionAttributes
      */
-    private $extensionAttributesFactory;
+    private $setExtensionAttributes;
 
     /**
-     * @param ExtensionAttributesFactory $extensionAttributesFactory
+     * @param InitPickupLocationExtensionAttributes $setExtensionAttributes
      */
-    public function __construct(ExtensionAttributesFactory $extensionAttributesFactory)
-    {
-        $this->extensionAttributesFactory = $extensionAttributesFactory;
+    public function __construct(
+        InitPickupLocationExtensionAttributes $setExtensionAttributes
+    ) {
+        $this->setExtensionAttributes = $setExtensionAttributes;
     }
 
     /**
@@ -40,18 +39,12 @@ class LoadInStorePickupOnGetListPlugin
     public function afterGetList(
         SourceRepositoryInterface $subject,
         SourceSearchResultsInterface $sourceSearchResults
-    ):SourceSearchResultsInterface {
-        foreach ($sourceSearchResults->getItems() as $source) {
-            $extensionAttributes = $source->getExtensionAttributes();
-
-            if ($extensionAttributes === null) {
-                $extensionAttributes = $this->extensionAttributesFactory->create(SourceInterface::class);
-                $source->setExtensionAttributes($extensionAttributes);
-            }
-
-            $pickupAvailable = $source->getData(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE);
-            $extensionAttributes->setIsPickupLocationActive((bool)$pickupAvailable);
-        }
+    ): SourceSearchResultsInterface {
+        $items = $sourceSearchResults->getItems();
+        array_walk(
+            $items,
+            [$this->setExtensionAttributes, 'execute']
+        );
 
         return $sourceSearchResults;
     }

@@ -8,7 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="Magento_InventoryInStorePickup" setup_version="1.0.0">
         <sequence>
-            <module name="Magento_Inventory"/>
+            <module name="Magento_InventoryApi"/>
             <module name="Magento_InventoryInStorePickupApi"/>
             <module name="Magento_InventoryDistanceBasedSourceSelection" />
             <module name="Magento_Sales" />

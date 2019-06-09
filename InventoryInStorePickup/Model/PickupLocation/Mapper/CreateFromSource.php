@@ -13,6 +13,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Model\Mapper\CreateFromSourceInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 
 /**
  * @inheritdoc
@@ -47,20 +48,40 @@ class CreateFromSource implements CreateFromSourceInterface
      * @inheritdoc
      * @throws \InvalidArgumentException
      */
-    public function execute(SourceInterface $source, array $map): PickupLocationInterface
+    public function execute(SourceInterface $source, array $map, array $preProcessors): PickupLocationInterface
     {
-        $mappedData = $this->extractDataFromSource($source, $map);
-        $data = $this->preparePickupLocationFields($mappedData);
+        $data = $this->extractDataFromSource($source, $map);
+        $data = $this->preProcessData($source, $data, $preProcessors);
+        $data = $this->preparePickupLocationFields($data, $map);
 
         return $this->pickupLocationFactory->create($data);
     }
 
     /**
-     * @param array $mappedData
+     * @param SourceInterface $source
+     * @param array $data
+     * @param PreProcessorInterface[] $preProcessors
      *
      * @return array
      */
-    private function preparePickupLocationFields(array $mappedData): array
+    private function preProcessData(SourceInterface $source, array $data, array $preProcessors)
+    {
+        foreach ($preProcessors as $field => $processor) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = $processor->process($source, $data[$field]);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $sourceData
+     * @param array $map
+     *
+     * @return array
+     */
+    private function preparePickupLocationFields(array $sourceData, array $map): array
     {
         $pickupLocationExtension = $this->extensionAttributesFactory->create(PickupLocationInterface::class);
         $pickupLocationMethods = get_class_methods(PickupLocationInterface::class);
@@ -68,7 +89,8 @@ class CreateFromSource implements CreateFromSourceInterface
             'extensionAttributes' => $pickupLocationExtension
         ];
 
-        foreach ($mappedData as $pickupLocationField => $value) {
+        foreach ($sourceData as $sourceField => $value) {
+            $pickupLocationField = $map[$sourceField];
             if ($this->isExtensionAttributeField($pickupLocationField)) {
                 $methodName = $this->getSetterMethodName($this->getExtensionAttributeFieldName($pickupLocationField));
 
@@ -91,15 +113,15 @@ class CreateFromSource implements CreateFromSourceInterface
     /**
      * Extract values from Source according to the provided map.
      *
-     * @param \Magento\InventoryApi\Api\Data\SourceInterface $source
+     * @param SourceInterface $source
      * @param string[] $map
      *
      * @return array
      */
     private function extractDataFromSource(SourceInterface $source, array $map): array
     {
-        $mappedData = [];
-        foreach ($map as $sourceField => $pickupLocationField) {
+        $sourceData = [];
+        foreach (array_keys($map) as $sourceField) {
             if ($this->isExtensionAttributeField($sourceField)) {
                 $methodName = $this->getGetterMethodName($this->getExtensionAttributeFieldName($sourceField));
                 $entity = $source->getExtensionAttributes();
@@ -112,10 +134,10 @@ class CreateFromSource implements CreateFromSourceInterface
                 $this->throwException(SourceInterface::class, $sourceField);
             }
 
-            $mappedData[$pickupLocationField] = $entity->{$methodName}();
+            $sourceData[$sourceField] = $entity->{$methodName}();
         }
 
-        return $mappedData;
+        return $sourceData;
     }
 
     /**

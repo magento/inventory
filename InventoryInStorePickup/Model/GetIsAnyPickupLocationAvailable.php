@@ -9,8 +9,7 @@ namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 
 /**
@@ -19,37 +18,27 @@ use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 class GetIsAnyPickupLocationAvailable implements GetIsAnyPickupLocationAvailableInterface
 {
     /**
-     * @var GetPickupLocationsAssignedToStockOrderedByPriorityInterface
+     * @var GetPickupLocationsAssignedToSalesChannelInterface
      */
     private $getPickupLocations;
 
     /**
-     * @var GetStockBySalesChannelInterface
+     * @param GetPickupLocationsAssignedToSalesChannelInterface $getPickupLocations
      */
-    private $getStockBySalesChannel;
-
-    /**
-     * @param GetPickupLocationsAssignedToStockOrderedByPriorityInterface $getPickupLocations
-     * @param GetStockBySalesChannelInterface $getStockBySalesChannel
-     */
-    public function __construct(
-        GetPickupLocationsAssignedToStockOrderedByPriorityInterface $getPickupLocations,
-        GetStockBySalesChannelInterface $getStockBySalesChannel
-    ) {
+    public function __construct(GetPickupLocationsAssignedToSalesChannelInterface $getPickupLocations)
+    {
         $this->getPickupLocations = $getPickupLocations;
-        $this->getStockBySalesChannel = $getStockBySalesChannel;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute(SalesChannelInterface $salesChannel): bool
+    public function execute(string $salesChannelType, string $salesChannelCode): bool
     {
         $result = false;
 
         try {
-            $stock = $this->getStockBySalesChannel->execute($salesChannel);
-            $result = count($this->getPickupLocations->execute((int)$stock->getStockId())) > 0;
+            $result = count($this->getPickupLocations->execute($salesChannelType, $salesChannelCode)) > 0;
         } catch (NoSuchEntityException $exception) {
             return $result;
         }
