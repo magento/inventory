@@ -8,14 +8,16 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToStockOrderedByPriorityInterface;
+use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
  */
-class GetPickupLocationsAssignedToStockOrderedByPriority implements GetPickupLocationsAssignedToStockOrderedByPriorityInterface
+class GetPickupLocationsAssignedToSalesChannel implements GetPickupLocationsAssignedToSalesChannelInterface
 {
     /**
      * @var GetSourcesAssignedToStockOrderedByPriorityInterface
@@ -28,24 +30,34 @@ class GetPickupLocationsAssignedToStockOrderedByPriority implements GetPickupLoc
     private $mapper;
 
     /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
+     * @param StockResolverInterface $stockResolver
      * @param Mapper $mapper
      */
     public function __construct(
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
+        StockResolverInterface $stockResolver,
         Mapper $mapper
     ) {
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
+        $this->stockResolver = $stockResolver;
         $this->mapper = $mapper;
     }
 
     /**
      * @inheritdoc
+     * @throws NoSuchEntityException
      * @throws LocalizedException
      */
-    public function execute(int $stockId): array
+    public function execute(string $salesChannelType, string $salesChannelCode): array
     {
-        $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
+        $stock = $this->stockResolver->execute($salesChannelType, $salesChannelCode);
+        $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stock->getStockId());
 
         $result = [];
         foreach ($sources as $source) {

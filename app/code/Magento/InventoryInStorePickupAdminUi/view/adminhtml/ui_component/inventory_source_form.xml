@@ -31,4 +31,41 @@
             </formElements>
         </field>
     </fieldset>
+    <fieldset name="pickup_location" sortOrder="100" component="Magento_InventoryInStorePickupAdminUi/js/form/components/fieldset">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Pickup Location</label>
+            <dataScope>general</dataScope>
+            <imports>
+                <link name="visible">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
+            </imports>
+        </settings>
+        <field name="frontend_name">
+            <settings>
+                <dataScope>extension_attributes.frontend_name</dataScope>
+                <dataType>string</dataType>
+                <label translate="true">Frontend name</label>
+                <tooltip>
+                    <description translate="true">Pickup Location name visible for the customer on checkout</description>
+                </tooltip>
+            </settings>
+        </field>
+        <field name="frontend_description" formElement="wysiwyg">
+            <settings>
+                <dataScope>extension_attributes.frontend_description</dataScope>
+                <dataType>string</dataType>
+                <label translate="true">Frontend description</label>
+                <tooltip>
+                    <description translate="true">Pickup Location description</description>
+                </tooltip>
+            </settings>
+            <formElements>
+                <wysiwyg>
+                    <settings>
+                        <wysiwyg>true</wysiwyg>
+                    </settings>
+                </wysiwyg>
+            </formElements>
+        </field>
+    </fieldset>
 </form>

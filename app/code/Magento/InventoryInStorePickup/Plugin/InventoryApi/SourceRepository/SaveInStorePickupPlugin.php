@@ -7,9 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
+use Magento\Framework\DataObject;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface as Location;
 
+/**
+ * Set data to Source itself from its extension attributes to save
+ * these values to `inventory_source` DB table
+ */
 class SaveInStorePickupPlugin
 {
     /**
@@ -24,11 +30,13 @@ class SaveInStorePickupPlugin
     public function beforeSave(
         SourceRepositoryInterface $subject,
         SourceInterface $source
-    ):array {
+    ): array {
         $extensionAttributes = $source->getExtensionAttributes();
 
-        if ($extensionAttributes !== null && $extensionAttributes->getIsPickupLocationActive() !== null) {
-            $source->setIsPickupLocationActive($extensionAttributes->getIsPickupLocationActive());
+        if ($extensionAttributes !== null && $source instanceof  DataObject) {
+            $source->setData(Location::IS_PICKUP_LOCATION_ACTIVE, $extensionAttributes->getIsPickupLocationActive());
+            $source->setData(Location::FRONTEND_NAME, $extensionAttributes->getFrontendName());
+            $source->setData(Location::FRONTEND_DESCRIPTION, $extensionAttributes->getFrontendDescription());
         }
 
         return [$source];

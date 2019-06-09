@@ -10,9 +10,13 @@ namespace Magento\InventoryInStorePickup\Test\Integration;
 use Magento\InventoryInStorePickup\Model\AddressFactory;
 use Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Integration tests coverage for @see \Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations.
+ */
 class GetNearbyPickupLocationsOfflineTest extends TestCase
 {
     /**
@@ -37,7 +41,10 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
+     *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
      * @param array $addressData
@@ -45,6 +52,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      * @param int $stockId
      * @param string[] $sortedSourceCodes
      *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @dataProvider executeDataProvider
      * @magentoAppArea frontend
      *
@@ -53,13 +61,18 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
     public function testExecute(
         array $addressData,
         int $radius,
-        int $stockId,
+        string $salesChannelCode,
         array $sortedSourceCodes
     ) {
         $address = $this->addressFactory->create($addressData);
 
         /** @var PickupLocationInterface[] $sources */
-        $pickupLocations = $this->getNearbyPickupLocations->execute($address, $radius, $stockId);
+        $pickupLocations = $this->getNearbyPickupLocations->execute(
+            $address,
+            $radius,
+            SalesChannelInterface::TYPE_WEBSITE,
+            $salesChannelCode
+        );
 
         $this->assertCount(count($sortedSourceCodes), $pickupLocations);
         foreach ($sortedSourceCodes as $key => $code) {
@@ -76,7 +89,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      *          City
      *      ]
      *      Radius (in KM),
-     *      Stock Id,
+     *      Sales Channel Code,
      *      Expected Source Codes[]
      * ]
      *
@@ -91,7 +104,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'postcode' => '81671'
                 ],
                 500,
-                10,
+                'eu_website',
                 ['eu-3']
             ],
             [
@@ -100,7 +113,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'region' => 'Bretagne'
                 ],
                 1000,
-                10,
+                'eu_website',
                 ['eu-1']
             ],
             [
@@ -109,7 +122,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'city' => 'Saint-Saturnin-lès-Apt'
                 ],
                 1000,
-                30,
+                'global_website',
                 ['eu-1', 'eu-3']
             ],
             [
@@ -118,7 +131,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'postcode' => '12022'
                     ],
                 350,
-                10,
+                'eu_website',
                 []
             ],
             [
@@ -129,7 +142,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'city' => 'Rasun Di Sotto'
                 ],
                 350,
-                10,
+                'eu_website',
                 ['eu-3']
             ],
             [
@@ -138,7 +151,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'postcode' => '86559',
                 ],
                 750,
-                30,
+                'global_website',
                 ['eu-3', 'eu-1']
             ],
             [
@@ -147,7 +160,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'region' => 'Kansas'
                 ],
                 1000,
-                20,
+                'us_website',
                 ['us-1']
             ]
         ];
