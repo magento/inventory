@@ -7,10 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api;
 
-use \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 
 /**
- * Find nearest Pickup Locations by requested address, radius, and affiliation to stock.
+ * Find nearest Pickup Locations by requested address, radius, and affiliation to Sales Channel.
+ * Default locations sort order - ascending distance to request address.
  *
  * @api
  */
