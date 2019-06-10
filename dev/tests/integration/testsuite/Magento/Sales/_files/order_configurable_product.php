@@ -51,6 +51,9 @@ $order->setIncrementId('100000001')
 $order->save();
 
 $qtyOrdered = 2;
+$simpleProductId = current($configurableProduct->getExtensionAttributes()->getConfigurableProductLinks());
+/** @var \Magento\Catalog\Api\Data\ProductInterface $simpleProduct */
+$simpleProduct = $productRepository->getById($simpleProductId);
 /** @var \Magento\Sales\Model\Order\Item $orderItem */
 $orderConfigurableItem = $objectManager->create(\Magento\Sales\Model\Order\Item::class);
 $orderConfigurableItem->setProductId($configurableProduct->getId())->setQtyOrdered($qtyOrdered);
@@ -60,6 +63,9 @@ $orderConfigurableItem->setRowTotal($configurableProduct->getPrice());
 $orderConfigurableItem->setParentItemId(null);
 $orderConfigurableItem->setProductType('configurable');
 $orderConfigurableItem->setOrder($order);
+$orderConfigurableItem->setProductOptions([
+    'simple_sku' => $simpleProduct->getSku()
+]);
 /** @var \Magento\Sales\Api\OrderItemRepositoryInterface $orderItemsRepository */
 $orderItemsRepository = $objectManager->create(\Magento\Sales\Api\OrderItemRepositoryInterface::class);
 // Configurable item must be present in database to have its real ID to set parent id of simple product.
