@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Model\ResourceModel\Quote\Address\Collection">
+        <plugin name="add_pickup_location_to_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection\GetPickupLocationInformationPlugin" sortOrder="20" />
+    </type>
+    <type name="Magento\Quote\Model\ResourceModel\Quote\Address">
+        <plugin name="save_pickup_location_for_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\SavePickupLocationForQuoteAddress" sortOrder="20" />
+        <plugin name="load_pickup_location_for_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\LoadPickupLocationForQuoteAddress" sortOrder="30" />
+    </type>
+</config>
