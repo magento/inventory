@@ -37,14 +37,20 @@ class GetPickupLocationInformationPlugin
     /**
      * @param Collection $collection
      * @param \Closure $proceed
+     * @param bool $printQuery
+     * @param bool $logQuery
      *
      * @return Collection
      * @throws \Zend_Db_Select_Exception
      */
-    public function aroundLoadWithFilter(Collection $collection, \Closure $proceed): Collection
-    {
+    public function aroundLoadWithFilter(
+        Collection $collection,
+        \Closure $proceed,
+        bool $printQuery,
+        bool $logQuery
+    ): Collection {
         if ($collection->isLoaded()) {
-            return $proceed();
+            return $proceed($printQuery, $logQuery);
         }
 
         if (!isset($collection->getSelect()->getPart(\Zend_Db_Select::FROM)[self::TABLE_ALIAS])) {
@@ -55,7 +61,7 @@ class GetPickupLocationInformationPlugin
             );
         }
 
-        $result = $proceed();
+        $result = $proceed($printQuery, $logQuery);
 
         /** @var Address $address */
         foreach ($collection->getItems() as $address) {
