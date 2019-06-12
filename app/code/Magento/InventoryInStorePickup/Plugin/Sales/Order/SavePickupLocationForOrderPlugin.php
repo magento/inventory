@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Plugin\Sales\Order;
 
 use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation\SaveOrderPickupLocation;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Save Pickup Location identifier, related to the Order Entity.

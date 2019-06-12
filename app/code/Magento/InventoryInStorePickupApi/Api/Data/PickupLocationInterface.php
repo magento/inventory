@@ -142,5 +142,4 @@ interface PickupLocationInterface extends ExtensibleDataInterface
      * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface|null
      */
     public function getExtensionAttributes(): ?PickupLocationExtensionInterface;
-
 }
