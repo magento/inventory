@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\Sales\Order;
 
+use Magento\InventoryInStorePickup\Model\Order\GetPickupLocationCode;
 use Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation\SaveOrderPickupLocation;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -22,11 +23,20 @@ class SavePickupLocationForOrderPlugin
     private $saveOrderPickupLocation;
 
     /**
-     * @param SaveOrderPickupLocation $saveOrderPickupLocation
+     * @var GetPickupLocationCode
      */
-    public function __construct(SaveOrderPickupLocation $saveOrderPickupLocation)
-    {
+    private $getPickupLocationCode;
+
+    /**
+     * @param SaveOrderPickupLocation $saveOrderPickupLocation
+     * @param GetPickupLocationCode $getPickupLocationCode
+     */
+    public function __construct(
+        SaveOrderPickupLocation $saveOrderPickupLocation,
+        GetPickupLocationCode $getPickupLocationCode
+    ) {
         $this->saveOrderPickupLocation = $saveOrderPickupLocation;
+        $this->getPickupLocationCode = $getPickupLocationCode;
     }
 
     /**
@@ -44,10 +54,10 @@ class SavePickupLocationForOrderPlugin
         OrderInterface $result,
         OrderInterface $entity
     ) {
-        $extension = $result->getExtensionAttributes();
+        $pickupLocationCode = $this->getPickupLocationCode->execute($result);
 
-        if (null !== $extension && $extension->getPickupLocationCode()) {
-            $this->saveOrderPickupLocation->execute((int)$result->getEntityId(), $extension->getPickupLocationCode());
+        if ($pickupLocationCode) {
+            $this->saveOrderPickupLocation->execute((int)$result->getEntityId(), $pickupLocationCode);
         }
 
         return $result;
