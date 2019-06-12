@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\Order;
 
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Check if order can be fulfilled: if its pickup location has enough QTY

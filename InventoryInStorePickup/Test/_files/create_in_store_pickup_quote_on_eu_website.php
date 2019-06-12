@@ -5,7 +5,6 @@
  */
 declare(strict_types=1);
 
-use Magento\InventoryInStorePickup\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;

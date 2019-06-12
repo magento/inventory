@@ -10,8 +10,8 @@ namespace Magento\InventoryInStorePickup\Model;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
-use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**

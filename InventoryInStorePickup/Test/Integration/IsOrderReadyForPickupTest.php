@@ -9,12 +9,12 @@ namespace Magento\InventoryInStorePickup\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
+use Magento\Sales\Api\Data\OrderExtensionFactory;
+use Magento\Sales\Api\Data\OrderExtensionInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
-use Magento\Sales\Api\Data\OrderExtensionInterface;
-use Magento\Sales\Api\Data\OrderExtensionFactory;
 
 class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
 {
