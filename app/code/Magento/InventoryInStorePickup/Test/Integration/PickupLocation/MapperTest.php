@@ -9,8 +9,8 @@ namespace Magento\InventoryInStorePickup\Test\Integration\PickupLocation;
 
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 

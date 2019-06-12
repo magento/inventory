@@ -25,7 +25,6 @@ $searchCriteria = $searchCriteriaBuilder
     ->create();
 $cart = current($cartRepository->getList($searchCriteria)->getItems());
 
-
 $itemsToAdd = [
     'SKU-1' => 3.5,
     'SKU-2' => 2

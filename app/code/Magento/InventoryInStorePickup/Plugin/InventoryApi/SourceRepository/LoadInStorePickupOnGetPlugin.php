@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
-use Magento\Framework\DataObject;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickup\Model\Source\InitPickupLocationExtensionAttributes;

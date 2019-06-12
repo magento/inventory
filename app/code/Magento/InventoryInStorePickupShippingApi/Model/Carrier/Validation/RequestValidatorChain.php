@@ -9,7 +9,6 @@ namespace Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
 /**

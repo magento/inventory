@@ -8,17 +8,17 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Api\Data\ShipmentInterface;
-use Magento\Sales\Api\ShipmentRepositoryInterface;
-use Magento\Sales\Api\Data\ShipmentItemInterface;
-use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
-use Magento\Sales\Api\Data\OrderExtensionInterface;
-use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
+use Magento\Sales\Api\Data\OrderExtensionFactory;
+use Magento\Sales\Api\Data\OrderExtensionInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\Data\ShipmentItemInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
+use Magento\TestFramework\Helper\Bootstrap;
 
 class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
 {
