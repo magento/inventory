@@ -11,6 +11,7 @@ namespace Magento\InventoryInStorePickup\Model\SourceSelection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\InventoryInStorePickup\Model\Source\GetIsPickupLocationActive;
 use Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
@@ -39,18 +40,26 @@ class GetSourceItemQtyAvailableService implements GetSourceItemQtyAvailableInter
     private $sourceRepository;
 
     /**
+     * @var GetIsPickupLocationActive
+     */
+    private $getIsPickupLocationActive;
+
+    /**
      * @param GetActiveStorePickupOrdersBySource $getActiveStorePickupOrders
      * @param GetOrderItemsByOrdersListAndSku $getOrderItemsByOrdersListAndSku
      * @param SourceRepositoryInterface $sourceRepository
+     * @param GetIsPickupLocationActive $getIsPickupLocationActive
      */
     public function __construct(
         GetActiveStorePickupOrdersBySource $getActiveStorePickupOrders,
         GetOrderItemsByOrdersListAndSku $getOrderItemsByOrdersListAndSku,
-        SourceRepositoryInterface $sourceRepository
+        SourceRepositoryInterface $sourceRepository,
+        GetIsPickupLocationActive $getIsPickupLocationActive
     ) {
         $this->getSourceActiveStorePickupOrders = $getActiveStorePickupOrders;
         $this->getOrderItemsByOrdersListAndSku = $getOrderItemsByOrdersListAndSku;
         $this->sourceRepository = $sourceRepository;
+        $this->getIsPickupLocationActive = $getIsPickupLocationActive;
     }
 
     /**
@@ -97,12 +106,12 @@ class GetSourceItemQtyAvailableService implements GetSourceItemQtyAvailableInter
     {
         $source = $this->sourceRepository->get($sourceItem->getSourceCode());
 
-        if ($source->getExtensionAttributes() === null ||
-            !$source->getExtensionAttributes()->getIsPickupLocationActive()
-        ) {
-            return [];
+        if ($this->getIsPickupLocationActive->execute($source)) {
+            return $this->getSourceActiveStorePickupOrders
+                ->execute($source->getSourceCode())
+                ->getItems();
         }
 
-        return $this->getSourceActiveStorePickupOrders->execute($source->getSourceCode())->getItems();
+        return [];
     }
 }

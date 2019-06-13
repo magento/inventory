@@ -10,7 +10,6 @@ namespace Magento\InventoryInStorePickup\Model;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface;
-use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 
 /**
  * @inheritdoc
