@@ -22,8 +22,6 @@ class SavePickupLocationForQuoteAddress
     private $saveQuoteAddressPickupLocation;
 
     /**
-     * SavePickupLocationForQuoteAddress constructor.
-     *
      * @param SaveQuoteAddressPickupLocation $saveQuoteAddressPickupLocation
      */
     public function __construct(SaveQuoteAddressPickupLocation $saveQuoteAddressPickupLocation)
@@ -32,6 +30,8 @@ class SavePickupLocationForQuoteAddress
     }
 
     /**
+     * Save information about associate Pickup Location Code to Quote Address.
+     *
      * @param Address $subject
      * @param Address $result
      * @param AddressInterface $entity

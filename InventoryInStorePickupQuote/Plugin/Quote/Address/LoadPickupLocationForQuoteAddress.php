@@ -42,6 +42,8 @@ class LoadPickupLocationForQuoteAddress
     }
 
     /**
+     * Load and add Pickup Location information to Quote Address.
+     *
      * @param Address $subject
      * @param Address $result
      * @param AddressInterface $entity
@@ -56,13 +58,15 @@ class LoadPickupLocationForQuoteAddress
         }
 
         $pickupLocationCode = $this->getPickupLocationCodeByQuoteAddressId->execute((int)$entity->getId());
-        if ($pickupLocationCode) {
-            if (!$entity->getExtensionAttributes()) {
-                $entity->setExtensionAttributes($this->addressExtensionInterfaceFactory->create());
-            }
-
-            $entity->getExtensionAttributes()->setPickupLocationCode($pickupLocationCode);
+        if (!$pickupLocationCode) {
+            return $result;
         }
+
+        if (!$entity->getExtensionAttributes()) {
+            $entity->setExtensionAttributes($this->addressExtensionInterfaceFactory->create());
+        }
+
+        $entity->getExtensionAttributes()->setPickupLocationCode($pickupLocationCode);
 
         return $result;
     }
