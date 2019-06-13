@@ -35,6 +35,8 @@ class GetPickupLocationInformationPlugin
     }
 
     /**
+     * Load information about Pickup Location Code to collection of Quote Address.
+     *
      * @param Collection $collection
      * @param \Closure $proceed
      * @param bool $printQuery
@@ -78,6 +80,7 @@ class GetPickupLocationInformationPlugin
      * Add Loaded Pickup Location to Extension Attributes.
      *
      * @param Address $item
+     * @return void
      */
     private function addPickupLocationToExtensionAttributes(Address $item): void
     {
