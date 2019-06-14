@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\Order;
 
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Check if order can be fulfilled: if its pickup location has enough QTY
@@ -35,41 +35,45 @@ class IsFulfillable
     private $sourceRepository;
 
     /**
+     * @var GetPickupLocationCode
+     */
+    private $getPickupLocationCode;
+
+    /**
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilder
      * @param SourceRepositoryInterface $sourceRepository
+     * @param GetPickupLocationCode $getPickupLocationCode
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
         SearchCriteriaBuilderFactory $searchCriteriaBuilder,
-        SourceRepositoryInterface $sourceRepository
+        SourceRepositoryInterface $sourceRepository,
+        GetPickupLocationCode $getPickupLocationCode
     ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilder;
         $this->sourceRepository = $sourceRepository;
+        $this->getPickupLocationCode = $getPickupLocationCode;
     }
 
     /**
      * Check if items are ordered form the Pickup location and verify that each item has enough quantity.
      *
      * @param OrderInterface $order
+     *
      * @return bool
+     * @throws NoSuchEntityException
      */
     public function execute(OrderInterface $order): bool
     {
-        $extensionAttributes = $order->getExtensionAttributes();
-        if (!$extensionAttributes) {
-            return false;
-        }
+        $sourceCode = $this->getPickupLocationCode->execute($order);
 
-        $sourceCode = $extensionAttributes->getPickupLocationCode();
-        if (!$sourceCode) {
-            return false;
-        }
-
-        foreach ($order->getItems() as $item) {
-            if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
-                return false;
+        if ($sourceCode) {
+            foreach ($order->getItems() as $item) {
+                if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
+                    return false;
+                }
             }
         }
 
@@ -82,6 +86,7 @@ class IsFulfillable
      * @param string $sku
      * @param string $sourceCode
      * @param float $qtyOrdered
+     *
      * @return bool
      * @throws NoSuchEntityException
      */
