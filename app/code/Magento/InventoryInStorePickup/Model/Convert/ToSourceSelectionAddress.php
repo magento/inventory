@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\Convert;
 
-use Magento\InventoryInStorePickupApi\Api\Data\AddressInterface as PickupLocationsRequestAddressInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface as SourceSelectionAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
 /**
- * Create Source Selection Address based on Pickup Locations Address request.
+ * Create Source Selection Address based on Pickup Locations Search Criteria.
  */
-class AddressToSourceSelectionAddress
+class ToSourceSelectionAddress
 {
     /**
      * @var AddressInterfaceFactory
@@ -30,17 +30,17 @@ class AddressToSourceSelectionAddress
     }
 
     /**
-     * @param PickupLocationsRequestAddressInterface $address
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return SourceSelectionAddressInterface
      */
-    public function execute(PickupLocationsRequestAddressInterface $address): SourceSelectionAddressInterface
+    public function execute(SearchCriteriaInterface $searchCriteria): SourceSelectionAddressInterface
     {
         $data = [
-            'country' => $address->getCountry(),
-            'postcode' => $address->getPostcode() ?? '',
-            'region' => $address->getRegion() ?? '',
-            'city' => $address->getCity() ??'',
+            'country' => $searchCriteria->getCountry(),
+            'postcode' => $searchCriteria->getPostcode() ?? '',
+            'region' => $searchCriteria->getRegion() ?? '',
+            'city' => $searchCriteria->getCity() ??'',
             'street' => ''
         ];
 
