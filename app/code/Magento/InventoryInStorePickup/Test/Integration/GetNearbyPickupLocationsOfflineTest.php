@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
-use Magento\InventoryInStorePickup\Model\AddressFactory;
+use Magento\Framework\Api\SortOrder;
+use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteriaBuilder;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -25,14 +27,20 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
     private $getNearbyPickupLocations;
 
     /**
-     * @var AddressFactory
+     * @var SearchCriteriaBuilder
      */
-    private $addressFactory;
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var SortOrderBuilder
+     */
+    private $sortOrderBuilder;
 
     protected function setUp()
     {
         $this->getNearbyPickupLocations = Bootstrap::getObjectManager()->get(GetNearbyPickupLocations::class);
-        $this->addressFactory = Bootstrap::getObjectManager()->get(AddressFactory::class);
+        $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
+        $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);
     }
 
     /**
@@ -47,9 +55,8 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
-     * @param array $addressData
-     * @param int $radius
-     * @param int $stockId
+     * @param array $searchCriteriaData
+     * @param string $salesChannelCode
      * @param string[] $sortedSourceCodes
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -59,17 +66,30 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      * @magentoDbIsolation disabled
      */
     public function testExecute(
-        array $addressData,
-        int $radius,
+        array $searchCriteriaData,
         string $salesChannelCode,
         array $sortedSourceCodes
     ) {
-        $address = $this->addressFactory->create($addressData);
+        $this->searchCriteriaBuilder->setRadius($searchCriteriaData['radius'])
+                                    ->setCountry($searchCriteriaData['country']);
+
+        if (isset($searchCriteriaData['postcode'])) {
+            $this->searchCriteriaBuilder->setPostcode($searchCriteriaData['postcode']);
+        }
+
+        if (isset($searchCriteriaData['city'])) {
+            $this->searchCriteriaBuilder->setCity($searchCriteriaData['city']);
+        }
+
+        if (isset($searchCriteriaData['region'])) {
+            $this->searchCriteriaBuilder->setRegion($searchCriteriaData['region']);
+        }
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
 
         /** @var PickupLocationInterface[] $sources */
         $pickupLocations = $this->getNearbyPickupLocations->execute(
-            $address,
-            $radius,
+            $searchCriteria,
             SalesChannelInterface::TYPE_WEBSITE,
             $salesChannelCode
         );
@@ -82,13 +102,13 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
 
     /**
      * [
-     *      Address[
+     *      SearchCriteria[
      *          Country,
      *          Postcode,
      *          Region,
-     *          City
+     *          City,
+     *          Radius (in KM)
      *      ]
-     *      Radius (in KM),
      *      Sales Channel Code,
      *      Expected Source Codes[]
      * ]
@@ -101,36 +121,36 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
             [
                 [
                     'country' => 'DE',
-                    'postcode' => '81671'
+                    'postcode' => '81671',
+                    'radius' => 500
                 ],
-                500,
                 'eu_website',
                 ['eu-3']
             ],
             [
                 [
                     'country' => 'FR',
-                    'region' => 'Bretagne'
+                    'region' => 'Bretagne',
+                    'radius' => 1000
                 ],
-                1000,
                 'eu_website',
                 ['eu-1']
             ],
             [
                 [
                     'country' => 'FR',
-                    'city' => 'Saint-Saturnin-lès-Apt'
+                    'city' => 'Saint-Saturnin-lès-Apt',
+                    'radius' => 1000
                 ],
-                1000,
                 'global_website',
                 ['eu-1', 'eu-3']
             ],
             [
                 [
                     'country' => 'IT',
-                    'postcode' => '12022'
-                    ],
-                350,
+                    'postcode' => '12022',
+                    'radius' => 350
+                ],
                 'eu_website',
                 []
             ],
@@ -139,9 +159,9 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                     'country' => 'IT',
                     'postcode' => '39030',
                     'region' => 'Trentino-Alto Adige',
-                    'city' => 'Rasun Di Sotto'
+                    'city' => 'Rasun Di Sotto',
+                    'radius' => 350
                 ],
-                350,
                 'eu_website',
                 ['eu-3']
             ],
@@ -149,20 +169,100 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                 [
                     'country' => 'DE',
                     'postcode' => '86559',
+                    'radius' => 750
                 ],
-                750,
                 'global_website',
                 ['eu-3', 'eu-1']
             ],
             [
                 [
                     'country' => 'US',
-                    'region' => 'Kansas'
+                    'region' => 'Kansas',
+                    'radius' => 1000
                 ],
-                1000,
                 'us_website',
                 ['us-1']
             ]
         ];
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
+     *
+     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @magentoAppArea frontend
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteWithPaging()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->setRadius(750)
+                                                      ->setCountry('DE')
+                                                      ->setPostcode('86559')
+                                                      ->setPageSize(1)
+                                                      ->setCurrentPage(1)
+                                                      ->create();
+
+        /** @var PickupLocationInterface[] $sources */
+        $pickupLocations = $this->getNearbyPickupLocations->execute(
+            $searchCriteria,
+            SalesChannelInterface::TYPE_WEBSITE,
+            'global_website'
+        );
+
+        $this->assertCount(1, $pickupLocations);
+        $this->assertEquals('eu-1', current($pickupLocations)->getSourceCode());
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
+     *
+     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @magentoAppArea frontend
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteWithSortOrderDifferentThanDistance()
+    {
+        $sortOrder = $this->sortOrderBuilder->setField('source_code')
+                                            ->setDirection(SortOrder::SORT_ASC)
+                                            ->create();
+        $searchCriteria = $this->searchCriteriaBuilder->setRadius(750)
+                                                      ->setCountry('DE')
+                                                      ->setPostcode('86559')
+                                                      ->setSortOrders([$sortOrder])
+                                                      ->create();
+
+        /** @var PickupLocationInterface[] $sources */
+        $pickupLocations = $this->getNearbyPickupLocations->execute(
+            $searchCriteria,
+            SalesChannelInterface::TYPE_WEBSITE,
+            'global_website'
+        );
+
+        $sortedSourceCodes = ['eu-1', 'eu-3'];
+
+        $this->assertCount(count($sortedSourceCodes), $pickupLocations);
+        foreach ($sortedSourceCodes as $key => $code) {
+            $this->assertEquals($code, $pickupLocations[$key]->getSourceCode());
+        }
     }
 }

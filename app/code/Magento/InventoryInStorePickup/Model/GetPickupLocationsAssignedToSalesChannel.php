@@ -12,7 +12,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 use Magento\InventoryInStorePickup\Model\Source\GetIsPickupLocationActive;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface;
-use Magento\InventoryInStorePickupApi\Model\Mapper;
+use Magento\InventoryInStorePickupApi\Api\MapperInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
@@ -26,7 +26,7 @@ class GetPickupLocationsAssignedToSalesChannel implements GetPickupLocationsAssi
     private $getSourcesAssignedToStockOrderedByPriority;
 
     /**
-     * @var Mapper
+     * @var MapperInterface
      */
     private $mapper;
 
@@ -43,13 +43,13 @@ class GetPickupLocationsAssignedToSalesChannel implements GetPickupLocationsAssi
     /**
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @param StockResolverInterface $stockResolver
-     * @param Mapper $mapper
+     * @param MapperInterface $mapper
      * @param Source\GetIsPickupLocationActive $getIsPickupLocationActive
      */
     public function __construct(
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
         StockResolverInterface $stockResolver,
-        Mapper $mapper,
+        MapperInterface $mapper,
         GetIsPickupLocationActive $getIsPickupLocationActive
     ) {
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
