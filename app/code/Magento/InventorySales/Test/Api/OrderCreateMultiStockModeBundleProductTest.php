@@ -18,6 +18,7 @@ class OrderCreateMultiStockModeBundleProductTest extends OrderPlacementBase
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/source_items_bundle_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530381/scenarios/1870317
      */
     public function testCustomerPlaceOrderDefaultWebsiteDefaultStock()
     {
@@ -48,6 +49,7 @@ class OrderCreateMultiStockModeBundleProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/source_items_bundle_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530381/scenarios/1870478
      */
     public function testCustomerPlaceOrderCustomWebsiteDefaultStock()
     {

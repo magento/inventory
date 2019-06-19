@@ -18,6 +18,7 @@ class OrderCreateMultiStockModeSimpleProductTest extends OrderPlacementBase
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530370/scenarios/1837241
      */
     public function testCustomerPlaceOrderDefaultWebsiteDefaultStock()
     {
@@ -45,6 +46,7 @@ class OrderCreateMultiStockModeSimpleProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/assign_products_to_websites.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530370/scenarios/1841699
      */
     public function testCustomerPlaceOrderCustomWebsiteDefaultStock()
     {
@@ -75,6 +77,7 @@ class OrderCreateMultiStockModeSimpleProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530370/scenarios/1841119
      */
     public function testCustomerPlaceOrderDefaultWebsiteCustomStock()
     {
@@ -107,6 +110,7 @@ class OrderCreateMultiStockModeSimpleProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530370/scenarios/1850104
      */
     public function testCustomerPlaceOrderCustomWebsiteCustomStock()
     {

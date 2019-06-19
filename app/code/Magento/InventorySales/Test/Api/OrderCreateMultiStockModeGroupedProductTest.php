@@ -17,6 +17,7 @@ class OrderCreateMultiStockModeGroupedProductTest extends OrderPlacementBase
      *
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530373/scenarios/1870535
      */
     public function testCustomerPlaceOrderDefaultWebsiteDefaultStock()
     {
@@ -46,6 +47,7 @@ class OrderCreateMultiStockModeGroupedProductTest extends OrderPlacementBase
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530373/scenarios/1870535
      */
     public function testCustomerPlaceOrderCustomWebsiteDefaultStock()
     {

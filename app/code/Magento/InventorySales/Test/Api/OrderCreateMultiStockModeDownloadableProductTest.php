@@ -18,6 +18,7 @@ class OrderCreateMultiStockModeDownloadableProductTest extends OrderPlacementBas
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable_source_item_on_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530382/scenarios/1820317
      */
     public function testCustomerPlaceOrderDefaultWebsiteDefaultStock()
     {
@@ -43,6 +44,7 @@ class OrderCreateMultiStockModeDownloadableProductTest extends OrderPlacementBas
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable_source_item_on_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530382/scenarios/2270016
      */
     public function testCustomerPlaceOrderCustomWebsiteDefaultStock()
     {

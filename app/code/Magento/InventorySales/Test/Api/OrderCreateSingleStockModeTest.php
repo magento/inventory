@@ -21,6 +21,11 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1817469
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1855115
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/2270523
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1868245
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1820315
      *
      * @return void
      */
@@ -50,6 +55,9 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1827658
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/2270522
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1820316
      *
      * @return void
      */
@@ -90,6 +98,7 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1834776
      *
      * @return void
      */
@@ -117,6 +126,7 @@ class OrderCreateSingleStockModeTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_configurable.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySales/Test/_files/product_bundle.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/915538/scenarios/1835492
      *
      * @return void
      */

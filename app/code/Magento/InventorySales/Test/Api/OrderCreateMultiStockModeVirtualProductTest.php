@@ -18,6 +18,7 @@ class OrderCreateMultiStockModeVirtualProductTest extends OrderPlacementBase
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual_source_item_on_default_source.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530380/scenarios/1851577
      */
     public function testCustomerPlaceOrderDefaultWebsiteDefaultStock()
     {
@@ -43,6 +44,7 @@ class OrderCreateMultiStockModeVirtualProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual_source_item_on_default_source.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530380/scenarios/1851581
      */
     public function testCustomerPlaceOrderAdditionalWebsiteDefaultStock()
     {
@@ -73,6 +75,7 @@ class OrderCreateMultiStockModeVirtualProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual_source_item_on_additional_source.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530380/scenarios/1851580
      */
     public function testCustomerPlaceOrderDefaultWebsiteAdditionalStock()
     {
@@ -103,6 +106,7 @@ class OrderCreateMultiStockModeVirtualProductTest extends OrderPlacementBase
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual_source_item_on_additional_source.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/530380/scenarios/1851582
      */
     public function testCustomerPlaceOrderAdditionalWebsiteAdditionalStock()
     {
