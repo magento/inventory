@@ -32,7 +32,7 @@ class IsStorePickupOrder implements IsStorePickupOrderInterface
      * @param GetPickupLocationCode $getPickupLocationCode
      */
     public function __construct(
-      OrderRepositoryInterface $orderRepository,
+        OrderRepositoryInterface $orderRepository,
         GetPickupLocationCode $getPickupLocationCode
     ) {
         $this->orderRepository = $orderRepository;
@@ -46,7 +46,6 @@ class IsStorePickupOrder implements IsStorePickupOrderInterface
     {
         $order = $this->orderRepository->get($orderId);
 
-        /* TODO: check order shipping method instead? */
         return (bool)$this->getPickupLocationCode->execute($order);
     }
 }

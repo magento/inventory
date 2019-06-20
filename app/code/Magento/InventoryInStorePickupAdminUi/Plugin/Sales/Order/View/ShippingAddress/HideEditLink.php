@@ -33,15 +33,16 @@ class HideEditLink
     }
 
     /**
+     * Hide edit shipping address link for orders placed with store pickup.
+     *
      * @param Info $subject
      * @param string $result
      * @param Address $address
-     *
      * @return string
      */
     public function afterGetAddressEditLink(Info $subject, string $result, Address $address): string
     {
-        if ($address->getAddressType() == self::TYPE_SHIPPING) {
+        if ($address->getAddressType() === self::TYPE_SHIPPING) {
             if ($this->isStorePickupOrder->execute((int)$address->getOrder()->getEntityId())) {
                 return '';
             }

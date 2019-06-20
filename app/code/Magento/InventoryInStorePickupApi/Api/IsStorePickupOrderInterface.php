@@ -9,16 +9,16 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Api;
 
 /**
- * A service which provides info if order is placed using
- * In-store pickup
+ * A service which provides info if order is placed using In-store pickup.
+ *
+ * @api
  */
 interface IsStorePickupOrderInterface
 {
     /**
-     * Service call
+     * Check if order with the specified id was places with store-pickup.
      *
      * @param int $orderId
-     *
      * @return bool
      */
     public function execute(int $orderId): bool;
