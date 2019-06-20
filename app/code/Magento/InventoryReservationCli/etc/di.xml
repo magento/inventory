@@ -6,13 +6,13 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Framework\Console\CommandList">
+    <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="inventory_saleable_quantity_inconsistency" xsi:type="object">
+                <item name="inventory_salable_quantity_inconsistency" xsi:type="object">
                     Magento\InventoryReservationCli\Command\ShowInconsistencies
                 </item>
-                <item name="inventory_saleable_quantity_compensations" xsi:type="object">
+                <item name="inventory_salable_quantity_compensations" xsi:type="object">
                     Magento\InventoryReservationCli\Command\CreateCompensations
                 </item>
             </argument>
@@ -20,34 +20,9 @@
     </type>
     <type name="Magento\InventoryReservationCli\Command\ShowInconsistencies">
         <arguments>
-            <argument name="getSaleableQuantityInconsistencies" xsi:type="object">
-                Magento\InventoryReservationCli\Model\GetSaleableQuantityInconsistencies\Proxy
-            </argument>
-            <argument name="filterCompleteOrders" xsi:type="object">
-                Magento\InventoryReservationCli\Model\SaleableQuantityInconsistency\FilterCompleteOrders\Proxy
-            </argument>
-            <argument name="filterIncompleteOrders" xsi:type="object">
-                Magento\InventoryReservationCli\Model\SaleableQuantityInconsistency\FilterIncompleteOrders\Proxy
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\InventoryReservationCli\Command\CreateCompensations">
-        <arguments>
-            <argument name="getSaleableQuantityInconsistencies" xsi:type="object">
-                Magento\InventoryReservationCli\Model\GetSaleableQuantityInconsistencies\Proxy
-            </argument>
-            <argument name="getSaleableQuantityCompensations" xsi:type="object">
-                Magento\InventoryReservationCli\Model\GetSaleableQuantityCompensations\Proxy
-            </argument>
-            <argument name="appendReservations" xsi:type="object">
-                Magento\InventoryReservationsApi\Model\AppendReservationsInterface\Proxy
-            </argument>
-            <argument name="filterCompleteOrders" xsi:type="object">
-                Magento\InventoryReservationCli\Model\SaleableQuantityInconsistency\FilterCompleteOrders\Proxy
-            </argument>
-            <argument name="filterIncompleteOrders" xsi:type="object">
-                Magento\InventoryReservationCli\Model\SaleableQuantityInconsistency\FilterIncompleteOrders\Proxy
-            </argument>
+            <argument name="getSalableQuantityInconsistencies" xsi:type="object">Magento\InventoryReservationCli\Model\GetSalableQuantityInconsistencies\Proxy</argument>
+            <argument name="filterCompleteOrders" xsi:type="object">Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterCompleteOrders\Proxy</argument>
+            <argument name="filterIncompleteOrders" xsi:type="object">Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterIncompleteOrders\Proxy</argument>
         </arguments>
     </type>
 </config>
