@@ -1,6 +1,6 @@
 # InventoryInStorePickupShipping module
 
-The `InventoryInStorePickupShipping` module provides business logic for In-Store Pickup Delivery Method.
+The `InventoryInStorePickupShipping` module provides business logic for In-Store Pickup functionality on Checkout.
 
 This module is part of the new inventory infrastructure. The
 [Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
