@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickupAdminUi\Block\Adminhtml\Order\View;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Backend\Block\Widget\Form\Container;
 use Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order\NotifyPickup;
-use Magento\InventoryInStorePickupAdminUi\Model\IsDisplayReadyForPickupButton;
+use Magento\InventoryInStorePickupAdminUi\Model\IsRenderReadyForPickupButton;
 use Magento\Sales\Block\Adminhtml\Order\View;
 
 /**
@@ -33,7 +33,7 @@ class ReadyForPickup extends Container
     private $viewBlock;
 
     /**
-     * @var IsDisplayReadyForPickupButton
+     * @var IsRenderReadyForPickupButton
      */
     private $isDisplayButton;
 
@@ -42,13 +42,13 @@ class ReadyForPickup extends Container
      *
      * @param Context $context
      * @param View $viewBlock
-     * @param IsDisplayReadyForPickupButton $isDisplayButton
+     * @param IsRenderReadyForPickupButton $isDisplayButton
      * @param array $data
      */
     public function __construct(
         Context $context,
         View $viewBlock,
-        IsDisplayReadyForPickupButton $isDisplayButton,
+        IsRenderReadyForPickupButton $isDisplayButton,
         array $data = []
     ) {
         $this->viewBlock = $viewBlock;
@@ -85,6 +85,7 @@ class ReadyForPickup extends Container
                 )
             ]
         );
+        $this->buttonList->remove('order_ship');
     }
 
     /**

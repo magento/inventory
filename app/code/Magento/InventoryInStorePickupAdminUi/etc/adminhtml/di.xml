@@ -9,4 +9,7 @@
     <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
         <plugin name="convert_is_pickup_location_active_boolean_to_string" type="Magento\InventoryInStorePickupAdminUi\Plugin\Ui\DataProvider\ConvertBooleanToStringPlugin" sortOrder="10"/>
     </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\View\Info">
+        <plugin name="hide-edit-link" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Order\View\ShippingAddress\HideEditLink"/>
+    </type>
 </config>
