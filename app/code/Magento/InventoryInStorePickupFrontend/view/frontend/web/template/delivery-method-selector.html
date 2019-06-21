@@ -1,12 +1,12 @@
 <div id="delivery-method-selector" class="step-content">
     <button
         class="action action-select-shipping"
-        css="'selected': !isSelected()"
+        css="'selected': !isStorePickupSelected()"
         data-bind="click: selectShipping, i18n: 'Shipping'"
     ></button>
     <button
         class="action action-select-store-pickup"
-        css="'selected': isSelected()"
+        css="'selected': isStorePickupSelected()"
         data-bind="click: selectStorePickup , i18n: 'Pick in Store'"
     ></button>
 </div>

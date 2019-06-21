@@ -29,14 +29,13 @@ define([
             template: 'Magento_InventoryInStorePickupFrontend/store-pickup',
             deliveryMethodSelectorTemplate:
                 'Magento_InventoryInStorePickupFrontend/delivery-method-selector',
+            isVisible: false,
+            isStorePickupSelected: false,
         },
-        isVisible: ko.observable(false),
-        isSelected: ko.observable(false),
         rates: shippingService.getShippingRates(),
         inStoreMethod: null,
 
         initialize: function() {
-            var self = this;
             this._super();
 
             // TODO: Decide how will configuration be provided.
@@ -57,10 +56,16 @@ define([
             this.preselectFromQuote();
             this.syncWithShipping();
         },
+        initObservable: function() {
+            return this._super().observe([
+                'isVisible',
+                'isStorePickupSelected',
+            ]);
+        },
         preselectFromQuote: function() {
             var self = this;
             quote.shippingMethod.subscribe(function(shippingMethod) {
-                self.isSelected(
+                self.isStorePickupSelected(
                     shippingMethod &&
                         shippingMethod.carrier_code ===
                             self.inStoreMethod.carrier_code &&
@@ -73,16 +78,14 @@ define([
          * Synchronize store pickup visibility with shipping step.
          */
         syncWithShipping: function() {
-            var self = this;
-            var shipping = _.findWhere(stepNavigator.steps(), {
+            var inStoreMethod = this.inStoreMethod;
+            var shippingStep = _.findWhere(stepNavigator.steps(), {
                 code: 'shipping',
             });
-            shipping.isVisible.subscribe(function(isShippingVisible) {
+            shippingStep.isVisible.subscribe(function(isShippingVisible) {
                 self.isVisible(isShippingVisible);
             });
-            self.isVisible(
-                self.inStoreMethod.available && shipping.isVisible()
-            );
+            this.isVisible(inStoreMethod.available && shippingStep.isVisible());
         },
         selectShipping: function() {
             var inStoreMethod = this.inStoreMethod;
@@ -95,12 +98,10 @@ define([
             this.selectShippingMethod(shippingMethod);
         },
         selectStorePickup: function() {
-            // TODO: Decide if selection logic works that way.
             this.selectShippingMethod(this.inStoreMethod);
         },
         /**
          * @param {Object} shippingMethod
-         * @return {Boolean}
          */
         selectShippingMethod: function(shippingMethod) {
             var shippingRate = shippingMethod
@@ -111,8 +112,6 @@ define([
 
             selectShippingMethodAction(shippingMethod);
             checkoutData.setSelectedShippingRate(shippingRate);
-
-            return true;
         },
     });
 });

@@ -7,11 +7,11 @@
 <li
     id="store-pickup"
     data-bind="fadeVisible: isVisible()"
-    css="'selected-shipping': !isSelected(), 'selected-store-pickup': isSelected()"
+    css="'selected-shipping': !isStorePickupSelected(), 'selected-store-pickup': isStorePickupSelected()"
 >
     <render args="deliveryMethodSelectorTemplate"/>
 
-    <!-- ko if: isSelected -->
+    <!-- ko if: isStorePickupSelected -->
         <!-- ko foreach: getRegion('store-selector') -->
             <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
