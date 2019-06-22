@@ -125,8 +125,6 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         $searchCriteriaSource = $this->searchCriteriaBuilder
             ->setPageSize($searchCriteria->getPageSize() ?? false)
             ->setCurrentPage($searchCriteria->getCurrentPage() ?? 1)
-            ->setSortOrders($searchCriteria->getSortOrders() ?? [])
-            ->setFilterGroups($searchCriteria->getFilterGroups())
             ->addFilter(SourceInterface::SOURCE_CODE, $stockCodes, 'in')
             ->addFilter(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE, true)
             ->create();
@@ -138,12 +136,32 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
             $results[] = $this->mapper->map($source);
         }
 
-        if (empty($searchCriteria->getSortOrders())) {
-            usort($results, function (PickupLocationInterface $left, PickupLocationInterface $right) use ($codes) {
-                return array_search($left->getSourceCode(), $codes) <=> array_search($right->getSourceCode(), $codes);
-            });
-        }
+        $this->sortByDistance($results, $codes);
 
         return $results;
+    }
+
+    /**
+     * Sort pickup locations by distance
+     *
+     * @param PickupLocationInterface[] $pickupLocations
+     * @param string[] $sortedCodes
+     *
+     * @return void
+     */
+    private function sortByDistance(&$pickupLocations, array $sortedCodes): void
+    {
+        usort(
+            $pickupLocations,
+            function (PickupLocationInterface $left, PickupLocationInterface $right) use ($sortedCodes) {
+                return array_search(
+                        $left->getSourceCode(),
+                        $sortedCodes
+                    ) <=> array_search(
+                        $right->getSourceCode(),
+                        $sortedCodes
+                    );
+            }
+        );
     }
 }

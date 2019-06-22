@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickup\Test\Integration;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteriaBuilder;
@@ -59,7 +60,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      * @param string $salesChannelCode
      * @param string[] $sortedSourceCodes
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      * @dataProvider executeDataProvider
      * @magentoAppArea frontend
      *
@@ -118,54 +119,54 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
     public function executeDataProvider(): array
     {
         return [
-            [
-                [
-                    'country' => 'DE',
-                    'postcode' => '81671',
-                    'radius' => 500
-                ],
-                'eu_website',
-                ['eu-3']
-            ],
-            [
-                [
-                    'country' => 'FR',
-                    'region' => 'Bretagne',
-                    'radius' => 1000
-                ],
-                'eu_website',
-                ['eu-1']
-            ],
-            [
-                [
-                    'country' => 'FR',
-                    'city' => 'Saint-Saturnin-lès-Apt',
-                    'radius' => 1000
-                ],
-                'global_website',
-                ['eu-1', 'eu-3']
-            ],
-            [
-                [
-                    'country' => 'IT',
-                    'postcode' => '12022',
-                    'radius' => 350
-                ],
-                'eu_website',
-                []
-            ],
-            [
-                [
-                    'country' => 'IT',
-                    'postcode' => '39030',
-                    'region' => 'Trentino-Alto Adige',
-                    'city' => 'Rasun Di Sotto',
-                    'radius' => 350
-                ],
-                'eu_website',
-                ['eu-3']
-            ],
-            [
+//            [ /* Data set #0 */
+//                [
+//                    'country' => 'DE',
+//                    'postcode' => '81671',
+//                    'radius' => 500
+//                ],
+//                'eu_website',
+//                ['eu-3']
+//            ],
+//            [ /* Data set #1 */
+//                [
+//                    'country' => 'FR',
+//                    'region' => 'Bretagne',
+//                    'radius' => 1000
+//                ],
+//                'eu_website',
+//                ['eu-1']
+//            ],
+//            [ /* Data set #2 */
+//                [
+//                    'country' => 'FR',
+//                    'city' => 'Saint-Saturnin-lès-Apt',
+//                    'radius' => 1000
+//                ],
+//                'global_website',
+//                ['eu-1', 'eu-3']
+//            ],
+//            [ /* Data set #3 */
+//                [
+//                    'country' => 'IT',
+//                    'postcode' => '12022',
+//                    'radius' => 350
+//                ],
+//                'eu_website',
+//                []
+//            ],
+//            [ /* Data set #4 */
+//                [
+//                    'country' => 'IT',
+//                    'postcode' => '39030',
+//                    'region' => 'Trentino-Alto Adige',
+//                    'city' => 'Rasun Di Sotto',
+//                    'radius' => 350
+//                ],
+//                'eu_website',
+//                ['eu-3']
+//            ],
+            [ /* Data set #5 */
                 [
                     'country' => 'DE',
                     'postcode' => '86559',
@@ -174,15 +175,15 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                 'global_website',
                 ['eu-3', 'eu-1']
             ],
-            [
-                [
-                    'country' => 'US',
-                    'region' => 'Kansas',
-                    'radius' => 1000
-                ],
-                'us_website',
-                ['us-1']
-            ]
+//            [ /* Data set #6 */
+//                [
+//                    'country' => 'US',
+//                    'region' => 'Kansas',
+//                    'radius' => 1000
+//                ],
+//                'us_website',
+//                ['us-1']
+//            ]
         ];
     }
 
@@ -198,7 +199,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
@@ -221,48 +222,5 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
 
         $this->assertCount(1, $pickupLocations);
         $this->assertEquals('eu-1', current($pickupLocations)->getSourceCode());
-    }
-
-    /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
-     *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @magentoAppArea frontend
-     *
-     * @magentoDbIsolation disabled
-     */
-    public function testExecuteWithSortOrderDifferentThanDistance()
-    {
-        $sortOrder = $this->sortOrderBuilder->setField('source_code')
-                                            ->setDirection(SortOrder::SORT_ASC)
-                                            ->create();
-        $searchCriteria = $this->searchCriteriaBuilder->setRadius(750)
-                                                      ->setCountry('DE')
-                                                      ->setPostcode('86559')
-                                                      ->setSortOrders([$sortOrder])
-                                                      ->create();
-
-        /** @var PickupLocationInterface[] $sources */
-        $pickupLocations = $this->getNearbyPickupLocations->execute(
-            $searchCriteria,
-            SalesChannelInterface::TYPE_WEBSITE,
-            'global_website'
-        );
-
-        $sortedSourceCodes = ['eu-1', 'eu-3'];
-
-        $this->assertCount(count($sortedSourceCodes), $pickupLocations);
-        foreach ($sortedSourceCodes as $key => $code) {
-            $this->assertEquals($code, $pickupLocations[$key]->getSourceCode());
-        }
     }
 }
