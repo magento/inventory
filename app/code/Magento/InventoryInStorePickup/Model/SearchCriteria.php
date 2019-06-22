@@ -12,20 +12,68 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 /**
  * @inheritdoc
  */
-class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements SearchCriteriaInterface
+class SearchCriteria implements SearchCriteriaInterface
 {
-    private const RADIUS = 'radius';
-    private const COUNTRY = 'country';
-    private const POSTCODE = 'postcode';
-    private const REGION = 'region';
-    private const CITY = 'city';
+    /**
+     * @var int
+     */
+    private $radius;
 
     /**
-     * @inheritdoc
+     * @var string
      */
-    public function setRadius(int $radius): SearchCriteriaInterface
-    {
-        return $this->setData(self::RADIUS, $radius);
+    private $country;
+
+    /**
+     * @var string|null
+     */
+    private $postcode;
+
+    /**
+     * @var string|null
+     */
+    private $region;
+
+    /**
+     * @var string|null
+     */
+    private $city;
+
+    /**
+     * @var int|null
+     */
+    private $pageSize;
+
+    /**
+     * @var int
+     */
+    private $currentPage = 1;
+
+    /**
+     * @param int $radius
+     * @param string $country
+     * @param string|null $postcode
+     * @param string|null $region
+     * @param string|null $city
+     * @param int|null $pageSize
+     * @param int $currentPage
+     */
+    public function __construct(
+        int $radius,
+        string $country,
+        ?string $postcode = null,
+        ?string $region = null,
+        ?string $city = null,
+        ?int $pageSize = null,
+        int $currentPage = 1
+    ) {
+        $this->radius = $radius;
+        $this->country = $country;
+        $this->postcode = $postcode;
+        $this->region = $region;
+        $this->city = $city;
+        $this->pageSize = $pageSize;
+        $this->currentPage = $currentPage;
     }
 
     /**
@@ -33,15 +81,7 @@ class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements Se
      */
     public function getRadius(): int
     {
-        return (int)$this->_get(self::RADIUS);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setCountry(string $country): SearchCriteriaInterface
-    {
-        return $this->setData(self::COUNTRY, $country);
+        return $this->radius;
     }
 
     /**
@@ -49,15 +89,7 @@ class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements Se
      */
     public function getCountry(): string
     {
-        return (string)$this->_get(self::COUNTRY);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setPostcode(?string $postcode): SearchCriteriaInterface
-    {
-        return $this->setData(self::POSTCODE, $postcode);
+        return $this->country;
     }
 
     /**
@@ -65,15 +97,7 @@ class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements Se
      */
     public function getPostcode(): ?string
     {
-        return $this->_get(self::POSTCODE);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setRegion(?string $region): SearchCriteriaInterface
-    {
-        return $this->setData(self::REGION, $region);
+        return $this->postcode;
     }
 
     /**
@@ -81,15 +105,7 @@ class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements Se
      */
     public function getRegion(): ?string
     {
-        return $this->_get(self::REGION);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setCity(?string $city): SearchCriteriaInterface
-    {
-        return $this->setData(self::CITY, $city);
+        return $this->region;
     }
 
     /**
@@ -97,6 +113,22 @@ class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements Se
      */
     public function getCity(): ?string
     {
-        return $this->_get(self::CITY);
+        return $this->city;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPageSize(): ?int
+    {
+        return $this->pageSize;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCurrentPage(): int
+    {
+        return $this->currentPage;
     }
 }

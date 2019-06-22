@@ -12,30 +12,12 @@ namespace Magento\InventoryInStorePickupApi\Api\Data;
  *
  * @api
  */
-interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaInterface
+interface SearchCriteriaInterface
 {
-    /**
-     * Add radius to the Search Request.
-     *
-     * @param int $radius in KM.
-     *
-     * @return SearchCriteriaInterface
-     */
-    public function setRadius(int $radius): self;
-
     /**
      * @return int
      */
     public function getRadius(): int;
-
-    /**
-     * Add country to the Search Request.
-     *
-     * @param string $country
-     *
-     * @return SearchCriteriaInterface
-     */
-    public function setCountry(string $country): self;
 
     /**
      * Requested country
@@ -45,31 +27,11 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
     public function getCountry(): string;
 
     /**
-     * Add region to the Search Request.
-     * Search by postcode is in priority for Offline mode.
-     *
-     * @param string|null $postcode
-     *
-     * @return SearchCriteriaInterface
-     */
-    public function setPostcode(?string $postcode): self;
-
-    /**
      * Requested postcode
      *
      * @return string|null
      */
     public function getPostcode(): ?string;
-
-    /**
-     * Add region to the Search Request.
-     * Search by region will be done only if Postcode and City are missed for Offline mode.
-     *
-     * @param string|null $region
-     *
-     * @return SearchCriteriaInterface
-     */
-    public function setRegion(?string $region): self;
 
     /**
      * Requested region
@@ -79,19 +41,24 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
     public function getRegion(): ?string;
 
     /**
-     * Add city to the Search Request.
-     * Search by city will be done only if Postcode is missed for Offline mode.
-     *
-     * @param string|null $city
-     *
-     * @return SearchCriteriaInterface
-     */
-    public function setCity(?string $city): self;
-
-    /**
      * Requested city
      *
      * @return string|null
      */
     public function getCity(): ?string;
+
+    /**
+     * Get page size.
+     *
+     * @return int|null
+     */
+    public function getPageSize(): ?int;
+
+    /**
+     * Get current page.
+     * If not specified, 1 is returned by default
+     *
+     * @return int
+     */
+    public function getCurrentPage(): int;
 }
