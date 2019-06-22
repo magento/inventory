@@ -19,7 +19,7 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
-    <route method="GET" url="V1/inventory/in-store-pickup/pickup-location/:salesChannelType/:salesChannelCode/:pickupLocationCode">
+    <route url="/V1/inventory/in-store-pickup/pickup-location/:salesChannelType/:salesChannelCode/:pickupLocationCode" method="GET">
         <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" method="execute"/>
         <resources>
             <resource ref="anonymous"/>
