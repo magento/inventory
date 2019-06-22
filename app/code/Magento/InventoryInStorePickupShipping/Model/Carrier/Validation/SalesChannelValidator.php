@@ -13,7 +13,6 @@ use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
@@ -22,11 +21,6 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
  */
 class SalesChannelValidator implements RequestValidatorInterface
 {
-    /**
-     * @var SalesChannelInterfaceFactory
-     */
-    private $salesChannelInterfaceFactory;
-
     /**
      * @var WebsiteRepositoryInterface
      */
@@ -43,18 +37,15 @@ class SalesChannelValidator implements RequestValidatorInterface
     private $getIsAnyPickupLocationAvailable;
 
     /**
-     * @param SalesChannelInterfaceFactory $salesChannelInterfaceFactory
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param ValidationResultFactory $validationResultFactory
      * @param GetIsAnyPickupLocationAvailableInterface $getIsAnyPickupLocationAvailable
      */
     public function __construct(
-        SalesChannelInterfaceFactory $salesChannelInterfaceFactory,
         WebsiteRepositoryInterface $websiteRepository,
         ValidationResultFactory $validationResultFactory,
         GetIsAnyPickupLocationAvailableInterface $getIsAnyPickupLocationAvailable
     ) {
-        $this->salesChannelInterfaceFactory = $salesChannelInterfaceFactory;
         $this->websiteRepository = $websiteRepository;
         $this->validationResultFactory = $validationResultFactory;
         $this->getIsAnyPickupLocationAvailable = $getIsAnyPickupLocationAvailable;

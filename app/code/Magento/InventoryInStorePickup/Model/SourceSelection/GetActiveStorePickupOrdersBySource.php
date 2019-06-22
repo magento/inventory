@@ -58,15 +58,9 @@ class GetActiveStorePickupOrdersBySource
     public function execute(string $pickupLocationCode): OrderSearchResultInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(
-                self::PICKUP_LOCATION_CODE,
-                $pickupLocationCode
-            )
-            ->addFilter(
-                OrderInterface::STATE,
-                implode(',', $this->statesToFilter),
-                'nin'
-            )->create();
+            ->addFilter(self::PICKUP_LOCATION_CODE, $pickupLocationCode)
+            ->addFilter(OrderInterface::STATE, implode(',', $this->statesToFilter), 'nin')
+            ->create();
 
         return $this->orderRepository->getList($searchCriteria);
     }

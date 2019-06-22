@@ -25,6 +25,7 @@ class FrontendName implements PreProcessorInterface
     public function process(SourceInterface $source, $value): string
     {
         if (empty($value)) {
+            /** @see https://github.com/magento/inventory/issues/2348 */
             $value = $source->getName();
         }
 

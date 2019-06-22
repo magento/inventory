@@ -62,10 +62,8 @@ class GetOrderItemsByOrdersListAndSku
                     $orders
                 )),
                 'in'
-            )->addFilter(
-                OrderItemInterface::SKU,
-                $sku
-            )->create();
+            )->addFilter(OrderItemInterface::SKU, $sku)
+            ->create();
 
         return $this->orderItemRepository->getList($searchCriteria);
     }
