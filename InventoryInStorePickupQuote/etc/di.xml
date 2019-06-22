@@ -10,7 +10,24 @@
         <plugin name="add_pickup_location_to_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection\GetPickupLocationInformationPlugin" sortOrder="20" />
     </type>
     <type name="Magento\Quote\Model\ResourceModel\Quote\Address">
-        <plugin name="save_pickup_location_for_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\SavePickupLocationForQuoteAddress" sortOrder="20" />
+        <plugin name="manage_assignemnt_of_pickup_location_to_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\ManageAssignmentOfPickupLocationToQuoteAddress" sortOrder="20" />
         <plugin name="load_pickup_location_for_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\LoadPickupLocationForQuoteAddress" sortOrder="30" />
+    </type>
+    <type name="Magento\Checkout\Api\ShippingInformationManagementInterface">
+        <plugin name="shipping_information_management_replace_shipping_address" type="Magento\InventoryInStorePickupQuote\Plugin\Checkout\AddPickupLocationAddressToShippingInformation" sortOrder="20"/>
+    </type>
+    <type name="Magento\Quote\Model\ShippingAddressManagementInterface">
+        <plugin name="shipping_address_management_replace_shipping_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\ReplaceShippingAddressForShippingAddressManagement" sortOrder="20"/>
+    </type>
+    <type name="Magento\Quote\Api\BillingAddressManagementInterface">
+        <plugin name="do_not_use_billing_address_for_shipping_for_in_store_pickup_quote" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\DoNotUseBillingAddressForShipping" sortOrder="20" />
+    </type>
+
+    <type name="Magento\Quote\Model\ValidationRules\QuoteValidationComposite">
+        <arguments>
+            <argument name="validationRules" xsi:type="array">
+                <item name="InStorePickupQuoteValidationRule" xsi:type="object">Magento\InventoryInStorePickupQuote\Model\Quote\ValidationRule\InStorePickupQuoteValidationRule</item>
+            </argument>
+        </arguments>
     </type>
 </config>

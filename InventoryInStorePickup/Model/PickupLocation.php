@@ -107,7 +107,7 @@ class PickupLocation implements PickupLocationInterface
      * @param float|null $longitude
      * @param string|null $countryId
      * @param int|null $regionId
-     * @param int|null $region
+     * @param string|null $region
      * @param string|null $city
      * @param string|null $street
      * @param string|null $postcode
@@ -125,7 +125,7 @@ class PickupLocation implements PickupLocationInterface
         ?float $longitude = null,
         ?string $countryId = null,
         ?int $regionId = null,
-        ?int $region = null,
+        ?string $region = null,
         ?string $city = null,
         ?string $street = null,
         ?string $postcode = null,
