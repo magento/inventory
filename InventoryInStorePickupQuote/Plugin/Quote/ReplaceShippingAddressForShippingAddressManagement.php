@@ -127,6 +127,10 @@ class ReplaceShippingAddressForShippingAddressManagement
             return [$cartId, $address];
         }
 
+        /**
+         * @TODO Refactor when issue will be resolved in core.
+         * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
+         */
         $address = $this->addressConverter->convert(
             $pickupLocation,
             $address,

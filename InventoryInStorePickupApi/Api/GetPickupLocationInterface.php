@@ -23,7 +23,7 @@ interface GetPickupLocationInterface
      * @param string $salesChannelType
      * @param string $salesChannelCode
      *
-     * @return PickupLocationInterface
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface
      * @throws NoSuchEntityException
      */
     public function execute(

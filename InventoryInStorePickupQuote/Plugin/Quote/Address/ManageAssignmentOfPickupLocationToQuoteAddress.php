@@ -70,7 +70,7 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
         if (!$entity->getExtensionAttributes() ||
             !$quote->getExtensionAttributes() ||
             !$quote->getExtensionAttributes()->getShippingAssignments() ||
-            !$entity->getAddressType() !== AddressEntity::ADDRESS_TYPE_SHIPPING
+            !($entity->getAddressType() === AddressEntity::ADDRESS_TYPE_SHIPPING)
         ) {
             return $result;
         }

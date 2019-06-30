@@ -35,6 +35,9 @@ class ExtractPickupLocationShippingAddressData
     /**
      * Extract Shipping Address fields from Pickup Location.
      *
+     * @TODO Refactor when issue will be resolved in core.
+     * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
+     *
      * @param PickupLocationInterface $pickupLocation
      *
      * @return array
