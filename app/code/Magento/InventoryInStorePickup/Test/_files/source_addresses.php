@@ -5,6 +5,7 @@
  */
 declare(strict_types=1);
 
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
@@ -13,54 +14,60 @@ $sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface
 
 $sourceAddressMap = [
     'eu-1' => [
-        'description' => 'Near Paris',
-        'latitude' => 48.9833,
-        'longitude' => 2.6167,
-        'country_id' => 'FR',
-        'city' => 'Mitry-Mory',
-        'postcode' => '77292 CEDEX',
+        SourceInterface::DESCRIPTION => 'Near Paris',
+        SourceInterface::LATITUDE => 48.9833,
+        SourceInterface::LONGITUDE => 2.6167,
+        SourceInterface::COUNTRY_ID => 'FR',
+        SourceInterface::CITY => 'Mitry-Mory',
+        SourceInterface::POSTCODE => '77292 CEDEX',
+        SourceInterface::STREET => 'Rue Paul Vaillant Couturier 31'
     ],
     'eu-2' => [
-        'description' => 'Near Marseille',
-        'latitude' => 43.5283,
-        'longitude' => 5.4497,
-        'country_id' => 'FR',
-        'city' => 'Aix-en-Provence',
-        'postcode' => '13080',
+        SourceInterface::DESCRIPTION => 'Near Marseille',
+        SourceInterface::LATITUDE => 43.5283,
+        SourceInterface::LONGITUDE => 5.4497,
+        SourceInterface::COUNTRY_ID => 'FR',
+        SourceInterface::CITY => 'Aix-en-Provence',
+        SourceInterface::POSTCODE => '13100',
+        SourceInterface::STREET => 'Rue Marius Reynaud 5'
     ],
     'eu-3' => [
-        'description' => 'Near Munich',
-        'latitude' => 47.8496,
-        'longitude' => 12.067,
-        'country_id' => 'DE',
-        'city' => 'Kolbermoor',
-        'postcode' => '83059',
+        SourceInterface::DESCRIPTION => 'Near Munich',
+        SourceInterface::LATITUDE => 47.8496,
+        SourceInterface::LONGITUDE => 12.067,
+        SourceInterface::COUNTRY_ID => 'DE',
+        SourceInterface::CITY => 'Kolbermoor',
+        SourceInterface::POSTCODE => '83059',
+        SourceInterface::STREET => 'Rosenheimer Str. 30'
     ],
     'eu-disabled' => [
-        'description' => 'In the middle of Germany',
-        'latitude' => 50.9833,
-        'longitude' => 11.0333,
-        'country_id' => 'DE',
-        'city' => 'Erfurt',
-        'postcode' => '99098',
+        SourceInterface::DESCRIPTION => 'In the middle of Germany',
+        SourceInterface::LATITUDE => 50.9833,
+        SourceInterface::LONGITUDE => 11.0333,
+        SourceInterface::COUNTRY_ID => 'DE',
+        SourceInterface::CITY => 'Erfurt',
+        SourceInterface::POSTCODE => '99098',
+        SourceInterface::STREET => 'Juri-Gagarin-Ring 152'
     ],
     'us-1' => [
-        'description' => 'In the middle of US',
-        'latitude' => 38.7634,
-        'longitude' => -95.84,
-        'country_id' => 'US',
-        'city' => 'Burlingame',
-        'postcode' => '66413',
+        SourceInterface::DESCRIPTION => 'In the middle of US',
+        SourceInterface::LATITUDE => 38.7634,
+        SourceInterface::LONGITUDE => -95.84,
+        SourceInterface::COUNTRY_ID => 'US',
+        SourceInterface::CITY => 'Burlingame',
+        SourceInterface::POSTCODE => '66413',
+        SourceInterface::STREET => 'Bloomquist Dr 100'
     ],
 ];
 
 foreach ($sourceAddressMap as $sourceCode => $addressData) {
     $source = $sourceRepository->get($sourceCode);
-    $source->setDescription($addressData['description']);
-    $source->setLatitude($addressData['latitude']);
-    $source->setLongitude($addressData['longitude']);
-    $source->setCountryId($addressData['country_id']);
-    $source->setCity($addressData['city']);
-    $source->setPostcode($addressData['postcode']);
+    $source->setDescription($addressData[SourceInterface::DESCRIPTION]);
+    $source->setLatitude($addressData[SourceInterface::LATITUDE]);
+    $source->setLongitude($addressData[SourceInterface::LONGITUDE]);
+    $source->setCountryId($addressData[SourceInterface::COUNTRY_ID]);
+    $source->setCity($addressData[SourceInterface::CITY]);
+    $source->setPostcode($addressData[SourceInterface::POSTCODE]);
+    $source->setStreet($addressData[SourceInterface::STREET]);
     $sourceRepository->save($source);
 }

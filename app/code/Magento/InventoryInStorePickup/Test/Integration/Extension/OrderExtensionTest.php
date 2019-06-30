@@ -41,6 +41,7 @@ class OrderExtensionTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
@@ -66,25 +67,7 @@ class OrderExtensionTest extends TestCase
             ->create();
         /** @var OrderInterface $createdOrder */
         $createdOrder = current($this->orderRepository->getList($searchCriteria)->getItems());
-        $orderId = $createdOrder->getEntityId();
 
-        $extension = $createdOrder->getExtensionAttributes();
-
-        if (empty($extension)) {
-            /** @var \Magento\Sales\Api\Data\OrderExtensionInterface $extension */
-            $extension = $this->orderExtensionFactory->create();
-        }
-
-        $extension->setPickupLocationCode($sourceId);
-        $createdOrder->setExtensionAttributes($extension);
-
-        $this->orderRepository->save($createdOrder);
-
-        // Remove value to re-load from DB during 'get'.
-        $extension->setPickupLocationCode(null);
-
-        $order = $this->orderRepository->get($orderId);
-
-        $this->assertEquals($order->getExtensionAttributes()->getPickupLocationCode(), $sourceId);
+        $this->assertEquals($createdOrder->getExtensionAttributes()->getPickupLocationCode(), $sourceId);
     }
 }
