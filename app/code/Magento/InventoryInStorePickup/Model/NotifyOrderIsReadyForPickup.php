@@ -44,7 +44,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     private $orderRepository;
 
     /**
-     * @var \Magento\Sales\Api\Data\ShipmentCreationArgumentsInterfaceFactory
+     * @var ShipmentCreationArgumentsInterfaceFactory
      */
     private $shipmentArgumentsFactory;
 
