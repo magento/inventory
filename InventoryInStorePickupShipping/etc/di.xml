@@ -6,6 +6,11 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetFreePackagesInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetFreePackages" />
+    <preference for="Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\ShippingPriceRequest" />
+    <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPrice" />
+    <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceRequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPriceRequest" />
+
     <type name="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">

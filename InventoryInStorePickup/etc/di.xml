@@ -50,5 +50,6 @@
         </arguments>
     </type>
     <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface" type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
+    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation" />
 </config>
