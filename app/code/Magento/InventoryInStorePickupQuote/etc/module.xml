@@ -10,6 +10,7 @@
         <sequence>
             <module name="Magento_Quote" />
             <module name="Magento_InventoryInStorePickupApi" />
+            <module name="Magento_Checkout" />
         </sequence>
     </module>
 </config>

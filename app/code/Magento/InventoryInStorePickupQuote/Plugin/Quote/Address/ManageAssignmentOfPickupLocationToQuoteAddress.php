@@ -7,15 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\Address;
 
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\DeleteQuoteAddressPickupLocation;
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\SaveQuoteAddressPickupLocation;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
-use Magento\Quote\Model\Quote\Address as AddressEntity;
-use Magento\Quote\Model\ResourceModel\Quote\Address;
+use Magento\Quote\Model\Quote\Address;
 
 /**
  * Save or delete selected Pickup Location Code for Quote Address.
@@ -57,20 +54,19 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
      *
      * @param Address $subject
      * @param Address $result
-     * @param AddressEntity $entity
      *
      * @return Address
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(Address $subject, Address $result, AddressEntity $entity): Address
+    public function afterAfterSave(Address $subject, Address $result): Address
     {
-        $quote = $this->cartRepository->get($entity->getQuoteId());
+        $quote = $this->cartRepository->get($subject->getQuoteId());
 
-        if (!$entity->getExtensionAttributes() ||
+        if (!$subject->getExtensionAttributes() ||
             !$quote->getExtensionAttributes() ||
             !$quote->getExtensionAttributes()->getShippingAssignments() ||
-            !($entity->getAddressType() === AddressEntity::ADDRESS_TYPE_SHIPPING)
+            !($subject->getAddressType() === Address::ADDRESS_TYPE_SHIPPING)
         ) {
             return $result;
         }
@@ -82,16 +78,16 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
         $shipping = $shippingAssignment->getShipping();
 
         if (!($shipping->getMethod() === InStorePickup::DELIVERY_METHOD &&
-            $entity->getExtensionAttributes()->getPickupLocationCode())
+            $subject->getExtensionAttributes()->getPickupLocationCode())
         ) {
-            $this->deleteQuoteAddressPickupLocation->execute((int)$entity->getId());
+            $this->deleteQuoteAddressPickupLocation->execute((int)$subject->getId());
 
             return $result;
         }
 
         $this->saveQuoteAddressPickupLocation->execute(
-            (int)$entity->getId(),
-            $entity->getExtensionAttributes()->getPickupLocationCode()
+            (int)$subject->getId(),
+            $subject->getExtensionAttributes()->getPickupLocationCode()
         );
 
         return $result;
