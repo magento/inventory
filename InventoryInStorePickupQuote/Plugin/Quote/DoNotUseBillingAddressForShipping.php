@@ -50,7 +50,7 @@ class DoNotUseBillingAddressForShipping
         BillingAddressManagementInterface $subject,
         int $cartId,
         AddressInterface $address,
-        bool $useForShipping
+        bool $useForShipping = false
     ): array {
         $quote = $this->cartRepository->getActive($cartId);
 

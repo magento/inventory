@@ -9,7 +9,6 @@ namespace Magento\InventoryInStorePickupQuote\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\DataObject\Copy;
-use Magento\InventoryInStorePickup\Model\PickupLocation;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\Data\AddressInterface;
