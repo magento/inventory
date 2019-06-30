@@ -51,7 +51,7 @@ class DoNotUseBillingAddressForShipping
         int $cartId,
         AddressInterface $address,
         bool $useForShipping
-    ) {
+    ): array {
         $quote = $this->cartRepository->getActive($cartId);
 
         if (!$quote->getExtensionAttributes() || !$quote->getExtensionAttributes()->getShippingAssignments()) {
