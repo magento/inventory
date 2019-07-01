@@ -119,53 +119,53 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
     public function executeDataProvider(): array
     {
         return [
-//            [ /* Data set #0 */
-//                [
-//                    'country' => 'DE',
-//                    'postcode' => '81671',
-//                    'radius' => 500
-//                ],
-//                'eu_website',
-//                ['eu-3']
-//            ],
-//            [ /* Data set #1 */
-//                [
-//                    'country' => 'FR',
-//                    'region' => 'Bretagne',
-//                    'radius' => 1000
-//                ],
-//                'eu_website',
-//                ['eu-1']
-//            ],
-//            [ /* Data set #2 */
-//                [
-//                    'country' => 'FR',
-//                    'city' => 'Saint-Saturnin-lès-Apt',
-//                    'radius' => 1000
-//                ],
-//                'global_website',
-//                ['eu-1', 'eu-3']
-//            ],
-//            [ /* Data set #3 */
-//                [
-//                    'country' => 'IT',
-//                    'postcode' => '12022',
-//                    'radius' => 350
-//                ],
-//                'eu_website',
-//                []
-//            ],
-//            [ /* Data set #4 */
-//                [
-//                    'country' => 'IT',
-//                    'postcode' => '39030',
-//                    'region' => 'Trentino-Alto Adige',
-//                    'city' => 'Rasun Di Sotto',
-//                    'radius' => 350
-//                ],
-//                'eu_website',
-//                ['eu-3']
-//            ],
+            [ /* Data set #0 */
+                [
+                    'country' => 'DE',
+                    'postcode' => '81671',
+                    'radius' => 500
+                ],
+                'eu_website',
+                ['eu-3']
+            ],
+            [ /* Data set #1 */
+                [
+                    'country' => 'FR',
+                    'region' => 'Bretagne',
+                    'radius' => 1000
+                ],
+                'eu_website',
+                ['eu-1']
+            ],
+            [ /* Data set #2 */
+                [
+                    'country' => 'FR',
+                    'city' => 'Saint-Saturnin-lès-Apt',
+                    'radius' => 1000
+                ],
+                'global_website',
+                ['eu-1', 'eu-3']
+            ],
+            [ /* Data set #3 */
+                [
+                    'country' => 'IT',
+                    'postcode' => '12022',
+                    'radius' => 350
+                ],
+                'eu_website',
+                []
+            ],
+            [ /* Data set #4 */
+                [
+                    'country' => 'IT',
+                    'postcode' => '39030',
+                    'region' => 'Trentino-Alto Adige',
+                    'city' => 'Rasun Di Sotto',
+                    'radius' => 350
+                ],
+                'eu_website',
+                ['eu-3']
+            ],
             [ /* Data set #5 */
                 [
                     'country' => 'DE',
@@ -175,15 +175,15 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                 'global_website',
                 ['eu-3', 'eu-1']
             ],
-//            [ /* Data set #6 */
-//                [
-//                    'country' => 'US',
-//                    'region' => 'Kansas',
-//                    'radius' => 1000
-//                ],
-//                'us_website',
-//                ['us-1']
-//            ]
+            [ /* Data set #6 */
+                [
+                    'country' => 'US',
+                    'region' => 'Kansas',
+                    'radius' => 1000
+                ],
+                'us_website',
+                ['us-1']
+            ]
         ];
     }
 
