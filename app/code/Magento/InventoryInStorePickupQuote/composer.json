@@ -6,7 +6,6 @@
         "magento/framework": "*",
         "magento/module-inventory-in-store-pickup-api": "*",
         "magento/module-quote": "*",
-        "magento/module-checkout": "*",
         "magento/module-inventory-in-store-pickup-shipping-api": "*",
         "magento/module-store": "*",
         "magento/module-inventory-sales-api": "*"
