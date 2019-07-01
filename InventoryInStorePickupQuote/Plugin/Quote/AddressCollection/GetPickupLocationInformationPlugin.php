@@ -25,8 +25,6 @@ class GetPickupLocationInformationPlugin
     private $addressExtensionInterfaceFactory;
 
     /**
-     * GetPickupLocationInformation constructor.
-     *
      * @param AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory
      */
     public function __construct(AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory)

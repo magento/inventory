@@ -49,8 +49,6 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
     private $getPickupLocation;
 
     /**
-     * InStorePickupQuoteValidationRule constructor.
-     *
      * @param ValidationResultFactory $validationResultFactory
      * @param StoreRepositoryInterface $storeRepository
      * @param WebsiteRepositoryInterface $websiteRepository

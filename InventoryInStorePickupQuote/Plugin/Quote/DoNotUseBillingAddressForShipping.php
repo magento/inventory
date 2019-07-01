@@ -25,8 +25,6 @@ class DoNotUseBillingAddressForShipping
     private $cartRepository;
 
     /**
-     * DoNotUseBillingAddressForShipping constructor.
-     *
      * @param CartRepositoryInterface $cartRepository
      */
     public function __construct(CartRepositoryInterface $cartRepository)
