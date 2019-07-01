@@ -22,8 +22,6 @@ class DeleteQuoteAddressPickupLocation
     private $connection;
 
     /**
-     * DeleteQuoteAddressPickupLocation constructor.
-     *
      * @param ResourceConnection $connection
      */
     public function __construct(ResourceConnection $connection)

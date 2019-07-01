@@ -10,7 +10,6 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\Address;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\GetPickupLocationCodeByQuoteAddressId;
 use Magento\Quote\Api\Data\AddressExtensionInterfaceFactory;
-use Magento\Quote\Model\Quote\Address as AddressEntity;
 use Magento\Quote\Model\ResourceModel\Quote\Address;
 
 /**
@@ -29,8 +28,6 @@ class LoadPickupLocationForQuoteAddress
     private $addressExtensionInterfaceFactory;
 
     /**
-     * LoadPickupLocationForQuoteAddress constructor.
-     *
      * @param GetPickupLocationCodeByQuoteAddressId $getPickupLocationCodeByQuoteAddressId
      * @param AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory
      */

@@ -23,8 +23,6 @@ class ExtractPickupLocationShippingAddressData
     private $objectCopyService;
 
     /**
-     * ExtractPickupLocationShippingAddressData constructor.
-     *
      * @param Copy $copyService
      */
     public function __construct(Copy $copyService)

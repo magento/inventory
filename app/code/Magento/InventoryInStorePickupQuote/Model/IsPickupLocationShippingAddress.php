@@ -21,8 +21,6 @@ class IsPickupLocationShippingAddress
     private $extractPickupLocationShippingAddressData;
 
     /**
-     * IsPickupLocationShippingAddress constructor.
-     *
      * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
      */
     public function __construct(ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData)
