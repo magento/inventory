@@ -15,10 +15,6 @@
     <type name="Magento\Quote\Model\Quote\Address">
         <plugin name="manage_assignemnt_of_pickup_location_to_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\ManageAssignmentOfPickupLocationToQuoteAddress" sortOrder="20" />
     </type>
-
-    <type name="Magento\Checkout\Api\ShippingInformationManagementInterface">
-        <plugin name="shipping_information_management_replace_shipping_address" type="Magento\InventoryInStorePickupQuote\Plugin\Checkout\AddPickupLocationAddressToShippingInformation" sortOrder="20"/>
-    </type>
     <type name="Magento\Quote\Model\ShippingAddressManagementInterface">
         <plugin name="shipping_address_management_replace_shipping_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\ReplaceShippingAddressForShippingAddressManagement" sortOrder="20"/>
     </type>
