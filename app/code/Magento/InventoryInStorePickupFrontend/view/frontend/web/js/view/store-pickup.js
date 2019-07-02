@@ -7,6 +7,7 @@ define([
     'uiComponent',
     'ko',
     'underscore',
+    'jquery',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/action/select-shipping-method',
     'Magento_Checkout/js/checkout-data',
@@ -16,6 +17,7 @@ define([
     Component,
     ko,
     _,
+    $,
     quote,
     selectShippingMethodAction,
     checkoutData,
@@ -55,6 +57,7 @@ define([
 
             this.preselectFromQuote();
             this.syncWithShipping();
+            this.convertShippingAddress();
         },
         initObservable: function() {
             return this._super().observe([
@@ -78,6 +81,7 @@ define([
          * Synchronize store pickup visibility with shipping step.
          */
         syncWithShipping: function() {
+            var self = this;
             var inStoreMethod = this.inStoreMethod;
             var shippingStep = _.findWhere(stepNavigator.steps(), {
                 code: 'shipping',
@@ -112,6 +116,26 @@ define([
 
             selectShippingMethodAction(shippingMethod);
             checkoutData.setSelectedShippingRate(shippingRate);
+        },
+        convertShippingAddress() {
+            var self = this;
+            quote.shippingAddress.subscribe(function(shippingAddress) {
+                if (
+                    shippingAddress.getType() !== 'store-pickup-address' &&
+                    self.isStorePickupSelected()
+                ) {
+                    quote.shippingAddress(
+                        $.extend({}, shippingAddress, {
+                            canUseForBilling: function() {
+                                return false;
+                            },
+                            getType: function() {
+                                return 'store-pickup-address';
+                            },
+                        })
+                    );
+                }
+            });
         },
     });
 });
