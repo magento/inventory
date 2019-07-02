@@ -7,15 +7,21 @@ define([
     'jquery',
     'uiComponent',
     'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/step-navigator',
+    'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/model/checkout-data-resolver',
+    'Magento_Checkout/js/action/select-shipping-address',
     'Magento_Checkout/js/action/set-shipping-information',
 ], function(
     $,
     Component,
     quote,
+    checkoutData,
     stepNavigator,
+    addressConverter,
     checkoutDataResolver,
+    selectShippingAddress,
     setShippingInformationAction
 ) {
     'use strict';
@@ -32,8 +38,27 @@ define([
          * Set shipping information handler
          */
         setPickupInformation: function() {
+            var address;
             if (this.validatePickupInformation()) {
+                address = $.extend(
+                    {},
+                    addressConverter.formAddressDataToQuoteAddress({
+                        custom_attributes: {
+                            pickupLocation: {
+                                code: 'test',
+                                name: 'Location name',
+                                street: 'Some street',
+                                city: 'Some city',
+                                postcode: '123123',
+                                countryId: 'US',
+                            },
+                        },
+                    })
+                );
                 quote.billingAddress(null);
+                selectShippingAddress(address);
+                checkoutData.setShippingAddressFromData(address);
+                checkoutData.setSelectedShippingAddress(address.getKey());
                 checkoutDataResolver.resolveBillingAddress();
                 setShippingInformationAction().done(function() {
                     stepNavigator.next();
