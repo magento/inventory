@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupApi\Api\Data;
+namespace Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria;
 
 /**
  * Search Criteria for searching Pickup Locations.
  *
  * @api
  */
-interface SearchCriteriaInterface
+interface GetNearbyLocationsCriteriaInterface
 {
     /**
      * @return int

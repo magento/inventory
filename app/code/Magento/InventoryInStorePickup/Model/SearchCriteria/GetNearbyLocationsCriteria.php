@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model;
+namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
 
 /**
  * @inheritdoc
  */
-class SearchCriteria implements SearchCriteriaInterface
+class GetNearbyLocationsCriteria implements GetNearbyLocationsCriteriaInterface
 {
     /**
      * @var int

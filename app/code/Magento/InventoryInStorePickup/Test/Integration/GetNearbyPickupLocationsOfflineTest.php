@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration;
 
-use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations;
@@ -103,7 +102,7 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
 
     /**
      * [
-     *      SearchCriteria[
+     *      GetNearbyLocationsCriteria[
      *          Country,
      *          Postcode,
      *          Region,

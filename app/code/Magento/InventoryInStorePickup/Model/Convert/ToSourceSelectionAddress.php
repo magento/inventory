@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\Convert;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface as SourceSelectionAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
@@ -30,11 +30,11 @@ class ToSourceSelectionAddress
     }
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
+     * @param GetNearbyLocationsCriteriaInterface $searchCriteria
      *
      * @return SourceSelectionAddressInterface
      */
-    public function execute(SearchCriteriaInterface $searchCriteria): SourceSelectionAddressInterface
+    public function execute(GetNearbyLocationsCriteriaInterface $searchCriteria): SourceSelectionAddressInterface
     {
         $data = [
             'country' => $searchCriteria->getCountry(),
