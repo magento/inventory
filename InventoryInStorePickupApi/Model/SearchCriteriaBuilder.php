@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Model;
 
 use InvalidArgumentException;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterfaceFactory;
 use TypeError;
 
 /**
@@ -33,31 +33,31 @@ class SearchCriteriaBuilder
     private $data = [];
 
     /**
-     * @var SearchCriteriaInterfaceFactory
+     * @var GetNearbyLocationsCriteriaInterfaceFactory
      */
     private $factory;
 
     /**
-     * @param SearchCriteriaInterfaceFactory $factory
+     * @param GetNearbyLocationsCriteriaInterfaceFactory $factory
      */
     public function __construct(
-        SearchCriteriaInterfaceFactory $factory
+        GetNearbyLocationsCriteriaInterfaceFactory $factory
     ) {
         $this->factory = $factory;
     }
 
     /**
-     * Builds the SearchCriteria Data Object.
+     * Builds the GetNearbyLocationsCriteria Data Object.
      *
-     * @return SearchCriteriaInterface
+     * @return GetNearbyLocationsCriteriaInterface
      * @throws InvalidArgumentException
      */
-    public function create(): SearchCriteriaInterface
+    public function create(): GetNearbyLocationsCriteriaInterface
     {
         try {
             return $this->factory->create($this->data);
         } catch (TypeError $error) {
-            throw new InvalidArgumentException('Invalid SearchCriteria arguments given', 0, $error);
+            throw new InvalidArgumentException('Invalid GetNearbyLocationsCriteria arguments given', 0, $error);
         }
     }
 
