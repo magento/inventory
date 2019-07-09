@@ -88,15 +88,16 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
         $searchCriteria = $this->searchCriteriaBuilder->create();
 
         /** @var PickupLocationInterface[] $sources */
-        $pickupLocations = $this->getNearbyPickupLocations->execute(
+        $result = $this->getNearbyPickupLocations->execute(
             $searchCriteria,
             SalesChannelInterface::TYPE_WEBSITE,
             $salesChannelCode
         );
 
-        $this->assertCount(count($sortedSourceCodes), $pickupLocations);
+        $this->assertEquals(count($sortedSourceCodes), $result->getTotalCount());
+        $this->assertCount(count($sortedSourceCodes), $result->getItems());
         foreach ($sortedSourceCodes as $key => $code) {
-            $this->assertEquals($code, $pickupLocations[$key]->getSourceCode());
+            $this->assertEquals($code, $result->getItems()[$key]->getSourceCode());
         }
     }
 
@@ -213,13 +214,14 @@ class GetNearbyPickupLocationsOfflineTest extends TestCase
                                                       ->create();
 
         /** @var PickupLocationInterface[] $sources */
-        $pickupLocations = $this->getNearbyPickupLocations->execute(
+        $result = $this->getNearbyPickupLocations->execute(
             $searchCriteria,
             SalesChannelInterface::TYPE_WEBSITE,
             'global_website'
         );
 
-        $this->assertCount(1, $pickupLocations);
-        $this->assertEquals('eu-1', current($pickupLocations)->getSourceCode());
+        $this->assertCount(1, $result->getItems());
+        $this->assertEquals(1, $result->getTotalCount());
+        $this->assertEquals('eu-1', current($result->getItems())->getSourceCode());
     }
 }
