@@ -6,7 +6,6 @@
     "magento/framework": "*",
     "magento/module-grouped-product": "*",
     "magento/module-catalog": "*",
-    "magento/module-inventory-api": "*",
     "magento/module-inventory-sales-api": "*",
     "magento/module-store": "*"
   },
