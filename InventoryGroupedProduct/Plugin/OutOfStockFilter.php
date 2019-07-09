@@ -74,7 +74,7 @@ class OutOfStockFilter
 
             foreach ($result as $index => $cartItem) {
                 if (!$this->isProductSalable->execute($cartItem->getSku(), $stockId)) {
-                    unset ($result[$index]);
+                    unset($result[$index]);
                 }
             }
         }

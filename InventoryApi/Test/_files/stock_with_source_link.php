@@ -19,12 +19,14 @@ $stockSourceLinksSave = $objectManager->get(StockSourceLinksSaveInterface::class
 /** @var StockSourceLinkInterfaceFactory $stockSourceLinkFactory */
 $stockSourceLinkFactory = $objectManager->get(StockSourceLinkInterfaceFactory::class);
 
-$link = $stockSourceLinkFactory->create([
-    'data' => [
-        StockSourceLinkInterface::STOCK_ID => $stock->getStockId(),
-        StockSourceLinkInterface::SOURCE_CODE => $source->getSourceCode(),
-        StockSourceLinkInterface::PRIORITY => 1,
+$link = $stockSourceLinkFactory->create(
+    [
+        'data' => [
+            StockSourceLinkInterface::STOCK_ID => $stock->getStockId(),
+            StockSourceLinkInterface::SOURCE_CODE => $source->getSourceCode(),
+            StockSourceLinkInterface::PRIORITY => 1,
+        ],
     ]
-]);
+);
 
 $stockSourceLinksSave->execute([$link]);

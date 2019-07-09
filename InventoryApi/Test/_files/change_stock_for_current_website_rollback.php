@@ -8,15 +8,12 @@ declare(strict_types=1);
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 
 $objectManager = Bootstrap::getObjectManager();
 /** @var SalesChannelInterfaceFactory $salesChannelFactory */
 $salesChannelFactory = $objectManager->get(SalesChannelInterfaceFactory::class);
-/** @var StoreManagerInterface $storeManager */
-$storeManager = $objectManager->get(StoreManagerInterface::class);
 /** @var DefaultStockProviderInterface $defaultStockProvider */
 $defaultStockProvider = $objectManager->get(DefaultStockProviderInterface::class);
 /** @var StockRepositoryInterface $stockRepository */
@@ -28,8 +25,7 @@ $stockRepository = $objectManager->get(StockRepositoryInterface::class);
 $defaultStock = $stockRepository->get($defaultStockProvider->getId());
 $extensionAttributes = $defaultStock->getExtensionAttributes();
 $salesChannel = $salesChannelFactory->create();
-$website = $storeManager->getWebsite();
-$salesChannel->setCode($website->getCode());
+$salesChannel->setCode('base');
 $salesChannel->setType(SalesChannelInterface::TYPE_WEBSITE);
 $extensionAttributes->setSalesChannels([$salesChannel]);
 $stockRepository->save($defaultStock);
