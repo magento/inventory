@@ -18,36 +18,36 @@ interface SearchResultInterface
     /**
      * Get items list.
      *
-     * @return PickupLocationInterface[]
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface[]
      */
     public function getItems(): array;
 
     /**
      * Set items list.
      *
-     * @param PickupLocationInterface[] $items
+     * @param \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface[] $items
      *
      * @return $this
      */
-    public function setItems(array $items);
+    public function setItems(array $items): SearchResultInterface;
 
     /**
      * Get search criteria.
      *
-     * @return GetNearbyLocationsCriteriaInterface
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface
      */
     public function getSearchCriteria(): GetNearbyLocationsCriteriaInterface;
 
     /**
      * Set search criteria.
      *
-     * @param GetNearbyLocationsCriteriaInterface $searchCriteria
+     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface $searchCriteria
      *
      * @return $this
      */
     public function setSearchCriteria(
         GetNearbyLocationsCriteriaInterface $searchCriteria
-    );
+    ): SearchResultInterface;
 
     /**
      * Get total count.
@@ -63,5 +63,5 @@ interface SearchResultInterface
      *
      * @return $this
      */
-    public function setTotalCount(int $totalCount);
+    public function setTotalCount(int $totalCount): SearchResultInterface;
 }
