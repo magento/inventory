@@ -7,9 +7,10 @@
 -->
 
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
+        xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Suite/etc/suiteSchema.xsd">
     <suite name="MSI_Single_Mode">
         <before>
+            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
             <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled disabled"/>
             <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
         </before>
@@ -21,12 +22,14 @@
             <group name="multi_mode"/>
         </exclude>
         <after>
-            <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled enabled"/>
+            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
         </after>
     </suite>
     <suite name="MSI_Multi_Mode">
         <before>
+            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
             <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled disabled"/>
+            <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
         </before>
         <include>
             <group name="multi_mode"/>
@@ -36,12 +39,14 @@
             <group name="single_mode"/>
         </exclude>
         <after>
-            <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled enabled"/>
+            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
         </after>
     </suite>
     <suite name="MSI_Sort_Order_Tests">
         <before>
+            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
             <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled disabled"/>
+            <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
         </before>
         <include>
             <group name="sort_order_test"/>
@@ -52,7 +57,7 @@
             <group name="multi_mode"/>
         </exclude>
         <after>
-            <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled enabled"/>
+            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
         </after>
     </suite>
 </suites>

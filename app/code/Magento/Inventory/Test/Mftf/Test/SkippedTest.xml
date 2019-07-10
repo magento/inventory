@@ -7,15 +7,25 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
-    <test name="TemporaryUpdateWithStartDateLessAndDateBiggerThanStartDateOfExistingUpdate">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <!-- MSI-1135 -->
+    <test name="AdminSourceSelectionAlgorithmSourcePriorityWithSimpleMsiProductTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
         </annotations>
     </test>
-    <test name="TemporaryUpdateWithStartAndSateBeforeExistingUpdateTest">
+    <!-- MSI-1128 -->
+    <test name="AdminCreateInvoiceForVirtualProductInSingleStockModeTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
+    <!-- MSI-1313 -->
+    <test name="AdminOrderCreatedForGuestCustomerWithConfigurableProductWithDropDownAttributeViaTheAdminTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
@@ -23,55 +33,16 @@
         </annotations>
     </test>
 
-    <test name="EndToEndB2CLoggedInUserTest">
+    <!-- MSI-1319 -->
+    <test name="AdminCreateOrderWithGroupedProductDefaultStockTest">
         <annotations>
             <skip>
-                <issueId value="MSI-1631"/>
+                <issueId value="MSI-1759"/>
             </skip>
         </annotations>
     </test>
-    <test name="AdvanceCatalogSearchConfigurableBySkuTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdvanceCatalogSearchConfigurableByShortDescriptionTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdvanceCatalogSearchConfigurableByNameTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdvanceCatalogSearchConfigurableByDescriptionTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdminShareStagingUpdateTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="StorefrontPurchaseProductCustomOptionsDifferentStoreViewsTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
+
+    <!-- MAGETWO-87435 -->
     <test name="EndToEndB2CGuestUserTest">
         <annotations>
             <skip>
@@ -79,49 +50,40 @@
             </skip>
         </annotations>
     </test>
-    <test name="AdminApplyTierPriceToProductTest">
+    <!-- MAGETWO-87653 -->
+    <test name="EndToEndB2CLoggedInUserTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
         </annotations>
     </test>
-    <test name="StorefrontConfigurableProductChildSearchTest">
+    <!-- MC-138 -->
+    <test name="AdvanceCatalogSearchConfigurableByNameTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
         </annotations>
     </test>
-    <test name="StorefrontProductNameWithHTMLEntities">
+    <!-- MC-144 -->
+    <test name="AdvanceCatalogSearchConfigurableBySkuTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
         </annotations>
     </test>
-    <test name="ShopByButtonInMobile">
+    <!-- MC-237 -->
+    <test name="AdvanceCatalogSearchConfigurableByDescriptionTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
         </annotations>
     </test>
-    <test name="StorefrontUpdateWishlistTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="StorefrontTaxQuoteCheckoutLoggedInSimple">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
-    <test name="AdminAddDefaultImageDownloadableProductTest">
+    <!-- MC-240 -->
+    <test name="AdvanceCatalogSearchConfigurableByShortDescriptionTest">
         <annotations>
             <skip>
                 <issueId value="MSI-1631"/>

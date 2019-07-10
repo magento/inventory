@@ -7,14 +7,13 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminSourcePrioritySelectionAlgorithmSimpleProductCustomStockTest">
         <annotations>
-            <features value="Multi-Source Inventory"/>
             <stories value="Source Selection Algorithm by source priority with simple product on custom stock."/>
             <title value="Source Selection Algorithm by source priority with simple product on custom stock."/>
             <description value="Check, 'Source Selection Algorithm' by source priority select corrects source for simple product on custom stock."/>
-            <testCaseId value="1126"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/790998/scenarios/1624282"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -64,7 +63,6 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterStockSave"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterStockSave"/>
         </before>
-
         <after>
             <comment userInput="Disable sources, as they can brake single source mode tests." stepKey="disableSourcesComment"/>
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
@@ -136,9 +134,7 @@
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$highPrioritySource.source[source_code]$$)}}" stepKey="selectHighPrioritySource"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="doneSelectHighPrioritySource"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$lowPrioritySource.source[source_code]$$" stepKey="checkLowPrioritySourceCode"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$lowPrioritySource.source[name]$$" stepKey="checkLowPrioritySourceName"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$highPrioritySource.source[source_code]$$" stepKey="checkHighPrioritySourceCode"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$highPrioritySource.source[name]$$" stepKey="checkHighPrioritySourceName"/>
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForLowPrioritySource"/>
@@ -157,16 +153,16 @@
             <argument name="checkQuantity" value="1"/>
         </actionGroup>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
-        <waitForElement selector="{{CheckoutShippingMethodsSection.next}}" time="30" stepKey="waitForNextButtonVisible"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"/>
-        <waitForPageLoad stepKey="waitFroSecondCheckoutStepPageLoad"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
         <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 
@@ -183,17 +179,17 @@
         <see selector="{{AdminProductGridSection.productSalableQty('1',$$customStock.stock[name]$$)}}" userInput="1950" stepKey="checkSalableQtyAfterPlaceOrder"/>
 
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="navigateToOrderListPage"/>
-        <waitForLoadingMaskToDisappear stepKey="waitOrderListPageLoad"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
         <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$grabOrderNumber}" stepKey="searchOrder"/>
         <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearch"/>
-        <waitForLoadingMaskToDisappear stepKey="waitFilteredOrderListPageLoad"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>
         <click selector="{{AdminOrdersGridSection.firstRow}}" stepKey="navigateToOrderViewPage"/>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
 
         <comment userInput="Run 'Source Selection Algorithm'" stepKey="runSourceSelectionAlgorithm"/>
         <click selector="{{AdminSourceSelectionFormSection.sourceSelectionAlgorithmToggle}}" stepKey="openSourceSelectionAlgorithmList"/>
         <click selector="{{AdminSourceSelectionFormSection.selectSourcePriority}}" stepKey="selectSourcePriorityAlgorithm"/>
-        <waitForAjaxLoad stepKey="waitForAlgorithmApplied"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
 
         <comment userInput="Check, 'Source Selection Algorithm' by source priority applied correctly." stepKey="checkAlgorithmAppliedComment"/>
         <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowProductSku('0')}}" userInput="$$product.sku$$" stepKey="checkProductSku"/>
@@ -206,7 +202,7 @@
         <comment userInput="Select source and proceed to shipment" stepKey="selectSourceAndProceedToShipmentComment"/>
         <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="$$highPrioritySource.source[name]$$" stepKey="selectSourceToCreateShipment"/>
         <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
-        <waitForPageLoad stepKey="waitForNewShipmentPageLoad"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad9"/>
 
         <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeShipmentOrderStatus"/>
         <actionGroup ref="verifyBasicShipmentInformation" stepKey="checkBasicShipmentOrderInfo">

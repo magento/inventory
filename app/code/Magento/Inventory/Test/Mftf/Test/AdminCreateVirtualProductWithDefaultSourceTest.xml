@@ -7,14 +7,13 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminCreateVirtualProductWithDefaultSourceTest">
         <annotations>
-            <features value="Multi-Source Inventory"/>
             <stories value="Add Virtual Product"/>
             <title value="Virtual Product created with Default Source assigned by Admin user"/>
-            <description value="Virtual Product created with Default Source assigned by Admin user"/>
-            <testCaseId value="1499"/>
+            <description value="Virtual Product created with Default Source assigned by Admin user."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/457015/scenarios/1436612"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -59,6 +58,7 @@
         <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns1"/>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage1"/>
 
+        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="In Stock" stepKey="selectStockStatus" />
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillSourceQuantityField1"/>
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>

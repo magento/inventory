@@ -12,11 +12,12 @@ use Magento\Backend\App\Action;
 use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 
 /**
  * NewAction Controller
  */
-class NewAction extends Action
+class NewAction extends Action implements HttpGetActionInterface
 {
     /**
      * @see _isAllowed()
@@ -30,7 +31,7 @@ class NewAction extends Action
     {
         /** @var Page $resultPage */
         $resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
-        $resultPage->setActiveMenu('Magento_InventoryApi::source');
+        $resultPage->setActiveMenu('Magento_InventoryAdminUi::source');
         $resultPage->getConfig()->getTitle()->prepend(__('New Source'));
 
         return $resultPage;

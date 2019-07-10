@@ -7,7 +7,7 @@
 -->
 
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="displayOutOfStockProduct">
         <amOnPage url="{{InventoryConfigurationPage.url}}" stepKey="navigateToInventoryConfigurationPage"/>
         <waitForPageLoad stepKey="waitForConfigPageToLoad"/>
@@ -21,6 +21,7 @@
     <actionGroup name="noDisplayOutOfStockProduct">
         <amOnPage url="{{InventoryConfigurationPage.url}}" stepKey="navigateToInventoryConfigurationPage"/>
         <waitForPageLoad stepKey="waitForConfigPageToLoad"/>
+        <conditionalClick stepKey="expandProductStockOptions" selector="{{InventoryConfigSection.ProductStockOptionsTab}}" dependentSelector="{{InventoryConfigSection.CheckIfProductStockOptionsTabExpanded}}" visible="true" />
         <uncheckOption selector="{{InventoryConfigSection.DisplayOutOfStockSystemValue}}" stepKey="uncheckUseSystemValue"/>
         <waitForElementVisible selector="{{InventoryConfigSection.DisplayOutOfStockDropdown}}" stepKey="waitForSwitcherDropdown" />
         <selectOption selector="{{InventoryConfigSection.DisplayOutOfStockDropdown}}" userInput="No" stepKey="switchToNo" />

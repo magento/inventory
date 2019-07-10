@@ -14,11 +14,22 @@
         <plugin name="LoadSourceForShipment" type="Magento\InventoryShipping\Plugin\Sales\ResourceModel\Order\Shipment\LoadSourceForShipmentPlugin"/>
         <plugin name="DeleteSourceForShipment" type="Magento\InventoryShipping\Plugin\Sales\ResourceModel\Order\Shipment\DeleteSourceForShipmentPlugin"/>
     </type>
+    <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
+        <plugin name="GetListShipmentRepository" type="Magento\InventoryShipping\Plugin\Sales\Model\Order\GetListShipmentRepositoryPlugin"/>
+    </type>
     <type name="Magento\InventoryApi\Model\SourceValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="carrier_links" xsi:type="object">Magento\InventoryShipping\Model\Source\Validator\CarrierLinksValidator</item>
             </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryShipping\Model\GetSourceSelectionResultFromInvoice">
+        <arguments>
+            <!-- @deprecated parameter stockByWebsiteIdResolver has been deprecated and not in use now -->
+            <argument name="stockByWebsiteIdResolver" xsi:type="null"/>
+            <!-- @deprecated parameter inventoryRequestFactory has been deprecated and not in use now -->
+            <argument name="inventoryRequestFactory" xsi:type="null"/>
         </arguments>
     </type>
     <!-- Return Processor -->
@@ -29,4 +40,5 @@
             </argument>
         </arguments>
     </type>
+    <preference for="Magento\Shipping\Controller\Adminhtml\Order\Shipment\NewAction" type="Magento\InventoryShipping\Controller\Adminhtml\Order\Shipment\NewAction"/>
 </config>

@@ -6,7 +6,7 @@
   */
 -->
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="CreateNewPageWithAllValues">
         <arguments>
             <argument name="PageTitle" type="string"/>
@@ -27,5 +27,11 @@
         <clickWithLeftButton selector="{{CmsNewPagePiwSection.selectStoreView(selectStoreViewOpt)}}" stepKey="clickStoreView2"/>
         <click selector="{{CmsNewPageHierarchySection.header}}" stepKey="clickHierarchy"/>
         <click selector="{{CmsNewPageHierarchySection.selectHierarchy(selectHierarchyOpt)}}" stepKey="clickPageCheckBoxes"/>
+    </actionGroup>
+    <actionGroup name="CreateNewPageWithAllValuesAndContent" extends="CreateNewPageWithAllValues">
+        <arguments>
+            <argument name="pageContent" type="string"/>
+        </arguments>
+        <fillField selector="{{CmsNewPagePageContentSection.content}}" userInput="{{pageContent}}" stepKey="fillContentField" after="fillFieldContentHeading"/>
     </actionGroup>
 </actionGroups>

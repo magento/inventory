@@ -7,24 +7,20 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminOrderCreatedWithConfigurableProductWithTextAttributeViaTheAdminTest">
         <annotations>
-            <features value="Multi-Source Inventory"/>
             <stories value="Add Order"/>
             <title value="Create an Order with a Configurable Product with Text Swatch Attributes via the Admin."/>
             <description value="You should be able to place an Order using a Configurable Product with Test Swatch Attributes that is assigned to a Source with a Stock."/>
-            <testCaseId value="1325"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419535/scenarios/1446443"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
         </annotations>
 
         <before>
-            <createData entity="MsiCustomer1" stepKey="createCustomer1"/>
+            <createData entity="Msi_US_Customer" stepKey="createCustomer1"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock1"/>
             <createData entity="FullSource1" stepKey="createSource1"/>
             <createData entity="FullSource2" stepKey="createSource2"/>

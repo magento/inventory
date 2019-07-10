@@ -7,7 +7,7 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="EndToEndB2CGuestUserTest">
         <annotations>
             <features value="End to End scenarios"/>
@@ -17,6 +17,9 @@
             <description value="User browses catalog, searches for product, adds product to cart, adds product to wishlist, compares products, uses coupon code and checks out."/>
             <severity value="CRITICAL"/>
             <testCaseId value="MAGETWO-87435"/>
+            <skip>
+                <issueId value="MC-16684"/>
+            </skip>
         </annotations>
         <before>
             <resetCookie userInput="PHPSESSID" stepKey="resetCookieForCart"/>

@@ -15,6 +15,8 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryLowQuantityNotificationApi\Api\GetSourceItemConfigurationInterface;
 use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface;
+use Magento\Framework\Stdlib\ArrayManager;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
  * Product form modifier. Add to form source item configuration data
@@ -42,21 +44,37 @@ class SourceItemConfiguration extends AbstractModifier
     private $scopeConfig;
 
     /**
+     * @var ArrayManager
+     */
+    private $arrayManager;
+
+    /**
+     * @var IsSingleSourceModeInterface
+     */
+    private $isSingleSourceMode;
+
+    /**
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param LocatorInterface $locator
      * @param GetSourceItemConfigurationInterface $getSourceItemConfiguration
      * @param ScopeConfigInterface $scopeConfig
+     * @param ArrayManager $arrayManager
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
      */
     public function __construct(
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         LocatorInterface $locator,
         GetSourceItemConfigurationInterface $getSourceItemConfiguration,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ArrayManager $arrayManager,
+        IsSingleSourceModeInterface $isSingleSourceMode
     ) {
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->locator = $locator;
         $this->getSourceItemConfiguration = $getSourceItemConfiguration;
         $this->scopeConfig = $scopeConfig;
+        $this->arrayManager = $arrayManager;
+        $this->isSingleSourceMode = $isSingleSourceMode;
     }
 
     /**
@@ -96,11 +114,14 @@ class SourceItemConfiguration extends AbstractModifier
 
             $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] =
                 $sourceConfiguration[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY];
-            $source['notify_stock_qty_use_default'] = "0";
 
+            $notifyQtyConfigValue = $this->getNotifyQtyConfigValue();
             if ($source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === null) {
-                $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $this->getNotifyQtyConfigValue();
-                $source['notify_stock_qty_use_default'] = "1";
+                $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $notifyQtyConfigValue;
+            }
+            $source['notify_stock_qty_use_default'] = '0';
+            if ((float)$source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === $notifyQtyConfigValue) {
+                $source['notify_stock_qty_use_default'] = '1';
             }
         }
         unset($source);
@@ -113,13 +134,34 @@ class SourceItemConfiguration extends AbstractModifier
      */
     public function modifyMeta(array $meta)
     {
+        $stockDataPath = $this->arrayManager->findPath(
+            'stock_data',
+            $meta,
+            null,
+            'children'
+        );
+
+        if (null === $stockDataPath || $this->isSingleSourceMode->execute()) {
+            return $meta;
+        }
+
+        $backordersPath = $stockDataPath . '/children/container_notify_stock_qty/arguments/data/config';
+        $meta = $this->arrayManager->set(
+            $backordersPath,
+            $meta,
+            [
+                'visible' => 0,
+                'imports' => '',
+            ]
+        );
+
         return $meta;
     }
 
     /**
      * @return float
      */
-    private function getNotifyQtyConfigValue() : float
+    private function getNotifyQtyConfigValue(): float
     {
         return (float)$this->scopeConfig->getValue('cataloginventory/item_options/notify_stock_qty');
     }

@@ -139,6 +139,7 @@
                         <dataType>text</dataType>
                         <dataScope>source_code</dataScope>
                         <label translate="true">Code</label>
+                        <labelVisible>false</labelVisible>
                     </settings>
                 </field>
                 <field name="name" formElement="input" sortOrder="20">
@@ -147,6 +148,7 @@
                         <dataType>text</dataType>
                         <dataScope>name</dataScope>
                         <label translate="true">Name</label>
+                        <labelVisible>false</labelVisible>
                     </settings>
                 </field>
                 <field name="priority" formElement="input" sortOrder="30">
@@ -158,11 +160,15 @@
                         <visible>false</visible>
                     </settings>
                 </field>
-                <field name="actionDelete" formElement="actionDelete" sortOrder="40">
+                <actionDelete name="actionDelete" template="Magento_InventoryCatalogAdminUi/stock/assign-sources/action-delete">
+                    <argument name="data" xsi:type="array" />
                     <settings>
                         <label translate="true">Unassign</label>
+                        <elementTmpl>Magento_InventoryCatalogAdminUi/stock/assign-sources/action-delete</elementTmpl>
+                        <dataType>text</dataType>
+                        <componentType>actionDelete</componentType>
                     </settings>
-                </field>
+                </actionDelete>
             </container>
         </dynamicRows>
         <modal name="assign_sources_modal">
