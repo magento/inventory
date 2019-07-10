@@ -7,12 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria;
 
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+
 /**
  * Search Criteria for searching Pickup Locations.
  *
  * @api
  */
-interface GetNearbyLocationsCriteriaInterface
+interface GetNearbyLocationsCriteriaInterface extends SearchCriteriaInterface
 {
     /**
      * @return int
@@ -46,19 +48,4 @@ interface GetNearbyLocationsCriteriaInterface
      * @return string|null
      */
     public function getCity(): ?string;
-
-    /**
-     * Get page size.
-     *
-     * @return int|null
-     */
-    public function getPageSize(): ?int;
-
-    /**
-     * Get current page.
-     * If not specified, 1 is returned by default
-     *
-     * @return int
-     */
-    public function getCurrentPage(): int;
 }

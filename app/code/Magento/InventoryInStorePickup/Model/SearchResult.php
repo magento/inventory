@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model;
 
 use InvalidArgumentException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 
 class SearchResult implements SearchResultInterface
@@ -26,19 +26,19 @@ class SearchResult implements SearchResultInterface
     private $totalCount = 0;
 
     /**
-     * @var GetNearbyLocationsCriteriaInterface
+     * @var SearchCriteriaInterface
      */
     private $searchCriteria;
 
     /**
      * @param PickupLocationInterface[] $items
      * @param int $totalCount
-     * @param GetNearbyLocationsCriteriaInterface|null $searchCriteria
+     * @param SearchCriteriaInterface|null $searchCriteria
      */
     public function __construct(
         array $items,
         int $totalCount = 0,
-        $searchCriteria = null
+        ?SearchCriteriaInterface $searchCriteria = null
     ) {
         $this->items = $items;
         $this->totalCount = $totalCount;
@@ -56,18 +56,18 @@ class SearchResult implements SearchResultInterface
     /**
      * @inheritDoc
      */
-    public function setItems(array $items)
+    public function setItems(array $items): SearchResultInterface
     {
         $this->validateItems($items);
         $this->items = $items;
 
-        return $this->items;
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getSearchCriteria(): GetNearbyLocationsCriteriaInterface
+    public function getSearchCriteria(): SearchCriteriaInterface
     {
         return $this->searchCriteria;
     }
@@ -75,7 +75,7 @@ class SearchResult implements SearchResultInterface
     /**
      * @inheritDoc
      */
-    public function setSearchCriteria(GetNearbyLocationsCriteriaInterface $searchCriteria)
+    public function setSearchCriteria(SearchCriteriaInterface $searchCriteria): SearchResultInterface
     {
         $this->searchCriteria = $searchCriteria;
 
@@ -93,7 +93,7 @@ class SearchResult implements SearchResultInterface
     /**
      * @inheritDoc
      */
-    public function setTotalCount(int $totalCount)
+    public function setTotalCount(int $totalCount): SearchResultInterface
     {
         $this->totalCount = $totalCount;
 
@@ -112,7 +112,7 @@ class SearchResult implements SearchResultInterface
             if (!$item instanceof PickupLocationInterface) {
                 throw new InvalidArgumentException(
                     sprintf(
-                        'Items should be an instance of %s, $s given',
+                        'Items should be an instance of %s, %s given',
                         [
                             PickupLocationInterface::class,
                             is_object($item) ? get_class($item) : gettype($item)
