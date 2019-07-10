@@ -8,10 +8,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
-
 /**
  * Search results for providing nearby pickup locations
+ * @api
  */
 interface SearchResultInterface
 {
@@ -34,19 +33,19 @@ interface SearchResultInterface
     /**
      * Get search criteria.
      *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface
+     * @return SearchCriteriaInterface
      */
-    public function getSearchCriteria(): GetNearbyLocationsCriteriaInterface;
+    public function getSearchCriteria(): SearchCriteriaInterface;
 
     /**
      * Set search criteria.
      *
-     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface $searchCriteria
+     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface $searchCriteria
      *
      * @return $this
      */
     public function setSearchCriteria(
-        GetNearbyLocationsCriteriaInterface $searchCriteria
+        SearchCriteriaInterface $searchCriteria
     ): SearchResultInterface;
 
     /**
