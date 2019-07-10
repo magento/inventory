@@ -7,13 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\QuoteGraphQl\Model\Cart;
 
-use Magento\CustomerGraphQl\Model\Customer\CheckCustomerAccount;
-use Magento\Framework\GraphQl\Exception\GraphQlAuthenticationException;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
-use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
+use Magento\GraphQl\Model\Query\ContextInterface;
 use Magento\Quote\Api\Data\CartInterface;
+use Magento\Quote\Model\Quote\Address;
 
 /**
  * Set billing address for a specified shopping cart
@@ -26,35 +25,19 @@ class SetBillingAddressOnCart
     private $quoteAddressFactory;
 
     /**
-     * @var CheckCustomerAccount
-     */
-    private $checkCustomerAccount;
-
-    /**
-     * @var GetCustomerAddress
-     */
-    private $getCustomerAddress;
-
-    /**
      * @var AssignBillingAddressToCart
      */
     private $assignBillingAddressToCart;
 
     /**
      * @param QuoteAddressFactory $quoteAddressFactory
-     * @param CheckCustomerAccount $checkCustomerAccount
-     * @param GetCustomerAddress $getCustomerAddress
      * @param AssignBillingAddressToCart $assignBillingAddressToCart
      */
     public function __construct(
         QuoteAddressFactory $quoteAddressFactory,
-        CheckCustomerAccount $checkCustomerAccount,
-        GetCustomerAddress $getCustomerAddress,
         AssignBillingAddressToCart $assignBillingAddressToCart
     ) {
         $this->quoteAddressFactory = $quoteAddressFactory;
-        $this->checkCustomerAccount = $checkCustomerAccount;
-        $this->getCustomerAddress = $getCustomerAddress;
         $this->assignBillingAddressToCart = $assignBillingAddressToCart;
     }
 
@@ -65,9 +48,8 @@ class SetBillingAddressOnCart
      * @param CartInterface $cart
      * @param array $billingAddressInput
      * @return void
-     * @throws GraphQlInputException
-     * @throws GraphQlAuthenticationException
      * @throws GraphQlAuthorizationException
+     * @throws GraphQlInputException
      * @throws GraphQlNoSuchEntityException
      */
     public function execute(ContextInterface $context, CartInterface $cart, array $billingAddressInput): void
@@ -96,14 +78,39 @@ class SetBillingAddressOnCart
             );
         }
 
+        $billingAddress = $this->createBillingAddress($context, $customerAddressId, $addressInput);
+
+        $this->assignBillingAddressToCart->execute($cart, $billingAddress, $useForShipping);
+    }
+
+    /**
+     * Create billing address
+     *
+     * @param ContextInterface $context
+     * @param int|null $customerAddressId
+     * @param array $addressInput
+     * @return Address
+     * @throws GraphQlAuthorizationException
+     * @throws GraphQlInputException
+     * @throws GraphQlNoSuchEntityException
+     */
+    private function createBillingAddress(
+        ContextInterface $context,
+        ?int $customerAddressId,
+        ?array $addressInput
+    ): Address {
         if (null === $customerAddressId) {
             $billingAddress = $this->quoteAddressFactory->createBasedOnInputData($addressInput);
         } else {
-            $this->checkCustomerAccount->execute($context->getUserId(), $context->getUserType());
-            $customerAddress = $this->getCustomerAddress->execute((int)$customerAddressId, (int)$context->getUserId());
-            $billingAddress = $this->quoteAddressFactory->createBasedOnCustomerAddress($customerAddress);
-        }
+            if (false === $context->getExtensionAttributes()->getIsCustomer()) {
+                throw new GraphQlAuthorizationException(__('The current customer isn\'t authorized.'));
+            }
 
-        $this->assignBillingAddressToCart->execute($cart, $billingAddress, $useForShipping);
+            $billingAddress = $this->quoteAddressFactory->createBasedOnCustomerAddress(
+                (int)$customerAddressId,
+                (int)$context->getUserId()
+            );
+        }
+        return $billingAddress;
     }
 }

@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\QuoteGraphQl\Model\Cart;
 
-use Magento\CustomerGraphQl\Model\Customer\CheckCustomerAccount;
+use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
-use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
+use Magento\GraphQl\Model\Query\ContextInterface;
 use Magento\Quote\Api\Data\CartInterface;
 
 /**
@@ -23,35 +23,19 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
     private $quoteAddressFactory;
 
     /**
-     * @var CheckCustomerAccount
-     */
-    private $checkCustomerAccount;
-
-    /**
-     * @var GetCustomerAddress
-     */
-    private $getCustomerAddress;
-
-    /**
      * @var AssignShippingAddressToCart
      */
     private $assignShippingAddressToCart;
 
     /**
      * @param QuoteAddressFactory $quoteAddressFactory
-     * @param CheckCustomerAccount $checkCustomerAccount
-     * @param GetCustomerAddress $getCustomerAddress
      * @param AssignShippingAddressToCart $assignShippingAddressToCart
      */
     public function __construct(
         QuoteAddressFactory $quoteAddressFactory,
-        CheckCustomerAccount $checkCustomerAccount,
-        GetCustomerAddress $getCustomerAddress,
         AssignShippingAddressToCart $assignShippingAddressToCart
     ) {
         $this->quoteAddressFactory = $quoteAddressFactory;
-        $this->checkCustomerAccount = $checkCustomerAccount;
-        $this->getCustomerAddress = $getCustomerAddress;
         $this->assignShippingAddressToCart = $assignShippingAddressToCart;
     }
 
@@ -82,11 +66,17 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
         }
 
         if (null === $customerAddressId) {
+            $addressInput['country_code'] = strtoupper($addressInput['country_code']);
             $shippingAddress = $this->quoteAddressFactory->createBasedOnInputData($addressInput);
         } else {
-            $this->checkCustomerAccount->execute($context->getUserId(), $context->getUserType());
-            $customerAddress = $this->getCustomerAddress->execute((int)$customerAddressId, (int)$context->getUserId());
-            $shippingAddress = $this->quoteAddressFactory->createBasedOnCustomerAddress($customerAddress);
+            if (false === $context->getExtensionAttributes()->getIsCustomer()) {
+                throw new GraphQlAuthorizationException(__('The current customer isn\'t authorized.'));
+            }
+
+            $shippingAddress = $this->quoteAddressFactory->createBasedOnCustomerAddress(
+                (int)$customerAddressId,
+                $context->getUserId()
+            );
         }
 
         $this->assignShippingAddressToCart->execute($cart, $shippingAddress);
