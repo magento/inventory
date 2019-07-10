@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryIndexer\Plugin\Inventory\Model\StockRepository;
+namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\StockInterface;
@@ -14,11 +14,12 @@ use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
+use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 
 /**
  * Create stock table on Save method of StockRepositoryInterface
  */
-class CreateStockTableAfterSaveStock
+class CreateIndexAfterStockCreated
 {
     /**
      * @var IndexNameBuilder
@@ -31,15 +32,23 @@ class CreateStockTableAfterSaveStock
     private $indexStructure;
 
     /**
+     * @var StockIndexer
+     */
+    private $stockIndexer;
+
+    /**
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexStructureInterface $indexStructure
+     * @param StockIndexer $stockIndexer
      */
     public function __construct(
         IndexNameBuilder $indexNameBuilder,
-        IndexStructureInterface $indexStructure
+        IndexStructureInterface $indexStructure,
+        StockIndexer $stockIndexer
     ) {
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexStructure = $indexStructure;
+        $this->stockIndexer = $stockIndexer;
     }
 
     /**
@@ -56,10 +65,6 @@ class CreateStockTableAfterSaveStock
         int $stockId,
         StockInterface $stock
     ): int {
-        if ($stockId === 1) {
-            return $stockId;
-        }
-
         $mainIndexName = $this->indexNameBuilder
             ->setIndexId(InventoryIndexer::INDEXER_ID)
             ->addDimension('stock_', (string)$stockId)
@@ -67,7 +72,7 @@ class CreateStockTableAfterSaveStock
             ->build();
 
         if (!$this->indexStructure->isExist($mainIndexName, ResourceConnection::DEFAULT_CONNECTION)) {
-            $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
+            $this->stockIndexer->executeRow($stockId);
         }
 
         return $stockId;

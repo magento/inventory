@@ -42,7 +42,7 @@
     </type>
     <!-- Stock -->
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
-        <plugin name="create_stock_index_table" type="Magento\InventoryIndexer\Plugin\Inventory\Model\StockRepository\CreateStockTableAfterSaveStock"/>
+        <plugin name="create_stock_index_table" type="Magento\InventoryIndexer\Plugin\InventoryApi\CreateIndexAfterStockCreated"/>
     </type>
     <!-- Source Item -->
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
