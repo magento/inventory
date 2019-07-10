@@ -1,0 +1,38 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\InventoryInStorePickupAdminUi\ViewModel\CreateOrder\SourcesForm;
+
+// @codingStandardsIgnoreFile
+/** @var SourcesForm $viewModel */
+$viewModel = $block->getData('view_model');
+if (!$viewModel) {
+    return '';
+}
+/** @var Magento\Backend\Block\Template $block */
+$sources = $viewModel->getPickupLocationsArray();
+$selectedSourceCode = $viewModel->getSelectedPickupLocationCode();
+?>
+<fieldset class="admin__fieldset payment-method"
+          id="shippinh_form_pickup_location_source"
+>
+    <div class="admin__field _required">
+        <label class="label admin__field-label" for="pickup_location_source">
+            <span><?= $block->escapeHtml(__('Pickup Location Source')) ?></span>
+        </label>
+        <div class="admin__field-control control">
+            <select id="pickup_location_source" name="pickup_location_source"
+                    class="required-entry select admin__control-select">
+                <?php foreach ($sources as $code => $name): ?>
+                    <option value="<?= $block->escapeHtml($code) ?>"
+                        <?php if ($code == $selectedSourceCode): ?> selected="selected"<?php endif; ?>>
+                        <?= $block->escapeHtml($name) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</fieldset>
