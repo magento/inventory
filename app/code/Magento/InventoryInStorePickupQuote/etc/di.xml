@@ -31,4 +31,7 @@
     <type name="Magento\Quote\Model\Quote\Address\ToOrder">
         <plugin name="pass_pickup_location_to_order_during_address_conversion" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\PassPickupLocationToOrder" sortOrder="20" />
     </type>
+    <type name="Magento\Quote\Model\Quote\TotalsCollector">
+        <plugin name="in-store-pickup-set-shipping-description" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\SetShippingDescription" />
+    </type>
 </config>
