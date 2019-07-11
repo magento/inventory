@@ -7,6 +7,7 @@
         "magento/module-inventory-in-store-pickup-shipping-api": "*",
         "magento/module-inventory-in-store-pickup-api": "*",
         "magento/module-inventory-sales-api": "*",
+        "magento/module-inventory-in-store-pickup-quote": "*",
         "magento/module-quote": "*",
         "magento/module-store": "*",
         "magento/module-catalog": "*"

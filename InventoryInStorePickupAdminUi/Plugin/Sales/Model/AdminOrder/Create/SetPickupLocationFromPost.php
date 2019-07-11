@@ -8,10 +8,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Model\AdminOrder\Create;
 
+use Magento\Backend\Model\Session\Quote;
 use Magento\Framework\App\RequestInterface;
-use Magento\InventoryInStorePickupShipping\Model\Address\SetAddressPickupLocation;
+use Magento\InventoryInStorePickupQuote\Model\Address\SetAddressPickupLocation;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
-use Magento\Sales\Model\AdminOrder\Create;
+use Magento\Sales\Controller\Adminhtml\Order\Create\Save;
 
 /**
  * Set shipping address location from POST
@@ -31,25 +32,34 @@ class SetPickupLocationFromPost
     private $setAddressPickupLocation;
 
     /**
+     * @var Quote
+     */
+    private $backendQuote;
+
+    /**
      * @param RequestInterface $request
      * @param SetAddressPickupLocation $setAddressPickupLocation
+     * @param Quote $backendQuote
      */
     public function __construct(
         RequestInterface $request,
-        SetAddressPickupLocation $setAddressPickupLocation
+        SetAddressPickupLocation $setAddressPickupLocation,
+        Quote $backendQuote
     ) {
         $this->request = $request;
         $this->setAddressPickupLocation = $setAddressPickupLocation;
+        $this->backendQuote = $backendQuote;
     }
 
     /**
-     * @param Create $subject
+     * @param Save $subject
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeCreateOrder(Create $subject)
+    public function beforeExecute(Save $subject)
     {
-        $address = $subject->getShippingAddress();
+        $address = $this->backendQuote->getQuote()->getShippingAddress();
         if ($address->getShippingMethod() == InStorePickup::DELIVERY_METHOD) {
             $pickupLocationCode = $this->request->getParam(self::PARAM_KEY);
             $this->setAddressPickupLocation->execute($address, $pickupLocationCode);
