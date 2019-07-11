@@ -12,4 +12,7 @@
     <type name="Magento\Sales\Block\Adminhtml\Order\View\Info">
         <plugin name="hide-edit-link" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Order\View\ShippingAddress\HideEditLink"/>
     </type>
+    <type name="Magento\Sales\Model\AdminOrder\Create">
+        <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Model\AdminOrder\Create\SetPickupLocationFromPost" />
+    </type>
 </config>
