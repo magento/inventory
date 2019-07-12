@@ -14,7 +14,7 @@ use Magento\Framework\App\ResourceConnection;
  */
 class SaveQuoteAddressPickupLocation
 {
-    private const ADDRESS_ID = 'address_id';
+    private const ADDRESS_ID           = 'address_id';
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**

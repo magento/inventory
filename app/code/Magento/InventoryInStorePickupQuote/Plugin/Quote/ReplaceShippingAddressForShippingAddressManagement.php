@@ -145,6 +145,7 @@ class ReplaceShippingAddressForShippingAddressManagement
      * Validate if Quote Shipping Address has assigned Pickup Location.
      *
      * @param AddressInterface $address
+     *
      * @return void
      * @throws StateException
      */
