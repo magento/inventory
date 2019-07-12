@@ -112,6 +112,5 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
             SalesChannelInterface::TYPE_WEBSITE,
             $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
         );
-
     }
 }

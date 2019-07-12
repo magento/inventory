@@ -17,7 +17,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Address\Collection;
 class GetPickupLocationInformationPlugin
 {
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
-    private const TABLE_ALIAS = 'iplqa';
+    private const TABLE_ALIAS          = 'iplqa';
 
     /**
      * @var AddressExtensionInterfaceFactory
@@ -78,6 +78,7 @@ class GetPickupLocationInformationPlugin
      * Add Loaded Pickup Location to Extension Attributes.
      *
      * @param Address $item
+     *
      * @return void
      */
     private function addPickupLocationToExtensionAttributes(Address $item): void
