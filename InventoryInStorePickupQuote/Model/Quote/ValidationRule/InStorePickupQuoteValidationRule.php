@@ -9,14 +9,13 @@ namespace Magento\InventoryInStorePickupQuote\Model\Quote\ValidationRule;
 
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
+use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
+use Magento\InventoryInStorePickupQuote\Model\Quote\GetShipping;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\ValidationRules\QuoteValidationRuleInterface;
-use Magento\Store\Api\StoreRepositoryInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
  * Validate Quote for In-Store Pickup Delivery Method.
@@ -29,16 +28,6 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
     private $validationResultFactory;
 
     /**
-     * @var StoreRepositoryInterface
-     */
-    private $storeRepository;
-
-    /**
-     * @var WebsiteRepositoryInterface
-     */
-    private $websiteRepository;
-
-    /**
      * @var IsPickupLocationShippingAddress
      */
     private $isPickupLocationShippingAddress;
@@ -49,55 +38,56 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
     private $getPickupLocation;
 
     /**
+     * @var GetWebsiteCodeByStoreId
+     */
+    private $getWebsiteCodeByStoreId;
+
+    /**
+     * @var GetShipping
+     */
+    private $getShipping;
+
+    /**
      * @param ValidationResultFactory $validationResultFactory
-     * @param StoreRepositoryInterface $storeRepository
-     * @param WebsiteRepositoryInterface $websiteRepository
      * @param IsPickupLocationShippingAddress $isPickupLocationShippingAddress
      * @param GetPickupLocationInterface $getPickupLocation
+     * @param GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
+     * @param GetShipping $getShipping
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
-        StoreRepositoryInterface $storeRepository,
-        WebsiteRepositoryInterface $websiteRepository,
         IsPickupLocationShippingAddress $isPickupLocationShippingAddress,
-        GetPickupLocationInterface $getPickupLocation
+        GetPickupLocationInterface $getPickupLocation,
+        GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId,
+        GetShipping $getShipping
     ) {
         $this->validationResultFactory = $validationResultFactory;
-        $this->storeRepository = $storeRepository;
-        $this->websiteRepository = $websiteRepository;
         $this->isPickupLocationShippingAddress = $isPickupLocationShippingAddress;
         $this->getPickupLocation = $getPickupLocation;
+        $this->getWebsiteCodeByStoreId = $getWebsiteCodeByStoreId;
+        $this->getShipping = $getShipping;
     }
 
     /**
      * @inheritdoc
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function validate(Quote $quote): array
     {
         $validationErrors = [];
 
-        if (!$quote->getExtensionAttributes() || !$quote->getExtensionAttributes()->getShippingAssignments()) {
+        $shipping = $this->getShipping->execute($quote);
+
+        if ($shipping === null || $shipping->getMethod() !== InStorePickup::DELIVERY_METHOD) {
             return [$this->validationResultFactory->create(['errors' => $validationErrors])];
         }
-
-        $shippingAssignments = $quote->getExtensionAttributes()->getShippingAssignments();
-        /** @var ShippingAssignmentInterface $shippingAssignment */
-        $shippingAssignment = current($shippingAssignments);
-        $shipping = $shippingAssignment->getShipping();
-
-        if ($shipping->getMethod() !== InStorePickup::DELIVERY_METHOD) {
-            return [$this->validationResultFactory->create(['errors' => $validationErrors])];
-        }
-
-        $store = $this->storeRepository->getById($quote->getStoreId());
-        $website = $this->websiteRepository->getById($store->getWebsiteId());
 
         $address = $quote->getShippingAddress();
 
         $pickupLocation = $this->getPickupLocation->execute(
             $address->getExtensionAttributes()->getPickupLocationCode(),
             SalesChannelInterface::TYPE_WEBSITE,
-            $website->getCode()
+            $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
         );
 
         if (!$this->isPickupLocationShippingAddress->execute($pickupLocation, $address)) {
