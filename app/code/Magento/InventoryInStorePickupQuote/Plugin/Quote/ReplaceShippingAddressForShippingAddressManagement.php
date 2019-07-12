@@ -81,6 +81,8 @@ class ReplaceShippingAddressForShippingAddressManagement
     }
 
     /**
+     * Check and replace Quote Address with Pickup Location address for In-Store Pickup Quote.
+     *
      * @param ShippingAddressManagementInterface $subject
      * @param int $cartId
      * @param AddressInterface $address
@@ -135,7 +137,7 @@ class ReplaceShippingAddressForShippingAddressManagement
             $pickupLocation,
             $address,
             ['extension_attribute_pickup_location_code_pickup_location_code' => $pickupLocation->getSourceCode()]
-            );
+        );
 
         return [$cartId, $address];
     }
