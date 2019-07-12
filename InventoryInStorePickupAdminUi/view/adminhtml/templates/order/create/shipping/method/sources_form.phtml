@@ -8,13 +8,12 @@ use Magento\InventoryInStorePickupAdminUi\ViewModel\CreateOrder\SourcesForm;
 
 // @codingStandardsIgnoreFile
 /** @var SourcesForm $viewModel */
-$viewModel = $block->getData('view_model');
+$viewModel = $block->getViewModel();
 if (!$viewModel) {
     return '';
 }
 /** @var Magento\Backend\Block\Template $block */
-$sources = $viewModel->getPickupLocationsArray();
-$selectedSourceCode = $viewModel->getSelectedPickupLocationCode();
+$sources = $viewModel->getPickupSourcesOptionsList();
 ?>
 <fieldset class="admin__fieldset payment-method"
           id="shippinh_form_pickup_location_source"
@@ -27,8 +26,7 @@ $selectedSourceCode = $viewModel->getSelectedPickupLocationCode();
             <select id="pickup_location_source" name="pickup_location_source"
                     class="required-entry select admin__control-select">
                 <?php foreach ($sources as $code => $name): ?>
-                    <option value="<?= $block->escapeHtml($code) ?>"
-                        <?php if ($code == $selectedSourceCode): ?> selected="selected"<?php endif; ?>>
+                    <option value="<?= $block->escapeHtml($code) ?>">
                         <?= $block->escapeHtml($name) ?>
                     </option>
                 <?php endforeach; ?>
