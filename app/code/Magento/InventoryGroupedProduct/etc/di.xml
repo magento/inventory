@@ -10,7 +10,4 @@
         <plugin name="disable_grouped_type"
                 type="Magento\InventoryGroupedProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableGroupedTypePlugin"/>
     </type>
-    <type name="Magento\GroupedProduct\Model\Product\Type\Grouped">
-        <plugin name="outOfStockFilter" type="Magento\InventoryGroupedProduct\Plugin\OutOfStockFilter" />
-    </type>
 </config>
