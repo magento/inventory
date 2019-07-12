@@ -9,15 +9,16 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
-use Magento\InventoryInStorePickupQuote\Model\Quote\GetShipping;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\ShippingAddressManagementInterface;
 
 /**
@@ -46,21 +47,21 @@ class ReplaceShippingAddressForShippingAddressManagement
     private $addressConverter;
 
     /**
-     * @var GetShipping
-     */
-    private $getShipping;
-
-    /**
      * @var GetWebsiteCodeByStoreId
      */
     private $getWebsiteCodeByStoreId;
+
+    /**
+     * @var IsInStorePickupDeliveryCartInterface
+     */
+    private $isInStorePickupDeliveryCart;
 
     /**
      * @param CartRepositoryInterface $cartRepository
      * @param GetPickupLocationInterface $getPickupLocation
      * @param IsPickupLocationShippingAddress $isPickupLocationShippingAddress
      * @param ToQuoteAddress $addressConverter
-     * @param GetShipping $getShipping
+     * @param IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
      * @param GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
      */
     public function __construct(
@@ -68,15 +69,15 @@ class ReplaceShippingAddressForShippingAddressManagement
         GetPickupLocationInterface $getPickupLocation,
         IsPickupLocationShippingAddress $isPickupLocationShippingAddress,
         ToQuoteAddress $addressConverter,
-        GetShipping $getShipping,
+        IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart,
         GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
     ) {
         $this->cartRepository = $cartRepository;
         $this->getPickupLocation = $getPickupLocation;
         $this->isPickupLocationShippingAddress = $isPickupLocationShippingAddress;
         $this->addressConverter = $addressConverter;
-        $this->getShipping = $getShipping;
         $this->getWebsiteCodeByStoreId = $getWebsiteCodeByStoreId;
+        $this->isInStorePickupDeliveryCart = $isInStorePickupDeliveryCart;
     }
 
     /**
@@ -98,21 +99,12 @@ class ReplaceShippingAddressForShippingAddressManagement
     ): array {
         $quote = $this->cartRepository->getActive($cartId);
 
-        $shipping = $this->getShipping->execute($quote);
-
-        if ($shipping === null || $shipping->getMethod() !== InStorePickup::DELIVERY_METHOD) {
+        if (!$this->isInStorePickupDeliveryCart->execute($quote)) {
             return [$cartId, $address];
         }
 
-        if (!$address->getExtensionAttributes() || !$address->getExtensionAttributes()->getPickupLocationCode()) {
-            throw new StateException(__('Pickup Location Code is required for In-Store Pickup Delivery Method.'));
-        }
-
-        $pickupLocation = $this->getPickupLocation->execute(
-            $address->getExtensionAttributes()->getPickupLocationCode(),
-            SalesChannelInterface::TYPE_WEBSITE,
-            $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
-        );
+        $this->validateQuoteAddressPickupLocation($address);
+        $pickupLocation = $this->getPickupLocation($quote, $address);
 
         if ($this->isPickupLocationShippingAddress->execute($pickupLocation, $address)) {
             return [$cartId, $address];
@@ -129,5 +121,37 @@ class ReplaceShippingAddressForShippingAddressManagement
         );
 
         return [$cartId, $address];
+    }
+
+    /**
+     * Get Pickup Location entity, assigned to Shipping Address.
+     *
+     * @param CartInterface $quote
+     * @param AddressInterface $address
+     *
+     * @return PickupLocationInterface
+     * @throws NoSuchEntityException
+     */
+    private function getPickupLocation(CartInterface $quote, AddressInterface $address): PickupLocationInterface
+    {
+        return $this->getPickupLocation->execute(
+            $address->getExtensionAttributes()->getPickupLocationCode(),
+            SalesChannelInterface::TYPE_WEBSITE,
+            $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
+        );
+    }
+
+    /**
+     * Validate if Quote Shipping Address has assigned Pickup Location.
+     *
+     * @param AddressInterface $address
+     * @return void
+     * @throws StateException
+     */
+    private function validateQuoteAddressPickupLocation(AddressInterface $address): void
+    {
+        if (!$address->getExtensionAttributes() || !$address->getExtensionAttributes()->getPickupLocationCode()) {
+            throw new StateException(__('Pickup Location Code is required for In-Store Pickup Delivery Method.'));
+        }
     }
 }

@@ -48,7 +48,7 @@ class GetWebsiteCodeByStoreId
      * @return string
      * @throws NoSuchEntityException
      */
-    public function execute(int $storeId)
+    public function execute(int $storeId): string
     {
         $store = $this->storeRepository->getById($storeId);
         $website = $this->websiteRepository->getById($store->getWebsiteId());

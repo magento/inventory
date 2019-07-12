@@ -11,11 +11,14 @@ use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
-use Magento\InventoryInStorePickupQuote\Model\Quote\GetShipping;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\ValidationRules\QuoteValidationRuleInterface;
+use Magento\Quote\Api\Data\AddressInterface;
+use Magento\Quote\Api\Data\CartInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Validate Quote for In-Store Pickup Delivery Method.
@@ -43,52 +46,46 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
     private $getWebsiteCodeByStoreId;
 
     /**
-     * @var GetShipping
+     * @var IsInStorePickupDeliveryCartInterface
      */
-    private $getShipping;
+    private $isInStorePickupDeliveryCart;
 
     /**
      * @param ValidationResultFactory $validationResultFactory
      * @param IsPickupLocationShippingAddress $isPickupLocationShippingAddress
      * @param GetPickupLocationInterface $getPickupLocation
      * @param GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
-     * @param GetShipping $getShipping
+     * @param IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
         IsPickupLocationShippingAddress $isPickupLocationShippingAddress,
         GetPickupLocationInterface $getPickupLocation,
         GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId,
-        GetShipping $getShipping
+        IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->isPickupLocationShippingAddress = $isPickupLocationShippingAddress;
         $this->getPickupLocation = $getPickupLocation;
         $this->getWebsiteCodeByStoreId = $getWebsiteCodeByStoreId;
-        $this->getShipping = $getShipping;
+        $this->isInStorePickupDeliveryCart = $isInStorePickupDeliveryCart;
     }
 
     /**
      * @inheritdoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function validate(Quote $quote): array
     {
         $validationErrors = [];
 
-        $shipping = $this->getShipping->execute($quote);
-
-        if ($shipping === null || $shipping->getMethod() !== InStorePickup::DELIVERY_METHOD) {
+        if (!$this->isInStorePickupDeliveryCart->execute($quote)) {
             return [$this->validationResultFactory->create(['errors' => $validationErrors])];
         }
 
         $address = $quote->getShippingAddress();
 
-        $pickupLocation = $this->getPickupLocation->execute(
-            $address->getExtensionAttributes()->getPickupLocationCode(),
-            SalesChannelInterface::TYPE_WEBSITE,
-            $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
-        );
+        $pickupLocation = $this->getPickupLocation($quote, $address);
 
         if (!$this->isPickupLocationShippingAddress->execute($pickupLocation, $address)) {
             $validationErrors[] = __(
@@ -97,5 +94,24 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
         }
 
         return [$this->validationResultFactory->create(['errors' => $validationErrors])];
+    }
+
+    /**
+     * Get Pickup Location entity, assigned to Shipping Address.
+     *
+     * @param CartInterface $quote
+     * @param AddressInterface $address
+     *
+     * @return PickupLocationInterface
+     * @throws NoSuchEntityException
+     */
+    private function getPickupLocation(CartInterface $quote, AddressInterface $address): PickupLocationInterface
+    {
+        return $this->getPickupLocation->execute(
+            $address->getExtensionAttributes()->getPickupLocationCode(),
+            SalesChannelInterface::TYPE_WEBSITE,
+            $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
+        );
+
     }
 }
