@@ -23,6 +23,7 @@ use Magento\Quote\Model\ShippingAddressManagementInterface;
 
 /**
  * Replace Shipping Address with Pickup Location Shipping Address for Shipping Address Management service.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReplaceShippingAddressForShippingAddressManagement
 {
