@@ -9,4 +9,8 @@
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Attribute\OptionSelectBuilderInterface">
         <plugin name="Magento_ConfigurableProduct_Plugin_Model_ResourceModel_Attribute_InStockOptionSelectBuilder" type="Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Attribute\IsSalableOptionSelectBuilder"/>
     </type>
+    <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
+        <plugin name="add_option_qtys"
+                type="Magento\InventoryConfigurableProduct\Plugin\Block\Product\View\Type\AddOptionQtysPlugin"/>
+    </type>
 </config>
