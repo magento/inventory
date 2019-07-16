@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
  * In-Store Pickup Delivery Method Model.
  *
  * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class InStorePickup extends AbstractCarrier implements CarrierInterface
 {
@@ -79,6 +80,8 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      * @param GetFreePackagesInterface $getFreePackages
      * @param GetShippingPriceRequestInterface $getShippingPriceRequest
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,

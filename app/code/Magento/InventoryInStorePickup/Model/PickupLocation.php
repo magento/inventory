@@ -11,8 +11,9 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * {@inheritdoc}
+ * @inheritdoc
  * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class PickupLocation implements PickupLocationInterface
 {
