@@ -49,11 +49,14 @@ class ExtractPickupLocationShippingAddressData
             []
         );
 
-        return array_merge($pickupLocationAddressData, [
-            AddressInterface::SAME_AS_BILLING => false,
-            AddressInterface::SAVE_IN_ADDRESS_BOOK => false,
-            AddressInterface::CUSTOMER_ADDRESS_ID => null,
-            'shipping_method' => InStorePickup::DELIVERY_METHOD
-        ]);
+        return array_merge(
+            $pickupLocationAddressData,
+            [
+                AddressInterface::SAME_AS_BILLING => false,
+                AddressInterface::SAVE_IN_ADDRESS_BOOK => false,
+                AddressInterface::CUSTOMER_ADDRESS_ID => null,
+                'shipping_method' => InStorePickup::DELIVERY_METHOD
+            ]
+        );
     }
 }

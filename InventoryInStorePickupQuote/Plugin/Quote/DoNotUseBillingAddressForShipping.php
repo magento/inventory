@@ -8,11 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
 use Magento\Quote\Api\BillingAddressManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;
-use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 
 /**
  * Disallow use Billing Address for shipping if Quote Delivery Method is In-Store Pickup.
@@ -25,11 +24,20 @@ class DoNotUseBillingAddressForShipping
     private $cartRepository;
 
     /**
-     * @param CartRepositoryInterface $cartRepository
+     * @var IsInStorePickupDeliveryCartInterface
      */
-    public function __construct(CartRepositoryInterface $cartRepository)
-    {
+    private $isInStorePickupDeliveryCart;
+
+    /**
+     * @param CartRepositoryInterface $cartRepository
+     * @param IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
+     */
+    public function __construct(
+        CartRepositoryInterface $cartRepository,
+        IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
+    ) {
         $this->cartRepository = $cartRepository;
+        $this->isInStorePickupDeliveryCart = $isInStorePickupDeliveryCart;
     }
 
     /**
@@ -52,16 +60,7 @@ class DoNotUseBillingAddressForShipping
     ): array {
         $quote = $this->cartRepository->getActive($cartId);
 
-        if (!$quote->getExtensionAttributes() || !$quote->getExtensionAttributes()->getShippingAssignments()) {
-            return [$cartId, $address, $useForShipping];
-        }
-
-        $shippingAssignments = $quote->getExtensionAttributes()->getShippingAssignments();
-        /** @var ShippingAssignmentInterface $shippingAssignment */
-        $shippingAssignment = current($shippingAssignments);
-        $shipping = $shippingAssignment->getShipping();
-
-        if ($shipping->getMethod() === InStorePickup::DELIVERY_METHOD) {
+        if ($this->isInStorePickupDeliveryCart->execute($quote)) {
             $useForShipping = false;
         }
 

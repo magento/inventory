@@ -10,6 +10,7 @@
     <preference for="Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\ShippingPriceRequest" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPrice" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceRequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPriceRequest" />
+    <preference for="Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface" type="Magento\InventoryInStorePickupShipping\Model\IsInStorePickupDeliveryCart" />
 
     <type name="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain">
         <arguments>
