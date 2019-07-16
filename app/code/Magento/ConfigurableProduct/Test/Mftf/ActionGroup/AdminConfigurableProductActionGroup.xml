@@ -131,6 +131,22 @@
         <click selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" stepKey="clickOnConfirmInPopup"/>
     </actionGroup>
 
+    <actionGroup name="createConfigurationsForAttributeWithImages" extends="generateConfigurationsByAttributeCode">
+        <arguments>
+            <argument name="attributeCode" type="string" defaultValue="SomeString"/>
+            <argument name="image" defaultValue="ProductImage"/>
+        </arguments>
+
+        <click selector="{{AdminCreateProductConfigurationsPanel.applySingleSetOfImages}}" stepKey="clickOnApplySingleImageSetToAllSku" after="enterAttributeQuantity"/>
+        <waitForElementVisible selector="{{AdminCreateProductConfigurationsPanel.imageUploadButton}}" stepKey="seeImageSectionIsReady" after="clickOnApplySingleImageSetToAllSku"/>
+        <attachFile selector="{{AdminCreateProductConfigurationsPanel.imageFileUpload}}" userInput="{{image.file}}" stepKey="uploadFile" after="seeImageSectionIsReady"/>
+        <waitForElementNotVisible selector="{{AdminCreateProductConfigurationsPanel.uploadProgressBar}}" stepKey="waitForUpload" after="uploadFile"/>
+        <waitForElementVisible selector="{{AdminCreateProductConfigurationsPanel.imageFile(image.fileName)}}" stepKey="waitForThumbnail" after="waitForUpload"/>
+
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton2" after="clickOnNextButton4"/>
+        <click selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" stepKey="clickOnConfirmInPopup" after="clickOnSaveButton2"/>
+    </actionGroup>
+
     <actionGroup name="createConfigurationsForTwoAttribute" extends="generateConfigurationsByAttributeCode">
         <arguments>
             <argument name="secondAttributeCode" type="string"/>
@@ -189,7 +205,23 @@
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnThirdNextButton"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnFourthNextButton"/>
     </actionGroup>
-
+    <actionGroup name="selectCreatedAttributeAndCreateTwoOptions" extends="addNewProductConfigurationAttribute">
+        <remove keyForRemoval="clickOnNewAttribute"/>
+        <remove keyForRemoval="waitForIFrame"/>
+        <remove keyForRemoval="switchToNewAttributeIFrame"/>
+        <remove keyForRemoval="fillDefaultLabel"/>
+        <remove keyForRemoval="clickOnNewAttributePanel"/>
+        <remove keyForRemoval="waitForSaveAttribute"/>
+        <remove keyForRemoval="switchOutOfIFrame"/>
+        <remove keyForRemoval="waitForFilters"/>
+        <fillField userInput="{{attribute.attribute_code}}" selector="{{AdminCreateProductConfigurationsPanel.attributeCode}}" stepKey="fillFilterAttributeCodeField"/>
+        <fillField userInput="{{firstOption.label}}" selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="fillFieldForNewFirstOption"/>
+        <fillField userInput="{{secondOption.label}}" selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="fillFieldForNewSecondOption"/>
+        <remove keyForRemoval="clickOnSelectAll"/>
+        <remove keyForRemoval="clickOnSecondNextButton"/>
+        <remove keyForRemoval="clickOnThirdNextButton"/>
+        <remove keyForRemoval="clickOnFourthNextButton"/>
+    </actionGroup>
     <actionGroup name="changeProductConfigurationsInGrid">
         <arguments>
             <argument name="firstOption" type="entity"/>
@@ -275,5 +307,15 @@
         <seeInField userInput="{{ApiConfigurableProduct.name}}" selector="{{AdminProductFormSection.productName}}" stepKey="seeNameRequired"/>
         <seeInField userInput="{{ApiConfigurableProduct.sku}}" selector="{{AdminProductFormSection.productSku}}" stepKey="seeSkuRequired"/>
         <dontSeeInField userInput="{{ApiConfigurableProduct.price}}" selector="{{AdminProductFormSection.productPrice}}" stepKey="dontSeePriceRequired"/>
+    </actionGroup>
+
+    <!--Click in Next Step and see Title-->
+    <actionGroup name="AdminConfigurableWizardMoveToNextStepActionGroup">
+        <arguments>
+            <argument name="title" type="string"/>
+        </arguments>
+        <click selector="{{ConfigurableProductSection.nextButton}}" stepKey="clickNextButton"/>
+        <waitForPageLoad stepKey="waitForNextStepLoaded"/>
+        <see userInput="{{title}}" selector="{{AdminProductFormConfigurationsSection.stepsWizardTitle}}" stepKey="seeStepTitle"/>
     </actionGroup>
 </actionGroups>
