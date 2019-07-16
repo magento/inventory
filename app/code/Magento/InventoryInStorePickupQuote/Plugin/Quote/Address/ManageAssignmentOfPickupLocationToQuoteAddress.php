@@ -9,9 +9,8 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\Address;
 
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\DeleteQuoteAddressPickupLocation;
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\SaveQuoteAddressPickupLocation;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote\Address;
 
 /**
@@ -35,18 +34,26 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
     private $deleteQuoteAddressPickupLocation;
 
     /**
+     * @var IsInStorePickupDeliveryCartInterface
+     */
+    private $isInStorePickupDeliveryCart;
+
+    /**
      * @param SaveQuoteAddressPickupLocation $saveQuoteAddressPickupLocation
      * @param DeleteQuoteAddressPickupLocation $deleteQuoteAddressPickupLocation
      * @param CartRepositoryInterface $cartRepository
+     * @param IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
      */
     public function __construct(
         SaveQuoteAddressPickupLocation $saveQuoteAddressPickupLocation,
         DeleteQuoteAddressPickupLocation $deleteQuoteAddressPickupLocation,
-        CartRepositoryInterface $cartRepository
+        CartRepositoryInterface $cartRepository,
+        IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
     ) {
         $this->saveQuoteAddressPickupLocation = $saveQuoteAddressPickupLocation;
         $this->cartRepository = $cartRepository;
         $this->deleteQuoteAddressPickupLocation = $deleteQuoteAddressPickupLocation;
+        $this->isInStorePickupDeliveryCart = $isInStorePickupDeliveryCart;
     }
 
     /**
@@ -61,24 +68,14 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
      */
     public function afterAfterSave(Address $subject, Address $result): Address
     {
-        $quote = $this->cartRepository->get($subject->getQuoteId());
-
-        if (!$subject->getExtensionAttributes() ||
-            !$quote->getExtensionAttributes() ||
-            !$quote->getExtensionAttributes()->getShippingAssignments() ||
-            !($subject->getAddressType() === Address::ADDRESS_TYPE_SHIPPING)
-        ) {
+        if (!$this->validateAddress($subject)) {
             return $result;
         }
 
-        $shippingAssignments = $quote->getExtensionAttributes()->getShippingAssignments();
+        $quote = $this->cartRepository->get((int)$subject->getQuoteId());
 
-        /** @var ShippingAssignmentInterface $shippingAssignment */
-        $shippingAssignment = current($shippingAssignments);
-        $shipping = $shippingAssignment->getShipping();
-
-        if (!($shipping->getMethod() === InStorePickup::DELIVERY_METHOD &&
-            $subject->getExtensionAttributes()->getPickupLocationCode())
+        if (!$this->isInStorePickupDeliveryCart->execute($quote) ||
+            !$subject->getExtensionAttributes()->getPickupLocationCode()
         ) {
             $this->deleteQuoteAddressPickupLocation->execute((int)$subject->getId());
 
@@ -91,5 +88,17 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
         );
 
         return $result;
+    }
+
+    /**
+     * Check if address can have a Pickup Location.
+     *
+     * @param Address $address
+     *
+     * @return bool
+     */
+    private function validateAddress(Address $address): bool
+    {
+        return $address->getExtensionAttributes() && $address->getAddressType() === Address::ADDRESS_TYPE_SHIPPING;
     }
 }
