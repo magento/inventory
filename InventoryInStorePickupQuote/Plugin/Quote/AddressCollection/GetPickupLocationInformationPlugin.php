@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection;
 
+use Magento\Framework\DB\Select;
 use Magento\Quote\Api\Data\AddressExtensionInterfaceFactory;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Collection;
@@ -53,7 +54,7 @@ class GetPickupLocationInformationPlugin
             return $proceed($printQuery, $logQuery);
         }
 
-        if (!isset($collection->getSelect()->getPart(\Zend_Db_Select::FROM)[self::TABLE_ALIAS])) {
+        if (!isset($collection->getSelect()->getPart(Select::FROM)[self::TABLE_ALIAS])) {
             $collection->getSelect()->joinLeft(
                 [self::TABLE_ALIAS => 'inventory_pickup_location_quote_address'],
                 self::TABLE_ALIAS . '.address_id = main_table.address_id',

@@ -27,6 +27,8 @@ use Magento\Quote\Model\ShippingAddressManagementInterface;
  */
 class ReplaceShippingAddressForShippingAddressManagement
 {
+    private const ADDRESS_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
+
     /**
      * @var CartRepositoryInterface
      */
@@ -118,7 +120,7 @@ class ReplaceShippingAddressForShippingAddressManagement
         $address = $this->addressConverter->convert(
             $pickupLocation,
             $address,
-            ['extension_attribute_pickup_location_code_pickup_location_code' => $pickupLocation->getSourceCode()]
+            [self::ADDRESS_FIELD_NAME => $pickupLocation->getSourceCode()]
         );
 
         return [$cartId, $address];

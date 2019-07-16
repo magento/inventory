@@ -18,6 +18,8 @@ use Magento\Quote\Model\Quote\Address\ToOrder;
  */
 class PassPickupLocationToOrder
 {
+    private const ORDER_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
+
     /**
      * @param ToOrder $subject
      * @param Address $address
@@ -31,8 +33,7 @@ class PassPickupLocationToOrder
         $extension = $address->getExtensionAttributes();
 
         if ($extension && $extension->getPickupLocationCode()) {
-            $data['extension_attribute_pickup_location_code_pickup_location_code'] =
-                $extension->getPickupLocationCode();
+            $data[self::ORDER_FIELD_NAME] = $extension->getPickupLocationCode();
         }
 
         return [$address, $data];
