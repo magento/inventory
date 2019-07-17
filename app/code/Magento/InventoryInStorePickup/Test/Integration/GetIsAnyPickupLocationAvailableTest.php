@@ -20,11 +20,14 @@ class GetIsAnyPickupLocationAvailableTest extends TestCase
     /**
      * @var GetIsAnyPickupLocationAvailable
      */
-    private $getIsPickupLocationAvailable;
+    private $isPickupLocationAvailable;
 
+    /**
+     * @inheritdoc
+     */
     public function setUp()
     {
-        $this->getIsPickupLocationAvailable = Bootstrap::getObjectManager()->get(GetIsAnyPickupLocationAvailable::class);
+        $this->isPickupLocationAvailable = Bootstrap::getObjectManager()->get(GetIsAnyPickupLocationAvailable::class);
     }
 
     /**
@@ -40,7 +43,7 @@ class GetIsAnyPickupLocationAvailableTest extends TestCase
      */
     public function testExecuteWithAvailableLocations()
     {
-        $result = $this->getIsPickupLocationAvailable->execute(SalesChannelInterface::TYPE_WEBSITE, 'eu_website');
+        $result = $this->isPickupLocationAvailable->execute(SalesChannelInterface::TYPE_WEBSITE, 'eu_website');
         $this->assertTrue($result);
     }
 
@@ -56,7 +59,7 @@ class GetIsAnyPickupLocationAvailableTest extends TestCase
      */
     public function testExecuteWithoutAvailableLocations()
     {
-        $result = $this->getIsPickupLocationAvailable->execute(SalesChannelInterface::TYPE_WEBSITE, 'eu_website');
+        $result = $this->isPickupLocationAvailable->execute(SalesChannelInterface::TYPE_WEBSITE, 'eu_website');
         $this->assertFalse($result);
     }
 }

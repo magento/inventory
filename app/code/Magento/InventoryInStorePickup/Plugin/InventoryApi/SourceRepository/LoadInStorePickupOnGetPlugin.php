@@ -11,6 +11,9 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickup\Model\Source\InitPickupLocationExtensionAttributes;
 
+/**
+ * Populate store pickup extension attributes when loading single order.
+ */
 class LoadInStorePickupOnGetPlugin
 {
     /**
