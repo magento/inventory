@@ -98,7 +98,6 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
 
     /**
      * @inheritdoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(
         SearchCriteriaInterface $searchCriteria,
@@ -139,9 +138,14 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         }
 
         if (empty($searchCriteria->getSortOrders())) {
-            usort($results, function (PickupLocationInterface $left, PickupLocationInterface $right) use ($codes) {
-                return array_search($left->getSourceCode(), $codes) <=> array_search($right->getSourceCode(), $codes);
-            });
+            usort(
+                $results,
+                function (PickupLocationInterface $left, PickupLocationInterface $right) use ($codes) {
+                    $left = array_search($left->getSourceCode(), $codes);
+                    $right = array_search($right->getSourceCode(), $codes);
+                    return $left <=> $right;
+                }
+            );
         }
 
         return $results;

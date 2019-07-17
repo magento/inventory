@@ -18,8 +18,9 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 interface RequestValidatorInterface
 {
     /**
-     * @param RateRequest $rateRequest
+     * Validate rate request for In-Store Pickup Delivery.
      *
+     * @param RateRequest $rateRequest
      * @return ValidationResult
      */
     public function validate(RateRequest $rateRequest): ValidationResult;

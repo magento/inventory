@@ -16,6 +16,9 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
+/**
+ * @inheritdoc
+ */
 class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
 {
     /** @var ObjectManagerInterface */
@@ -73,7 +76,11 @@ class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
 
         $orderId = (int)$createdOrder->getEntityId();
 
-        $this->assertEquals($expectedResult, $this->isOrderReadyForPickUpService->execute($orderId), "sourceId: {$sourceId}");
+        $this->assertEquals(
+            $expectedResult,
+            $this->isOrderReadyForPickUpService->execute($orderId),
+            "sourceId: {$sourceId}"
+        );
     }
 
     /**

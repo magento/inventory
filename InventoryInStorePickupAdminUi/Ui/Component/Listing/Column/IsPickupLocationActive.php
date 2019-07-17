@@ -11,6 +11,9 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 
+/**
+ * Render pickup location on sources grid.
+ */
 class IsPickupLocationActive extends Column
 {
     /**
@@ -33,6 +36,8 @@ class IsPickupLocationActive extends Column
     }
 
     /**
+     * Normalize source data.
+     *
      * @param array $dataSource
      * @return array
      */
@@ -40,7 +45,8 @@ class IsPickupLocationActive extends Column
     {
         foreach ($dataSource['data']['items'] as &$row) {
             $row[PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] =
-                $row[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] ?? '';
+                $row[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]
+                [PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE] ?? '';
         }
 
         return $dataSource;

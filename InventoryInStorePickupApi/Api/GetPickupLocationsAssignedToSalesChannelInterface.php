@@ -15,9 +15,10 @@ namespace Magento\InventoryInStorePickupApi\Api;
 interface GetPickupLocationsAssignedToSalesChannelInterface
 {
     /**
+     * Get Pickup Locations for requested Sales Channel, ordered by corresponded Source priority.
+     *
      * @param string $salesChannelType
      * @param string $salesChannelCode
-     *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface[]
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

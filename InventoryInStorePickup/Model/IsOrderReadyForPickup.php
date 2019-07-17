@@ -41,8 +41,9 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
     }
 
     /**
-     * @param int $orderId
+     * Check if order can be shipped and the pickup location has enough QTY.
      *
+     * @param int $orderId
      * @return bool
      */
     public function execute(int $orderId): bool

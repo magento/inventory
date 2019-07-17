@@ -32,16 +32,6 @@ class SearchCriteriaBuilder extends FrameworkSearchCriteriaBuilder
     }
 
     /**
-     * Builds the SearchCriteria Data Object.
-     *
-     * @return SearchCriteriaInterface
-     */
-    public function create(): SearchCriteriaInterface
-    {
-        return parent::create();
-    }
-
-    /**
      * @inheritdoc
      */
     public function setRadius(int $radius)

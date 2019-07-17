@@ -40,7 +40,7 @@
                 <link name="visible">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
             </imports>
         </settings>
-        <field name="frontend_name">
+        <field name="frontend_name" formElement="input">
             <settings>
                 <dataScope>extension_attributes.frontend_name</dataScope>
                 <dataType>string</dataType>

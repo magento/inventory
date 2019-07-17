@@ -15,6 +15,9 @@ use Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailab
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @inheritdoc
+ */
 class GetSourceItemQtyAvailableServiceTest extends TestCase
 {
     /**
@@ -88,7 +91,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider SingleStorePickupOrderProvider
+     * @dataProvider singleStorePickupOrderProvider
      *
      * @param string $sourceCode
      * @param string $sku
@@ -126,7 +129,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider MultipleStorePickupOrdersProvider
+     * @dataProvider multipleStorePickupOrdersProvider
      *
      * @param string $sourceCode
      * @param string $sku
@@ -164,7 +167,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function SingleStorePickupOrderProvider(): array
+    public function singleStorePickupOrderProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 2.0], //3.5 reserved
@@ -180,7 +183,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function MultipleStorePickupOrdersProvider(): array
+    public function multipleStorePickupOrdersProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 1.0], //3.5 + 1.0 reserved
