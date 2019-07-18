@@ -23,8 +23,6 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
  */
 class GetPickupLocation implements GetPickupLocationInterface
 {
-    private const PICKUP_LOCATION_NOT_FOUND = 'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".';
-
     /**
      * @var GetIsPickupLocationActive
      */
@@ -92,7 +90,7 @@ class GetPickupLocation implements GetPickupLocationInterface
         if (!$this->getIsPickupLocationActive->execute($source)) {
             throw new NoSuchEntityException(
                 __(
-                    self::PICKUP_LOCATION_NOT_FOUND,
+                    'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [$pickupLocationCode, $salesChannelType, $salesChannelCode]
                 )
             );
@@ -109,7 +107,7 @@ class GetPickupLocation implements GetPickupLocationInterface
         if ($result->getTotalCount() === 0) {
             throw new NoSuchEntityException(
                 __(
-                    self::PICKUP_LOCATION_NOT_FOUND,
+                    'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [$pickupLocationCode, $salesChannelType, $salesChannelCode]
                 )
             );
