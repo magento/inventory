@@ -64,15 +64,28 @@ class GetPickupLocationInformationPlugin
 
         $result = $proceed($printQuery, $logQuery);
 
-        /** @var Address $address */
-        foreach ($collection->getItems() as $address) {
-            if ($address->hasData(self::PICKUP_LOCATION_CODE)) {
-                $this->addPickupLocationToExtensionAttributes($address);
-            }
-            $address->unsetData(self::PICKUP_LOCATION_CODE);
+        foreach ($collection as $address) {
+            $this->processAddress($address);
         }
 
         return $result;
+    }
+
+    /**
+     * Process address entity.
+     *
+     * @param Address $address
+     *
+     * @return void
+     */
+    private function processAddress(Address $address): void
+    {
+        $hasDataChanges = $address->hasDataChanges();
+        if ($address->getData(self::PICKUP_LOCATION_CODE)) {
+            $this->addPickupLocationToExtensionAttributes($address);
+        }
+        $address->unsetData(self::PICKUP_LOCATION_CODE);
+        $address->setDataChanges($hasDataChanges);
     }
 
     /**
@@ -88,6 +101,6 @@ class GetPickupLocationInformationPlugin
             $item->setExtensionAttributes($this->addressExtensionInterfaceFactory->create());
         }
 
-        $item->getExtensionAttributes()->setPickupLocationCode($item->getData('pickup_location_code'));
+        $item->getExtensionAttributes()->setPickupLocationCode($item->getData(self::PICKUP_LOCATION_CODE));
     }
 }
