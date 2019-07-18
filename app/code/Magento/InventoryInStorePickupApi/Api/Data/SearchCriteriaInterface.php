@@ -24,6 +24,8 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
     public function setRadius(int $radius): self;
 
     /**
+     * Search radius, by default in KM.
+     *
      * @return int
      */
     public function getRadius(): int;
@@ -32,7 +34,6 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
      * Add country to the Search Request.
      *
      * @param string $country
-     *
      * @return SearchCriteriaInterface
      */
     public function setCountry(string $country): self;
@@ -45,11 +46,9 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
     public function getCountry(): string;
 
     /**
-     * Add region to the Search Request.
-     * Search by postcode is in priority for Offline mode.
+     * Add region to the Search Request. Search by postcode is in priority for Offline mode.
      *
      * @param string|null $postcode
-     *
      * @return SearchCriteriaInterface
      */
     public function setPostcode(?string $postcode): self;
@@ -63,10 +62,10 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
 
     /**
      * Add region to the Search Request.
+     *
      * Search by region will be done only if Postcode and City are missed for Offline mode.
      *
      * @param string|null $region
-     *
      * @return SearchCriteriaInterface
      */
     public function setRegion(?string $region): self;
@@ -80,10 +79,10 @@ interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaI
 
     /**
      * Add city to the Search Request.
+     *
      * Search by city will be done only if Postcode is missed for Offline mode.
      *
      * @param string|null $city
-     *
      * @return SearchCriteriaInterface
      */
     public function setCity(?string $city): self;

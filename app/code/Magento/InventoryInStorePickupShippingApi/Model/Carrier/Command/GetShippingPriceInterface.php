@@ -18,9 +18,10 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 interface GetShippingPriceInterface
 {
     /**
+     * Get shipping price for In-Store Pickup delivery.
+     *
      * @param ShippingPriceRequestInterface $shippingPriceRequest
      * @param RateRequest $rateRequest
-     *
      * @return float|null
      */
     public function execute(ShippingPriceRequestInterface $shippingPriceRequest, RateRequest $rateRequest): ?float;

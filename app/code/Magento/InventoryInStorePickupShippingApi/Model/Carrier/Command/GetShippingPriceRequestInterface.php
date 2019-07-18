@@ -19,12 +19,12 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 interface GetShippingPriceRequestInterface
 {
     /**
+     * Create Shipping Price Request Data Transfer Object.
+     *
      * @param RateRequest $rateRequest
      * @param float $defaultPrice
      * @param float $freePackages
-     *
      * @param ShippingPriceRequestExtensionInterface|null $shippingPriceRequestExtension
-     *
      * @return ShippingPriceRequestInterface
      */
     public function execute(

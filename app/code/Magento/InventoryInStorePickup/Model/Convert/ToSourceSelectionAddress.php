@@ -30,8 +30,9 @@ class ToSourceSelectionAddress
     }
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
+     * Create Source Selection Address based on Pickup Locations Search Criteria.
      *
+     * @param SearchCriteriaInterface $searchCriteria
      * @return SourceSelectionAddressInterface
      */
     public function execute(SearchCriteriaInterface $searchCriteria): SourceSelectionAddressInterface
