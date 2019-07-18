@@ -34,8 +34,9 @@ interface ShippingPriceRequestInterface extends ExtensibleDataInterface
     /**
      * Set extension attributes
      *
-     * @phpcs:ignore
+     * @phpcs:disable
      * @param \Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestExtensionInterface|null $extensionAttributes
+     * @phpcs:enable
      * @return void
      */
     public function setExtensionAttributes(?ShippingPriceRequestExtensionInterface $extensionAttributes): void;
