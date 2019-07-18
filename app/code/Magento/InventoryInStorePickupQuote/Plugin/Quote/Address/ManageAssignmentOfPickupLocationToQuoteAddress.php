@@ -9,8 +9,7 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\Address;
 
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\DeleteQuoteAddressPickupLocation;
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\SaveQuoteAddressPickupLocation;
-use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Model\Quote\Address;
 
 /**
@@ -24,36 +23,20 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
     private $saveQuoteAddressPickupLocation;
 
     /**
-     * @var CartRepositoryInterface
-     */
-    private $cartRepository;
-
-    /**
      * @var DeleteQuoteAddressPickupLocation
      */
     private $deleteQuoteAddressPickupLocation;
 
     /**
-     * @var IsInStorePickupDeliveryCartInterface
-     */
-    private $isInStorePickupDeliveryCart;
-
-    /**
      * @param SaveQuoteAddressPickupLocation $saveQuoteAddressPickupLocation
      * @param DeleteQuoteAddressPickupLocation $deleteQuoteAddressPickupLocation
-     * @param CartRepositoryInterface $cartRepository
-     * @param IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
      */
     public function __construct(
         SaveQuoteAddressPickupLocation $saveQuoteAddressPickupLocation,
-        DeleteQuoteAddressPickupLocation $deleteQuoteAddressPickupLocation,
-        CartRepositoryInterface $cartRepository,
-        IsInStorePickupDeliveryCartInterface $isInStorePickupDeliveryCart
+        DeleteQuoteAddressPickupLocation $deleteQuoteAddressPickupLocation
     ) {
         $this->saveQuoteAddressPickupLocation = $saveQuoteAddressPickupLocation;
-        $this->cartRepository = $cartRepository;
         $this->deleteQuoteAddressPickupLocation = $deleteQuoteAddressPickupLocation;
-        $this->isInStorePickupDeliveryCart = $isInStorePickupDeliveryCart;
     }
 
     /**
@@ -63,7 +46,6 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
      * @param Address $result
      *
      * @return Address
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterAfterSave(Address $subject, Address $result): Address
@@ -72,11 +54,7 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
             return $result;
         }
 
-        $quote = $this->cartRepository->get((int)$subject->getQuoteId());
-
-        if (!$this->isInStorePickupDeliveryCart->execute($quote) ||
-            !$subject->getExtensionAttributes()->getPickupLocationCode()
-        ) {
+        if (!$this->isAddressHasPickupLocation($subject)) {
             $this->deleteQuoteAddressPickupLocation->execute((int)$subject->getId());
 
             return $result;
@@ -88,6 +66,19 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
         );
 
         return $result;
+    }
+
+    /**
+     * Validate if address has Pickup Location.
+     *
+     * @param Address $address
+     *
+     * @return bool
+     */
+    private function isAddressHasPickupLocation(Address $address): bool
+    {
+        return $address->getShippingMethod() === InStorePickup::DELIVERY_METHOD &&
+            $address->getExtensionAttributes()->getPickupLocationCode();
     }
 
     /**
