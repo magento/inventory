@@ -187,7 +187,7 @@ class OrderRepository extends \Magento\Sales\Model\OrderRepository
     /**
      * Set shipping assignments to extension attributes.
      *
-     * @inheritdoc
+     * @param OrderInterface $order
      */
     private function setShippingAssignments(OrderInterface $order)
     {

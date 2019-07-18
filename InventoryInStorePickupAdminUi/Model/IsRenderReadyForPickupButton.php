@@ -30,8 +30,9 @@ class IsRenderReadyForPickupButton
     }
 
     /**
-     * @param Order $order
+     * Check if 'Notify Order is Ready for Pickup' button should be rendered
      *
+     * @param Order $order
      * @return bool
      */
     public function execute(Order $order): bool

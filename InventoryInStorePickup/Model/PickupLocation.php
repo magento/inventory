@@ -114,6 +114,7 @@ class PickupLocation implements PickupLocationInterface
      * @param string|null $postcode
      * @param string|null $phone
      * @param PickupLocationExtensionInterface|null $extensionAttributes
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         string $sourceCode,

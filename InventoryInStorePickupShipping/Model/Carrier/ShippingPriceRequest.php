@@ -11,7 +11,7 @@ use Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestExten
 use Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestInterface;
 
 /**
- * {@inheritdoc}
+ * @inheritdoc
  * @codeCoverageIgnore
  */
 class ShippingPriceRequest implements ShippingPriceRequestInterface
@@ -33,7 +33,7 @@ class ShippingPriceRequest implements ShippingPriceRequestInterface
 
     /**
      * @param float $defaultPrice
-     * @param float freePackages
+     * @param float $freePackages
      * @param ShippingPriceRequestExtensionInterface|null $shippingPriceRequestExtension
      */
     public function __construct(

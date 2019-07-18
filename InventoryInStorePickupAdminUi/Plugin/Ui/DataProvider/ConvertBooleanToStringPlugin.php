@@ -11,19 +11,22 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider;
 
 /**
+ * Convert the extension attribute boolean (true|false) to string integer value ("1"|"0") to match expected type.
+ *
  * @TODO Remove when issue will be resolved in core.
  * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/22067.
  */
 class ConvertBooleanToStringPlugin
 {
     /**
+     * Convert the extension attribute to boolean/
+     *
      * Convert the extension attribute boolean (true|false) to string integer value ("1"|"0") to match expected type.
      * Ui DataProvider does not support this for Extension Attributes.
-     * @see \Magento\Ui\DataProvider\SearchResultFactory::createAttributes
      *
+     * @see \Magento\Ui\DataProvider\SearchResultFactory::createAttributes
      * @param SourceDataProvider $subject
      * @param array $result
-     *
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

@@ -39,6 +39,7 @@ class HideEditLink
      * @param string $result
      * @param Address $address
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetAddressEditLink(Info $subject, string $result, Address $address): string
     {
