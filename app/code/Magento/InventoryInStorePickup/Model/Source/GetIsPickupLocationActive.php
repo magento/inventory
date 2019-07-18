@@ -11,13 +11,15 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 
 /**
  * Anti copy-paste service.
- * Extracts is_pickup_location_active from the source with all the null-checks
+ *
+ * Extracts is_pickup_location_active from the source with all the null-checks.
  */
 class GetIsPickupLocationActive
 {
     /**
-     * @param SourceInterface $source
+     * Extracts is_pickup_location_active from the source with all the null-checks.
      *
+     * @param SourceInterface $source
      * @return bool
      */
     public function execute(SourceInterface $source): bool

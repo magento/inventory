@@ -30,7 +30,10 @@ class InitPickupLocationExtensionAttributes
     {
         $this->extensionAttributesFactory = $extensionAttributesFactory;
     }
+
     /**
+     * Set store-pickup related source extension attributes.
+     *
      * @param SourceInterface $source
      */
     public function execute(SourceInterface $source): void
