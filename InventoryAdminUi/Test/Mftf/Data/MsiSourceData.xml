@@ -165,6 +165,28 @@
         <data key="street">Peremohy Ave, 37</data>
         <data key="postcode">03056</data>
     </entity>
+    <entity name="StorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method.</data>
+        <data key="latitude">0</data>
+        <data key="longitude">0</data>
+        <data key="priority">100</data>
+        <data key="contact_name">John Doe</data>
+        <data key="email" unique="prefix">john.doe@example.com</data>
+        <data key="phone">123-456-7890</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <data key="stateProvince">California</data>
+        <data key="region_id">12</data>
+        <data key="city">Culver City</data>
+        <data key="street">6161 West Centinela Avenue</data>
+        <data key="postcode">90230</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
     <!-- This entity shouldn't be used in tests as it will fail test AdminManageSourceGridColumnsSortingTest -->
     <!-- The reason: source can't be deleted, only disabled-->
     <entity name="SourceForColumnsSortingOrderTestOnly" type="source">
