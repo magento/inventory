@@ -152,6 +152,7 @@ class ReplaceShippingAddressForShippingAddressManagement
      */
     private function validateQuoteAddressPickupLocation(AddressInterface $address): void
     {
+        //TODO set Same As Billing button should be removed or validation will fail in admin
         if (!$address->getExtensionAttributes() || !$address->getExtensionAttributes()->getPickupLocationCode()) {
             throw new StateException(__('Pickup Location Code is required for In-Store Pickup Delivery Method.'));
         }
