@@ -94,7 +94,6 @@ class InStorePickupTest extends TestCase
      */
     public function testShippingMethodWithoutPickupLocations()
     {
-        $this->markTestSkipped("Test has to be updated");
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('reserved_order_id', 'test01')
             ->create();
