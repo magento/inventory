@@ -8,9 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupShipping\Test\Integration\Carrier;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Quote\Api\Data\ShippingAssignmentInterfaceFactory;
 use PHPUnit\Framework\TestCase;
+use Magento\Quote\Api\Data\ShippingInterfaceFactory;
 
 /**
  * @inheritdoc
@@ -48,7 +52,6 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_in_store_pickup_quote_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/add_products_from_eu_stock_to_cart.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
@@ -77,8 +80,7 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_in_store_pickup_quote_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/add_products_from_eu_stock_to_cart.php
+     * @magentoDataFixture Magento/Sales/_files/quote.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
@@ -90,10 +92,28 @@ class InStorePickupTest extends TestCase
     public function testShippingMethodWithoutPickupLocations()
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('reserved_order_id', 'in_store_pickup_test_order')
+            ->addFilter('reserved_order_id', 'test01')
             ->create();
-        /** @var \Magento\Quote\Api\Data\CartInterface $cart */
+        /** @var \Magento\Quote\Model\Quote $cart */
         $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
+
+        /** @var ShippingAssignmentInterfaceFactory $shippingAssignmentFactory */
+        $shippingAssignmentFactory = Bootstrap::getObjectManager()->get(ShippingAssignmentInterfaceFactory::class);
+        /** @var ShippingAssignmentInterface $shippingAssignment */
+        $shippingAssignment = $shippingAssignmentFactory->create();
+        /** @var ShippingInterfaceFactory $shippingFactory */
+        $shippingFactory = Bootstrap::getObjectManager()->get(ShippingInterfaceFactory::class);
+        $shipping = $shippingFactory->create();
+        $shipping->setMethod(InStorePickup::DELIVERY_METHOD);
+        $shipping->setAddress($cart->getShippingAddress());
+        $shippingAssignment->setShipping($shipping);
+        $shippingAssignment->setItems($cart->getAllItems());
+        $cart->getExtensionAttributes()->setShippingAssignments([$shippingAssignment]);
+
+        $this->cartRepository->save($cart);
+
+        $cart = $this->cartRepository->get($cart->getId());
+
         $this->assertEmpty($cart->getShippingAddress()->getShippingMethod());
         $this->assertEquals(0, $cart->getShippingAddress()->getShippingAmount());
     }
