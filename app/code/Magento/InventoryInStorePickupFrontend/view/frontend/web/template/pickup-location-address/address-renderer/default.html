@@ -1,0 +1,37 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="shipping-address-item" css="'selected-item' : isSelected() , 'not-selected-item':!isSelected()">
+    <text args="address().name"/><br/>
+    <text args="address().street"/><br/>
+    <text args="address().city "/>, <span text="address().region"></span> <text args="address().postcode"/><br/>
+    <text args="getCountryName(address().country_id)"/><br/>
+    <a if="address().phone" attr="'href': 'tel:' + address().phone" text="address().phone"></a><br/>
+
+    <each args="data: address().customAttributes, as: 'element'">
+        <each args="data: Object.keys(element), as: 'attribute'">
+            <if args="typeof element[attribute] === 'object'">
+                <if args="element[attribute].label">
+                    <text args="element[attribute].label"/>
+                </if>
+                <ifnot args="element[attribute].label">
+                    <if args="element[attribute].value">
+                        <text args="element[attribute].value"/>
+                    </if>
+                </ifnot>
+            </if>
+            <if args="typeof element[attribute] === 'string'">
+                <text args="element[attribute]"/>
+            </if><br/>
+        </each>
+    </each>
+
+    <!-- ko if: (!isSelected()) -->
+    <button type="button" click="selectAddress" class="action action-select-shipping-item">
+        <span translate="'Ship Here'"></span>
+    </button>
+    <!-- /ko -->
+</div>

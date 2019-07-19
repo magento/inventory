@@ -7,7 +7,7 @@
         class="step-content"
         data-role="content"
     >
-        Store selector content goes here.
+        <each args="getRegion('address-list')" render="" />
 
         <form class="form-continue" data-bind="submit: setPickupInformation" novalidate="novalidate">
             <div class="actions-toolbar">
