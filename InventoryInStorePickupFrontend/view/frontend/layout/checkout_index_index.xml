@@ -49,6 +49,10 @@
                                                                 </item>
                                                             </item>
                                                         </item>
+                                                        <item name="address-list" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Magento_InventoryInStorePickupFrontend/js/view/pickup-location-address/list</item>
+                                                            <item name="displayArea" xsi:type="string">address-list</item>
+                                                        </item>
                                                     </item>
                                                 </item>
                                             </item>
