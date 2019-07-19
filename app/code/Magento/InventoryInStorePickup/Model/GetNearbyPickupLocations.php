@@ -109,6 +109,7 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
 
     /**
      * @inheritdoc
+     *
      * @throws NoSuchEntityException
      */
     public function execute(
@@ -172,12 +173,12 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
             $pickupLocations,
             function (PickupLocationInterface $left, PickupLocationInterface $right) use ($sortedCodes) {
                 return array_search(
-                        $left->getSourceCode(),
-                        $sortedCodes
-                    ) <=> array_search(
-                        $right->getSourceCode(),
-                        $sortedCodes
-                    );
+                    $left->getSourceCode(),
+                    $sortedCodes
+                ) <=> array_search(
+                    $right->getSourceCode(),
+                    $sortedCodes
+                );
             }
         );
     }

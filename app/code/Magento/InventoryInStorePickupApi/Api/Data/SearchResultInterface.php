@@ -41,8 +41,9 @@ interface SearchResultInterface
     /**
      * Set search criteria.
      *
+     * @phpcs:disable
      * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface $searchCriteria
-     *
+     * @phpcs:enable
      * @return $this
      */
     public function setSearchCriteria(GetNearbyLocationsCriteriaInterface $searchCriteria): SearchResultInterface;
