@@ -56,7 +56,7 @@ class SearchResult implements SearchResultInterface
     /**
      * @inheritDoc
      */
-    public function setItems(array $items)
+    public function setItems(array $items): SearchResultInterface
     {
         $this->validateItems($items);
         $this->items = $items;
@@ -75,7 +75,7 @@ class SearchResult implements SearchResultInterface
     /**
      * @inheritDoc
      */
-    public function setSearchCriteria(GetNearbyLocationsCriteriaInterface $searchCriteria)
+    public function setSearchCriteria(GetNearbyLocationsCriteriaInterface $searchCriteria): SearchResultInterface
     {
         $this->searchCriteria = $searchCriteria;
 
@@ -93,7 +93,7 @@ class SearchResult implements SearchResultInterface
     /**
      * @inheritDoc
      */
-    public function setTotalCount(int $totalCount)
+    public function setTotalCount(int $totalCount): SearchResultInterface
     {
         $this->totalCount = $totalCount;
 
