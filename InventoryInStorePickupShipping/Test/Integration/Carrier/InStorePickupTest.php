@@ -88,8 +88,6 @@ class InStorePickupTest extends TestCase
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
-     *
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testShippingMethodWithoutPickupLocations()
     {
@@ -108,11 +106,15 @@ class InStorePickupTest extends TestCase
         $shipping = $shippingFactory->create();
         $shipping->setMethod(InStorePickup::DELIVERY_METHOD);
         $shipping->setAddress($cart->getShippingAddress());
-        $shipping->getAddress()->getExtensionAttributes()->setPickupLocationCode('eu-1');
         $shippingAssignment->setShipping($shipping);
         $shippingAssignment->setItems($cart->getAllItems());
         $cart->getExtensionAttributes()->setShippingAssignments([$shippingAssignment]);
 
         $this->cartRepository->save($cart);
+
+        $cart = $this->cartRepository->get($cart->getId());
+
+        $this->assertEmpty($cart->getShippingAddress()->getShippingMethod());
+        $this->assertEquals(0, $cart->getShippingAddress()->getShippingAmount());
     }
 }
