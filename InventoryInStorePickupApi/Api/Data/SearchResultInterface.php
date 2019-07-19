@@ -45,9 +45,7 @@ interface SearchResultInterface
      *
      * @return $this
      */
-    public function setSearchCriteria(
-        GetNearbyLocationsCriteriaInterface $searchCriteria
-    ): SearchResultInterface;
+    public function setSearchCriteria(GetNearbyLocationsCriteriaInterface $searchCriteria): SearchResultInterface;
 
     /**
      * Get total count.
