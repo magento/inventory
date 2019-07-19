@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupShipping\Test\Integration\Carrier;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
@@ -90,7 +89,7 @@ class InStorePickupTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @expectedException NoSuchEntityException
+     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testShippingMethodWithoutPickupLocations()
     {
