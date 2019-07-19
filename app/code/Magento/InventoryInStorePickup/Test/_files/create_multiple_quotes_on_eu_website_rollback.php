@@ -19,7 +19,7 @@ $registry = Bootstrap::getObjectManager()->get(Registry::class);
 $cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
 /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
 $searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
-
+//phpcs:ignore
 $ids = 'in_store_pickup_test_order-SKU-1,in_store_pickup_test_order-SKU-3,in_store_pickup_test_order-SKU-4,in_store_pickup_test_order-SKU-6';
 $searchCriteria = $searchCriteriaBuilder
     ->addFilter('reserved_order_id', $ids, 'in')

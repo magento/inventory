@@ -21,10 +21,11 @@ class PassPickupLocationToOrder
     private const ORDER_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
 
     /**
+     * Add Pickup Location code to the Order from Quote Address.
+     *
      * @param ToOrder $subject
      * @param Address $address
      * @param array $data
-     *
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

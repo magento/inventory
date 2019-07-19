@@ -11,6 +11,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 
 /** @var ResourceConnection $connection */
 $connection = Bootstrap::getObjectManager()->get(ResourceConnection::class);
-$connection->getConnection()->delete($connection->getTableName('inventory_source'), [
-    SourceInterface::SOURCE_CODE . ' IN (?)' => ['pickup']
-]);
+$connection->getConnection()->delete(
+    $connection->getTableName('inventory_source'),
+    [SourceInterface::SOURCE_CODE . ' IN (?)' => ['pickup']]
+);
