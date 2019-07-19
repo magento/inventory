@@ -13,4 +13,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Quote\Model\QuoteRepository\LoadHandler">
+        <plugin name="force-load-extension-attributes" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\ForceLoadExtensionAttributes" sortOrder="69" />
+    </type>
 </config>
