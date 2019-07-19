@@ -73,7 +73,7 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
 
     /**
      * @inheritdoc
-     * 
+     *
      * @throws NoSuchEntityException
      */
     public function validate(Quote $quote): array
