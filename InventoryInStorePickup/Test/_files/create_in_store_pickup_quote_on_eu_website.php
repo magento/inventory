@@ -5,6 +5,7 @@
  */
 declare(strict_types=1);
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -43,10 +44,29 @@ $cartId = $cartManagement->createEmptyCart();
 $cart = $cartRepository->get($cartId);
 $cart->setCustomerEmail('admin@example.com');
 $cart->setCustomerIsGuest(true);
+$cart->setReservedOrderId('in_store_pickup_test_order');
 
 $store = $storeRepository->get('store_for_eu_website');
 $cart->setStoreId($store->getId());
 $storeManager->setCurrentStore($store->getCode());
+
+/** @var ProductRepositoryInterface $productRepository */
+$productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+
+$itemsToAdd = [
+    'SKU-1' => 3.5,
+    'SKU-2' => 2
+];
+
+foreach ($itemsToAdd as $sku => $qty) {
+    $product = $productRepository->get($sku);
+    $requestData = [
+        'product' => $product->getProductId(),
+        'qty' => $qty
+    ];
+    $request = new \Magento\Framework\DataObject($requestData);
+    $cart->addProduct($product, $request);
+}
 
 /** @var AddressInterface $address */
 $address = $addressFactory->create(
@@ -64,11 +84,14 @@ $address = $addressFactory->create(
         ]
     ]
 );
+
+$cartRepository->save($cart);
+$cart = $cartRepository->get($cart->getId());
+
 $addressExtension = $addressExtensionFactory->create();
 $addressExtension->setPickupLocationCode('eu-1');
 $address->setExtensionAttributes($addressExtension);
 
-$cart->setReservedOrderId('in_store_pickup_test_order');
 $cart->setBillingAddress($address);
 $cart->setShippingAddress($address);
 $cart->getPayment()->setMethod('checkmo');
