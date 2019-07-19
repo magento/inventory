@@ -11,8 +11,9 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * {@inheritdoc}
+ * @inheritdoc
  * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class PickupLocation implements PickupLocationInterface
 {
@@ -113,6 +114,7 @@ class PickupLocation implements PickupLocationInterface
      * @param string|null $postcode
      * @param string|null $phone
      * @param PickupLocationExtensionInterface|null $extensionAttributes
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         string $sourceCode,

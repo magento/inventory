@@ -14,6 +14,9 @@ use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @inheritdoc
+ */
 class MapperTest extends TestCase
 {
     /**

@@ -89,6 +89,8 @@ class ReadyForPickup extends Container
     }
 
     /**
+     * Check if admin is allowed to send email.
+     *
      * @return bool
      */
     private function isEmailsSendingAllowed(): bool
@@ -97,6 +99,8 @@ class ReadyForPickup extends Container
     }
 
     /**
+     * Check if delivery notification button may be displayed.
+     *
      * @return bool
      */
     private function isDisplayButton(): bool

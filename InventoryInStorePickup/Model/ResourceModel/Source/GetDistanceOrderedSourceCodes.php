@@ -12,7 +12,10 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
 
 /**
- * Get Source Codes, ordered by distance to request coordinates using Haversine formula (Great Circle Distance) database query.
+ * Get Source Codes ordered by distance
+ *
+ * Get Source Codes, ordered by distance to request coordinates using Haversine formula (Great Circle Distance)
+ * database query.
  */
 class GetDistanceOrderedSourceCodes
 {
@@ -32,9 +35,10 @@ class GetDistanceOrderedSourceCodes
     }
 
     /**
+     * Get list of sources located in specified radius of specific coordinates.
+     *
      * @param LatLngInterface $latLng
      * @param int $radius
-     *
      * @return string[]
      */
     public function execute(LatLngInterface $latLng, int $radius): array
