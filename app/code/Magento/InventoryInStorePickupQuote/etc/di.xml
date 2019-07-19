@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Model\ResourceModel\Quote\Address\Collection">
+        <plugin name="add_pickup_location_to_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection\GetPickupLocationInformationPlugin" sortOrder="20" />
+    </type>
+    <type name="Magento\Quote\Model\ResourceModel\Quote\Address">
+        <plugin name="load_pickup_location_for_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\LoadPickupLocationForQuoteAddress" sortOrder="30" />
+    </type>
+    <type name="Magento\Quote\Model\Quote\Address">
+        <plugin name="manage_assignemnt_of_pickup_location_to_quote_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\Address\ManageAssignmentOfPickupLocationToQuoteAddress" sortOrder="20" />
+    </type>
+    <type name="Magento\Quote\Model\ShippingAddressManagementInterface">
+        <plugin name="shipping_address_management_replace_shipping_address" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\ReplaceShippingAddressForShippingAddressManagement" sortOrder="20"/>
+    </type>
+    <type name="Magento\Quote\Api\BillingAddressManagementInterface">
+        <plugin name="do_not_use_billing_address_for_shipping_for_in_store_pickup_quote" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\DoNotUseBillingAddressForShipping" sortOrder="20" />
+    </type>
+    <type name="Magento\Quote\Model\ValidationRules\QuoteValidationComposite">
+        <arguments>
+            <argument name="validationRules" xsi:type="array">
+                <item name="InStorePickupQuoteValidationRule" xsi:type="object">Magento\InventoryInStorePickupQuote\Model\Quote\ValidationRule\InStorePickupQuoteValidationRule</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Address\ToOrder">
+        <plugin name="pass_pickup_location_to_order_during_address_conversion" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\PassPickupLocationToOrder" sortOrder="20" />
+    </type>
+</config>

@@ -32,6 +32,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
 {
     private const CARRIER_CODE = 'in_store';
     private const METHOD_CODE  = 'pickup';
+    public const DELIVERY_METHOD = self::CARRIER_CODE . '_' . self::METHOD_CODE;
 
     /**
      * @var bool
