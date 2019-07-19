@@ -17,8 +17,9 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 interface GetFreePackagesInterface
 {
     /**
-     * @param RateRequest $request
+     * Get number of packages with free delivery.
      *
+     * @param RateRequest $request
      * @return float
      */
     public function execute(RateRequest $request): float;

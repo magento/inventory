@@ -13,6 +13,9 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @inheritdoc
+ */
 class InventorySourceExtensionTest extends TestCase
 {
     /** @var ObjectManagerInterface */

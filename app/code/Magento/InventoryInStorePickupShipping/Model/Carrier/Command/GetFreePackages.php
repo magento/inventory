@@ -60,8 +60,9 @@ class GetFreePackages implements GetFreePackagesInterface
     }
 
     /**
-     * @param AbstractItem $item
+     * Check if item is eligible for free shipping.
      *
+     * @param AbstractItem $item
      * @return float
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

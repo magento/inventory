@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order;
 use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
@@ -22,7 +23,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Notify Customer of order pickup availability.
  */
-class NotifyPickup extends Action
+class NotifyPickup extends Action implements HttpPostActionInterface
 {
     /**
      * Authorization level of a basic admin session

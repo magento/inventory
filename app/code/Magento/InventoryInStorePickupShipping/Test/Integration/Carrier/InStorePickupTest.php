@@ -12,6 +12,9 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @inheritdoc
+ */
 class InStorePickupTest extends TestCase
 {
     /**

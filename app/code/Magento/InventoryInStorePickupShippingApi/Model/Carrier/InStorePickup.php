@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
  * In-Store Pickup Delivery Method Model.
  *
  * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class InStorePickup extends AbstractCarrier implements CarrierInterface
 {
@@ -78,6 +79,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      * @param GetFreePackagesInterface $getFreePackages
      * @param GetShippingPriceRequestInterface $getShippingPriceRequest
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -121,6 +123,8 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
     }
 
     /**
+     * Build shipping method error message.
+     *
      * @return Error
      */
     private function createErrorResult(): Error
@@ -161,8 +165,9 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
     }
 
     /**
-     * @param float $shippingPrice
+     * Create rate object based on shipping price.
      *
+     * @param float $shippingPrice
      * @return Method
      */
     private function createResultMethod(float $shippingPrice): Method

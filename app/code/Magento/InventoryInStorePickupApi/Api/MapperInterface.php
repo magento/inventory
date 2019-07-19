@@ -18,8 +18,9 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 interface MapperInterface
 {
     /**
-     * @param SourceInterface $source
+     * Create projection of sources on In-Store Pickup context.
      *
+     * @param SourceInterface $source
      * @return PickupLocationInterface
      */
     public function map(SourceInterface $source): PickupLocationInterface;
