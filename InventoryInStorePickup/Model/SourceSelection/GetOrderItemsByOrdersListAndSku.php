@@ -15,8 +15,7 @@ use Magento\Sales\Api\Data\OrderItemSearchResultInterface;
 use Magento\Sales\Api\OrderItemRepositoryInterface;
 
 /**
- * Get order items by the orders list provided
- * and a certain order item`s SKU
+ * Get order items by the orders list provided and a certain order item`s SKU.
  *
  * Something kind of emulation of SQL JOIN
  */
@@ -45,9 +44,10 @@ class GetOrderItemsByOrdersListAndSku
     }
 
     /**
+     * Get order items by the orders list provided and a certain order item`s SKU.
+     *
      * @param OrderInterface[] $orders
      * @param string $sku
-     *
      * @return OrderItemSearchResultInterface
      */
     public function execute(array $orders, string $sku): OrderItemSearchResultInterface
@@ -55,12 +55,15 @@ class GetOrderItemsByOrdersListAndSku
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(
                 OrderItemInterface::ORDER_ID,
-                implode(',', array_map(
-                    function (OrderInterface $order) {
-                        return $order->getEntityId();
-                    },
-                    $orders
-                )),
+                implode(
+                    ',',
+                    array_map(
+                        function (OrderInterface $order) {
+                            return $order->getEntityId();
+                        },
+                        $orders
+                    )
+                ),
                 'in'
             )->addFilter(OrderItemInterface::SKU, $sku)
             ->create();

@@ -106,8 +106,9 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     }
 
     /**
-     * @param OrderInterface $order
+     * Get shipping arguments from the Order extension attributes.
      *
+     * @param OrderInterface $order
      * @return ShipmentCreationArgumentsInterface
      */
     private function getShipmentArguments(OrderInterface $order): ShipmentCreationArgumentsInterface

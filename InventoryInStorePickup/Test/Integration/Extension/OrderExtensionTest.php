@@ -15,6 +15,9 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @inheritdoc
+ */
 class OrderExtensionTest extends TestCase
 {
     /** @var ObjectManagerInterface */

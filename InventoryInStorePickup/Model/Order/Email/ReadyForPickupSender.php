@@ -18,10 +18,8 @@ use Magento\Sales\Model\Order\Email\SenderBuilderFactory;
 use Psr\Log\LoggerInterface;
 
 /**
- * {@inheritdoc}
+ * @inheritdoc
  *
- * TODO: refactor
- * TODO: Implement asynchronous email sending
  * @see https://github.com/magento-engcom/msi/issues/2160
  */
 class ReadyForPickupSender extends Sender

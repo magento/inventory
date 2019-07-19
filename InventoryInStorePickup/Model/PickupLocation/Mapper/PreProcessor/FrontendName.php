@@ -11,15 +11,16 @@ namespace Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcesso
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 
+/**
+ * Processor for transferring frontend name from Source entity to Pickup Location entity.
+ */
 class FrontendName implements PreProcessorInterface
 {
-
     /**
      * Process Source Field before pass it to Pickup Location
      *
      * @param SourceInterface $source
      * @param string $value Frontend Name Extension Attribute value
-     *
      * @return string
      */
     public function process(SourceInterface $source, $value): string

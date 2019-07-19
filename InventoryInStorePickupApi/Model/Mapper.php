@@ -18,6 +18,7 @@ use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 
 /**
  * Create projection of sources on In-Store Pickup context.
+ *
  * Data transfer from source to projection will be done according to provided fields mapping.
  *
  * @api
@@ -88,9 +89,7 @@ class Mapper implements MapperInterface
     }
 
     /**
-     * @param SourceInterface $source
-     *
-     * @return PickupLocationInterface
+     * @inheritDoc
      */
     public function map(SourceInterface $source): PickupLocationInterface
     {
@@ -102,9 +101,10 @@ class Mapper implements MapperInterface
     }
 
     /**
+     * Process data with the set of registered preprocessors.
+     *
      * @param SourceInterface $source
      * @param array $data
-     *
      * @return array
      */
     private function preProcessData(SourceInterface $source, array $data)
@@ -119,8 +119,9 @@ class Mapper implements MapperInterface
     }
 
     /**
-     * @param array $sourceData
+     * Populate pickup location data fields based on the values in the provided source data.
      *
+     * @param array $sourceData
      * @return array
      */
     private function preparePickupLocationFields(array $sourceData): array
@@ -168,7 +169,6 @@ class Mapper implements MapperInterface
      * Extract values from Source according to the provided map.
      *
      * @param SourceInterface $source
-     *
      * @return array
      */
     private function extractDataFromSource(SourceInterface $source): array
@@ -200,8 +200,9 @@ class Mapper implements MapperInterface
     }
 
     /**
-     * @param $fieldName
+     * Detect if field is an extension attribute by it's name.
      *
+     * @param string $fieldName
      * @return string
      */
     private function getExtensionAttributeFieldName(string $fieldName): string
@@ -214,8 +215,7 @@ class Mapper implements MapperInterface
     /**
      * Check if field should be get from extension attributes.
      *
-     * @param $fieldName
-     *
+     * @param string $fieldName
      * @return bool
      */
     private function isExtensionAttributeField(string $fieldName): bool
@@ -227,7 +227,6 @@ class Mapper implements MapperInterface
      * Get getter name based on field name.
      *
      * @param string $fieldName
-     *
      * @return string
      */
     private function getGetterMethodName(string $fieldName): string
@@ -239,7 +238,6 @@ class Mapper implements MapperInterface
      * Get setter name for Extension Attribute based on field name.
      *
      * @param string $fieldName
-     *
      * @return string
      */
     private function getSetterMethodName(string $fieldName): string

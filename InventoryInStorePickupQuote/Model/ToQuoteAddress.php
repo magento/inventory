@@ -62,9 +62,7 @@ class ToQuoteAddress
      *
      * @param PickupLocationInterface $pickupLocation
      * @param Address $originalAddress
-     *
      * @param array $data
-     *
      * @return AddressInterface
      */
     public function convert(
