@@ -30,8 +30,9 @@ class ToSourceSelectionAddress
     }
 
     /**
-     * @param GetNearbyLocationsCriteriaInterface $searchCriteria
+     * Create Source Selection Address based on Pickup Locations Search Criteria.
      *
+     * @param GetNearbyLocationsCriteriaInterface $searchCriteria
      * @return SourceSelectionAddressInterface
      */
     public function execute(GetNearbyLocationsCriteriaInterface $searchCriteria): SourceSelectionAddressInterface
@@ -40,7 +41,7 @@ class ToSourceSelectionAddress
             'country' => $searchCriteria->getCountry(),
             'postcode' => $searchCriteria->getPostcode() ?? '',
             'region' => $searchCriteria->getRegion() ?? '',
-            'city' => $searchCriteria->getCity() ??'',
+            'city' => $searchCriteria->getCity() ?? '',
             'street' => ''
         ];
 

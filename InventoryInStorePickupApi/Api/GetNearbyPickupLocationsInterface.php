@@ -19,10 +19,11 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 interface GetNearbyPickupLocationsInterface
 {
     /**
+     * Find nearest Pickup Locations by requested address, radius, and affiliation to Sales Channel.
+     *
      * @param GetNearbyLocationsCriteriaInterface $searchCriteria
      * @param string $salesChannelType
      * @param string $salesChannelCode
-     *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface
      */
     public function execute(

@@ -15,6 +15,8 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria;
 interface GetNearbyLocationsCriteriaInterface
 {
     /**
+     * Get search radius in KM.
+     *
      * @return int
      */
     public function getRadius(): int;
@@ -56,7 +58,8 @@ interface GetNearbyLocationsCriteriaInterface
 
     /**
      * Get current page.
-     * If not specified, 1 is returned by default
+     *
+     * If not specified, 1 is returned by default.
      *
      * @return int
      */

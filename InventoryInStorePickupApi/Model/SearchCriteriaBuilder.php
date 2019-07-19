@@ -149,8 +149,7 @@ class SearchCriteriaBuilder
      * Set data
      *
      * @param string $key
-     * @param $value
-     *
+     * @param mixed $value
      * @return SearchCriteriaBuilder
      */
     private function set(string $key, $value): self

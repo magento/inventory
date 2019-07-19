@@ -13,6 +13,9 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 
+/**
+ * @inheritdoc
+ */
 class SearchResult implements SearchResultInterface
 {
     /**
@@ -101,8 +104,9 @@ class SearchResult implements SearchResultInterface
     }
 
     /**
-     * @param array $items
+     * Validate Pickup Location objects.
      *
+     * @param array $items
      * @return void
      * @throws InvalidArgumentException
      */
