@@ -116,11 +116,9 @@ class SearchResult implements SearchResultInterface
             if (!$item instanceof PickupLocationInterface) {
                 throw new InvalidArgumentException(
                     sprintf(
-                        'Items should be an instance of %s, $s given',
-                        [
-                            PickupLocationInterface::class,
-                            is_object($item) ? get_class($item) : gettype($item)
-                        ]
+                        'Expected instance of %s, %s given instead.',
+                        PickupLocationInterface::class,
+                        is_object($item) ? get_class($item) : $item
                     )
                 );
             }
