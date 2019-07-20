@@ -26,6 +26,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
 {
