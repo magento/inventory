@@ -118,7 +118,7 @@ class SearchResult implements SearchResultInterface
                     sprintf(
                         'Expected instance of %s, %s given instead.',
                         PickupLocationInterface::class,
-                        is_object($item) ? get_class($item) : $item
+                        is_object($item) ? get_class($item) : 'not object type'
                     )
                 );
             }
