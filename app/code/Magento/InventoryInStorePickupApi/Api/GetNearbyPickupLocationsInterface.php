@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 
 /**
  * Find nearest Pickup Locations by requested address, radius, and affiliation to Sales Channel.
@@ -20,14 +21,14 @@ interface GetNearbyPickupLocationsInterface
     /**
      * Find nearest Pickup Locations by requested address, radius, and affiliation to Sales Channel.
      *
-     * @param SearchCriteriaInterface $searchCriteria
+     * @param GetNearbyLocationsCriteriaInterface $searchCriteria
      * @param string $salesChannelType
      * @param string $salesChannelCode
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface[]
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface
      */
     public function execute(
-        SearchCriteriaInterface $searchCriteria,
+        GetNearbyLocationsCriteriaInterface $searchCriteria,
         string $salesChannelType,
         string $salesChannelCode
-    ): array;
+    ): SearchResultInterface;
 }

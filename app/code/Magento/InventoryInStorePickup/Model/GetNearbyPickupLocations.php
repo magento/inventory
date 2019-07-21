@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
@@ -16,13 +17,16 @@ use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInt
 use Magento\InventoryInStorePickup\Model\Convert\ToSourceSelectionAddress;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrderedSourceCodes;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface;
 use Magento\InventoryInStorePickupApi\Api\MapperInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
 {
@@ -67,6 +71,11 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
     private $stockResolver;
 
     /**
+     * @var SearchResultInterfaceFactory
+     */
+    private $searchResultFactory;
+
+    /**
      * @param MapperInterface $mapper
      * @param ToSourceSelectionAddress $addressToSourceSelectionAddress
      * @param GetLatLngFromAddressInterface $getLatLngFromAddress
@@ -75,6 +84,7 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SourceRepositoryInterface $sourceRepository
      * @param StockResolverInterface $stockResolver
+     * @param SearchResultInterfaceFactory $searchResultFactory
      */
     public function __construct(
         MapperInterface $mapper,
@@ -84,7 +94,8 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         GetStockSourceLinksInterface $getStockSourceLinks,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SourceRepositoryInterface $sourceRepository,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        SearchResultInterfaceFactory $searchResultFactory
     ) {
         $this->mapper = $mapper;
         $this->addressToSourceSelectionAddress = $addressToSourceSelectionAddress;
@@ -94,16 +105,19 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sourceRepository = $sourceRepository;
         $this->stockResolver = $stockResolver;
+        $this->searchResultFactory = $searchResultFactory;
     }
 
     /**
      * @inheritdoc
+     *
+     * @throws NoSuchEntityException
      */
     public function execute(
-        SearchCriteriaInterface $searchCriteria,
+        GetNearbyLocationsCriteriaInterface $searchCriteria,
         string $salesChannelType,
         string $salesChannelCode
-    ): array {
+    ): SearchResultInterface {
         $sourceSelectionAddress = $this->addressToSourceSelectionAddress->execute($searchCriteria);
         $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
 
@@ -124,30 +138,49 @@ class GetNearbyPickupLocations implements GetNearbyPickupLocationsInterface
         $searchCriteriaSource = $this->searchCriteriaBuilder
             ->setPageSize($searchCriteria->getPageSize() ?? false)
             ->setCurrentPage($searchCriteria->getCurrentPage() ?? 1)
-            ->setSortOrders($searchCriteria->getSortOrders() ?? [])
-            ->setFilterGroups($searchCriteria->getFilterGroups())
             ->addFilter(SourceInterface::SOURCE_CODE, $stockCodes, 'in')
             ->addFilter(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE, true)
             ->create();
         $searchResult = $this->sourceRepository->getList($searchCriteriaSource);
 
-        $results = [];
+        $items = [];
 
         foreach ($searchResult->getItems() as $source) {
-            $results[] = $this->mapper->map($source);
+            $items[] = $this->mapper->map($source);
         }
 
-        if (empty($searchCriteria->getSortOrders())) {
-            usort(
-                $results,
-                function (PickupLocationInterface $left, PickupLocationInterface $right) use ($codes) {
-                    $left = array_search($left->getSourceCode(), $codes);
-                    $right = array_search($right->getSourceCode(), $codes);
-                    return $left <=> $right;
-                }
-            );
-        }
+        $this->sortByDistance($items, $codes);
 
-        return $results;
+        return $this->searchResultFactory->create(
+            [
+                'items' => $items,
+                'totalCount' => count($items),
+                'searchCriteria' => $searchCriteria
+            ]
+        );
+    }
+
+    /**
+     * Sort pickup locations by distance
+     *
+     * @param PickupLocationInterface[] $pickupLocations
+     * @param string[] $sortedCodes
+     *
+     * @return void
+     */
+    private function sortByDistance(&$pickupLocations, array $sortedCodes): void
+    {
+        usort(
+            $pickupLocations,
+            function (PickupLocationInterface $left, PickupLocationInterface $right) use ($sortedCodes) {
+                return array_search(
+                    $left->getSourceCode(),
+                    $sortedCodes
+                ) <=> array_search(
+                    $right->getSourceCode(),
+                    $sortedCodes
+                );
+            }
+        );
     }
 }
