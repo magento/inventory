@@ -31,17 +31,13 @@ define([
                 '#store-selector form[data-role=email-with-possible-login]',
         },
         quoteIsVirtual: quote.isVirtual(),
-        pickupLocations: pickupLocationsService.pickupLocations,
 
         initialize: function() {
             this._super();
 
-            quote.shippingAddress.subscribe(console.log);
-
             quote.shippingAddress.subscribe(function(address) {
                 pickupLocationsService.getLocations(address);
             });
-            this.pickupLocations.subscribe(console.log);
         },
 
         /**
@@ -50,39 +46,17 @@ define([
         setPickupInformation: function() {
             var address;
             if (this.validatePickupInformation()) {
-                // address = $.extend(
-                //     {},
-                //     addressConverter.formAddressDataToQuoteAddress({
-                //         firstname: 'NKD',
-                //         lastname: 'Store',
-                //         street: ['Schönhauser Allee 101'],
-                //         city: 'Berlin',
-                //         postcode: '10439',
-                //         countryId: 'DE',
-                //         telephone: '123123123',
-                //         custom_attributes: {
-                //             sourceCode: 'test-source-code',
-                //         },
-                //     })
-                // );
-                // quote.billingAddress(null);
-                // selectShippingAddress(address);
-                // checkoutData.setShippingAddressFromData(address);
-                // checkoutData.setSelectedShippingAddress(address.getKey());
-                // checkoutDataResolver.resolveBillingAddress();
+                // var shippingAddress = quote.shippingAddress();
+                // if (shippingAddress.extension_attributes === undefined) {
+                //     shippingAddress.extension_attributes = {};
+                // }
 
-                debugger;
-                var shippingAddress = quote.shippingAddress();
-                if (shippingAddress.extension_attributes === undefined) {
-                    shippingAddress.extension_attributes = {};
-                }
+                // var sourceCode = _.findWhere(shippingAddress.customAttributes, {
+                //     attribute_code: 'sourceCode',
+                // });
 
-                var sourceCode = _.findWhere(shippingAddress.customAttributes, {
-                    attribute_code: 'sourceCode',
-                });
-
-                shippingAddress.extension_attributes.pickup_location_code =
-                    sourceCode.value;
+                // shippingAddress.extension_attributes.pickup_location_code =
+                //     sourceCode.value;
 
                 setShippingInformationAction().done(function() {
                     stepNavigator.next();
