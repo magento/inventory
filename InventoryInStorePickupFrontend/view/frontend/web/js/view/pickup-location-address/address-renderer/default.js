@@ -6,30 +6,11 @@
 define([
     'jquery',
     'ko',
-    'underscore',
     'uiComponent',
-    'Magento_Checkout/js/action/select-shipping-address',
     'Magento_Checkout/js/model/quote',
-    'Magento_Checkout/js/model/shipping-address/form-popup-state',
-    'Magento_Checkout/js/checkout-data',
     'Magento_Customer/js/customer-data',
-    'Magento_Checkout/js/model/address-converter',
-    'Magento_Checkout/js/action/select-shipping-address',
-    'Magento_Checkout/js/model/checkout-data-resolver',
-], function(
-    $,
-    ko,
-    _,
-    Component,
-    selectShippingAddressAction,
-    quote,
-    formPopUpState,
-    checkoutData,
-    customerData,
-    addressConverter,
-    selectShippingAddress,
-    checkoutDataResolver
-) {
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
+], function($, ko, Component, quote, customerData, pickupLocationsService) {
     'use strict';
 
     var countryData = customerData.get('directory-data');
@@ -40,6 +21,10 @@ define([
                 'Magento_InventoryInStorePickupFrontend/pickup-location-address/address-renderer/default',
         },
 
+        initialize: function() {
+            this._super();
+        },
+
         /** @inheritdoc */
         initObservable: function() {
             this._super();
@@ -47,8 +32,6 @@ define([
                 var sourceCode,
                     isSelected = false,
                     shippingAddress = quote.shippingAddress();
-
-                console.log(shippingAddress);
 
                 if (shippingAddress && shippingAddress.customAttributes) {
                     sourceCode = _.findWhere(shippingAddress.customAttributes, {
@@ -75,33 +58,22 @@ define([
                 : ''; //eslint-disable-line
         },
 
+        /**
+         * Returns region name based on given country and region identifiers.
+         * @param {string} countryId Country identifier.
+         * @param {string} regionId Region identifier.
+         */
+        getRegionName: function(countryId, regionId) {
+            var regions = countryData()[countryId]
+                ? countryData()[countryId].regions
+                : null;
+
+            return regions && regions[regionId] ? regions[regionId].name : '';
+        },
+
         /** Set selected customer shipping address  */
         selectAddress: function() {
-            var address = $.extend(
-                {},
-                addressConverter.formAddressDataToQuoteAddress({
-                    firstname: this.address().name,
-                    lastname: 'Store',
-                    street: [this.address().street],
-                    city: this.address().city,
-                    postcode: this.address().postcode,
-                    countryId: this.address().country_id,
-                    telephone: this.address().phone,
-                    region: this.address().region,
-                    region_id: this.address().region_id,
-                    custom_attributes: {
-                        sourceCode: this.address().source_code,
-                    },
-                })
-            );
-            quote.billingAddress(null);
-            selectShippingAddress(address);
-            checkoutData.setShippingAddressFromData(address);
-            checkoutData.setSelectedShippingAddress(address.getKey());
-            checkoutDataResolver.resolveBillingAddress();
-
-            // selectShippingAddressAction(this.address());
-            // checkoutData.setSelectedShippingAddress(this.address().getKey());
+            pickupLocationsService.selectForShipping(this.address());
         },
 
         /**

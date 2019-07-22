@@ -9,11 +9,9 @@ define([
     'mageUtils',
     'uiComponent',
     'uiLayout',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-], function(_, ko, utils, Component, layout, pickupLocationsService) {
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations',
+], function(_, ko, utils, Component, layout, pickupLocations) {
     'use strict';
-
-    var pickupLocations = pickupLocationsService.pickupLocations;
 
     var defaultRendererTemplate = {
         parent: '${ $.$data.parentName }',
@@ -34,13 +32,8 @@ define([
         initialize: function() {
             this._super().initChildren();
 
-            pickupLocations.subscribe(function(changes) {
-                console.log({ changes });
-                var self = this;
-
-                changes.forEach(function(change) {
-                    self.createRendererComponent(change);
-                });
+            pickupLocations.subscribe(function(locations) {
+                _.each(locations, this.createRendererComponent, this);
             }, this);
 
             return this;
@@ -57,7 +50,6 @@ define([
 
         /** @inheritdoc */
         initChildren: function() {
-            console.log(pickupLocations());
             _.each(pickupLocations(), this.createRendererComponent, this);
 
             return this;
