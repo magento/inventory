@@ -13,6 +13,10 @@ define([
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/shipping-service',
     'Magento_Checkout/js/model/step-navigator',
+    'Magento_Customer/js/model/address-list',
+    'Magento_Checkout/js/action/select-shipping-address',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
 ], function(
     Component,
     ko,
@@ -22,7 +26,11 @@ define([
     selectShippingMethodAction,
     checkoutData,
     shippingService,
-    stepNavigator
+    stepNavigator,
+    addressList,
+    selectShippingAddressAction,
+    pickupLocations,
+    pickupLocationsService
 ) {
     'use strict';
 
@@ -100,9 +108,34 @@ define([
                 );
             });
             this.selectShippingMethod(shippingMethod);
+
+            var shippingAddress = quote.shippingAddress();
+            if (this.isStorePickupAddress(shippingAddress)) {
+                var defaultShippingAddress = _.find(addressList(), function(
+                    address
+                ) {
+                    return address.isDefaultShipping();
+                });
+
+                selectShippingAddressAction(defaultShippingAddress);
+                checkoutData.setSelectedShippingAddress(
+                    defaultShippingAddress.getKey()
+                );
+            }
         },
         selectStorePickup: function() {
             this.selectShippingMethod(this.inStoreMethod);
+
+            var subscription = pickupLocations.subscribe(function(locations) {
+                var nearestPickupLocation = locations[0];
+                if (nearestPickupLocation) {
+                    pickupLocationsService.selectForShipping(
+                        nearestPickupLocation
+                    );
+                }
+                subscription.dispose();
+            });
+            pickupLocationsService.getLocations(quote.shippingAddress());
         },
         /**
          * @param {Object} shippingMethod
@@ -115,14 +148,12 @@ define([
                 : null;
 
             selectShippingMethodAction(shippingMethod);
-            checkoutData.setSelectedShippingRate(shippingRate);
         },
         convertShippingAddress() {
-            var self = this;
             quote.shippingAddress.subscribe(function(shippingAddress) {
                 if (
-                    shippingAddress.getType() !== 'store-pickup-address' &&
-                    self.isStorePickupSelected()
+                    !this.isStorePickupAddress(shippingAddress) &&
+                    this.isStorePickupSelected()
                 ) {
                     quote.shippingAddress(
                         $.extend({}, shippingAddress, {
@@ -135,7 +166,10 @@ define([
                         })
                     );
                 }
-            });
+            }, this);
+        },
+        isStorePickupAddress(address) {
+            return address.getType() === 'store-pickup-address';
         },
     });
 });

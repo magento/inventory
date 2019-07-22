@@ -1,4 +1,4 @@
-<div id="store-selector">
+<div id="store-selector" data-bind="blockLoader: isLoading">
     <each if="!quoteIsVirtual" args="getRegion('customer-email')" render="" />
 
     <div class="step-title" data-bind="i18n: 'Store'" data-role="title"></div>

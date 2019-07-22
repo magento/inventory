@@ -16,7 +16,6 @@ define([
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/select-shipping-address',
-    'Magento_Checkout/js/model/checkout-data-resolver',
 ], function(
     $,
     resourceUrlManager,
@@ -29,8 +28,7 @@ define([
 
     checkoutData,
     addressConverter,
-    selectShippingAddress,
-    checkoutDataResolver
+    selectShippingAddressAction
 ) {
     'use strict';
 
@@ -91,13 +89,17 @@ define([
                     custom_attributes: {
                         sourceCode: location.source_code,
                     },
-                })
+                }),
+                {
+                    canUseForBilling: function() {
+                        return false;
+                    },
+                    getType: function() {
+                        return 'store-pickup-address';
+                    },
+                }
             );
-            // quote.billingAddress(null);
-            // selectShippingAddress(address);
-            // checkoutData.setShippingAddressFromData(address);
-            // checkoutData.setSelectedShippingAddress(address.getKey());
-            // checkoutDataResolver.resolveBillingAddress();
+
             selectShippingAddressAction(address);
             checkoutData.setSelectedShippingAddress(address.getKey());
         },

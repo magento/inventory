@@ -10,8 +10,9 @@ define([
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
     'Magento_Checkout/js/model/step-navigator',
+    'Magento_Checkout/js/model/shipping-service',
     'Magento_Checkout/js/action/set-shipping-information',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations',
 ], function(
     $,
     _,
@@ -19,8 +20,8 @@ define([
     quote,
     customer,
     stepNavigator,
-    setShippingInformationAction,
-    pickupLocationsService
+    shippingService,
+    setShippingInformationAction
 ) {
     'use strict';
 
@@ -31,32 +32,28 @@ define([
                 '#store-selector form[data-role=email-with-possible-login]',
         },
         quoteIsVirtual: quote.isVirtual(),
+        isLoading: shippingService.isLoading,
 
         initialize: function() {
             this._super();
-
-            quote.shippingAddress.subscribe(function(address) {
-                pickupLocationsService.getLocations(address);
-            });
         },
-
         /**
          * Set shipping information handler
          */
         setPickupInformation: function() {
-            var address;
+            var shippingAddress;
             if (this.validatePickupInformation()) {
-                // var shippingAddress = quote.shippingAddress();
-                // if (shippingAddress.extension_attributes === undefined) {
-                //     shippingAddress.extension_attributes = {};
-                // }
+                shippingAddress = quote.shippingAddress();
+                if (shippingAddress.extension_attributes === undefined) {
+                    shippingAddress.extension_attributes = {};
+                }
 
-                // var sourceCode = _.findWhere(shippingAddress.customAttributes, {
-                //     attribute_code: 'sourceCode',
-                // });
+                var sourceCode = _.findWhere(shippingAddress.customAttributes, {
+                    attribute_code: 'sourceCode',
+                });
 
-                // shippingAddress.extension_attributes.pickup_location_code =
-                //     sourceCode.value;
+                shippingAddress.extension_attributes.pickup_location_code =
+                    sourceCode.value;
 
                 setShippingInformationAction().done(function() {
                     stepNavigator.next();

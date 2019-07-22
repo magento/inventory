@@ -75,12 +75,5 @@ define([
         selectAddress: function() {
             pickupLocationsService.selectForShipping(this.address());
         },
-
-        /**
-         * Show popup.
-         */
-        showPopup: function() {
-            $('[data-open-modal="opc-new-shipping-address"]').trigger('click');
-        },
     });
 });

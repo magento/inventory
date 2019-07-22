@@ -21,7 +21,6 @@ define([
         initialize: function() {
             this._super();
             this.extractPickupLocationFromAddress(this.address());
-            console.log(this.pickupLocation());
         },
 
         initObservable: function() {
