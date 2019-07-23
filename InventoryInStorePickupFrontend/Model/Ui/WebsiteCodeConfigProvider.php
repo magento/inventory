@@ -29,6 +29,6 @@ class WebsiteCodeConfigProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        return ['currentWebsiteCode' => $this->getCurrentWebsiteCode->execute()];
+        return ['websiteCode' => $this->getCurrentWebsiteCode->execute()];
     }
 }
