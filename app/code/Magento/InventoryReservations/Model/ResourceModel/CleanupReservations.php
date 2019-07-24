@@ -51,7 +51,7 @@ class CleanupReservations implements CleanupReservationsInterface
                 $reservationTable,
                 ['GROUP_CONCAT(' . ReservationInterface::RESERVATION_ID . ')']
             )
-            ->group([ReservationInterface::STOCK_ID, ReservationInterface::SKU])
+            ->group("JSON_EXTRACT(metadata, '$.object_id')")
             ->having('SUM(' . ReservationInterface::QUANTITY . ') = 0');
             $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
         $groupedReservationIds = implode(',', $connection->fetchCol($select));
