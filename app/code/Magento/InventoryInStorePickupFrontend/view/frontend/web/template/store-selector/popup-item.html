@@ -4,10 +4,29 @@
  * See COPYING.txt for license details.
  */
 -->
-<li class="location" click="$parent.selectPickupLocation">
-    <text args="location.name"/><br/>
-    <text args="location.street"/><br/>
-    <text args="location.city "/>, <span text="location.region"></span> <text args="location.postcode"/><br/>
-    <!-- <text args="getCountryName(address().countryId)"/><br/> -->
-    <a if="location.telephone" attr="'href': 'tel:' + location.telephone" text="location.telephone"></a><br/>
-</li>
+<tr class="row location">
+    <td class="col col-location-details location-details">
+        <p class="location-name"><text args="location.name"/></p>
+        <p class="location-address">
+            <text args="location.street"/><br/>
+            <text args="location.city"/>, <span text="location.region"></span> <text args="location.postcode"/><br/>
+            <text args="location.country"/><br/>
+            <a if="location.telephone" attr="'href': 'tel:' + location.telephone" text="location.telephone"></a>
+        </p>
+        <p if="location.description" class="location-description" data-bind="html: location.description"></p>
+    </td>
+    <td class="col col-location-actions">
+        <div class="select-location" ifnot="$parent.isPickupLocationSelected($data)">
+            <button type="button"
+                    class="action secondary action-select-shipping-item"
+                    click="$parent.selectPickupLocation.bind($parent, $data)">
+                <span translate="'Ship Here'"/>
+            </button>
+        </div>
+        <div class="location-selected" if="$parent.isPickupLocationSelected($data)">
+            <button type="button" class="action secondary" disabled>
+                <span translate="'Selected'"/>
+            </button>
+        </div>
+    </td>
+</tr>

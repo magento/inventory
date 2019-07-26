@@ -30,8 +30,6 @@ define([
 ) {
     'use strict';
 
-    var popup;
-
     return Component.extend({
         defaults: {
             template: 'Magento_InventoryInStorePickupFrontend/store-selector',
@@ -48,6 +46,7 @@ define([
         quoteIsVirtual: quote.isVirtual(),
         nearbyLocations: [],
         isLoading: shippingService.isLoading,
+        popup: null,
 
         initObservable: function() {
             return this._super().observe(['nearbyLocations']);
@@ -83,19 +82,21 @@ define([
          * @return {*}
          */
         getPopup: function() {
-            if (!popup) {
+            var self = this;
+
+            if (!this.popup) {
                 // this.popUpList.options.modalCloseBtnHandler = this.onClosePopUp.bind(this);
                 // this.popUpList.options.keyEventHandlers = {
                 //     escapeKey: this.onClosePopUp.bind(this)
                 // };
 
-                popup = modal(
+                this.popup = modal(
                     this.popUpList.options,
                     $(this.popUpList.element)
                 );
             }
 
-            return popup;
+            return this.popup;
         },
         openPopup: function() {
             var self = this;
@@ -109,7 +110,10 @@ define([
         },
         selectPickupLocation: function(location) {
             pickupLocationsService.selectForShipping(location);
-            popup.closeModal();
+            this.getPopup().closeModal();
+        },
+        isPickupLocationSelected: function(location) {
+            return _.isEqual(this.selectedLocation(), location);
         },
 
         validatePickupInformation: function() {

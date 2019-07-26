@@ -41,9 +41,19 @@
             </button>
         </div>
     </form>
-    <ul class="store-selector-popup-list">
-        <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
-        <!--ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
-        <!-- /ko -->
+    <table class="store-selector-popup-table">
+            <thead>
+            <tr class="row">
+                <th class="col col-method" translate="'Location Details'"></th>
+                <th class="col col-carrier" translate="'Action'"></th>
+            </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
+                    <!--ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
+                <!-- /ko -->
+            </tbody>
+        </table>
+        
     </ul>
 </div>
