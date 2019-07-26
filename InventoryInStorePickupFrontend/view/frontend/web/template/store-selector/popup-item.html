@@ -1,0 +1,13 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<li class="location" click="$parent.selectPickupLocation">
+    <text args="location.name"/><br/>
+    <text args="location.street"/><br/>
+    <text args="location.city "/>, <span text="location.region"></span> <text args="location.postcode"/><br/>
+    <!-- <text args="getCountryName(address().countryId)"/><br/> -->
+    <a if="location.telephone" attr="'href': 'tel:' + location.telephone" text="location.telephone"></a><br/>
+</li>

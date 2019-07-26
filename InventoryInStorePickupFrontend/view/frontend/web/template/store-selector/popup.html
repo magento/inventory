@@ -1,0 +1,49 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div id="store-selector-popup">
+    <form
+        class="form store-selector-search"
+        id="store-selector-search"
+        action=""
+        method="get"
+    >
+        <div class="field search">
+            <label
+                class="label"
+                for="store-selector-search-input"
+                data-role="minisearch-label"
+            >
+                <span>Search</span>
+            </label>
+            <div class="control">
+                <input
+                    id="store-selector-search-input"
+                    type="text"
+                    name="query"
+                    value=""
+                    placeholder="Zip code or city"
+                    class="input-text"
+                />
+            </div>
+        </div>
+        <div class="actions">
+            <button
+                type="submit"
+                title="Search"
+                class="action search"
+                aria-label="Search"
+            >
+                <span>Search</span>
+            </button>
+        </div>
+    </form>
+    <ul class="store-selector-popup-list">
+        <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
+        <!--ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
+        <!-- /ko -->
+    </ul>
+</div>
