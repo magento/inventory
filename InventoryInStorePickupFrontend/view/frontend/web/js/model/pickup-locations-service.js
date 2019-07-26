@@ -115,7 +115,6 @@ define([
                     });
                 })
                 .fail(function(response) {
-                    pickupLocations.nearbyLocations([]);
                     errorProcessor.process(response);
                 });
         },

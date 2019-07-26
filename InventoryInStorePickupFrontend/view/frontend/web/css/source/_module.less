@@ -9,6 +9,9 @@
 @checkout-delivery-method-selector-action__border-color: @color-gray76;
 @checkout-delivery-method-selector-action__background: @color-white;
 
+@checkout-source-selector-popup-location_border: @border-width__base solid
+    @color-gray80;
+
 & when (@media-common = true) {
     #store-pickup {
         &.selected-shipping {
@@ -68,8 +71,8 @@
         }
     }
 
-    .selected-location-details {
-        .selected-location-name {
+    .location-details {
+        .location-name {
             font-size: @font-size__l;
             font-weight: @font-weight__bold;
         }
@@ -82,6 +85,48 @@
     .modal-content {
         #opc-store-selector-popup {
             display: block;
+        }
+    }
+
+    .store-selector-popup-table {
+        thead {
+            th {
+                display: none;
+            }
+        }
+
+        tbody {
+            .location {
+                .location-name {
+                    .lib-css(font-size, @font-size__base);
+                }
+
+                + .location {
+                    .lib-css(
+                        border-top,
+                        @checkout-source-selector-popup-location_border
+                    );
+                }
+            }
+
+            .col-location-details {
+                padding-left: 0;
+
+                p {
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            .col-location-actions {
+                padding-right: 0;
+                vertical-align: middle;
+
+                .action {
+                    float: right;
+                }
+            }
         }
     }
 }
