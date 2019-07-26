@@ -7,10 +7,21 @@
         class="step-content"
         data-role="content"
     >
-        <each args="getRegion('address-list')" render="" />
+        <render args="selectedLocationTemplate"/>
+
+        <each args="getRegion('after-selected-location')" render="" />
 
         <form class="form-continue" data-bind="submit: setPickupInformation" novalidate="novalidate">
             <div class="actions-toolbar">
+                <div class="secondary">
+                    <button
+                        type="button"
+                        class="button action"
+                        click="openPopup"
+                    >
+                        <span><!-- ko i18n: 'Select Other'--><!-- /ko --></span>
+                    </button>
+                </div>
                 <div class="primary">
                     <button
                         data-role="opc-continue"
@@ -22,5 +33,6 @@
                 </div>
             </div>
         </form>
+        <div id="opc-store-selector-popup" render="storeSelectorPopupTemplate" />
     </div>
 </div>

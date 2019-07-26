@@ -1,0 +1,25 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!-- ko if: !isLoading() && !selectedLocation() -->
+<p
+    class="no-selected-locations"
+    data-bind="i18n: 'We could not preselect pickup location based on available information, please select it manually.'"
+></p>
+<!-- /ko -->
+<div
+    class="selected-location-details"
+    data-bind="if: selectedLocation"
+>
+    <p class="selected-location-name"><text args="selectedLocation().name"/></p>
+    <p class="selected-location-address">
+        <text args="selectedLocation().street"/><br/>
+        <text args="selectedLocation().city"/>, <span text="selectedLocation().region"></span> <text args="selectedLocation().postcode"/><br/>
+        <text args="selectedLocation().country"/><br/>
+        <a if="selectedLocation().telephone" attr="'href': 'tel:' + selectedLocation().telephone" text="selectedLocation().telephone"></a>
+    </p>
+    <p class="selected-location-description" data-bind="html: selectedLocation().description"></p>
+</div>

@@ -56,14 +56,32 @@
         }
 
         .form-continue {
+            margin: @indent__base 0 0;
+
             .actions-toolbar {
                 .action {
                     &.primary {
                         &:extend(.abs-button-l all);
-                        margin: @indent__base 0 0;
                     }
                 }
             }
+        }
+    }
+
+    .selected-location-details {
+        .selected-location-name {
+            font-size: @font-size__l;
+            font-weight: @font-weight__bold;
+        }
+    }
+
+    #opc-store-selector-popup {
+        display: none;
+    }
+
+    .modal-content {
+        #opc-store-selector-popup {
+            display: block;
         }
     }
 }

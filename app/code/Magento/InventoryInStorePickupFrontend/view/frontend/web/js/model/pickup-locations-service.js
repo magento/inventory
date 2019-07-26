@@ -5,34 +5,58 @@
 
 define([
     'jquery',
+    'knockout',
     'Magento_InventoryInStorePickupFrontend/js/model/resource-url-manager',
     'mage/storage',
-    'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/model/shipping-service',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-registry',
     'Magento_Checkout/js/model/error-processor',
-
+    'Magento_Customer/js/customer-data',
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/select-shipping-address',
 ], function(
     $,
+    ko,
     resourceUrlManager,
     storage,
-    quote,
     shippingService,
-    pickupLocations,
-    pickupLocationsRegistry,
     errorProcessor,
-
+    customerData,
     checkoutData,
     addressConverter,
     selectShippingAddressAction
 ) {
     'use strict';
 
+    var websiteCode = window.checkoutConfig.websiteCode;
+    var countryData = customerData.get('directory-data');
+
     return {
+        selectedLocation: ko.observable(null),
+        /**
+         * Get shipping rates for specified address.
+         * @param {Object} address
+         */
+        getLocation: function(sourceCode) {
+            var serviceUrl = resourceUrlManager.getUrlForPickupLocation(
+                'website',
+                websiteCode,
+                sourceCode
+            );
+            shippingService.isLoading(true);
+
+            return storage
+                .get(serviceUrl, {}, false)
+                .then(function(result) {
+                    shippingService.isLoading(false);
+
+                    console.log(result);
+                })
+                .fail(function(response) {
+                    errorProcessor.process(response);
+                    return [];
+                });
+        },
         /**
          * Get shipping rates for specified address.
          * @param {Object} address
@@ -42,37 +66,58 @@ define([
             var cache, serviceUrl;
 
             shippingService.isLoading(true);
-            cache = pickupLocationsRegistry.get(address.getCacheKey());
             serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel(
                 'website',
-                'base'
+                websiteCode
             );
 
-            if (cache) {
-                pickupLocations(cache);
-                shippingService.isLoading(false);
-            } else {
-                storage
-                    .get(serviceUrl, {}, false)
-                    .done(function(result) {
-                        var addresses = _.map(result, function(address) {
-                            return self.formatAddress(address);
-                        });
+            return storage
+                .get(serviceUrl, {}, false)
+                .then(function(result) {
+                    shippingService.isLoading(false);
 
-                        pickupLocationsRegistry.set(
-                            address.getCacheKey(),
-                            addresses
-                        );
-                        pickupLocations(addresses);
-                    })
-                    .fail(function(response) {
-                        pickupLocations([]);
-                        errorProcessor.process(response);
-                    })
-                    .always(function() {
-                        shippingService.isLoading(false);
+                    return _.map(result.items, function(address) {
+                        return self.formatAddress(address);
                     });
-            }
+                })
+                .fail(function(response) {
+                    errorProcessor.process(response);
+                    return [];
+                });
+        },
+        getNearbyLocations: function(address) {
+            var self = this;
+            var serviceUrl;
+
+            shippingService.isLoading(true);
+            var query = {
+                searchCriteria: {
+                    radius: 999999,
+                    country: address.countryId,
+                    city: address.city,
+                    postcode: address.postcode,
+                    region: address.region,
+                },
+            };
+            serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(
+                'website',
+                websiteCode,
+                query
+            );
+
+            return storage
+                .get(serviceUrl, {}, false)
+                .then(function(result) {
+                    shippingService.isLoading(false);
+
+                    return _.map(result.items, function(address) {
+                        return self.formatAddress(address);
+                    });
+                })
+                .fail(function(response) {
+                    pickupLocations.nearbyLocations([]);
+                    errorProcessor.process(response);
+                });
         },
         selectForShipping: function(location) {
             var address = $.extend(
@@ -100,6 +145,7 @@ define([
                 }
             );
 
+            this.selectedLocation(location);
             selectShippingAddressAction(address);
             checkoutData.setSelectedShippingAddress(address.getKey());
         },
@@ -117,10 +163,36 @@ define([
                 city: address.city,
                 postcode: address.postcode,
                 country_id: address.country_id,
+                country: this.getCountryName(address.country_id),
                 telephone: address.phone,
                 region_id: address.region_id,
+                region: this.getRegionName(
+                    address.country_id,
+                    address.region_id
+                ),
                 source_code: address.source_code,
             };
+        },
+        /**
+         * @param {*} countryId
+         * @return {String}
+         */
+        getCountryName: function(countryId) {
+            return countryData()[countryId] != undefined
+                ? countryData()[countryId].name
+                : ''; //eslint-disable-line
+        },
+        /**
+         * Returns region name based on given country and region identifiers.
+         * @param {string} countryId Country identifier.
+         * @param {string} regionId Region identifier.
+         */
+        getRegionName: function(countryId, regionId) {
+            var regions = countryData()[countryId]
+                ? countryData()[countryId].regions
+                : null;
+
+            return regions && regions[regionId] ? regions[regionId].name : '';
         },
     };
 });

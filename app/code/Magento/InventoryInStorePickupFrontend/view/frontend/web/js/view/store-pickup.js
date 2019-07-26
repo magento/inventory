@@ -5,31 +5,27 @@
 
 define([
     'uiComponent',
-    'ko',
     'underscore',
     'jquery',
+    'knockout',
+    'uiRegistry',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/action/select-shipping-method',
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/shipping-service',
     'Magento_Checkout/js/model/step-navigator',
-    'Magento_Customer/js/model/address-list',
-    'Magento_Checkout/js/action/select-shipping-address',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
 ], function(
     Component,
-    ko,
     _,
     $,
+    ko,
+    registry,
     quote,
     selectShippingMethodAction,
     checkoutData,
     shippingService,
     stepNavigator,
-    addressList,
-    selectShippingAddressAction,
-    pickupLocations,
     pickupLocationsService
 ) {
     'use strict';
@@ -40,7 +36,12 @@ define([
             deliveryMethodSelectorTemplate:
                 'Magento_InventoryInStorePickupFrontend/delivery-method-selector',
             isVisible: false,
+            isAvailable: false,
             isStorePickupSelected: false,
+            rate: {
+                carrier_code: 'in_store',
+                method_code: 'pickup',
+            },
         },
         rates: shippingService.getShippingRates(),
         inStoreMethod: null,
@@ -48,106 +49,71 @@ define([
         initialize: function() {
             this._super();
 
-            // TODO: Decide how will configuration be provided.
-            var checkoutConfig = window.checkoutConfig;
-            this.inStoreMethod = checkoutConfig.storePickup || {
-                amount: 0,
-                available: true,
-                base_amount: 0,
-                carrier_code: 'in_store',
-                carrier_title: 'In Store',
-                error_message: '',
-                method_code: 'pickup',
-                method_title: 'Pickup',
-                price_excl_tax: 0,
-                price_incl_tax: 0,
-            };
-
-            this.preselectFromQuote();
             this.syncWithShipping();
             this.convertShippingAddress();
         },
         initObservable: function() {
-            return this._super().observe([
-                'isVisible',
-                'isStorePickupSelected',
-            ]);
-        },
-        preselectFromQuote: function() {
-            var self = this;
-            quote.shippingMethod.subscribe(function(shippingMethod) {
-                self.isStorePickupSelected(
-                    shippingMethod &&
-                        shippingMethod.carrier_code ===
-                            self.inStoreMethod.carrier_code &&
-                        shippingMethod.method_code ===
-                            self.inStoreMethod.method_code
-                );
-            });
+            this._super().observe(['isVisible']);
+
+            this.isStorePickupSelected = ko.pureComputed(function() {
+                return _.isMatch(quote.shippingMethod(), this.rate);
+            }, this);
+
+            this.isAvailable = ko.pureComputed(function() {
+                return _.findWhere(this.rates(), {
+                    carrier_code: this.rate.carrier_code,
+                    method_code: this.rate.method_code,
+                });
+            }, this);
+
+            return this;
         },
         /**
          * Synchronize store pickup visibility with shipping step.
          */
         syncWithShipping: function() {
-            var self = this;
-            var inStoreMethod = this.inStoreMethod;
             var shippingStep = _.findWhere(stepNavigator.steps(), {
                 code: 'shipping',
             });
             shippingStep.isVisible.subscribe(function(isShippingVisible) {
-                self.isVisible(isShippingVisible);
-            });
-            this.isVisible(inStoreMethod.available && shippingStep.isVisible());
+                this.isVisible(this.isAvailable && isShippingVisible);
+            }, this);
+            this.isVisible(this.isAvailable && shippingStep.isVisible());
         },
         selectShipping: function() {
-            var inStoreMethod = this.inStoreMethod;
-            var shippingMethod = _.find(this.rates(), function(rate) {
-                return (
-                    rate.carrier_code !== inStoreMethod.carrier_code &&
-                    rate.method_code !== inStoreMethod.method_code
+            var nonPickupShippingMethod = _.find(
+                this.rates(),
+                function(rate) {
+                    return (
+                        rate.carrier_code !== this.rate.carrier_code &&
+                        rate.method_code !== this.rate.method_code
+                    );
+                },
+                this
+            );
+
+            this.selectShippingMethod(nonPickupShippingMethod);
+
+            registry.async('checkoutProvider')(function(checkoutProvider) {
+                checkoutProvider.set(
+                    'shippingAddress',
+                    quote.shippingAddress()
                 );
+                checkoutProvider.trigger('data.reset');
             });
-            this.selectShippingMethod(shippingMethod);
-
-            var shippingAddress = quote.shippingAddress();
-            if (this.isStorePickupAddress(shippingAddress)) {
-                var defaultShippingAddress = _.find(addressList(), function(
-                    address
-                ) {
-                    return address.isDefaultShipping();
-                });
-
-                selectShippingAddressAction(defaultShippingAddress);
-                checkoutData.setSelectedShippingAddress(
-                    defaultShippingAddress.getKey()
-                );
-            }
         },
         selectStorePickup: function() {
-            this.selectShippingMethod(this.inStoreMethod);
-
-            var subscription = pickupLocations.subscribe(function(locations) {
-                var nearestPickupLocation = locations[0];
-                if (nearestPickupLocation) {
-                    pickupLocationsService.selectForShipping(
-                        nearestPickupLocation
-                    );
-                }
-                subscription.dispose();
-            });
-            pickupLocationsService.getLocations(quote.shippingAddress());
+            this.preselectLocation();
+            this.selectShippingMethod(this.rate);
         },
         /**
          * @param {Object} shippingMethod
          */
         selectShippingMethod: function(shippingMethod) {
-            var shippingRate = shippingMethod
-                ? shippingMethod['carrier_code'] +
-                  '_' +
-                  shippingMethod['method_code']
-                : null;
-
             selectShippingMethodAction(shippingMethod);
+            checkoutData.setSelectedShippingAddress(
+                quote.shippingAddress().getKey()
+            );
         },
         convertShippingAddress() {
             quote.shippingAddress.subscribe(function(shippingAddress) {
@@ -167,6 +133,37 @@ define([
                     );
                 }
             }, this);
+        },
+        preselectLocation: function() {
+            if (pickupLocationsService.selectedLocation()) {
+                return;
+            }
+
+            var shippingAddress = quote.shippingAddress();
+            var customAttributes = shippingAddress.customAttributes || [];
+            var selectedSourceCode = _.findWhere(customAttributes, {
+                attribute_code: 'sourceCode',
+            });
+
+            if (selectedSourceCode) {
+                pickupLocationsService
+                    .getLocation(selectedSourceCode)
+                    .then(function(location) {
+                        pickupLocationsService.selectedLocation(location);
+                    });
+            } else {
+                pickupLocationsService
+                    .getNearbyLocations(shippingAddress)
+                    .then(function(locations) {
+                        var nearestLocation = locations[0];
+
+                        if (nearestLocation) {
+                            pickupLocationsService.selectForShipping(
+                                nearestLocation
+                            );
+                        }
+                    });
+            }
         },
         isStorePickupAddress(address) {
             return address.getType() === 'store-pickup-address';

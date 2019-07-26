@@ -7,35 +7,50 @@ define([
     'jquery',
     'underscore',
     'uiComponent',
+    'uiRegistry',
+    'Magento_Ui/js/modal/modal',
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/model/shipping-service',
     'Magento_Checkout/js/action/set-shipping-information',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
 ], function(
     $,
     _,
     Component,
+    registry,
+    modal,
     quote,
     customer,
     stepNavigator,
     shippingService,
-    setShippingInformationAction
+    setShippingInformationAction,
+    pickupLocationsService
 ) {
     'use strict';
+
+    var popup;
 
     return Component.extend({
         defaults: {
             template: 'Magento_InventoryInStorePickupFrontend/store-selector',
+            selectedLocationTemplate:
+                'Magento_InventoryInStorePickupFrontend/store-selector/selected-location',
+            storeSelectorPopupTemplate:
+                'Magento_InventoryInStorePickupFrontend/store-selector/popup',
+            storeSelectorPopupItemTemplate:
+                'Magento_InventoryInStorePickupFrontend/store-selector/popup-item',
             loginFormSelector:
                 '#store-selector form[data-role=email-with-possible-login]',
         },
+        selectedLocation: pickupLocationsService.selectedLocation,
         quoteIsVirtual: quote.isVirtual(),
+        nearbyLocations: [],
         isLoading: shippingService.isLoading,
 
-        initialize: function() {
-            this._super();
+        initObservable: function() {
+            return this._super().observe(['nearbyLocations']);
         },
         /**
          * Set shipping information handler
@@ -55,10 +70,46 @@ define([
                 shippingAddress.extension_attributes.pickup_location_code =
                     sourceCode.value;
 
-                setShippingInformationAction().done(function() {
-                    stepNavigator.next();
+                registry.async('checkoutProvider')(function(checkoutProvider) {
+                    checkoutProvider.set('shippingAddress', shippingAddress);
+
+                    setShippingInformationAction().done(function() {
+                        stepNavigator.next();
+                    });
                 });
             }
+        },
+        /**
+         * @return {*}
+         */
+        getPopup: function() {
+            if (!popup) {
+                // this.popUpList.options.modalCloseBtnHandler = this.onClosePopUp.bind(this);
+                // this.popUpList.options.keyEventHandlers = {
+                //     escapeKey: this.onClosePopUp.bind(this)
+                // };
+
+                popup = modal(
+                    this.popUpList.options,
+                    $(this.popUpList.element)
+                );
+            }
+
+            return popup;
+        },
+        openPopup: function() {
+            var self = this;
+
+            pickupLocationsService
+                .getNearbyLocations(quote.shippingAddress())
+                .then(function(locations) {
+                    self.nearbyLocations(locations);
+                });
+            this.getPopup().openModal();
+        },
+        selectPickupLocation: function(location) {
+            pickupLocationsService.selectForShipping(location);
+            popup.closeModal();
         },
 
         validatePickupInformation: function() {
