@@ -217,6 +217,7 @@
         "magento/module-inventory-in-store-pickup-api": "*",
         "magento/module-inventory-in-store-pickup-order-extension": "*",
         "magento/module-inventory-in-store-pickup-quote": "*",
+        "magento/module-inventory-in-store-pickup-quote-graph-ql": "*",
         "magento/module-inventory-in-store-pickup-shipping": "*",
         "magento/module-inventory-in-store-pickup-shipping-admin-ui": "*",
         "magento/module-inventory-in-store-pickup-shipping-api": "*",
