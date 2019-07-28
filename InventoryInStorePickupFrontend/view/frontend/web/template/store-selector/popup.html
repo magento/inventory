@@ -5,29 +5,21 @@
  */
 -->
 <div id="store-selector-popup">
-    <form
-        class="form store-selector-search"
-        id="store-selector-search"
-        action=""
-        method="get"
-    >
+    <div class="block block-search store-selector-search">
         <div class="field search">
-            <label
-                class="label"
-                for="store-selector-search-input"
-                data-role="minisearch-label"
-            >
+            <label class="label" for="store-selector-search-input">
                 <span>Search</span>
             </label>
             <div class="control">
                 <input
                     id="store-selector-search-input"
                     type="text"
-                    name="query"
-                    value=""
-                    placeholder="Zip code or city"
+                    name="store-selector-search-query"
+                    placeholder="Search with zip code or city name..."
                     class="input-text"
-                />
+                    maxlength="128"
+                    data-bind="textInput: searchQuery"
+                >
             </div>
         </div>
         <div class="actions">
@@ -40,8 +32,8 @@
                 <span>Search</span>
             </button>
         </div>
-    </form>
-    <table class="store-selector-popup-table">
+    </div>
+    <table class="store-selector-popup-table" data-bind="blockLoader: isLoading">
             <thead>
             <tr class="row">
                 <th class="col col-method" translate="'Location Details'"></th>
