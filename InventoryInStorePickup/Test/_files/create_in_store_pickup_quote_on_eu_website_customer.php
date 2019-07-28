@@ -41,10 +41,8 @@ $shippingFactory = Bootstrap::getObjectManager()->get(ShippingInterfaceFactory::
 /** @var \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory */
 $addressExtensionFactory = Bootstrap::getObjectManager()->get(AddressExtensionFactory::class);
 
-$cartId = $cartManagement->createEmptyCart();
+$cartId = $cartManagement->createEmptyCartForCustomer(1);
 $cart = $cartRepository->get($cartId);
-$cart->setCustomerEmail('admin@example.com');
-$cart->setCustomerIsGuest(true);
 $cart->setReservedOrderId('in_store_pickup_test_order');
 
 $store = $storeRepository->get('store_for_eu_website');
