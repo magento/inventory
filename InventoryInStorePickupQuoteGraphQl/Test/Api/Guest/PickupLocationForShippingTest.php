@@ -135,7 +135,7 @@ QUERY;
             $pickupLocationCode,
             SalesChannel::TYPE_WEBSITE,
             $this->storeManager->getWebsite()->getCode()
-            );
+        );
 
         $assertionMap = [
             ['response_field' => 'firstname', 'expected_value' => 'test firstname'],
@@ -145,7 +145,13 @@ QUERY;
             ['response_field' => 'city', 'expected_value' => $pickupLocation->getCity()],
             ['response_field' => 'postcode', 'expected_value' => $pickupLocation->getPostcode()],
             ['response_field' => 'telephone', 'expected_value' => '88776655'],
-            ['response_field' => 'country', 'expected_value' => ['code' => $pickupLocation->getCountryId(), 'label' => $pickupLocation->getCountryId()]],
+            [
+                'response_field' => 'country',
+                'expected_value' => [
+                    'code' => $pickupLocation->getCountryId(),
+                    'label' => $pickupLocation->getCountryId()
+                ]
+            ],
             ['response_field' => '__typename', 'expected_value' => 'ShippingCartAddress']
         ];
 

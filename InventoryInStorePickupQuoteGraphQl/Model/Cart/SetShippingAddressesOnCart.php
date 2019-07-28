@@ -19,8 +19,7 @@ use Magento\QuoteGraphQl\Model\Cart\QuoteAddressFactory;
 use Magento\QuoteGraphQl\Model\Cart\SetShippingAddressesOnCartInterface;
 
 /**
- * Set shipping address to the cart.
- * Proceed with passed Pickup Location code.
+ * Set shipping address to the cart. Proceed with passed Pickup Location code.
  */
 class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
 {
