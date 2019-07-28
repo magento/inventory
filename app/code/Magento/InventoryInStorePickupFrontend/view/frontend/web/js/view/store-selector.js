@@ -13,6 +13,7 @@ define([
     'Magento_Customer/js/model/customer',
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/model/shipping-service',
+    'Magento_Checkout/js/action/create-shipping-address',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
 ], function(
@@ -25,6 +26,7 @@ define([
     customer,
     stepNavigator,
     shippingService,
+    createShippingAddress,
     setShippingInformationAction,
     pickupLocationsService
 ) {
@@ -44,12 +46,35 @@ define([
         },
         selectedLocation: pickupLocationsService.selectedLocation,
         quoteIsVirtual: quote.isVirtual(),
+        searchQuery: '',
         nearbyLocations: [],
         isLoading: shippingService.isLoading,
         popup: null,
 
+        initialize: function() {
+            this._super();
+
+            var updateNearbyLocations = _.debounce(function(searchQuery) {
+                var postcode, city;
+                city = searchQuery.replace(/(\d+[\-]?\d+)/, function(match) {
+                    postcode = match;
+
+                    return '';
+                });
+
+                this.updateNearbyLocations(
+                    createShippingAddress({
+                        city: city,
+                        postcode: postcode,
+                        country_id: quote.shippingAddress().countryId,
+                    })
+                );
+            }, 300).bind(this);
+            this.searchQuery.subscribe(updateNearbyLocations);
+        },
+
         initObservable: function() {
-            return this._super().observe(['nearbyLocations']);
+            return this._super().observe(['nearbyLocations', 'searchQuery']);
         },
         /**
          * Set shipping information handler
@@ -99,13 +124,7 @@ define([
             return this.popup;
         },
         openPopup: function() {
-            var self = this;
-
-            pickupLocationsService
-                .getNearbyLocations(quote.shippingAddress())
-                .then(function(locations) {
-                    self.nearbyLocations(locations);
-                });
+            this.updateNearbyLocations(quote.shippingAddress());
             this.getPopup().openModal();
         },
         selectPickupLocation: function(location) {
@@ -114,6 +133,16 @@ define([
         },
         isPickupLocationSelected: function(location) {
             return _.isEqual(this.selectedLocation(), location);
+        },
+        updateNearbyLocations(address) {
+            debugger;
+            var self = this;
+
+            return pickupLocationsService
+                .getNearbyLocations(address)
+                .then(function(locations) {
+                    self.nearbyLocations(locations);
+                });
         },
 
         validatePickupInformation: function() {

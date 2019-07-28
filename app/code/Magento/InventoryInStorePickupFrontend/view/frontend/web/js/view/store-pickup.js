@@ -14,6 +14,8 @@ define([
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/shipping-service',
     'Magento_Checkout/js/model/step-navigator',
+    'Magento_Checkout/js/model/shipping-rate-service',
+    'Magento_InventoryInStorePickupFrontend/js/model/shipping-rate-processor/store-pickup-address',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
 ], function(
     Component,
@@ -26,6 +28,8 @@ define([
     checkoutData,
     shippingService,
     stepNavigator,
+    shippingRateService,
+    shippingRateProcessor,
     pickupLocationsService
 ) {
     'use strict';
@@ -48,6 +52,11 @@ define([
 
         initialize: function() {
             this._super();
+
+            shippingRateService.registerProcessor(
+                'store-pickup-address',
+                shippingRateProcessor
+            );
 
             this.syncWithShipping();
             this.convertShippingAddress();
@@ -103,8 +112,19 @@ define([
             });
         },
         selectStorePickup: function() {
+            var pickupShippingMethod = _.find(
+                this.rates(),
+                function(rate) {
+                    return (
+                        rate.carrier_code === this.rate.carrier_code &&
+                        rate.method_code === this.rate.method_code
+                    );
+                },
+                this
+            );
+
             this.preselectLocation();
-            this.selectShippingMethod(this.rate);
+            this.selectShippingMethod(pickupShippingMethod);
         },
         /**
          * @param {Object} shippingMethod

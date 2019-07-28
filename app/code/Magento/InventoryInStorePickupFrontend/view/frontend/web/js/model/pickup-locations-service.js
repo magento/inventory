@@ -74,8 +74,6 @@ define([
             return storage
                 .get(serviceUrl, {}, false)
                 .then(function(result) {
-                    shippingService.isLoading(false);
-
                     return _.map(result.items, function(address) {
                         return self.formatAddress(address);
                     });
@@ -83,6 +81,9 @@ define([
                 .fail(function(response) {
                     errorProcessor.process(response);
                     return [];
+                })
+                .always(function() {
+                    shippingService.isLoading(false);
                 });
         },
         getNearbyLocations: function(address) {
@@ -108,14 +109,15 @@ define([
             return storage
                 .get(serviceUrl, {}, false)
                 .then(function(result) {
-                    shippingService.isLoading(false);
-
                     return _.map(result.items, function(address) {
                         return self.formatAddress(address);
                     });
                 })
                 .fail(function(response) {
                     errorProcessor.process(response);
+                })
+                .always(function() {
+                    shippingService.isLoading(false);
                 });
         },
         selectForShipping: function(location) {
