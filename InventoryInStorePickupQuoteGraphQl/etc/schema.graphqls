@@ -1,0 +1,6 @@
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+
+input ShippingAddressInput {
+    pickup_location_code: String @doc(description: "The code of Pickup Location which will be used for In-Store Pickup.")
+}
