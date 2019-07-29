@@ -15,6 +15,10 @@
                     </arguments>
                 </block>
             </referenceBlock>
+            <block
+                    template="Magento_InventoryInStorePickupAdminUi::order/create/storepickup-script-load.phtml"
+                    name="order.create.storepickup-script-load">
+            </block>
         </referenceContainer>
     </body>
 </page>
