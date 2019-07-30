@@ -9,13 +9,14 @@ namespace Magento\InventoryInStorePickupQuote\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\DataObject\Copy;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
 
 /**
  * Convert Pickup Location and provided Shipping Address to Pickup Location Quote Address.
+ *
+ * @api
  */
 class ToQuoteAddress
 {
@@ -58,20 +59,19 @@ class ToQuoteAddress
     }
 
     /**
-     * Convert Pickup Location and Quote Address to Pickup Location Quote Address.
+     * Convert Pickup Location Data and Quote Address to Pickup Location Quote Address.
      *
-     * @param PickupLocationInterface $pickupLocation
+     * @param array $pickupLocationAddressData
      * @param Address $originalAddress
      * @param array $data
+     *
      * @return AddressInterface
      */
     public function convert(
-        PickupLocationInterface $pickupLocation,
+        array $pickupLocationAddressData,
         Address $originalAddress,
         $data = []
     ): AddressInterface {
-        $pickupLocationAddressData = $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
-
         $quoteAddressData = $this->objectCopyService->getDataFromFieldset(
             'sales_convert_quote_address',
             'to_pickup_location_shipping_address',

@@ -12,6 +12,7 @@ use Magento\Checkout\Api\ShippingInformationManagementInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
+use Magento\InventoryInStorePickupQuote\Model\ExtractPickupLocationShippingAddressData;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -55,12 +56,18 @@ class AddPickupLocationAddressToShippingInformation
     private $isPickupLocationShippingAddress;
 
     /**
+     * @var ExtractPickupLocationShippingAddressData
+     */
+    private $extractPickupLocationShippingAddressData;
+
+    /**
      * @param GetPickupLocationInterface $getPickupLocation
      * @param ToQuoteAddress $addressConverter
      * @param CartRepositoryInterface $cartRepository
      * @param StoreRepositoryInterface $storeRepository
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param IsPickupLocationShippingAddress $isPickupLocationShippingAddress
+     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
      */
     public function __construct(
         GetPickupLocationInterface $getPickupLocation,
@@ -68,7 +75,8 @@ class AddPickupLocationAddressToShippingInformation
         CartRepositoryInterface $cartRepository,
         StoreRepositoryInterface $storeRepository,
         WebsiteRepositoryInterface $websiteRepository,
-        IsPickupLocationShippingAddress $isPickupLocationShippingAddress
+        IsPickupLocationShippingAddress $isPickupLocationShippingAddress,
+        ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
     ) {
         $this->getPickupLocation = $getPickupLocation;
         $this->addressConverter = $addressConverter;
@@ -76,6 +84,7 @@ class AddPickupLocationAddressToShippingInformation
         $this->storeRepository = $storeRepository;
         $this->websiteRepository = $websiteRepository;
         $this->isPickupLocationShippingAddress = $isPickupLocationShippingAddress;
+        $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
     }
 
     /**
@@ -124,7 +133,7 @@ class AddPickupLocationAddressToShippingInformation
         }
 
         $shippingAddress = $this->addressConverter->convert(
-            $pickupLocation,
+            $this->extractPickupLocationShippingAddressData->execute($pickupLocation),
             $shippingAddress,
             ['extension_attribute_pickup_location_code_pickup_location_code' => $pickupLocation->getSourceCode()]
         );
