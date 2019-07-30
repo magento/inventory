@@ -7,7 +7,7 @@
 namespace Magento\InventoryInStorePickupApi\Api;
 
 use Magento\Framework\Exception\NoSuchEntityException;
-use \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Get Pickup Location by provided Pickup Location Code.
@@ -17,11 +17,11 @@ use \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 interface GetPickupLocationInterface
 {
     /**
-     * @param string $pickupLocationCode
+     * Get Pickup Location by provided Pickup Location Code.
      *
+     * @param string $pickupLocationCode
      * @param string $salesChannelType
      * @param string $salesChannelCode
-     *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface
      * @throws NoSuchEntityException
      */

@@ -10,7 +10,6 @@ namespace Magento\InventoryInStorePickupQuote\Model;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\DataObject\Copy;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
@@ -63,9 +62,7 @@ class ToQuoteAddress
      *
      * @param PickupLocationInterface $pickupLocation
      * @param Address $originalAddress
-     *
      * @param array $data
-     *
      * @return AddressInterface
      */
     public function convert(
@@ -88,8 +85,6 @@ class ToQuoteAddress
             array_merge($pickupLocationAddressData, $quoteAddressData, $data),
             AddressInterface::class
         );
-
-        $address->setShippingMethod(InStorePickup::DELIVERY_METHOD);
 
         return $address;
     }

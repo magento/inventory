@@ -15,6 +15,9 @@ use Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailab
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @inheritdoc
+ */
 class GetSourceItemQtyAvailableServiceTest extends TestCase
 {
     /**
@@ -77,7 +80,6 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_in_store_pickup_quote_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/add_products_from_eu_stock_to_cart.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_order.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_order_pickup_location.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_multiple_quotes_on_eu_website.php
@@ -89,7 +91,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider SingleStorePickupOrderProvider
+     * @dataProvider singleStorePickupOrderProvider
      *
      * @param string $sourceCode
      * @param string $sku
@@ -115,7 +117,6 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_in_store_pickup_quote_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/add_products_from_eu_stock_to_cart.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_order.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_order_pickup_location.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_multiple_quotes_on_eu_website.php
@@ -128,7 +129,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      *
      * @magentoDbIsolation disabled
      *
-     * @dataProvider MultipleStorePickupOrdersProvider
+     * @dataProvider multipleStorePickupOrdersProvider
      *
      * @param string $sourceCode
      * @param string $sku
@@ -166,7 +167,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function SingleStorePickupOrderProvider(): array
+    public function singleStorePickupOrderProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 2.0], //3.5 reserved
@@ -182,7 +183,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     /**
      * @return array
      */
-    public function MultipleStorePickupOrdersProvider(): array
+    public function multipleStorePickupOrdersProvider(): array
     {
         return [
             ['eu-1', 'SKU-1', 1.0], //3.5 + 1.0 reserved

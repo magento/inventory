@@ -7,76 +7,155 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
-use Magento\Framework\Api\SearchCriteriaBuilder as FrameworkSearchCriteriaBuilder;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteriaInterface;
+use InvalidArgumentException;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterfaceFactory;
+use TypeError;
 
 /**
  * Builder for Pickup Locations Search Criteria.
  *
  * @api
  */
-class SearchCriteriaBuilder extends FrameworkSearchCriteriaBuilder
+class SearchCriteriaBuilder
 {
     private const RADIUS = 'radius';
     private const COUNTRY = 'country';
     private const POSTCODE = 'postcode';
     private const REGION = 'region';
     private const CITY = 'city';
+    private const PAGE_SIZE = 'pageSize';
+    private const CURRENT_PAGE = 'currentPage';
 
     /**
-     * @inheritdoc
+     * @var array
      */
-    protected function _getDataObjectType()
-    {
-        return SearchCriteriaInterface::class;
+    private $data = [];
+
+    /**
+     * @var GetNearbyLocationsCriteriaInterfaceFactory
+     */
+    private $factory;
+
+    /**
+     * @param GetNearbyLocationsCriteriaInterfaceFactory $factory
+     */
+    public function __construct(
+        GetNearbyLocationsCriteriaInterfaceFactory $factory
+    ) {
+        $this->factory = $factory;
     }
 
     /**
-     * Builds the SearchCriteria Data Object.
+     * Builds the GetNearbyLocationsCriteria Data Object.
      *
-     * @return SearchCriteriaInterface
+     * @return GetNearbyLocationsCriteriaInterface
+     * @throws InvalidArgumentException
      */
-    public function create(): SearchCriteriaInterface
+    public function create(): GetNearbyLocationsCriteriaInterface
     {
-        return parent::create();
+        try {
+            return $this->factory->create($this->data);
+        } catch (TypeError $error) {
+            throw new InvalidArgumentException('Invalid GetNearbyLocationsCriteria arguments given', 0, $error);
+        }
     }
 
     /**
-     * @inheritdoc
+     * Set radius. Required.
+     *
+     * @param int $radius
+     *
+     * @return SearchCriteriaBuilder
      */
     public function setRadius(int $radius)
     {
-        return $this->_set(self::RADIUS, $radius);
+        return $this->set(self::RADIUS, $radius);
     }
 
     /**
-     * @inheritdoc
+     * Set country. Required.
+     *
+     * @param string $country
+     *
+     * @return SearchCriteriaBuilder
      */
     public function setCountry(string $country): self
     {
-        return $this->_set(self::COUNTRY, $country);
+        return $this->set(self::COUNTRY, $country);
     }
 
     /**
-     * @inheritdoc
+     * Set postcode. Not required.
+     *
+     * @param string|null $postcode
+     *
+     * @return SearchCriteriaBuilder
      */
     public function setPostcode(?string $postcode): self
     {
-        return $this->_set(self::POSTCODE, $postcode);
-    }
-    /**
-     * @inheritdoc
-     */
-    public function setRegion(?string $region): self
-    {
-        return $this->_set(self::REGION, $region);
+        return $this->set(self::POSTCODE, $postcode);
     }
 
     /**
-     * @inheritdoc
+     * Set region. Not required.
+     *
+     * @param string|null $region
+     *
+     * @return SearchCriteriaBuilder
+     */
+    public function setRegion(?string $region): self
+    {
+        return $this->set(self::REGION, $region);
+    }
+
+    /**
+     * Set city. Not required.
+     *
+     * @param string|null $city
+     *
+     * @return SearchCriteriaBuilder
      */
     public function setCity(?string $city): self
     {
-        return $this->_set(self::CITY, $city);
+        return $this->set(self::CITY, $city);
+    }
+
+    /**
+     * Set page size. Not required.
+     *
+     * @param int $pageSize
+     *
+     * @return SearchCriteriaBuilder
+     */
+    public function setPageSize(int $pageSize): self
+    {
+        return $this->set(self::PAGE_SIZE, $pageSize);
+    }
+
+    /**
+     * Set current page. Not required.
+     *
+     * @param int $page
+     *
+     * @return SearchCriteriaBuilder
+     */
+    public function setCurrentPage(int $page): self
+    {
+        return $this->set(self::CURRENT_PAGE, $page);
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return SearchCriteriaBuilder
+     */
+    private function set(string $key, $value): self
+    {
+        $this->data[$key] = $value;
+
+        return $this;
     }
 }
