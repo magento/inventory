@@ -13,8 +13,7 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface as Location;
 
 /**
- * Set data to Source itself from its extension attributes to save
- * these values to `inventory_source` DB table
+ * Set data to Source itself from its extension attributes to save these values to `inventory_source` DB table.
  */
 class SaveInStorePickupPlugin
 {

@@ -18,8 +18,6 @@ use PHPUnit\Framework\TestCase;
  */
 class GetPickupLocationTest extends TestCase
 {
-    private const PICKUP_LOCATION_NOT_FOUND = 'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".';
-
     /**
      * @var GetPickupLocation
      */
@@ -104,7 +102,7 @@ class GetPickupLocationTest extends TestCase
                 'eu_website',
                 true,
                 __(
-                    self::PICKUP_LOCATION_NOT_FOUND,
+                    'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'us-1',
                         SalesChannelInterface::TYPE_WEBSITE,
@@ -126,7 +124,7 @@ class GetPickupLocationTest extends TestCase
                 'eu_website',
                 true,
                 __(
-                    self::PICKUP_LOCATION_NOT_FOUND,
+                    'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'eu-2',
                         SalesChannelInterface::TYPE_WEBSITE,

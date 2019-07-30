@@ -41,10 +41,9 @@ class GetWebsiteCodeByStoreId
     }
 
     /**
-     * Get Website Code by provided Store Id.
+     * Provide website code by store id.
      *
      * @param int $storeId
-     *
      * @return string
      * @throws NoSuchEntityException
      */

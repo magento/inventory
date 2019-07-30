@@ -126,6 +126,9 @@
             <field name="gift_message_id">
                 <aspect name="to_pickup_location_shipping_address"/>
             </field>
+            <field name="shipping_method">
+                <aspect name="to_pickup_location_shipping_address"/>
+            </field>
         </fieldset>
     </scope>
 </config>

@@ -64,6 +64,7 @@ class GetSourceItemQtyAvailableService implements GetSourceItemQtyAvailableInter
 
     /**
      * @inheritDoc
+     *
      * @throws NoSuchEntityException
      */
     public function execute(SourceItemInterface $sourceItem): float
@@ -73,8 +74,9 @@ class GetSourceItemQtyAvailableService implements GetSourceItemQtyAvailableInter
     }
 
     /**
-     * @param SourceItemInterface $sourceItem
+     * Calculate number of items reserved for the store pickup.
      *
+     * @param SourceItemInterface $sourceItem
      * @return float
      * @throws NoSuchEntityException
      */
@@ -97,8 +99,9 @@ class GetSourceItemQtyAvailableService implements GetSourceItemQtyAvailableInter
     }
 
     /**
-     * @param SourceItemInterface $sourceItem
+     * Get a list of orders placed with store pickup for specified source item.
      *
+     * @param SourceItemInterface $sourceItem
      * @return OrderInterface[]
      * @throws NoSuchEntityException
      */
