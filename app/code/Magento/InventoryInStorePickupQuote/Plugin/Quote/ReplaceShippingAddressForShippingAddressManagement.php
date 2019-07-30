@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
+use Magento\InventoryInStorePickupQuote\Model\ExtractPickupLocationShippingAddressData;
 use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;
@@ -52,24 +53,32 @@ class ReplaceShippingAddressForShippingAddressManagement
     private $getWebsiteCodeByStoreId;
 
     /**
+     * @var ExtractPickupLocationShippingAddressData
+     */
+    private $extractPickupLocationShippingAddressData;
+
+    /**
      * @param CartRepositoryInterface $cartRepository
      * @param GetPickupLocationInterface $getPickupLocation
      * @param IsPickupLocationShippingAddress $isPickupLocationShippingAddress
      * @param ToQuoteAddress $addressConverter
      * @param GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
+     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
         GetPickupLocationInterface $getPickupLocation,
         IsPickupLocationShippingAddress $isPickupLocationShippingAddress,
         ToQuoteAddress $addressConverter,
-        GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
+        GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId,
+        ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
     ) {
         $this->cartRepository = $cartRepository;
         $this->getPickupLocation = $getPickupLocation;
         $this->isPickupLocationShippingAddress = $isPickupLocationShippingAddress;
         $this->addressConverter = $addressConverter;
         $this->getWebsiteCodeByStoreId = $getWebsiteCodeByStoreId;
+        $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
     }
 
     /**
@@ -105,7 +114,7 @@ class ReplaceShippingAddressForShippingAddressManagement
          * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
          */
         $address = $this->addressConverter->convert(
-            $pickupLocation,
+            $this->extractPickupLocationShippingAddressData->execute($pickupLocation),
             $address,
             [self::ADDRESS_FIELD_NAME => $pickupLocation->getSourceCode()]
         );
