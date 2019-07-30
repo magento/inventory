@@ -13,6 +13,7 @@ use Magento\Quote\Api\Data\AddressInterface;
 
 /**
  * Set Address pickup location
+ * @api
  */
 class SetAddressPickupLocation
 {
@@ -31,6 +32,8 @@ class SetAddressPickupLocation
     }
 
     /**
+     * Set Address pickup location
+     *
      * @param AddressInterface $address
      * @param string $pickupLocation
      *
