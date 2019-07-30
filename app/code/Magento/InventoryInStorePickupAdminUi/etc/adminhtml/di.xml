@@ -15,7 +15,4 @@
     <type name="Magento\Sales\Controller\Adminhtml\Order\Create\Save">
         <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Model\AdminOrder\Create\SetPickupLocationFromPost" />
     </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\Create\Shipping\Address">
-        <plugin name="hide-shipping-address" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Order\Create\ShippingAddress\Hide" disabled="true"/>
-    </type>
 </config>
