@@ -61,14 +61,14 @@ class ToQuoteAddress
     /**
      * Convert Pickup Location Data and Quote Address to Pickup Location Quote Address.
      *
-     * @param array $pickupLocationAddressData
+     * @param array $addressData
      * @param Address $originalAddress
      * @param array $data
      *
      * @return AddressInterface
      */
     public function convert(
-        array $pickupLocationAddressData,
+        array $addressData,
         Address $originalAddress,
         $data = []
     ): AddressInterface {
@@ -82,7 +82,7 @@ class ToQuoteAddress
 
         $this->dataObjectHelper->populateWithArray(
             $address,
-            array_merge($pickupLocationAddressData, $quoteAddressData, $data),
+            array_merge($addressData, $quoteAddressData, $data),
             AddressInterface::class
         );
 
