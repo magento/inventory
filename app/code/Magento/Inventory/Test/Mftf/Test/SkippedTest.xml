@@ -90,4 +90,109 @@
             </skip>
         </annotations>
     </test>
+
+    <!-- MC-18595 -->
+    <test name="AdminCreateDownloadableProductWithInvalidDomainLinkUrlTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-2423" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCacheValidationWhenDownloadableProductIsSoldOutOnMultipleStockModeTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCacheValidationWhenDownloadableProductIsSoldOutOnSingleStockModeTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCatalogQuickSearchForDownloadableProductInSingleStockModeTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCatalogQuickSearchForDownloadableProductOnTestStockTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCreateDownloadableProductOnSingleStockModeTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCreateDownloadableProductWithCustomStockTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCreateDownloadableProductWithDefaultSourceTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminCreateOrderWithDownloadableProductDefaultStockTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminMassActionAssignProductSourcesForDifferentTypesOfProductsTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminMassActionTransferInventoryToSourceForDifferentTypeOfProductsTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="AdminMassActionUnassignProductSourcesForDifferentTypesOfProductsTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
+
+    <test name="GuestCustomerOrderedDownloadableProductOnCustomStockFromHomepageTest">
+        <annotations>
+            <skip>
+                <issueId value="MC-18804" />
+            </skip>
+        </annotations>
+    </test>
 </tests>
