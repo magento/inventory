@@ -106,7 +106,8 @@ mutation {
         country {
           code
           label
-        }
+        },
+        pickup_location_code,
         __typename
       }
     }
@@ -152,6 +153,7 @@ QUERY;
                     'label' => $pickupLocation->getCountryId()
                 ]
             ],
+            ['response_field' => 'pickup_location_code', 'expected_value' => $pickupLocation->getSourceCode()],
             ['response_field' => '__typename', 'expected_value' => 'ShippingCartAddress']
         ];
 

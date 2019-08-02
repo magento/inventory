@@ -4,3 +4,7 @@
 input ShippingAddressInput {
     pickup_location_code: String @doc(description: "The code of Pickup Location which will be used for In-Store Pickup.")
 }
+
+type ShippingCartAddress implements CartAddressInterface {
+    pickup_location_code: String @resolver(class: "\\Magento\\InventoryInStorePickupQuoteGraphQl\\Model\\Resolver\\ShippingAddress\\PickupLocationCode")
+}

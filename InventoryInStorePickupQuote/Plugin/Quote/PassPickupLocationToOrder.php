@@ -7,14 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\ToOrder;
 
 /**
  * Pass Pickup Location code to the Order from Quote Address.
- *
- * @TODO Move logic to fieldset.xml when issue will be resolved in core..
- * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
  */
 class PassPickupLocationToOrder
 {
@@ -31,6 +29,10 @@ class PassPickupLocationToOrder
      */
     public function beforeConvert(ToOrder $subject, Address $address, array $data = []): array
     {
+        if ($address->getShippingMethod() !== InStorePickup::DELIVERY_METHOD) {
+            return [$address, $data];
+        }
+
         $extension = $address->getExtensionAttributes();
 
         if ($extension && $extension->getPickupLocationCode()) {

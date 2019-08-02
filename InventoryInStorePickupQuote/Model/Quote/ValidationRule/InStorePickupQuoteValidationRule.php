@@ -7,18 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Model\Quote\ValidationRule;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
 use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\ValidationRules\QuoteValidationRuleInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\CartInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\ValidationRules\QuoteValidationRuleInterface;
 
 /**
  * Validate Quote for In-Store Pickup Delivery Method.
@@ -85,10 +85,15 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
         }
 
         $address = $quote->getShippingAddress();
-
         $pickupLocation = $this->getPickupLocation($quote, $address);
 
-        if (!$this->isPickupLocationShippingAddress->execute($pickupLocation, $address)) {
+        if (!$pickupLocation) {
+            $validationErrors[] = __(
+                'Pickup Location is missed for In-Store Pickup Quote.'
+            );
+        }
+
+        if ($pickupLocation && !$this->isPickupLocationShippingAddress->execute($pickupLocation, $address)) {
             $validationErrors[] = __(
                 'Pickup Location Address does not match Shipping Address for In-Store Pickup Quote.'
             );
@@ -103,11 +108,15 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
      * @param CartInterface $quote
      * @param AddressInterface $address
      *
-     * @return PickupLocationInterface
+     * @return PickupLocationInterface|null
      * @throws NoSuchEntityException
      */
-    private function getPickupLocation(CartInterface $quote, AddressInterface $address): PickupLocationInterface
+    private function getPickupLocation(CartInterface $quote, AddressInterface $address): ?PickupLocationInterface
     {
+        if (!$address->getExtensionAttributes() || !$address->getExtensionAttributes()->getPickupLocationCode()) {
+            return null;
+        }
+
         return $this->getPickupLocation->execute(
             $address->getExtensionAttributes()->getPickupLocationCode(),
             SalesChannelInterface::TYPE_WEBSITE,
