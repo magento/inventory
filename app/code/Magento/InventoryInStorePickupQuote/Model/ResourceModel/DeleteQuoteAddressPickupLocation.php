@@ -41,6 +41,6 @@ class DeleteQuoteAddressPickupLocation
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_pickup_location_quote_address');
 
-        $connection->delete($table, [self::ADDRESS_ID => $addressId]);
+        $connection->delete($table, [self::ADDRESS_ID . ' in (?)' => $addressId]);
     }
 }
