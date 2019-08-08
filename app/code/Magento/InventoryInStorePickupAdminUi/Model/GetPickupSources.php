@@ -42,8 +42,9 @@ class GetPickupSources
     }
 
     /**
-     * @param int $stockId
+     * Get list of sources marked as pickup location by website.
      *
+     * @param int $stockId
      * @return array
      * @throws InputException
      * @throws LocalizedException
