@@ -6,5 +6,8 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Sales\Api\OrderRepositoryInterface" type="Magento\InventoryInStorePickupOrderExtension\Model\OrderRepository" />
+    <type name="Magento\RequisitionList\Model\RequisitionListItem\Validator\Stock">
+        <plugin name="magentoRequisitionListStockPlugin"
+                type="Magento\InventoryRequisitionList\Plugin\Model\RequisitionListItem\Validator\StockPlugin" />
+    </type>
 </config>
