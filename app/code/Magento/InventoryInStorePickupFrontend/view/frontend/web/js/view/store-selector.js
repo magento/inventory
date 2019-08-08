@@ -135,7 +135,6 @@ define([
             return _.isEqual(this.selectedLocation(), location);
         },
         updateNearbyLocations(address) {
-            debugger;
             var self = this;
 
             return pickupLocationsService
