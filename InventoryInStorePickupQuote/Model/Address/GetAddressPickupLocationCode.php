@@ -16,8 +16,9 @@ use Magento\Quote\Api\Data\AddressInterface;
 class GetAddressPickupLocationCode
 {
     /**
-     * @param AddressInterface $address
+     * Get Address extension_attributes.pickup_location_code
      *
+     * @param AddressInterface $address
      * @return string|null
      */
     public function execute(AddressInterface $address): ?string

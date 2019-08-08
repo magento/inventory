@@ -35,8 +35,9 @@ class GetCarrierTitle
     }
 
     /**
-     * @param int|null $storeId
+     * Get In-Store Pickup carrier title
      *
+     * @param int|null $storeId
      * @return string
      */
     public function execute(?int $storeId = null): string

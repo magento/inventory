@@ -41,8 +41,9 @@ class GetPickupLocationByCode
     }
 
     /**
-     * @param string $pickupLocationCode
+     * Get Pickup Location by its code.
      *
+     * @param string $pickupLocationCode
      * @return PickupLocationInterface
      * @throws NoSuchEntityException
      */

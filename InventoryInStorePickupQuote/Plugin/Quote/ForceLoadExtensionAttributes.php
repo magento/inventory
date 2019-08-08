@@ -14,11 +14,14 @@ use Magento\Quote\Model\QuoteRepository\LoadHandler;
 
 /**
  * By default, shipping assignments are not loaded for inactive quote.
+ *
  * For admin panel, it is always inactive.
  */
 class ForceLoadExtensionAttributes
 {
     /**
+     * Activate backend cart to add store pickup information.
+     *
      * @param LoadHandler $loadHandler
      * @param Closure $method
      * @param CartInterface $cart

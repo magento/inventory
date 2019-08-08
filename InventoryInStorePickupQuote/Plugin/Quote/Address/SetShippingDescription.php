@@ -19,6 +19,7 @@ use Magento\Quote\Model\Quote\TotalsCollector;
 
 /**
  * Set Shipping Description
+ *
  * e.g. In-Store Pickup Delivery - Pickup Location Name
  */
 class SetShippingDescription
@@ -54,10 +55,11 @@ class SetShippingDescription
     }
 
     /**
+     * Set shipping description to the quote api.
+     *
      * @param TotalsCollector $subject
      * @param Total $total
      * @param Quote $quote
-     *
      * @return Total
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -68,8 +70,7 @@ class SetShippingDescription
         Quote $quote
     ) {
         $address = $quote->getShippingAddress();
-        if (
-            $address->getShippingMethod() == InStorePickup::DELIVERY_METHOD
+        if ($address->getShippingMethod() == InStorePickup::DELIVERY_METHOD
             && $this->getAddressPickupLocationCode->execute($address)
         ) {
             $description = $this->getShippingDescription($this->getAddressPickupLocationCode->execute($address));
@@ -83,8 +84,9 @@ class SetShippingDescription
     }
 
     /**
-     * @param string $pickupLocationCode
+     * Format shipping description based on Pickup Location code.
      *
+     * @param string $pickupLocationCode
      * @return string
      * @throws NoSuchEntityException
      */

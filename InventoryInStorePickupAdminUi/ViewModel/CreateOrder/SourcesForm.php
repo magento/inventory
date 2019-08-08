@@ -60,8 +60,7 @@ class SourcesForm implements ArgumentInterface
     }
 
     /**
-     * @return array
-     *  [sourceCode => SourceName]
+     * @return array [sourceCode => SourceName]
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
@@ -76,6 +75,8 @@ class SourcesForm implements ArgumentInterface
     }
 
     /**
+     * Load list of pickup sources.
+     *
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
@@ -92,6 +93,8 @@ class SourcesForm implements ArgumentInterface
     }
 
     /**
+     * Get stock id assigned to quote.
+     *
      * @return int|null
      * @throws NoSuchEntityException
      */

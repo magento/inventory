@@ -31,9 +31,10 @@ class SetAddressPickupLocation
     }
 
     /**
+     * Set pickup location address
+     *
      * @param AddressInterface $address
      * @param string $pickupLocation
-     *
      * @return void
      */
     public function execute(AddressInterface $address, string $pickupLocation): void
