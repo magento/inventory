@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Test\Integration\SourceSelection;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService;
@@ -84,7 +85,6 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_order_pickup_location.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_multiple_quotes_on_eu_website.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_multiple_orders_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/mark_sources_as_pickup_location.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
@@ -97,7 +97,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @param string $sku
      * @param float $qtyExpected
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function testSingleStorePickupOrder(string $sourceCode, string $sku, float $qtyExpected)
     {
@@ -122,7 +122,6 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_multiple_quotes_on_eu_website.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_multiple_orders_on_eu_website.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_orders_pickup_location.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/mark_sources_as_pickup_location.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
@@ -188,9 +187,9 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
         return [
             ['eu-1', 'SKU-1', 1.0], //3.5 + 1.0 reserved
             ['eu-2', 'SKU-1', 3.5],
-            ['eu-2', 'SKU-2', 2.0], // 1.0 reserved
+            ['eu-2', 'SKU-2', 3.0],
             ['eu-3', 'SKU-1', 10.0],
-            ['us-1', 'SKU-2', 5.0],
+            ['us-1', 'SKU-2', 4.0], // 1.0 reserved
             ['eu-2', 'SKU-3', 6.0],
             ['eu-2', 'SKU-4', 6.0],
             ['eu-1', 'SKU-6', 665.0], // 1.0 reserved

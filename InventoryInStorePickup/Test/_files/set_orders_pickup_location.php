@@ -16,7 +16,7 @@ $orderRepository = $om->get(OrderRepositoryInterface::class);
 /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
 $searchCriteriaBuilder = $om->get(SearchCriteriaBuilder::class);
 
-foreach ([['SKU-1', 'eu-1'], ['SKU-2', 'eu-2'], ['SKU-6', 'eu-1']] as $skuSource) {
+foreach ([['SKU-1', 'eu-1'], ['SKU-2', 'us-1'], ['SKU-6', 'eu-1']] as $skuSource) {
     /** @var OrderInterface $order */
     $order = current(
         $orderRepository->getList(
