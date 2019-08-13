@@ -51,7 +51,6 @@
                                                         </item>
                                                     </item>
                                                     <item name="config" xsi:type="array">
-                                                        <item name="suggestedLocationsLimit" xsi:type="number">3</item>
                                                         <item name="popUpList" xsi:type="array">
                                                             <item name="element" xsi:type="string">#opc-store-selector-popup</item>
                                                             <item name="options" xsi:type="array">
