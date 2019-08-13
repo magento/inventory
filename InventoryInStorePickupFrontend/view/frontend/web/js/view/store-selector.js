@@ -43,11 +43,15 @@ define([
                 'Magento_InventoryInStorePickupFrontend/store-selector/popup-item',
             loginFormSelector:
                 '#store-selector form[data-role=email-with-possible-login]',
+            imports: {
+                nearbySearchRadius: '${ $.parentName }:nearbySearchRadius',
+                nearbySearchLimit: '${ $.parentName }:nearbySearchLimit',
+            },
         },
         selectedLocation: pickupLocationsService.selectedLocation,
         quoteIsVirtual: quote.isVirtual(),
         searchQuery: '',
-        nearbyLocations: [],
+        nearbyLocations: null,
         isLoading: shippingService.isLoading,
         popup: null,
 
@@ -107,14 +111,7 @@ define([
          * @return {*}
          */
         getPopup: function() {
-            var self = this;
-
             if (!this.popup) {
-                // this.popUpList.options.modalCloseBtnHandler = this.onClosePopUp.bind(this);
-                // this.popUpList.options.keyEventHandlers = {
-                //     escapeKey: this.onClosePopUp.bind(this)
-                // };
-
                 this.popup = modal(
                     this.popUpList.options,
                     $(this.popUpList.element)
@@ -124,8 +121,13 @@ define([
             return this.popup;
         },
         openPopup: function() {
-            this.updateNearbyLocations(quote.shippingAddress());
+            var shippingAddress = quote.shippingAddress();
+
             this.getPopup().openModal();
+
+            if (shippingAddress.city && shippingAddress.postcode) {
+                this.updateNearbyLocations(shippingAddress);
+            }
         },
         selectPickupLocation: function(location) {
             pickupLocationsService.selectForShipping(location);
@@ -138,7 +140,14 @@ define([
             var self = this;
 
             return pickupLocationsService
-                .getNearbyLocations(address)
+                .getNearbyLocations({
+                    radius: this.nearbySearchRadius,
+                    pageSize: this.nearbySearchLimit,
+                    country: address.countryId,
+                    city: address.city,
+                    postcode: address.postcode,
+                    region: address.region,
+                })
                 .then(function(locations) {
                     self.nearbyLocations(locations);
                 });

@@ -46,6 +46,8 @@ define([
                 carrier_code: 'in_store',
                 method_code: 'pickup',
             },
+            nearbySearchRadius: 5000,
+            nearbySearchLimit: 50,
         },
         rates: shippingService.getShippingRates(),
         inStoreMethod: null,
@@ -171,9 +173,16 @@ define([
                     .then(function(location) {
                         pickupLocationsService.selectedLocation(location);
                     });
-            } else {
+            } else if (shippingAddress.city && shippingAddress.postcode) {
                 pickupLocationsService
-                    .getNearbyLocations(shippingAddress)
+                    .getNearbyLocations({
+                        radius: this.nearbySearchRadius,
+                        pageSize: this.nearbySearchLimit,
+                        country: shippingAddress.countryId,
+                        city: shippingAddress.city,
+                        postcode: shippingAddress.postcode,
+                        region: shippingAddress.region,
+                    })
                     .then(function(locations) {
                         var nearestLocation = locations[0];
 
