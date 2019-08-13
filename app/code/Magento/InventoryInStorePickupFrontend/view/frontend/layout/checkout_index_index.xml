@@ -61,6 +61,7 @@
                                                                 <item name="title" xsi:type="string" translate="true">Select Store</item>
                                                                 <item name="trigger" xsi:type="string">opc-store-selector-popup</item>
                                                                 <item name="buttons" xsi:type="array"></item>
+                                                                <item name="modalClass" xsi:type="string">store-selector-popup</item>
                                                             </item>
                                                         </item>
                                                     </item>

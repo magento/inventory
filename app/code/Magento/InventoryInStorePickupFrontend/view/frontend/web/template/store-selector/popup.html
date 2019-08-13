@@ -15,11 +15,11 @@
                     id="store-selector-search-input"
                     type="text"
                     name="store-selector-search-query"
-                    placeholder="Search with zip code or city name..."
+                    placeholder="Search with postcode or city name..."
                     class="input-text"
                     maxlength="128"
                     data-bind="textInput: searchQuery"
-                >
+                />
             </div>
         </div>
         <div class="actions">
@@ -33,19 +33,29 @@
             </button>
         </div>
     </div>
-    <table class="store-selector-popup-table" data-bind="blockLoader: isLoading">
-            <thead>
+    <table
+        class="store-selector-popup-table"
+        data-bind="blockLoader: isLoading, if: nearbyLocations() && nearbyLocations().length"
+    >
+        <thead>
             <tr class="row">
                 <th class="col col-method" translate="'Location Details'"></th>
                 <th class="col col-carrier" translate="'Action'"></th>
             </tr>
-            </thead>
-            <tbody>
-                <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
-                    <!--ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
-                <!-- /ko -->
-            </tbody>
-        </table>
-        
-    </ul>
+        </thead>
+        <tbody>
+            <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
+            <!--ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
+            <!-- /ko -->
+        </tbody>
+    </table>
+    <p
+        class="store-selector-popup-no-locations"
+        if="searchQuery() && nearbyLocations() && !nearbyLocations().length"
+    >
+        We couldn't find nearby locations for provided search query.
+    </p>
+    <p class="store-selector-popup-empty-query" ifnot="searchQuery()">
+        Please provide postcode or city name to find nearest pickup locations.
+    </p>
 </div>

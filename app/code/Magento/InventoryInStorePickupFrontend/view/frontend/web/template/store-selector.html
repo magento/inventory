@@ -19,7 +19,8 @@
                         class="button action"
                         click="openPopup"
                     >
-                        <span><!-- ko i18n: 'Select Other'--><!-- /ko --></span>
+                        <span if="selectedLocation"><!-- ko i18n: 'Select Other'--><!-- /ko --></span>
+                        <span ifnot="selectedLocation"><!-- ko i18n: 'Select Store'--><!-- /ko --></span>
                     </button>
                 </div>
                 <div class="primary">

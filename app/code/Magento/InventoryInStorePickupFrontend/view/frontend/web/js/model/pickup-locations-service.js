@@ -58,18 +58,16 @@ define([
                 });
         },
         /**
-         * Get shipping rates for specified address.
-         * @param {Object} address
+         * Get all pickup locations defined for given sales channel.
          */
-        getLocations: function(address) {
+        getLocations: function() {
             var self = this;
-            var cache, serviceUrl;
-
-            shippingService.isLoading(true);
-            serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel(
+            var serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel(
                 'website',
                 websiteCode
             );
+
+            shippingService.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
@@ -86,25 +84,22 @@ define([
                     shippingService.isLoading(false);
                 });
         },
-        getNearbyLocations: function(address) {
+        /**
+         * Get nearby pickup locations based on given search criteria.
+         * @param {object} searchCriteria Search criteria object.
+         * @see Magento/InventoryInStorePickup/Model/SearchCriteria/GetNearbyLocationsCriteria.php
+         */
+        getNearbyLocations: function(searchCriteria) {
             var self = this;
-            var serviceUrl;
-
-            shippingService.isLoading(true);
             var query = {
-                searchCriteria: {
-                    radius: 999999,
-                    country: address.countryId,
-                    city: address.city,
-                    postcode: address.postcode,
-                    region: address.region,
-                },
+                searchCriteria: searchCriteria,
             };
-            serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(
+            var serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(
                 'website',
                 websiteCode,
                 query
             );
+            shippingService.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)

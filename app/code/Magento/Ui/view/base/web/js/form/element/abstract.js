@@ -11,8 +11,8 @@ define([
     'mageUtils',
     'uiLayout',
     'uiElement',
-    'Magento_Ui/js/lib/validation/validator'
-], function (_, utils, layout, Element, validator) {
+    'Magento_Ui/js/lib/validation/validator',
+], function(_, utils, layout, Element, validator) {
     'use strict';
 
     return Element.extend({
@@ -26,7 +26,7 @@ define([
             elementTmpl: 'ui/form/element/input',
             tooltipTpl: 'ui/form/element/helper/tooltip',
             fallbackResetTpl: 'ui/form/element/helper/fallback-reset',
-            'input_type': 'input',
+            input_type: 'input',
             placeholder: false,
             description: '',
             labelVisible: true,
@@ -47,30 +47,31 @@ define([
                 component: 'Magento_Ui/js/form/switcher',
                 name: '${ $.name }_switcher',
                 target: '${ $.name }',
-                property: 'value'
+                property: 'value',
             },
             listens: {
                 visible: 'setPreview',
                 value: 'setDifferedFromDefault',
                 '${ $.provider }:data.reset': 'reset',
                 '${ $.provider }:data.overload': 'overload',
-                '${ $.provider }:${ $.customScope ? $.customScope + "." : ""}data.validate': 'validate',
-                'isUseDefault': 'toggleUseDefault'
+                '${ $.provider }:${ $.customScope ? $.customScope + "." : ""}data.validate':
+                    'validate',
+                isUseDefault: 'toggleUseDefault',
             },
             ignoreTmpls: {
-                value: true
+                value: true,
             },
 
             links: {
-                value: '${ $.provider }:${ $.dataScope }'
-            }
+                value: '${ $.provider }:${ $.dataScope }',
+            },
         },
 
         /**
          * Invokes initialize method of parent class,
          * contains initialization logic
          */
-        initialize: function () {
+        initialize: function() {
             _.bindAll(this, 'reset');
 
             this._super()
@@ -86,7 +87,7 @@ define([
          *
          * @returns {Object}
          */
-        checkInvalid: function () {
+        checkInvalid: function() {
             return this.error() && this.error().length ? this : null;
         },
 
@@ -95,15 +96,17 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        initObservable: function () {
-            var rules = this.validation = this.validation || {};
+        initObservable: function() {
+            var rules = (this.validation = this.validation || {});
 
             this._super();
 
-            this.observe('error disabled focused preview visible value warn notice isDifferedFromDefault')
+            this.observe(
+                'error disabled focused preview visible value warn notice isDifferedFromDefault'
+            )
                 .observe('isUseDefault serviceDisabled')
                 .observe({
-                    'required': !!rules['required-entry']
+                    required: !!rules['required-entry'],
                 });
 
             return this;
@@ -114,7 +117,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        initConfig: function () {
+        initConfig: function() {
             var uid = utils.uniqueid(),
                 name,
                 valueUpdate,
@@ -125,14 +128,16 @@ define([
             scope = this.dataScope.split('.');
             name = scope.length > 1 ? scope.slice(1) : scope;
 
-            valueUpdate = this.showFallbackReset ? 'afterkeydown' : this.valueUpdate;
+            valueUpdate = this.showFallbackReset
+                ? 'afterkeydown'
+                : this.valueUpdate;
 
             _.extend(this, {
                 uid: uid,
                 noticeId: 'notice-' + uid,
                 errorId: 'error-' + uid,
                 inputName: utils.serializeName(name.join('.')),
-                valueUpdate: valueUpdate
+                valueUpdate: valueUpdate,
             });
 
             return this;
@@ -143,7 +148,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        initSwitcher: function () {
+        initSwitcher: function() {
             if (this.switcherConfig.enabled) {
                 layout([this.switcherConfig]);
             }
@@ -156,7 +161,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        setInitialValue: function () {
+        setInitialValue: function() {
             this.initialValue = this.getInitialValue();
 
             if (this.value.peek() !== this.initialValue) {
@@ -174,7 +179,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        _setClasses: function () {
+        _setClasses: function() {
             var additional = this.additionalClasses;
 
             if (_.isString(additional)) {
@@ -183,7 +188,7 @@ define([
                 if (additional.trim().length) {
                     additional = additional.trim().split(' ');
 
-                    additional.forEach(function (name) {
+                    additional.forEach(function(name) {
                         if (name.length) {
                             this.additionalClasses[name] = true;
                         }
@@ -195,7 +200,7 @@ define([
                 _required: this.required,
                 _error: this.error,
                 _warn: this.warn,
-                _disabled: this.disabled
+                _disabled: this.disabled,
             });
 
             return this;
@@ -206,11 +211,11 @@ define([
          *
          * @returns {*} Elements' value.
          */
-        getInitialValue: function () {
+        getInitialValue: function() {
             var values = [this.value(), this.default],
                 value;
 
-            values.some(function (v) {
+            values.some(function(v) {
                 if (v !== null && v !== undefined) {
                     value = v;
 
@@ -230,7 +235,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        setVisible: function (isVisible) {
+        setVisible: function(isVisible) {
             this.visible(isVisible);
 
             return this;
@@ -241,7 +246,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        show: function () {
+        show: function() {
             this.visible(true);
 
             return this;
@@ -252,7 +257,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        hide: function () {
+        hide: function() {
             this.visible(false);
 
             return this;
@@ -263,7 +268,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        disable: function () {
+        disable: function() {
             this.disabled(true);
 
             return this;
@@ -274,7 +279,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        enable: function () {
+        enable: function() {
             this.disabled(false);
 
             return this;
@@ -286,7 +291,7 @@ define([
          * @param {(Object|Boolean)} [options]
          * @returns {Abstract} Chainable.
          */
-        setValidation: function (rule, options) {
+        setValidation: function(rule, options) {
             var rules = utils.copy(this.validation),
                 changed;
 
@@ -311,7 +316,7 @@ define([
          *
          * @returns {String} Value of the preview observable.
          */
-        getPreview: function () {
+        getPreview: function() {
             return this.value();
         },
 
@@ -320,7 +325,7 @@ define([
          *
          * @returns {Boolean}
          */
-        hasAddons: function () {
+        hasAddons: function() {
             return this.addbefore || this.addafter;
         },
 
@@ -329,7 +334,7 @@ define([
          *
          * @returns {Boolean}
          */
-        hasService: function () {
+        hasService: function() {
             return this.service && this.service.template;
         },
 
@@ -338,7 +343,7 @@ define([
          *
          * @returns {Boolean}
          */
-        hasChanged: function () {
+        hasChanged: function() {
             var notEqual = this.value() !== this.initialValue;
 
             return !this.visible() ? false : notEqual;
@@ -349,7 +354,7 @@ define([
          *
          * @returns {Boolean}
          */
-        hasData: function () {
+        hasData: function() {
             return !utils.isEmpty(this.value());
         },
 
@@ -358,7 +363,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        reset: function () {
+        reset: function() {
             this.value(this.initialValue);
             this.error(false);
 
@@ -368,7 +373,7 @@ define([
         /**
          * Sets current state as initial.
          */
-        overload: function () {
+        overload: function() {
             this.setInitialValue();
             this.bubble('update', this.hasChanged());
         },
@@ -378,7 +383,7 @@ define([
          *
          * @returns {Abstract} Chainable.
          */
-        clear: function () {
+        clear: function() {
             this.value('');
 
             return this;
@@ -390,7 +395,7 @@ define([
          * @param {*} value - Value to be processed.
          * @returns {*}
          */
-        normalizeData: function (value) {
+        normalizeData: function(value) {
             return utils.isEmpty(value) ? '' : value;
         },
 
@@ -401,10 +406,15 @@ define([
          *
          * @returns {Object} Validate information.
          */
-        validate: function () {
+        validate: function() {
             var value = this.value(),
-                result = validator(this.validation, value, this.validationParams),
-                message = !this.disabled() && this.visible() ? result.message : '',
+                result = validator(
+                    this.validation,
+                    value,
+                    this.validationParams
+                ),
+                message =
+                    !this.disabled() && this.visible() ? result.message : '',
                 isValid = this.disabled() || !this.visible() || result.passed;
 
             this.error(message);
@@ -418,14 +428,14 @@ define([
 
             return {
                 valid: isValid,
-                target: this
+                target: this,
             };
         },
 
         /**
          * Callback that fires when 'value' property is updated.
          */
-        onUpdate: function () {
+        onUpdate: function() {
             this.bubble('update', this.hasChanged());
 
             this.validate();
@@ -434,7 +444,7 @@ define([
         /**
          * Restore value to default
          */
-        restoreToDefault: function () {
+        restoreToDefault: function() {
             this.value(this.default);
             this.focused(true);
         },
@@ -442,9 +452,15 @@ define([
         /**
          * Update whether value differs from default value
          */
-        setDifferedFromDefault: function () {
-            var value = typeof this.value() != 'undefined' && this.value() !== null ? this.value() : '',
-                defaultValue = typeof this.default != 'undefined' && this.default !== null ? this.default : '';
+        setDifferedFromDefault: function() {
+            var value =
+                    typeof this.value() != 'undefined' && this.value() !== null
+                        ? this.value()
+                        : '',
+                defaultValue =
+                    typeof this.default != 'undefined' && this.default !== null
+                        ? this.default
+                        : '';
 
             this.isDifferedFromDefault(value !== defaultValue);
         },
@@ -452,18 +468,21 @@ define([
         /**
          * @param {Boolean} state
          */
-        toggleUseDefault: function (state) {
+        toggleUseDefault: function(state) {
             this.disabled(state);
 
             if (this.source && this.hasService()) {
-                this.source.set('data.use_default.' + this.index, Number(state));
+                this.source.set(
+                    'data.use_default.' + this.index,
+                    Number(state)
+                );
             }
         },
 
         /**
          *  Callback when value is changed by user
          */
-        userChanges: function () {
+        userChanges: function() {
             this.valueChangedByUser = true;
         },
 
@@ -472,7 +491,7 @@ define([
          *
          * @returns {Boolean|String}
          */
-        getDescriptionId: function () {
+        getDescriptionId: function() {
             var id = false;
 
             if (this.error()) {
@@ -482,6 +501,6 @@ define([
             }
 
             return id;
-        }
+        },
     });
 });
