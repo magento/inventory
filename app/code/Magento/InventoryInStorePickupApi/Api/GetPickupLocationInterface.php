@@ -11,7 +11,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Get Pickup Location by provided Pickup Location Code.
- *
+ * @deprecated
  * @api
  */
 interface GetPickupLocationInterface

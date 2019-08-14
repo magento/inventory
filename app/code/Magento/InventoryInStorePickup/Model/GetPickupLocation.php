@@ -20,6 +20,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
+ * @deprecated
  */
 class GetPickupLocation implements GetPickupLocationInterface
 {

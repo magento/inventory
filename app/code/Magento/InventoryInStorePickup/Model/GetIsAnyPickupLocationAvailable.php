@@ -13,6 +13,7 @@ use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChann
 
 /**
  * @inheritdoc
+ * @deprecated
  */
 class GetIsAnyPickupLocationAvailable implements GetIsAnyPickupLocationAvailableInterface
 {

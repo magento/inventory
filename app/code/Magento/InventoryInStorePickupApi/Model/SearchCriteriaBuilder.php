@@ -14,6 +14,7 @@ use TypeError;
 
 /**
  * Builder for Pickup Locations Search Criteria.
+ * @deprecated
  *
  * @api
  */

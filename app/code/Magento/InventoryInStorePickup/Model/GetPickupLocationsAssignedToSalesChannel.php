@@ -17,6 +17,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * @inheritdoc
+ * @deprecated
  */
 class GetPickupLocationsAssignedToSalesChannel implements GetPickupLocationsAssignedToSalesChannelInterface
 {

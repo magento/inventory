@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickupApi\Api;
 
 /**
  * Provide information if at least one Pickup Location available for Sales Channel.
- *
+ * @deprecated
  * @api
  */
 interface GetIsAnyPickupLocationAvailableInterface
