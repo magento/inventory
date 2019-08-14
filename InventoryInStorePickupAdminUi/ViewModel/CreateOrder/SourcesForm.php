@@ -60,6 +60,8 @@ class SourcesForm implements ArgumentInterface
     }
 
     /**
+     * Get list of inventory sources assigned as pickup locations.
+     *
      * @return array [sourceCode => SourceName]
      * @throws InputException
      * @throws LocalizedException

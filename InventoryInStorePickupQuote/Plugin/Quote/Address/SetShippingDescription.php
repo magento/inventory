@@ -18,9 +18,7 @@ use Magento\Quote\Model\Quote\Address\Total;
 use Magento\Quote\Model\Quote\TotalsCollector;
 
 /**
- * Set Shipping Description
- *
- * e.g. In-Store Pickup Delivery - Pickup Location Name
+ * Set Shipping Description e.g. In-Store Pickup Delivery - Pickup Location Name
  */
 class SetShippingDescription
 {

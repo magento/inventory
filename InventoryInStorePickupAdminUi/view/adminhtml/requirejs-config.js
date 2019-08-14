@@ -7,7 +7,7 @@ var config = {
     config: {
         map: {
             '*': {
-                triggerShippingMethodUpdate: 'Magento_InventoryInStorePickupAdminUi/order/create/trigger-shipping-method-update'
+                triggerShippingMethodUpdate: 'Magento_InventoryInStorePickupAdminUi/order/create/trigger-shipping-method-update' //eslint-disable-line max-len
             }
         },
         mixins: {
