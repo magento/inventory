@@ -5,15 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
+namespace Magento\InventoryInStorePickup\Model\SearchRequest;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 
 /**
  * @inheritdoc
- * @deprecated
  */
-class GetNearbyLocationsCriteria implements GetNearbyLocationsCriteriaInterface
+class DistanceFilter implements DistanceFilterInterface
 {
     /**
      * @var int
@@ -28,11 +27,6 @@ class GetNearbyLocationsCriteria implements GetNearbyLocationsCriteriaInterface
     /**
      * @var string|null
      */
-    private $postcode;
-
-    /**
-     * @var string|null
-     */
     private $region;
 
     /**
@@ -41,40 +35,29 @@ class GetNearbyLocationsCriteria implements GetNearbyLocationsCriteriaInterface
     private $city;
 
     /**
-     * @var int|null
+     * @var string|null
      */
-    private $pageSize;
-
-    /**
-     * @var int
-     */
-    private $currentPage = 1;
+    private $postcode;
 
     /**
      * @param int $radius
      * @param string $country
-     * @param string|null $postcode
      * @param string|null $region
      * @param string|null $city
-     * @param int|null $pageSize
-     * @param int $currentPage
+     * @param string|null $postcode
      */
     public function __construct(
         int $radius,
         string $country,
-        ?string $postcode = null,
         ?string $region = null,
         ?string $city = null,
-        ?int $pageSize = null,
-        int $currentPage = 1
+        ?string $postcode = null
     ) {
         $this->radius = $radius;
         $this->country = $country;
-        $this->postcode = $postcode;
         $this->region = $region;
         $this->city = $city;
-        $this->pageSize = $pageSize;
-        $this->currentPage = $currentPage;
+        $this->postcode = $postcode;
     }
 
     /**
@@ -96,14 +79,6 @@ class GetNearbyLocationsCriteria implements GetNearbyLocationsCriteriaInterface
     /**
      * @inheritdoc
      */
-    public function getPostcode(): ?string
-    {
-        return $this->postcode;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getRegion(): ?string
     {
         return $this->region;
@@ -118,18 +93,10 @@ class GetNearbyLocationsCriteria implements GetNearbyLocationsCriteriaInterface
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function getPageSize(): ?int
+    public function getPostcode(): ?string
     {
-        return $this->pageSize;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCurrentPage(): int
-    {
-        return $this->currentPage;
+        return $this->postcode;
     }
 }

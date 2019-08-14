@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickup\Model\ResourceModel\Source;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 
 /**
  * Get Source Codes ordered by distance
@@ -39,6 +40,7 @@ class GetDistanceOrderedSourceCodes
      *
      * @param LatLngInterface $latLng
      * @param int $radius
+     *
      * @return string[]
      */
     public function execute(LatLngInterface $latLng, int $radius): array
@@ -46,11 +48,18 @@ class GetDistanceOrderedSourceCodes
         $connection = $this->resourceConnection->getConnection();
         $sourceTable = $this->resourceConnection->getTableName('inventory_source');
         $query = $connection->select()
-            ->from($sourceTable)
-            ->where(SourceInterface::ENABLED)
-            ->columns(['source_code', $this->createDistanceColumn($latLng) . ' AS distance'])
-            ->having('distance <= ?', $radius)
-            ->order('distance ASC');
+                            ->from($sourceTable)
+                            ->where(SourceInterface::ENABLED)
+                            ->columns(
+                                [
+                                    'source_code',
+                                    $this->createDistanceColumn(
+                                        $latLng
+                                    ) . ' AS ' . DistanceFilterInterface::DISTANCE_FIELD
+                                ]
+                            )
+                            ->having(DistanceFilterInterface::DISTANCE_FIELD . ' <= ?', $radius)
+                            ->order(DistanceFilterInterface::DISTANCE_FIELD . ' ASC');
 
         return $connection->fetchCol($query);
     }

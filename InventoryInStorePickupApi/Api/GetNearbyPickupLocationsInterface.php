@@ -13,7 +13,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 /**
  * Find nearest Pickup Locations by requested address, radius, and affiliation to Sales Channel.
  * Default locations sort order - ascending distance to request address.
- *
+ * @deprecated
  * @api
  */
 interface GetNearbyPickupLocationsInterface

@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickupApi\Api;
 
 /**
  * Get Pickup Locations for requested Sales Channel, ordered by corresponded Source priority.
- *
+ * @deprecated
  * @api
  */
 interface GetPickupLocationsAssignedToSalesChannelInterface

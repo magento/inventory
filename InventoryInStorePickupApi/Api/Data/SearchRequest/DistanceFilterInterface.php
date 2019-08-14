@@ -5,15 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria;
+namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
 /**
- * Search Criteria for searching Pickup Locations.
- * @deprecated
+ * Filter by Distance to the Address.
+ *
  * @api
  */
-interface GetNearbyLocationsCriteriaInterface
+interface DistanceFilterInterface
 {
+    public const DISTANCE_FIELD = 'distance';
+
     /**
      * Get search radius in KM.
      *
@@ -27,13 +29,6 @@ interface GetNearbyLocationsCriteriaInterface
      * @return string
      */
     public function getCountry(): string;
-
-    /**
-     * Requested postcode
-     *
-     * @return string|null
-     */
-    public function getPostcode(): ?string;
 
     /**
      * Requested region
@@ -50,18 +45,9 @@ interface GetNearbyLocationsCriteriaInterface
     public function getCity(): ?string;
 
     /**
-     * Get page size.
+     * Requested postcode
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getPageSize(): ?int;
-
-    /**
-     * Get current page.
-     *
-     * If not specified, 1 is returned by default.
-     *
-     * @return int
-     */
-    public function getCurrentPage(): int;
+    public function getPostcode(): ?string;
 }

@@ -13,6 +13,7 @@ use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
 /**
  * Create Source Selection Address based on Pickup Locations Search Criteria.
+ * @deprecated
  */
 class ToSourceSelectionAddress
 {
