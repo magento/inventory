@@ -38,6 +38,7 @@ define([
          * @param {Object} address
          */
         getLocation: function(sourceCode) {
+            var self = this;
             var serviceUrl = resourceUrlManager.getUrlForPickupLocation(
                 'website',
                 websiteCode,
@@ -47,10 +48,10 @@ define([
 
             return storage
                 .get(serviceUrl, {}, false)
-                .then(function(result) {
+                .then(function(address) {
                     shippingService.isLoading(false);
 
-                    console.log(result);
+                    return self.formatAddress(address);
                 })
                 .fail(function(response) {
                     errorProcessor.process(response);
@@ -149,7 +150,7 @@ define([
          * Formats address returned by REST endpoint to match checkout address field naming.
          * @param {object} address Address object returned by REST endpoint.
          */
-        formatAddress(address) {
+        formatAddress: function(address) {
             return {
                 name: address.name,
                 description: address.description,

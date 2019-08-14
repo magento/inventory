@@ -84,19 +84,21 @@ define([
          * Set shipping information handler
          */
         setPickupInformation: function() {
-            var shippingAddress;
-            if (this.validatePickupInformation()) {
-                shippingAddress = quote.shippingAddress();
-                if (shippingAddress.extension_attributes === undefined) {
-                    shippingAddress.extension_attributes = {};
-                }
+            var shippingAddress = quote.shippingAddress();
 
+            if (this.validatePickupInformation()) {
                 var sourceCode = _.findWhere(shippingAddress.customAttributes, {
                     attribute_code: 'sourceCode',
                 });
 
-                shippingAddress.extension_attributes.pickup_location_code =
-                    sourceCode.value;
+                shippingAddress = $.extend(true, quote.shippingAddress(), {
+                    extension_attributes: {
+                        pickup_location_code: sourceCode.value,
+                    },
+                    custom_attributes: {
+                        sourceCode: sourceCode.value,
+                    },
+                });
 
                 registry.async('checkoutProvider')(function(checkoutProvider) {
                     checkoutProvider.set('shippingAddress', shippingAddress);
@@ -136,7 +138,7 @@ define([
         isPickupLocationSelected: function(location) {
             return _.isEqual(this.selectedLocation(), location);
         },
-        updateNearbyLocations(address) {
+        updateNearbyLocations: function(address) {
             var self = this;
 
             return pickupLocationsService

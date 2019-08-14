@@ -80,7 +80,8 @@
         "zendframework/zend-uri": "^2.5.1",
         "zendframework/zend-validator": "^2.6.0",
         "zendframework/zend-view": "~2.10.0",
-        "guzzlehttp/guzzle": "^6.3.3"
+        "guzzlehttp/guzzle": "^6.3.3",
+        "creativestyle/magesuite-in-store-pickup-payment": "dev-feature-payment-method"
     },
     "require-dev": {
         "allure-framework/allure-phpunit": "~1.2.0",
@@ -387,5 +388,15 @@
             "Magento\\TestFramework\\Utility\\": "dev/tests/static/framework/Magento/TestFramework/Utility/"
         }
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        {
+            "type": "composer",
+            "url": "https://satis.creativestyle.pl"
+        }
+    ],
     "prefer-stable": true
 }

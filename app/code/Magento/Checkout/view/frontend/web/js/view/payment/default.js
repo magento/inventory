@@ -142,7 +142,6 @@ define([
             if (event) {
                 event.preventDefault();
             }
-            debugger;
             if (
                 this.validate() &&
                 additionalValidators.validate() &&
