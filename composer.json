@@ -11,7 +11,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "~7.1.3||~7.2.0",
+        "php": "~7.1.3||~7.2.0||~7.3.0",
         "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
@@ -36,7 +36,7 @@
         "colinmollenhour/php-redis-session-abstract": "~1.4.0",
         "composer/composer": "^1.6",
         "elasticsearch/elasticsearch": "~2.0|~5.1|~6.1",
-        "magento/composer": "~1.4.0",
+        "magento/composer": "~1.5.0",
         "magento/magento-composer-installer": ">=0.1.11",
         "magento/zendframework1": "~1.14.1",
         "monolog/monolog": "^1.17",
@@ -187,6 +187,7 @@
         "magento/module-integration": "*",
         "magento/module-inventory": "*",
         "magento/module-inventory-admin-ui": "*",
+        "magento/module-inventory-advanced-checkout": "*",
         "magento/module-inventory-api": "*",
         "magento/module-inventory-graph-ql": "*",
         "magento/module-inventory-bundle-product": "*",
@@ -217,6 +218,7 @@
         "magento/module-inventory-low-quantity-notification-api": "*",
         "magento/module-inventory-low-quantity-notification-admin-ui": "*",
         "magento/module-inventory-product-alert": "*",
+        "magento/module-inventory-requisition-list": "*",
         "magento/module-inventory-reservations": "*",
         "magento/module-inventory-reservations-api": "*",
         "magento/module-inventory-reservation-cli": "*",
