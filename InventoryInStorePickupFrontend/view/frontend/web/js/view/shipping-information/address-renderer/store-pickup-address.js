@@ -37,7 +37,7 @@ define([
                 : ''; //eslint-disable-line
         },
 
-        extractPickupLocationFromAddress(address) {
+        extractPickupLocationFromAddress: function(address) {
             var pickupLocationAttribute = _.findWhere(
                 address.customAttributes,
                 { attribute_code: 'pickupLocation' }

@@ -60,8 +60,17 @@ define([
                 shippingRateProcessor
             );
 
+            quote.shippingAddress.subscribe(function(shippingAddress) {
+                this.convertAddressType(shippingAddress);
+            }, this);
+            this.convertAddressType(quote.shippingAddress());
+
+            this.isStorePickupSelected.subscribe(function() {
+                this.preselectLocation();
+            }, this);
+            this.preselectLocation();
+
             this.syncWithShipping();
-            this.convertShippingAddress();
         },
         initObservable: function() {
             this._super().observe(['isVisible']);
@@ -137,27 +146,28 @@ define([
                 quote.shippingAddress().getKey()
             );
         },
-        convertShippingAddress() {
-            quote.shippingAddress.subscribe(function(shippingAddress) {
-                if (
-                    !this.isStorePickupAddress(shippingAddress) &&
-                    this.isStorePickupSelected()
-                ) {
-                    quote.shippingAddress(
-                        $.extend({}, shippingAddress, {
-                            canUseForBilling: function() {
-                                return false;
-                            },
-                            getType: function() {
-                                return 'store-pickup-address';
-                            },
-                        })
-                    );
-                }
-            }, this);
+        convertAddressType: function(shippingAddress) {
+            if (
+                !this.isStorePickupAddress(shippingAddress) &&
+                this.isStorePickupSelected()
+            ) {
+                quote.shippingAddress(
+                    $.extend({}, shippingAddress, {
+                        canUseForBilling: function() {
+                            return false;
+                        },
+                        getType: function() {
+                            return 'store-pickup-address';
+                        },
+                    })
+                );
+            }
         },
         preselectLocation: function() {
-            if (pickupLocationsService.selectedLocation()) {
+            if (
+                !this.isStorePickupSelected() ||
+                pickupLocationsService.selectedLocation()
+            ) {
                 return;
             }
 
@@ -169,9 +179,9 @@ define([
 
             if (selectedSourceCode) {
                 pickupLocationsService
-                    .getLocation(selectedSourceCode)
+                    .getLocation(selectedSourceCode.value)
                     .then(function(location) {
-                        pickupLocationsService.selectedLocation(location);
+                        pickupLocationsService.selectForShipping(location);
                     });
             } else if (shippingAddress.city && shippingAddress.postcode) {
                 pickupLocationsService
@@ -194,7 +204,7 @@ define([
                     });
             }
         },
-        isStorePickupAddress(address) {
+        isStorePickupAddress: function(address) {
             return address.getType() === 'store-pickup-address';
         },
     });
