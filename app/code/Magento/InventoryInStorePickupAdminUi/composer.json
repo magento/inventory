@@ -12,8 +12,8 @@
         "magento/module-inventory-admin-ui": "*",
         "magento/module-inventory-api": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/moduke-inventory-in-store-pickup-shipping-api": "*",
-        "magento/moduke-inventory-in-store-pickup-quote": "*"
+        "magento/module-inventory-in-store-pickup-shipping-api": "*",
+        "magento/module-inventory-in-store-pickup-quote": "*"
     },
     "type": "magento2-module",
     "license": [
