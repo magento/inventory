@@ -18,7 +18,7 @@ use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrdered
 use Magento\InventoryInStorePickup\Model\SearchRequest\ConvertToSourceSelectionAddress;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
@@ -89,6 +89,7 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
         $codes = $this->getSourceCodes($searchRequest);
 
         if ($codes !== null) {
+            $codes = implode(',', $codes);
             $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, $codes, 'in');
         }
     }
@@ -133,12 +134,14 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
 
         $searchResult = $this->getStockSourceLinks->execute($searchCriteriaStockSource);
 
-        $codes = [];
+        $stockCodes = [];
         foreach ($searchResult->getItems() as $item) {
-            $codes[] = $item->getSourceCode();
+            $stockCodes[] = $item->getSourceCode();
         }
 
-        return $codes;
+        $resultCodes = array_intersect($sourceCodes, $stockCodes);
+
+        return $resultCodes;
     }
 
     /**

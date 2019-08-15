@@ -53,4 +53,19 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface" type="Magento\InventoryInStorePickup\Model\SearchResult\ExtractStrategy" />
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="resolve-address-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveAddressFilter</item>
+                <item name="resolve-distance-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDistanceFilter</item>
+                <item name="resolve-pickup-location-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolvePickupLocationFilters</item>
+                <item name="resolve-search-request-meta" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveSearchRequestMeta</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\AddressFilter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest" />
 </config>

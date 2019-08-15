@@ -15,7 +15,6 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInter
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface;
-use Magento\Tests\NamingConvention\true\string;
 
 /**
  * Work with Distance Based data set.
@@ -61,8 +60,7 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
         foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
             foreach ($filterGroup->getFilters() as $filter) {
                 if ($this->isDistanceCodesFilter($filter, $searchRequest->getPickupLocationCodeFilter())) {
-                    return is_array($filter->getValue()) ?
-                        $filter->getValue() : explode(',', $filter->getValue());
+                    return explode(',', $filter->getValue());
                 }
             }
         }
@@ -126,7 +124,7 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
     private function isDistanceCodesFilter(Filter $filter, ?FilterInterface $pickupLocationCodeFilter): bool
     {
         return $filter->getField() === SourceInterface::SOURCE_CODE &&
-            $filter->getConditionType() === 'eq' &&
+            $filter->getConditionType() === 'in' &&
             (!$pickupLocationCodeFilter || !$pickupLocationCodeFilter->getValue() === $filter->getValue());
     }
 

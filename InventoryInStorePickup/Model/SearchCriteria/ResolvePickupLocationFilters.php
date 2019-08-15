@@ -11,7 +11,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
 /**
  * Add Pickup Location related filters to the Search Criteria.

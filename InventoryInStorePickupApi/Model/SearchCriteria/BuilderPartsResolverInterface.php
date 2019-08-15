@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupApi\Model;
+namespace Magento\InventoryInStorePickupApi\Model\SearchCriteria;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;

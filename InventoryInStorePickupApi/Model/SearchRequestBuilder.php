@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Model;
 
 use InvalidArgumentException;
+use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
@@ -154,6 +155,7 @@ class SearchRequestBuilder
 
     /**
      * Build Distance Filter.
+     *
      * @return void
      */
     private function buildDistanceFilter(): void
@@ -168,6 +170,7 @@ class SearchRequestBuilder
 
     /**
      * Build Address Filter.
+     *
      * @return void
      */
     private function buildAddressFilter(): void
@@ -191,6 +194,7 @@ class SearchRequestBuilder
     public function setStreetFilter(string $street, ?string $condition = null): self
     {
         $this->data[self::ADDRESS_FILTER][self::STREET_FILTER] = $this->createFilter($street, $condition);
+
         return $this;
     }
 
@@ -205,6 +209,7 @@ class SearchRequestBuilder
     public function setPostcodeFilter(string $postcode, ?string $condition = null): self
     {
         $this->data[self::ADDRESS_FILTER][self::POSTCODE_FILTER] = $this->createFilter($postcode, $condition);
+
         return $this;
     }
 
@@ -219,6 +224,7 @@ class SearchRequestBuilder
     public function setAddressCityFilter(string $city, ?string $condition = null): self
     {
         $this->data[self::ADDRESS_FILTER][self::CITY_FILTER] = $this->createFilter($city, $condition);
+
         return $this;
     }
 
@@ -233,6 +239,7 @@ class SearchRequestBuilder
     public function setAddressRegionIdFilter(string $regionId, ?string $condition = null): self
     {
         $this->data[self::ADDRESS_FILTER][self::REGION_ID_FILTER] = $this->createFilter($regionId, $condition);
+
         return $this;
     }
 
@@ -247,6 +254,7 @@ class SearchRequestBuilder
     public function setAddressRegionFilter(string $region, ?string $condition = null): self
     {
         $this->data[self::ADDRESS_FILTER][self::REGION_FILTER] = $this->createFilter($region, $condition);
+
         return $this;
     }
 
@@ -261,6 +269,7 @@ class SearchRequestBuilder
     public function setAddressCountryFilter(string $country, ?string $condition): self
     {
         $this->data[self::ADDRESS_FILTER][self::COUNTRY_FILTER] = $this->createFilter($country, $condition);
+
         return $this;
     }
 
@@ -274,6 +283,7 @@ class SearchRequestBuilder
     public function setDistanceFilterRadius(int $radius): self
     {
         $this->data[self::DISTANCE_FILTER][self::RADIUS] = $radius;
+
         return $this;
     }
 
@@ -287,6 +297,7 @@ class SearchRequestBuilder
     public function setDistanceFilterPostcode(string $postcode): self
     {
         $this->data[self::DISTANCE_FILTER][self::POSTCODE] = $postcode;
+
         return $this;
     }
 
@@ -300,6 +311,7 @@ class SearchRequestBuilder
     public function setDistanceFilterCity(string $city): self
     {
         $this->data[self::DISTANCE_FILTER][self::CITY] = $city;
+
         return $this;
     }
 
@@ -313,6 +325,7 @@ class SearchRequestBuilder
     public function setDistanceFilterRegion(string $region): self
     {
         $this->data[self::DISTANCE_FILTER][self::REGION] = $region;
+
         return $this;
     }
 
@@ -326,6 +339,7 @@ class SearchRequestBuilder
     public function setDistanceFilterCountry(string $country): self
     {
         $this->data[self::DISTANCE_FILTER][self::COUNTRY] = $country;
+
         return $this;
     }
 
@@ -339,20 +353,43 @@ class SearchRequestBuilder
     public function setSearchRequestExtension(SearchRequestExtensionInterface $extension): self
     {
         $this->data[self::SEARCH_REQUEST_EXTENSION] = $extension;
+
         return $this;
     }
 
     /**
      * Set Sort Orders.
      *
-     * @param array $sortOrders
+     * @param SortOrder[] $sortOrders
      *
      * @return SearchRequestBuilder
      */
     public function setSortOrders(array $sortOrders): self
     {
+        $this->validateSortOrder($sortOrders);
         $this->data[self::SORT_ORDERS] = $sortOrders;
+
         return $this;
+    }
+
+    /**
+     * Validate Sort Orders input.
+     *
+     * @param array|null $sortOrders
+     */
+    private function validateSortOrder(array $sortOrders): void
+    {
+        foreach ($sortOrders as $sortOrder) {
+            if (!$sortOrder instanceof SortOrder) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid Sort Order provided for %s. Sort Order must implement %s.',
+                        self::class,
+                        SortOrder::class
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -365,6 +402,7 @@ class SearchRequestBuilder
     public function setScopeCode(string $scopeCode): self
     {
         $this->data[self::SCOPE_CODE] = $scopeCode;
+
         return $this;
     }
 
@@ -378,6 +416,7 @@ class SearchRequestBuilder
     public function setScopeType(string $scopeType): self
     {
         $this->data[self::SCOPE_TYPE] = $scopeType;
+
         return $this;
     }
 
@@ -392,6 +431,7 @@ class SearchRequestBuilder
     public function setPickupLocationCodeFilter(string $code, ?string $condition = null): self
     {
         $this->data[self::PICKUP_LOCATION_CODE_FILTER] = $this->createFilter($code, $condition);
+
         return $this;
     }
 
@@ -406,6 +446,7 @@ class SearchRequestBuilder
     public function setNameFilter(string $name, ?string $condition = null): self
     {
         $this->data[self::NAME_FILTER] = $this->createFilter($name, $condition);
+
         return $this;
     }
 
@@ -419,6 +460,7 @@ class SearchRequestBuilder
     public function setCurrentPage(int $page): self
     {
         $this->data[self::CURRENT_PAGE] = $page;
+
         return $this;
     }
 
@@ -432,6 +474,7 @@ class SearchRequestBuilder
     public function setPageSize(int $pageSize): self
     {
         $this->data[self::PAGE_SIZE] = $pageSize;
+
         return $this;
     }
 
