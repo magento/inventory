@@ -15,10 +15,7 @@
         <plugin name="load_in_store_pickup_on_get" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetPlugin"/>
         <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
     </type>
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface" type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface" type="Magento\InventoryInStorePickup\Model\SearchCriteria\GetNearbyLocationsCriteria" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToSalesChannel" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface" type="Magento\InventoryInStorePickup\Model\GetIsAnyPickupLocationAvailable"/>
 
