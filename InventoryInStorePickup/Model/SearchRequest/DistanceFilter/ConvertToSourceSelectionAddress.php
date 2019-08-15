@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\SearchRequest;
+namespace Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
@@ -30,7 +30,7 @@ class ConvertToSourceSelectionAddress
     }
 
     /**
-     * Create Source Selection Address based on Pickup Locations Search Criteria.
+     * Create Source Selection Address based on Distance Fitler from Search Request.
      *
      * @param DistanceFilterInterface $distanceFilter
      * @return AddressInterface
