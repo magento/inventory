@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickupApi\Model;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
 /**
  * @inheritdoc

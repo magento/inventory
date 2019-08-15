@@ -13,11 +13,12 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
 /**
  * Resolve Page and Sort related information for Search Criteria Builder.
  */
-class ResolveSearchRequestMeta implements \Magento\InventoryInStorePickupApi\Model\BuilderPartsResolverInterface
+class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
 {
     private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
@@ -28,8 +29,15 @@ class ResolveSearchRequestMeta implements \Magento\InventoryInStorePickupApi\Mod
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
-        $this->addPageDetails($searchRequest, $searchCriteriaBuilder);
-        $this->addSortOrders($searchRequest, $searchCriteriaBuilder);
+        $searchCriteriaBuilder->setCurrentPage($searchRequest->getCurrentPage());
+
+        if ($searchRequest->getPageSize()) {
+            $searchCriteriaBuilder->setPageSize($searchRequest->getPageSize());
+        }
+
+        if ($searchRequest->getSort()) {
+            $this->addSortOrders($searchRequest, $searchCriteriaBuilder);
+        }
     }
 
     /**
@@ -68,22 +76,5 @@ class ResolveSearchRequestMeta implements \Magento\InventoryInStorePickupApi\Mod
         }
 
         $searchCriteriaBuilder->setSortOrders($sorts);
-    }
-
-    /**
-     * Add Page Details to Search Criteria Builder.
-     *
-     * @param SearchRequestInterface $searchRequest
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     */
-    private function addPageDetails(
-        SearchRequestInterface $searchRequest,
-        SearchCriteriaBuilder $searchCriteriaBuilder
-    ): void {
-        if ($searchRequest->getPageSize()) {
-            $searchCriteriaBuilder->setPageSize($searchRequest->getPageSize());
-        }
-
-        $searchCriteriaBuilder->setCurrentPage($searchRequest->getCurrentPage());
     }
 }
