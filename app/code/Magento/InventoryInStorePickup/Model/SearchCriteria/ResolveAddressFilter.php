@@ -23,10 +23,12 @@ class ResolveAddressFilter implements BuilderPartsResolverInterface
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
-        $filters = $this->extractAddressFitlers($searchRequest);
+        $filters = $this->extractAddressFilters($searchRequest);
 
         foreach ($filters as $field => $filter) {
-            $searchCriteriaBuilder->addFilter($field, $filter->getValue(), $filter->getConditionType());
+            if ($filter) {
+                $searchCriteriaBuilder->addFilter($field, $filter->getValue(), $filter->getConditionType());
+            }
         }
     }
 
@@ -37,7 +39,7 @@ class ResolveAddressFilter implements BuilderPartsResolverInterface
      *
      * @return FilterInterface[]
      */
-    private function extractAddressFitlers(SearchRequestInterface $searchRequest): array
+    private function extractAddressFilters(SearchRequestInterface $searchRequest): array
     {
         $filters = [];
 
