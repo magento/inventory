@@ -11,7 +11,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilder;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
@@ -33,7 +33,7 @@ class SalesChannelValidator implements RequestValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @var SearchRequestBuilder
+     * @var SearchRequestBuilderInterface
      */
     private $searchRequestBuilder;
 
@@ -45,13 +45,13 @@ class SalesChannelValidator implements RequestValidatorInterface
     /**
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param ValidationResultFactory $validationResultFactory
-     * @param SearchRequestBuilder $searchRequestBuilder
+     * @param SearchRequestBuilderInterface $searchRequestBuilder
      * @param GetPickupLocationsInterface $getPickupLocations
      */
     public function __construct(
         WebsiteRepositoryInterface $websiteRepository,
         ValidationResultFactory $validationResultFactory,
-        SearchRequestBuilder $searchRequestBuilder,
+        SearchRequestBuilderInterface $searchRequestBuilder,
         GetPickupLocationsInterface $getPickupLocations
     ) {
         $this->websiteRepository = $websiteRepository;

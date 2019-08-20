@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocationsTest;
 
-use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryInStorePickup\Model\GetPickupLocations;
-use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilder;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -27,14 +26,14 @@ class AddressFilterTest extends TestCase
     private $getPickupLocations;
 
     /**
-     * @var SearchRequestBuilder
+     * @var SearchRequestBuilderInterface
      */
     private $searchRequestBuilder;
 
     protected function setUp()
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
-        $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilder::class);
+        $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilderInterface::class);
     }
 
     /**

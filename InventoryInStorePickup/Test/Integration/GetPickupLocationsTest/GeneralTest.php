@@ -11,7 +11,7 @@ use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\GetPickupLocations;
-use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilder;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class GeneralTest extends TestCase
     private $getPickupLocations;
 
     /**
-     * @var SearchRequestBuilder
+     * @var SearchRequestBuilderInterface
      */
     private $searchRequestBuilder;
 
@@ -41,7 +41,7 @@ class GeneralTest extends TestCase
     protected function setUp()
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
-        $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilder::class);
+        $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilderInterface::class);
         $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);
     }
 

@@ -10,12 +10,13 @@ namespace Magento\InventoryInStorePickup\Model;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilder;
+use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
  * @inheritdoc
  */
-class GetPickupLocation implements \Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface
+class GetPickupLocation implements GetPickupLocationInterface
 {
     /**
      * @var GetPickupLocationsInterface
@@ -23,17 +24,17 @@ class GetPickupLocation implements \Magento\InventoryInStorePickupApi\Model\GetP
     private $getPickupLocations;
 
     /**
-     * @var SearchRequestBuilder
+     * @var SearchRequestBuilderInterface
      */
     private $searchRequestBuilder;
 
     /**
      * @param GetPickupLocationsInterface $getPickupLocations
-     * @param SearchRequestBuilder $searchRequestBuilder
+     * @param SearchRequestBuilderInterface $searchRequestBuilder
      */
     public function __construct(
         GetPickupLocationsInterface $getPickupLocations,
-        SearchRequestBuilder $searchRequestBuilder
+        SearchRequestBuilderInterface $searchRequestBuilder
     ) {
         $this->getPickupLocations = $getPickupLocations;
         $this->searchRequestBuilder = $searchRequestBuilder;
