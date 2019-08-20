@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupApi\Model;
+namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterfaceFactory;
@@ -15,11 +15,12 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterfaceFact
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
- * Search Request Builder.
+ * @inheritdoc
  */
-class SearchRequestBuilder
+class SearchRequestBuilder implements SearchRequestBuilderInterface
 {
     /**
      * Search Request Fields.
@@ -109,9 +110,7 @@ class SearchRequestBuilder
     }
 
     /**
-     * Build Search Request object.
-     *
-     * @return SearchRequestInterface
+     * @inheritdoc
      */
     public function create(): SearchRequestInterface
     {
@@ -168,14 +167,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Street for filter by address.
-     *
-     * @param string $street
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setStreetFilter(string $street, ?string $condition = null): self
+    public function setStreetFilter(string $street, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::ADDRESS_FILTER][self::STREET_FILTER] = $this->createFilter($street, $condition);
 
@@ -183,14 +177,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Postcode for filter by address.
-     *
-     * @param string $postcode
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setPostcodeFilter(string $postcode, ?string $condition = null): self
+    public function setPostcodeFilter(string $postcode, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::ADDRESS_FILTER][self::POSTCODE_FILTER] = $this->createFilter($postcode, $condition);
 
@@ -198,14 +187,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set City for filter by address.
-     *
-     * @param string $city
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setAddressCityFilter(string $city, ?string $condition = null): self
+    public function setAddressCityFilter(string $city, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::ADDRESS_FILTER][self::CITY_FILTER] = $this->createFilter($city, $condition);
 
@@ -213,14 +197,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Region Id for filter by address.
-     *
-     * @param string $regionId
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setAddressRegionIdFilter(string $regionId, ?string $condition = null): self
+    public function setAddressRegionIdFilter(string $regionId, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::ADDRESS_FILTER][self::REGION_ID_FILTER] = $this->createFilter($regionId, $condition);
 
@@ -228,14 +207,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Region for filter by address.
-     *
-     * @param string $region
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setAddressRegionFilter(string $region, ?string $condition = null): self
+    public function setAddressRegionFilter(string $region, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::ADDRESS_FILTER][self::REGION_FILTER] = $this->createFilter($region, $condition);
 
@@ -243,14 +217,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set country for filter by address.
-     *
-     * @param string $country
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setAddressCountryFilter(string $country, ?string $condition): self
+    public function setAddressCountryFilter(string $country, ?string $condition): SearchRequestBuilderInterface
     {
         $this->data[self::ADDRESS_FILTER][self::COUNTRY_FILTER] = $this->createFilter($country, $condition);
 
@@ -258,13 +227,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Radius for Distance Filter.
-     *
-     * @param int $radius
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setDistanceFilterRadius(int $radius): self
+    public function setDistanceFilterRadius(int $radius): SearchRequestBuilderInterface
     {
         $this->data[self::DISTANCE_FILTER][self::RADIUS] = $radius;
 
@@ -272,13 +237,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Postcode for Distance Filter.
-     *
-     * @param string $postcode
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setDistanceFilterPostcode(string $postcode): self
+    public function setDistanceFilterPostcode(string $postcode): SearchRequestBuilderInterface
     {
         $this->data[self::DISTANCE_FILTER][self::POSTCODE] = $postcode;
 
@@ -286,13 +247,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set City for Distance filter.
-     *
-     * @param string $city
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setDistanceFilterCity(string $city): self
+    public function setDistanceFilterCity(string $city): SearchRequestBuilderInterface
     {
         $this->data[self::DISTANCE_FILTER][self::CITY] = $city;
 
@@ -300,13 +257,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Region for Distance filter.
-     *
-     * @param string $region
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setDistanceFilterRegion(string $region): self
+    public function setDistanceFilterRegion(string $region): SearchRequestBuilderInterface
     {
         $this->data[self::DISTANCE_FILTER][self::REGION] = $region;
 
@@ -314,13 +267,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Country for Distance filter.
-     *
-     * @param string $country
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setDistanceFilterCountry(string $country): self
+    public function setDistanceFilterCountry(string $country): SearchRequestBuilderInterface
     {
         $this->data[self::DISTANCE_FILTER][self::COUNTRY] = $country;
 
@@ -328,13 +277,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Search Request Extension.
-     *
-     * @param SearchRequestExtensionInterface $extension
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setSearchRequestExtension(SearchRequestExtensionInterface $extension): self
+    public function setSearchRequestExtension(SearchRequestExtensionInterface $extension): SearchRequestBuilderInterface
     {
         $this->data[self::SEARCH_REQUEST_EXTENSION] = $extension;
 
@@ -342,13 +287,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Sort Orders.
-     *
-     * @param SortOrder[] $sortOrders
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setSortOrders(array $sortOrders): self
+    public function setSortOrders(array $sortOrders): SearchRequestBuilderInterface
     {
         $this->validateSortOrder($sortOrders);
         $this->data[self::SORT_ORDERS] = $sortOrders;
@@ -377,13 +318,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set scope code.
-     *
-     * @param string $scopeCode
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setScopeCode(string $scopeCode): self
+    public function setScopeCode(string $scopeCode): SearchRequestBuilderInterface
     {
         $this->data[self::SCOPE_CODE] = $scopeCode;
 
@@ -391,13 +328,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set scope type.
-     *
-     * @param string $scopeType
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setScopeType(string $scopeType): self
+    public function setScopeType(string $scopeType): SearchRequestBuilderInterface
     {
         $this->data[self::SCOPE_TYPE] = $scopeType;
 
@@ -405,14 +338,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Add filter by Pickup Location Code.
-     *
-     * @param string $code
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setPickupLocationCodeFilter(string $code, ?string $condition = null): self
+    public function setPickupLocationCodeFilter(string $code, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::PICKUP_LOCATION_CODE_FILTER] = $this->createFilter($code, $condition);
 
@@ -420,14 +348,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set Filter by Pickup Location Name.
-     *
-     * @param string $name
-     * @param string|null $condition
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setNameFilter(string $name, ?string $condition = null): self
+    public function setNameFilter(string $name, ?string $condition = null): SearchRequestBuilderInterface
     {
         $this->data[self::NAME_FILTER] = $this->createFilter($name, $condition);
 
@@ -435,13 +358,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set current page. Not required.
-     *
-     * @param int $page
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setCurrentPage(int $page): self
+    public function setCurrentPage(int $page): SearchRequestBuilderInterface
     {
         $this->data[self::CURRENT_PAGE] = $page;
 
@@ -449,13 +368,9 @@ class SearchRequestBuilder
     }
 
     /**
-     * Set page size. Not required.
-     *
-     * @param int $pageSize
-     *
-     * @return SearchRequestBuilder
+     * @inheritdoc
      */
-    public function setPageSize(int $pageSize): self
+    public function setPageSize(int $pageSize): SearchRequestBuilderInterface
     {
         $this->data[self::PAGE_SIZE] = $pageSize;
 
