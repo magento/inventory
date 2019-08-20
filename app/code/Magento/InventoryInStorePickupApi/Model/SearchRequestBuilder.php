@@ -176,7 +176,7 @@ class SearchRequestBuilder
     private function buildAddressFilter(): void
     {
         $addressFilterData = $this->data[self::ADDRESS_FILTER];
-        if (!empty($distanceFilterData)) {
+        if (!empty($addressFilterData)) {
             $this->data[self::ADDRESS_FILTER] = $this->addressFilterFactory->create($addressFilterData);
         } else {
             unset($this->data[self::ADDRESS_FILTER]);

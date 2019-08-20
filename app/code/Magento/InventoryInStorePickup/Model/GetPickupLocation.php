@@ -64,6 +64,6 @@ class GetPickupLocation implements \Magento\InventoryInStorePickupApi\Model\GetP
             );
         }
 
-        return $pickupLocation = current($searchResult->getItems());
+        return current($searchResult->getItems());
     }
 }

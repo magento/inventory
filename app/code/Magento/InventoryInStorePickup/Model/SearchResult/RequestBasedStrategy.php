@@ -18,6 +18,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * Work with default data set.
+ *
  * This assume that data set did not filtered by assignment to Stock.
  */
 class RequestBasedStrategy implements ExtractStrategyInterface
@@ -54,6 +55,7 @@ class RequestBasedStrategy implements ExtractStrategyInterface
 
     /**
      * @inheritdoc
+     *
      * @throws NoSuchEntityException
      */
     public function getSources(

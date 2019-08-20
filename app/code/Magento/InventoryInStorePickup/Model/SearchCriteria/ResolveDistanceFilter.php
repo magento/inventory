@@ -82,6 +82,7 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
 
     /**
      * @inheritdoc
+     *
      * @throws NoSuchEntityException
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void

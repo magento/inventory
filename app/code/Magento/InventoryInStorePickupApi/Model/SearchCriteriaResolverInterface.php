@@ -18,6 +18,8 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 interface SearchCriteriaResolverInterface
 {
     /**
+     * Resolve Framework Search Criteria from the Search Request object.
+     *
      * @param SearchRequestInterface $searchRequest
      *
      * @return SearchCriteria
