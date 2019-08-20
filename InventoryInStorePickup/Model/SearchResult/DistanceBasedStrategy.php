@@ -54,8 +54,10 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
      *
      * @return array
      */
-    private function getSortedCodes(SearchRequestInterface $searchRequest, SourceSearchResultsInterface $searchResults): array
-    {
+    private function getSortedCodes(
+        SearchRequestInterface $searchRequest,
+        SourceSearchResultsInterface $searchResults
+    ): array {
         $searchCriteria = $searchResults->getSearchCriteria();
         foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
             foreach ($filterGroup->getFilters() as $filter) {
@@ -82,33 +84,32 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
         array $sourceCodes,
         string $sortDirection = SortOrder::SORT_ASC
     ): array {
-        if ($sortDirection === SortOrder::SORT_ASC) {
-            usort(
-                $sources,
-                function (SourceInterface $left, SourceInterface $right) use ($sourceCodes) {
-                    return array_search(
-                            $left->getSourceCode(),
-                            $sourceCodes
-                        ) <=> array_search(
-                            $right->getSourceCode(),
-                            $sourceCodes
-                        );
-                }
-            );
-        } else {
-            usort(
-                $sources,
-                function (SourceInterface $left, SourceInterface $right) use ($sourceCodes) {
-                    return array_search(
-                            $right->getSourceCode(),
-                            $sourceCodes
-                        ) <=> array_search(
-                            $left->getSourceCode(),
-                            $sourceCodes
-                        );
-                }
-            );
-        }
+        $ascSort = function (SourceInterface $left, SourceInterface $right) use ($sourceCodes) {
+            return array_search(
+                    $left->getSourceCode(),
+                    $sourceCodes
+                ) <=> array_search(
+                    $right->getSourceCode(),
+                    $sourceCodes
+                );
+        };
+
+        $descSort = function (SourceInterface $left, SourceInterface $right) use ($sourceCodes) {
+            return array_search(
+                    $right->getSourceCode(),
+                    $sourceCodes
+                ) <=> array_search(
+                    $left->getSourceCode(),
+                    $sourceCodes
+                );
+        };
+
+        $sort = $sortDirection === SortOrder::SORT_ASC ? $ascSort : $descSort;
+
+        usort(
+            $sources,
+            $sort
+        );
 
         return $sources;
     }

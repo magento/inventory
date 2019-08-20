@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Integration;
+namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocationsTest;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Integration tests coverage for @see \Magento\InventoryInStorePickup\Model\GetPickupLocations.
  */
-class GetPickupLocationsDistanceFilterOfflineTest extends TestCase
+class DistanceFilterOfflineTest extends TestCase
 {
     /**
      * @var GetPickupLocations
@@ -56,7 +56,7 @@ class GetPickupLocationsDistanceFilterOfflineTest extends TestCase
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
-     * @param array $searchCriteriaData
+     * @param array $searchRequestData
      * @param string $salesChannelCode
      * @param string[] $sortOrder
      * @param string[] $sortedSourceCodes
@@ -67,25 +67,25 @@ class GetPickupLocationsDistanceFilterOfflineTest extends TestCase
      * @magentoDbIsolation disabled
      */
     public function testExecute(
-        array $searchCriteriaData,
+        array $searchRequestData,
         string $salesChannelCode,
         ?array $sortOrder,
         array $sortedSourceCodes
     ) {
-        $this->searchRequestBuilder->setDistanceFilterRadius($searchCriteriaData['radius'])
-                                   ->setDistanceFilterCountry($searchCriteriaData['country'])
+        $this->searchRequestBuilder->setDistanceFilterRadius($searchRequestData['radius'])
+                                   ->setDistanceFilterCountry($searchRequestData['country'])
                                    ->setScopeCode($salesChannelCode);
 
-        if (isset($searchCriteriaData['postcode'])) {
-            $this->searchRequestBuilder->setDistanceFilterPostcode($searchCriteriaData['postcode']);
+        if (isset($searchRequestData['postcode'])) {
+            $this->searchRequestBuilder->setDistanceFilterPostcode($searchRequestData['postcode']);
         }
 
-        if (isset($searchCriteriaData['city'])) {
-            $this->searchRequestBuilder->setDistanceFilterCity($searchCriteriaData['city']);
+        if (isset($searchRequestData['city'])) {
+            $this->searchRequestBuilder->setDistanceFilterCity($searchRequestData['city']);
         }
 
-        if (isset($searchCriteriaData['region'])) {
-            $this->searchRequestBuilder->setDistanceFilterRegion($searchCriteriaData['region']);
+        if (isset($searchRequestData['region'])) {
+            $this->searchRequestBuilder->setDistanceFilterRegion($searchRequestData['region']);
         }
 
         if ($sortOrder) {

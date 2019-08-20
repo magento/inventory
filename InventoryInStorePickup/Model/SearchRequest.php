@@ -77,7 +77,7 @@ class SearchRequest implements SearchRequestInterface
      * @param AddressFilterInterface|null $addressFilter
      * @param FilterInterface|null $nameFilter
      * @param FilterInterface|null $pickupLocationCodeFilter
-     * @param SortOrder[]|null $sortOrder
+     * @param array|null $sortOrders
      * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
      * @param int $currentPage

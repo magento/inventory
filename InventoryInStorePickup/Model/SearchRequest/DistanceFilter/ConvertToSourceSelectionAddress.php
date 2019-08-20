@@ -47,5 +47,4 @@ class ConvertToSourceSelectionAddress
 
         return $this->addressInterfaceFactory->create($data);
     }
-
 }
