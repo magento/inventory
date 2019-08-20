@@ -81,6 +81,7 @@ class SearchRequest implements SearchRequestInterface
      * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
      * @param int $currentPage
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         string $scopeCode,

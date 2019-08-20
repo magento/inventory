@@ -1,10 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: al.kravchuk
- * Date: 20.08.19
- * Time: 20:58
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
