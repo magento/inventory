@@ -29,7 +29,7 @@ class SearchRequestBuilder
     private const ADDRESS_FILTER = 'addressFilter';
     private const DISTANCE_FILTER = 'distanceFilter';
     private const NAME_FILTER = 'nameFilter';
-    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationFilter';
+    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCodeFilter';
     private const SORT_ORDERS = 'sortOrders';
     private const PAGE_SIZE = 'pageSize';
     private const CURRENT_PAGE = 'currentPage';

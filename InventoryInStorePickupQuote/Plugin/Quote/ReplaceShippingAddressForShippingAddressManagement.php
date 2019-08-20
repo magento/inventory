@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;

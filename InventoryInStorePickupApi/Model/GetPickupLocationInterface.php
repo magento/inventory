@@ -4,14 +4,14 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\InventoryInStorePickupApi\Api;
+namespace Magento\InventoryInStorePickupApi\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Get Pickup Location by provided Pickup Location Code.
- * @deprecated
+ * Sugar Service to provide single Pickup Location by Sales Channel Code, Type and Pickup Location Code.
+ *
  * @api
  */
 interface GetPickupLocationInterface
@@ -22,7 +22,7 @@ interface GetPickupLocationInterface
      * @param string $pickupLocationCode
      * @param string $salesChannelType
      * @param string $salesChannelCode
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface
+     * @return PickupLocationInterface
      * @throws NoSuchEntityException
      */
     public function execute(
