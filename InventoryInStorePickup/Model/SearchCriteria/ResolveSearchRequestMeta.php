@@ -20,8 +20,6 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverI
  */
 class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
 {
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
-
     /**
      * @inheritdoc
      *
@@ -68,7 +66,7 @@ class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
                 $sortOrder->setField(PickupLocationInterface::FRONTEND_NAME);
             }
 
-            if ($sortOrder->getField() === self::PICKUP_LOCATION_CODE) {
+            if ($sortOrder->getField() === PickupLocationInterface::PICKUP_LOCATION_CODE) {
                 $sortOrder->setField(SourceInterface::SOURCE_CODE);
             }
 
