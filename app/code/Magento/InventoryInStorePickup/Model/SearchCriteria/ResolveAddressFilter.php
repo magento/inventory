@@ -52,6 +52,7 @@ class ResolveAddressFilter implements BuilderPartsResolverInterface
         $filters[SourceInterface::COUNTRY_ID] = $addressFilter->getCountryFilter();
         $filters[SourceInterface::REGION] = $addressFilter->getRegionFilter();
         $filters[SourceInterface::REGION_ID] = $addressFilter->getRegionIdFilter();
+        $filters[SourceInterface::POSTCODE] = $addressFilter->getPostcodeFilter();
         $filters[SourceInterface::CITY] = $addressFilter->getCityFilter();
         $filters[SourceInterface::STREET] = $addressFilter->getStreetFilter();
 

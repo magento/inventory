@@ -19,6 +19,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Integration tests coverage for @see \Magento\InventoryInStorePickup\Model\GetPickupLocations.
+ *
+ * Cover usage of Distance Filter.
  */
 class DistanceFilterOfflineTest extends TestCase
 {
