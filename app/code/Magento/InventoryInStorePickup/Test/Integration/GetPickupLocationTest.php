@@ -115,8 +115,12 @@ class GetPickupLocationTest extends TestCase
                 'global_website',
                 true,
                 __(
-                    'Source with code "%value" does not exist.',
-                    ['value' => 'zzz']
+                    'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
+                    [
+                        'zzz',
+                        SalesChannelInterface::TYPE_WEBSITE,
+                        'global_website'
+                    ]
                 )
             ],
             [
