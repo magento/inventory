@@ -8,14 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Get Pickup Location identifier by quote address identifier.
  */
 class GetPickupLocationCodeByQuoteAddressId
 {
-    private const ADDRESS_ID           = 'address_id';
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
+    private const ADDRESS_ID = 'address_id';
 
     /**
      * @var ResourceConnection
@@ -43,8 +43,9 @@ class GetPickupLocationCodeByQuoteAddressId
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_pickup_location_quote_address');
 
+        $columns = [PickupLocationInterface::PICKUP_LOCATION_CODE => PickupLocationInterface::PICKUP_LOCATION_CODE];
         $select = $connection->select()
-                             ->from($table, [self::PICKUP_LOCATION_CODE => self::PICKUP_LOCATION_CODE])
+                             ->from($table, $columns)
                              ->where(self::ADDRESS_ID . '= ?', $addressId)
                              ->limit(1);
 
