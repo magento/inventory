@@ -79,7 +79,7 @@ class CombinedTest extends TestCase
 
         $this->assertCount(1, $result->getItems());
         $this->assertEquals(1, $result->getTotalCount());
-        $this->assertEquals('eu-1', current($result->getItems())->getSourceCode());
+        $this->assertEquals('eu-1', current($result->getItems())->getPickupLocationCode());
     }
 
     /**
@@ -116,7 +116,7 @@ class CombinedTest extends TestCase
 
         $this->assertCount(1, $result->getItems());
         $this->assertEquals(1, $result->getTotalCount());
-        $this->assertEquals('eu-3', current($result->getItems())->getSourceCode());
+        $this->assertEquals('eu-3', current($result->getItems())->getPickupLocationCode());
     }
 
     /**
@@ -162,8 +162,8 @@ class CombinedTest extends TestCase
         $this->assertCount(2, $result->getItems());
         $this->assertEquals(2, $result->getTotalCount());
         $items = $result->getItems();
-        $this->assertEquals('us-1', current($items)->getSourceCode());
-        $this->assertEquals('eu-1', next($items)->getSourceCode());
+        $this->assertEquals('us-1', current($items)->getPickupLocationCode());
+        $this->assertEquals('eu-1', next($items)->getPickupLocationCode());
     }
 
     /**
@@ -197,6 +197,6 @@ class CombinedTest extends TestCase
 
         $this->assertCount(1, $result->getItems());
         $this->assertEquals(1, $result->getTotalCount());
-        $this->assertEquals('eu-1', current($result->getItems())->getSourceCode());
+        $this->assertEquals('eu-1', current($result->getItems())->getPickupLocationCode());
     }
 }

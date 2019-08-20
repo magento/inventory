@@ -68,7 +68,7 @@ class GetPickupLocationTest extends TestCase
         );
 
         if (!$exceptionExpected) {
-            $this->assertEquals($pickupLocationCode, $pickupLocation->getSourceCode());
+            $this->assertEquals($pickupLocationCode, $pickupLocation->getPickupLocationCode());
         }
     }
 

@@ -11,7 +11,7 @@
     <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
         <arguments>
             <argument name="map" xsi:type="array">
-                <item name="source_code" xsi:type="string">source_code</item>
+                <item name="source_code" xsi:type="string">pickup_location_code</item>
                 <item name="email" xsi:type="string">email</item>
                 <item name="fax" xsi:type="string">fax</item>
                 <item name="contact_name" xsi:type="string">contact_name</item>

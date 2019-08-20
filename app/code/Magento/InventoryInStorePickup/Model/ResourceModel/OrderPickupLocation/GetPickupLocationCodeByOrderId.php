@@ -43,13 +43,11 @@ class GetPickupLocationCodeByOrderId
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_pickup_location_order');
 
+        $columns = [PickupLocationInterface::PICKUP_LOCATION_CODE => PickupLocationInterface::PICKUP_LOCATION_CODE];
         $select = $connection->select()
-             ->from(
-                 $table,
-                 [PickupLocationInterface::PICKUP_LOCATION_CODE => PickupLocationInterface::PICKUP_LOCATION_CODE]
-             )
-             ->where(self::ORDER_ID . '= ?', $orderId)
-             ->limit(1);
+                             ->from($table, $columns)
+                             ->where(self::ORDER_ID . '= ?', $orderId)
+                             ->limit(1);
 
         $id = $connection->fetchOne($select);
 

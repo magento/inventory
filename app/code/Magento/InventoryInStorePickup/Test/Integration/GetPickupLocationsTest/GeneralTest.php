@@ -58,7 +58,7 @@ class GeneralTest extends TestCase
      * @param string $salesChannelCode
      * @param array $paging
      * @param array $sortOrder
-     * @param string[] $sortedSourceCodes
+     * @param string[] $sortedPickupLocationCodes
      *
      * @dataProvider executeDataProvider
      * @magentoAppArea frontend
@@ -71,7 +71,7 @@ class GeneralTest extends TestCase
         string $salesChannelCode,
         array $paging,
         array $sortOrder,
-        array $sortedSourceCodes
+        array $sortedPickupLocationCodes
     ): void {
         if (!empty($codeFilter)) {
             $this->searchRequestBuilder->setPickupLocationCodeFilter($codeFilter['value'], $codeFilter['condition']);
@@ -102,10 +102,10 @@ class GeneralTest extends TestCase
         $searchRequest = $this->searchRequestBuilder->create();
         $searchResult = $this->getPickupLocations->execute($searchRequest);
 
-        $this->assertEquals(count($sortedSourceCodes), $searchResult->getTotalCount());
-        $this->assertCount(count($sortedSourceCodes), $searchResult->getItems());
-        foreach ($sortedSourceCodes as $key => $code) {
-            $this->assertEquals($code, $searchResult->getItems()[$key]->getSourceCode());
+        $this->assertEquals(count($sortedPickupLocationCodes), $searchResult->getTotalCount());
+        $this->assertCount(count($sortedPickupLocationCodes), $searchResult->getItems());
+        foreach ($sortedPickupLocationCodes as $key => $code) {
+            $this->assertEquals($code, $searchResult->getItems()[$key]->getPickupLocationCode());
         }
     }
 
@@ -129,7 +129,7 @@ class GeneralTest extends TestCase
      *              Direction,
      *              Field
      *      ],
-     *      Expected Source Codes[]
+     *      Expected Pickup Location Codes[]
      * ]
      *
      * @return array

@@ -28,7 +28,7 @@ interface PickupLocationInterface extends ExtensibleDataInterface
      *
      * @return string
      */
-    public function getSourceCode(): string;
+    public function getPickupLocationCode(): string;
 
     /**
      * Get Pickup Location name
