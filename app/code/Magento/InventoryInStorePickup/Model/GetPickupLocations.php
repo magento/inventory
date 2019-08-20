@@ -12,7 +12,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
-use Magento\InventoryInStorePickupApi\Api\MapperInterface;
+use Magento\InventoryInStorePickupApi\Model\MapperInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface;
 
