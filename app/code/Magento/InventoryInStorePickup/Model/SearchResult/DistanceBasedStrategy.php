@@ -85,31 +85,18 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
         string $sortDirection = SortOrder::SORT_ASC
     ): array {
         $ascSort = function (SourceInterface $left, SourceInterface $right) use ($sourceCodes) {
-            return array_search(
-                    $left->getSourceCode(),
-                    $sourceCodes
-                ) <=> array_search(
-                    $right->getSourceCode(),
-                    $sourceCodes
-                );
+            return array_search($left->getSourceCode(), $sourceCodes) <=>
+                array_search($right->getSourceCode(), $sourceCodes);
         };
 
         $descSort = function (SourceInterface $left, SourceInterface $right) use ($sourceCodes) {
-            return array_search(
-                    $right->getSourceCode(),
-                    $sourceCodes
-                ) <=> array_search(
-                    $left->getSourceCode(),
-                    $sourceCodes
-                );
+            return array_search($right->getSourceCode(), $sourceCodes) <=>
+                array_search($left->getSourceCode(), $sourceCodes);
         };
 
         $sort = $sortDirection === SortOrder::SORT_ASC ? $ascSort : $descSort;
 
-        usort(
-            $sources,
-            $sort
-        );
+        usort($sources, $sort);
 
         return $sources;
     }

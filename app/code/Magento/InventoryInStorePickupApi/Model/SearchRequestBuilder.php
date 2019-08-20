@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
-use InvalidArgumentException;
 use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterfaceFactory;
@@ -16,7 +15,6 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterfaceFact
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
-use TypeError;
 
 /**
  * Search Request Builder.
@@ -117,23 +115,9 @@ class SearchRequestBuilder
      */
     public function create(): SearchRequestInterface
     {
-        try {
-            $this->buildDistanceFilter();
-        } catch (TypeError $error) {
-            throw new InvalidArgumentException('Invalid DistanceFilter arguments given.', 0, $error);
-        }
-
-        try {
-            $this->buildAddressFilter();
-        } catch (TypeError $error) {
-            throw new InvalidArgumentException('Invalid AddressFilter arguments given.', 0, $error);
-        }
-
-        try {
-            $searchRequest = $this->searchRequestFactory->create($this->data);
-        } catch (TypeError $error) {
-            throw new InvalidArgumentException('Invalid SearchRequest arguments given.', 0, $error);
-        }
+        $this->buildDistanceFilter();
+        $this->buildAddressFilter();
+        $searchRequest = $this->searchRequestFactory->create($this->data);
 
         $this->reset();
 

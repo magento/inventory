@@ -118,7 +118,7 @@ class DistanceFilterOfflineTest extends TestCase
 
     /**
      * [
-     *      SearchRequestDistanceFilter[
+     *      Search Request Distance Filter[
      *          Country,
      *          Postcode,
      *          Region,
@@ -126,10 +126,11 @@ class DistanceFilterOfflineTest extends TestCase
      *          Radius (in KM)
      *      ],
      *      Sales Channel Code,
-     *      SortOrders[
-     *          Direction,
-     *          Field
-     *      ]
+     *      Sort Orders[
+     *          Sort Order[
+     *              Direction,
+     *              Field
+     *      ],
      *      Expected Source Codes[]
      * ]
      *
