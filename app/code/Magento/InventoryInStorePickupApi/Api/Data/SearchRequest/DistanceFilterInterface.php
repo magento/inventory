@@ -9,6 +9,8 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
 /**
  * Filter by Distance to the Address.
+ * Pickup Locations will be filtered by distance according to the geo-position of the entered address.
+ * Required fields for the address are country and one of the field: region or city or postcode.
  *
  * @api
  */
@@ -24,28 +26,28 @@ interface DistanceFilterInterface
     public function getRadius(): int;
 
     /**
-     * Requested country
+     * Requested country.
      *
      * @return string
      */
     public function getCountry(): string;
 
     /**
-     * Requested region
+     * Requested region.
      *
      * @return string|null
      */
     public function getRegion(): ?string;
 
     /**
-     * Requested city
+     * Requested city.
      *
      * @return string|null
      */
     public function getCity(): ?string;
 
     /**
-     * Requested postcode
+     * Requested postcode.
      *
      * @return string|null
      */

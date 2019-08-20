@@ -9,6 +9,8 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
 /**
  * Filter to filter by Address Fields.
+ * Each field may be filtered with different condition type.
+ * Supported types restricted by @see \Magento\Framework\Api\SearchCriteriaInterface
  *
  * @api
  */

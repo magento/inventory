@@ -24,21 +24,21 @@ interface PickupLocationInterface extends ExtensibleDataInterface
     public const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
-     * Get source code of Pickup Location
+     * Get source code of Pickup Location.
      *
      * @return string
      */
     public function getPickupLocationCode(): string;
 
     /**
-     * Get Pickup Location name
+     * Get Pickup Location Name.
      *
      * @return string|null
      */
     public function getName(): ?string;
 
     /**
-     * Get Pickup Location contact email
+     * Get Pickup Location contact Email.
      *
      * @return string|null
      */
