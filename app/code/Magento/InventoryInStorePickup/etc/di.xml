@@ -16,9 +16,6 @@
         <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
     </type>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToSalesChannel" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface" type="Magento\InventoryInStorePickup\Model\GetIsAnyPickupLocationAvailable"/>
-
     <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
     <type name="Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender">
