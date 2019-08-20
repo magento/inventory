@@ -9,18 +9,20 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
 /**
  * Filter for Pickup Location search.
+ *
+ * @api
  */
 interface FilterInterface
 {
     /**
-     * Value of the filter
+     * Value of the filter.
      *
      * @return string
      */
     public function getValue(): string;
 
     /**
-     * Condition type for the filter
+     * Condition type for the filter.
      *
      * @return string
      */
