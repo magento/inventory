@@ -61,7 +61,7 @@ class DistanceFilterOfflineTest extends TestCase
      * @param array $searchRequestData
      * @param string $salesChannelCode
      * @param string[] $sortOrder
-     * @param string[] $sortedSourceCodes
+     * @param string[] $sortedPickupLocationCodes
      *
      * @dataProvider executeDataProvider
      * @magentoAppArea frontend
@@ -72,7 +72,7 @@ class DistanceFilterOfflineTest extends TestCase
         array $searchRequestData,
         string $salesChannelCode,
         ?array $sortOrder,
-        array $sortedSourceCodes
+        array $sortedPickupLocationCodes
     ) {
         $this->searchRequestBuilder->setDistanceFilterRadius($searchRequestData['radius'])
                                    ->setDistanceFilterCountry($searchRequestData['country'])
@@ -109,10 +109,10 @@ class DistanceFilterOfflineTest extends TestCase
             $searchRequest
         );
 
-        $this->assertEquals(count($sortedSourceCodes), $result->getTotalCount());
-        $this->assertCount(count($sortedSourceCodes), $result->getItems());
-        foreach ($sortedSourceCodes as $key => $code) {
-            $this->assertEquals($code, $result->getItems()[$key]->getSourceCode());
+        $this->assertEquals(count($sortedPickupLocationCodes), $result->getTotalCount());
+        $this->assertCount(count($sortedPickupLocationCodes), $result->getItems());
+        foreach ($sortedPickupLocationCodes as $key => $code) {
+            $this->assertEquals($code, $result->getItems()[$key]->getPickupLocationCode());
         }
     }
 
@@ -131,7 +131,7 @@ class DistanceFilterOfflineTest extends TestCase
      *              Direction,
      *              Field
      *      ],
-     *      Expected Source Codes[]
+     *      Expected Pickup Location Codes[]
      * ]
      *
      * @return array

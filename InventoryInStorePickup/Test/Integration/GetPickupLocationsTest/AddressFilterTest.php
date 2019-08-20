@@ -47,15 +47,18 @@ class AddressFilterTest extends TestCase
      *
      * @param array $searchRequestData
      * @param string $salesChannelCode
-     * @param string[] $sortedSourceCodes
+     * @param string[] $sortedPickupLocationCodes
      *
      * @dataProvider executeDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      */
-    public function testExecute(array $searchRequestData, string $salesChannelCode, array $sortedSourceCodes): void
-    {
+    public function testExecute(
+        array $searchRequestData,
+        string $salesChannelCode,
+        array $sortedPickupLocationCodes
+    ): void {
         foreach ($searchRequestData as $field => $condition) {
             $this->setFilter($field, $condition);
         }
@@ -66,10 +69,10 @@ class AddressFilterTest extends TestCase
 
         $searchResult = $this->getPickupLocations->execute($searchRequest);
 
-        $this->assertEquals(count($sortedSourceCodes), $searchResult->getTotalCount());
-        $this->assertCount(count($sortedSourceCodes), $searchResult->getItems());
-        foreach ($sortedSourceCodes as $key => $code) {
-            $this->assertEquals($code, $searchResult->getItems()[$key]->getSourceCode());
+        $this->assertEquals(count($sortedPickupLocationCodes), $searchResult->getTotalCount());
+        $this->assertCount(count($sortedPickupLocationCodes), $searchResult->getItems());
+        foreach ($sortedPickupLocationCodes as $key => $code) {
+            $this->assertEquals($code, $searchResult->getItems()[$key]->getPickupLocationCode());
         }
     }
 
@@ -118,7 +121,7 @@ class AddressFilterTest extends TestCase
      *          Street,
      *      ],
      *      Sales Channel Code,
-     *      Expected Source Codes[]
+     *      Expected Pickup Location Codes[]
      * ]
      *
      * @return array

@@ -107,7 +107,7 @@ class ReplaceShippingAddressForShippingAddressManagement
         $address = $this->addressConverter->convert(
             $pickupLocation,
             $address,
-            [self::ADDRESS_FIELD_NAME => $pickupLocation->getSourceCode()]
+            [self::ADDRESS_FIELD_NAME => $pickupLocation->getPickupLocationCode()]
         );
 
         return [$cartId, $address];

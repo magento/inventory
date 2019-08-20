@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickupApi\Model;
 
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
@@ -44,7 +45,7 @@ class SearchCriteriaResolverChain implements SearchCriteriaResolverInterface
     /**
      * @inheritdoc
      */
-    public function resolve(SearchRequestInterface $searchRequest): SearchCriteria
+    public function resolve(SearchRequestInterface $searchRequest): SearchCriteriaInterface
     {
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 

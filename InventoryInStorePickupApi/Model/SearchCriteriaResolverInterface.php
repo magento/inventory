@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
-use Magento\Framework\Api\SearchCriteria;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 
 /**
@@ -22,7 +22,7 @@ interface SearchCriteriaResolverInterface
      *
      * @param SearchRequestInterface $searchRequest
      *
-     * @return SearchCriteria
+     * @return SearchCriteriaInterface
      */
-    public function resolve(SearchRequestInterface $searchRequest): SearchCriteria;
+    public function resolve(SearchRequestInterface $searchRequest): SearchCriteriaInterface;
 }
