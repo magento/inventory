@@ -277,40 +277,4 @@ class DistanceFilterOfflineTest extends TestCase
             ],
         ];
     }
-
-    /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
-     *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
-     *
-     * @magentoAppArea frontend
-     *
-     * @magentoDbIsolation disabled
-     */
-    public function testExecuteWithPaging()
-    {
-        $searchRequest = $this->searchRequestBuilder->setDistanceFilterRadius(750)
-                                                    ->setDistanceFilterCountry('DE')
-                                                    ->setDistanceFilterPostcode('86559')
-                                                    ->setScopeCode('global_website')
-                                                    ->setPageSize(1)
-                                                    ->setCurrentPage(1)
-                                                    ->create();
-
-        /** @var PickupLocationInterface[] $sources */
-        $result = $this->getPickupLocations->execute(
-            $searchRequest
-        );
-
-        $this->assertCount(1, $result->getItems());
-        $this->assertEquals(1, $result->getTotalCount());
-        $this->assertEquals('eu-1', current($result->getItems())->getSourceCode());
-    }
 }
