@@ -38,7 +38,7 @@ class ResolvePickupLocationFilters implements BuilderPartsResolverInterface
                 $searchRequest->getPickupLocationCodeFilter()->getConditionType()
             );
         }
-
+        $searchCriteriaBuilder->addFilter(SourceInterface::ENABLED, true);
         $searchCriteriaBuilder->addFilter(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE, true);
     }
 }
