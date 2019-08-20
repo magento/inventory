@@ -31,16 +31,10 @@ class AddressFilterTest extends TestCase
      */
     private $searchRequestBuilder;
 
-    /**
-     * @var SortOrderBuilder
-     */
-    private $sortOrderBuilder;
-
     protected function setUp()
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
         $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilder::class);
-        $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);
     }
 
     /**
@@ -80,6 +74,12 @@ class AddressFilterTest extends TestCase
         }
     }
 
+    /**
+     * Set Filter to the Search Request Builder.
+     *
+     * @param string $field
+     * @param array $condition
+     */
     private function setFilter(string $field, array $condition): void
     {
         switch ($field) {
@@ -105,7 +105,6 @@ class AddressFilterTest extends TestCase
                 throw new \InvalidArgumentException(
                     sprintf('Invalid field provided for Address Filter Test: %s', $field)
                 );
-                break;
         }
     }
 
