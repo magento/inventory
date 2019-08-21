@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Api\Data;
 
 /**
- * Search results for providing nearby pickup locations
+ * Search results for providing pickup locations.
  */
 interface SearchResultInterface
 {
