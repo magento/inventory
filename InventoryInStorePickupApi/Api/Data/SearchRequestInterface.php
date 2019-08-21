@@ -12,7 +12,12 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInter
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 
 /**
- * Search Request for Pickup Locations.
+ * Endpoint used to filter Pickup Locations by different parameters:
+ * - by address fields @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface
+ * - by distance to the address @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface
+ * - by Pickup Location Code(s) and Name(s)
+ * Also, endpoint supports paging and sort orders.
+ *
  * @api
  */
 interface SearchRequestInterface

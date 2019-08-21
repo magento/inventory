@@ -15,14 +15,14 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 interface FilterInterface
 {
     /**
-     * Value of the filter.
+     * Get value.
      *
      * @return string
      */
     public function getValue(): string;
 
     /**
-     * Condition type for the filter.
+     * Get Condition Type.
      *
      * @return string
      */
