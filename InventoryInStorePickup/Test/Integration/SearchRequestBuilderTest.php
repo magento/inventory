@@ -44,6 +44,8 @@ class SearchRequestBuilderTest extends TestCase
      * Test creation of Search Request.
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testCreate(): void
     {
