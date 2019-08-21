@@ -10,6 +10,7 @@ namespace Magento\InventoryAdvancedCheckout\Plugin\Model\IsProductInStock;
 use Magento\AdvancedCheckout\Model\IsProductInStockInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -41,21 +42,29 @@ class ProductInStockPlugin
     private $websiteRepository;
 
     /**
+     * @var IsSourceItemManagementAllowedForProductTypeInterface
+     */
+    private $isSourceItemManagementAllowedForProductType;
+
+    /**
      * @param ProductRepositoryInterface $productRepository
      * @param IsProductSalableInterface $isProductSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
+     * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         IsProductSalableInterface $isProductSalable,
         StockResolverInterface $stockResolver,
-        WebsiteRepositoryInterface $websiteRepository
+        WebsiteRepositoryInterface $websiteRepository,
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
     ) {
         $this->productRepository = $productRepository;
         $this->isProductSalable = $isProductSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
+        $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
     }
 
     /**
@@ -76,6 +85,9 @@ class ProductInStockPlugin
         int $websiteId
     ): bool {
         $product = $this->productRepository->getById($productId);
+        if (!$this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId())) {
+            return $proceed($productId, $websiteId);
+        }
         $website = $this->websiteRepository->getById($websiteId);
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
 
