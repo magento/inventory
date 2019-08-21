@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocationsTest;
+namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocations;
 
 use Magento\InventoryInStorePickup\Model\GetPickupLocations;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
@@ -98,10 +98,10 @@ class AddressFilterTest extends TestCase
                 $this->searchRequestBuilder->setAddressCityFilter($condition['value'], $condition['condition']);
                 break;
             case 'postcode':
-                $this->searchRequestBuilder->setPostcodeFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setAddressPostcodeFilter($condition['value'], $condition['condition']);
                 break;
             case 'street':
-                $this->searchRequestBuilder->setStreetFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setAddressStreetFilter($condition['value'], $condition['condition']);
                 break;
             default:
                 throw new \InvalidArgumentException(

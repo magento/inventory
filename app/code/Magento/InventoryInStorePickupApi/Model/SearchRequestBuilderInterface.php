@@ -13,8 +13,10 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 
 /**
  * Search Request Builder.
+ *
+ * @api
  */
-interface SearchRequestBuilderInterface
+interface SearchRequestBuilderInterface extends \Magento\Framework\Api\SimpleBuilderInterface
 {
     /**
      * Build Search Request object.
@@ -31,7 +33,7 @@ interface SearchRequestBuilderInterface
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setStreetFilter(string $street, ?string $condition = null): self;
+    public function setAddressStreetFilter(string $street, ?string $condition = null): self;
 
     /**
      * Set Postcode for filter by address.
@@ -41,7 +43,7 @@ interface SearchRequestBuilderInterface
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setPostcodeFilter(string $postcode, ?string $condition = null): self;
+    public function setAddressPostcodeFilter(string $postcode, ?string $condition = null): self;
 
     /**
      * Set City for filter by address.
@@ -126,9 +128,7 @@ interface SearchRequestBuilderInterface
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setDistanceFilterCountry(
-        string $country
-    ): self;
+    public function setDistanceFilterCountry(string $country): self;
 
     /**
      * Set Search Request Extension.

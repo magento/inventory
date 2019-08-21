@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocationsTest;
+namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocations;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
