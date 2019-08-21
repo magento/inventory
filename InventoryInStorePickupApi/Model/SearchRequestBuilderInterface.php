@@ -131,15 +131,6 @@ interface SearchRequestBuilderInterface extends \Magento\Framework\Api\SimpleBui
     public function setDistanceFilterCountry(string $country): self;
 
     /**
-     * Set Search Request Extension.
-     *
-     * @param SearchRequestExtensionInterface $extension
-     *
-     * @return SearchRequestBuilderInterface
-     */
-    public function setSearchRequestExtension(SearchRequestExtensionInterface $extension): self;
-
-    /**
      * Set Sort Orders.
      *
      * @param SortOrder[] $sortOrders
