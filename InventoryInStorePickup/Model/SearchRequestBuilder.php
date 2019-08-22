@@ -38,6 +38,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     private const CURRENT_PAGE = 'currentPage';
     private const SCOPE_CODE = 'scopeCode';
     private const SCOPE_TYPE = 'scopeType';
+    private const SEARCH_REQUEST_EXTENSION = 'searchRequestExtension';
 
     /**
      * Builder data
@@ -230,6 +231,16 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     public function setDistanceFilterCountry(string $country): SearchRequestBuilderInterface
     {
         $this->distanceFilterBuilder->setCountry($country);
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSearchRequestExtension(SearchRequestExtensionInterface $extension): SearchRequestBuilderInterface
+    {
+        $this->data[self::SEARCH_REQUEST_EXTENSION] = $extension;
 
         return $this;
     }

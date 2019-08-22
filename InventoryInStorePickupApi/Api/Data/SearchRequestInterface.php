@@ -20,7 +20,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
  *
  * @api
  */
-interface SearchRequestInterface
+interface SearchRequestInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     /**
      * Get Filter by Distance Filter.
@@ -86,4 +86,20 @@ interface SearchRequestInterface
      * @return \Magento\Framework\Api\SortOrder[]|null
      */
     public function getSort(): ?array;
+
+    /**
+     * Set Extension Attributes for Search Request.
+     *
+     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface|null $extensionAttributes
+     *
+     * @return void
+     */
+    public function setExtensionAttributes(?SearchRequestExtensionInterface $extensionAttributes): void;
+
+    /**
+     * Get Extension Attributes of Search Request.
+     *
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface|null
+     */
+    public function getExtensionAttributes(): ?SearchRequestExtensionInterface;
 }
