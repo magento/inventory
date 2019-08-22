@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Model;
 
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\Quote\Model\Quote\Address;
+use Magento\Quote\Api\Data\AddressInterface;
 
 /**
  * Check if provided Shipping Address is address of Pickup Location.
@@ -21,22 +21,31 @@ class IsPickupLocationShippingAddress
     private $extractPickupLocationShippingAddressData;
 
     /**
-     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
+     * @var ExtractQuoteAddressShippingAddressData
      */
-    public function __construct(ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData)
-    {
+    private $extractQuoteAddressShippingAddressData;
+
+    /**
+     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
+     * @param ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
+     */
+    public function __construct(
+        ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData,
+        ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
+    ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
+        $this->extractQuoteAddressShippingAddressData = $extractQuoteAddressShippingAddressData;
     }
 
     /**
      * Check if Address is Pickup Location address.
      *
      * @param PickupLocationInterface $pickupLocation
-     * @param Address $shippingAddress
+     * @param AddressInterface $shippingAddress
      *
      * @return bool
      */
-    public function execute(PickupLocationInterface $pickupLocation, Address $shippingAddress): bool
+    public function execute(PickupLocationInterface $pickupLocation, AddressInterface $shippingAddress): bool
     {
         $data = $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
 
@@ -46,8 +55,10 @@ class IsPickupLocationShippingAddress
             return false;
         }
 
+        $shippingAddressData = $this->extractQuoteAddressShippingAddressData->execute($shippingAddress);
+
         foreach ($data as $key => $value) {
-            if ($shippingAddress->getData($key) != $value) {
+            if (!array_key_exists($key, $shippingAddressData) || $shippingAddressData[$key] != $value) {
                 return false;
             }
         }
