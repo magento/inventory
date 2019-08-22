@@ -11,6 +11,7 @@ use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 
@@ -55,6 +56,11 @@ class SearchRequest implements SearchRequestInterface
     private $sortOrders;
 
     /**
+     * @var SearchRequestExtensionInterface|null
+     */
+    private $searchRequestExtension;
+
+    /**
      * @var int|null
      */
     private $pageSize;
@@ -72,6 +78,7 @@ class SearchRequest implements SearchRequestInterface
      * @param FilterInterface|null $nameFilter
      * @param FilterInterface|null $pickupLocationCodeFilter
      * @param array|null $sortOrders
+     * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
      * @param int $currentPage
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -84,6 +91,7 @@ class SearchRequest implements SearchRequestInterface
         ?FilterInterface $nameFilter = null,
         ?FilterInterface $pickupLocationCodeFilter = null,
         ?array $sortOrders = null,
+        ?SearchRequestExtensionInterface $searchRequestExtension = null,
         ?int $pageSize = null,
         int $currentPage = 1
     ) {
@@ -94,6 +102,7 @@ class SearchRequest implements SearchRequestInterface
         $this->nameFilter = $nameFilter;
         $this->pickupLocationCodeFilter = $pickupLocationCodeFilter;
         $this->sortOrders = $sortOrders;
+        $this->searchRequestExtension = $searchRequestExtension;
         $this->pageSize = $pageSize;
         $this->currentPage = $currentPage;
     }
