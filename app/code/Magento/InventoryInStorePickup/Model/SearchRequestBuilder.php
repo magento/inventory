@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickup\Model;
 use InvalidArgumentException;
 use Magento\Framework\Api\SimpleBuilderInterface;
 use Magento\Framework\Api\SortOrder;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterface;
