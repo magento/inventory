@@ -8,8 +8,6 @@ define([
     'knockout',
     'Magento_InventoryInStorePickupFrontend/js/model/resource-url-manager',
     'mage/storage',
-    'Magento_Checkout/js/model/shipping-service',
-    'Magento_Checkout/js/model/error-processor',
     'Magento_Customer/js/customer-data',
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/address-converter',
@@ -19,8 +17,6 @@ define([
     ko,
     resourceUrlManager,
     storage,
-    shippingService,
-    errorProcessor,
     customerData,
     checkoutData,
     addressConverter,
@@ -32,6 +28,7 @@ define([
     var countryData = customerData.get('directory-data');
 
     return {
+        isLoading: ko.observable(false),
         selectedLocation: ko.observable(null),
         /**
          * Get shipping rates for specified address.
@@ -44,18 +41,19 @@ define([
                 websiteCode,
                 sourceCode
             );
-            shippingService.isLoading(true);
+            self.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
                 .then(function(address) {
-                    shippingService.isLoading(false);
-
                     return self.formatAddress(address);
                 })
                 .fail(function(response) {
-                    errorProcessor.process(response);
+                    self.processError(response);
                     return [];
+                })
+                .always(function() {
+                    self.isLoading(false);
                 });
         },
         /**
@@ -68,7 +66,7 @@ define([
                 websiteCode
             );
 
-            shippingService.isLoading(true);
+            self.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
@@ -78,11 +76,11 @@ define([
                     });
                 })
                 .fail(function(response) {
-                    errorProcessor.process(response);
+                    self.processError(response);
                     return [];
                 })
                 .always(function() {
-                    shippingService.isLoading(false);
+                    self.isLoading(false);
                 });
         },
         /**
@@ -100,7 +98,7 @@ define([
                 websiteCode,
                 query
             );
-            shippingService.isLoading(true);
+            self.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
@@ -110,10 +108,11 @@ define([
                     });
                 })
                 .fail(function(response) {
-                    errorProcessor.process(response);
+                    self.processError(response);
+                    return [];
                 })
                 .always(function() {
-                    shippingService.isLoading(false);
+                    self.isLoading(false);
                 });
         },
         selectForShipping: function(location) {
@@ -190,6 +189,38 @@ define([
                 : null;
 
             return regions && regions[regionId] ? regions[regionId].name : '';
+        },
+        processError: function(response) {
+            var expr = /([%])\w+/g,
+                error;
+
+            if (response.status == 401) {
+                //eslint-disable-line eqeqeq
+                window.location.replace(url.build('customer/account/login/'));
+                return;
+            }
+
+            try {
+                error = JSON.parse(response.responseText);
+            } catch (exception) {
+                error = $t(
+                    'Something went wrong with your request. Please try again later.'
+                );
+            }
+
+            if (error.hasOwnProperty('parameters')) {
+                error = error.message.replace(expr, function(varName) {
+                    varName = varName.substr(1);
+
+                    if (error.parameters.hasOwnProperty(varName)) {
+                        return messageObj.parameters[varName];
+                    }
+
+                    return error.parameters.shift();
+                });
+            }
+
+            console.error(error);
         },
     };
 });

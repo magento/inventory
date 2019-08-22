@@ -12,8 +12,7 @@ define([
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
     'Magento_Checkout/js/model/step-navigator',
-    'Magento_Checkout/js/model/shipping-service',
-    'Magento_Checkout/js/action/create-shipping-address',
+    'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
 ], function(
@@ -25,8 +24,7 @@ define([
     quote,
     customer,
     stepNavigator,
-    shippingService,
-    createShippingAddress,
+    addressConverter,
     setShippingInformationAction,
     pickupLocationsService
 ) {
@@ -52,7 +50,7 @@ define([
         quoteIsVirtual: quote.isVirtual(),
         searchQuery: '',
         nearbyLocations: null,
-        isLoading: shippingService.isLoading,
+        isLoading: pickupLocationsService.isLoading,
         popup: null,
 
         initialize: function() {
@@ -67,7 +65,7 @@ define([
                 });
 
                 this.updateNearbyLocations(
-                    createShippingAddress({
+                    addressConverter.formAddressDataToQuoteAddress({
                         city: city,
                         postcode: postcode,
                         country_id: quote.shippingAddress().countryId,
@@ -152,6 +150,9 @@ define([
                 })
                 .then(function(locations) {
                     self.nearbyLocations(locations);
+                })
+                .fail(function() {
+                    self.nearbyLocations([]);
                 });
         },
 

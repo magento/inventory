@@ -164,10 +164,13 @@ define([
             }
         },
         preselectLocation: function() {
-            if (
-                !this.isStorePickupSelected() ||
-                pickupLocationsService.selectedLocation()
-            ) {
+            if (!this.isStorePickupSelected()) {
+                return;
+            }
+
+            var selectedLocation = pickupLocationsService.selectedLocation();
+            if (selectedLocation) {
+                pickupLocationsService.selectForShipping(selectedLocation);
                 return;
             }
 

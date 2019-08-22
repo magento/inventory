@@ -16,7 +16,11 @@
 
 @checkout-pickup-location-name-popup_font-size: @font-size__l;
 
-@checkout-pickup-location-popup-note_margin: @indent__base 0;
+@checkout-pickup-location-popup-search_padding: 0 0 @indent__s;
+@checkout-pickup-location-popup-search_margin: 0 0 @indent__base;
+@checkout-pickup-location-popup-search_border: @modal-title__border;
+
+@checkout-pickup-location-popup-note_margin: 0 0 @indent__base;
 
 & when (@media-common = true) {
     #store-pickup {
@@ -87,13 +91,28 @@
         }
     }
 
+    .store-selector-popup {
+        .modal-title {
+            border-bottom: 0;
+        }
+
+        .modal-header {
+            padding-bottom: 0;
+        }
+    }
+
     #opc-store-selector-popup {
         display: none;
 
         .block-search {
-            float: left;
-            padding-left: 0;
+            float: none;
             width: 100%;
+            .lib-css(margin, @checkout-pickup-location-popup-search_margin);
+            .lib-css(padding, @checkout-pickup-location-popup-search_padding);
+            .lib-css(
+                border-bottom,
+                @checkout-pickup-location-popup-search_border
+            );
         }
     }
 

@@ -8,7 +8,7 @@
     <div class="block block-search store-selector-search">
         <div class="field search">
             <label class="label" for="store-selector-search-input">
-                <span>Search</span>
+                <span data-bind="i18n: 'Search'"></span>
             </label>
             <div class="control">
                 <input
@@ -29,13 +29,22 @@
                 class="action search"
                 aria-label="Search"
             >
-                <span>Search</span>
+                <span data-bind="i18n: 'Search'"></span>
             </button>
         </div>
     </div>
+    <p
+        class="store-selector-popup-no-locations"
+        if="searchQuery() && nearbyLocations() && !nearbyLocations().length"
+    >
+        <!-- ko i18n: 'We were unable to find nearby locations for provided search query.'--><!-- /ko -->
+    </p>
+    <p class="store-selector-popup-empty-query" ifnot="searchQuery()">
+        <!-- ko i18n: 'Please provide postcode or city name to find nearest pickup locations.'--><!-- /ko -->
+    </p>
     <table
         class="store-selector-popup-table"
-        data-bind="blockLoader: isLoading, if: nearbyLocations() && nearbyLocations().length"
+        data-bind="blockLoader: isLoading, visible: nearbyLocations() && nearbyLocations().length"
     >
         <thead>
             <tr class="row">
@@ -49,13 +58,4 @@
             <!-- /ko -->
         </tbody>
     </table>
-    <p
-        class="store-selector-popup-no-locations"
-        if="searchQuery() && nearbyLocations() && !nearbyLocations().length"
-    >
-        We couldn't find nearby locations for provided search query.
-    </p>
-    <p class="store-selector-popup-empty-query" ifnot="searchQuery()">
-        Please provide postcode or city name to find nearest pickup locations.
-    </p>
 </div>
