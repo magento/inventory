@@ -23,6 +23,8 @@ use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
  * @inheritdoc
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SearchRequestBuilder implements SearchRequestBuilderInterface
 {
