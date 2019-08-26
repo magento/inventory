@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\Source\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
+use Magento\Inventory\Model\Source\Command\GetListInterface;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Model\SourceValidatorInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 /**
  * Check that code is valid
@@ -23,11 +25,28 @@ class CodeValidator implements SourceValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var SearchCriteriaBuilder
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var GetListInterface
+     */
+    private $getList;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param GetListInterface $getList
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        GetListInterface $getList
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->getList = $getList;
     }
 
     /**
@@ -36,8 +55,13 @@ class CodeValidator implements SourceValidatorInterface
     public function validate(SourceInterface $source): ValidationResult
     {
         $value = (string)$source->getSourceCode();
-
-        if ('' === trim($value)) {
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter(SourceInterface::SOURCE_CODE, $value)
+            ->create();
+        $sourceSearchResults = $this->getList->execute($searchCriteria);
+        if (!empty($sourceSearchResults->getItems())) {
+            $errors[] = __('"%field" value should be unique.', ['field' => SourceInterface::SOURCE_CODE]);
+        } elseif ('' === trim($value)) {
             $errors[] = __('"%field" can not be empty.', ['field' => SourceInterface::SOURCE_CODE]);
         } elseif (preg_match('/\s/', $value)) {
             $errors[] = __('"%field" can not contain whitespaces.', ['field' => SourceInterface::SOURCE_CODE]);
