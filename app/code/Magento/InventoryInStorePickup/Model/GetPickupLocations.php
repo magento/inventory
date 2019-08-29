@@ -86,7 +86,7 @@ class GetPickupLocations implements GetPickupLocationsInterface
         return $this->searchResultFactory->create(
             [
                 'items' => $pickupLocations,
-                'totalCount' => count($pickupLocations),
+                'totalCount' => $searchResult->getTotalCount(),
                 'searchRequest' => $searchRequest
             ]
         );
