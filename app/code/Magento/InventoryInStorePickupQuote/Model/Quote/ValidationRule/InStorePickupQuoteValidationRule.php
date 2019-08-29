@@ -89,7 +89,7 @@ class InStorePickupQuoteValidationRule implements QuoteValidationRuleInterface
 
         if (!$pickupLocation) {
             $validationErrors[] = __(
-                'Pickup Location is missed for In-Store Pickup Quote.'
+                'Quote does not have Pickup Location assigned.'
             );
         }
 
