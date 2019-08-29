@@ -23,6 +23,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * Calculate Distance Based Filter and resolve part for Search Criteria Builder.
+ * Apply filter by Source Codes, limited by distance and assignment to the Scope.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
