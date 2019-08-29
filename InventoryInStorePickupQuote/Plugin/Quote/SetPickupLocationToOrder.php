@@ -12,11 +12,13 @@ use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\ToOrder;
 
 /**
- * Pass Pickup Location code to the Order from Quote Address.
+ * Set Pickup Location code to the Order from Quote Address.
+ *
+ * The Pickup Location code will be pass to the Order only if selected delivery method is In-Store Pickup.
  */
-class PassPickupLocationToOrder
+class SetPickupLocationToOrder
 {
-    private const ORDER_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
+    private const ORDER_FIELD_NAME = 'pickup_location_code';
 
     /**
      * Add Pickup Location code to the Order from Quote Address.
