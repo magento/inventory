@@ -18,9 +18,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterfac
 
 /**
  * Work with Distance Based data set.
- * This assume next statements:
- * 1. Data already filtered by Scope
- * 2. Sort data by distance if Sort by distance is requested or no other sorts are provided.
+ * This assume that we need to sort data by distance if Sort by distance is requested or no other sorts are provided.
  */
 class DistanceBasedStrategy implements ExtractStrategyInterface
 {

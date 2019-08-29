@@ -5,23 +5,23 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\SearchResult;
+namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
- * Work with default data set.
- *
- * This assume that data set did not filtered by assignment to Stock.
+ * Add filter by Source Codes which are related to Requested Scope.
+ * In case of Distance Filter present in Search Request, the filter will not be added.
  */
-class RequestBasedStrategy implements ExtractStrategyInterface
+class ResolveScopeFilter implements BuilderPartsResolverInterface
 {
     /**
      * @var StockResolverInterface
@@ -56,55 +56,18 @@ class RequestBasedStrategy implements ExtractStrategyInterface
     /**
      * @inheritdoc
      *
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSources(
-        SearchRequestInterface $searchRequest,
-        SourceSearchResultsInterface $sourcesSearchResult
-    ): array {
-        $stockId = $this->getStockId($searchRequest);
-        $sourceCodes = [];
-
-        foreach ($sourcesSearchResult->getItems() as $item) {
-            $sourceCodes[] = $item->getSourceCode();
-        }
-
-        $sourceCodes = $this->getSourceCodesAssignedToStock($stockId, $sourceCodes);
-        $sources = [];
-
-        foreach ($sourcesSearchResult->getItems() as $source) {
-            if (in_array($source->getSourceCode(), $sourceCodes)) {
-                $sources[] = $source;
-            }
-        }
-
-        return $sources;
-    }
-
-    /**
-     * Get list of Source Codes assigned to the Stock.
-     *
-     * @param int $stockId
-     * @param string[] $sourceCodes
-     *
-     * @return string[]
-     */
-    private function getSourceCodesAssignedToStock(int $stockId, array $sourceCodes): array
+    public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaStockSource = $searchCriteriaBuilder
-            ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
-            ->addFilter(StockSourceLinkInterface::SOURCE_CODE, $sourceCodes, 'in')
-            ->create();
-
-        $searchResult = $this->getStockSourceLinks->execute($searchCriteriaStockSource);
-
-        $codes = [];
-        foreach ($searchResult->getItems() as $item) {
-            $codes[] = $item->getSourceCode();
+        if ($searchRequest->getDistanceFilter()) {
+            return;
         }
 
-        return $codes;
+        $stockId = $this->getStockId($searchRequest);
+        $sourceCodes = $this->getSourceCodesAssignedToStock($stockId);
+
+        $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, implode(',', $sourceCodes), 'in');
     }
 
     /**
@@ -123,5 +86,29 @@ class RequestBasedStrategy implements ExtractStrategyInterface
         $stock = $this->stockResolver->execute($scopeType, $scopeCode);
 
         return $stock->getStockId();
+    }
+
+    /**
+     * Get list of Source Codes assigned to the Stock.
+     *
+     * @param int $stockId
+     *
+     * @return string[]
+     */
+    private function getSourceCodesAssignedToStock(int $stockId): array
+    {
+        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
+        $searchCriteriaStockSource = $searchCriteriaBuilder
+            ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
+            ->create();
+
+        $searchResult = $this->getStockSourceLinks->execute($searchCriteriaStockSource);
+
+        $codes = [];
+        foreach ($searchResult->getItems() as $item) {
+            $codes[] = $item->getSourceCode();
+        }
+
+        return $codes;
     }
 }
