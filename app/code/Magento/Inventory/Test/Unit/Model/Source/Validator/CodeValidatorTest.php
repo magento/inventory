@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Test\Unit\Model\Source\Validator;
 
+use Magento\Framework\Api\SearchCriteria;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Source\Command\GetListInterface;
 use Magento\Inventory\Model\Source\Validator\CodeValidator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,14 +33,32 @@ class CodeValidatorTest extends TestCase
     private $source;
 
     /**
+     * @var SearchCriteriaBuilder|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $searchCriteriaBuilderMock;
+
+    /**
      * @var ValidationResultFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $validationResultFactory;
 
+    /**
+     * @var GetListInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $getSourceListMock;
+
+    /**
+     * @var SearchCriteria|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $searchCriteriaMock;
+
     protected function setUp()
     {
         $this->validationResultFactory = $this->createMock(ValidationResultFactory::class);
+        $this->getSourceListMock = $this->getMockBuilder(GetListInterface::class)->getMock();
         $this->source = $this->getMockBuilder(SourceInterface::class)->getMock();
+        $this->searchCriteriaMock = $this->createMock(SearchCriteria::class);
+        $this->searchCriteriaBuilderMock = $this->createMock(SearchCriteriaBuilder::class);
     }
 
     public function testValidateCodeNotEmpty()
@@ -49,10 +69,19 @@ class CodeValidatorTest extends TestCase
             ->with(['errors' => [__('"%field" can not be empty.', ['field' => SourceInterface::SOURCE_CODE])]])
             ->willReturn($emptyValidatorResult);
 
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('addFilter')
+            ->willReturnSelf();
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('create')
+            ->willReturn($this->searchCriteriaMock);
+
         $this->codeValidator = (new ObjectManager($this))->getObject(
             CodeValidator::class,
             [
-                'validationResultFactory' => $this->validationResultFactory
+                'validationResultFactory' => $this->validationResultFactory,
+                'searchCriteriaBuilder' => $this->searchCriteriaBuilderMock,
+                'getSourceList' => $this->getSourceListMock
             ]
         );
 
@@ -65,6 +94,14 @@ class CodeValidatorTest extends TestCase
     public function testValidateCodeNotWithWhiteSpaces()
     {
         $emptyValidatorResult = $this->createMock(\Magento\Framework\Validation\ValidationResult::class);
+
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('addFilter')
+            ->willReturnSelf();
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('create')
+            ->willReturn($this->searchCriteriaMock);
+
         $this->validationResultFactory->expects($this->once())
             ->method('create')
             ->with(
@@ -76,7 +113,9 @@ class CodeValidatorTest extends TestCase
         $this->codeValidator = (new ObjectManager($this))->getObject(
             CodeValidator::class,
             [
-                'validationResultFactory' => $this->validationResultFactory
+                'validationResultFactory' => $this->validationResultFactory,
+                'searchCriteriaBuilder' => $this->searchCriteriaBuilderMock,
+                'getSourceList' => $this->getSourceListMock
             ]
         );
         $this->source->expects($this->once())
@@ -88,13 +127,23 @@ class CodeValidatorTest extends TestCase
     public function testValidateCodeSuccessfully()
     {
         $emptyValidatorResult = $this->createMock(\Magento\Framework\Validation\ValidationResult::class);
+
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('addFilter')
+            ->willReturnSelf();
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('create')
+            ->willReturn($this->searchCriteriaMock);
+
         $this->validationResultFactory->expects($this->once())
             ->method('create')
             ->willReturn($emptyValidatorResult);
         $this->codeValidator = (new ObjectManager($this))->getObject(
             CodeValidator::class,
             [
-                'validationResultFactory' => $this->validationResultFactory
+                'validationResultFactory' => $this->validationResultFactory,
+                'searchCriteriaBuilder' => $this->searchCriteriaBuilderMock,
+                'getSourceList' => $this->getSourceListMock
             ]
         );
         $this->source->expects($this->once())
@@ -109,6 +158,14 @@ class CodeValidatorTest extends TestCase
     public function testValidateCodeNotWithInvalidCharacters()
     {
         $emptyValidatorResult = $this->createMock(\Magento\Framework\Validation\ValidationResult::class);
+
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('addFilter')
+            ->willReturnSelf();
+        $this->searchCriteriaBuilderMock->expects($this->any())
+            ->method('create')
+            ->willReturn($this->searchCriteriaMock);
+
         $this->validationResultFactory->expects($this->once())
             ->method('create')
             ->with(
@@ -122,7 +179,9 @@ class CodeValidatorTest extends TestCase
         $this->codeValidator = (new ObjectManager($this))->getObject(
             CodeValidator::class,
             [
-                'validationResultFactory' => $this->validationResultFactory
+                'validationResultFactory' => $this->validationResultFactory,
+                'searchCriteriaBuilder' => $this->searchCriteriaBuilderMock,
+                'getSourceList' => $this->getSourceListMock
             ]
         );
         $this->source->expects($this->once())

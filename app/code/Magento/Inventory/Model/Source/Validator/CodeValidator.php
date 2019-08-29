@@ -32,21 +32,21 @@ class CodeValidator implements SourceValidatorInterface
     /**
      * @var GetListInterface
      */
-    private $getList;
+    private $getSourceList;
 
     /**
      * @param ValidationResultFactory $validationResultFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param GetListInterface $getList
+     * @param GetListInterface $getSourceList
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        GetListInterface $getList
+        GetListInterface $getSourceList
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->getList = $getList;
+        $this->getSourceList = $getSourceList;
     }
 
     /**
@@ -58,8 +58,8 @@ class CodeValidator implements SourceValidatorInterface
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceInterface::SOURCE_CODE, $value)
             ->create();
-        $sourceSearchResults = $this->getList->execute($searchCriteria);
-        if (!empty($sourceSearchResults->getItems())) {
+        $sourceSearchResults = $this->getSourceList->execute($searchCriteria);
+        if ($sourceSearchResults->getTotalCount()) {
             $errors[] = __('"%field" value should be unique.', ['field' => SourceInterface::SOURCE_CODE]);
         } elseif ('' === trim($value)) {
             $errors[] = __('"%field" can not be empty.', ['field' => SourceInterface::SOURCE_CODE]);
