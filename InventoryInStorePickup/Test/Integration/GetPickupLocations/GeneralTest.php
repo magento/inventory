@@ -57,6 +57,7 @@ class GeneralTest extends TestCase
      * @param array $nameFilter
      * @param string $salesChannelCode
      * @param array $paging
+     * @param int $expectedTotalCount
      * @param array $sortOrder
      * @param string[] $sortedPickupLocationCodes
      *
@@ -70,6 +71,7 @@ class GeneralTest extends TestCase
         array $nameFilter,
         string $salesChannelCode,
         array $paging,
+        int $expectedTotalCount,
         array $sortOrder,
         array $sortedPickupLocationCodes
     ): void {
@@ -102,7 +104,7 @@ class GeneralTest extends TestCase
         $searchRequest = $this->searchRequestBuilder->create();
         $searchResult = $this->getPickupLocations->execute($searchRequest);
 
-        $this->assertEquals(count($sortedPickupLocationCodes), $searchResult->getTotalCount());
+        $this->assertEquals($expectedTotalCount, $searchResult->getTotalCount());
         $this->assertCount(count($sortedPickupLocationCodes), $searchResult->getItems());
         foreach ($sortedPickupLocationCodes as $key => $code) {
             $this->assertEquals($code, $searchResult->getItems()[$key]->getPickupLocationCode());
@@ -124,6 +126,7 @@ class GeneralTest extends TestCase
      *          Page Size,
      *          Current Page
      *      ],
+     *      Expected Total Count,
      *      Sort Orders[
      *          Sort Order[
      *              Direction,
@@ -144,6 +147,7 @@ class GeneralTest extends TestCase
               [],
               'eu_website',
               [],
+              1,
               [],
               ['eu-1']
             ],
@@ -152,6 +156,7 @@ class GeneralTest extends TestCase
               [],
               'eu_website',
               [],
+              2,
               [],
               ['eu-1', 'eu-3']
             ],
@@ -160,6 +165,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [],
+              2,
               [],
               ['eu-1', 'eu-3']
             ],
@@ -168,6 +174,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [],
+              3,
               [],
               ['eu-1', 'eu-3', 'us-1']
             ],
@@ -176,6 +183,7 @@ class GeneralTest extends TestCase
               [],
               'eu_website',
               [],
+              0,
               [],
               []
             ],
@@ -184,6 +192,7 @@ class GeneralTest extends TestCase
               ['value' => 'EU-source-1', 'condition' => 'eq'],
               'eu_website',
               [],
+              1,
               [],
               ['eu-1']
             ],
@@ -192,6 +201,7 @@ class GeneralTest extends TestCase
               ['value' => 'source', 'condition' => 'fulltext'],
               'global_website',
               [],
+              3,
               [],
               ['eu-1', 'eu-3', 'us-1']
             ],
@@ -200,6 +210,7 @@ class GeneralTest extends TestCase
               ['value' => 'source', 'condition' => 'fulltext'],
               'global_website',
               [],
+              2,
               [],
               ['eu-1', 'eu-3']
             ],
@@ -208,6 +219,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [],
+              3,
               [],
               ['eu-1', 'eu-3', 'us-1']
             ],
@@ -216,6 +228,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [],
+              3,
               [],
               ['eu-1', 'eu-3', 'us-1']
             ],
@@ -224,6 +237,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [1, 1],
+              3,
               [],
               ['eu-1']
             ],
@@ -232,6 +246,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [1, 2],
+              3,
               [],
               ['eu-3']
             ],
@@ -240,6 +255,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [],
+              3,
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_DESC,
@@ -253,6 +269,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [],
+              3,
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_DESC,
@@ -270,6 +287,7 @@ class GeneralTest extends TestCase
               [],
               'global_website',
               [1, 2],
+              3,
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_DESC,
@@ -283,6 +301,7 @@ class GeneralTest extends TestCase
               ['value' => 'source', 'condition' => 'fulltext'],
               'global_website',
               [1, 2],
+              2,
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_DESC,
