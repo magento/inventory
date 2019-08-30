@@ -105,10 +105,15 @@ class SourceDataProvider extends DataProvider
             if ($data['totalRecords'] > 0) {
                 $sourceCode = $data['items'][0][SourceInterface::SOURCE_CODE];
                 $sourceGeneralData = $data['items'][0];
+
+                $source = $this->sourceRepository->get($sourceCode);
+                $sourceGeneralData['type_code'] = $source->getExtensionAttributes()->getTypeCode();
+
                 $sourceGeneralData['disable_source_code'] = !empty($sourceGeneralData['source_code']);
                 $dataForSingle[$sourceCode] = [
                     'general' => $sourceGeneralData,
                 ];
+
                 return $dataForSingle;
             }
             $sessionData = $this->session->getSourceFormData(true);

@@ -90,4 +90,10 @@
         </arguments>
     </type>
     <preference for="Magento\InventoryApi\Model\IsProductAssignedToStockInterface" type="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock"/>
+    <!-- SourceTypeLink -->
+    <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink"/>
+    <preference for="Magento\InventoryApi\Model\SourceTypeLinkManagementInterface" type="Magento\Inventory\Model\SourceCarrierLinkManagement"/>
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="SourceTypeExtensionAttribute" type="Magento\Inventory\Plugin\SourceTypeAttribute"/>
+    </type>
 </config>
