@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
-use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
@@ -74,7 +74,7 @@ class GetProductQtyById
 
         try {
             $qty = $this->getProductSalableQty->execute($sku, $stockId);
-        } catch (InputException $e) {
+        } catch (LocalizedException $e) {
             $qty = 0.0;
         }
 
