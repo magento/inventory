@@ -86,5 +86,27 @@
         "constraint": {
             "PRIMARY": true
         }
+    },
+    "inventory_source_type": {
+        "column": {
+            "type_code": true,
+            "name": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "inventory_source_type_link": {
+        "column": {
+            "link_id": true,
+            "source_code": true,
+            "type_code": true,
+            "position": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "INV_SOURCE_TYPE_LNK_SOURCE_CODE_INV_SOURCE_SOURCE_CODE": true,
+            "INV_SOURCE_TYPE_LNK_TYPE_CODE_INV_SOURCE_TYPE_TYPE_CODE": true
+        }
     }
 }
