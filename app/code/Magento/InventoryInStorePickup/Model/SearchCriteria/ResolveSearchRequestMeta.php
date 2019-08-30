@@ -21,6 +21,15 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverI
 class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
 {
     /**
+     * @var array
+     */
+    private $translations = [
+        SourceInterface::NAME => PickupLocationInterface::FRONTEND_NAME,
+        PickupLocationInterface::PICKUP_LOCATION_CODE => SourceInterface::SOURCE_CODE,
+        SourceInterface::DESCRIPTION => PickupLocationInterface::FRONTEND_DESCRIPTION
+    ];
+
+    /**
      * @inheritdoc
      *
      * @throws InputException
@@ -50,7 +59,6 @@ class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
         SearchRequestInterface $searchRequest,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ): void {
-
         $sorts = [];
         foreach ($searchRequest->getSort() as $sortOrder) {
             if ($sortOrder->getField() === DistanceFilterInterface::DISTANCE_FIELD) {
@@ -58,21 +66,27 @@ class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
                 if ($searchRequest->getDistanceFilter()) {
                     return;
                 }
-                // Sort order should be skipped in case that Distance Filter is missed.
+                // Sort Order by 'distance' must be skipped in case that Distance Filter is missed.
                 continue;
             }
 
-            if ($sortOrder->getField() === SourceInterface::NAME) {
-                $sortOrder->setField(PickupLocationInterface::FRONTEND_NAME);
-            }
-
-            if ($sortOrder->getField() === PickupLocationInterface::PICKUP_LOCATION_CODE) {
-                $sortOrder->setField(SourceInterface::SOURCE_CODE);
-            }
+            $sortOrder->setField($this->translateFieldName($sortOrder->getField()));
 
             $sorts[] = $sortOrder;
         }
 
         $searchCriteriaBuilder->setSortOrders($sorts);
+    }
+
+    /**
+     * Translate field name according to possible difference due projection.
+     *
+     * @param string $requestedName
+     *
+     * @return string
+     */
+    private function translateFieldName(string $requestedName): string
+    {
+        return $this->translations[$requestedName] ?? $requestedName;
     }
 }
