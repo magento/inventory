@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SearchResult;
 
 use Magento\Framework\Api\SortOrder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
@@ -36,6 +37,8 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
 
     /**
      * @inheritdoc
+     *
+     * @throws NoSuchEntityException
      */
     public function getSources(
         SearchRequestInterface $searchRequest,

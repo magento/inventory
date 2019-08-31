@@ -33,6 +33,8 @@ class ExtractStrategy implements ExtractStrategyInterface
 
     /**
      * @inheritdoc
+     *
+     * @throws NoSuchEntityException
      */
     public function getSources(
         SearchRequestInterface $searchRequest,
