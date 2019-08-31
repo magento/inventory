@@ -12,11 +12,11 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magento\InventoryInStorePickup\Model\SearchRequestBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\DataProvider\PickupLocation;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest;
 
@@ -31,7 +31,7 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     private $searchRequestResolver;
 
     /**
-     * @var SearchRequestBuilder
+     * @var SearchRequestBuilderInterface
      */
     private $searchRequestBuilder;
 
@@ -47,13 +47,13 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
 
     /**
      * @param SearchRequest $searchRequestResolver
-     * @param SearchRequestBuilder $searchRequestBuilder
+     * @param SearchRequestBuilderInterface $searchRequestBuilder
      * @param GetPickupLocationsInterface $getPickupLocations
      * @param PickupLocation $dataProvider
      */
     public function __construct(
         SearchRequest $searchRequestResolver,
-        SearchRequestBuilder $searchRequestBuilder,
+        SearchRequestBuilderInterface $searchRequestBuilder,
         GetPickupLocationsInterface $getPickupLocations,
         PickupLocation $dataProvider
     ) {
