@@ -8,79 +8,30 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
-use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
-use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetDistanceOrderedSourceCodes;
-use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\ConvertToSourceSelectionAddress;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * Calculate Distance Based Filter and resolve part for Search Criteria Builder.
  * Apply filter by Source Codes, limited by distance and assignment to the Scope.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResolveDistanceFilter implements BuilderPartsResolverInterface
 {
     /**
-     * @var ConvertToSourceSelectionAddress
+     * @var GetDistanceToSources
      */
-    private $convertToSourceSelectionAddress;
+    private $getDistanceToSources;
 
     /**
-     * @var GetLatLngFromAddressInterface
-     */
-    private $getLatLngFromAddress;
-
-    /**
-     * @var GetDistanceOrderedSourceCodes
-     */
-    private $getDistanceOrderedSourceCodes;
-
-    /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @var SearchCriteriaBuilderFactory
-     */
-    private $searchCriteriaBuilderFactory;
-
-    /**
-     * @var GetStockSourceLinksInterface
-     */
-    private $getStockSourceLinks;
-
-    /**
-     * @param ConvertToSourceSelectionAddress $convertToSourceSelectionAddress
-     * @param GetLatLngFromAddressInterface $getLatLngFromAddress
-     * @param GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes
-     * @param StockResolverInterface $stockResolver
-     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
-     * @param GetStockSourceLinksInterface $getStockSourceLinks
+     * @param GetDistanceToSources $getDistanceToSources
      */
     public function __construct(
-        ConvertToSourceSelectionAddress $convertToSourceSelectionAddress,
-        GetLatLngFromAddressInterface $getLatLngFromAddress,
-        GetDistanceOrderedSourceCodes $getDistanceOrderedSourceCodes,
-        StockResolverInterface $stockResolver,
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        GetStockSourceLinksInterface $getStockSourceLinks
+        GetDistanceToSources $getDistanceToSources
     ) {
-        $this->convertToSourceSelectionAddress = $convertToSourceSelectionAddress;
-        $this->getLatLngFromAddress = $getLatLngFromAddress;
-        $this->getDistanceOrderedSourceCodes = $getDistanceOrderedSourceCodes;
-        $this->stockResolver = $stockResolver;
-        $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
-        $this->getStockSourceLinks = $getStockSourceLinks;
+        $this->getDistanceToSources = $getDistanceToSources;
     }
 
     /**
@@ -114,70 +65,8 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
             return null;
         }
 
-        $codes = $this->getCodesOfClosestSources($distanceFilter);
-        $stockId = $this->getStockId($searchRequest);
+        $distances = $this->getDistanceToSources->execute($distanceFilter);
 
-        return $this->filterSourcesByStockId($codes, $stockId);
-    }
-
-    /**
-     * Filter list of codes by assignment to Stock.
-     *
-     * @param array $sourceCodes
-     * @param int $stockId
-     *
-     * @return string[]
-     */
-    private function filterSourcesByStockId(array $sourceCodes, int $stockId): array
-    {
-        $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
-        $searchCriteriaStockSource = $searchCriteriaBuilder
-            ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
-            ->addFilter(StockSourceLinkInterface::SOURCE_CODE, $sourceCodes, 'in')
-            ->create();
-
-        $searchResult = $this->getStockSourceLinks->execute($searchCriteriaStockSource);
-
-        $stockCodes = [];
-        foreach ($searchResult->getItems() as $item) {
-            $stockCodes[] = $item->getSourceCode();
-        }
-
-        $resultCodes = array_intersect($sourceCodes, $stockCodes);
-
-        return $resultCodes;
-    }
-
-    /**
-     * Get Stock Id from Search Request.
-     *
-     * @param SearchRequestInterface $searchRequest
-     *
-     * @return int
-     * @throws NoSuchEntityException
-     */
-    private function getStockId(SearchRequestInterface $searchRequest): int
-    {
-        $scopeType = $searchRequest->getScopeType();
-        $scopeCode = $searchRequest->getScopeCode();
-
-        $stock = $this->stockResolver->execute($scopeType, $scopeCode);
-
-        return $stock->getStockId();
-    }
-
-    /**
-     * Get codes closest sources to requested address.
-     *
-     * @param DistanceFilterInterface $distanceFilter
-     *
-     * @return string[]
-     */
-    private function getCodesOfClosestSources(DistanceFilterInterface $distanceFilter): array
-    {
-        $sourceSelectionAddress = $this->convertToSourceSelectionAddress->execute($distanceFilter);
-        $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
-
-        return $this->getDistanceOrderedSourceCodes->execute($latLng, $distanceFilter->getRadius());
+        return array_keys($distances);
     }
 }

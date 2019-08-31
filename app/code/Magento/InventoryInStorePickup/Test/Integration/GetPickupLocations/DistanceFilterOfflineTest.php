@@ -105,9 +105,7 @@ class DistanceFilterOfflineTest extends TestCase
         $searchRequest = $this->searchRequestBuilder->create();
 
         /** @var PickupLocationInterface[] $sources */
-        $result = $this->getPickupLocations->execute(
-            $searchRequest
-        );
+        $result = $this->getPickupLocations->execute($searchRequest);
 
         $this->assertEquals(count($sortedPickupLocationCodes), $result->getTotalCount());
         $this->assertCount(count($sortedPickupLocationCodes), $result->getItems());
