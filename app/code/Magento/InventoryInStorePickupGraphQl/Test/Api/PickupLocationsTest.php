@@ -79,6 +79,7 @@ class PickupLocationsTest extends GraphQlAbstract
       longitude
       country_id
       region_id
+      region
       city
       street
       postcode
@@ -357,6 +358,7 @@ pickup_locations(
       longitude
       country_id
       region_id
+      region
       city
       street
       postcode
@@ -412,6 +414,7 @@ QUERY;
         $this->assertEquals($pickupLocation->getLongitude(), $data['longitude']);
         $this->assertEquals($pickupLocation->getCountryId(), $data['country_id']);
         $this->assertEquals($pickupLocation->getRegionId(), $data['region_id']);
+        $this->assertEquals($pickupLocation->getRegion(), $data['region']);
         $this->assertEquals($pickupLocation->getCity(), $data['city']);
         $this->assertEquals($pickupLocation->getStreet(), $data['street']);
         $this->assertEquals($pickupLocation->getPostcode(), $data['postcode']);
