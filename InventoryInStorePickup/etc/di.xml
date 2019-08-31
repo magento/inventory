@@ -54,6 +54,7 @@
             <argument name="resolvers" xsi:type="array">
                 <item name="resolve-address-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveAddressFilter</item>
                 <item name="resolve-distance-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDistanceFilter</item>
+                <item name="resolve-scope-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveScopeFilter</item>
                 <item name="resolve-pickup-location-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolvePickupLocationFilters</item>
                 <item name="resolve-search-request-meta" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveSearchRequestMeta</item>
             </argument>

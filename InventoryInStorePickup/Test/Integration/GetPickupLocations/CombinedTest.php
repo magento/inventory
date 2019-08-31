@@ -115,7 +115,7 @@ class CombinedTest extends TestCase
         $result = $this->getPickupLocations->execute($searchRequest);
 
         $this->assertCount(1, $result->getItems());
-        $this->assertEquals(1, $result->getTotalCount());
+        $this->assertEquals(2, $result->getTotalCount());
         $this->assertEquals('eu-3', current($result->getItems())->getPickupLocationCode());
     }
 
@@ -196,7 +196,7 @@ class CombinedTest extends TestCase
         $result = $this->getPickupLocations->execute($searchRequest);
 
         $this->assertCount(1, $result->getItems());
-        $this->assertEquals(1, $result->getTotalCount());
+        $this->assertEquals(2, $result->getTotalCount());
         $this->assertEquals('eu-1', current($result->getItems())->getPickupLocationCode());
     }
 }
