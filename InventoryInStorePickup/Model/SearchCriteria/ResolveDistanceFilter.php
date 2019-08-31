@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
@@ -35,6 +36,8 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
 
     /**
      * @inheritdoc
+     *
+     * @throws NoSuchEntityException
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
@@ -52,6 +55,7 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
      * @param SearchRequestInterface $searchRequest
      *
      * @return array|null
+     * @throws NoSuchEntityException
      */
     private function getSourceCodes(SearchRequestInterface $searchRequest): ?array
     {

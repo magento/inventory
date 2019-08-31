@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
@@ -61,6 +63,7 @@ class GetDistanceToSources
      * @param DistanceFilterInterface $distanceFilter
      *
      * @return float[]
+     * @throws NoSuchEntityException
      */
     public function execute(DistanceFilterInterface $distanceFilter): array
     {
@@ -95,11 +98,16 @@ class GetDistanceToSources
      * @param DistanceFilterInterface $distanceFilter
      *
      * @return float[]
+     * @throws NoSuchEntityException
      */
     private function getDistanceToSources(DistanceFilterInterface $distanceFilter): array
     {
         $sourceSelectionAddress = $this->toSourceSelectionAddress($distanceFilter);
-        $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
+        try {
+            $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
+        } catch (LocalizedException $exception) {
+            throw new NoSuchEntityException(__($exception->getMessage()), $exception);
+        }
 
         return $this->getOrderedDistanceToSources->execute($latLng, $distanceFilter->getRadius());
     }
