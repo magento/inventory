@@ -23,20 +23,12 @@ class ExtractStrategy implements ExtractStrategyInterface
     private $distanceBasedStrategy;
 
     /**
-     * @var RequestBasedStrategy
-     */
-    private $requestBasedStrategy;
-
-    /**
      * @param DistanceBasedStrategy $distanceBasedStrategy
-     * @param RequestBasedStrategy $requestBasedStrategy
      */
     public function __construct(
-        DistanceBasedStrategy $distanceBasedStrategy,
-        RequestBasedStrategy $requestBasedStrategy
+        DistanceBasedStrategy $distanceBasedStrategy
     ) {
         $this->distanceBasedStrategy = $distanceBasedStrategy;
-        $this->requestBasedStrategy = $requestBasedStrategy;
     }
 
     /**
@@ -51,7 +43,8 @@ class ExtractStrategy implements ExtractStrategyInterface
         if ($searchRequest->getDistanceFilter()) {
             $data = $this->distanceBasedStrategy->getSources($searchRequest, $sourcesSearchResult);
         } else {
-            $data = $this->requestBasedStrategy->getSources($searchRequest, $sourcesSearchResult);
+            // default strategy
+            $data = $sourcesSearchResult->getItems();
         }
 
         return $data;
