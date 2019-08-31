@@ -60,10 +60,6 @@ class ResolveScopeFilter implements BuilderPartsResolverInterface
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
-        if ($searchRequest->getDistanceFilter()) {
-            return;
-        }
-
         $stockId = $this->getStockId($searchRequest);
         $sourceCodes = $this->getSourceCodesAssignedToStock($stockId);
 
