@@ -40,6 +40,7 @@ input PickupLocationSortInput @doc(description: "PickupLocationSortInput specifi
     region_id: SortEnum @doc(description: "Id of the region.")
     city: SortEnum @doc(description: "City where pickup location is placed.")
     street: SortEnum @doc(description: "Street where pickup location is placed.")
+    postcode: SortEnum @doc(description: "Postcode where pickup location is placed.")
     longitude: SortEnum @doc(description: "Geographic longitude where pickup location is placed.")
     latitude: SortEnum @doc(description: "Geographic latitude where pickup location is placed.")
     email: SortEnum @doc(description: "Contact email of the pickup location.")
