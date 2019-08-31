@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\S
 
 use Magento\Framework\GraphQl\Query\Resolver\Argument\AstConverter;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\Filter\Clause;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
@@ -42,33 +43,68 @@ class Address implements ResolverInterface
         $filters = $this->astConverter->getClausesFromAst($fieldName, $argument[$argumentName]);
 
         foreach ($filters as $filter) {
-            $this->applyFilterToBuilder($searchRequestBuilder, $filter);
+            $this->addFilterToBuilder($searchRequestBuilder, $filter);
         }
 
         return $searchRequestBuilder;
     }
 
-    private function applyFilterToBuilder(SearchRequestBuilderInterface $searchRequestBuilder, Clause $filter): void
+    /**
+     * Add filter to the Search Request Builder.
+     *
+     * @param SearchRequestBuilderInterface $searchRequestBuilder
+     * @param Clause $filter
+     */
+    private function addFilterToBuilder(SearchRequestBuilderInterface $searchRequestBuilder, Clause $filter): void
     {
         switch ($filter->getFieldName()) {
-            case 'country_id':
-                $searchRequestBuilder->setAddressCountryFilter($filter->getClauseValue(), $filter->getClauseType());
+            case SourceInterface::COUNTRY_ID:
+                $searchRequestBuilder->setAddressCountryFilter(
+                    $this->getClauseValue($filter),
+                    $filter->getClauseType()
+                );
                 break;
-            case 'postcode':
-                $searchRequestBuilder->setAddressPostcodeFilter($filter->getClauseValue(), $filter->getClauseType());
+            case SourceInterface::POSTCODE:
+                $searchRequestBuilder->setAddressPostcodeFilter(
+                    $this->getClauseValue($filter),
+                    $filter->getClauseType()
+                );
                 break;
-            case 'region':
-                $searchRequestBuilder->setAddressRegionFilter($filter->getClauseValue(), $filter->getClauseType());
+            case SourceInterface::REGION:
+                $searchRequestBuilder->setAddressRegionFilter(
+                    $this->getClauseValue($filter),
+                    $filter->getClauseType()
+                );
                 break;
-            case 'region_id':
-                $searchRequestBuilder->setAddressRegionIdFilter($filter->getClauseValue(), $filter->getClauseType());
+            case SourceInterface::REGION_ID:
+                $searchRequestBuilder->setAddressRegionIdFilter(
+                    $this->getClauseValue($filter),
+                    $filter->getClauseType()
+                );
                 break;
-            case 'city':
-                $searchRequestBuilder->setAddressCityFilter($filter->getClauseValue(), $filter->getClauseType());
+            case SourceInterface::CITY:
+                $searchRequestBuilder->setAddressCityFilter($this->getClauseValue($filter), $filter->getClauseType());
                 break;
-            case 'street':
-                $searchRequestBuilder->setAddressStreetFilter($filter->getClauseValue(), $filter->getClauseType());
+            case SourceInterface::STREET:
+                $searchRequestBuilder->setAddressStreetFilter(
+                    $this->getClauseValue($filter),
+                    $filter->getClauseType()
+                );
                 break;
         }
+    }
+
+    /**
+     * Get value from the clause.
+     *
+     * @param Clause $filter
+     *
+     * @return string
+     */
+    private function getClauseValue(Clause $filter): string
+    {
+        $value = $filter->getClauseValue();
+
+        return is_array($value) ? implode(',', $value) : $value;
     }
 }

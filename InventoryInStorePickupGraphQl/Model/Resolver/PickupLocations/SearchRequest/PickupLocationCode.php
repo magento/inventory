@@ -43,6 +43,9 @@ class PickupLocationCode implements ResolverInterface
         $filter = $this->astConverter->getClausesFromAst($fieldName, [$argumentName => $nameFilter]);
         $filter = current($filter);
 
-        return $searchRequestBuilder->setPickupLocationCodeFilter($filter->getClauseValue(), $filter->getClauseType());
+        $value = $filter->getClauseValue();
+        $value = is_array($value) ? implode(',', $value) : $value;
+
+        return $searchRequestBuilder->setPickupLocationCodeFilter($value, $filter->getClauseType());
     }
 }

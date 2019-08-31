@@ -25,7 +25,7 @@ class PickupLocation
     public function getData(PickupLocationInterface $pickupLocation): array
     {
         return [
-            PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => $pickupLocation->getPickupLocationCode(),
+            PickupLocationInterface::PICKUP_LOCATION_CODE => $pickupLocation->getPickupLocationCode(),
             SourceInterface::NAME => $pickupLocation->getName(),
             SourceInterface::DESCRIPTION => $pickupLocation->getDescription(),
             SourceInterface::EMAIL => $pickupLocation->getEmail(),

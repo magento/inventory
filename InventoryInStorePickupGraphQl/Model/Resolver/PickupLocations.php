@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupGraphQl\Model\Resolver;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
+use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\InventoryInStorePickup\Model\SearchRequestBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
@@ -71,7 +73,11 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
         $builder = $this->searchRequestResolver->resolve($this->searchRequestBuilder, $field->getName(), $args);
 
         $searchRequest = $builder->create();
-        $searchResult = $this->getPickupLocations->execute($searchRequest);
+        try {
+            $searchResult = $this->getPickupLocations->execute($searchRequest);
+        } catch (NoSuchEntityException $e) {
+            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
+        }
 
         return [
             'items' => $this->getPickupLocationsData($searchResult->getItems()),
@@ -102,10 +108,10 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
         }
 
         if (isset($args['search_request']['distance_filter']) && !(
-                $args['search_request']['distance_filter']['region'] ||
-                $args['search_request']['distance_filter']['city'] ||
-                $args['search_request']['distance_filter']['postcode']
-            )) {
+            $args['search_request']['distance_filter']['region'] ||
+            $args['search_request']['distance_filter']['city'] ||
+            $args['search_request']['distance_filter']['postcode']
+        )) {
             throw new GraphQlInputException(__('Region or city or postcode must be specified for distance filter.'));
         }
     }
