@@ -25,7 +25,6 @@ define([
             };
 
             function hideShippingAddressForm(hide) {
-                debugger;
                 let theSameAsBilling = $('#order-shipping_same_as_billing + label');
                 if (hide) {
                     order.disableShippingAddress(true);
