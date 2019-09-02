@@ -1,4 +1,4 @@
-<div id="store-selector" data-bind="blockLoader: isLoading" data-bind="css: { 'store-selected': selectedLocation }">
+<div id="store-selector" data-bind="blockLoader: isLoading, css: { 'store-selected': selectedLocation }">
     <each if="!quoteIsVirtual" args="getRegion('customer-email')" render="" />
 
     <div class="step-title" data-bind="i18n: 'Store'" data-role="title"></div>
@@ -28,6 +28,9 @@
                         data-role="opc-continue"
                         type="submit"
                         class="button action continue primary"
+                        data-bind="enable: selectedLocation,
+                            css: {disabled: !selectedLocation}"
+                        disabled
                     >
                         <span><!-- ko i18n: 'Next'--><!-- /ko --></span>
                     </button>
