@@ -53,11 +53,16 @@ class ProductQtyPlugin
      * @param ProductQty $subject
      * @param callable $proceed
      * @param int $productId
+     * @param int $websiteId
      * @return float|null
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundGetProductQtyLeft(ProductQty $subject, callable $proceed, int $productId):? float
-    {
+    public function aroundGetProductQtyLeft(
+        ProductQty $subject,
+        callable $proceed,
+        int $productId,
+        int $websiteId
+    ):? float {
         $productSalableQty = $this->getProductQtyById->execute($productId);
         if ($this->qtyLeftChecker->useQtyForViewing($productSalableQty)) {
             return  $this->getStockQtyLeft($productSalableQty);

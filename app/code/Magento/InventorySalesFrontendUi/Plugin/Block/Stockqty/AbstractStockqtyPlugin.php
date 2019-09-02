@@ -69,6 +69,8 @@ class AbstractStockqtyPlugin
     }
 
     /**
+     * Is message visible.
+     *
      * @param AbstractStockqty $subject
      * @param callable $proceed
      * @return bool
@@ -91,6 +93,8 @@ class AbstractStockqtyPlugin
     }
 
     /**
+     * Get stock qty left.
+     *
      * @param AbstractStockqty $subject
      * @param callable $proceed
      * @return float
