@@ -44,20 +44,27 @@
             <settings>
                 <dataScope>extension_attributes.frontend_name</dataScope>
                 <dataType>string</dataType>
-                <label translate="true">Frontend name</label>
+                <label translate="true">Frontend Name</label>
                 <tooltip>
-                    <description translate="true">Pickup Location name visible for the customer on checkout</description>
+                    <description translate="true">Pickup Location Name visible for the customer on checkout</description>
                 </tooltip>
             </settings>
         </field>
-        <field name="frontend_description" formElement="wysiwyg">
+        <field name="frontend_description" template="ui/form/field" formElement="wysiwyg">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="add_variables" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
+                        <item name="add_images" xsi:type="boolean">true</item>
+                        <item name="add_directives" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
             <settings>
                 <dataScope>extension_attributes.frontend_description</dataScope>
                 <dataType>string</dataType>
-                <label translate="true">Frontend description</label>
-                <tooltip>
-                    <description translate="true">Pickup Location description</description>
-                </tooltip>
+                <label translate="true">Frontend Description</label>
             </settings>
             <formElements>
                 <wysiwyg>
