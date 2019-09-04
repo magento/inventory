@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor;
 
+use Magento\Framework\Filter\Template;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
-use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
  * Processor for transferring Frontend Description from Source entity to Pickup Location entity Description.
@@ -18,23 +18,24 @@ use Magento\Widget\Model\Template\FilterEmulate;
 class FrontendDescription implements PreProcessorInterface
 {
     /**
-     * @var FilterEmulate
+     * @var Template
      */
-    private $filterEmulate;
+    private $templateFilter;
 
     /**
-     * @param FilterEmulate $filterEmulate
+     * @param Template $templateFilter
      */
-    public function __construct(FilterEmulate $filterEmulate)
+    public function __construct(Template $templateFilter)
     {
-        $this->filterEmulate = $filterEmulate;
+        $this->templateFilter = $templateFilter;
     }
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
     public function process(SourceInterface $source, $value): string
     {
-        return $this->filterEmulate->filter($value);
+        return $value ? $this->templateFilter->filter($value) : $value;
     }
 }
