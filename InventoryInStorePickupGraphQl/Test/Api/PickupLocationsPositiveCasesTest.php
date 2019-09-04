@@ -16,8 +16,9 @@ use Magento\TestFramework\TestCase\GraphQlAbstract;
 
 /**
  * Test coverage for Pickup Locations GraphQl endpoint.
+ * Test positive test cases.
  */
-class PickupLocationsTest extends GraphQlAbstract
+class PickupLocationsPositiveCasesTest extends GraphQlAbstract
 {
     /**
      * @var GetPickupLocationInterface
@@ -315,65 +316,6 @@ QUERY;
               1
             ]
         ];
-    }
-
-    /**
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/inventory_geoname.php
-     *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
-     *
-     * @magentoDbIsolation disabled
-     *
-     * @expectedException \Exception
-     * @expectedExceptionMessage Unknown geoname for  86559   ZZZ
-     */
-    public function testPickupLocationEndpointDistanceSearchByWrongAddress()
-    {
-        $query = <<<QUERY
-{
-pickup_locations(
-    distance:{
-      radius: 750
-      country_code: "ZZZ"
-      postcode: "86559"
-    }
-    page_size: 1
-    current_page: 1
-    sort: {distance: ASC}
-  ){
-    items {
-      pickup_location_code
-      name
-      email
-      fax
-      description
-      latitude
-      longitude
-      country_id
-      region_id
-      region
-      city
-      street
-      postcode
-      phone
-    },
-    total_count
-    page_info {
-      page_size
-      current_page
-      total_pages
-    }
-  }
-}
-QUERY;
-        $this->graphQlQuery($query, [], '', ['Store' => 'store_for_global_website']);
     }
 
     /**
