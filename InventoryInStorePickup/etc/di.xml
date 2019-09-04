@@ -65,7 +65,4 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filter" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest" />
     <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequestBuilder" />
-    <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Builder\AddressFilterBuilder" />
-    <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequest\DistanceFilterBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Builder\DistanceFilterBuilder" />
-    <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FilterBuilder" />
 </config>

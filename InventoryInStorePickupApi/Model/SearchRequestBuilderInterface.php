@@ -15,7 +15,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
  *
  * @api
  */
-interface SearchRequestBuilderInterface extends \Magento\Framework\Api\SimpleBuilderInterface
+interface SearchRequestBuilderInterface
 {
     /**
      * Build Search Request object.

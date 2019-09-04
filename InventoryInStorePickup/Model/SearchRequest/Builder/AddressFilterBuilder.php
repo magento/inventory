@@ -9,14 +9,11 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterfaceFactory;
 
 /**
- * @inheritdoc
+ * Address Filter Builder.
  */
-class AddressFilterBuilder implements AddressFilterBuilderInterface
+class AddressFilterBuilder
 {
     private const COUNTRY_FILTER   = 'countryFilter';
     private const POSTCODE_FILTER  = 'postcodeFilter';
@@ -33,7 +30,7 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     private $data = [];
 
     /**
-     * @var FilterBuilderInterfaceFactory
+     * @var FilterBuilderFactory
      */
     private $filterBuilderFactory;
 
@@ -43,11 +40,11 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     private $addressFilterFactory;
 
     /**
-     * @param FilterBuilderInterfaceFactory $filterBuilderFactory
+     * @param FilterBuilderFactory $filterBuilderFactory
      * @param AddressFilterInterfaceFactory $addressFilterFactory
      */
     public function __construct(
-        FilterBuilderInterfaceFactory $filterBuilderFactory,
+        FilterBuilderFactory $filterBuilderFactory,
         AddressFilterInterfaceFactory $addressFilterFactory
     ) {
         $this->filterBuilderFactory = $filterBuilderFactory;
@@ -55,7 +52,9 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Build Address Filter.
+     *
+     * @return AddressFilterInterface|null
      */
     public function create(): ?AddressFilterInterface
     {
@@ -64,7 +63,7 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
 
         /**
          * @var string $key
-         * @var FilterBuilderInterface $value
+         * @var FilterBuilder $value
          */
         foreach ($data as $key => $value) {
             $data[$key] = $value->create();
@@ -74,9 +73,14 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Street filter.
+     *
+     * @param string $street
+     * @param string|null $condition
+     *
+     * @return self
      */
-    public function setStreetFilter(string $street, ?string $condition = null): AddressFilterBuilderInterface
+    public function setStreetFilter(string $street, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($street)->setConditionType($condition);
         $this->data[self::STREET_FILTER] = $filterBuilder;
@@ -85,9 +89,14 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Postcode filter.
+     *
+     * @param string $postcode
+     * @param string|null $condition
+     *
+     * @return self
      */
-    public function setPostcodeFilter(string $postcode, ?string $condition = null): AddressFilterBuilderInterface
+    public function setPostcodeFilter(string $postcode, ?string $condition = null): self
     {
         $filter = $this->filterBuilderFactory->create()->setValue($postcode)->setConditionType($condition);
         $this->data[self::POSTCODE_FILTER] = $filter;
@@ -96,9 +105,14 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set City filter.
+     *
+     * @param string $city
+     * @param string|null $condition
+     *
+     * @return self
      */
-    public function setCityFilter(string $city, ?string $condition = null): AddressFilterBuilderInterface
+    public function setCityFilter(string $city, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($city)->setConditionType($condition);
         $this->data[self::CITY_FILTER] = $filterBuilder;
@@ -107,9 +121,14 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Region Id filter.
+     *
+     * @param string $regionId
+     * @param string|null $condition
+     *
+     * @return self
      */
-    public function setRegionIdFilter(string $regionId, ?string $condition = null): AddressFilterBuilderInterface
+    public function setRegionIdFilter(string $regionId, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($regionId)->setConditionType($condition);
         $this->data[self::REGION_ID_FILTER] = $filterBuilder;
@@ -118,9 +137,14 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Region filter.
+     *
+     * @param string $region
+     * @param string|null $condition
+     *
+     * @return self
      */
-    public function setRegionFilter(string $region, ?string $condition = null): AddressFilterBuilderInterface
+    public function setRegionFilter(string $region, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($region)->setConditionType($condition);
         $this->data[self::REGION_FILTER] = $filterBuilder;
@@ -129,21 +153,18 @@ class AddressFilterBuilder implements AddressFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Country filter.
+     *
+     * @param string $country
+     * @param string|null $condition
+     *
+     * @return self
      */
-    public function setCountryFilter(string $country, ?string $condition): AddressFilterBuilderInterface
+    public function setCountryFilter(string $country, ?string $condition): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($country)->setConditionType($condition);
         $this->data[self::COUNTRY_FILTER] = $filterBuilder;
 
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getData(): array
-    {
-        return $this->data;
     }
 }

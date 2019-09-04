@@ -8,16 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use InvalidArgumentException;
-use Magento\Framework\Api\SimpleBuilderInterface;
 use Magento\Framework\Api\SortOrder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\AddressFilterBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\DistanceFilterBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FilterBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FilterBuilderFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\DistanceFilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\DistanceFilterBuilderInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
@@ -46,57 +43,47 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     private $data = [];
 
     /**
-     * @var SimpleBuilderInterface[]
-     */
-    private $compositeBuilders = [];
-
-    /**
      * @var SearchRequestInterfaceFactory
      */
     private $searchRequestFactory;
 
     /**
-     * @var AddressFilterBuilderInterface
+     * @var AddressFilterBuilder
      */
     private $addressFilterBuilder;
 
     /**
-     * @var DistanceFilterBuilderInterface
+     * @var DistanceFilterBuilder
      */
     private $distanceFilterBuilder;
 
     /**
-     * @var FilterBuilderInterface
+     * @var FilterBuilder
      */
     private $codeFilter;
 
     /**
-     * @var FilterBuilderInterface
+     * @var FilterBuilder
      */
     private $nameFilter;
 
     /**
-     * @param AddressFilterBuilderInterfaceFactory $addressFilterBuilderFactory
-     * @param DistanceFilterBuilderInterfaceFactory $distanceFilterBuilderFactory
-     * @param FilterBuilderInterfaceFactory $filterBuilderFactory
+     * @param AddressFilterBuilder $addressFilterBuilderFactory
+     * @param DistanceFilterBuilder $distanceFilterBuilderFactory
+     * @param FilterBuilderFactory $filterBuilderFactory
      * @param SearchRequestInterfaceFactory $searchRequestFactory
      */
     public function __construct(
-        AddressFilterBuilderInterfaceFactory $addressFilterBuilderFactory,
-        DistanceFilterBuilderInterfaceFactory $distanceFilterBuilderFactory,
-        FilterBuilderInterfaceFactory $filterBuilderFactory,
+        AddressFilterBuilder $addressFilterBuilderFactory,
+        DistanceFilterBuilder $distanceFilterBuilderFactory,
+        FilterBuilderFactory $filterBuilderFactory,
         SearchRequestInterfaceFactory $searchRequestFactory
     ) {
         $this->searchRequestFactory = $searchRequestFactory;
-        $this->addressFilterBuilder = $addressFilterBuilderFactory->create();
-        $this->distanceFilterBuilder = $distanceFilterBuilderFactory->create();
+        $this->addressFilterBuilder = $addressFilterBuilderFactory;
+        $this->distanceFilterBuilder = $distanceFilterBuilderFactory;
         $this->codeFilter = $filterBuilderFactory->create();
         $this->nameFilter = $filterBuilderFactory->create();
-
-        $this->compositeBuilders[self::ADDRESS_FILTER] = $this->addressFilterBuilder;
-        $this->compositeBuilders[self::DISTANCE_FILTER] = $this->distanceFilterBuilder;
-        $this->compositeBuilders[self::PICKUP_LOCATION_CODE_FILTER] = $this->codeFilter;
-        $this->compositeBuilders[self::NAME_FILTER] = $this->nameFilter;
     }
 
     /**
@@ -118,9 +105,10 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     private function buildComposite(): void
     {
-        foreach ($this->compositeBuilders as $key => $builder) {
-            $this->data[$key] = $builder->create();
-        }
+        $this->data[self::ADDRESS_FILTER] = $this->addressFilterBuilder->create();
+        $this->data[self::DISTANCE_FILTER] = $this->distanceFilterBuilder->create();
+        $this->data[self::PICKUP_LOCATION_CODE_FILTER] = $this->codeFilter->create();
+        $this->data[self::NAME_FILTER] = $this->nameFilter->create();
     }
 
     /**
@@ -322,13 +310,5 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
         $this->data[self::PAGE_SIZE] = $pageSize;
 
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getData(): array
-    {
-        return array_merge($this->data, $this->compositeBuilders);
     }
 }
