@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model;
 
-use Magento\Catalog\Model\ProductQty;
+use Magento\CatalogInventory\Model\ProductQty;
 use Magento\InventoryCatalog\Model\GetProductQtyById;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryCatalog\Model\QtyLeftChecker;
