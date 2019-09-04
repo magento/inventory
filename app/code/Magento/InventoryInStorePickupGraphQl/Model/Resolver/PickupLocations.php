@@ -100,19 +100,21 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
      */
     private function validateInput(array $args): void
     {
-        if (isset($args['search_request']['currentPage']) && $args['search_request']['currentPage'] < 1) {
-            throw new GraphQlInputException(__('currentPage value must be greater than 0.'));
+        if (isset($args['current_page']) && $args['current_page'] < 1) {
+            throw new GraphQlInputException(__('current_page value must be greater than 0.'));
         }
-        if (isset($args['search_request']['pageSize']) && $args['search_request']['pageSize'] < 1) {
-            throw new GraphQlInputException(__('pageSize value must be greater than 0.'));
+        if (isset($args['page_size']) && $args['page_size'] < 1) {
+            throw new GraphQlInputException(__('page_size value must be greater than 0.'));
         }
 
-        if (isset($args['search_request']['distance_filter']) && !(
-            $args['search_request']['distance_filter']['region'] ||
-            $args['search_request']['distance_filter']['city'] ||
-            $args['search_request']['distance_filter']['postcode']
+        if (isset($args['distance']) && !(
+            isset($args['distance']['region']) ||
+            isset($args['distance']['city']) ||
+            isset($args['distance']['postcode'])
         )) {
-            throw new GraphQlInputException(__('Region or city or postcode must be specified for distance filter.'));
+            throw new GraphQlInputException(
+                __('Region or city or postcode must be specified for the filter by distance.')
+            );
         }
     }
 
@@ -137,13 +139,13 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
         if ($searchRequest->getCurrentPage() > $maxPages && $searchResult->getTotalCount() > 0) {
             throw new GraphQlInputException(
                 __(
-                    'currentPage value %1 specified is greater than the %2 page(s) available.',
+                    'current_page value %1 specified is greater than the %2 page(s) available.',
                     [$currentPage, $maxPages]
                 )
             );
         }
 
-        return (int) $maxPages;
+        return (int)$maxPages;
     }
 
     /**
