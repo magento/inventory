@@ -45,7 +45,7 @@ class ModuleDBChangeTest extends \PHPUnit\Framework\TestCase
             } else {
                 //get current minor branch name
                 preg_match('|^(\d+\.\d+)|', $branchName, $minorBranch);
-                $branchName = $minorBranch[0];
+                $branchName = $minorBranch[0] ?? $branchName;
 
                 //get all version branches
                 preg_match_all('|^(\d+\.\d+)|m', file_get_contents($branchesFile), $matches);
