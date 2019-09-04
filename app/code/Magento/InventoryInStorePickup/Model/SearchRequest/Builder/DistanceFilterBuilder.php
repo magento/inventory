@@ -9,12 +9,11 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\DistanceFilterBuilderInterface;
 
 /**
- * @inheritdoc
+ * Distance Filter Builder.
  */
-class DistanceFilterBuilder implements DistanceFilterBuilderInterface
+class DistanceFilterBuilder
 {
     private const RADIUS = 'radius';
     private const COUNTRY = 'country';
@@ -43,7 +42,9 @@ class DistanceFilterBuilder implements DistanceFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Build Distance Filter.
+     *
+     * @return DistanceFilterInterface|null
      */
     public function create(): ?DistanceFilterInterface
     {
@@ -54,55 +55,67 @@ class DistanceFilterBuilder implements DistanceFilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Radius for Distance Filter.
+     *
+     * @param int $radius
+     *
+     * @return self
      */
-    public function setRadius(int $radius): DistanceFilterBuilderInterface
+    public function setRadius(int $radius): self
     {
         $this->data[self::RADIUS] = $radius;
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * Set Postcode for Distance Filter.
+     *
+     * @param string $postcode
+     *
+     * @return self
      */
-    public function setPostcode(string $postcode): DistanceFilterBuilderInterface
+    public function setPostcode(string $postcode): self
     {
         $this->data[self::POSTCODE] = $postcode;
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * Set City for Distance filter.
+     *
+     * @param string $city
+     *
+     * @return self
      */
-    public function setCity(string $city): DistanceFilterBuilderInterface
+    public function setCity(string $city): self
     {
         $this->data[self::CITY] = $city;
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * Set Region for Distance filter.
+     *
+     * @param string $region
+     *
+     * @return self
      */
-    public function setRegion(string $region): DistanceFilterBuilderInterface
+    public function setRegion(string $region): self
     {
         $this->data[self::REGION] = $region;
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * Set Country for Distance filter.
+     *
+     * @param string $country
+     *
+     * @return self
      */
-    public function setCountry(string $country): DistanceFilterBuilderInterface
+    public function setCountry(string $country): self
     {
         $this->data[self::COUNTRY] = $country;
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getData(): array
-    {
-        return $this->data;
     }
 }
