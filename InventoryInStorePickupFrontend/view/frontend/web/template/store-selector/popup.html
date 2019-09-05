@@ -15,10 +15,9 @@
                     id="store-selector-search-input"
                     type="text"
                     name="store-selector-search-query"
-                    placeholder="Search with postcode or city name..."
                     class="input-text"
                     maxlength="128"
-                    data-bind="textInput: searchQuery"
+                    data-bind="textInput: searchQuery, attr: { placeholder: $t('Search with postcode or city name...') }"
                 />
             </div>
         </div>
