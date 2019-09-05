@@ -6,6 +6,7 @@
         "magento/framework": "*",
         "magento/module-ui": "*",
         "magento/module-inventory-in-store-pickup-api": "*",
+        "magento/module-inventory-in-store-pickup": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-sales": "*",
         "magento/module-backend": "*"
