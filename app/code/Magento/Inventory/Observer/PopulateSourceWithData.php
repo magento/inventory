@@ -23,10 +23,8 @@ class PopulateSourceWithData implements ObserverInterface
      * @param SourceExtensionFactory $extensionFactory
      */
     public function __construct(
-//        SourceTypeLinkManagement $sourceTypeLinkManagement,
         SourceExtensionFactory $extensionFactory
     ) {
-//        $this->sourceTypeLinkManagement = $sourceTypeLinkManagement;
         $this->extensionFactory = $extensionFactory;
     }
 

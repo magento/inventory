@@ -58,21 +58,6 @@ interface SourceTypeLinkInterface extends ExtensibleDataInterface
     public function setTypeCode(?string $sourceCode): void;
 
     /**
-     * Get position
-     *
-     * @return int|null
-     */
-    public function getPosition(): ?int;
-
-    /**
-     * Set position
-     *
-     * @param int|null $position
-     * @return void
-     */
-    public function setPosition(?int $position): void;
-
-    /**
      * Retrieve existing extension attributes object
      *
      * @return \Magento\InventoryApi\Api\Data\SourceCarrierLinkExtensionInterface|null

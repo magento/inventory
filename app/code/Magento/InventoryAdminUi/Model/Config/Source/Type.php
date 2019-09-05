@@ -8,7 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryAdminUi\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Inventory\Model\ResourceModel\Source\Type as resourceModel;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Inventory\Model\ResourceModel\Source\Type as SourceTypeResource;
 
 /**
  * Class Type
@@ -17,16 +18,14 @@ use Magento\Inventory\Model\ResourceModel\Source\Type as resourceModel;
 class Type implements OptionSourceInterface
 {
     /**
-     * @var \Magento\Cms\Model\Page
+     * @var SourceTypeResource
      */
-    protected $resourceModel;
+    private $resourceModel;
 
     /**
-     * Constructor
-     *
-     * @param \Magento\Cms\Model\Page $cmsPage
+     * @param SourceTypeResource $resourceModel
      */
-    public function __construct(resourceModel $resourceModel)
+    public function __construct(SourceTypeResource $resourceModel)
     {
         $this->resourceModel = $resourceModel;
     }
@@ -36,7 +35,7 @@ class Type implements OptionSourceInterface
      *
      * @codeCoverageIgnore
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function toOptionArray()
     {

@@ -22,14 +22,6 @@ class SourceTypeLink extends AbstractExtensibleModel implements SourceTypeLinkIn
     /**
      * @inheritdoc
      */
-    protected function _construct()
-    {
-        $this->_init(SourceTypeLinkResourceModel::class);
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getSourceCode(): ?string
     {
         return $this->getData(self::SOURCE_CODE);
@@ -57,24 +49,6 @@ class SourceTypeLink extends AbstractExtensibleModel implements SourceTypeLinkIn
     public function setTypeCode(?string $typeCode): void
     {
         $this->setData(self::TYPE_CODE, $typeCode);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPosition(): ?int
-    {
-        return $this->getData(self::POSITION) === null ?
-            null:
-            (int)$this->getData(self::POSITION);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setPosition(?int $position): void
-    {
-        $this->setData(self::POSITION, $position);
     }
 
     /**

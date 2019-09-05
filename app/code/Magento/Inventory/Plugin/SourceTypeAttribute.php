@@ -16,7 +16,7 @@ class SourceTypeAttribute
     /**
      * @var SourceTypeLinkManagement
      */
-    protected $sourceTypeLinkManagement;
+    private $sourceTypeLinkManagement;
 
     /**
      * SourceTypeAttribute constructor.

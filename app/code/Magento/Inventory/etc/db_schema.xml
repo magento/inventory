@@ -42,8 +42,6 @@
         <column xsi:type="int" name="link_id" padding="10" unsigned="true" nullable="false" identity="true"/>
         <column xsi:type="varchar" name="source_code" nullable="false" length="255"/>
         <column xsi:type="varchar" name="type_code" nullable="false" length="255"/>
-        <column xsi:type="smallint" name="position" padding="5" unsigned="true" nullable="true" identity="false"
-                default="0"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="link_id"/>
         </constraint>
