@@ -46,7 +46,7 @@
                 <dataType>string</dataType>
                 <label translate="true">Frontend Name</label>
                 <tooltip>
-                    <description translate="true">Pickup Location Name visible for the customer on checkout</description>
+                    <description translate="true">Pickup Location Name visible for the customer on checkout.</description>
                 </tooltip>
             </settings>
         </field>

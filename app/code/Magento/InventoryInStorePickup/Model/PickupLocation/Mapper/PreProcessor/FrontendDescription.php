@@ -31,11 +31,16 @@ class FrontendDescription implements PreProcessorInterface
     }
 
     /**
-     * @inheritdoc
+     * Process Source Field before pass it to Pickup Location
+     *
+     * @param SourceInterface $source
+     * @param string|null $value Source Field Value
+     *
+     * @return string|null
      * @throws \Exception
      */
-    public function process(SourceInterface $source, $value): string
+    public function process(SourceInterface $source, $value): ?string
     {
-        return $value ? $this->templateFilter->filter($value) : $value;
+        return $value ? $this->templateFilter->filter($value) : null;
     }
 }
