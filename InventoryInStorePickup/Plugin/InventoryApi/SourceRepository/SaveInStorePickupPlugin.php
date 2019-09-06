@@ -39,7 +39,7 @@ class SaveInStorePickupPlugin
             $source->setData(Location::IS_PICKUP_LOCATION_ACTIVE, $extensionAttributes->getIsPickupLocationActive());
             $source->setData(Location::FRONTEND_DESCRIPTION, $extensionAttributes->getFrontendDescription());
             $source->setData(Location::FRONTEND_NAME, $extensionAttributes->getFrontendName());
-        } else if (empty($source->getData(Location::FRONTEND_NAME))) {
+        } elseif ($source->getData(Location::FRONTEND_NAME) === null) {
             $source->setData(Location::FRONTEND_NAME, $source->getName());
         }
 
