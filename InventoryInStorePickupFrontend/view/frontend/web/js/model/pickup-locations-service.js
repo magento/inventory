@@ -127,6 +127,7 @@ define([
                     country_id: location.country_id,
                     telephone: location.telephone,
                     region_id: location.region_id,
+                    save_in_address_book: 0,
                     custom_attributes: {
                         sourceCode: location.source_code,
                     },
