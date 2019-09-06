@@ -16,6 +16,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverI
 
 /**
  * Calculate Distance Based Filter and resolve part for Search Criteria Builder.
+ *
  * Apply filter by Source Codes, limited by distance and assignment to the Scope.
  */
 class ResolveDistanceFilter implements BuilderPartsResolverInterface
