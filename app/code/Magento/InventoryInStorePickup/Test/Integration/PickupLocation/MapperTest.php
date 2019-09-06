@@ -131,6 +131,7 @@ class MapperTest extends TestCase
     {
         $source = $this->sourceRepository->get($this->sourceCode);
         $source->getExtensionAttributes()->setFrontendName(null);
+        $this->sourceRepository->save($source);
 
         /** @var  Mapper $mapper */
         $mapper = $this->objectManager->create(Mapper::class);
