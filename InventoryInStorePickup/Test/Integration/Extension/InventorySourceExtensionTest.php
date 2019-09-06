@@ -38,11 +38,11 @@ class InventorySourceExtensionTest extends TestCase
     {
         $pickupLocationConfig = [
             'default' => ['active' => false, 'name' => 'default', 'desc' => 'default'],
-            'eu-1' => ['active' => true, 'name' => '', 'desc' => ''],
-            'eu-2' => ['active' => true, 'name' => 'zzz', 'desc' => ''],
-            'eu-3' => ['active' => false, 'name' => '', 'desc' => 'zzz1'],
-            'eu-disabled' => ['active' => false, 'name' => '', 'desc' => ''],
-            'us-1' => ['active' => true, 'name' => '666', 'desc' => ''],
+            'eu-1' => ['active' => true, 'name' => 'EU-source-1', 'desc' => null],
+            'eu-2' => ['active' => true, 'name' => 'zzz', 'desc' => null],
+            'eu-3' => ['active' => false, 'name' => 'EU-source-3', 'desc' => 'zzz1'],
+            'eu-disabled' => ['active' => false, 'name' => 'EU-source-disabled', 'desc' => null],
+            'us-1' => ['active' => true, 'name' => '666', 'desc' => null],
         ];
 
         $searchResult = $this->sourceRepository->getList();
