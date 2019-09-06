@@ -14,30 +14,15 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
 /**
- * Add Pickup Location related filters to the Search Criteria.
+ * Add default filters to the Search Criteria Builder.
  */
-class ResolvePickupLocationFilters implements BuilderPartsResolverInterface
+class ResolveDefaultFilters implements BuilderPartsResolverInterface
 {
     /**
      * @inheritdoc
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
-        if ($searchRequest->getNameFilter()) {
-            $searchCriteriaBuilder->addFilter(
-                PickupLocationInterface::FRONTEND_NAME,
-                $searchRequest->getNameFilter()->getValue(),
-                $searchRequest->getNameFilter()->getConditionType()
-            );
-        }
-
-        if ($searchRequest->getPickupLocationCodeFilter()) {
-            $searchCriteriaBuilder->addFilter(
-                SourceInterface::SOURCE_CODE,
-                $searchRequest->getPickupLocationCodeFilter()->getValue(),
-                $searchRequest->getPickupLocationCodeFilter()->getConditionType()
-            );
-        }
         $searchCriteriaBuilder->addFilter(SourceInterface::ENABLED, true);
         $searchCriteriaBuilder->addFilter(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE, true);
     }

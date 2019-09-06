@@ -52,16 +52,16 @@
     <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface">
         <arguments>
             <argument name="resolvers" xsi:type="array">
-                <item name="resolve-address-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveAddressFilter</item>
+                <item name="resolve-default-filters" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDefaultFilters</item>
+                <item name="resolve-filter-set" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveFilterSet</item>
                 <item name="resolve-distance-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDistanceFilter</item>
                 <item name="resolve-scope-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveScopeFilter</item>
-                <item name="resolve-pickup-location-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolvePickupLocationFilters</item>
-                <item name="resolve-search-request-meta" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveSearchRequestMeta</item>
+                <item name="resolve-meta" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveMeta</item>
             </argument>
         </arguments>
     </type>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\AddressFilter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\FilterSet" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filter" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest" />
     <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequestBuilder" />

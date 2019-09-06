@@ -62,16 +62,16 @@ class CombinedTest extends TestCase
      *
      * @magentoDbIsolation disabled
      */
-    public function testExecuteDistanceFilterWithAddressFilter()
+    public function testExecuteDistanceFilterWithAddressFilters()
     {
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
                                                     ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
                                                     ->setDistanceFilterRadius(750)
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setDistanceFilterCountry('DE')
-                                                    ->setAddressCityFilter('Kolbermoor,Mitry-Mory', 'in')
-                                                    ->setAddressRegionIdFilter('259')
-                                                    ->setAddressRegionFilter('Seine-et-Marne')
+                                                    ->setCityFilter('Kolbermoor,Mitry-Mory', 'in')
+                                                    ->setRegionIdFilter('259')
+                                                    ->setRegionFilter('Seine-et-Marne')
                                                     ->create();
 
         /** @var SearchResultInterface $result */
@@ -135,7 +135,7 @@ class CombinedTest extends TestCase
      *
      * @magentoDbIsolation disabled
      */
-    public function testExecuteWithAllFilters()
+    public function testExecuteWithAll()
     {
         $sort = $this->sortOrderBuilder->setField(DistanceFilterInterface::DISTANCE_FIELD)
             ->setDirection(SortOrder::SORT_DESC)
@@ -147,10 +147,10 @@ class CombinedTest extends TestCase
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setNameFilter('source', 'fulltext')
-                                                    ->setAddressCityFilter(
+                                                    ->setCityFilter(
                                                         'Kolbermoor,Mitry-Mory,Burlingame',
                                                         'in'
-                                                    )->setAddressCountryFilter('DE', 'neq')
+                                                    )->setCountryFilter('DE', 'neq')
                                                     ->setPageSize(2)
                                                     ->setCurrentPage(2)
                                                     ->setSortOrders([$sort])

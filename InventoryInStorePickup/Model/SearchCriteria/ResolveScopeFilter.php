@@ -56,7 +56,7 @@ class ResolveScopeFilter implements BuilderPartsResolverInterface
     /**
      * @inheritdoc
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
