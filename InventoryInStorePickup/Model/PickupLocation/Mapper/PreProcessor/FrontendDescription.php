@@ -35,9 +35,9 @@ class FrontendDescription implements PreProcessorInterface
      *
      * @param SourceInterface $source
      * @param string|null $value Source Field Value
-     *
      * @return string|null
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function process(SourceInterface $source, $value): ?string
     {
