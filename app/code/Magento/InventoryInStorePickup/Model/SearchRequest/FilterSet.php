@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 
 /**
  * @inheritdoc
  */
-class AddressFilter implements AddressFilterInterface
+class FilterSet implements FilterSetInterface
 {
     /**
      * @var FilterInterface|null
@@ -46,6 +46,18 @@ class AddressFilter implements AddressFilterInterface
     private $streetFilter;
 
     /**
+     * @var FilterInterface|null
+     */
+    private $nameFilter;
+
+    /**
+     * @var FilterInterface|null
+     */
+    private $pickupLocationCodeFilter;
+
+    /**
+     * @param FilterInterface|null $nameFilter
+     * @param FilterInterface|null $pickupLocationCodeFilter
      * @param FilterInterface|null $countryFilter
      * @param FilterInterface|null $postcodeFilter
      * @param FilterInterface|null $regionFilter
@@ -54,6 +66,8 @@ class AddressFilter implements AddressFilterInterface
      * @param FilterInterface|null $streetFilter
      */
     public function __construct(
+        ?FilterInterface $nameFilter = null,
+        ?FilterInterface $pickupLocationCodeFilter = null,
         ?FilterInterface $countryFilter = null,
         ?FilterInterface $postcodeFilter = null,
         ?FilterInterface $regionFilter = null,
@@ -67,6 +81,8 @@ class AddressFilter implements AddressFilterInterface
         $this->regionIdFilter = $regionIdFilter;
         $this->cityFilter = $cityFilter;
         $this->streetFilter = $streetFilter;
+        $this->nameFilter = $nameFilter;
+        $this->pickupLocationCodeFilter = $pickupLocationCodeFilter;
     }
 
     /**
@@ -115,5 +131,21 @@ class AddressFilter implements AddressFilterInterface
     public function getStreetFilter(): ?FilterInterface
     {
         return $this->streetFilter;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getNameFilter(): ?FilterInterface
+    {
+        return $this->nameFilter;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPickupLocationCodeFilter(): ?FilterInterface
+    {
+        return $this->pickupLocationCodeFilter;
     }
 }

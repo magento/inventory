@@ -7,20 +7,22 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterfaceFactory;
 
 /**
- * Address Filter Builder.
+ * Filter Set Builder.
  */
-class AddressFilterBuilder
+class FilterSetBuilder
 {
-    private const COUNTRY_FILTER   = 'countryFilter';
-    private const POSTCODE_FILTER  = 'postcodeFilter';
-    private const REGION_FILTER    = 'regionFilter';
+    private const COUNTRY_FILTER = 'countryFilter';
+    private const POSTCODE_FILTER = 'postcodeFilter';
+    private const REGION_FILTER = 'regionFilter';
     private const REGION_ID_FILTER = 'regionIdFilter';
-    private const CITY_FILTER      = 'cityFilter';
-    private const STREET_FILTER    = 'streetFilter';
+    private const CITY_FILTER = 'cityFilter';
+    private const STREET_FILTER = 'streetFilter';
+    private const NAME_FILTER = 'nameFilter';
+    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCodeFilter';
 
     /**
      * Filter data.
@@ -35,28 +37,28 @@ class AddressFilterBuilder
     private $filterBuilderFactory;
 
     /**
-     * @var AddressFilterInterfaceFactory
+     * @var FilterSetInterfaceFactory
      */
-    private $addressFilterFactory;
+    private $filterSetFactory;
 
     /**
      * @param FilterBuilderFactory $filterBuilderFactory
-     * @param AddressFilterInterfaceFactory $addressFilterFactory
+     * @param FilterSetInterfaceFactory $filterSetFactory
      */
     public function __construct(
         FilterBuilderFactory $filterBuilderFactory,
-        AddressFilterInterfaceFactory $addressFilterFactory
+        FilterSetInterfaceFactory $filterSetFactory
     ) {
         $this->filterBuilderFactory = $filterBuilderFactory;
-        $this->addressFilterFactory = $addressFilterFactory;
+        $this->filterSetFactory = $filterSetFactory;
     }
 
     /**
-     * Build Address Filter.
+     * Build Filter Set.
      *
-     * @return AddressFilterInterface|null
+     * @return FilterSetInterface|null
      */
-    public function create(): ?AddressFilterInterface
+    public function create(): ?FilterSetInterface
     {
         $data = $this->data;
         $this->data = [];
@@ -69,7 +71,39 @@ class AddressFilterBuilder
             $data[$key] = $value->create();
         }
 
-        return empty($data) ? null : $this->addressFilterFactory->create($data);
+        return empty($data) ? null : $this->filterSetFactory->create($data);
+    }
+
+    /**
+     * Set Name filter.
+     *
+     * @param string $name
+     * @param string|null $condition
+     *
+     * @return FilterSetBuilder
+     */
+    public function setNameFilter(string $name, ?string $condition = null): self
+    {
+        $filterBuilder = $this->filterBuilderFactory->create()->setValue($name)->setConditionType($condition);
+        $this->data[self::NAME_FILTER] = $filterBuilder;
+
+        return $this;
+    }
+
+    /**
+     * Set Pickup Location Code filter.
+     *
+     * @param string $code
+     * @param string|null $condition
+     *
+     * @return FilterSetBuilder
+     */
+    public function setPickupLocationCodeFilter(string $code, ?string $condition = null): self
+    {
+        $filterBuilder = $this->filterBuilderFactory->create()->setValue($code)->setConditionType($condition);
+        $this->data[self::PICKUP_LOCATION_CODE_FILTER] = $filterBuilder;
+
+        return $this;
     }
 
     /**

@@ -16,9 +16,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * Integration tests coverage for @see \Magento\InventoryInStorePickup\Model\GetPickupLocations.
  *
- * Cover usage of Address Filter.
+ * Cover usage of Filter Set.
  */
-class AddressFilterTest extends TestCase
+class FilterSetTest extends TestCase
 {
     /**
      * @var GetPickupLocations
@@ -86,39 +86,47 @@ class AddressFilterTest extends TestCase
     {
         switch ($field) {
             case 'country':
-                $this->searchRequestBuilder->setAddressCountryFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setCountryFilter($condition['value'], $condition['condition']);
                 break;
             case 'region':
-                $this->searchRequestBuilder->setAddressRegionFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setRegionFilter($condition['value'], $condition['condition']);
                 break;
             case 'region_id':
-                $this->searchRequestBuilder->setAddressRegionIdFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setRegionIdFilter($condition['value'], $condition['condition']);
                 break;
             case 'city':
-                $this->searchRequestBuilder->setAddressCityFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setCityFilter($condition['value'], $condition['condition']);
                 break;
             case 'postcode':
-                $this->searchRequestBuilder->setAddressPostcodeFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setPostcodeFilter($condition['value'], $condition['condition']);
                 break;
             case 'street':
-                $this->searchRequestBuilder->setAddressStreetFilter($condition['value'], $condition['condition']);
+                $this->searchRequestBuilder->setStreetFilter($condition['value'], $condition['condition']);
+                break;
+            case 'pickup_location_code':
+                $this->searchRequestBuilder->setPickupLocationCodeFilter($condition['value'], $condition['condition']);
+                break;
+            case 'name':
+                $this->searchRequestBuilder->setNameFilter($condition['value'], $condition['condition']);
                 break;
             default:
                 throw new \InvalidArgumentException(
-                    sprintf('Invalid field provided for Address Filter Test: %s', $field)
+                    sprintf('Invalid field provided for Filter Set Test: %s', $field)
                 );
         }
     }
 
     /**
      * [
-     *      Address Filter[
+     *      Filter Set[
      *          Country,
      *          Region,
      *          RegionId,
      *          City,
      *          Postcode,
      *          Street,
+     *          Name,
+     *          PickupLocationCode
      *      ],
      *      Sales Channel Code,
      *      Expected Pickup Location Codes[]
@@ -310,7 +318,78 @@ class AddressFilterTest extends TestCase
               ],
               'global_website',
               ['eu-3']
-            ]
+            ],
+            [ /* Data set #23 */
+                [
+                    'pickup_location_code' => ['value' => 'eu-1', 'condition' => 'eq']
+                ],
+                'eu_website',
+                ['eu-1']
+            ],
+            [ /* Data set #24 */
+              [
+                  'pickup_location_code' => ['value' => 'eu-1,eu-3', 'condition' => 'in']
+              ],
+              'eu_website',
+              ['eu-1', 'eu-3']
+            ],
+            [ /* Data set #25 */
+              [
+                  'pickup_location_code' => ['value' => 'eu%', 'condition' => 'like']
+              ],
+              'global_website',
+              ['eu-1', 'eu-3']
+            ],
+            [ /* Data set #26 */
+              [
+                  'pickup_location_code' => ['value' => 'u', 'condition' => 'fulltext']
+              ],
+              'global_website',
+              ['eu-1', 'eu-3', 'us-1']
+            ],
+            [ /* Data set #27 */
+              [
+                  'pickup_location_code' => ['value' => 'eu-2', 'condition' => 'eq']
+              ],
+              'eu_website',
+              []
+            ],
+            [ /* Data set #28 */
+              [
+                  'name' => ['value' => 'EU-source-1', 'condition' => 'eq']
+              ],
+              'eu_website',
+              ['eu-1']
+            ],
+            [ /* Data set #29 */
+              [
+                  'name' => ['value' => 'source', 'condition' => 'fulltext']
+              ],
+              'global_website',
+              ['eu-1', 'eu-3', 'us-1']
+            ],
+            [ /* Data set #30 */
+              [
+                  'name' => ['value' => 'source', 'condition' => 'fulltext'],
+                  'pickup_location_code' => ['value' => 'eu%', 'condition' => 'like']
+              ],
+              'global_website',
+              ['eu-1', 'eu-3']
+            ],
+            [ /* Data set #31 */
+              [
+                  'country' => ['value' => 'FR', 'condition' => 'neq'],
+                  'region' => ['value' => 'Bayern', 'condition' => 'eq'],
+                  'region_id' => ['value' => '81', 'condition' => 'eq'],
+                  'city' => ['value' => 'K%', 'condition' => 'like'],
+                  'postcode' => ['value' => '83059,13100', 'condition' => 'in'],
+                  'street' => ['value' => 'heimer', 'condition' => 'fulltext'],
+                  'name' => ['value' => 'source', 'condition' => 'fulltext'],
+                  'pickup_location_code' => ['value' => 'eu%', 'condition' => 'like']
+              ],
+              'global_website',
+              ['eu-3']
+            ],
         ];
     }
 }

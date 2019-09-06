@@ -8,13 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
 /**
- * Filter to filter by Address Fields.
+ * Filter to filter by Fields.
  * Each field may be filtered with different condition type.
- * Supported types restricted by @see \Magento\Framework\Api\SearchCriteriaInterface
+ * Supported condition types restricted by @see \Magento\Framework\Api\SearchCriteriaInterface
  *
  * @api
  */
-interface AddressFilterInterface
+interface FilterSetInterface
 {
     /**
      * Get Filter by Country.
@@ -57,4 +57,18 @@ interface AddressFilterInterface
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
     public function getStreetFilter(): ?FilterInterface;
+
+    /**
+     * Get Filter by Name.
+     *
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
+     */
+    public function getNameFilter(): ?FilterInterface;
+
+    /**
+     * Get Filter by Pickup Location Code.
+     *
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
+     */
+    public function getPickupLocationCodeFilter(): ?FilterInterface;
 }

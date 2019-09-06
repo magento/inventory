@@ -25,64 +25,64 @@ interface SearchRequestBuilderInterface
     public function create(): SearchRequestInterface;
 
     /**
-     * Set Street for filter by address.
+     * Set filter by Street.
      *
      * @param string $street
      * @param string|null $condition
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setAddressStreetFilter(string $street, ?string $condition = null): self;
+    public function setStreetFilter(string $street, ?string $condition = null): self;
 
     /**
-     * Set Postcode for filter by address.
+     * Set filter by Postcode.
      *
      * @param string $postcode
      * @param string|null $condition
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setAddressPostcodeFilter(string $postcode, ?string $condition = null): self;
+    public function setPostcodeFilter(string $postcode, ?string $condition = null): self;
 
     /**
-     * Set City for filter by address.
+     * Set filter by City.
      *
      * @param string $city
      * @param string|null $condition
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setAddressCityFilter(string $city, ?string $condition = null): self;
+    public function setCityFilter(string $city, ?string $condition = null): self;
 
     /**
-     * Set Region Id for filter by address.
+     * Set filter by Region Id.
      *
      * @param string $regionId
      * @param string|null $condition
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setAddressRegionIdFilter(string $regionId, ?string $condition = null): self;
+    public function setRegionIdFilter(string $regionId, ?string $condition = null): self;
 
     /**
-     * Set Region for filter by address.
+     * Set filter by Region.
      *
      * @param string $region
      * @param string|null $condition
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setAddressRegionFilter(string $region, ?string $condition = null): self;
+    public function setRegionFilter(string $region, ?string $condition = null): self;
 
     /**
-     * Set country for filter by address.
+     * Set filter by Country Code.
      *
      * @param string $country
      * @param string|null $condition
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setAddressCountryFilter(string $country, ?string $condition): self;
+    public function setCountryFilter(string $country, ?string $condition): self;
 
     /**
      * Set Radius for Distance Filter.
@@ -157,7 +157,7 @@ interface SearchRequestBuilderInterface
     public function setScopeType(string $scopeType): self;
 
     /**
-     * Add filter by Pickup Location Code.
+     * Set filter by Pickup Location Code.
      *
      * @param string $code
      * @param string|null $condition
@@ -177,7 +177,7 @@ interface SearchRequestBuilderInterface
     public function setNameFilter(string $name, ?string $condition = null): self;
 
     /**
-     * Set current page. Not required.
+     * Set Current Page.
      *
      * @param int $page
      *
@@ -186,7 +186,7 @@ interface SearchRequestBuilderInterface
     public function setCurrentPage(int $page): self;
 
     /**
-     * Set page size. Not required.
+     * Set Page Size.
      *
      * @param int $pageSize
      *
