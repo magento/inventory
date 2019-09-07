@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SearchRequestBuilderTest extends TestCase
 {
-    private const VALUE          = 'value';
+    private const VALUE = 'value';
     private const CONDITION_TYPE = 'condition_type';
 
     /**
@@ -83,14 +83,14 @@ class SearchRequestBuilderTest extends TestCase
                                    ->create()
         ];
 
-        $this->searchRequestBuilder->setAddressStreetFilter(
+        $this->searchRequestBuilder->setStreetFilter(
             $addressStreetFilter[self::VALUE],
             $addressStreetFilter[self::CONDITION_TYPE]
-        )->setAddressPostcodeFilter($addressPostcodeFilter[self::VALUE], $addressPostcodeFilter[self::CONDITION_TYPE])
-            ->setAddressCityFilter($addressCityFilter[self::VALUE], $addressCityFilter[self::CONDITION_TYPE])
-            ->setAddressRegionIdFilter($addressRegionId[self::VALUE], $addressRegionId[self::CONDITION_TYPE])
-            ->setAddressRegionFilter($addressRegion[self::VALUE], $addressRegion[self::CONDITION_TYPE])
-            ->setAddressCountryFilter($addressCountry[self::VALUE], $addressCountry[self::CONDITION_TYPE])
+        )->setPostcodeFilter($addressPostcodeFilter[self::VALUE], $addressPostcodeFilter[self::CONDITION_TYPE])
+            ->setCityFilter($addressCityFilter[self::VALUE], $addressCityFilter[self::CONDITION_TYPE])
+            ->setRegionIdFilter($addressRegionId[self::VALUE], $addressRegionId[self::CONDITION_TYPE])
+            ->setRegionFilter($addressRegion[self::VALUE], $addressRegion[self::CONDITION_TYPE])
+            ->setCountryFilter($addressCountry[self::VALUE], $addressCountry[self::CONDITION_TYPE])
             ->setDistanceFilterRadius($distanceFilterRadius)
             ->setDistanceFilterCountry($distanceFilterCountry)
             ->setDistanceFilterRegion($distanceFilterRegion)
@@ -106,37 +106,46 @@ class SearchRequestBuilderTest extends TestCase
 
         $searchRequest = $this->searchRequestBuilder->create();
 
-        $addressFilter = $searchRequest->getAddressFilter();
-        $this->assertEquals($addressStreetFilter[self::VALUE], $addressFilter->getStreetFilter()->getValue());
+        $filterSet = $searchRequest->getFilterSet();
+        $this->assertEquals($addressStreetFilter[self::VALUE], $filterSet->getStreetFilter()->getValue());
         $this->assertEquals(
             $addressStreetFilter[self::CONDITION_TYPE],
-            $addressFilter->getStreetFilter()->getConditionType()
+            $filterSet->getStreetFilter()->getConditionType()
         );
-        $this->assertEquals($addressPostcodeFilter[self::VALUE], $addressFilter->getPostcodeFilter()->getValue());
+        $this->assertEquals($addressPostcodeFilter[self::VALUE], $filterSet->getPostcodeFilter()->getValue());
         $this->assertEquals(
             $addressPostcodeFilter[self::CONDITION_TYPE],
-            $addressFilter->getPostcodeFilter()->getConditionType()
+            $filterSet->getPostcodeFilter()->getConditionType()
         );
-        $this->assertEquals($addressCityFilter[self::VALUE], $addressFilter->getCityFilter()->getValue());
+        $this->assertEquals($addressCityFilter[self::VALUE], $filterSet->getCityFilter()->getValue());
         $this->assertEquals(
             $addressCityFilter[self::CONDITION_TYPE],
-            $addressFilter->getCityFilter()->getConditionType()
+            $filterSet->getCityFilter()->getConditionType()
         );
-        $this->assertEquals($addressRegionId[self::VALUE], $addressFilter->getRegionIdFilter()->getValue());
+        $this->assertEquals($addressRegionId[self::VALUE], $filterSet->getRegionIdFilter()->getValue());
         $this->assertEquals(
             $addressRegionId[self::CONDITION_TYPE],
-            $addressFilter->getRegionIdFilter()->getConditionType()
+            $filterSet->getRegionIdFilter()->getConditionType()
         );
-        $this->assertEquals($addressRegion[self::VALUE], $addressFilter->getRegionFilter()->getValue());
+        $this->assertEquals($addressRegion[self::VALUE], $filterSet->getRegionFilter()->getValue());
         $this->assertEquals(
             $addressRegion[self::CONDITION_TYPE],
-            $addressFilter->getRegionFilter()->getConditionType()
+            $filterSet->getRegionFilter()->getConditionType()
         );
-        $this->assertEquals($addressCountry[self::VALUE], $addressFilter->getCountryFilter()->getValue());
+        $this->assertEquals($addressCountry[self::VALUE], $filterSet->getCountryFilter()->getValue());
         $this->assertEquals(
             $addressCountry[self::CONDITION_TYPE],
-            $addressFilter->getCountryFilter()->getConditionType()
+            $filterSet->getCountryFilter()->getConditionType()
         );
+
+        $this->assertEquals($codeFilter[self::VALUE], $filterSet->getPickupLocationCodeFilter()->getValue());
+        $this->assertEquals(
+            $codeFilter[self::CONDITION_TYPE],
+            $filterSet->getPickupLocationCodeFilter()->getConditionType()
+        );
+
+        $this->assertEquals($nameFilter[self::VALUE], $filterSet->getNameFilter()->getValue());
+        $this->assertEquals($nameFilter[self::CONDITION_TYPE], $filterSet->getNameFilter()->getConditionType());
 
         $distanceFilter = $searchRequest->getDistanceFilter();
 
@@ -150,15 +159,6 @@ class SearchRequestBuilderTest extends TestCase
         $this->assertEquals($scopeType, $searchRequest->getScopeType());
         $this->assertEquals($currentPage, $searchRequest->getCurrentPage());
         $this->assertEquals($pageSize, $searchRequest->getPageSize());
-
-        $this->assertEquals($codeFilter[self::VALUE], $searchRequest->getPickupLocationCodeFilter()->getValue());
-        $this->assertEquals(
-            $codeFilter[self::CONDITION_TYPE],
-            $searchRequest->getPickupLocationCodeFilter()->getConditionType()
-        );
-
-        $this->assertEquals($nameFilter[self::VALUE], $searchRequest->getNameFilter()->getValue());
-        $this->assertEquals($nameFilter[self::CONDITION_TYPE], $searchRequest->getNameFilter()->getConditionType());
 
         foreach ($searchRequest->getSort() as $key => $sortOrder) {
             $this->assertSame($sortOrders[$key], $sortOrder);
