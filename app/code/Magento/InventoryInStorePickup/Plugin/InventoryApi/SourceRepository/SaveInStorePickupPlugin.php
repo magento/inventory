@@ -38,11 +38,34 @@ class SaveInStorePickupPlugin
         if ($extensionAttributes !== null) {
             $source->setData(Location::IS_PICKUP_LOCATION_ACTIVE, $extensionAttributes->getIsPickupLocationActive());
             $source->setData(Location::FRONTEND_DESCRIPTION, $extensionAttributes->getFrontendDescription());
-            $source->setData(Location::FRONTEND_NAME, $extensionAttributes->getFrontendName());
-        } elseif ($source->getData(Location::FRONTEND_NAME) === null) {
-            $source->setData(Location::FRONTEND_NAME, $source->getName());
         }
 
+        $this->setFrontendName($source, $extensionAttributes);
+
         return [$source];
+    }
+    
+    /**
+     * Set Frontend Name to Source.
+     * Extension Attributes are not set and Source Frontend Name is missed -> use Source Name
+     * Extension Attributes are not set and Source Frontend Name is set -> do nothing
+     * Extension Attributes are set and Frontend Name attribute is missed -> use Source Name
+     * Extension Attributes are set and Frontend Name attribute is set -> use Frontend Name attribute
+     *
+     * @param SourceInterface|DataObject $source
+     * @param SourceExtensionInterface|null $extensionAttributes
+     */
+    private function setFrontendName(SourceInterface $source, ?SourceExtensionInterface $extensionAttributes): void
+    {
+        if ($extensionAttributes === null && $source->getData(Location::FRONTEND_NAME) === null ||
+            $extensionAttributes && $extensionAttributes->getFrontendName() === null
+        ) {
+            $source->setData(Location::FRONTEND_NAME, $source->getName());
+            return;
+        }
+
+        if ($extensionAttributes) {
+            $source->setData(Location::FRONTEND_NAME, $extensionAttributes->getFrontendName());
+        }
     }
 }
