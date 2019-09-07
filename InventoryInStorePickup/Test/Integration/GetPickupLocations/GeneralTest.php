@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Integration tests coverage for @see \Magento\InventoryInStorePickup\Model\GetPickupLocations.
  *
- * Cover usage of Pickup Location filters, base sort and paging.
+ * Cover usage of base sort and paging.
  */
 class GeneralTest extends TestCase
 {
@@ -53,8 +53,6 @@ class GeneralTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      *
-     * @param array $codeFilter
-     * @param array $nameFilter
      * @param string $salesChannelCode
      * @param array $paging
      * @param int $expectedTotalCount
@@ -67,21 +65,12 @@ class GeneralTest extends TestCase
      * @magentoDbIsolation disabled
      */
     public function testExecute(
-        array $codeFilter,
-        array $nameFilter,
         string $salesChannelCode,
         array $paging,
         int $expectedTotalCount,
         array $sortOrder,
         array $sortedPickupLocationCodes
     ): void {
-        if (!empty($codeFilter)) {
-            $this->searchRequestBuilder->setPickupLocationCodeFilter($codeFilter['value'], $codeFilter['condition']);
-        }
-
-        if (!empty($nameFilter)) {
-            $this->searchRequestBuilder->setNameFilter($nameFilter['value'], $nameFilter['condition']);
-        }
 
         if (!empty($paging)) {
             $this->searchRequestBuilder->setPageSize(current($paging));
@@ -113,14 +102,6 @@ class GeneralTest extends TestCase
 
     /**
      * [
-     *      Pickup Location Code Filter[
-     *          Value,
-     *          Condition
-     *      ],
-     *      Name Filter[
-     *          Value,
-     *          Condition
-     *      ],
      *      Sales Channel Code,
      *      Page[
      *          Page Size,
@@ -143,116 +124,34 @@ class GeneralTest extends TestCase
     {
         return [
             [ /* Data set #0 */
-              ['value' => 'eu-1', 'condition' => 'eq'],
+              'global_website',
               [],
-              'eu_website',
+              3,
               [],
-              1,
-              [],
-              ['eu-1']
+              ['eu-1', 'eu-3', 'us-1']
             ],
             [ /* Data set #1 */
-              ['value' => 'eu-1,eu-3', 'condition' => 'in'],
+              'global_website',
               [],
-              'eu_website',
+              3,
               [],
-              2,
-              [],
-              ['eu-1', 'eu-3']
+              ['eu-1', 'eu-3', 'us-1']
             ],
             [ /* Data set #2 */
-              ['value' => 'eu%', 'condition' => 'like'],
-              [],
-              'global_website',
-              [],
-              2,
-              [],
-              ['eu-1', 'eu-3']
-            ],
-            [ /* Data set #3 */
-              ['value' => 'u', 'condition' => 'fulltext'],
-              [],
-              'global_website',
-              [],
-              3,
-              [],
-              ['eu-1', 'eu-3', 'us-1']
-            ],
-            [ /* Data set #4 */
-              ['value' => 'eu-2', 'condition' => 'eq'],
-              [],
-              'eu_website',
-              [],
-              0,
-              [],
-              []
-            ],
-            [ /* Data set #5 */
-              [],
-              ['value' => 'EU-source-1', 'condition' => 'eq'],
-              'eu_website',
-              [],
-              1,
-              [],
-              ['eu-1']
-            ],
-            [ /* Data set #6 */
-              [],
-              ['value' => 'source', 'condition' => 'fulltext'],
-              'global_website',
-              [],
-              3,
-              [],
-              ['eu-1', 'eu-3', 'us-1']
-            ],
-            [ /* Data set #7 */
-              ['value' => 'eu%', 'condition' => 'like'],
-              ['value' => 'source', 'condition' => 'fulltext'],
-              'global_website',
-              [],
-              2,
-              [],
-              ['eu-1', 'eu-3']
-            ],
-            [ /* Data set #8 */
-              [],
-              [],
-              'global_website',
-              [],
-              3,
-              [],
-              ['eu-1', 'eu-3', 'us-1']
-            ],
-            [ /* Data set #9 */
-              [],
-              [],
-              'global_website',
-              [],
-              3,
-              [],
-              ['eu-1', 'eu-3', 'us-1']
-            ],
-            [ /* Data set #10 */
-              [],
-              [],
               'global_website',
               [1, 1],
               3,
               [],
               ['eu-1']
             ],
-            [ /* Data set #11 */
-              [],
-              [],
+            [ /* Data set #3 */
               'global_website',
               [1, 2],
               3,
               [],
               ['eu-3']
             ],
-            [ /* Data set #12 */
-              [],
-              [],
+            [ /* Data set #4 */
               'global_website',
               [],
               3,
@@ -264,9 +163,7 @@ class GeneralTest extends TestCase
               ],
               ['us-1', 'eu-1', 'eu-3']
             ],
-            [ /* Data set #13 */
-              [],
-              [],
+            [ /* Data set #5 */
               'global_website',
               [],
               3,
@@ -282,9 +179,7 @@ class GeneralTest extends TestCase
               ],
               ['eu-3', 'eu-1', 'us-1']
             ],
-            [ /* Data set #14 */
-              [],
-              [],
+            [ /* Data set #6 */
               'global_website',
               [1, 2],
               3,
@@ -296,20 +191,6 @@ class GeneralTest extends TestCase
               ],
               ['eu-1']
             ],
-            [ /* Data set #15 */
-              ['value' => 'eu%', 'condition' => 'like'],
-              ['value' => 'source', 'condition' => 'fulltext'],
-              'global_website',
-              [1, 2],
-              2,
-              [
-                  [
-                      SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                      SortOrder::FIELD => SourceInterface::COUNTRY_ID
-                  ]
-              ],
-              ['eu-3']
-            ]
         ];
     }
 }

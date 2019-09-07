@@ -9,12 +9,11 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterface;
 
 /**
- * @inheritdoc
+ * Filter Builder.
  */
-class FilterBuilder implements FilterBuilderInterface
+class FilterBuilder
 {
     private const FIELD_VALUE = 'value';
     private const FIELD_CONDITION_TYPE = 'conditionType';
@@ -59,7 +58,7 @@ class FilterBuilder implements FilterBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setValue(string $value): FilterBuilderInterface
+    public function setValue(string $value): self
     {
         $this->data[self::FIELD_VALUE] = $value;
 
@@ -67,20 +66,16 @@ class FilterBuilder implements FilterBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * Set Filter Condition Type.
+     *
+     * @param string|null $conditionType
+     *
+     * @return FilterBuilder
      */
-    public function setConditionType(?string $conditionType): FilterBuilderInterface
+    public function setConditionType(?string $conditionType): self
     {
         $this->data[self::FIELD_CONDITION_TYPE] = $conditionType;
 
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getData(): array
-    {
-        return $this->data;
     }
 }

@@ -8,9 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Api\SortOrder;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 
@@ -35,19 +34,9 @@ class SearchRequest implements SearchRequestInterface
     private $distanceFilter;
 
     /**
-     * @var AddressFilterInterface|null
+     * @var FilterSetInterface|null
      */
-    private $addressFilter;
-
-    /**
-     * @var FilterInterface|null
-     */
-    private $nameFilter;
-
-    /**
-     * @var FilterInterface|null
-     */
-    private $pickupLocationCodeFilter;
+    private $filterSet;
 
     /**
      * @var SortOrder|null
@@ -68,21 +57,16 @@ class SearchRequest implements SearchRequestInterface
      * @param string $scopeCode
      * @param string $scopeType
      * @param DistanceFilterInterface|null $distanceFilter
-     * @param AddressFilterInterface|null $addressFilter
-     * @param FilterInterface|null $nameFilter
-     * @param FilterInterface|null $pickupLocationCodeFilter
+     * @param FilterSetInterface|null $filterSet
      * @param array|null $sortOrders
      * @param int|null $pageSize
      * @param int $currentPage
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         string $scopeCode,
         string $scopeType = SalesChannelInterface::TYPE_WEBSITE,
         ?DistanceFilterInterface $distanceFilter = null,
-        ?AddressFilterInterface $addressFilter = null,
-        ?FilterInterface $nameFilter = null,
-        ?FilterInterface $pickupLocationCodeFilter = null,
+        ?FilterSetInterface $filterSet = null,
         ?array $sortOrders = null,
         ?int $pageSize = null,
         int $currentPage = 1
@@ -90,9 +74,7 @@ class SearchRequest implements SearchRequestInterface
         $this->scopeCode = $scopeCode;
         $this->scopeType = $scopeType;
         $this->distanceFilter = $distanceFilter;
-        $this->addressFilter = $addressFilter;
-        $this->nameFilter = $nameFilter;
-        $this->pickupLocationCodeFilter = $pickupLocationCodeFilter;
+        $this->filterSet = $filterSet;
         $this->sortOrders = $sortOrders;
         $this->pageSize = $pageSize;
         $this->currentPage = $currentPage;
@@ -109,25 +91,9 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @inheritdoc
      */
-    public function getAddressFilter(): ?AddressFilterInterface
+    public function getFilterSet(): ?FilterSetInterface
     {
-        return $this->addressFilter;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getNameFilter(): ?FilterInterface
-    {
-        return $this->nameFilter;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPickupLocationCodeFilter(): ?FilterInterface
-    {
-        return $this->pickupLocationCodeFilter;
+        return $this->filterSet;
     }
 
     /**
