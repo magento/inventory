@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupShippingApi\Api\Data;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
-use Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestExtensionInterface;
 
 /**
  * Shipping Price Request Data Transfer Object.
