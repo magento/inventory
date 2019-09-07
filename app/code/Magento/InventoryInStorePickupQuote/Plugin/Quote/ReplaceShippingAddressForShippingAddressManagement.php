@@ -24,8 +24,6 @@ use Magento\Quote\Model\ShippingAddressManagementInterface;
  */
 class ReplaceShippingAddressForShippingAddressManagement
 {
-    private const ADDRESS_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
-
     /**
      * @var CartRepositoryInterface
      */
@@ -100,15 +98,7 @@ class ReplaceShippingAddressForShippingAddressManagement
             return [$cartId, $address];
         }
 
-        /**
-         * @TODO Refactor when issue will be resolved in core.
-         * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
-         */
-        $address = $this->addressConverter->convert(
-            $pickupLocation,
-            $address,
-            [self::ADDRESS_FIELD_NAME => $pickupLocation->getPickupLocationCode()]
-        );
+        $address = $this->addressConverter->convert($pickupLocation, $address);
 
         return [$cartId, $address];
     }

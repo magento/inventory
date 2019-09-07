@@ -33,20 +33,16 @@ class ExtractPickupLocationShippingAddressData
     /**
      * Extract Shipping Address fields from Pickup Location.
      *
-     * @TODO Refactor when issue will be resolved in core.
-     * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
-     *
      * @param PickupLocationInterface $pickupLocation
      *
      * @return array
      */
     public function execute(PickupLocationInterface $pickupLocation): array
     {
-        $pickupLocationAddressData = $this->objectCopyService->copyFieldsetToTarget(
+        $pickupLocationAddressData = $this->objectCopyService->getDataFromFieldset(
             'inventory_convert_pickup_location',
             'to_pickup_location_shipping_address',
-            $pickupLocation,
-            []
+            $pickupLocation
         );
 
         return array_merge(
