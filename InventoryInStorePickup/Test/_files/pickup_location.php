@@ -20,6 +20,15 @@ $sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface
 
 /** @var SourceInterface $source */
 $source = $sourceFactory->create();
+
+$description = <<<DESCRIPTION
+<div class="wrapper">
+    <p>Test Pickup Location Description</p>
+    <img src="{{media url="test/location.png"}}" alt="/" />
+    <a href="{{store direct_url="contact"}}">Test Info</a>
+</div>
+DESCRIPTION;
+
 $dataObjectHelper->populateWithArray(
     $source,
     [
@@ -47,7 +56,7 @@ $sourceRepository->save($source);
 
 $source = $sourceRepository->get('pickup');
 $source->getExtensionAttributes()
-    ->setFrontendDescription('frontend-description')
+    ->setFrontendDescription($description)
     ->setFrontendName('frontend-name')
     ->setIsPickupLocationActive(true);
 
