@@ -8,33 +8,24 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use InvalidArgumentException;
-use Magento\Framework\Api\SimpleBuilderInterface;
 use Magento\Framework\Api\SortOrder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FilterSetBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\DistanceFilterBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\AddressFilterBuilderInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\DistanceFilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\DistanceFilterBuilderInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequest\FilterBuilderInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
  * @inheritdoc
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SearchRequestBuilder implements SearchRequestBuilderInterface
 {
     /**
      * Search Request Fields.
      */
-    private const ADDRESS_FILTER = 'addressFilter';
+    private const FILTER_SET = 'filterSet';
     private const DISTANCE_FILTER = 'distanceFilter';
-    private const NAME_FILTER = 'nameFilter';
-    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCodeFilter';
     private const SORT_ORDERS = 'sortOrders';
     private const PAGE_SIZE = 'pageSize';
     private const CURRENT_PAGE = 'currentPage';
@@ -50,57 +41,33 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     private $data = [];
 
     /**
-     * @var SimpleBuilderInterface[]
-     */
-    private $compositeBuilders = [];
-
-    /**
      * @var SearchRequestInterfaceFactory
      */
     private $searchRequestFactory;
 
     /**
-     * @var AddressFilterBuilderInterface
+     * @var FilterSetBuilder
      */
-    private $addressFilterBuilder;
+    private $filterSetBuilder;
 
     /**
-     * @var DistanceFilterBuilderInterface
+     * @var DistanceFilterBuilder
      */
     private $distanceFilterBuilder;
 
     /**
-     * @var FilterBuilderInterface
-     */
-    private $codeFilter;
-
-    /**
-     * @var FilterBuilderInterface
-     */
-    private $nameFilter;
-
-    /**
-     * @param AddressFilterBuilderInterfaceFactory $addressFilterBuilderFactory
-     * @param DistanceFilterBuilderInterfaceFactory $distanceFilterBuilderFactory
-     * @param FilterBuilderInterfaceFactory $filterBuilderFactory
+     * @param FilterSetBuilder $filterSetBuilderFactory
+     * @param DistanceFilterBuilder $distanceFilterBuilderFactory
      * @param SearchRequestInterfaceFactory $searchRequestFactory
      */
     public function __construct(
-        AddressFilterBuilderInterfaceFactory $addressFilterBuilderFactory,
-        DistanceFilterBuilderInterfaceFactory $distanceFilterBuilderFactory,
-        FilterBuilderInterfaceFactory $filterBuilderFactory,
+        FilterSetBuilder $filterSetBuilderFactory,
+        DistanceFilterBuilder $distanceFilterBuilderFactory,
         SearchRequestInterfaceFactory $searchRequestFactory
     ) {
         $this->searchRequestFactory = $searchRequestFactory;
-        $this->addressFilterBuilder = $addressFilterBuilderFactory->create();
-        $this->distanceFilterBuilder = $distanceFilterBuilderFactory->create();
-        $this->codeFilter = $filterBuilderFactory->create();
-        $this->nameFilter = $filterBuilderFactory->create();
-
-        $this->compositeBuilders[self::ADDRESS_FILTER] = $this->addressFilterBuilder;
-        $this->compositeBuilders[self::DISTANCE_FILTER] = $this->distanceFilterBuilder;
-        $this->compositeBuilders[self::PICKUP_LOCATION_CODE_FILTER] = $this->codeFilter;
-        $this->compositeBuilders[self::NAME_FILTER] = $this->nameFilter;
+        $this->filterSetBuilder = $filterSetBuilderFactory;
+        $this->distanceFilterBuilder = $distanceFilterBuilderFactory;
     }
 
     /**
@@ -122,17 +89,16 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     private function buildComposite(): void
     {
-        foreach ($this->compositeBuilders as $key => $builder) {
-            $this->data[$key] = $builder->create();
-        }
+        $this->data[self::FILTER_SET] = $this->filterSetBuilder->create();
+        $this->data[self::DISTANCE_FILTER] = $this->distanceFilterBuilder->create();
     }
 
     /**
      * @inheritdoc
      */
-    public function setAddressStreetFilter(string $street, ?string $condition = null): SearchRequestBuilderInterface
+    public function setStreetFilter(string $street, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->addressFilterBuilder->setStreetFilter($street, $condition);
+        $this->filterSetBuilder->setStreetFilter($street, $condition);
 
         return $this;
     }
@@ -140,9 +106,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setAddressPostcodeFilter(string $postcode, ?string $condition = null): SearchRequestBuilderInterface
+    public function setPostcodeFilter(string $postcode, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->addressFilterBuilder->setPostcodeFilter($postcode, $condition);
+        $this->filterSetBuilder->setPostcodeFilter($postcode, $condition);
 
         return $this;
     }
@@ -150,9 +116,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setAddressCityFilter(string $city, ?string $condition = null): SearchRequestBuilderInterface
+    public function setCityFilter(string $city, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->addressFilterBuilder->setCityFilter($city, $condition);
+        $this->filterSetBuilder->setCityFilter($city, $condition);
 
         return $this;
     }
@@ -160,9 +126,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setAddressRegionIdFilter(string $regionId, ?string $condition = null): SearchRequestBuilderInterface
+    public function setRegionIdFilter(string $regionId, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->addressFilterBuilder->setRegionIdFilter($regionId, $condition);
+        $this->filterSetBuilder->setRegionIdFilter($regionId, $condition);
 
         return $this;
     }
@@ -170,9 +136,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setAddressRegionFilter(string $region, ?string $condition = null): SearchRequestBuilderInterface
+    public function setRegionFilter(string $region, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->addressFilterBuilder->setRegionFilter($region, $condition);
+        $this->filterSetBuilder->setRegionFilter($region, $condition);
 
         return $this;
     }
@@ -180,9 +146,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setAddressCountryFilter(string $country, ?string $condition): SearchRequestBuilderInterface
+    public function setCountryFilter(string $country, ?string $condition): SearchRequestBuilderInterface
     {
-        $this->addressFilterBuilder->setCountryFilter($country, $condition);
+        $this->filterSetBuilder->setCountryFilter($country, $condition);
 
         return $this;
     }
@@ -303,7 +269,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setPickupLocationCodeFilter(string $code, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->codeFilter->setValue($code)->setConditionType($condition);
+        $this->filterSetBuilder->setPickupLocationCodeFilter($code, $condition);
 
         return $this;
     }
@@ -313,7 +279,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setNameFilter(string $name, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->nameFilter->setValue($name)->setConditionType($condition);
+        $this->filterSetBuilder->setNameFilter($name, $condition);
 
         return $this;
     }
@@ -336,13 +302,5 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
         $this->data[self::PAGE_SIZE] = $pageSize;
 
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getData(): array
-    {
-        return array_merge($this->data, $this->compositeBuilders);
     }
 }

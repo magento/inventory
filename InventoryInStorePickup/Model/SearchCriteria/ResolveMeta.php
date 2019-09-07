@@ -16,9 +16,9 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
 /**
- * Resolve Page and Sort related information for Search Criteria Builder.
+ * Resolve Page and Sort related information for the Search Criteria Builder.
  */
-class ResolveSearchRequestMeta implements BuilderPartsResolverInterface
+class ResolveMeta implements BuilderPartsResolverInterface
 {
     /**
      * @var array
