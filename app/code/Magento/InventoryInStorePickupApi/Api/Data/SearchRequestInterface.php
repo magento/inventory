@@ -7,15 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 
 /**
- * Endpoint used to filter Pickup Locations by different parameters:
- * - by address fields @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface
+ * Endpoint used to search Pickup Locations by different parameters:
+ * - by attribute filters fields @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface
  * - by distance to the address @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface
- * - by Pickup Location Code(s) and Name(s)
  * Also, endpoint supports paging and sort orders.
  *
  * @api
@@ -30,25 +28,11 @@ interface SearchRequestInterface extends \Magento\Framework\Api\ExtensibleDataIn
     public function getDistanceFilter(): ?DistanceFilterInterface;
 
     /**
-     * Get Filter by Address Filter.
+     * Get set of filter.
      *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AddressFilterInterface|null
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface|null
      */
-    public function getAddressFilter(): ?AddressFilterInterface;
-
-    /**
-     * Get Filter by Name Filter.
-     *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
-     */
-    public function getNameFilter(): ?FilterInterface;
-
-    /**
-     * Get Filter by Pickup Location Code Filter.
-     *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
-     */
-    public function getPickupLocationCodeFilter(): ?FilterInterface;
+    public function getFilterSet(): ?FilterSetInterface;
 
     /**
      * Get page size.

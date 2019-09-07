@@ -9,21 +9,22 @@ namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 
 /**
- * Resolve Search Criteria Builder parts from Address Filter.
+ * Resolve Search Criteria Builder parts from the Filter Set.
  */
-class ResolveAddressFilter implements BuilderPartsResolverInterface
+class ResolveFilterSet implements BuilderPartsResolverInterface
 {
     /**
      * @inheritdoc
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
-        $filters = $this->extractAddressFilters($searchRequest);
+        $filters = $this->extractFilters($searchRequest);
 
         foreach ($filters as $field => $filter) {
             if ($filter) {
@@ -33,28 +34,30 @@ class ResolveAddressFilter implements BuilderPartsResolverInterface
     }
 
     /**
-     * Extract Address filters from Search Request.
+     * Extract filters from Search Request.
      *
      * @param SearchRequestInterface $searchRequest
      *
      * @return FilterInterface[]
      */
-    private function extractAddressFilters(SearchRequestInterface $searchRequest): array
+    private function extractFilters(SearchRequestInterface $searchRequest): array
     {
         $filters = [];
 
-        $addressFilter = $searchRequest->getAddressFilter();
+        $filterSet = $searchRequest->getFilterSet();
 
-        if ($addressFilter === null) {
+        if ($filterSet === null) {
             return $filters;
         }
 
-        $filters[SourceInterface::COUNTRY_ID] = $addressFilter->getCountryFilter();
-        $filters[SourceInterface::REGION] = $addressFilter->getRegionFilter();
-        $filters[SourceInterface::REGION_ID] = $addressFilter->getRegionIdFilter();
-        $filters[SourceInterface::POSTCODE] = $addressFilter->getPostcodeFilter();
-        $filters[SourceInterface::CITY] = $addressFilter->getCityFilter();
-        $filters[SourceInterface::STREET] = $addressFilter->getStreetFilter();
+        $filters[SourceInterface::COUNTRY_ID] = $filterSet->getCountryFilter();
+        $filters[SourceInterface::REGION] = $filterSet->getRegionFilter();
+        $filters[SourceInterface::REGION_ID] = $filterSet->getRegionIdFilter();
+        $filters[SourceInterface::POSTCODE] = $filterSet->getPostcodeFilter();
+        $filters[SourceInterface::CITY] = $filterSet->getCityFilter();
+        $filters[SourceInterface::STREET] = $filterSet->getStreetFilter();
+        $filters[SourceInterface::SOURCE_CODE] = $filterSet->getPickupLocationCodeFilter();
+        $filters[PickupLocationInterface::FRONTEND_NAME] = $filterSet->getNameFilter();
 
         return $filters;
     }

@@ -19,6 +19,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * Add filter by Source Codes which are related to Requested Scope.
+ *
  * In case of Distance Filter present in Search Request, the filter will not be added.
  */
 class ResolveScopeFilter implements BuilderPartsResolverInterface
@@ -56,7 +57,7 @@ class ResolveScopeFilter implements BuilderPartsResolverInterface
     /**
      * @inheritdoc
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
     {
