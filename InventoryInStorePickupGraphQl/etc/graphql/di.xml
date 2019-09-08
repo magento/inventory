@@ -10,9 +10,7 @@
         <arguments>
             <argument name="resolvers" xsi:type="array">
                 <item name="distance" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\Distance</item>
-                <item name="address" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\Address</item>
-                <item name="name" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\Name</item>
-                <item name="pickup_location_code" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\PickupLocationCode</item>
+                <item name="filter" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\Filter</item>
                 <item name="current_page" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\CurrentPage</item>
                 <item name="page_size" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\PageSize</item>
                 <item name="sort" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\Sort</item>
