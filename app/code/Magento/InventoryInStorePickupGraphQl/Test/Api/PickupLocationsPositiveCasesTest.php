@@ -153,10 +153,12 @@ QUERY;
               1,
               1
             ],
-            [ /* Data set #2. General filters with array value type conditions. */
+            [ /* Data set #2. Filter by Code and Name with array value type conditions. */
               'pickup_locations(
+  filter:{
     pickup_location_code: {in: ["eu-3", "eu-2", "eu-1"]}
     name:{in: ["EU-source-1", "EU-source-2"]}
+  }
   )',
               ['eu-1'],
               'eu_website',
@@ -166,10 +168,12 @@ QUERY;
               1,
               1
             ],
-            [ /* Data set #3. General filters with sort. */
+            [ /* Data set #3. Filter by Code and Name with sort. */
               'pickup_locations(
-    pickup_location_code: {like: "eu%"}
-    name:{like: "%source%"}
+  	filter:{
+    	pickup_location_code: {like: "eu%"}
+    	name:{like: "%source%"}
+    }
     page_size: 1
     current_page: 2
     sort:{
@@ -184,9 +188,9 @@ QUERY;
               2,
               2
             ],
-            [ /* Data set #4. Address filter only. */
+            [ /* Data set #4. Filter by address attributes only. */
               'pickup_locations(
-    address:{
+    filter:{
       country_id: {neq:"FR"}
       region: {eq: "Bayern"}
       region_id:{eq: "81"}
@@ -222,15 +226,17 @@ QUERY;
               1,
               2
             ],
-            [ /* Data set #6. Distance filter with General Filters. */
+            [ /* Data set #6. Distance filter with Filter Name and Code attributes. */
               'pickup_locations(
     distance:{
       radius: 750
       country_code: "DE"
       city: "Adelzhausen"
     }
-    name:{like:"%source%"}
-    pickup_location_code:{like:"eu%"}
+  	filter:{
+    	name:{like:"%source%"}
+    	pickup_location_code:{like:"eu%"}
+    }
     page_size: 1
     current_page: 2
   )',
@@ -242,14 +248,14 @@ QUERY;
               2,
               2
             ],
-            [ /* Data set #7. Distance filter with Address Filter. */
+            [ /* Data set #7. Distance filter with Filter address attributes. */
               'pickup_locations(
     distance:{
       radius: 750
       country_code: "DE"
       postcode: "86559"
     }
-    address:{
+    filter:{
       city: {in: ["Kolbermoor", "Mitry-Mory"]}
       region: {eq: "Seine-et-Marne"}
       region_id: {eq: "259"}
@@ -285,19 +291,19 @@ QUERY;
             ],
             [ /* Data set #9. Test with all filters. */
                 'pickup_locations(
-    address:{
+    filter:{
       city: {in: ["Kolbermoor", "Mitry-Mory", "Burlingame"]}
       region: {nin: ["Thüringen", "Bouches-du-Rhône"]}
       region_id: {nin: ["94", "194"]}
       postcode: {in: ["77292 CEDEX", "13100", "83059", "99098", "66413"]}
       country_id:{neq: "DE"}
+      name:{like:"%source%"}
     }
     distance:{
       radius: 6371000
       country_code: "DE"
       region: "Bayern"
     }
-    name:{like:"%source%"}
     page_size: 2
     current_page: 1
     sort:{

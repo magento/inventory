@@ -10,12 +10,13 @@ namespace Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\S
 use Magento\Framework\GraphQl\Query\Resolver\Argument\AstConverter;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\Filter\Clause;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
- * Resolve address filters parameters.
+ * Resolve attribute filters.
  */
-class Address implements ResolverInterface
+class Filter implements ResolverInterface
 {
     /**
      * @var AstConverter
@@ -59,37 +60,46 @@ class Address implements ResolverInterface
     {
         switch ($filter->getFieldName()) {
             case SourceInterface::COUNTRY_ID:
-                $searchRequestBuilder->setAddressCountryFilter(
+                $searchRequestBuilder->setCountryFilter(
                     $this->getClauseValue($filter),
                     $filter->getClauseType()
                 );
                 break;
             case SourceInterface::POSTCODE:
-                $searchRequestBuilder->setAddressPostcodeFilter(
+                $searchRequestBuilder->setPostcodeFilter(
                     $this->getClauseValue($filter),
                     $filter->getClauseType()
                 );
                 break;
             case SourceInterface::REGION:
-                $searchRequestBuilder->setAddressRegionFilter(
+                $searchRequestBuilder->setRegionFilter(
                     $this->getClauseValue($filter),
                     $filter->getClauseType()
                 );
                 break;
             case SourceInterface::REGION_ID:
-                $searchRequestBuilder->setAddressRegionIdFilter(
+                $searchRequestBuilder->setRegionIdFilter(
                     $this->getClauseValue($filter),
                     $filter->getClauseType()
                 );
                 break;
             case SourceInterface::CITY:
-                $searchRequestBuilder->setAddressCityFilter($this->getClauseValue($filter), $filter->getClauseType());
+                $searchRequestBuilder->setCityFilter($this->getClauseValue($filter), $filter->getClauseType());
                 break;
             case SourceInterface::STREET:
-                $searchRequestBuilder->setAddressStreetFilter(
+                $searchRequestBuilder->setStreetFilter(
                     $this->getClauseValue($filter),
                     $filter->getClauseType()
                 );
+                break;
+            case PickupLocationInterface::PICKUP_LOCATION_CODE:
+                $searchRequestBuilder->setPickupLocationCodeFilter(
+                    $this->getClauseValue($filter),
+                    $filter->getClauseType()
+                );
+                break;
+            case SourceInterface::NAME:
+                $searchRequestBuilder->setNameFilter($this->getClauseValue($filter), $filter->getClauseType());
                 break;
         }
     }
