@@ -66,4 +66,11 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filter" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest" />
     <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequestBuilder" />
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchResult\Extractor">
+        <arguments>
+            <argument name="strategies" xsi:type="array">
+                <item name="distance-based" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchResult\Strategy\DistanceBased</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

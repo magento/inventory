@@ -14,7 +14,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
 use Magento\InventoryInStorePickupApi\Model\MapperInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractorInterface;
 
 /**
  * @inheritdoc
@@ -37,9 +37,9 @@ class GetPickupLocations implements GetPickupLocationsInterface
     private $searchCriteriaResolver;
 
     /**
-     * @var ExtractStrategyInterface
+     * @var ExtractorInterface
      */
-    private $extractStrategy;
+    private $extractor;
 
     /**
      * @var SearchResultInterfaceFactory
@@ -49,21 +49,21 @@ class GetPickupLocations implements GetPickupLocationsInterface
     /**
      * @param MapperInterface $mapper
      * @param SourceRepositoryInterface $sourceRepository
-     * @param ExtractStrategyInterface $extractStrategy
+     * @param ExtractorInterface $extractor
      * @param SearchCriteriaResolverInterface $searchCriteriaResolver
      * @param SearchResultInterfaceFactory $searchResultFactory
      */
     public function __construct(
         MapperInterface $mapper,
         SourceRepositoryInterface $sourceRepository,
-        ExtractStrategyInterface $extractStrategy,
+        ExtractorInterface $extractor,
         SearchCriteriaResolverInterface $searchCriteriaResolver,
         SearchResultInterfaceFactory $searchResultFactory
     ) {
         $this->mapper = $mapper;
         $this->sourceRepository = $sourceRepository;
         $this->searchCriteriaResolver = $searchCriteriaResolver;
-        $this->extractStrategy = $extractStrategy;
+        $this->extractor = $extractor;
         $this->searchResultFactory = $searchResultFactory;
     }
 
@@ -75,7 +75,7 @@ class GetPickupLocations implements GetPickupLocationsInterface
         $searchCriteria = $this->searchCriteriaResolver->resolve($searchRequest);
         $searchResult = $this->sourceRepository->getList($searchCriteria);
 
-        $sources = $this->extractStrategy->getSources($searchRequest, $searchResult);
+        $sources = $this->extractor->getSources($searchRequest, $searchResult);
 
         $pickupLocations = [];
 

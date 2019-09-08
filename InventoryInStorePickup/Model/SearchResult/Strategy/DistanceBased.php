@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\SearchResult;
+namespace Magento\InventoryInStorePickup\Model\SearchResult\Strategy;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -14,14 +14,14 @@ use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchResult\StrategyInterface;
 
 /**
  * Work with Distance Based data set.
  *
  * This assume that we need to sort data by distance if Sort by distance is requested or no other sorts are provided.
  */
-class DistanceBasedStrategy implements ExtractStrategyInterface
+class DistanceBased implements StrategyInterface
 {
     /**
      * @var GetDistanceToSources
@@ -111,5 +111,15 @@ class DistanceBasedStrategy implements ExtractStrategyInterface
         }
 
         return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isApplicable(
+        SearchRequestInterface $searchRequest,
+        SourceSearchResultsInterface $sourcesSearchResult
+    ): bool {
+        return (bool)$searchRequest->getDistanceFilter();
     }
 }
