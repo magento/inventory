@@ -48,6 +48,7 @@ define([
             },
             nearbySearchRadius: 5000,
             nearbySearchLimit: 50,
+            defaultCountry: window.checkoutConfig.defaultCountryId,
         },
         rates: shippingService.getShippingRates(),
         inStoreMethod: null,
@@ -195,6 +196,7 @@ define([
                         city: shippingAddress.city,
                         postcode: shippingAddress.postcode,
                         region: shippingAddress.region,
+                        country: this.defaultCountry,
                     })
                     .then(function(locations) {
                         var nearestLocation = locations[0];

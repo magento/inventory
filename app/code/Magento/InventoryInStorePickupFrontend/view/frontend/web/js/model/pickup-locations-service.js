@@ -214,7 +214,7 @@ define([
                     varName = varName.substr(1);
 
                     if (error.parameters.hasOwnProperty(varName)) {
-                        return messageObj.parameters[varName];
+                        return error.parameters[varName];
                     }
 
                     return error.parameters.shift();
