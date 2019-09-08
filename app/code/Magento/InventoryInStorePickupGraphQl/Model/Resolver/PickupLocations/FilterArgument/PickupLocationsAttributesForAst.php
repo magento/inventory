@@ -39,7 +39,7 @@ class PickupLocationsAttributesForAst implements FieldEntityAttributesInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getEntityAttributes(): array
     {

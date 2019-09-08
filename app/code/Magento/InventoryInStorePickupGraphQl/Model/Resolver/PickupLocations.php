@@ -151,14 +151,14 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     /**
      * Get Pickup Locations data.
      *
-     * @param $pickupLocations
+     * @param PickupLocationInterface[] $pickupLocations
      *
      * @return array
      */
-    private function getPickupLocationsData($pickupLocations)
+    private function getPickupLocationsData(array $pickupLocations): array
     {
         $pickupLocationsData = [];
-        /** @var PickupLocationInterface $item */
+
         foreach ($pickupLocations as $item) {
             $pickupLocationsData[$item->getPickupLocationCode()] = $this->dataProvider->getData($item);
         }

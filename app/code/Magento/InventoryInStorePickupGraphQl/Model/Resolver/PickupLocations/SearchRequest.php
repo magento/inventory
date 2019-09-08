@@ -42,6 +42,7 @@ class SearchRequest
 
     /**
      * @inheritdoc
+     *
      * @throws LocalizedException
      */
     public function resolve(
