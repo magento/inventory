@@ -13,4 +13,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\App\Cache\Tag\Strategy\Factory">
+        <arguments>
+            <argument name="customStrategies" xsi:type="array">
+                <item name="Magento\InventoryApi\Api\Data\SourceInterface" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Cache\Tag\Strategy\PickupLocation</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

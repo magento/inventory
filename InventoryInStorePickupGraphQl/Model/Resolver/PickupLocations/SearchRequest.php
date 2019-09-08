@@ -50,7 +50,7 @@ class SearchRequest
         string $fieldName,
         array $argument
     ): SearchRequestBuilderInterface {
-        $searchRequestBuilder->setScopeCode($this->storeManager->getWebsite()->getCode());
+        $searchRequestBuilder->setScopeCode('global_website');
 
         foreach ($this->resolvers as $argumentName => $resolver) {
             if (isset($argument[$argumentName])) {

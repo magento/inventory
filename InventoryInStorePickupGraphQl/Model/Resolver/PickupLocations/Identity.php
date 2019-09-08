@@ -17,7 +17,7 @@ class Identity implements IdentityInterface
     /**
      * @var string
      */
-    private $cacheTag = 'inv_pl';
+    const CACHE_TAG = 'inv_pl';
 
     /**
      * Get identity for Pickup Locations.
@@ -31,10 +31,10 @@ class Identity implements IdentityInterface
         $ids = [];
         $items = $resolvedData['items'] ?? [];
         foreach ($items as $item) {
-            $ids[] = sprintf('%s_%s', $this->cacheTag, $item['pickup_location_code']);
+            $ids[] = sprintf('%s_%s', self::CACHE_TAG, $item['pickup_location_code']);
         }
         if (!empty($ids)) {
-            array_unshift($ids, $this->cacheTag);
+            array_unshift($ids, self::CACHE_TAG);
         }
 
         return $ids;
