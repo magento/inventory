@@ -31,14 +31,14 @@ interface PickupLocationInterface extends ExtensibleDataInterface
     public function getPickupLocationCode(): string;
 
     /**
-     * Get Pickup Location Name.
+     * Get Pickup Location name.
      *
      * @return string|null
      */
     public function getName(): ?string;
 
     /**
-     * Get Pickup Location contact Email.
+     * Get Pickup Location contact email.
      *
      * @return string|null
      */
@@ -73,7 +73,7 @@ interface PickupLocationInterface extends ExtensibleDataInterface
     public function getLatitude(): ?float;
 
     /**
-     * Get Pickup Location longtitude.
+     * Get Pickup Location longitude.
      *
      * @return float|null
      */
