@@ -40,5 +40,12 @@ foreach (['SKU-1', 'SKU-2', 'SKU-3', 'SKU-4', 'SKU-6'] as $sku) {
     }
 
     $cartRepository->save($cart);
+    // TODO: Duct Tape to prevent failing of tests according to changes from 74ba0e3e0ae080f43860ac75b0f5a727c7df8cac
+    // TODO: Remove after issue will be solved in core
+    $searchCriteria = $searchCriteriaBuilder
+        ->addFilter('reserved_order_id', 'in_store_pickup_test_order-' . $sku)
+        ->create();
+    $cart = current($cartRepository->getList($searchCriteria)->getItems());
+
     $cartManagement->placeOrder($cart->getId());
 }
