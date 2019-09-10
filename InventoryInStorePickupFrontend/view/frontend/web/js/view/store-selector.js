@@ -41,6 +41,7 @@ define([
                 'Magento_InventoryInStorePickupFrontend/store-selector/popup-item',
             loginFormSelector:
                 '#store-selector form[data-role=email-with-possible-login]',
+            defaultCountryId: window.checkoutConfig.defaultCountryId,
             imports: {
                 nearbySearchRadius: '${ $.parentName }:nearbySearchRadius',
                 nearbySearchLimit: '${ $.parentName }:nearbySearchLimit',
@@ -143,7 +144,7 @@ define([
                 .getNearbyLocations({
                     radius: this.nearbySearchRadius,
                     pageSize: this.nearbySearchLimit,
-                    country: address.countryId,
+                    country: this.defaultCountryId,
                     city: address.city,
                     postcode: address.postcode,
                     region: address.region,
