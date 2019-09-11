@@ -53,5 +53,12 @@
     <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface" type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/><type name="Magento\InventoryApi\Model\SourceValidatorChain">
+    <arguments>
+        <argument name="validators" xsi:type="array">
+            <item name="default_source_use_as_pickup_location_validator" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\DefaultSourceUseForPickupLocationValidator</item>
+        </argument>
+    </arguments>
+</type>
+
 </config>
