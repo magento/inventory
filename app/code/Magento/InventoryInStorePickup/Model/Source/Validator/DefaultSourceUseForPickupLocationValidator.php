@@ -41,9 +41,7 @@ class DefaultSourceUseForPickupLocationValidator implements SourceValidatorInter
     }
 
     /**
-     * @param SourceInterface $source
-     *
-     * @return ValidationResult
+     * @inheritdoc
      */
     public function validate(SourceInterface $source): ValidationResult
     {

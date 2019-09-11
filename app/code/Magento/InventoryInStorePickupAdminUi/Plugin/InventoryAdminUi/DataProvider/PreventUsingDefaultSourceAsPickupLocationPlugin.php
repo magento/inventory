@@ -49,8 +49,10 @@ class PreventUsingDefaultSourceAsPickupLocationPlugin
     }
 
     /**
+     * Populate meta in case to disable possibility to mark Default Source as Pickup Location.
+     *
      * @param SourceDataProvider $subject
-     * @param $meta
+     * @param array $meta
      * @return array
      */
     public function afterGetMeta(
@@ -70,6 +72,8 @@ class PreventUsingDefaultSourceAsPickupLocationPlugin
     }
 
     /**
+     * Check if Source from Request is Default Source.
+     *
      * @return bool
      */
     private function isDefaultSource(): bool
