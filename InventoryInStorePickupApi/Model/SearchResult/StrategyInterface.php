@@ -11,13 +11,26 @@ use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 
 /**
- * Service to determine strategy and extract Pickup Locations from the Search Result.
+ * Strategy interface from Pickup Locations extraction.
  * @api
  */
-interface ExtractStrategyInterface
+interface StrategyInterface
 {
     /**
-     * Extract Pickup Location according to the strategy.
+     * Check if strategy is applicable.
+     *
+     * @param SearchRequestInterface $searchRequest
+     * @param SourceSearchResultsInterface $sourcesSearchResult
+     *
+     * @return bool
+     */
+    public function isApplicable(
+        SearchRequestInterface $searchRequest,
+        SourceSearchResultsInterface $sourcesSearchResult
+    ): bool;
+
+    /**
+     * Extract Pickup Locations.
      *
      * @param SearchRequestInterface $searchRequest
      * @param SourceSearchResultsInterface $sourcesSearchResult
