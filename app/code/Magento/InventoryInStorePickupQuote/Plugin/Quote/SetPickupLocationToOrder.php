@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\ToOrder;
@@ -26,6 +27,7 @@ class SetPickupLocationToOrder
      * @param ToOrder $subject
      * @param Address $address
      * @param array $data
+     *
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -38,7 +40,8 @@ class SetPickupLocationToOrder
         $extension = $address->getExtensionAttributes();
 
         if ($extension && $extension->getPickupLocationCode()) {
-            $data[self::ORDER_FIELD_NAME] = $extension->getPickupLocationCode();
+            $data[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][self::ORDER_FIELD_NAME] =
+                $extension->getPickupLocationCode();
         }
 
         return [$address, $data];
