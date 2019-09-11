@@ -37,7 +37,7 @@ define([
                      */
                     write: function (value) {
                         value = Boolean(value) === value ? value : Boolean(parseInt(value, 0));
-                        if (required() !== value ) {
+                        if (required() !== value) {
                             required(value);
                             this.setValidation('required-entry', required());
                         }
