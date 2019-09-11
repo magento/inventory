@@ -156,8 +156,4 @@
         <plugin name="adapt_verify_stock_to_negative_min_qty"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Spi\StockStateProvider\AdaptVerifyStockToNegativeMinQtyPlugin"/>
     </type>
-    <type name="Magento\CatalogInventory\Model\ProductQty">
-        <plugin name="adapt_qty_left_stock"
-                type="Magento\InventoryCatalog\Plugin\Catalog\Model\ProductQtyPlugin"/>
-    </type>
 </config>

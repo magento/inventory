@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+    "hash": "044915a6d7467bc01e687175fcaa384d",
     "content-hash": "323e19f6f31b573e6bece48158cd41ba",
     "packages": [
         {
@@ -51,7 +52,7 @@
                 }
             ],
             "description": "Braintree PHP Client Library",
-            "time": "2018-07-26T14:37:38+00:00"
+            "time": "2018-07-26 14:37:38"
         },
         {
             "name": "colinmollenhour/cache-backend-file",
@@ -84,7 +85,7 @@
             ],
             "description": "The stock Zend_Cache_Backend_File backend has extremely poor performance for cleaning by tags making it become unusable as the number of cached items increases. This backend makes many changes resulting in a huge performance boost, especially for tag cleaning.",
             "homepage": "https://github.com/colinmollenhour/Cm_Cache_Backend_File",
-            "time": "2019-04-18T21:54:31+00:00"
+            "time": "2019-04-18 21:54:31"
         },
         {
             "name": "colinmollenhour/cache-backend-redis",
@@ -120,7 +121,7 @@
             ],
             "description": "Zend_Cache backend using Redis with full support for tags.",
             "homepage": "https://github.com/colinmollenhour/Cm_Cache_Backend_Redis",
-            "time": "2018-09-24T16:02:07+00:00"
+            "time": "2018-09-24 16:02:07"
         },
         {
             "name": "colinmollenhour/credis",
@@ -160,7 +161,7 @@
             ],
             "description": "Credis is a lightweight interface to the Redis key-value store which wraps the phpredis library when available for better performance.",
             "homepage": "https://github.com/colinmollenhour/credis",
-            "time": "2018-05-07T14:45:04+00:00"
+            "time": "2018-05-07 14:45:04"
         },
         {
             "name": "colinmollenhour/php-redis-session-abstract",
@@ -197,7 +198,7 @@
             ],
             "description": "A Redis-based session handler with optimistic locking",
             "homepage": "https://github.com/colinmollenhour/php-redis-session-abstract",
-            "time": "2019-03-18T14:43:14+00:00"
+            "time": "2019-03-18 14:43:14"
         },
         {
             "name": "composer/ca-bundle",
@@ -253,7 +254,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2019-07-31T08:13:16+00:00"
+            "time": "2019-07-31 08:13:16"
         },
         {
             "name": "composer/composer",
@@ -333,7 +334,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2019-06-11T13:03:06+00:00"
+            "time": "2019-06-11 13:03:06"
         },
         {
             "name": "composer/semver",
@@ -395,7 +396,7 @@
                 "validation",
                 "versioning"
             ],
-            "time": "2019-03-19T17:25:45+00:00"
+            "time": "2019-03-19 17:25:45"
         },
         {
             "name": "composer/spdx-licenses",
@@ -455,7 +456,7 @@
                 "spdx",
                 "validator"
             ],
-            "time": "2019-07-29T10:31:59+00:00"
+            "time": "2019-07-29 10:31:59"
         },
         {
             "name": "composer/xdebug-handler",
@@ -499,7 +500,7 @@
                 "Xdebug",
                 "performance"
             ],
-            "time": "2019-05-27T17:52:04+00:00"
+            "time": "2019-05-27 17:52:04"
         },
         {
             "name": "container-interop/container-interop",
@@ -530,7 +531,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
-            "time": "2017-02-14T19:40:03+00:00"
+            "time": "2017-02-14 19:40:03"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -590,7 +591,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2019-07-19T14:48:24+00:00"
+            "time": "2019-07-19 14:48:24"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -655,7 +656,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-04-22T15:46:56+00:00"
+            "time": "2018-04-22 15:46:56"
         },
         {
             "name": "guzzlehttp/promises",
@@ -706,7 +707,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20T10:07:11+00:00"
+            "time": "2016-12-20 10:07:11"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -777,7 +778,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-07-01T23:21:34+00:00"
+            "time": "2019-07-01 23:21:34"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -828,7 +829,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2018-07-31T13:22:33+00:00"
+            "time": "2018-07-31 13:22:33"
         },
         {
             "name": "guzzlehttp/streams",
@@ -878,7 +879,7 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-10-12T19:18:40+00:00"
+            "time": "2014-10-12 19:18:40"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -944,7 +945,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2019-01-14T23:55:14+00:00"
+            "time": "2019-01-14 23:55:14"
         },
         {
             "name": "magento/composer",
@@ -980,7 +981,7 @@
                 "AFL-3.0"
             ],
             "description": "Magento composer library helps to instantiate Composer application and run composer commands.",
-            "time": "2019-07-29T19:52:05+00:00"
+            "time": "2019-07-29 19:52:05"
         },
         {
             "name": "magento/magento-composer-installer",
@@ -1059,7 +1060,7 @@
                 "composer-installer",
                 "magento"
             ],
-            "time": "2017-12-29T16:45:24+00:00"
+            "time": "2017-12-29 16:45:24"
         },
         {
             "name": "magento/zendframework1",
@@ -1106,7 +1107,7 @@
                 "ZF1",
                 "framework"
             ],
-            "time": "2019-07-26T16:43:11+00:00"
+            "time": "2019-07-26 16:43:11"
         },
         {
             "name": "monolog/monolog",
@@ -1184,7 +1185,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2018-11-05T09:00:11+00:00"
+            "time": "2018-11-05 09:00:11"
         },
         {
             "name": "paragonie/random_compat",
@@ -1229,7 +1230,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-07-02T15:55:56+00:00"
+            "time": "2018-07-02 15:55:56"
         },
         {
             "name": "paragonie/sodium_compat",
@@ -1311,7 +1312,7 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
-            "time": "2019-07-12T16:36:59+00:00"
+            "time": "2019-07-12 16:36:59"
         },
         {
             "name": "pelago/emogrifier",
@@ -1385,7 +1386,7 @@
                 "email",
                 "pre-processing"
             ],
-            "time": "2018-12-10T10:36:30+00:00"
+            "time": "2018-12-10 10:36:30"
         },
         {
             "name": "php-amqplib/php-amqplib",
@@ -1456,7 +1457,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2018-04-30T03:54:54+00:00"
+            "time": "2018-04-30 03:54:54"
         },
         {
             "name": "phpseclib/mcrypt_compat",
@@ -1505,7 +1506,7 @@
                 "encryption",
                 "mcrypt"
             ],
-            "time": "2018-08-22T03:11:43+00:00"
+            "time": "2018-08-22 03:11:43"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -1597,7 +1598,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2019-07-12T12:53:49+00:00"
+            "time": "2019-07-12 12:53:49"
         },
         {
             "name": "psr/container",
@@ -1646,7 +1647,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14T16:28:37+00:00"
+            "time": "2017-02-14 16:28:37"
         },
         {
             "name": "psr/http-message",
@@ -1696,7 +1697,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
@@ -1743,7 +1744,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-20T15:27:04+00:00"
+            "time": "2018-11-20 15:27:04"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -1783,7 +1784,7 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
-            "time": "2019-03-08T08:55:37+00:00"
+            "time": "2019-03-08 08:55:37"
         },
         {
             "name": "ramsey/uuid",
@@ -1865,7 +1866,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2018-07-19T23:38:55+00:00"
+            "time": "2018-07-19 23:38:55"
         },
         {
             "name": "react/promise",
@@ -1911,7 +1912,7 @@
                 "promise",
                 "promises"
             ],
-            "time": "2019-01-07T21:25:54+00:00"
+            "time": "2019-01-07 21:25:54"
         },
         {
             "name": "seld/jsonlint",
@@ -1960,7 +1961,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2018-01-24T12:46:19+00:00"
+            "time": "2018-01-24 12:46:19"
         },
         {
             "name": "seld/phar-utils",
@@ -2004,7 +2005,7 @@
             "keywords": [
                 "phra"
             ],
-            "time": "2015-10-13T18:44:15+00:00"
+            "time": "2015-10-13 18:44:15"
         },
         {
             "name": "symfony/console",
@@ -2075,7 +2076,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-25T14:34:37+00:00"
+            "time": "2019-01-25 14:34:37"
         },
         {
             "name": "symfony/css-selector",
@@ -2128,7 +2129,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-16T21:53:39+00:00"
+            "time": "2019-01-16 21:53:39"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2198,7 +2199,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-27T06:42:14+00:00"
+            "time": "2019-06-27 06:42:14"
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -2256,7 +2257,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-06-20T06:46:26+00:00"
+            "time": "2019-06-20 06:46:26"
         },
         {
             "name": "symfony/filesystem",
@@ -2306,7 +2307,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-23T08:51:25+00:00"
+            "time": "2019-06-23 08:51:25"
         },
         {
             "name": "symfony/finder",
@@ -2355,7 +2356,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-28T13:16:30+00:00"
+            "time": "2019-06-28 13:16:30"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2413,7 +2414,7 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2019-02-06T07:57:58+00:00"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2472,7 +2473,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-02-06T07:57:58+00:00"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/process",
@@ -2521,7 +2522,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-30T16:10:05+00:00"
+            "time": "2019-05-30 16:10:05"
         },
         {
             "name": "tedivm/jshrink",
@@ -2567,7 +2568,7 @@
                 "javascript",
                 "minifier"
             ],
-            "time": "2019-06-28T18:11:46+00:00"
+            "time": "2019-06-28 18:11:46"
         },
         {
             "name": "true/punycode",
@@ -2613,7 +2614,7 @@
                 "idna",
                 "punycode"
             ],
-            "time": "2016-11-16T10:37:54+00:00"
+            "time": "2016-11-16 10:37:54"
         },
         {
             "name": "tubalmartin/cssmin",
@@ -2666,7 +2667,7 @@
                 "minify",
                 "yui"
             ],
-            "time": "2018-01-15T15:26:51+00:00"
+            "time": "2018-01-15 15:26:51"
         },
         {
             "name": "webonyx/graphql-php",
@@ -2711,7 +2712,7 @@
                 "api",
                 "graphql"
             ],
-            "time": "2018-09-02T14:59:54+00:00"
+            "time": "2018-09-02 14:59:54"
         },
         {
             "name": "wikimedia/less.php",
@@ -2772,7 +2773,7 @@
                 "php",
                 "stylesheet"
             ],
-            "time": "2019-01-19T01:01:33+00:00"
+            "time": "2019-01-19 01:01:33"
         },
         {
             "name": "zendframework/zend-captcha",
@@ -2830,7 +2831,7 @@
                 "captcha",
                 "zf"
             ],
-            "time": "2019-06-18T09:32:52+00:00"
+            "time": "2019-06-18 09:32:52"
         },
         {
             "name": "zendframework/zend-code",
@@ -2883,7 +2884,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2018-08-13T20:36:59+00:00"
+            "time": "2018-08-13 20:36:59"
         },
         {
             "name": "zendframework/zend-config",
@@ -2939,7 +2940,7 @@
                 "config",
                 "zf2"
             ],
-            "time": "2016-02-04T23:01:10+00:00"
+            "time": "2016-02-04 23:01:10"
         },
         {
             "name": "zendframework/zend-console",
@@ -2992,7 +2993,7 @@
                 "console",
                 "zf"
             ],
-            "time": "2019-02-04T19:48:22+00:00"
+            "time": "2019-02-04 19:48:22"
         },
         {
             "name": "zendframework/zend-crypt",
@@ -3042,7 +3043,7 @@
                 "crypt",
                 "zf2"
             ],
-            "time": "2016-02-03T23:46:30+00:00"
+            "time": "2016-02-03 23:46:30"
         },
         {
             "name": "zendframework/zend-db",
@@ -3100,7 +3101,7 @@
                 "db",
                 "zf"
             ],
-            "time": "2019-02-25T11:37:45+00:00"
+            "time": "2019-02-25 11:37:45"
         },
         {
             "name": "zendframework/zend-di",
@@ -3147,7 +3148,7 @@
                 "di",
                 "zf2"
             ],
-            "time": "2016-04-25T20:58:11+00:00"
+            "time": "2016-04-25 20:58:11"
         },
         {
             "name": "zendframework/zend-diactoros",
@@ -3211,7 +3212,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2018-09-05T19:29:37+00:00"
+            "time": "2018-09-05 19:29:37"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -3256,7 +3257,7 @@
                 "escaper",
                 "zf"
             ],
-            "time": "2018-04-25T15:48:53+00:00"
+            "time": "2018-04-25 15:48:53"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -3310,7 +3311,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2018-04-25T15:33:34+00:00"
+            "time": "2018-04-25 15:33:34"
         },
         {
             "name": "zendframework/zend-feed",
@@ -3373,7 +3374,7 @@
                 "feed",
                 "zf"
             ],
-            "time": "2019-03-05T20:08:49+00:00"
+            "time": "2019-03-05 20:08:49"
         },
         {
             "name": "zendframework/zend-filter",
@@ -3438,7 +3439,7 @@
                 "filter",
                 "zf"
             ],
-            "time": "2018-12-17T16:00:04+00:00"
+            "time": "2018-12-17 16:00:04"
         },
         {
             "name": "zendframework/zend-form",
@@ -3516,7 +3517,7 @@
                 "form",
                 "zf"
             ],
-            "time": "2019-02-26T18:13:31+00:00"
+            "time": "2019-02-26 18:13:31"
         },
         {
             "name": "zendframework/zend-http",
@@ -3571,7 +3572,7 @@
                 "zend",
                 "zf"
             ],
-            "time": "2019-02-19T18:58:14+00:00"
+            "time": "2019-02-19 18:58:14"
         },
         {
             "name": "zendframework/zend-hydrator",
@@ -3634,7 +3635,7 @@
                 "hydrator",
                 "zf"
             ],
-            "time": "2018-11-19T19:16:10+00:00"
+            "time": "2018-11-19 19:16:10"
         },
         {
             "name": "zendframework/zend-i18n",
@@ -3702,7 +3703,7 @@
                 "i18n",
                 "zf"
             ],
-            "time": "2018-05-16T16:39:13+00:00"
+            "time": "2018-05-16 16:39:13"
         },
         {
             "name": "zendframework/zend-inputfilter",
@@ -3759,7 +3760,7 @@
                 "inputfilter",
                 "zf"
             ],
-            "time": "2019-01-30T16:58:51+00:00"
+            "time": "2019-01-30 16:58:51"
         },
         {
             "name": "zendframework/zend-json",
@@ -3814,7 +3815,7 @@
                 "json",
                 "zf2"
             ],
-            "time": "2016-02-04T21:20:26+00:00"
+            "time": "2016-02-04 21:20:26"
         },
         {
             "name": "zendframework/zend-loader",
@@ -3859,7 +3860,7 @@
                 "loader",
                 "zf"
             ],
-            "time": "2018-04-30T15:20:54+00:00"
+            "time": "2018-04-30 15:20:54"
         },
         {
             "name": "zendframework/zend-log",
@@ -3930,7 +3931,7 @@
                 "logging",
                 "zf2"
             ],
-            "time": "2018-04-09T21:59:51+00:00"
+            "time": "2018-04-09 21:59:51"
         },
         {
             "name": "zendframework/zend-mail",
@@ -3992,7 +3993,7 @@
                 "mail",
                 "zf"
             ],
-            "time": "2018-06-07T13:37:07+00:00"
+            "time": "2018-06-07 13:37:07"
         },
         {
             "name": "zendframework/zend-math",
@@ -4042,7 +4043,7 @@
                 "math",
                 "zf2"
             ],
-            "time": "2018-12-04T15:34:17+00:00"
+            "time": "2018-12-04 15:34:17"
         },
         {
             "name": "zendframework/zend-mime",
@@ -4093,7 +4094,7 @@
                 "mime",
                 "zf"
             ],
-            "time": "2018-05-14T19:02:50+00:00"
+            "time": "2018-05-14 19:02:50"
         },
         {
             "name": "zendframework/zend-modulemanager",
@@ -4153,7 +4154,7 @@
                 "modulemanager",
                 "zf"
             ],
-            "time": "2017-12-02T06:11:18+00:00"
+            "time": "2017-12-02 06:11:18"
         },
         {
             "name": "zendframework/zend-mvc",
@@ -4248,7 +4249,7 @@
                 "mvc",
                 "zf2"
             ],
-            "time": "2018-05-03T13:13:41+00:00"
+            "time": "2018-05-03 13:13:41"
         },
         {
             "name": "zendframework/zend-psr7bridge",
@@ -4297,7 +4298,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2016-05-10T21:44:39+00:00"
+            "time": "2016-05-10 21:44:39"
         },
         {
             "name": "zendframework/zend-serializer",
@@ -4354,7 +4355,7 @@
                 "serializer",
                 "zf"
             ],
-            "time": "2018-05-14T18:45:18+00:00"
+            "time": "2018-05-14 18:45:18"
         },
         {
             "name": "zendframework/zend-server",
@@ -4401,7 +4402,7 @@
                 "server",
                 "zf"
             ],
-            "time": "2018-04-30T22:21:28+00:00"
+            "time": "2018-04-30 22:21:28"
         },
         {
             "name": "zendframework/zend-servicemanager",
@@ -4453,7 +4454,7 @@
                 "servicemanager",
                 "zf2"
             ],
-            "time": "2018-06-22T14:49:54+00:00"
+            "time": "2018-06-22 14:49:54"
         },
         {
             "name": "zendframework/zend-session",
@@ -4520,7 +4521,7 @@
                 "session",
                 "zf"
             ],
-            "time": "2018-02-22T16:33:54+00:00"
+            "time": "2018-02-22 16:33:54"
         },
         {
             "name": "zendframework/zend-soap",
@@ -4573,7 +4574,7 @@
                 "soap",
                 "zf2"
             ],
-            "time": "2019-04-30T16:45:35+00:00"
+            "time": "2019-04-30 16:45:35"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -4619,7 +4620,7 @@
                 "stdlib",
                 "zf"
             ],
-            "time": "2018-08-28T21:34:05+00:00"
+            "time": "2018-08-28 21:34:05"
         },
         {
             "name": "zendframework/zend-text",
@@ -4667,7 +4668,7 @@
                 "text",
                 "zf"
             ],
-            "time": "2018-04-30T14:55:10+00:00"
+            "time": "2018-04-30 14:55:10"
         },
         {
             "name": "zendframework/zend-uri",
@@ -4714,7 +4715,7 @@
                 "uri",
                 "zf"
             ],
-            "time": "2019-02-27T21:39:04+00:00"
+            "time": "2019-02-27 21:39:04"
         },
         {
             "name": "zendframework/zend-validator",
@@ -4787,7 +4788,7 @@
                 "validator",
                 "zf2"
             ],
-            "time": "2019-01-30T14:26:10+00:00"
+            "time": "2019-01-30 14:26:10"
         },
         {
             "name": "zendframework/zend-view",
@@ -4874,7 +4875,7 @@
                 "view",
                 "zf2"
             ],
-            "time": "2019-02-19T17:40:15+00:00"
+            "time": "2019-02-19 17:40:15"
         }
     ],
     "packages-dev": [
@@ -4927,7 +4928,7 @@
                 "steps",
                 "testing"
             ],
-            "time": "2018-12-18T19:47:23+00:00"
+            "time": "2018-12-18 19:47:23"
         },
         {
             "name": "allure-framework/allure-php-api",
@@ -4979,7 +4980,7 @@
                 "php",
                 "report"
             ],
-            "time": "2016-12-07T12:15:46+00:00"
+            "time": "2016-12-07 12:15:46"
         },
         {
             "name": "allure-framework/allure-phpunit",
@@ -5029,7 +5030,7 @@
                 "steps",
                 "testing"
             ],
-            "time": "2017-11-03T13:08:21+00:00"
+            "time": "2017-11-03 13:08:21"
         },
         {
             "name": "behat/gherkin",
@@ -5088,7 +5089,7 @@
                 "gherkin",
                 "parser"
             ],
-            "time": "2019-01-16T14:22:17+00:00"
+            "time": "2019-01-16 14:22:17"
         },
         {
             "name": "codeception/codeception",
@@ -5179,7 +5180,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2018-08-01T07:21:49+00:00"
+            "time": "2018-08-01 07:21:49"
         },
         {
             "name": "codeception/phpunit-wrapper",
@@ -5225,7 +5226,7 @@
                 }
             ],
             "description": "PHPUnit classes used by Codeception",
-            "time": "2019-02-26T20:47:39+00:00"
+            "time": "2019-02-26 20:47:39"
         },
         {
             "name": "codeception/stub",
@@ -5255,7 +5256,7 @@
                 "MIT"
             ],
             "description": "Flexible Stub wrapper for PHPUnit's Mock Builder",
-            "time": "2019-03-02T15:35:10+00:00"
+            "time": "2019-03-02 15:35:10"
         },
         {
             "name": "consolidation/annotated-command",
@@ -5351,7 +5352,7 @@
                 }
             ],
             "description": "Initialize Symfony Console commands from annotated command class methods.",
-            "time": "2019-03-08T16:55:03+00:00"
+            "time": "2019-03-08 16:55:03"
         },
         {
             "name": "consolidation/config",
@@ -5432,7 +5433,7 @@
                 }
             ],
             "description": "Provide configuration services for a commandline tool.",
-            "time": "2019-03-03T19:37:04+00:00"
+            "time": "2019-03-03 19:37:04"
         },
         {
             "name": "consolidation/log",
@@ -5522,7 +5523,7 @@
                 }
             ],
             "description": "Improved Psr-3 / Psr\\Log logger based on Symfony Console components.",
-            "time": "2019-01-01T17:30:51+00:00"
+            "time": "2019-01-01 17:30:51"
         },
         {
             "name": "consolidation/output-formatters",
@@ -5623,7 +5624,7 @@
                 }
             ],
             "description": "Format text by applying transformations provided by plug-in formatters.",
-            "time": "2019-05-30T23:16:01+00:00"
+            "time": "2019-05-30 23:16:01"
         },
         {
             "name": "consolidation/robo",
@@ -5731,7 +5732,7 @@
                 }
             ],
             "description": "Modern task runner",
-            "time": "2019-07-29T15:40:50+00:00"
+            "time": "2019-07-29 15:40:50"
         },
         {
             "name": "consolidation/self-update",
@@ -5781,7 +5782,7 @@
                 }
             ],
             "description": "Provides a self:update command for Symfony Console applications.",
-            "time": "2018-10-28T01:52:03+00:00"
+            "time": "2018-10-28 01:52:03"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -5840,7 +5841,7 @@
                 "dot",
                 "notation"
             ],
-            "time": "2017-01-20T21:14:22+00:00"
+            "time": "2017-01-20 21:14:22"
         },
         {
             "name": "doctrine/annotations",
@@ -5908,7 +5909,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2019-03-25T19:12:02+00:00"
+            "time": "2019-03-25 19:12:02"
         },
         {
             "name": "doctrine/collections",
@@ -5978,7 +5979,7 @@
                 "iterators",
                 "php"
             ],
-            "time": "2019-06-09T13:48:14+00:00"
+            "time": "2019-06-09 13:48:14"
         },
         {
             "name": "doctrine/instantiator",
@@ -6034,7 +6035,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2019-03-17T17:37:11+00:00"
+            "time": "2019-03-17 17:37:11"
         },
         {
             "name": "doctrine/lexer",
@@ -6094,7 +6095,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-06-08T11:03:04+00:00"
+            "time": "2019-06-08 11:03:04"
         },
         {
             "name": "epfremme/swagger-php",
@@ -6140,7 +6141,7 @@
                 }
             ],
             "description": "Library for parsing swagger documentation into PHP entities for use in testing and code generation",
-            "time": "2016-09-26T17:24:17+00:00"
+            "time": "2016-09-26 17:24:17"
         },
         {
             "name": "facebook/webdriver",
@@ -6200,7 +6201,7 @@
                 "selenium",
                 "webdriver"
             ],
-            "time": "2019-06-13T08:02:18+00:00"
+            "time": "2019-06-13 08:02:18"
         },
         {
             "name": "flow/jsonpath",
@@ -6241,7 +6242,7 @@
                 }
             ],
             "description": "JSONPath implementation for parsing, searching and flattening arrays",
-            "time": "2018-03-04T16:39:47+00:00"
+            "time": "2018-03-04 16:39:47"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -6329,7 +6330,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2019-06-01T10:29:34+00:00"
+            "time": "2019-06-01 10:29:34"
         },
         {
             "name": "fzaninotto/faker",
@@ -6379,7 +6380,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2018-07-12T10:23:15+00:00"
+            "time": "2018-07-12 10:23:15"
         },
         {
             "name": "grasmash/expander",
@@ -6426,7 +6427,7 @@
                 }
             ],
             "description": "Expands internal property references in PHP arrays file.",
-            "time": "2017-12-21T22:14:55+00:00"
+            "time": "2017-12-21 22:14:55"
         },
         {
             "name": "grasmash/yaml-expander",
@@ -6474,7 +6475,7 @@
                 }
             ],
             "description": "Expands internal property references in a yaml file.",
-            "time": "2017-12-16T16:06:03+00:00"
+            "time": "2017-12-16 16:06:03"
         },
         {
             "name": "jms/metadata",
@@ -6529,7 +6530,7 @@
                 "xml",
                 "yaml"
             ],
-            "time": "2018-10-26T12:40:10+00:00"
+            "time": "2018-10-26 12:40:10"
         },
         {
             "name": "jms/parser-lib",
@@ -6564,7 +6565,7 @@
                 "Apache2"
             ],
             "description": "A library for easily creating recursive-descent parsers.",
-            "time": "2012-11-18T18:08:43+00:00"
+            "time": "2012-11-18 18:08:43"
         },
         {
             "name": "jms/serializer",
@@ -6648,7 +6649,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2019-04-17T08:12:16+00:00"
+            "time": "2019-04-17 08:12:16"
         },
         {
             "name": "league/container",
@@ -6713,7 +6714,7 @@
                 "provider",
                 "service"
             ],
-            "time": "2017-05-10T09:20:27+00:00"
+            "time": "2017-05-10 09:20:27"
         },
         {
             "name": "lusitanian/oauth",
@@ -6780,7 +6781,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2018-02-14T22:37:14+00:00"
+            "time": "2018-02-14 22:37:14"
         },
         {
             "name": "magento/magento-coding-standard",
@@ -6810,7 +6811,7 @@
                 "AFL-3.0"
             ],
             "description": "A set of Magento specific PHP CodeSniffer rules.",
-            "time": "2019-06-18T21:01:42+00:00"
+            "time": "2019-06-18 21:01:42"
         },
         {
             "name": "magento/magento2-functional-testing-framework",
@@ -6885,7 +6886,7 @@
                 "magento",
                 "testing"
             ],
-            "time": "2019-08-02T14:26:18+00:00"
+            "time": "2019-08-02 14:26:18"
         },
         {
             "name": "mikey179/vfsstream",
@@ -6931,7 +6932,7 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2019-04-08T13:54:32+00:00"
+            "time": "2019-04-08 13:54:32"
         },
         {
             "name": "moontoast/math",
@@ -6980,7 +6981,7 @@
                 "bcmath",
                 "math"
             ],
-            "time": "2017-02-16T16:54:46+00:00"
+            "time": "2017-02-16 16:54:46"
         },
         {
             "name": "mustache/mustache",
@@ -7026,7 +7027,7 @@
                 "mustache",
                 "templating"
             ],
-            "time": "2017-07-11T12:54:05+00:00"
+            "time": "2017-07-11 12:54:05"
         },
         {
             "name": "myclabs/deep-copy",
@@ -7074,7 +7075,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2019-04-07T13:18:21+00:00"
+            "time": "2019-04-07 13:18:21"
         },
         {
             "name": "pdepend/pdepend",
@@ -7114,7 +7115,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Official version of pdepend to be handled with Composer",
-            "time": "2017-12-13T13:21:38+00:00"
+            "time": "2017-12-13 13:21:38"
         },
         {
             "name": "phar-io/manifest",
@@ -7169,7 +7170,7 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "time": "2017-03-05T18:14:27+00:00"
+            "time": "2017-03-05 18:14:27"
         },
         {
             "name": "phar-io/version",
@@ -7216,7 +7217,7 @@
                 }
             ],
             "description": "Library for handling version information and constraints",
-            "time": "2017-03-05T17:38:23+00:00"
+            "time": "2017-03-05 17:38:23"
         },
         {
             "name": "php-cs-fixer/diff",
@@ -7267,7 +7268,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2018-02-15T16:58:55+00:00"
+            "time": "2018-02-15 16:58:55"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -7315,7 +7316,7 @@
                 "sequence",
                 "set"
             ],
-            "time": "2015-05-17T12:39:23+00:00"
+            "time": "2015-05-17 12:39:23"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -7369,7 +7370,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2017-09-11T18:02:19+00:00"
+            "time": "2017-09-11 18:02:19"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -7420,7 +7421,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2019-04-30T17:48:53+00:00"
+            "time": "2019-04-30 17:48:53"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -7467,7 +7468,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14T14:27:02+00:00"
+            "time": "2017-07-14 14:27:02"
         },
         {
             "name": "phpmd/phpmd",
@@ -7535,7 +7536,7 @@
                 "phpmd",
                 "pmd"
             ],
-            "time": "2019-07-30T21:13:32+00:00"
+            "time": "2019-07-30 21:13:32"
         },
         {
             "name": "phpoption/phpoption",
@@ -7585,7 +7586,7 @@
                 "php",
                 "type"
             ],
-            "time": "2015-07-25T16:39:46+00:00"
+            "time": "2015-07-25 16:39:46"
         },
         {
             "name": "phpspec/prophecy",
@@ -7648,7 +7649,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2019-06-13T12:50:23+00:00"
+            "time": "2019-06-13 12:50:23"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7711,7 +7712,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-04-06T15:36:58+00:00"
+            "time": "2018-04-06 15:36:58"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -7758,7 +7759,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2017-11-27T13:52:08+00:00"
+            "time": "2017-11-27 13:52:08"
         },
         {
             "name": "phpunit/php-text-template",
@@ -7799,7 +7800,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -7848,7 +7849,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26T11:10:40+00:00"
+            "time": "2017-02-26 11:10:40"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -7897,7 +7898,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-11-27T05:48:46+00:00"
+            "time": "2017-11-27 05:48:46"
         },
         {
             "name": "phpunit/phpunit",
@@ -7981,7 +7982,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-02-01T05:22:47+00:00"
+            "time": "2019-02-01 05:22:47"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -8041,7 +8042,7 @@
                 "xunit"
             ],
             "abandoned": true,
-            "time": "2018-08-09T05:50:03+00:00"
+            "time": "2018-08-09 05:50:03"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -8086,7 +8087,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2017-03-04T06:30:41+00:00"
+            "time": "2017-03-04 06:30:41"
         },
         {
             "name": "sebastian/comparator",
@@ -8150,7 +8151,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2018-02-01T13:46:46+00:00"
+            "time": "2018-02-01 13:46:46"
         },
         {
             "name": "sebastian/diff",
@@ -8202,7 +8203,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-08-03T08:09:46+00:00"
+            "time": "2017-08-03 08:09:46"
         },
         {
             "name": "sebastian/environment",
@@ -8252,7 +8253,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2017-07-01T08:51:00+00:00"
+            "time": "2017-07-01 08:51:00"
         },
         {
             "name": "sebastian/exporter",
@@ -8319,7 +8320,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2017-04-03T13:19:02+00:00"
+            "time": "2017-04-03 13:19:02"
         },
         {
             "name": "sebastian/finder-facade",
@@ -8358,7 +8359,7 @@
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
             "homepage": "https://github.com/sebastianbergmann/finder-facade",
-            "time": "2017-11-18T17:31:49+00:00"
+            "time": "2017-11-18 17:31:49"
         },
         {
             "name": "sebastian/global-state",
@@ -8409,7 +8410,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2017-04-27T15:39:26+00:00"
+            "time": "2017-04-27 15:39:26"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -8456,7 +8457,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2017-08-03T12:35:26+00:00"
+            "time": "2017-08-03 12:35:26"
         },
         {
             "name": "sebastian/object-reflector",
@@ -8501,7 +8502,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2017-03-29T09:07:27+00:00"
+            "time": "2017-03-29 09:07:27"
         },
         {
             "name": "sebastian/phpcpd",
@@ -8551,7 +8552,7 @@
             ],
             "description": "Copy/Paste Detector (CPD) for PHP code.",
             "homepage": "https://github.com/sebastianbergmann/phpcpd",
-            "time": "2017-11-16T08:49:28+00:00"
+            "time": "2017-11-16 08:49:28"
         },
         {
             "name": "sebastian/recursion-context",
@@ -8604,7 +8605,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2017-03-03T06:23:57+00:00"
+            "time": "2017-03-03 06:23:57"
         },
         {
             "name": "sebastian/resource-operations",
@@ -8646,7 +8647,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2015-07-28T20:34:47+00:00"
+            "time": "2015-07-28 20:34:47"
         },
         {
             "name": "sebastian/version",
@@ -8689,7 +8690,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-10-03T07:35:21+00:00"
+            "time": "2016-10-03 07:35:21"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -8740,7 +8741,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2019-04-10T23:49:02+00:00"
+            "time": "2019-04-10 23:49:02"
         },
         {
             "name": "symfony/browser-kit",
@@ -8799,7 +8800,7 @@
             ],
             "description": "Symfony BrowserKit Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-11T15:41:59+00:00"
+            "time": "2019-06-11 15:41:59"
         },
         {
             "name": "symfony/config",
@@ -8863,7 +8864,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2019-07-18T10:34:59+00:00"
+            "time": "2019-07-18 10:34:59"
         },
         {
             "name": "symfony/dependency-injection",
@@ -8936,7 +8937,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2019-07-26T07:03:43+00:00"
+            "time": "2019-07-26 07:03:43"
         },
         {
             "name": "symfony/dom-crawler",
@@ -8997,7 +8998,7 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-13T11:03:18+00:00"
+            "time": "2019-06-13 11:03:18"
         },
         {
             "name": "symfony/http-foundation",
@@ -9052,7 +9053,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-07-23T11:21:36+00:00"
+            "time": "2019-07-23 11:21:36"
         },
         {
             "name": "symfony/mime",
@@ -9111,7 +9112,7 @@
                 "mime",
                 "mime-type"
             ],
-            "time": "2019-07-19T16:21:19+00:00"
+            "time": "2019-07-19 16:21:19"
         },
         {
             "name": "symfony/options-resolver",
@@ -9165,7 +9166,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2019-06-13T11:01:17+00:00"
+            "time": "2019-06-13 11:01:17"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -9227,7 +9228,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-03-04T13:44:35+00:00"
+            "time": "2019-03-04 13:44:35"
         },
         {
             "name": "symfony/polyfill-php70",
@@ -9286,7 +9287,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-02-06T07:57:58+00:00"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -9341,7 +9342,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-02-06T07:57:58+00:00"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/service-contracts",
@@ -9399,7 +9400,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-06-13T11:15:36+00:00"
+            "time": "2019-06-13 11:15:36"
         },
         {
             "name": "symfony/stopwatch",
@@ -9449,7 +9450,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-27T08:16:38+00:00"
+            "time": "2019-05-27 08:16:38"
         },
         {
             "name": "symfony/yaml",
@@ -9508,7 +9509,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2019-07-24T13:01:31+00:00"
+            "time": "2019-07-24 13:01:31"
         },
         {
             "name": "theseer/fdomdocument",
@@ -9548,7 +9549,7 @@
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
             "homepage": "https://github.com/theseer/fDOMDocument",
-            "time": "2017-06-30T11:53:12+00:00"
+            "time": "2017-06-30 11:53:12"
         },
         {
             "name": "theseer/tokenizer",
@@ -9588,7 +9589,7 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "time": "2019-06-13T22:48:21+00:00"
+            "time": "2019-06-13 22:48:21"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -9639,7 +9640,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2019-01-29T11:11:52+00:00"
+            "time": "2019-01-29 11:11:52"
         },
         {
             "name": "webmozart/assert",
@@ -9690,7 +9691,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2018-12-25T11:19:39+00:00"
+            "time": "2018-12-25 11:19:39"
         }
     ],
     "aliases": [],

@@ -1,21 +1,21 @@
 <?php
 /**
+ *
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog\Model;
+namespace Magento\InventoryCatalog\Model;
 
-use Magento\CatalogInventory\Model\ProductQty;
 use Magento\InventoryCatalog\Model\GetProductQtyById;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryCatalog\Model\QtyLeftChecker;
 
 /**
- * Plugin for adapt qty left for product according to the stock.
+ * Model for getting product qty left.
  */
-class ProductQtyPlugin
+class ProductQty
 {
     /**
      * @var StockItemConfigurationInterface
@@ -48,21 +48,14 @@ class ProductQtyPlugin
     }
 
     /**
-     * Get product qty left.
+     * Gte product qty info.
      *
-     * @param ProductQty $subject
-     * @param callable $proceed
      * @param int $productId
      * @param int $websiteId
      * @return float|null
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundGetProductQtyLeft(
-        ProductQty $subject,
-        callable $proceed,
-        int $productId,
-        int $websiteId
-    ):? float {
+    public function getProductQtyLeft(int $productId, int $websiteId):? float
+    {
         $productSalableQty = $this->getProductQtyById->execute($productId);
         if ($this->qtyLeftChecker->useQtyForViewing($productSalableQty)) {
             return  $this->getStockQtyLeft($productSalableQty);
