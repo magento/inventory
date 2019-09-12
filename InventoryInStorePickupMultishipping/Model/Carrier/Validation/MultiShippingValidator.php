@@ -40,10 +40,9 @@ class MultiShippingValidator implements RequestValidatorInterface
         $errors = [];
         /** @var \Magento\Quote\Model\Quote\Item\AbstractItem[] $items */
         $items = $rateRequest->getAllItems();
-        $first = current($items);
-        $quote = $first->getQuote();
+        $item = current($items);
 
-        if ($quote->getIsMultiShipping()) {
+        if ($item && $item->getQuote()->getIsMultiShipping()) {
             $errors[] = __('In-Store Pickup is not available with multiple address checkout.');
         }
 
