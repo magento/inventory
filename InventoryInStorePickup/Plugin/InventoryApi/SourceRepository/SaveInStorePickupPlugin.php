@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository;
 
 use Magento\Framework\DataObject;
+use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface as Location;
@@ -44,7 +45,7 @@ class SaveInStorePickupPlugin
 
         return [$source];
     }
-    
+
     /**
      * Set Frontend Name to Source.
      * Extension Attributes are not set and Source Frontend Name is missed -> use Source Name
