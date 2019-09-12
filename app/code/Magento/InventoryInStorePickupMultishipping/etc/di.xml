@@ -13,4 +13,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Quote\Api\CartRepositoryInterface">
+        <plugin name="remove_in_store_pickup_data" type="Magento\InventoryInStorePickupMultishipping\Plugin\Quote\RemoveInStorePickupDataInMultishippingModePlugin" />
+    </type>
 </config>
