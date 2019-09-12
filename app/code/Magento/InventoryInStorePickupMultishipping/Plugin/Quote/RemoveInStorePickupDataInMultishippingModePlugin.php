@@ -24,6 +24,7 @@ class RemoveInStorePickupDataInMultishippingModePlugin
      * @param CartInterface $cart
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(CartRepositoryInterface $repository, CartInterface $cart)
     {

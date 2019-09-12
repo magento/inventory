@@ -40,7 +40,7 @@ class PluginTest extends \PHPUnit\Framework\TestCase
             ['__wakeUp', 'setIsMultiShipping', 'getIsMultiShipping']
         );
         $this->cartMock->expects($this->once())->method('getQuote')->will($this->returnValue($this->quoteMock));
-        $this->object = new \Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller\Index\Index\DisableMultishippingPlugin(
+        $this->object = new DisableMultishippingPlugin(
             $this->cartMock
         );
     }
