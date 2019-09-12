@@ -22,6 +22,8 @@ use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchR
 
 /**
  * Resolve Pickup Locations.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterface
 {
