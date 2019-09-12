@@ -9,7 +9,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupMultishipping\Test\Unit\Controller\Checkout;
 
-use Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller\Index\Index\Plugin;
+use Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller\Index\Index\DisableMultishippingPlugin;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for plugin which turns Off Multishipping mode for Quote.
@@ -17,19 +18,19 @@ use Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller\Index
 class PluginTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject
      */
-    protected $cartMock;
+    private $cartMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject
      */
-    protected $quoteMock;
+    private $quoteMock;
 
     /**
-     * @var Plugin
+     * @var DisableMultishippingPlugin
      */
-    protected $object;
+    private $object;
 
     protected function setUp()
     {
@@ -39,7 +40,7 @@ class PluginTest extends \PHPUnit\Framework\TestCase
             ['__wakeUp', 'setIsMultiShipping', 'getIsMultiShipping']
         );
         $this->cartMock->expects($this->once())->method('getQuote')->will($this->returnValue($this->quoteMock));
-        $this->object = new \Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller\Index\Index\Plugin(
+        $this->object = new \Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller\Index\Index\DisableMultishippingPlugin(
             $this->cartMock
         );
     }

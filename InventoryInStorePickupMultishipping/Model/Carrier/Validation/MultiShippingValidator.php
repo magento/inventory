@@ -18,12 +18,6 @@ use Magento\Checkout\Model\Cart;
  */
 class MultiShippingValidator implements RequestValidatorInterface
 {
-
-    /**
-     * @var Cart
-     */
-    private $checkoutSession;
-
     /**
      * @var ValidationResultFactory
      */
@@ -31,14 +25,11 @@ class MultiShippingValidator implements RequestValidatorInterface
 
     /**
      * @param ValidationResultFactory $validationResultFactory
-     * @param Cart $checkoutSession
      */
     public function __construct(
-        ValidationResultFactory $validationResultFactory,
-        Cart $checkoutSession
+        ValidationResultFactory $validationResultFactory
     ) {
         $this->validationResultFactory = $validationResultFactory;
-        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -47,11 +38,13 @@ class MultiShippingValidator implements RequestValidatorInterface
     public function validate(RateRequest $rateRequest): ValidationResult
     {
         $errors = [];
-
-        $quote = $this->checkoutSession->getQuote();
+        /** @var \Magento\Quote\Model\Quote\Item\AbstractItem[] $items */
+        $items = $rateRequest->getAllItems();
+        $first = current($items);
+        $quote = $first->getQuote();
 
         if ($quote->getIsMultiShipping()) {
-            $errors[] = __('No Pickup Locations available for Multi Shipping');
+            $errors[] = __('In-Store Pickup is not available with multiple address checkout.');
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
