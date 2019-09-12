@@ -11,6 +11,7 @@ use Magento\Framework\DataObject;
 use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\InventoryInStorePickup\Model\Source\InitPickupLocationExtensionAttributes;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface as Location;
 
 /**
@@ -18,6 +19,19 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface as Locati
  */
 class SaveInStorePickupPlugin
 {
+    /**
+     * @var InitPickupLocationExtensionAttributes
+     */
+    private $setExtensionAttributes;
+
+    /**
+     * @param InitPickupLocationExtensionAttributes $setExtensionAttributes
+     */
+    public function __construct(InitPickupLocationExtensionAttributes $setExtensionAttributes)
+    {
+        $this->setExtensionAttributes = $setExtensionAttributes;
+    }
+
     /**
      * Persist the In-Store pickup attribute on Source save
      *
@@ -36,12 +50,14 @@ class SaveInStorePickupPlugin
         }
 
         $extensionAttributes = $source->getExtensionAttributes();
+        $this->setFrontendName($source, $extensionAttributes);
+
         if ($extensionAttributes !== null) {
             $source->setData(Location::IS_PICKUP_LOCATION_ACTIVE, $extensionAttributes->getIsPickupLocationActive());
             $source->setData(Location::FRONTEND_DESCRIPTION, $extensionAttributes->getFrontendDescription());
         }
 
-        $this->setFrontendName($source, $extensionAttributes);
+        $this->setExtensionAttributes->execute($source);
 
         return [$source];
     }
