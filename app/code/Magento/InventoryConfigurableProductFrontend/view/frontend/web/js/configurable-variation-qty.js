@@ -9,14 +9,15 @@
 define([
     'jquery',
     'underscore',
-    'mage/url'
-], function ($, _, urlBuilder) {
+    'mage/url',
+    'Magento_Ui/js/model/messageList'
+], function ($, _, urlBuilder, globalMessageList) {
     'use strict';
 
     return function (productId) {
-        var selectorInfoStockSkuQty = '.availability.only',
-            selectorInfoStockSkuQtyValue = '.availability.only > strong',
-            productQtyInfoBlock = $(selectorInfoStockSkuQty),
+        const selectorInfoStockSkuQty = '.availability.only',
+            selectorInfoStockSkuQtyValue = '.availability.only > strong';
+        let productQtyInfoBlock = $(selectorInfoStockSkuQty),
             productQtyInfo = $(selectorInfoStockSkuQtyValue);
 
         if (!_.isUndefined(productId) && productId !== null) {
@@ -27,7 +28,6 @@ define([
                     'id': productId
                 }
             }).done(function (response) {
-
                 if (!_.isUndefined(response.qty)) {
                     productQtyInfo.text(response.qty);
                     productQtyInfoBlock.show();
@@ -35,7 +35,12 @@ define([
                     productQtyInfoBlock.hide();
                 }
             }).fail(function (response) {
+                let error = JSON.parse(response.responseText);
+
                 productQtyInfoBlock.hide();
+                globalMessageList.addErrorMessage({
+                    message: error.message
+                });
             });
         } else {
             productQtyInfoBlock.hide();

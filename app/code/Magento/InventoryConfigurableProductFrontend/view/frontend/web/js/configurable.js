@@ -5,16 +5,14 @@
 define([
     'jquery',
     'configurableVariationQty',
-    'jquery/ui'
+    'jquery-ui-modules/widget'
 ], function ($, configurableVariationQty) {
     'use strict';
 
     return function (configurable) {
         $.widget('mage.configurable', configurable, {
 
-            /**
-             * @inheritDoc
-             */
+            /** @inheritdoc */
             _configureElement: function (element) {
                 this._super(element);
                 configurableVariationQty(this.simpleProduct);

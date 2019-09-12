@@ -56,7 +56,7 @@ class ProductQty
      */
     public function getProductQtyLeft(int $productId, int $websiteId):? float
     {
-        $productSalableQty = $this->getProductQtyById->execute($productId);
+        $productSalableQty = $this->getProductQtyById->execute($productId, $websiteId);
         if ($this->qtyLeftChecker->useQtyForViewing($productSalableQty)) {
             return  $this->getStockQtyLeft($productSalableQty);
         }
