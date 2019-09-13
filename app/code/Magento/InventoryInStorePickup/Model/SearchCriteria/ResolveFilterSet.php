@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 
 /**
  * Resolve Search Criteria Builder parts from the Filter Set.
@@ -22,8 +22,10 @@ class ResolveFilterSet implements BuilderPartsResolverInterface
     /**
      * @inheritdoc
      */
-    public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
-    {
+    public function resolve(
+        SearchRequestInterface $searchRequest,
+        SearchCriteriaBuilderDecorator $searchCriteriaBuilder
+    ): void {
         $filters = $this->extractFilters($searchRequest);
 
         foreach ($filters as $field => $filter) {

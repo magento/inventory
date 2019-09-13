@@ -73,4 +73,12 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryApi\Model\SourceValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="city" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\CityValidator</item>
+                <item name="street" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\StreetValidator</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

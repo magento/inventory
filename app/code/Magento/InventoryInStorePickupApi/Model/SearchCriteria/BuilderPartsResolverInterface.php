@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model\SearchCriteria;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 
 /**
@@ -21,7 +20,10 @@ interface BuilderPartsResolverInterface
      * Resolve Search Request and place it into Search Criteria Builder parts.
      *
      * @param SearchRequestInterface $searchRequest
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SearchCriteriaBuilderDecorator $searchCriteriaBuilder
      */
-    public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void;
+    public function resolve(
+        SearchRequestInterface $searchRequest,
+        SearchCriteriaBuilderDecorator $searchCriteriaBuilder
+    ): void;
 }

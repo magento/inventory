@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Model;
 
-use Magento\Framework\Api\SearchCriteria;
-use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecoratorFactory;
 
 /**
  * @inheritdoc
@@ -19,7 +18,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverI
 class SearchCriteriaResolverChain implements SearchCriteriaResolverInterface
 {
     /**
-     * @var SearchCriteriaBuilderFactory
+     * @var SearchCriteriaBuilderDecoratorFactory
      */
     private $searchCriteriaBuilderFactory;
 
@@ -29,11 +28,11 @@ class SearchCriteriaResolverChain implements SearchCriteriaResolverInterface
     private $resolvers;
 
     /**
-     * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
+     * @param SearchCriteriaBuilderDecoratorFactory $searchCriteriaBuilderFactory
      * @param BuilderPartsResolverInterface[] $resolvers
      */
     public function __construct(
-        SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
+        SearchCriteriaBuilderDecoratorFactory $searchCriteriaBuilderFactory,
         array $resolvers
     ) {
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
