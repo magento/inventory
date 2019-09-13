@@ -133,23 +133,6 @@ class MapperTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/pickup_location.php
-     * @throws
-     */
-    public function testEmptyFrontendName()
-    {
-        $source = $this->sourceRepository->get($this->sourceCode);
-        $source->getExtensionAttributes()->setFrontendName(null);
-        $this->sourceRepository->save($source);
-
-        /** @var  Mapper $mapper */
-        $mapper = $this->objectManager->create(Mapper::class);
-
-        $pickupLocation = $mapper->map($source);
-        $this->assertEquals($source->getName(), $pickupLocation->getName());
-    }
-
-    /**
      * @return array
      */
     private function getMap(): array
