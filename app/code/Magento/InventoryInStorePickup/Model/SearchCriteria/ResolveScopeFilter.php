@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -15,6 +14,7 @@ use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
@@ -59,8 +59,10 @@ class ResolveScopeFilter implements BuilderPartsResolverInterface
      *
      * @throws NoSuchEntityException
      */
-    public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
-    {
+    public function resolve(
+        SearchRequestInterface $searchRequest,
+        SearchCriteriaBuilderDecorator $searchCriteriaBuilder
+    ): void {
         $stockId = $this->getStockId($searchRequest);
         $sourceCodes = $this->getSourceCodesAssignedToStock($stockId);
 
