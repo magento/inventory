@@ -33,6 +33,7 @@ class InventorySourceExtensionTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      */
     public function testGetListOfSourcesWithPickupLocationExtensionAfterSave()
     {
