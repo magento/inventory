@@ -7,7 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\Extension;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -29,6 +32,57 @@ class InventorySourceExtensionTest extends TestCase
         $this->objectManager = Bootstrap::getObjectManager();
 
         $this->sourceRepository = $this->objectManager->get(SourceRepositoryInterface::class);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     *
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
+     *
+     * @expectedException \Magento\Framework\Validation\ValidationException
+     * @expectedExceptionMessage Validation Failed
+     */
+    public function testSaveDefaultSourceAsPickupLocation()
+    {
+        $source = $this->sourceRepository->get('default');
+        $source->getExtensionAttributes()->setIsPickupLocationActive(true);
+        $this->sourceRepository->save($source);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     *
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     *
+     * @expectedException \Magento\Framework\Validation\ValidationException
+     * @expectedExceptionMessage Validation Failed
+     */
+    public function testSaveSourceAsPickupLocationWithoutStreet()
+    {
+        $source = $this->sourceRepository->get('eu-1');
+        $source->getExtensionAttributes()->setIsPickupLocationActive(true);
+        $source->setCity('Some City');
+        $this->sourceRepository->save($source);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     *
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     *
+     * @expectedException \Magento\Framework\Validation\ValidationException
+     * @expectedExceptionMessage Validation Failed
+     */
+    public function testSaveSourceAsPickupLocationWithoutCity()
+    {
+        $source = $this->sourceRepository->get('eu-2');
+        $source->getExtensionAttributes()->setIsPickupLocationActive(true);
+        $source->setStreet('Some Street');
+        $this->sourceRepository->save($source);
     }
 
     /**
