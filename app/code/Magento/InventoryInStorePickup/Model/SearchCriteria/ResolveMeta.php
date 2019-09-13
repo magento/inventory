@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 
 /**
  * Resolve Page and Sort related information for the Search Criteria Builder.
@@ -34,8 +34,10 @@ class ResolveMeta implements BuilderPartsResolverInterface
      *
      * @throws InputException
      */
-    public function resolve(SearchRequestInterface $searchRequest, SearchCriteriaBuilder $searchCriteriaBuilder): void
-    {
+    public function resolve(
+        SearchRequestInterface $searchRequest,
+        SearchCriteriaBuilderDecorator $searchCriteriaBuilder
+    ): void {
         $searchCriteriaBuilder->setCurrentPage($searchRequest->getCurrentPage());
 
         if ($searchRequest->getPageSize()) {
@@ -51,13 +53,13 @@ class ResolveMeta implements BuilderPartsResolverInterface
      * Adjust and add Sort Orders to the Search Criteria Builder.
      *
      * @param SearchRequestInterface $searchRequest
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SearchCriteriaBuilderDecorator $searchCriteriaBuilder
      *
      * @throws InputException
      */
     private function addSortOrders(
         SearchRequestInterface $searchRequest,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilderDecorator $searchCriteriaBuilder
     ): void {
         $sorts = [];
         foreach ($searchRequest->getSort() as $sortOrder) {
