@@ -7,18 +7,19 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\ToOrder;
 
 /**
- * Pass Pickup Location code to the Order from Quote Address.
+ * Set Pickup Location code to the Order from Quote Address.
  *
- * @TODO Move logic to fieldset.xml when issue will be resolved in core..
- * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
+ * The Pickup Location code will be pass to the Order only if selected delivery method is In-Store Pickup.
  */
-class PassPickupLocationToOrder
+class SetPickupLocationToOrder
 {
-    private const ORDER_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
+    private const ORDER_FIELD_NAME = 'pickup_location_code';
 
     /**
      * Add Pickup Location code to the Order from Quote Address.
@@ -26,15 +27,21 @@ class PassPickupLocationToOrder
      * @param ToOrder $subject
      * @param Address $address
      * @param array $data
+     *
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeConvert(ToOrder $subject, Address $address, array $data = []): array
     {
+        if ($address->getShippingMethod() !== InStorePickup::DELIVERY_METHOD) {
+            return [$address, $data];
+        }
+
         $extension = $address->getExtensionAttributes();
 
         if ($extension && $extension->getPickupLocationCode()) {
-            $data[self::ORDER_FIELD_NAME] = $extension->getPickupLocationCode();
+            $data[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][self::ORDER_FIELD_NAME] =
+                $extension->getPickupLocationCode();
         }
 
         return [$address, $data];
