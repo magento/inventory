@@ -47,34 +47,12 @@ class DefaultSourceUseForPickupLocationValidator implements SourceValidatorInter
     {
         $errors = [];
 
-        if ($this->isDefaultSource($source) && $this->isUsedAsPickupLocation($source)) {
+        if ($source->getSourceCode() === $this->defaultSourceProvider->getCode() &&
+            (!$source->getExtensionAttributes() || $source->getExtensionAttributes()->getIsPickupLocationActive())
+        ) {
             $errors[] = __('The Default Source can not be used for In-Store Pickup Delivery.');
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
-    }
-
-    /**
-     * Check if provided Source is Default Source.
-     *
-     * @param SourceInterface $source
-     *
-     * @return bool
-     */
-    private function isDefaultSource(SourceInterface $source): bool
-    {
-        return $source->getSourceCode() === $this->defaultSourceProvider->getCode();
-    }
-
-    /**
-     * Check if Source has been marked as Pickup Location.
-     *
-     * @param SourceInterface $source
-     *
-     * @return bool
-     */
-    private function isUsedAsPickupLocation(SourceInterface $source): bool
-    {
-        return !$source->getExtensionAttributes() || $source->getExtensionAttributes()->getIsPickupLocationActive();
     }
 }
