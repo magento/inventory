@@ -29,4 +29,9 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator">
+        <arguments>
+            <argument name="criteriaBuilder" shared="false" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
+        </arguments>
+    </type>
 </config>
