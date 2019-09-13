@@ -9,7 +9,6 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\Address;
 
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\DeleteQuoteAddressPickupLocation;
 use Magento\InventoryInStorePickupQuote\Model\ResourceModel\SaveQuoteAddressPickupLocation;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Model\Quote\Address;
 
 /**
@@ -54,7 +53,7 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
             return $result;
         }
 
-        if (!$this->isAddressHasPickupLocation($subject)) {
+        if (!$subject->getExtensionAttributes()->getPickupLocationCode()) {
             $this->deleteQuoteAddressPickupLocation->execute((int)$subject->getId());
 
             return $result;
@@ -66,19 +65,6 @@ class ManageAssignmentOfPickupLocationToQuoteAddress
         );
 
         return $result;
-    }
-
-    /**
-     * Validate if address has Pickup Location.
-     *
-     * @param Address $address
-     *
-     * @return bool
-     */
-    private function isAddressHasPickupLocation(Address $address): bool
-    {
-        return $address->getShippingMethod() === InStorePickup::DELIVERY_METHOD &&
-            $address->getExtensionAttributes()->getPickupLocationCode();
     }
 
     /**

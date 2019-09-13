@@ -37,6 +37,7 @@
             </argument>
             <argument name="preProcessors" xsi:type="array">
                 <item name="extension_attributes.frontend_name" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendName</item>
+                <item name="extension_attributes.frontend_description" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendDescription</item>
             </argument>
         </arguments>
     </type>
@@ -53,4 +54,12 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder" />
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
+    <type name="Magento\InventoryApi\Model\SourceValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="city" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\CityValidator</item>
+                <item name="street" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\StreetValidator</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

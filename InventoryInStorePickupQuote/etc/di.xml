@@ -29,6 +29,6 @@
         </arguments>
     </type>
     <type name="Magento\Quote\Model\Quote\Address\ToOrder">
-        <plugin name="pass_pickup_location_to_order_during_address_conversion" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\PassPickupLocationToOrder" sortOrder="20" />
+        <plugin name="set_pickup_location_to_order_during_address_conversion" type="Magento\InventoryInStorePickupQuote\Plugin\Quote\SetPickupLocationToOrder" sortOrder="20" />
     </type>
 </config>

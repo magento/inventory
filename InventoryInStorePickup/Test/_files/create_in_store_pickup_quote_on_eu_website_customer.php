@@ -17,6 +17,7 @@ use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterfaceFactory;
 use Magento\Quote\Api\Data\ShippingInterface;
 use Magento\Quote\Api\Data\ShippingInterfaceFactory;
+use Magento\Quote\Model\QuoteIdMaskFactory;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -40,10 +41,8 @@ $shippingFactory = Bootstrap::getObjectManager()->get(ShippingInterfaceFactory::
 /** @var \Magento\Quote\Api\Data\AddressExtensionFactory $addressExtensionFactory */
 $addressExtensionFactory = Bootstrap::getObjectManager()->get(AddressExtensionFactory::class);
 
-$cartId = $cartManagement->createEmptyCart();
+$cartId = $cartManagement->createEmptyCartForCustomer(1);
 $cart = $cartRepository->get($cartId);
-$cart->setCustomerEmail('admin@example.com');
-$cart->setCustomerIsGuest(true);
 $cart->setReservedOrderId('in_store_pickup_test_order');
 
 $store = $storeRepository->get('store_for_eu_website');
@@ -112,3 +111,9 @@ if (!$cart->getExtensionAttributes()) {
 $cart->getExtensionAttributes()->setShippingAssignments([$shippingAssignment]);
 
 $cartRepository->save($cart);
+
+/** @var \Magento\Quote\Model\QuoteIdMask $quoteIdMask */
+$quoteIdMask = Bootstrap::getObjectManager()->create(QuoteIdMaskFactory::class)->create();
+$quoteIdMask->setQuoteId($cart->getId());
+$quoteIdMask->setDataChanges(true);
+$quoteIdMask->save();
