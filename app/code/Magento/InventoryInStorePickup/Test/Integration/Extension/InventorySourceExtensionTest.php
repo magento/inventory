@@ -7,7 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\Extension;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -27,7 +30,6 @@ class InventorySourceExtensionTest extends TestCase
     protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
-
         $this->sourceRepository = $this->objectManager->get(SourceRepositoryInterface::class);
     }
 
@@ -35,7 +37,7 @@ class InventorySourceExtensionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      */
-    public function testGetListOfSourcesWithPickupLocationExtensionAfterSave()
+    public function testGetListOfSourcesWithPickupLocationExtensionAfterSave(): void
     {
         $pickupLocationConfig = [
             'default' => ['active' => false, 'name' => 'default', 'desc' => 'default'],
@@ -72,22 +74,94 @@ class InventorySourceExtensionTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     *
+     * @dataProvider dataProvider
+     *
+     * @param array $data
+     * @param string $sourceCode
+     * @param array $expected
+     *
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
+     * @throws ValidationException
      */
-    public function testGetSourceWithPickupLocationExtensionAfterSave()
+    public function testGetSourceWithPickupLocationExtensionAfterSave(array $data, string $sourceCode, array $expected)
     {
-        $sourceCode = 'source-code-1';
-
         $source = $this->sourceRepository->get($sourceCode);
         $source->getExtensionAttributes()
-               ->setIsPickupLocationActive(true)
-               ->setFrontendName('zzz')
-               ->setFrontendDescription('666');
+               ->setIsPickupLocationActive($data['is_active'])
+               ->setFrontendName($data['name'])
+               ->setFrontendDescription($data['description']);
         $this->sourceRepository->save($source);
 
         $source = $this->sourceRepository->get($sourceCode);
-        $this->assertEquals(true, $source->getExtensionAttributes()->getIsPickupLocationActive());
-        $this->assertEquals('zzz', $source->getExtensionAttributes()->getFrontendName());
-        $this->assertEquals('666', $source->getExtensionAttributes()->getFrontendDescription());
+        $this->assertEquals($expected['is_active'], $source->getExtensionAttributes()->getIsPickupLocationActive());
+        $this->assertEquals($expected['name'], $source->getExtensionAttributes()->getFrontendName());
+        $this->assertEquals($expected['description'], $source->getExtensionAttributes()->getFrontendDescription());
+    }
+
+    /**
+     * Test data sets.
+     *
+     * @return array
+     */
+    public function dataProvider(): array
+    {
+        return [
+            [ /* Data set #0. Default Source. */
+                [
+                    'name' => 'default',
+                    'description' => 'default',
+                    'is_active' => false
+                ],
+                'default',
+                [
+                    'name' => 'default',
+                    'description' => 'default',
+                    'is_active' => false
+                ]
+            ],
+            [ /* Data set #1. Save Frontend Name and without Description. */
+                [
+                    'name' => 'EU-source-1',
+                    'description' => null,
+                    'is_active' => true
+                ],
+                'eu-1',
+                [
+                    'name' => 'EU-source-1',
+                    'description' => null,
+                    'is_active' => true
+                ]
+            ],
+            [ /* Data set #2. Save custom Frontend Name and without Description. */
+                [
+                    'name' => 'zzz',
+                    'description' => null,
+                    'is_active' => true
+                ],
+                'eu-2',
+                [
+                    'name' => 'zzz',
+                    'description' => null,
+                    'is_active' => true
+                ]
+            ],
+            [ /* Data set #3. Save without Frontend Name and with Description. */
+                [
+                    'name' => null,
+                    'description' => 'zzz1',
+                    'is_active' => false
+                ],
+                'eu-3',
+                [
+                    'name' => 'EU-source-3',
+                    'description' => 'zzz1',
+                    'is_active' => false
+                ]
+            ]
+        ];
     }
 }
