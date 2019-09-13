@@ -9,12 +9,13 @@ namespace Magento\InventoryInStorePickupApi\Model\SearchCriteria;
 
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\Search\FilterGroup;
-use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SortOrder;
 
 /**
  * Decorator for @see \Magento\Framework\Api\SearchCriteriaBuilder
+ *
  * Provides Service Contracts for Search Criteria Builder usage.
  *
  * @api
@@ -27,8 +28,6 @@ class SearchCriteriaBuilderDecorator
     private $criteriaBuilder;
 
     /**
-     * SearchCriteriaBuilderDecorator constructor.
-     *
      * @param SearchCriteriaBuilder $criteriaBuilder
      */
     public function __construct(SearchCriteriaBuilder $criteriaBuilder)
@@ -39,9 +38,9 @@ class SearchCriteriaBuilderDecorator
     /**
      * Builds the SearchCriteria Data Object
      *
-     * @return SearchCriteria
+     * @return SearchCriteriaInterface
      */
-    public function create(): SearchCriteria
+    public function create(): SearchCriteriaInterface
     {
         return $this->criteriaBuilder->create();
     }
