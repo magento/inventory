@@ -11,6 +11,7 @@ use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Address;
 
 /**
  * Remove In-Store Pickup info if Quote in Multishipping mode.
@@ -35,6 +36,11 @@ class RemoveInStorePickupDataInMultishippingModePlugin
         $extension = $cart->getExtensionAttributes();
 
         $assignments = $extension->getShippingAssignments();
+
+        if ($assignments === null) {
+            return [$cart];
+        }
+
         /** @var \Magento\Quote\Api\Data\ShippingAssignmentInterface $assignment */
         $assignment = current($assignments);
         $shipping = $assignment->getShipping();
@@ -45,7 +51,7 @@ class RemoveInStorePickupDataInMultishippingModePlugin
 
         $shipping->setMethod('');
         $address = $shipping->getAddress();
-        if ($address instanceof \Magento\Quote\Model\Quote\Address) {
+        if ($address instanceof Address) {
             $address->setShippingMethod('');
         }
 
