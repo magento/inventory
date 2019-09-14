@@ -42,6 +42,10 @@ class ConvertBooleanToStringPlugin
             // Single attribute returned in:
             // \Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider::getData
             foreach ($result as $key => $item) {
+                if (!is_array($item)) {
+                    continue;
+                }
+
                 $result[$key]['general'] = $this->convertDataItemExtensionFieldsBoolValueToString($item['general']);
             }
         }

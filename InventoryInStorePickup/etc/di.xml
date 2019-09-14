@@ -30,7 +30,6 @@
                 <item name="extension_attributes.frontend_description" xsi:type="string">description</item>
             </argument>
             <argument name="preProcessors" xsi:type="array">
-                <item name="extension_attributes.frontend_name" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendName</item>
                 <item name="extension_attributes.frontend_description" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendDescription</item>
             </argument>
         </arguments>
@@ -45,9 +44,9 @@
         </arguments>
     </type>
     <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface" type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
-    <preference for="Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
     <preference for="Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface" type="Magento\InventoryInStorePickup\Model\SearchResult\ExtractStrategy" />
     <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface">
@@ -78,6 +77,7 @@
             <argument name="validators" xsi:type="array">
                 <item name="city" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\CityValidator</item>
                 <item name="street" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\StreetValidator</item>
+                <item name="default_source_use_as_pickup_location_validator" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\DefaultSourceUseForPickupLocationValidator</item>
             </argument>
         </arguments>
     </type>
