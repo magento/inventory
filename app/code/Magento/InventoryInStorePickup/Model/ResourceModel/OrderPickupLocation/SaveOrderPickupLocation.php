@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Save Order Pickup Location
@@ -15,7 +16,6 @@ use Magento\Framework\App\ResourceConnection;
 class SaveOrderPickupLocation
 {
     private const ORDER_ID  = 'order_id';
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
      * @var ResourceConnection
@@ -46,7 +46,7 @@ class SaveOrderPickupLocation
 
         $data = [
             self::ORDER_ID => $orderId,
-            self::PICKUP_LOCATION_CODE => $pickupLocationCode
+            PickupLocationInterface::PICKUP_LOCATION_CODE => $pickupLocationCode
         ];
 
         $connection->insertOnDuplicate($table, $data);

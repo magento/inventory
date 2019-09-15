@@ -109,7 +109,7 @@ class MapperTest extends TestCase
         $mapper = $this->objectManager->create(Mapper::class);
         $pickupLocation = $mapper->map($source);
 
-        $this->assertEquals($source->getSourceCode(), $pickupLocation->getSourceCode());
+        $this->assertEquals($source->getSourceCode(), $pickupLocation->getPickupLocationCode());
         $this->assertEquals($source->getExtensionAttributes()->getFrontendName(), $pickupLocation->getName());
         $this->assertNotEquals($source->getDescription(), $pickupLocation->getDescription());
         $this->assertEquals($source->getEmail(), $pickupLocation->getEmail());

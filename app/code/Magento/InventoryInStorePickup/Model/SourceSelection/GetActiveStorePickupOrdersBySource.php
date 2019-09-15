@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SourceSelection;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderSearchResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -18,8 +19,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
  */
 class GetActiveStorePickupOrdersBySource
 {
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
-
     /**
      * @var OrderRepositoryInterface
      */
@@ -59,7 +58,7 @@ class GetActiveStorePickupOrdersBySource
     public function execute(string $pickupLocationCode): OrderSearchResultInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(self::PICKUP_LOCATION_CODE, $pickupLocationCode)
+            ->addFilter(PickupLocationInterface::PICKUP_LOCATION_CODE, $pickupLocationCode)
             ->addFilter(OrderInterface::STATE, implode(',', $this->statesToFilter), 'nin')
             ->create();
 
