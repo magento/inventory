@@ -10,7 +10,8 @@
         "magento/module-sales": "*",
         "magento/module-store": "*",
         "magento/module-inventory-source-selection-api": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-inventory-catalog-api": "*"
     },
     "type": "magento2-module",
     "license": [
