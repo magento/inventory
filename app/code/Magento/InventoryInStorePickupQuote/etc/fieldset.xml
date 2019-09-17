@@ -27,8 +27,8 @@
             <field name="postcode">
                 <aspect name="to_pickup_location_shipping_address"/>
             </field>
-            <field name="source_code">
-                <aspect name="to_pickup_location_shipping_address" targetField="pickup_location_code"/>
+            <field name="pickup_location_code">
+                <aspect name="to_pickup_location_shipping_address"/>
             </field>
         </fieldset>
 

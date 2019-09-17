@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection;
 
 use Magento\Framework\DB\Select;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressExtensionInterfaceFactory;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Collection;
@@ -17,8 +18,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Address\Collection;
  */
 class GetPickupLocationInformationPlugin
 {
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
-    private const TABLE_ALIAS          = 'iplqa';
+    private const TABLE_ALIAS = 'iplqa';
 
     /**
      * @var AddressExtensionInterfaceFactory
@@ -58,7 +58,7 @@ class GetPickupLocationInformationPlugin
             $collection->getSelect()->joinLeft(
                 [self::TABLE_ALIAS => 'inventory_pickup_location_quote_address'],
                 self::TABLE_ALIAS . '.address_id = main_table.address_id',
-                [self::PICKUP_LOCATION_CODE]
+                [PickupLocationInterface::PICKUP_LOCATION_CODE]
             );
         }
 
@@ -81,10 +81,10 @@ class GetPickupLocationInformationPlugin
     private function processAddress(Address $address): void
     {
         $hasDataChanges = $address->hasDataChanges();
-        if ($address->getData(self::PICKUP_LOCATION_CODE)) {
+        if ($address->getData(PickupLocationInterface::PICKUP_LOCATION_CODE)) {
             $this->addPickupLocationToExtensionAttributes($address);
         }
-        $address->unsetData(self::PICKUP_LOCATION_CODE);
+        $address->unsetData(PickupLocationInterface::PICKUP_LOCATION_CODE);
         $address->setDataChanges($hasDataChanges);
     }
 
@@ -101,6 +101,8 @@ class GetPickupLocationInformationPlugin
             $item->setExtensionAttributes($this->addressExtensionInterfaceFactory->create());
         }
 
-        $item->getExtensionAttributes()->setPickupLocationCode($item->getData(self::PICKUP_LOCATION_CODE));
+        $item->getExtensionAttributes()->setPickupLocationCode(
+            $item->getData(PickupLocationInterface::PICKUP_LOCATION_CODE)
+        );
     }
 }

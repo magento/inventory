@@ -8,16 +8,18 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\ResourceModel\Source;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Select;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 
 /**
- * Get Source Codes ordered by distance
+ * Get Distance to Sources.
  *
- * Get Source Codes, ordered by distance to request coordinates using Haversine formula (Great Circle Distance)
- * database query.
+ * Get Source Codes and distance to them, ordered by distance to request coordinates using
+ * Haversine formula (Great Circle Distance) database query.
  */
-class GetDistanceOrderedSourceCodes
+class GetOrderedDistanceToSources
 {
     private const EARTH_RADIUS_KM = 6372.797;
 
@@ -35,24 +37,35 @@ class GetDistanceOrderedSourceCodes
     }
 
     /**
-     * Get list of sources located in specified radius of specific coordinates.
+     * Get associated list of source codes and distances to specific coordinates limited by specific radius.
      *
      * @param LatLngInterface $latLng
      * @param int $radius
-     * @return string[]
+     *
+     * @return float[]
      */
     public function execute(LatLngInterface $latLng, int $radius): array
     {
         $connection = $this->resourceConnection->getConnection();
         $sourceTable = $this->resourceConnection->getTableName('inventory_source');
         $query = $connection->select()
-            ->from($sourceTable)
-            ->where(SourceInterface::ENABLED)
-            ->columns(['source_code', $this->createDistanceColumn($latLng) . ' AS distance'])
-            ->having('distance <= ?', $radius)
-            ->order('distance ASC');
+                            ->from($sourceTable)
+                            ->where(SourceInterface::ENABLED)
+                            ->reset(Select::COLUMNS)
+                            ->columns(
+                                [
+                                    'source_code',
+                                    $this->createDistanceColumn(
+                                        $latLng
+                                    ) . ' AS ' . DistanceFilterInterface::DISTANCE_FIELD
+                                ]
+                            )
+                            ->having(DistanceFilterInterface::DISTANCE_FIELD . ' <= ?', $radius)
+                            ->order(DistanceFilterInterface::DISTANCE_FIELD . ' ASC');
 
-        return $connection->fetchCol($query);
+        $distances = $connection->fetchPairs($query);
+
+        return array_map('floatval', $distances);
     }
 
     /**
