@@ -2,12 +2,12 @@
 # See COPYING.txt for license details.
 
 type Query {
-    pickup_locations (
+    pickupLocations (
         distance: DistanceFilterInput @doc(description: "Perform search by distance using radius and the address for the search.")
         filter: PickupLocationFilterInput @doc(description: "Apply filters by attributes.")
         sort: PickupLocationSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
-        page_size: Int = 20 @doc(description: "The maximum number of pickup locations to return at once. The attribute is optional.")
-        current_page: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
+        pageSize: Int = 20 @doc(description: "The maximum number of pickup locations to return at once. The attribute is optional.")
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
     ): PickupLocations
     @resolver(class: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations") @doc(description: "The pickup locations query searches for locations that match the search request requirements.") @cache(cacheIdentity: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations\\Identity")
 }

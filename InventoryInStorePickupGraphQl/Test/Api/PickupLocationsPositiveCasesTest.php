@@ -98,15 +98,15 @@ QUERY;
         $request = '{' . PHP_EOL . $body . $responseTemplate . PHP_EOL . '}';
 
         $response = $this->graphQlQuery($request, [], '', ['Store' => $storeCode]);
-        self::assertArrayHasKey('pickup_locations', $response);
-        self::assertArrayHasKey('items', $response['pickup_locations']);
-        self::assertArrayHasKey('page_info', $response['pickup_locations']);
+        self::assertArrayHasKey('pickupLocations', $response);
+        self::assertArrayHasKey('items', $response['pickupLocations']);
+        self::assertArrayHasKey('page_info', $response['pickupLocations']);
 
-        $this->comparePickupLocations($response['pickup_locations']['items'], $expected, $websiteCode);
-        self::assertEquals($totalCount, $response['pickup_locations']['total_count']);
-        self::assertEquals($pageSize, $response['pickup_locations']['page_info']['page_size']);
-        self::assertEquals($currentPage, $response['pickup_locations']['page_info']['current_page']);
-        self::assertEquals($totalPages, $response['pickup_locations']['page_info']['total_pages']);
+        $this->comparePickupLocations($response['pickupLocations']['items'], $expected, $websiteCode);
+        self::assertEquals($totalCount, $response['pickupLocations']['total_count']);
+        self::assertEquals($pageSize, $response['pickupLocations']['page_info']['page_size']);
+        self::assertEquals($currentPage, $response['pickupLocations']['page_info']['current_page']);
+        self::assertEquals($totalPages, $response['pickupLocations']['page_info']['total_pages']);
     }
 
     /**
@@ -129,7 +129,7 @@ QUERY;
     {
         return [
             [ /* Data set #0. Without any filters. */
-              'pickup_locations',
+              'pickupLocations',
               ['eu-1', 'eu-3', 'us-1'],
               'global_website',
               'store_for_global_website',
@@ -139,7 +139,7 @@ QUERY;
               1
             ],
             [ /* Data set #1. Sort only. */
-              'pickup_locations(
+              'pickupLocations(
     sort: {
       postcode: DESC
       country_id: ASC
@@ -154,7 +154,7 @@ QUERY;
               1
             ],
             [ /* Data set #2. Filter by Code and Name with array value type conditions. */
-              'pickup_locations(
+              'pickupLocations(
   filter:{
     pickup_location_code: {in: ["eu-3", "eu-2", "eu-1"]}
     name:{in: ["EU-source-1", "EU-source-2"]}
@@ -169,13 +169,13 @@ QUERY;
               1
             ],
             [ /* Data set #3. Filter by Code and Name with sort. */
-              'pickup_locations(
+              'pickupLocations(
   	filter:{
     	pickup_location_code: {like: "eu%"}
     	name:{like: "%source%"}
     }
-    page_size: 1
-    current_page: 2
+    pageSize: 1
+    currentPage: 2
     sort:{
       country_id: DESC
     }
@@ -189,7 +189,7 @@ QUERY;
               2
             ],
             [ /* Data set #4. Filter by address attributes only. */
-              'pickup_locations(
+              'pickupLocations(
     filter:{
       country_id: {neq:"FR"}
       region: {eq: "Bayern"}
@@ -208,14 +208,14 @@ QUERY;
               1
             ],
             [ /* Data set #5. Distance Filter with paging. */
-              'pickup_locations(
+              'pickupLocations(
     distance:{
       radius: 750
       country_code: "DE"
       postcode: "86559"
     }
-    page_size: 1
-    current_page: 1
+    pageSize: 1
+    currentPage: 1
     sort: {distance: ASC}
   )',
               ['eu-1'],
@@ -227,7 +227,7 @@ QUERY;
               2
             ],
             [ /* Data set #6. Distance filter with Filter Name and Code attributes. */
-              'pickup_locations(
+              'pickupLocations(
     distance:{
       radius: 750
       country_code: "DE"
@@ -237,8 +237,8 @@ QUERY;
     	name:{like:"%source%"}
     	pickup_location_code:{like:"eu%"}
     }
-    page_size: 1
-    current_page: 2
+    pageSize: 1
+    currentPage: 2
   )',
               ['eu-3'],
               'global_website',
@@ -249,7 +249,7 @@ QUERY;
               2
             ],
             [ /* Data set #7. Distance filter with Filter address attributes. */
-              'pickup_locations(
+              'pickupLocations(
     distance:{
       radius: 750
       country_code: "DE"
@@ -271,7 +271,7 @@ QUERY;
               1
             ],
             [ /* Data set #8. Filter by distance but without sort by distance. */
-              'pickup_locations(
+              'pickupLocations(
     distance: {
       country_code:"FR"
       city:"Saint-Saturnin-lès-Apt"
@@ -290,7 +290,7 @@ QUERY;
               1
             ],
             [ /* Data set #9. Test with all filters. */
-                'pickup_locations(
+                'pickupLocations(
     filter:{
       city: {in: ["Kolbermoor", "Mitry-Mory", "Burlingame"]}
       region: {nin: ["Thüringen", "Bouches-du-Rhône"]}
@@ -304,8 +304,8 @@ QUERY;
       country_code: "DE"
       region: "Bayern"
     }
-    page_size: 2
-    current_page: 1
+    pageSize: 2
+    currentPage: 1
     sort:{
         distance: DESC
         city: ASC

@@ -102,11 +102,11 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
      */
     private function validateInput(array $args): void
     {
-        if (isset($args['current_page']) && $args['current_page'] < 1) {
-            throw new GraphQlInputException(__('current_page value must be greater than 0.'));
+        if (isset($args['currentPage']) && $args['currentPage'] < 1) {
+            throw new GraphQlInputException(__('currentPage value must be greater than 0.'));
         }
-        if (isset($args['page_size']) && $args['page_size'] < 1) {
-            throw new GraphQlInputException(__('page_size value must be greater than 0.'));
+        if (isset($args['pageSize']) && $args['pageSize'] < 1) {
+            throw new GraphQlInputException(__('pageSize value must be greater than 0.'));
         }
 
         if (isset($args['distance']) && !(
@@ -141,7 +141,7 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
         if ($searchRequest->getCurrentPage() > $maxPages && $searchResult->getTotalCount() > 0) {
             throw new GraphQlInputException(
                 __(
-                    'current_page value %1 specified is greater than the %2 page(s) available.',
+                    'currentPage value %1 specified is greater than the %2 page(s) available.',
                     [$currentPage, $maxPages]
                 )
             );
