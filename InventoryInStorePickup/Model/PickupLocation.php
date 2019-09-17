@@ -25,7 +25,7 @@ class PickupLocation implements PickupLocationInterface
     /**
      * @var string
      */
-    private $sourceCode;
+    private $pickupLocationCode;
 
     /**
      * @var string|null
@@ -98,7 +98,7 @@ class PickupLocation implements PickupLocationInterface
     private $email;
 
     /**
-     * @param string $sourceCode
+     * @param string $pickupLocationCode
      * @param string|null $name
      * @param string|null $email
      * @param string|null $fax
@@ -117,7 +117,7 @@ class PickupLocation implements PickupLocationInterface
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        string $sourceCode,
+        string $pickupLocationCode,
         ?string $name = null,
         ?string $email = null,
         ?string $fax = null,
@@ -134,7 +134,7 @@ class PickupLocation implements PickupLocationInterface
         ?string $phone = null,
         ?PickupLocationExtensionInterface $extensionAttributes = null
     ) {
-        $this->sourceCode = $sourceCode;
+        $this->pickupLocationCode = $pickupLocationCode;
         $this->name = $name;
         $this->email = $email;
         $this->fax = $fax;
@@ -155,9 +155,9 @@ class PickupLocation implements PickupLocationInterface
     /**
      * @inheritdoc
      */
-    public function getSourceCode(): string
+    public function getPickupLocationCode(): string
     {
-        return $this->sourceCode;
+        return $this->pickupLocationCode;
     }
 
     /**

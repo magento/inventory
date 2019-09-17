@@ -14,19 +14,24 @@ $sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface
 
 $pickupLocationAttributesMap = [
     'eu-1' => [
-        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => true
+        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => true,
+        PickupLocationInterface::FRONTEND_NAME => 'EU-source-1'
     ],
     'eu-2' => [
-        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => false
+        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => false,
+        PickupLocationInterface::FRONTEND_NAME => 'EU-source-2'
     ],
     'eu-3' => [
-        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => true
+        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => true,
+        PickupLocationInterface::FRONTEND_NAME => 'EU-source-3'
     ],
     'eu-disabled' => [
-        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => false
+        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => false,
+        PickupLocationInterface::FRONTEND_NAME => 'EU-source-disabled'
     ],
     'us-1' => [
-        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => true
+        PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE => true,
+        PickupLocationInterface::FRONTEND_NAME => 'US-source-1'
     ]
 ];
 
@@ -34,5 +39,6 @@ foreach ($pickupLocationAttributesMap as $sourceCode => $value) {
     $source = $sourceRepository->get($sourceCode);
     $extension = $source->getExtensionAttributes();
     $extension->setIsPickupLocationActive($value[PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE]);
+    $extension->setFrontendName($value[PickupLocationInterface::FRONTEND_NAME]);
     $sourceRepository->save($source);
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\ToOrder;
@@ -19,8 +20,6 @@ use Magento\Quote\Model\Quote\Address\ToOrder;
  */
 class SetPickupLocationToOrder
 {
-    private const ORDER_FIELD_NAME = 'pickup_location_code';
-
     /**
      * Add Pickup Location code to the Order from Quote Address.
      *
@@ -40,7 +39,7 @@ class SetPickupLocationToOrder
         $extension = $address->getExtensionAttributes();
 
         if ($extension && $extension->getPickupLocationCode()) {
-            $data[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][self::ORDER_FIELD_NAME] =
+            $data[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY][PickupLocationInterface::PICKUP_LOCATION_CODE] =
                 $extension->getPickupLocationCode();
         }
 
