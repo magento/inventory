@@ -94,57 +94,57 @@ QUERY;
     {
         return [
            [/* Data set #0. Search by not existing address */
-               'pickup_locations(
+               'pickupLocations(
     distance:{
       radius: 750
       country_code: "ZZZ"
       postcode: "86559"
     }
-    page_size: 1
-    current_page: 1
+    pageSize: 1
+    currentPage: 1
     sort: {distance: ASC}
   )',
                'store_for_global_website',
                'Unknown geoname for  86559   ZZZ'
            ],
            [/* Data set #1. Wrong page size. */
-            'pickup_locations(
-    page_size: -1
-    current_page: 1
+            'pickupLocations(
+    pageSize: -1
+    currentPage: 1
   )',
             'store_for_global_website',
-            'page_size value must be greater than 0.'
+            'pageSize value must be greater than 0.'
            ],
            [/* Data set #2. Wrong current page. */
-               'pickup_locations(
-    page_size: 10
-    current_page: -1
+               'pickupLocations(
+    pageSize: 10
+    currentPage: -1
   )',
                'store_for_global_website',
-               'current_page value must be greater than 0.'
+               'currentPage value must be greater than 0.'
            ],
            [/* Data set #3. Wrong max page. */
-               'pickup_locations(
+               'pickupLocations(
     distance:{
       radius: 750
       country_code: "DE"
       postcode: "86559"
     }
-    page_size: 1
-    current_page: 4
+    pageSize: 1
+    currentPage: 4
     sort: {distance: ASC}
   )',
                'store_for_global_website',
-               'current_page value 4 specified is greater than the 2 page(s) available.'
+               'currentPage value 4 specified is greater than the 2 page(s) available.'
            ],
            [/* Data set #4. Wrong distance filter input. */
-               'pickup_locations(
+               'pickupLocations(
     distance:{
       radius: 750
       country_code: "US"
     }
-    page_size: 1
-    current_page: 1
+    pageSize: 1
+    currentPage: 1
     sort: {distance: ASC}
   )',
                'store_for_global_website',

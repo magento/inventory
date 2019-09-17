@@ -9,7 +9,7 @@
     <type name="Magento\Framework\GraphQl\Query\Resolver\Argument\FieldEntityAttributesPool">
         <arguments>
             <argument name="attributesInstances" xsi:type="array">
-                <item name="pickup_locations" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\FilterArgument\PickupLocationsAttributesForAst</item>
+                <item name="pickupLocations" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\FilterArgument\PickupLocationsAttributesForAst</item>
             </argument>
         </arguments>
     </type>
