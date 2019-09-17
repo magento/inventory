@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickupAdminUi\Controller\Adminhtml\Order;
 use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
@@ -23,7 +23,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Notify Customer of order pickup availability.
  */
-class NotifyPickup extends Action implements HttpPostActionInterface
+class NotifyPickup extends Action implements HttpGetActionInterface
 {
     /**
      * Authorization level of a basic admin session
@@ -81,7 +81,7 @@ class NotifyPickup extends Action implements HttpPostActionInterface
 
         try {
             $this->notifyOrderIsReadyForPickup->execute((int)$order->getEntityId());
-            $this->messageManager->addSuccessMessage(__('The customer have been notified and shipment created.'));
+            $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (Exception $e) {
