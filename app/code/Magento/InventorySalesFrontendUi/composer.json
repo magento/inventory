@@ -6,6 +6,7 @@
         "magento/framework": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-inventory-catalog": "*",
+        "magento/module-inventory-catalog-frontend-ui": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-inventory-configuration-api": "*"
     },

@@ -1,6 +1,6 @@
-# InventorySwatches module
+# InventorySwatchesFrontendUi module
 
-The `InventorySwatches` add inventory management functionality.
+The `InventorySwatchesFrontendUi` add info about qty left to ui pages.
 
 This module is part of the new inventory infrastructure. The
 [Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)

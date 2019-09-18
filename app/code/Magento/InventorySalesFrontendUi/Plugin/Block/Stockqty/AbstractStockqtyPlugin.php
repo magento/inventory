@@ -8,13 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventorySalesFrontendUi\Plugin\Block\Stockqty;
 
 use Magento\CatalogInventory\Block\Stockqty\AbstractStockqty;
-use Magento\Framework\App\ObjectManager;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryCatalog\Model\QtyLeftChecker;
+use Magento\InventoryCatalogFrontendUi\Model\QtyLeftChecker;
 
 /**
  * Plugin for adapting stock qty for block.
@@ -51,21 +50,20 @@ class AbstractStockqtyPlugin
      * @param GetStockItemConfigurationInterface $getStockItemConfig
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
-     * @param QtyLeftChecker|null $qtyLeftChecker
+     * @param QtyLeftChecker $qtyLeftChecker
      */
     public function __construct(
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
         GetStockItemConfigurationInterface $getStockItemConfig,
         GetProductSalableQtyInterface $getProductSalableQty,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        QtyLeftChecker $qtyLeftChecker = null
+        QtyLeftChecker $qtyLeftChecker
     ) {
         $this->getStockItemConfiguration = $getStockItemConfig;
         $this->stockByWebsiteId = $stockByWebsiteId;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->qtyLeftChecker = $qtyLeftChecker ?: ObjectManager::getInstance()
-            ->get(QtyLeftChecker::class);
+        $this->qtyLeftChecker = $qtyLeftChecker;
     }
 
     /**

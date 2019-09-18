@@ -5,15 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Controller\Product;
+namespace Magento\InventoryCatalogFrontendUi\Controller\Product;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\App\Action\Context;
-use Magento\InventoryCatalog\Model\ProductQty;
+use Magento\InventoryCatalogFrontendUi\Model\GetProductQtyLeft;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 /**
  * Get product qty left.
@@ -36,50 +38,65 @@ class GetQty extends Action implements HttpGetActionInterface
     private $storeManager;
 
     /**
+     * @var GetSkusByProductIdsInterface
+     */
+    private $getSkusByProductIds;
+
+    /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param Context $context
      * @param ResultFactory $resultPageFactory
-     * @param ProductQty $productQty
+     * @param GetProductQtyLeft $productQty
      * @param StoreManagerInterface $storeManager
+     * @param GetSkusByProductIdsInterface $getSkusByProductIds
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
         Context $context,
         ResultFactory $resultPageFactory,
-        ProductQty $productQty,
-        StoreManagerInterface $storeManager
+        GetProductQtyLeft $productQty,
+        StoreManagerInterface $storeManager,
+        GetSkusByProductIdsInterface $getSkusByProductIds,
+        StockResolverInterface $stockResolver
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->productQty = $productQty;
         $this->storeManager = $storeManager;
+        $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->stockResolver = $stockResolver;
         parent::__construct($context);
     }
 
     /**
-     * Product view action
+     * Get qty left for product.
      *
      * @return ResultInterface
      */
     public function execute()
     {
         $productId = (int) $this->getRequest()->getParam('id');
+        $salesChannel = $this->getRequest()->getParam('channel');
 
-        if (!$productId) {
+        if (!$productId || !$salesChannel) {
             $resultForward = $this->resultPageFactory->create(ResultFactory::TYPE_FORWARD);
             $resultForward->forward('noroute');
             return $resultForward;
         }
 
-        $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
-        $qty = $this->productQty->getProductQtyLeft($productId, (int)$this->storeManager->getStore()->getWebsiteId());
+        $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        $websiteCode = $this->storeManager->getWebsite((int)$this->storeManager->getStore()->getWebsiteId())->getCode();
+        $stockId = $this->stockResolver->execute($salesChannel, $websiteCode)->getStockId();
 
-        if ($qty === null) {
-            $resultJson->setData([]);
-        } else {
-            $resultJson->setData(
-                [
-                    'qty' => $qty
-                ]
-            );
-        }
+        $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
+        $resultJson->setData(
+            [
+                'qty' => $this->productQty->execute($sku, (int)$stockId)
+            ]
+        );
 
         return $resultJson;
     }

@@ -15,9 +15,10 @@ define([
     'use strict';
 
     return function (productId) {
-        const selectorInfoStockSkuQty = '.availability.only',
-            selectorInfoStockSkuQtyValue = '.availability.only > strong';
-        let productQtyInfoBlock = $(selectorInfoStockSkuQty),
+        var selectorInfoStockSkuQty = '.availability.only',
+            selectorInfoStockSkuQtyValue = '.availability.only > strong',
+            salesChannel = 'website',
+            productQtyInfoBlock = $(selectorInfoStockSkuQty),
             productQtyInfo = $(selectorInfoStockSkuQtyValue);
 
         if (!_.isUndefined(productId) && productId !== null) {
@@ -25,22 +26,18 @@ define([
                 url: urlBuilder.build('catalog/product/getQty/'),
                 dataType: 'json',
                 data: {
-                    'id': productId
+                    'id': productId,
+                    'channel': salesChannel
                 }
             }).done(function (response) {
-                if (!_.isUndefined(response.qty)) {
+                if (response.qty !== null) {
                     productQtyInfo.text(response.qty);
                     productQtyInfoBlock.show();
                 } else {
                     productQtyInfoBlock.hide();
                 }
-            }).fail(function (response) {
-                let error = JSON.parse(response.responseText);
-
+            }).fail(function () {
                 productQtyInfoBlock.hide();
-                globalMessageList.addErrorMessage({
-                    message: error.message
-                });
             });
         } else {
             productQtyInfoBlock.hide();
