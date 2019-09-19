@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\PickupLocation;
 
+use Magento\Framework\Filter\Template;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
@@ -34,10 +35,17 @@ class MapperTest extends TestCase
      */
     private $sourceCode;
 
+    /**
+     * @var Template
+     */
+    private $templateFilter;
+
     protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->sourceRepository = $this->objectManager->create(SourceRepositoryInterface::class);
+        $this->templateFilter = $this->objectManager->create(Template::class);
+
         $this->sourceCode = 'pickup';
     }
 
@@ -92,6 +100,7 @@ class MapperTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/pickup_location.php
+     * @throws \Exception
      */
     public function testMapPickupLocation()
     {
@@ -100,13 +109,13 @@ class MapperTest extends TestCase
         $mapper = $this->objectManager->create(Mapper::class);
         $pickupLocation = $mapper->map($source);
 
-        $this->assertEquals($source->getSourceCode(), $pickupLocation->getSourceCode());
+        $this->assertEquals($source->getSourceCode(), $pickupLocation->getPickupLocationCode());
         $this->assertEquals($source->getExtensionAttributes()->getFrontendName(), $pickupLocation->getName());
         $this->assertNotEquals($source->getDescription(), $pickupLocation->getDescription());
         $this->assertEquals($source->getEmail(), $pickupLocation->getEmail());
         $this->assertEquals($source->getContactName(), $pickupLocation->getContactName());
         $this->assertEquals(
-            $source->getExtensionAttributes()->getFrontendDescription(),
+            $this->templateFilter->filter($source->getExtensionAttributes()->getFrontendDescription()),
             $pickupLocation->getDescription()
         );
         $this->assertNotEquals($source->getName(), $pickupLocation->getName());
@@ -121,22 +130,6 @@ class MapperTest extends TestCase
         $this->assertEquals($source->getPhone(), $pickupLocation->getPhone());
         $this->assertEquals($source->getFax(), $pickupLocation->getFax());
         $this->assertInstanceOf(PickupLocationExtensionInterface::class, $pickupLocation->getExtensionAttributes());
-    }
-
-    /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/pickup_location.php
-     * @throws
-     */
-    public function testEmptyFrontendName()
-    {
-        $source = $this->sourceRepository->get($this->sourceCode);
-        $source->getExtensionAttributes()->setFrontendName(null);
-
-        /** @var  Mapper $mapper */
-        $mapper = $this->objectManager->create(Mapper::class);
-
-        $pickupLocation = $mapper->map($source);
-        $this->assertEquals($source->getName(), $pickupLocation->getName());
     }
 
     /**

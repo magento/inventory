@@ -27,6 +27,9 @@
             <field name="postcode">
                 <aspect name="to_pickup_location_shipping_address"/>
             </field>
+            <field name="pickup_location_code">
+                <aspect name="to_pickup_location_shipping_address"/>
+            </field>
         </fieldset>
 
         <fieldset id="sales_convert_quote_address">
@@ -128,6 +131,37 @@
             </field>
             <field name="shipping_method">
                 <aspect name="to_pickup_location_shipping_address"/>
+                <aspect name="shipping_address_data" />
+            </field>
+            <field name="country_id">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="region">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="region_id">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="city">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="street">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="postcode">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="pickup_location_code">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="same_as_billing">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="save_in_address_book">
+                <aspect name="shipping_address_data"/>
+            </field>
+            <field name="customer_address_id">
+                <aspect name="shipping_address_data"/>
             </field>
         </fieldset>
     </scope>

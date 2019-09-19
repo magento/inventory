@@ -7,20 +7,8 @@
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/inventory/in-store-pickup/get-nearby-pickup-locations/:salesChannelType/:salesChannelCode/" method="GET">
-        <service class="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" method="execute"/>
-        <resources>
-            <resource ref="anonymous"/>
-        </resources>
-    </route>
-    <route url="/V1/inventory/in-store-pickup/pickup-locations-assigned-to-sales-channel/:salesChannelType/:salesChannelCode" method="GET">
-        <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface" method="execute"/>
-        <resources>
-            <resource ref="anonymous"/>
-        </resources>
-    </route>
-    <route url="/V1/inventory/in-store-pickup/pickup-location/:salesChannelType/:salesChannelCode/:pickupLocationCode" method="GET">
-        <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" method="execute"/>
+    <route url="/V1/inventory/in-store-pickup/pickup-locations/" method="GET">
+        <service class="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" method="execute"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>

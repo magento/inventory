@@ -18,26 +18,27 @@ use Magento\Framework\Api\ExtensibleDataInterface;
  */
 interface PickupLocationInterface extends ExtensibleDataInterface
 {
-    const IS_PICKUP_LOCATION_ACTIVE = 'is_pickup_location_active';
-    const FRONTEND_NAME = 'frontend_name';
-    const FRONTEND_DESCRIPTION = 'frontend_description';
+    public const IS_PICKUP_LOCATION_ACTIVE = 'is_pickup_location_active';
+    public const FRONTEND_NAME = 'frontend_name';
+    public const FRONTEND_DESCRIPTION = 'frontend_description';
+    public const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
-     * Get source code of Pickup Location
+     * Get source code of Pickup Location.
      *
      * @return string
      */
-    public function getSourceCode(): string;
+    public function getPickupLocationCode(): string;
 
     /**
-     * Get Pickup Location name
+     * Get Pickup Location name.
      *
      * @return string|null
      */
     public function getName(): ?string;
 
     /**
-     * Get Pickup Location contact email
+     * Get Pickup Location contact email.
      *
      * @return string|null
      */
@@ -72,7 +73,7 @@ interface PickupLocationInterface extends ExtensibleDataInterface
     public function getLatitude(): ?float;
 
     /**
-     * Get Pickup Location longtitude.
+     * Get Pickup Location longitude.
      *
      * @return float|null
      */
