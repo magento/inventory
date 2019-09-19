@@ -29,10 +29,7 @@
             <field key="phone">string</field>
             <field key="fax">string</field>
             <field key="use_default_carrier_config">boolean</field>
+            <field key="extension_attributes">source_extension_attribute</field>
         </object>
-    </operation>
-    <operation name="DeleteSource" dataType="source" type="delete"
-               auth="adminOauth" url="/V1/inventory/sources/{source_code}" method="DELETE">
-        <contentType>application/json</contentType>
     </operation>
 </operations>
