@@ -6,7 +6,7 @@
     "magento/framework": "*",
     "magento/module-inventory-catalog-api": "*",
     "magento/module-inventory-sales-api": "*",
-    "magento/module-inventory-store": "*",
+    "magento/module-store": "*",
     "magento/module-inventory-configuration-api": "*"
   },
   "suggest": {

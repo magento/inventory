@@ -1,5 +1,5 @@
 {
-    "name": "magento/module-inventory-swatches",
+    "name": "magento/module-inventory-swatches-frontend-ui",
     "description": "N/A",
     "require": {
         "php": "~7.1.3||~7.2.0||~7.3.0",

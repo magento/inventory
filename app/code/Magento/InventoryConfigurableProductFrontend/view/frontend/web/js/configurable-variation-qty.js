@@ -9,9 +9,8 @@
 define([
     'jquery',
     'underscore',
-    'mage/url',
-    'Magento_Ui/js/model/messageList'
-], function ($, _, urlBuilder, globalMessageList) {
+    'mage/url'
+], function ($, _, urlBuilder) {
     'use strict';
 
     return function (productId) {
