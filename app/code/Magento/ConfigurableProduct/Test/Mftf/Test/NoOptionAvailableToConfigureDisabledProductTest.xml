@@ -10,7 +10,6 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="NoOptionAvailableToConfigureDisabledProductTest">
         <annotations>
-            <stories value="Disabled Product"/>
             <title value="Disabled variation of configurable product can't be added to shopping cart via admin"/>
             <description value="Disabled variation of configurable product can't be added to shopping cart via admin"/>
             <severity value="AVERAGE"/>
@@ -52,8 +51,8 @@
             <getData entity="ProductAttributeOptionGetter" index="3" stepKey="getConfigAttributeOption3">
                 <requiredEntity createDataKey="createConfigProductAttribute"/>
             </getData>
-            <!-- Create the 2 children that will be a part of the configurable product -->
-            <comment userInput="Create the 2 children that will be a part of the configurable product" stepKey="createTwoChildrenProducts"/>
+            <!-- Create the 3 children that will be a part of the configurable product -->
+            <comment userInput="Create the 3 children that will be a part of the configurable product" stepKey="createTwoChildrenProducts"/>
             <createData entity="ApiSimpleProductWithPrice50" stepKey="createConfigChildProduct1">
                 <requiredEntity createDataKey="createConfigProductAttribute"/>
                 <requiredEntity createDataKey="getConfigAttributeOption1"/>
@@ -66,8 +65,8 @@
                 <requiredEntity createDataKey="createConfigProductAttribute"/>
                 <requiredEntity createDataKey="getConfigAttributeOption3"/>
             </createData>
-            <!-- Assign two products to the configurable product -->
-            <comment userInput="Assign two products to the configurable product" stepKey="assignToConfigurableProduct"/>
+            <!-- Assign 3 products to the configurable product -->
+            <comment userInput="Assign 3 products to the configurable product" stepKey="assignToConfigurableProduct"/>
             <createData entity="ConfigurableProductTwoOptions" stepKey="createConfigProductOption">
                 <requiredEntity createDataKey="createConfigProduct"/>
                 <requiredEntity createDataKey="createConfigProductAttribute"/>
@@ -87,12 +86,12 @@
                 <requiredEntity createDataKey="createConfigProduct"/>
                 <requiredEntity createDataKey="createConfigChildProduct3"/>
             </createData>
-            <!--Create Customer-->
+            <!-- Create Customer -->
             <comment userInput="Create customer" stepKey="commentCreateCustomer"/>
             <createData entity="Simple_US_Customer_CA" stepKey="createCustomer"/>
         </before>
         <after>
-            <!--Delete created data-->
+            <!-- Delete created data -->
             <comment userInput="Delete created data" stepKey="deleteData"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory2"/>
             <deleteData createDataKey="createConfigProduct" stepKey="deleteConfigProduct"/>
@@ -103,23 +102,23 @@
             <deleteData createDataKey="createCustomer" stepKey="deleteCreatedCustomer"/>
             <actionGroup ref="logout" stepKey="logout"/>
         </after>
-        <!--Disable child product -->
+        <!-- Disable child product -->
         <comment userInput="Disable child product" stepKey="disableChildProduct"/>
         <amOnPage url="{{AdminProductEditPage.url($$createConfigChildProduct1.id$$)}}" stepKey="goToEditPage"/>
         <waitForPageLoad stepKey="waitForChildProductPageLoad"/>
         <click selector="{{AdminProductFormSection.enableProductLabel}}" stepKey="disableProduct"/>
         <actionGroup ref="saveProductForm" stepKey="saveProductForm"/>
-        <!--Go to created customer page-->
+        <!-- Go to created customer page -->
         <comment userInput="Go to created customer page" stepKey="goToCreatedCustomerPage"/>
         <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrder">
             <argument name="customer" value="$$createCustomer$$"/>
         </actionGroup>
         <click selector="{{AdminOrderFormItemsSection.addProducts}}" stepKey="clickToAddProduct"/>
         <waitForPageLoad stepKey="waitForProductsOpened"/>
-        <!--Find created configurable product and click on "Configure" link-->
+        <!-- Find created configurable product and click on "Configure" link -->
         <comment userInput="Find created configurable product and click on Configure link" stepKey="goToConfigurableLink"/>
         <click selector="{{AdminOrderFormConfigureProductSection.configure($$createConfigProduct.id$$)}}" stepKey="clickOnConfigure"/>
-        <!--Click on attribute drop-down and check no option 1 is available-->
+        <!-- Click on attribute drop-down and check no option 1 is available -->
         <comment userInput="Click on attribute drop-down and check no option 1 is available" stepKey="commentNoOptionIsAvailable"/>
         <waitForElement selector="{{AdminOrderFormConfigureProductSection.selectOption}}" stepKey="waitForShippingSectionLoaded"/>
         <click selector="{{AdminOrderFormConfigureProductSection.selectOption}}" stepKey="clickToSelectOption"/>
