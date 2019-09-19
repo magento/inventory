@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model;
 
 use InvalidArgumentException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 
 /**
@@ -29,23 +29,23 @@ class SearchResult implements SearchResultInterface
     private $totalCount = 0;
 
     /**
-     * @var GetNearbyLocationsCriteriaInterface
+     * @var SearchRequestInterface
      */
-    private $searchCriteria;
+    private $searchRequest;
 
     /**
      * @param PickupLocationInterface[] $items
      * @param int $totalCount
-     * @param GetNearbyLocationsCriteriaInterface|null $searchCriteria
+     * @param SearchRequestInterface|null $searchRequest
      */
     public function __construct(
         array $items,
         int $totalCount = 0,
-        $searchCriteria = null
+        $searchRequest = null
     ) {
         $this->items = $items;
         $this->totalCount = $totalCount;
-        $this->searchCriteria = $searchCriteria;
+        $this->searchRequest = $searchRequest;
     }
 
     /**
@@ -63,24 +63,6 @@ class SearchResult implements SearchResultInterface
     {
         $this->validateItems($items);
         $this->items = $items;
-
-        return $this->items;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getSearchCriteria(): GetNearbyLocationsCriteriaInterface
-    {
-        return $this->searchCriteria;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setSearchCriteria(GetNearbyLocationsCriteriaInterface $searchCriteria): SearchResultInterface
-    {
-        $this->searchCriteria = $searchCriteria;
 
         return $this;
     }
@@ -123,5 +105,22 @@ class SearchResult implements SearchResultInterface
                 );
             }
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSearchRequest(): SearchRequestInterface
+    {
+        return $this->searchRequest;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSearchRequest(SearchRequestInterface $searchRequest): SearchResultInterface
+    {
+        $this->searchRequest = $searchRequest;
+        return $this;
     }
 }

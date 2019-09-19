@@ -9,8 +9,7 @@ namespace Magento\InventoryInStorePickupQuote\Plugin\Quote;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
-use Magento\InventoryInStorePickupQuote\Model\ExtractPickupLocationShippingAddressData;
+use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Model\GetWebsiteCodeByStoreId;
 use Magento\InventoryInStorePickupQuote\Model\IsPickupLocationShippingAddress;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;
@@ -25,8 +24,6 @@ use Magento\Quote\Model\ShippingAddressManagementInterface;
  */
 class ReplaceShippingAddressForShippingAddressManagement
 {
-    private const ADDRESS_FIELD_NAME = 'extension_attribute_pickup_location_code_pickup_location_code';
-
     /**
      * @var CartRepositoryInterface
      */
@@ -53,32 +50,24 @@ class ReplaceShippingAddressForShippingAddressManagement
     private $getWebsiteCodeByStoreId;
 
     /**
-     * @var ExtractPickupLocationShippingAddressData
-     */
-    private $extractPickupLocationShippingAddressData;
-
-    /**
      * @param CartRepositoryInterface $cartRepository
      * @param GetPickupLocationInterface $getPickupLocation
      * @param IsPickupLocationShippingAddress $isPickupLocationShippingAddress
      * @param ToQuoteAddress $addressConverter
      * @param GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
-     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
         GetPickupLocationInterface $getPickupLocation,
         IsPickupLocationShippingAddress $isPickupLocationShippingAddress,
         ToQuoteAddress $addressConverter,
-        GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId,
-        ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
+        GetWebsiteCodeByStoreId $getWebsiteCodeByStoreId
     ) {
         $this->cartRepository = $cartRepository;
         $this->getPickupLocation = $getPickupLocation;
         $this->isPickupLocationShippingAddress = $isPickupLocationShippingAddress;
         $this->addressConverter = $addressConverter;
         $this->getWebsiteCodeByStoreId = $getWebsiteCodeByStoreId;
-        $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
     }
 
     /**
@@ -109,15 +98,7 @@ class ReplaceShippingAddressForShippingAddressManagement
             return [$cartId, $address];
         }
 
-        /**
-         * @TODO Refactor when issue will be resolved in core.
-         * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
-         */
-        $address = $this->addressConverter->convert(
-            $this->extractPickupLocationShippingAddressData->execute($pickupLocation),
-            $address,
-            [self::ADDRESS_FIELD_NAME => $pickupLocation->getSourceCode()]
-        );
+        $address = $this->addressConverter->convert($pickupLocation, $address);
 
         return [$cartId, $address];
     }

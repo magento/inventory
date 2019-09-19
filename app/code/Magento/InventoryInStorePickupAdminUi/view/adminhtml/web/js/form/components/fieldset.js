@@ -21,7 +21,7 @@ define([
                 this._super();
 
                 // eslint-disable-next-line vars-on-top
-                var visible = ko.observable(this.visible());
+                var visible = this.visible;
 
                 this.visible = ko.computed({
                     /**
@@ -35,7 +35,8 @@ define([
                      * @param {String} value
                      */
                     write: function (value) {
-                        visible(Boolean(parseInt(value, 0)));
+                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 0));
+                        visible(value);
                     },
                     owner: this
                 });
