@@ -7,19 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model;
 
-use Magento\Sales\Api\Data\OrderInterface;
-
 /**
  * Filter orders for missing initial reservation
  */
 class SalableQuantityInconsistency
 {
     /**
-     * @var OrderInterface
-     */
-    private $order;
-
-    /**+
      * @var int
      */
     private $objectId;
@@ -30,26 +23,25 @@ class SalableQuantityInconsistency
     private $stockId;
 
     /**
+     * @var string
+     */
+    private $orderIncrementId;
+
+    /**
+     * @var bool
+     */
+    private $hasAssignedOrder = false;
+
+    /**
+     * @var string
+     */
+    private $orderStatus;
+
+    /**
      * List of SKUs and quantity
      * @var array
      */
     private $items = [];
-
-    /**
-     * @return OrderInterface|null
-     */
-    public function getOrder(): ?OrderInterface
-    {
-        return $this->order;
-    }
-
-    /**
-     * @param OrderInterface $order
-     */
-    public function setOrder(OrderInterface $order): void
-    {
-        $this->order = $order;
-    }
 
     /**
      * @return int
@@ -100,7 +92,7 @@ class SalableQuantityInconsistency
      */
     public function getStockId(): int
     {
-        return $this->stockId;
+        return (int)$this->stockId;
     }
 
     /**
@@ -109,5 +101,46 @@ class SalableQuantityInconsistency
     public function setStockId(int $stockId): void
     {
         $this->stockId = $stockId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderIncrementId(): string
+    {
+        return (string)$this->orderIncrementId;
+    }
+
+    /**
+     * @param string $orderIncrementId
+     */
+    public function setOrderIncrementId(string $orderIncrementId): void
+    {
+        $this->hasAssignedOrder = true;
+        $this->orderIncrementId = $orderIncrementId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderStatus(): string
+    {
+        return (string)$this->orderStatus;
+    }
+
+    /**
+     * @param string $orderStatus
+     */
+    public function setOrderStatus(string $orderStatus): void
+    {
+        $this->orderStatus = $orderStatus;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAssignedOrder(): bool
+    {
+        return $this->hasAssignedOrder;
     }
 }
