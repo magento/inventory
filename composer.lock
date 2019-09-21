@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12d81570582c711dac7c2de5ee64007b",
+    "content-hash": "0d7232b6bd74fc3249130fa5cf5e1227",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -4916,8 +4916,8 @@
             "authors": [
                 {
                     "name": "Ivan Krutov",
-                    "email": "vania-pooh@yandex-team.ru",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "vania-pooh@yandex-team.ru"
                 }
             ],
             "description": "A Codeception adapter for Allure report.",
@@ -6554,9 +6554,9 @@
             "authors": [
                 {
                     "name": "Johannes Schmitt",
-                    "role": "Developer of wrapped JMSSerializerBundle",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh"
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
             "description": "Library for (de-)serializing data of any complexity; supports XML, JSON, and YAML.",
@@ -6845,8 +6845,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "role": "Developer",
-                    "homepage": "http://frankkleine.de/"
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -9404,8 +9404,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
