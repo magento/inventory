@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Model;
 
+use Magento\InventoryInStorePickup\Model\ExtractPickupLocationShippingAddressData;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 
@@ -26,15 +27,23 @@ class IsPickupLocationShippingAddress
     private $extractQuoteAddressShippingAddressData;
 
     /**
+     * @var BuildShippingAddressData
+     */
+    private $buildShippingAddressData;
+
+    /**
      * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
      * @param ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
+     * @param BuildShippingAddressData $buildShippingAddressData
      */
     public function __construct(
         ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData,
-        ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
+        ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData,
+        BuildShippingAddressData $buildShippingAddressData
     ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
         $this->extractQuoteAddressShippingAddressData = $extractQuoteAddressShippingAddressData;
+        $this->buildShippingAddressData = $buildShippingAddressData;
     }
 
     /**
@@ -47,7 +56,9 @@ class IsPickupLocationShippingAddress
      */
     public function execute(PickupLocationInterface $pickupLocation, AddressInterface $shippingAddress): bool
     {
-        $data = $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
+        $data = $this->buildShippingAddressData->execute(
+            $this->extractPickupLocationShippingAddressData->execute($pickupLocation)
+        );
 
         if (!$shippingAddress->getExtensionAttributes() ||
             !$shippingAddress->getExtensionAttributes()->getPickupLocationCode()

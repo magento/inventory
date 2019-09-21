@@ -45,23 +45,16 @@ class GetPickupSources
     {
         $stockSources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
 
-        return array_filter($stockSources, [$this, 'getIsSourcePickupLocation']);
-    }
+        return array_filter(
+            $stockSources,
+            function (SourceInterface $source): bool {
+                $extension = $source->getExtensionAttributes();
+                if ($extension) {
+                    return (bool)$extension->getIsPickupLocationActive();
+                }
 
-    /**
-     * Extracts is_pickup_location_active from the source with all the null-checks.
-     *
-     * @param SourceInterface $source
-     *
-     * @return bool
-     */
-    private function getIsSourcePickupLocation(SourceInterface $source): bool
-    {
-        $extension = $source->getExtensionAttributes();
-        if ($extension) {
-            return (bool)$extension->getIsPickupLocationActive();
-        }
-
-        return false;
+                return false;
+            }
+        );
     }
 }
