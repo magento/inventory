@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupShippingApi\Model\Carrier;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\DataObject;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetFreePackagesInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceRequestInterface;
@@ -70,6 +71,11 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
     private $getShippingPriceRequest;
 
     /**
+     * @var GetCarrierTitle
+     */
+    private $getCarrierTitle;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
      * @param LoggerInterface $logger
@@ -79,6 +85,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      * @param RequestValidatorInterface $requestValidator
      * @param GetFreePackagesInterface $getFreePackages
      * @param GetShippingPriceRequestInterface $getShippingPriceRequest
+     * @param GetCarrierTitle $getCarrierTitle
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -92,6 +99,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         RequestValidatorInterface $requestValidator,
         GetFreePackagesInterface $getFreePackages,
         GetShippingPriceRequestInterface $getShippingPriceRequest,
+        GetCarrierTitle $getCarrierTitle,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
@@ -104,12 +112,13 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         $this->_code = self::CARRIER_CODE;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
+        $this->getCarrierTitle = $getCarrierTitle;
     }
 
     /**
      * @inheritdoc
      */
-    public function processAdditionalValidation(\Magento\Framework\DataObject $request)
+    public function processAdditionalValidation(DataObject $request)
     {
         /** @var RateRequest $request */
         $validationResult = $this->requestValidator->validate($request);
@@ -177,7 +186,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
             [
                 'data' => [
                     'carrier' => self::CARRIER_CODE,
-                    'carrier_title' => $this->getConfigData('title'),
+                    'carrier_title' => $this->getCarrierTitle->execute(),
                     'method' => self::METHOD_CODE,
                     'method_title' => $this->getConfigData('name'),
                     'cost' => $shippingPrice
