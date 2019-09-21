@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="multi_shipping" xsi:type="object">Magento\InventoryInStorePickupMultishipping\Model\Carrier\Validation\MultiShippingValidator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Quote\Api\CartRepositoryInterface">
+        <plugin name="remove_in_store_pickup_data" type="Magento\InventoryInStorePickupMultishipping\Plugin\Quote\RemoveInStorePickupDataInMultishippingModePlugin" />
+    </type>
+</config>
