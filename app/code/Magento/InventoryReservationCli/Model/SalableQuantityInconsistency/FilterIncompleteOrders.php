@@ -40,7 +40,7 @@ class FilterIncompleteOrders
         return array_filter(
             $inconsistencies,
             function (SalableQuantityInconsistency $inconsistency) {
-                return !in_array($inconsistency->getOrder()->getStatus(), $this->getCompleteOrderStatusList->execute());
+                return !in_array($inconsistency->getOrderStatus(), $this->getCompleteOrderStatusList->execute());
             }
         );
     }

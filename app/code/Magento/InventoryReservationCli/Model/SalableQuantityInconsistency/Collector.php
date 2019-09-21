@@ -87,7 +87,8 @@ class Collector
             $this->items[$key] = $this->salableQuantityInconsistencyFactory->create();
         }
 
-        $this->items[$key]->setOrder($order);
+        $this->items[$key]->setOrderIncrementId($order->getIncrementId());
+        $this->items[$key]->setOrderStatus($order->getStatus());
     }
 
     /**

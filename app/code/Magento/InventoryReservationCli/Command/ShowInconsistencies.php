@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Command;
 
+use Magento\Framework\Profiler;
 use Magento\InventoryReservationCli\Model\GetSalableQuantityInconsistencies;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterCompleteOrders;
@@ -102,7 +103,7 @@ class ShowInconsistencies extends Command
 
             $output->writeln(sprintf(
                 'Order <comment>%s</comment>:',
-                $inconsistency->getOrder()->getIncrementId()
+                $inconsistency->getOrderIncrementId()
             ));
 
             foreach ($inconsistentItems as $sku => $qty) {
@@ -135,7 +136,7 @@ class ShowInconsistencies extends Command
                 $output->writeln(
                     sprintf(
                         '%s:%s:%f:%s',
-                        $inconsistency->getOrder()->getIncrementId(),
+                        $inconsistency->getOrderIncrementId(),
                         $sku,
                         -$qty,
                         $inconsistency->getStockId()
@@ -173,6 +174,7 @@ class ShowInconsistencies extends Command
             $this->prettyOutput($output, $inconsistencies);
         }
 
+        var_dump(memory_get_peak_usage(true) / 1024 / 1024);
         return -1;
     }
 }
