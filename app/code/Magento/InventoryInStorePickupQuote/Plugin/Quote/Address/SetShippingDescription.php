@@ -9,15 +9,14 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\Address;
 
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickup\Model\GetPickupLocation;
-use Magento\InventoryInStorePickup\Model\PickupLocation\GetPickupLocationByCode;
+use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Model\Address\GetAddressPickupLocationCode;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\GetCarrierTitle;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total;
 use Magento\Quote\Model\Quote\TotalsCollector;
-use Magento\Tests\NamingConvention\true\string;
 
 /**
  * Set Shipping Description e.g. In-Store Pickup Delivery - Pickup Location Name
@@ -35,19 +34,19 @@ class SetShippingDescription
     private $getCarrierTitle;
 
     /**
-     * @var GetPickupLocation
+     * @var GetPickupLocationInterface
      */
     private $getPickupLocation;
 
     /**
      * @param GetAddressPickupLocationCode $getAddressPickupLocationCode
      * @param GetCarrierTitle $getCarrierTitle
-     * @param GetPickupLocation $getPickupLocation
+     * @param GetPickupLocationInterface $getPickupLocation
      */
     public function __construct(
         GetAddressPickupLocationCode $getAddressPickupLocationCode,
         GetCarrierTitle $getCarrierTitle,
-        GetPickupLocation $getPickupLocation
+        GetPickupLocationInterface $getPickupLocation
     ) {
         $this->getAddressPickupLocationCode = $getAddressPickupLocationCode;
         $this->getCarrierTitle = $getCarrierTitle;
@@ -77,7 +76,7 @@ class SetShippingDescription
         ) {
             $description = $this->getShippingDescription(
                 $this->getAddressPickupLocationCode->execute($address),
-                \Magento\InventorySalesApi\Api\Data\SalesChannelInterface::TYPE_WEBSITE,
+                SalesChannelInterface::TYPE_WEBSITE,
                 $quote->getStore()->getWebsite()->getCode()
             );
             $total->setShippingDescription($description);

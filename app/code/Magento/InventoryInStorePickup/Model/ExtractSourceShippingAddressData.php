@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupAdminUi\Model;
+namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\DataObject\Copy;
 use Magento\InventoryApi\Api\Data\SourceInterface;

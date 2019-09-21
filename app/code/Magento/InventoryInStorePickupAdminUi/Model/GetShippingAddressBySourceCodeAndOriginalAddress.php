@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickupAdminUi\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\InventoryInStorePickup\Model\ExtractSourceShippingAddressData;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;
 use Magento\Quote\Api\Data\AddressInterface;
 

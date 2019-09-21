@@ -10,8 +10,8 @@ namespace Magento\InventoryInStorePickupAdminUi\Model;
 
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
-use Magento\InventoryInStorePickup\Model\Source\GetIsPickupLocationActive;
 
 /**
  * Get list of sources marked as pickup location by website
@@ -24,27 +24,19 @@ class GetPickupSources
     private $getSourcesAssignedToStockOrderedByPriority;
 
     /**
-     * @var GetIsPickupLocationActive
-     */
-    private $getIsPickupLocationActive;
-
-    /**
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
-     * @param GetIsPickupLocationActive $getIsPickupLocationActive
      */
     public function __construct(
-        GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
-        GetIsPickupLocationActive $getIsPickupLocationActive
+        GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
     ) {
-
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
-        $this->getIsPickupLocationActive = $getIsPickupLocationActive;
     }
 
     /**
      * Get list of sources marked as pickup location by website.
      *
      * @param int $stockId
+     *
      * @return array
      * @throws InputException
      * @throws LocalizedException
@@ -53,6 +45,23 @@ class GetPickupSources
     {
         $stockSources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
 
-        return array_filter($stockSources, [$this->getIsPickupLocationActive, 'execute']);
+        return array_filter($stockSources, [$this, 'getIsSourcePickupLocation']);
+    }
+
+    /**
+     * Extracts is_pickup_location_active from the source with all the null-checks.
+     *
+     * @param SourceInterface $source
+     *
+     * @return bool
+     */
+    private function getIsSourcePickupLocation(SourceInterface $source): bool
+    {
+        $extension = $source->getExtensionAttributes();
+        if ($extension) {
+            return (bool)$extension->getIsPickupLocationActive();
+        }
+
+        return false;
     }
 }
