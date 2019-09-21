@@ -5,12 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupQuote\Model;
+namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\DataObject\Copy;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
-use Magento\Quote\Api\Data\AddressInterface;
 
 /**
  * Extract Shipping Address fields from Pickup Location.
@@ -39,20 +37,10 @@ class ExtractPickupLocationShippingAddressData
      */
     public function execute(PickupLocationInterface $pickupLocation): array
     {
-        $pickupLocationAddressData = $this->objectCopyService->getDataFromFieldset(
+        return $this->objectCopyService->getDataFromFieldset(
             'inventory_convert_pickup_location',
             'to_pickup_location_shipping_address',
             $pickupLocation
-        );
-
-        return array_merge(
-            $pickupLocationAddressData,
-            [
-                AddressInterface::SAME_AS_BILLING => false,
-                AddressInterface::SAVE_IN_ADDRESS_BOOK => false,
-                AddressInterface::CUSTOMER_ADDRESS_ID => null,
-                'shipping_method' => InStorePickup::DELIVERY_METHOD
-            ]
         );
     }
 }

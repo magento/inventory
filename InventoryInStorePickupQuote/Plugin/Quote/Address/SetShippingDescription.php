@@ -70,8 +70,7 @@ class SetShippingDescription
         Quote $quote
     ) {
         $address = $quote->getShippingAddress();
-        if (
-            $address->getShippingMethod() == InStorePickup::DELIVERY_METHOD
+        if ($address->getShippingMethod() == InStorePickup::DELIVERY_METHOD
             && $this->getAddressPickupLocationCode->execute($address)
         ) {
             $description = $this->getShippingDescription(
@@ -92,7 +91,6 @@ class SetShippingDescription
      * Format shipping description based on Pickup Location code.
      *
      * @param string $pickupLocationCode
-     *
      * @param string $salesChannelType
      * @param string $salesChannelCode
      *

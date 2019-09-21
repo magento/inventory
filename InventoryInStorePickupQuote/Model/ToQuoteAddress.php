@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickupQuote\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\DataObject\Copy;
+use Magento\InventoryInStorePickup\Model\ExtractPickupLocationShippingAddressData;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\AddressFactory;
@@ -39,21 +40,29 @@ class ToQuoteAddress
     private $dataObjectHelper;
 
     /**
+     * @var BuildShippingAddressData
+     */
+    private $buildShippingAddressData;
+
+    /**
      * @param Copy $objectCopyService
      * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
      * @param AddressFactory $addressFactory
      * @param DataObjectHelper $dataObjectHelper
+     * @param BuildShippingAddressData $buildShippingAddressData
      */
     public function __construct(
         Copy $objectCopyService,
         ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData,
         AddressFactory $addressFactory,
-        DataObjectHelper $dataObjectHelper
+        DataObjectHelper $dataObjectHelper,
+        BuildShippingAddressData $buildShippingAddressData
     ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
         $this->objectCopyService = $objectCopyService;
         $this->addressFactory = $addressFactory;
         $this->dataObjectHelper = $dataObjectHelper;
+        $this->buildShippingAddressData = $buildShippingAddressData;
     }
 
     /**
@@ -70,7 +79,9 @@ class ToQuoteAddress
         AddressInterface $originalAddress,
         $data = []
     ): AddressInterface {
-        $pickupLocationAddressData = $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
+        $pickupLocationAddressData = $this->buildShippingAddressData->execute(
+            $this->extractPickupLocationShippingAddressData->execute($pickupLocation)
+        );
 
         $quoteAddressData = $this->objectCopyService->getDataFromFieldset(
             'sales_convert_quote_address',
