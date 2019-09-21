@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Model\AdminOrder\Create;
+namespace Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Controller\AdminOrder\Create;
 
 use Magento\Backend\Model\Session\Quote;
 use Magento\Framework\App\RequestInterface;

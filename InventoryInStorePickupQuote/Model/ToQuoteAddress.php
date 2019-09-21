@@ -15,8 +15,6 @@ use Magento\Quote\Model\Quote\AddressFactory;
 
 /**
  * Convert Pickup Location and provided Shipping Address to Pickup Location Quote Address.
- *
- * @api
  */
 class ToQuoteAddress
 {

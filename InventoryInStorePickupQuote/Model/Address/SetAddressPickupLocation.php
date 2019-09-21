@@ -13,7 +13,6 @@ use Magento\Quote\Api\Data\AddressInterface;
 
 /**
  * Set Address pickup location
- * @api
  */
 class SetAddressPickupLocation
 {
