@@ -14,6 +14,6 @@
         <plugin name="hide-edit-link" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Order\View\ShippingAddress\HideEditLink"/>
     </type>
     <type name="Magento\Sales\Controller\Adminhtml\Order\Create\Save">
-        <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Model\AdminOrder\Create\SetPickupLocationFromPost" />
+        <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Controller\AdminOrder\Create\SetPickupLocationFromPost" />
     </type>
 </config>
