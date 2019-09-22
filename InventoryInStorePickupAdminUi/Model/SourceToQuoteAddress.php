@@ -5,24 +5,25 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupQuote\Model;
+namespace Magento\InventoryInStorePickupAdminUi\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\DataObject\Copy;
-use Magento\InventoryInStorePickup\Model\ExtractPickupLocationAddressData;
-use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickup\Model\ExtractSourceAddressData;
+use Magento\InventoryInStorePickupQuote\Model\GetShippingAddressData;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\AddressFactory;
 
 /**
- * Convert Pickup Location and provided Shipping Address to Pickup Location Quote Address.
+ * Convert Source and provided Shipping Address to Source Quote Address.
  */
-class ToQuoteAddress
+class SourceToQuoteAddress
 {
     /**
-     * @var ExtractPickupLocationAddressData
+     * @var ExtractSourceAddressData
      */
-    private $extractPickupLocationShippingAddressData;
+    private $extractSourceAddressData;
 
     /**
      * @var Copy
@@ -46,19 +47,19 @@ class ToQuoteAddress
 
     /**
      * @param Copy $objectCopyService
-     * @param ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData
+     * @param ExtractSourceAddressData $extractSourceAddressData
      * @param AddressFactory $addressFactory
      * @param DataObjectHelper $dataObjectHelper
      * @param GetShippingAddressData $getShippingAddressData
      */
     public function __construct(
         Copy $objectCopyService,
-        ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData,
+        ExtractSourceAddressData $extractSourceAddressData,
         AddressFactory $addressFactory,
         DataObjectHelper $dataObjectHelper,
         GetShippingAddressData $getShippingAddressData
     ) {
-        $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
+        $this->extractSourceAddressData = $extractSourceAddressData;
         $this->objectCopyService = $objectCopyService;
         $this->addressFactory = $addressFactory;
         $this->dataObjectHelper = $dataObjectHelper;
@@ -66,21 +67,21 @@ class ToQuoteAddress
     }
 
     /**
-     * Convert Pickup Location Data and Quote Address to Pickup Location Quote Address.
+     * Convert Source Data and Quote Address to Source Quote Address.
      *
-     * @param PickupLocationInterface $pickupLocation
+     * @param SourceInterface $source
      * @param AddressInterface $originalAddress
      * @param array $data
      *
      * @return AddressInterface
      */
     public function convert(
-        PickupLocationInterface $pickupLocation,
+        SourceInterface $source,
         AddressInterface $originalAddress,
         $data = []
     ): AddressInterface {
-        $pickupLocationAddressData = $this->getShippingAddressData->execute()
-            + $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
+        $sourceAddressData = $this->getShippingAddressData->execute()
+            + $this->extractSourceAddressData->execute($source);
 
         $quoteAddressData = $this->objectCopyService->getDataFromFieldset(
             'sales_convert_quote_address',
@@ -92,7 +93,7 @@ class ToQuoteAddress
 
         $this->dataObjectHelper->populateWithArray(
             $address,
-            array_merge($pickupLocationAddressData, $quoteAddressData, $data),
+            array_merge($sourceAddressData, $quoteAddressData, $data),
             AddressInterface::class
         );
 
