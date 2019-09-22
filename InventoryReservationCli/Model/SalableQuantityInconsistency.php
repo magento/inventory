@@ -140,7 +140,7 @@ class SalableQuantityInconsistency
     }
 
     /**
-     * Getter for order status
+     * Getter for order state
      *
      * @return string
      */

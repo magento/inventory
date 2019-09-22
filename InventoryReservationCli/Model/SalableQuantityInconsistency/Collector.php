@@ -96,6 +96,26 @@ class Collector
     }
 
     /**
+     * Add order to collectors items
+     *
+     * @param array $orderData
+     */
+    public function addOrderData(array $orderData): void
+    {
+        $objectId = $orderData['entity_id'];
+        $websiteId = (int)$orderData['website_id'];
+        $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
+        $key = $objectId . '-' . $stockId;
+
+        if (!isset($this->items[$key])) {
+            $this->items[$key] = $this->salableQuantityInconsistencyFactory->create();
+        }
+
+        $this->items[$key]->setOrderIncrementId($orderData['increment_id']);
+        $this->items[$key]->setOrderStatus($orderData['status']);
+    }
+
+    /**
      * Getter for items
      *
      * @return SalableQuantityInconsistency[]

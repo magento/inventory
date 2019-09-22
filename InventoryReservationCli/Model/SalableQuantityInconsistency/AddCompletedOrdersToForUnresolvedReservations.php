@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 
-use Magento\InventoryReservationCli\Model\GetOrdersInFinalState;
+use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderDataForOrderInFinalState;
 
 /**
  * Match completed orders with unresolved reservations
@@ -15,17 +15,17 @@ use Magento\InventoryReservationCli\Model\GetOrdersInFinalState;
 class AddCompletedOrdersToForUnresolvedReservations
 {
     /**
-     * @var GetOrdersInFinalState
+     * @var GetOrderDataForOrderInFinalState
      */
-    private $getOrdersInFinalState;
+    private $getOrderDataForOrderInFinalState;
 
     /**
-     * @param GetOrdersInFinalState $getOrdersInFinalState
+     * @param GetOrderDataForOrderInFinalState $getOrderDataForOrderInFinalState
      */
     public function __construct(
-        GetOrdersInFinalState $getOrdersInFinalState
+        GetOrderDataForOrderInFinalState $getOrderDataForOrderInFinalState
     ) {
-        $this->getOrdersInFinalState = $getOrdersInFinalState;
+        $this->getOrderDataForOrderInFinalState = $getOrderDataForOrderInFinalState;
     }
 
     /**
@@ -44,8 +44,8 @@ class AddCompletedOrdersToForUnresolvedReservations
             $orderIds[] = $inconsistency->getObjectId();
         }
 
-        foreach ($this->getOrdersInFinalState->execute($orderIds, $bunchSize, $page) as $order) {
-            $collector->addOrder($order);
+        foreach ($this->getOrderDataForOrderInFinalState->execute($orderIds) as $orderData) {
+            $collector->addOrderData($orderData);
         }
 
         $collector->setItems($inconsistencies);
