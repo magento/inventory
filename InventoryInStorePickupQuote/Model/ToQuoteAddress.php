@@ -40,29 +40,29 @@ class ToQuoteAddress
     private $dataObjectHelper;
 
     /**
-     * @var BuildShippingAddressData
+     * @var GetShippingAddressData
      */
-    private $buildShippingAddressData;
+    private $getShippingAddressData;
 
     /**
      * @param Copy $objectCopyService
      * @param ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData
      * @param AddressFactory $addressFactory
      * @param DataObjectHelper $dataObjectHelper
-     * @param BuildShippingAddressData $buildShippingAddressData
+     * @param GetShippingAddressData $getShippingAddressData
      */
     public function __construct(
         Copy $objectCopyService,
         ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData,
         AddressFactory $addressFactory,
         DataObjectHelper $dataObjectHelper,
-        BuildShippingAddressData $buildShippingAddressData
+        GetShippingAddressData $getShippingAddressData
     ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
         $this->objectCopyService = $objectCopyService;
         $this->addressFactory = $addressFactory;
         $this->dataObjectHelper = $dataObjectHelper;
-        $this->buildShippingAddressData = $buildShippingAddressData;
+        $this->getShippingAddressData = $getShippingAddressData;
     }
 
     /**
@@ -79,9 +79,8 @@ class ToQuoteAddress
         AddressInterface $originalAddress,
         $data = []
     ): AddressInterface {
-        $pickupLocationAddressData = $this->buildShippingAddressData->execute(
-            $this->extractPickupLocationShippingAddressData->execute($pickupLocation)
-        );
+        $pickupLocationAddressData = $this->getShippingAddressData->execute()
+            + $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
 
         $quoteAddressData = $this->objectCopyService->getDataFromFieldset(
             'sales_convert_quote_address',

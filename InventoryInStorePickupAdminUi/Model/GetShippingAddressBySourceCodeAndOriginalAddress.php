@@ -11,7 +11,7 @@ namespace Magento\InventoryInStorePickupAdminUi\Model;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryInStorePickup\Model\ExtractSourceAddressData;
-use Magento\InventoryInStorePickupQuote\Model\BuildShippingAddressData;
+use Magento\InventoryInStorePickupQuote\Model\GetShippingAddressData;
 use Magento\InventoryInStorePickupQuote\Model\ToQuoteAddress;
 use Magento\Quote\Api\Data\AddressInterface;
 
@@ -36,26 +36,26 @@ class GetShippingAddressBySourceCodeAndOriginalAddress
     private $sourceToQuoteAddress;
 
     /**
-     * @var BuildShippingAddressData
+     * @var GetShippingAddressData
      */
-    private $buildShippingAddressData;
+    private $getShippingAddressData;
 
     /**
      * @param SourceRepositoryInterface $sourceRepository
      * @param ExtractSourceAddressData $dataExtractor
      * @param ToQuoteAddress $sourceToQuoteAddress
-     * @param BuildShippingAddressData $buildShippingAddressData
+     * @param GetShippingAddressData $getShippingAddressData
      */
     public function __construct(
         SourceRepositoryInterface $sourceRepository,
         ExtractSourceAddressData $dataExtractor,
         ToQuoteAddress $sourceToQuoteAddress,
-        BuildShippingAddressData $buildShippingAddressData
+        GetShippingAddressData $getShippingAddressData
     ) {
         $this->sourceRepository = $sourceRepository;
         $this->dataExtractor = $dataExtractor;
         $this->sourceToQuoteAddress = $sourceToQuoteAddress;
-        $this->buildShippingAddressData = $buildShippingAddressData;
+        $this->getShippingAddressData = $getShippingAddressData;
     }
 
     /**
@@ -74,9 +74,7 @@ class GetShippingAddressBySourceCodeAndOriginalAddress
             return null;
         }
 
-        $addressData = $this->buildShippingAddressData->execute(
-            $this->dataExtractor->execute($source)
-        );
+        $addressData = $this->getShippingAddressData->execute() + $this->dataExtractor->execute($source);
 
         /** @noinspection PhpParamsInspection */
         return $this->sourceToQuoteAddress->convert($addressData, $originalAddress);

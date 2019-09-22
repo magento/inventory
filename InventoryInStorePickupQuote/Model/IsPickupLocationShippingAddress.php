@@ -27,23 +27,23 @@ class IsPickupLocationShippingAddress
     private $extractQuoteAddressShippingAddressData;
 
     /**
-     * @var BuildShippingAddressData
+     * @var GetShippingAddressData
      */
-    private $buildShippingAddressData;
+    private $getShippingAddressData;
 
     /**
      * @param ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData
      * @param ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
-     * @param BuildShippingAddressData $buildShippingAddressData
+     * @param GetShippingAddressData $getShippingAddressData
      */
     public function __construct(
         ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData,
         ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData,
-        BuildShippingAddressData $buildShippingAddressData
+        GetShippingAddressData $getShippingAddressData
     ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
         $this->extractQuoteAddressShippingAddressData = $extractQuoteAddressShippingAddressData;
-        $this->buildShippingAddressData = $buildShippingAddressData;
+        $this->getShippingAddressData = $getShippingAddressData;
     }
 
     /**
@@ -56,8 +56,8 @@ class IsPickupLocationShippingAddress
      */
     public function execute(PickupLocationInterface $pickupLocation, AddressInterface $shippingAddress): bool
     {
-        $data = $this->buildShippingAddressData->execute(
-            $this->extractPickupLocationShippingAddressData->execute($pickupLocation)
+        $data = $this->getShippingAddressData->execute() + $this->extractPickupLocationShippingAddressData->execute(
+            $pickupLocation
         );
 
         if (!$shippingAddress->getExtensionAttributes() ||
