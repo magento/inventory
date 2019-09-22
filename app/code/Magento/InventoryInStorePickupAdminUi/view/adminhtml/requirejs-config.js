@@ -13,7 +13,7 @@ var config = {
         mixins: {
             'Magento_Sales/order/create/scripts': {
                 'Magento_InventoryInStorePickupAdminUi/order/create/scripts-mixin': true
-            },
+            }
         }
     }
 };
