@@ -82,8 +82,6 @@ class AddExpectedReservations
                 $collector->addReservation($reservation);
                 $collector->addOrder($order);
             }
-
-            gc_collect_cycles();
         }
     }
 }

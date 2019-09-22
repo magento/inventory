@@ -7,12 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Command;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Profiler;
+use Magento\Framework\Validation\ValidationException;
+use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventoryReservationCli\Model\GetSalableQuantityInconsistencies;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterCompleteOrders;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterIncompleteOrders;
 use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,19 +46,27 @@ class ShowInconsistencies extends Command
     private $filterIncompleteOrders;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param GetSalableQuantityInconsistencies $getSalableQuantityInconsistencies
      * @param FilterCompleteOrders $filterCompleteOrders
      * @param FilterIncompleteOrders $filterIncompleteOrders
+     * @param LoggerInterface $logger
      */
     public function __construct(
         GetSalableQuantityInconsistencies $getSalableQuantityInconsistencies,
         FilterCompleteOrders $filterCompleteOrders,
-        FilterIncompleteOrders $filterIncompleteOrders
+        FilterIncompleteOrders $filterIncompleteOrders,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->getSalableQuantityInconsistencies = $getSalableQuantityInconsistencies;
         $this->filterCompleteOrders = $filterCompleteOrders;
         $this->filterIncompleteOrders = $filterIncompleteOrders;
+        $this->logger = $logger;
     }
 
     /**
@@ -152,9 +164,13 @@ class ShowInconsistencies extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws LocalizedException
+     * @throws ValidationException
+     * @throws SkuIsNotAssignedToStockException
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $startTime = microtime(true);
         $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
 
         if ($input->getOption('complete-orders')) {
@@ -174,7 +190,15 @@ class ShowInconsistencies extends Command
             $this->prettyOutput($output, $inconsistencies);
         }
 
-        var_dump(memory_get_peak_usage(true) / 1024 / 1024);
+        $this->logger->debug(
+            sprintf(
+                'Command "%s" took %.2f seconds and required %.2f MB memory',
+                $this->getName(),
+                (microtime(true) - $startTime),
+                (memory_get_peak_usage(true) / 1024 / 1024)
+            )
+        );
+
         return -1;
     }
 }

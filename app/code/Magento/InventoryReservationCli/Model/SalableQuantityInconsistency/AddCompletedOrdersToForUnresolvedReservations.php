@@ -44,7 +44,6 @@ class AddCompletedOrdersToForUnresolvedReservations
 
         foreach ($this->getOrdersInFinalState->execute($orderIds) as $order) {
             $collector->addOrder($order);
-            gc_collect_cycles();
         }
 
         $collector->setItems($inconsistencies);
