@@ -71,6 +71,8 @@ class GetOrdersInFinalState
             foreach ($orderSearchResult->getItems() as $item) {
                 yield $item->getEntityId() => $item;
             }
+
+            gc_collect_cycles();
         }
     }
 
