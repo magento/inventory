@@ -9,15 +9,12 @@ namespace Magento\InventoryReservationCli\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
-use Traversable;
 
 /**
- * Get list of orders, which are not in any of the final states (Complete, Closed, Canceled).
+ * Retrieve the total count of orders
  */
-class GetOrdersInNotFinalState
+class GetOrdersTotalCount
 {
     /**
      * @var OrderRepositoryInterface
@@ -30,47 +27,29 @@ class GetOrdersInNotFinalState
     private $searchCriteriaBuilder;
 
     /**
-     * @var GetCompleteOrderStatusList
-     */
-    private $getCompleteOrderStatusList;
-
-    /**
      * @param OrderRepositoryInterface $orderRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param GetCompleteOrderStatusList $getCompleteOrderStatusList
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        GetCompleteOrderStatusList $getCompleteOrderStatusList
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->orderRepository = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->getCompleteOrderStatusList = $getCompleteOrderStatusList;
     }
 
     /**
-     * Get list of orders
+     * Retrieves total count of orders
      *
-     * @param int $bunchSize
-     * @param int $page
-     * @return Traversable|OrderInterface[]
+     * @return int
      */
-    public function execute(int $bunchSize = 50, int $page = 1): Traversable
+    public function execute(): int
     {
         /** @var SearchCriteriaInterface $filter */
         $filter = $this->searchCriteriaBuilder
-            ->addFilter('state', $this->getCompleteOrderStatusList->execute(), 'nin')
-            ->setPageSize($bunchSize)
-            ->setCurrentPage($page)
+            ->setPageSize(1)
             ->create();
-
         $orderSearchResult = $this->orderRepository->getList($filter);
-
-        foreach ($orderSearchResult->getItems() as $item) {
-            yield $item->getEntityId() => $item;
-        }
-
-        gc_collect_cycles();
+        return $orderSearchResult->getTotalCount();
     }
 }

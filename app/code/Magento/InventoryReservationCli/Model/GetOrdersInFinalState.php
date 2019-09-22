@@ -12,6 +12,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Traversable;
 
 /**
  * Get list of orders in any of the final states (Complete, Closed, Canceled).
@@ -52,40 +53,26 @@ class GetOrdersInFinalState
      * Get list of orders in any of the final states (Complete, Closed, Canceled).
      *
      * @param array $orderIds
-     * @return OrderInterface[]
-     */
-    public function execute(array $orderIds): \Traversable
-    {
-        $bunchSize = 50;
-        $maxPage = $this->getMaxPage(count($orderIds), $bunchSize);
-        for ($page = 1; $page <= $maxPage; $page++) {
-            /** @var SearchCriteriaInterface $filter */
-            $filter = $this->searchCriteriaBuilder
-                ->addFilter('entity_id', $orderIds, 'in')
-                ->addFilter('state', $this->getCompleteOrderStatusList->execute(), 'in')
-                ->setPageSize($bunchSize)
-                ->setCurrentPage($page)
-                ->create();
-
-            $orderSearchResult = $this->orderRepository->getList($filter);
-
-            foreach ($orderSearchResult->getItems() as $item) {
-                yield $item->getEntityId() => $item;
-            }
-
-            gc_collect_cycles();
-        }
-    }
-
-    /**
-     * Calculates max page
-     *
-     * @param int $totalCount
      * @param int $bunchSize
-     * @return int
+     * @param int $page
+     * @return Traversable|OrderInterface[]
      */
-    private function getMaxPage(int $totalCount, int $bunchSize): int
+    public function execute(array $orderIds, int $bunchSize = 50, int $page = 1): Traversable
     {
-        return (int)ceil($totalCount / $bunchSize);
+        /** @var SearchCriteriaInterface $filter */
+        $filter = $this->searchCriteriaBuilder
+            ->addFilter('entity_id', $orderIds, 'in')
+            ->addFilter('state', $this->getCompleteOrderStatusList->execute(), 'in')
+            ->setPageSize($bunchSize)
+            ->setCurrentPage($page)
+            ->create();
+
+        $orderSearchResult = $this->orderRepository->getList($filter);
+
+        foreach ($orderSearchResult->getItems() as $item) {
+            yield $item->getEntityId() => $item;
+        }
+
+        gc_collect_cycles();
     }
 }
