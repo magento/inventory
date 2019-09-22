@@ -199,6 +199,7 @@ define([
                 label.attr('for', regionList.attr('id'));
             } else {
                 this._removeSelectOptions(regionList);
+                $(this.options.regionInputId).val('');
 
                 if (this.options.isRegionRequired) {
                     regionInput.addClass('required-entry').removeAttr('disabled');
