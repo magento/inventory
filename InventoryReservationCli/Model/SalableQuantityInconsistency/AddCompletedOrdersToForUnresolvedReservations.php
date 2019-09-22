@@ -32,8 +32,10 @@ class AddCompletedOrdersToForUnresolvedReservations
      * Remove all entries without order
      *
      * @param Collector $collector
+     * @param int $bunchSize
+     * @param int $page
      */
-    public function execute(Collector $collector): void
+    public function execute(Collector $collector, int $bunchSize = 50, int $page = 1): void
     {
         $inconsistencies = $collector->getItems();
 
@@ -42,7 +44,7 @@ class AddCompletedOrdersToForUnresolvedReservations
             $orderIds[] = $inconsistency->getObjectId();
         }
 
-        foreach ($this->getOrdersInFinalState->execute($orderIds) as $order) {
+        foreach ($this->getOrdersInFinalState->execute($orderIds, $bunchSize, $page) as $order) {
             $collector->addOrder($order);
         }
 

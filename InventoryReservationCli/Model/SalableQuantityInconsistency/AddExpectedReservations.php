@@ -60,11 +60,13 @@ class AddExpectedReservations
      * Add expected reservations by current incomplete orders.
      *
      * @param Collector $collector
+     * @param int $bunchSize
+     * @param int $page
      * @throws ValidationException
      */
-    public function execute(Collector $collector): void
+    public function execute(Collector $collector, int $bunchSize = 50, int $page = 1): void
     {
-        foreach ($this->getOrdersInNotFinalState->execute() as $order) {
+        foreach ($this->getOrdersInNotFinalState->execute($bunchSize, $page) as $order) {
             $websiteId = (int)$order->getStore()->getWebsiteId();
             $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
