@@ -3,16 +3,20 @@
  * See COPYING.txt for license details.
  */
 
-define([
+define(
+    [
         'jquery',
-        'Magento_Sales/order/create/form',
+        'Magento_Sales/order/create/form'
     ],
     function ($) {
         'use strict';
+
         return function () {
-            let storePickupCheckbox = $('#s_method_in_store_pickup');
+            var storePickupCheckbox = $('#s_method_in_store_pickup');
+
             if (storePickupCheckbox.length && storePickupCheckbox.prop('checked')) {
-                order.setShippingMethod(storePickupCheckbox.val());
+                window.order.setShippingMethod(storePickupCheckbox.val());
             }
         };
-    });
+    }
+);
