@@ -56,7 +56,7 @@ class GetOrdersInFinalState
      */
     public function execute(array $orderIds): \Traversable
     {
-        $bunchSize = 20;
+        $bunchSize = 50;
         for ($page = 1; $page <= $this->getMaxPage(count($orderIds), $bunchSize); $page++) {
             /** @var SearchCriteriaInterface $filter */
             $filter = $this->searchCriteriaBuilder
@@ -68,13 +68,15 @@ class GetOrdersInFinalState
 
             $orderSearchResult = $this->orderRepository->getList($filter);
 
-            foreach($orderSearchResult->getItems() as $item) {
+            foreach ($orderSearchResult->getItems() as $item) {
                 yield $item->getEntityId() => $item;
             }
         }
     }
 
     /**
+     * Calculates max page
+     *
      * @param int $totalCount
      * @param int $bunchSize
      * @return int

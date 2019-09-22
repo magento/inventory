@@ -55,8 +55,9 @@ class GetOrdersInNotFinalState
      */
     public function execute(): \Traversable
     {
-        $bunchSize = 20;
-        for ($page = 1; $page <= $this->getMaxPage($bunchSize); $page++) {
+        $bunchSize = 50;
+        $maxPage = $this->getMaxPage($bunchSize);
+        for ($page = 1; $page <= $maxPage; $page++) {
             /** @var SearchCriteriaInterface $filter */
             $filter = $this->searchCriteriaBuilder
                 ->addFilter('state', $this->getCompleteOrderStatusList->execute(), 'nin')
@@ -66,14 +67,15 @@ class GetOrdersInNotFinalState
 
             $orderSearchResult = $this->orderRepository->getList($filter);
 
-            // var_dump(memory_get_peak_usage(true) / 1024 / 1024);
-            foreach($orderSearchResult->getItems() as $item) {
+            foreach ($orderSearchResult->getItems() as $item) {
                 yield $item->getEntityId() => $item;
             }
         }
     }
 
     /**
+     * Calculates max page
+     *
      * @param int $bunchSize
      * @return int
      */

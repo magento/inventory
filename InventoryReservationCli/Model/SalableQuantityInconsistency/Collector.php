@@ -25,7 +25,7 @@ class Collector
     private $items = [];
 
     /**
-     * @var \Magento\InventoryReservationCli\Model\SalableQuantityInconsistencyFactory
+     * @var SalableQuantityInconsistencyFactory
      */
     private $salableQuantityInconsistencyFactory;
 
@@ -55,6 +55,8 @@ class Collector
     }
 
     /**
+     * Add reservation to collectors items
+     *
      * @param ReservationInterface $reservation
      */
     public function addReservation(ReservationInterface $reservation): void
@@ -74,6 +76,8 @@ class Collector
     }
 
     /**
+     * Add order to collectors items
+     *
      * @param OrderInterface $order
      */
     public function addOrder(OrderInterface $order): void
@@ -92,6 +96,8 @@ class Collector
     }
 
     /**
+     * Getter for items
+     *
      * @return SalableQuantityInconsistency[]
      */
     public function getItems(): array
@@ -100,6 +106,8 @@ class Collector
     }
 
     /**
+     * Setter for items
+     *
      * @param SalableQuantityInconsistency[] $items
      */
     public function setItems(array $items): void
