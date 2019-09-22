@@ -113,10 +113,12 @@ class ShowInconsistencies extends Command
         foreach ($inconsistencies as $inconsistency) {
             $inconsistentItems = $inconsistency->getItems();
 
-            $output->writeln(sprintf(
-                'Order <comment>%s</comment>:',
-                $inconsistency->getOrderIncrementId()
-            ));
+            $output->writeln(
+                sprintf(
+                    'Order <comment>%s</comment>:',
+                    $inconsistency->getOrderIncrementId()
+                )
+            );
 
             foreach ($inconsistentItems as $sku => $qty) {
                 $output->writeln(
@@ -159,7 +161,7 @@ class ShowInconsistencies extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @param InputInterface $input
      * @param OutputInterface $output
