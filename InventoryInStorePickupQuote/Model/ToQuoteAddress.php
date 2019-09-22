@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickupQuote\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\DataObject\Copy;
-use Magento\InventoryInStorePickup\Model\ExtractPickupLocationShippingAddressData;
+use Magento\InventoryInStorePickup\Model\ExtractPickupLocationAddressData;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Model\Quote\AddressFactory;
@@ -20,7 +20,7 @@ use Magento\Quote\Model\Quote\AddressFactory;
 class ToQuoteAddress
 {
     /**
-     * @var ExtractPickupLocationShippingAddressData
+     * @var ExtractPickupLocationAddressData
      */
     private $extractPickupLocationShippingAddressData;
 
@@ -46,14 +46,14 @@ class ToQuoteAddress
 
     /**
      * @param Copy $objectCopyService
-     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
+     * @param ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData
      * @param AddressFactory $addressFactory
      * @param DataObjectHelper $dataObjectHelper
      * @param BuildShippingAddressData $buildShippingAddressData
      */
     public function __construct(
         Copy $objectCopyService,
-        ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData,
+        ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData,
         AddressFactory $addressFactory,
         DataObjectHelper $dataObjectHelper,
         BuildShippingAddressData $buildShippingAddressData

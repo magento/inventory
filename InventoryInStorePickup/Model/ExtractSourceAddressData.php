@@ -11,9 +11,9 @@ use Magento\Framework\DataObject\Copy;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 
 /**
- * Extract Shipping Address fields from Source.
+ * Extract Address fields from Source.
  */
-class ExtractSourceShippingAddressData
+class ExtractSourceAddressData
 {
     /**
      * @var Copy
@@ -29,10 +29,7 @@ class ExtractSourceShippingAddressData
     }
 
     /**
-     * Extract Shipping Address fields from Source.
-     *
-     * @TODO Refactor when issue will be resolved in core.
-     * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/23386.
+     * Extract Address fields from Source.
      *
      * @param SourceInterface $source
      *
@@ -40,11 +37,10 @@ class ExtractSourceShippingAddressData
      */
     public function execute(SourceInterface $source): array
     {
-        return $this->objectCopyService->copyFieldsetToTarget(
+        return $this->objectCopyService->getDataFromFieldset(
             'inventory_convert_pickup_location',
             'to_pickup_location_shipping_address',
-            $source,
-            []
+            $source
         );
     }
 }
