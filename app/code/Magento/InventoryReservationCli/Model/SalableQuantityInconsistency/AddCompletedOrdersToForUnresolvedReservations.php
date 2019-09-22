@@ -30,6 +30,7 @@ class AddCompletedOrdersToForUnresolvedReservations
 
     /**
      * Remove all entries without order
+     *
      * @param Collector $collector
      */
     public function execute(Collector $collector): void

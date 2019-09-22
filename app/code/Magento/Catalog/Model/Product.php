@@ -18,8 +18,6 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Pricing\SaleableInterface;
-use Magento\Catalog\Api\Data\ProductExtensionInterface;
-use Magento\Catalog\Api\Data\ProductExtensionInterfaceFactory;
 
 /**
  * Catalog product model
@@ -445,8 +443,7 @@ class Product extends \Magento\Catalog\Model\AbstractModel implements
         \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface $joinProcessor,
         array $data = [],
         \Magento\Eav\Model\Config $config = null,
-        FilterProductCustomAttribute $filterCustomAttribute = null,
-        \Magento\Catalog\Api\Data\ProductExtensionInterfaceFactory $test = null
+        FilterProductCustomAttribute $filterCustomAttribute = null
     ) {
         $this->metadataService = $metadataService;
         $this->_itemOptionFactory = $itemOptionFactory;

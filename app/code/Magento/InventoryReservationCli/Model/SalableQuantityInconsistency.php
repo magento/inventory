@@ -39,11 +39,14 @@ class SalableQuantityInconsistency
 
     /**
      * List of SKUs and quantity
+     *
      * @var array
      */
     private $items = [];
 
     /**
+     * Getter for object id
+     *
      * @return int
      */
     public function getObjectId(): int
@@ -52,6 +55,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Setter for object id
+     *
      * @param int $objectId
      */
     public function setObjectId(int $objectId): void
@@ -60,6 +65,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Adds new item
+     *
      * @param string $sku
      * @param float $qty
      */
@@ -72,6 +79,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Getter for items
+     *
      * @return array
      */
     public function getItems(): array
@@ -80,6 +89,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Setter for items
+     *
      * @param array $items
      */
     public function setItems(array $items): void
@@ -88,6 +99,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Getter for stock id
+     *
      * @return int
      */
     public function getStockId(): int
@@ -96,6 +109,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Setter for stock id
+     *
      * @param int $stockId
      */
     public function setStockId(int $stockId): void
@@ -104,6 +119,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Getter for order increment id
+     *
      * @return string
      */
     public function getOrderIncrementId(): string
@@ -112,6 +129,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Setter for order increment id
+     *
      * @param string $orderIncrementId
      */
     public function setOrderIncrementId(string $orderIncrementId): void
@@ -121,6 +140,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Getter for order status
+     *
      * @return string
      */
     public function getOrderStatus(): string
@@ -129,6 +150,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Setter for order status
+     *
      * @param string $orderStatus
      */
     public function setOrderStatus(string $orderStatus): void
@@ -137,6 +160,8 @@ class SalableQuantityInconsistency
     }
 
     /**
+     * Retrieve whether an order is assigned to the given inconsistency
+     *
      * @return bool
      */
     public function hasAssignedOrder(): bool
