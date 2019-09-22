@@ -11,9 +11,9 @@ use Magento\Framework\DataObject\Copy;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Extract Shipping Address fields from Pickup Location.
+ * Extract Address fields from Pickup Location.
  */
-class ExtractPickupLocationShippingAddressData
+class ExtractPickupLocationAddressData
 {
     /**
      * @var Copy
@@ -29,7 +29,7 @@ class ExtractPickupLocationShippingAddressData
     }
 
     /**
-     * Extract Shipping Address fields from Pickup Location.
+     * Extract Address fields from Pickup Location.
      *
      * @param PickupLocationInterface $pickupLocation
      *
