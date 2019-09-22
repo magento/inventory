@@ -12,7 +12,7 @@ use Magento\Sales\Model\Order;
 /**
  * Provides list of order status for the complete state
  */
-class GetCompleteOrderStatusList
+class GetCompleteOrderStateList
 {
     /**
      * Provides list of order status for the complete state
