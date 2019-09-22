@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\ResolverInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Resolve parameters for the Search Request Builder.
@@ -23,35 +21,23 @@ class SearchRequest
     private $resolvers;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @param StoreManagerInterface $storeManager
      * @param ResolverInterface[] $resolvers
      */
     public function __construct(
-        StoreManagerInterface $storeManager,
         array $resolvers
     ) {
         $this->validateResolvers($resolvers);
         $this->resolvers = $resolvers;
-        $this->storeManager = $storeManager;
     }
 
     /**
      * @inheritdoc
-     *
-     * @throws LocalizedException
      */
     public function resolve(
         SearchRequestBuilderInterface $searchRequestBuilder,
         string $fieldName,
         array $argument
     ): SearchRequestBuilderInterface {
-        $searchRequestBuilder->setScopeCode('global_website');
-
         foreach ($this->resolvers as $argumentName => $resolver) {
             if (isset($argument[$argumentName])) {
                 $searchRequestBuilder = $resolver->resolve(
