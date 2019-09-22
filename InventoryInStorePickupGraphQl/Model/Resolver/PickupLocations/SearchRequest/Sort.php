@@ -43,8 +43,9 @@ class Sort implements ResolverInterface
             /** @var SortOrder $sortOrder */
             $sortOrders[] = $this->sortOrderBuilder
                 ->setField($fieldName)
-                ->setDirection($fieldValue == 'DESC' ? SortOrder::SORT_DESC : SortOrder::SORT_ASC)
-                ->create();
+                ->setDirection(
+                    $fieldValue === SortOrder::SORT_DESC ? SortOrder::SORT_DESC : SortOrder::SORT_ASC
+                )->create();
         }
 
         return $searchRequestBuilder->setSortOrders($sortOrders);
