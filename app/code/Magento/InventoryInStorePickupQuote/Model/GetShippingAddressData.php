@@ -13,25 +13,20 @@ use Magento\Quote\Api\Data\AddressInterface;
 /**
  * Finalize shipping address data for the Store Pickup cart.
  */
-class BuildShippingAddressData
+class GetShippingAddressData
 {
     /**
      * Finalize shipping address data for the Store Pickup cart.
      *
-     * @param array $addressData
-     *
      * @return array
      */
-    public function execute(array $addressData): array
+    public function execute(): array
     {
-        return array_merge(
-            $addressData,
-            [
-                AddressInterface::SAME_AS_BILLING => false,
-                AddressInterface::SAVE_IN_ADDRESS_BOOK => false,
-                AddressInterface::CUSTOMER_ADDRESS_ID => null,
-                'shipping_method' => InStorePickup::DELIVERY_METHOD
-            ]
-        );
+        return [
+            AddressInterface::SAME_AS_BILLING => false,
+            AddressInterface::SAVE_IN_ADDRESS_BOOK => false,
+            AddressInterface::CUSTOMER_ADDRESS_ID => null,
+            'shipping_method' => InStorePickup::DELIVERY_METHOD
+        ];
     }
 }
