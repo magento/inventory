@@ -105,20 +105,6 @@ class ShowInconsistencies extends Command
                 50
             )
             ->addOption(
-                'page-offset',
-                'o',
-                InputOption::VALUE_OPTIONAL,
-                'Defines with which page to start looping',
-                0
-            )
-            ->addOption(
-                'page-limit',
-                'l',
-                InputOption::VALUE_OPTIONAL,
-                'Defines how many loop will be done (0 = unlimited)',
-                0
-            )
-            ->addOption(
                 'raw',
                 'r',
                 InputOption::VALUE_NONE,
