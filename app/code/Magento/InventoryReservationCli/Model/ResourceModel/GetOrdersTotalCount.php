@@ -22,7 +22,7 @@ class GetOrdersTotalCount
     /**
      * @param ResourceConnection $resourceConnection
      */
-    public function __construct (
+    public function __construct(
         ResourceConnection $resourceConnection
     ) {
         $this->resourceConnection = $resourceConnection;

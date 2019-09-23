@@ -211,7 +211,8 @@ class ShowInconsistencies extends Command
             }
 
             $this->logger->debug(
-                'Bunch processed for reservation inconsistency check', [
+                'Bunch processed for reservation inconsistency check',
+                [
                     'duration' => sprintf('%.2fs', (microtime(true) - $startBunchExecution)),
                     'memory_usage' => sprintf('%.2fMB', (memory_get_peak_usage(true) / 1024 / 1024)),
                     'bunch_size' => $bunchSize,
@@ -226,7 +227,8 @@ class ShowInconsistencies extends Command
         }
 
         $this->logger->debug(
-            'Finished reservation inconsistency check', [
+            'Finished reservation inconsistency check',
+            [
                 'duration' => sprintf('%.2fs', (microtime(true) - $startTime)),
                 'memory_usage' => sprintf('%.2fMB', (memory_get_peak_usage(true) / 1024 / 1024)),
             ]
@@ -236,6 +238,8 @@ class ShowInconsistencies extends Command
     }
 
     /**
+     * Retrieve max page for given bunch size
+     *
      * @param int $bunchSize
      * @return int
      */
