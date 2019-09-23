@@ -29,7 +29,7 @@ class GetOrderDataForOrderInFinalState
      * @param ResourceConnection $resourceConnection
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
      */
-    public function __construct (
+    public function __construct(
         ResourceConnection $resourceConnection,
         GetCompleteOrderStateList $getCompleteOrderStateList
     ) {

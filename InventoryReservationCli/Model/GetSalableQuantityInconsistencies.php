@@ -103,7 +103,7 @@ class GetSalableQuantityInconsistencies
         $collector = $this->collectorFactory->create();
         $this->addExpectedReservations->execute($collector, $bunchSize, $page);
         $this->addExistingReservations->execute($collector);
-        $this->addCompletedOrdersToUnresolved->execute($collector, $bunchSize, $page);
+        $this->addCompletedOrdersToUnresolved->execute($collector);
 
         $items = $collector->getItems();
         $items = $this->filterManagedStockProducts->execute($items);
