@@ -9,25 +9,6 @@
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="NoOptionAvailableToConfigureDisabledProductTest">
-        <remove keyForRemoval="goToCreatedCustomerPageAgain"/>
-        <remove keyForRemoval="createNewOrderAgain"/>
-        <remove keyForRemoval="clickToAddProductAgain"/>
-        <remove keyForRemoval="waitForProductsOpenedAgain"/>
-        <remove keyForRemoval="idFilter"/>
-        <remove keyForRemoval="clickSearch"/>
-        <remove keyForRemoval="selectConfigurableProduct"/>
-        <remove keyForRemoval="addProductToOrder"/>
-        <remove keyForRemoval="waitForPageLoad"/>
-        <remove keyForRemoval="clickToAddProductToOrder"/>
-        <remove keyForRemoval="waitForNewOrderPageLoad"/>
-        <remove keyForRemoval="seeTheErrorMessageDisplayed"/>
-        <remove keyForRemoval="selectShippingMethod"/>
-        <remove keyForRemoval="openShippingMethod"/>
-        <remove keyForRemoval="waitForShippingMethods"/>
-        <remove keyForRemoval="chooseShippingMethod"/>
-        <remove keyForRemoval="waitForShippingMethodLoad"/>
-        <remove keyForRemoval="clickSubmitOrder"/>
-        <remove keyForRemoval="waitForSuccess"/>
         <remove keyForRemoval="seeSuccessMessage"/>
     </test>
 </tests>
