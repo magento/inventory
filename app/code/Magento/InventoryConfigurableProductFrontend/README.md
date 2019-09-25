@@ -1,8 +1,8 @@
 # InventoryConfigurableProductFrontend module
 
-The `InventoryConfigurableProductFrontend` add info about qty left quantity for configurable variations.
+The `InventoryConfigurableProductFrontend` adds info about qty left quantity for configurable variations.
 
-This module is part of the new inventory infrastructure. The
+This module is a part of the new inventory infrastructure. The
 [Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
 describes the MSI (Multi-Source Inventory) project in more detail.
 

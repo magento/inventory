@@ -10,7 +10,7 @@
     "magento/module-inventory-configuration-api": "*"
   },
   "suggest": {
-    "magento/module-inventory-reservations-api": "*"
+    "magento/module-inventory-catalog": "*"
   },
   "type": "magento2-module",
   "license": [

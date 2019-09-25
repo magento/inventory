@@ -20,9 +20,8 @@
         </annotations>
         <before>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <magentoCLI command="config:set  cataloginventory/options/stock_threshold_qty 2" stepKey="setQty2"/>
+            <magentoCLI command="config:set {{StorefrontCatalogInventoryStockThresholdQtyConfigData.path}} {{StorefrontCatalogInventoryStockThresholdQtyConfigData.value}}" stepKey="setQty2"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-            <!--Create 1 configurable product with 3 variations-->
             <comment userInput="Create 1 configurable product with 3 variations" stepKey="commentCreateConfigProducts"/>
             <createData entity="ApiConfigurableProduct" stepKey="createFirstConfigProduct">
                 <requiredEntity createDataKey="createCategory"/>
@@ -33,7 +32,6 @@
             <createData entity="ApiConfigurableProduct" stepKey="createThirdConfigProduct">
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <!--Create product drop down attribute-->
             <comment userInput="Create product drop down attribute" stepKey="commentCreateAttribute"/>
             <createData entity="productDropDownAttribute" stepKey="createDropDownAttribute"/>
             <createData entity="productAttributeOption1" stepKey="productAttributeFirstOption">
@@ -48,16 +46,13 @@
             <createData entity="AddToDefaultSet" stepKey="addToAttributeSetHandle">
                 <requiredEntity createDataKey="createDropDownAttribute"/>
             </createData>
-            <!--Create product swatch attributes-->
             <comment userInput="Create product swatch attributes" stepKey="commentCreateSwatchAttributes"/>
             <createData entity="productAttributeWithTwoOptions" stepKey="createVisualSwatchAttribute"/>
             <createData entity="productAttributeWithTwoOptions" stepKey="createTextSwatchAttribute"/>
         </before>
         <after>
-            <!--Reset configs-->
             <comment userInput="Reset configs" stepKey="commentResetConfigs"/>
-            <magentoCLI command="config:set  cataloginventory/options/stock_threshold_qty 0" stepKey="setDefaultValue"/>
-            <!--Delete created data-->
+            <magentoCLI command="config:set {{StorefrontCatalogInventoryStockThresholdQtyDefaultConfigData.path}} {{StorefrontCatalogInventoryStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultValue"/>
             <comment userInput="Delete created data" stepKey="commentDeleteData"/>
             <deleteData createDataKey="createFirstConfigProduct" stepKey="deleteFirstConfigProduct"/>
             <deleteData createDataKey="createSecondConfigProduct" stepKey="deleteSecondConfigProduct"/>
@@ -72,7 +67,6 @@
             <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridColumnsInitial"/>
             <actionGroup ref="logout" stepKey="logout"/>
         </after>
-        <!--Generate configurations for first product-->
         <comment userInput="Generate configurations for first product" stepKey="commentGenerateFirstConfigs"/>
         <amOnPage url="{{AdminProductEditPage.url($$createFirstConfigProduct.id$$)}}" stepKey="navigateToConfigProductPage"/>
         <waitForPageLoad stepKey="waitForProductPageLoad"/>
@@ -80,7 +74,6 @@
             <argument name="attributeCode" value="$$createDropDownAttribute.attribute_code$$"/>
         </actionGroup>
         <waitForPageLoad stepKey="waitForBulkImagesPriceQuantityPageLoad"/>
-        <!--Add quantity to product attribute options-->
         <comment userInput="Add quantity to product attribute options" stepKey="commentAddQuantity"/>
         <actionGroup ref="addUniqueQuantityToConfigurableProductOption" stepKey="addUniqueQtyForFirstOption">
             <argument name="frontend_label" value="$$createDropDownAttribute.attribute[frontend_labels][0][label]$$"/>
@@ -102,7 +95,6 @@
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButtonToGenerateConfigs"/>
         <waitForPageLoad stepKey="waitForConfigurableProductPageLoad"/>
         <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
-        <!--Check first product options on storefront-->
         <comment userInput="Check first product options on storefront" stepKey="commentCheckFirstProductOptions"/>
         <amOnPage url="{{StorefrontProductPage.url($$createFirstConfigProduct.custom_attributes[url_key]$$)}}" stepKey="openProductPage"/>
         <waitForPageLoad stepKey="waitForStorefrontFirstProductPage"/>
@@ -114,7 +106,6 @@
         <see selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 1 left" stepKey="seeSecondOptionQty"/>
         <selectOption selector="{{StorefrontProductInfoMainSection.attributeSelectByAttributeID($$createDropDownAttribute.attribute[frontend_labels][0][label]$$)}}" userInput="$$productAttributeThirdOption.option[store_labels][0][label]$$" stepKey="selectThirdOption"/>
         <dontSee selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 2 left" stepKey="seeThirdOptionQty"/>
-        <!--Add first product third variation to cart and place for order-->
         <comment userInput="Add first product third variation to cart and place for order" stepKey="commentPlaceFirstOrder"/>
         <actionGroup ref="StorefrontAddToCartCustomOptionsProductPageActionGroup" stepKey="addProductToCard">
             <argument name="productName" value="$$createFirstConfigProduct.name$$"/>
@@ -134,7 +125,6 @@
         <selectOption selector="{{StorefrontProductInfoMainSection.attributeSelectByAttributeID($$createDropDownAttribute.attribute[frontend_labels][0][label]$$)}}" userInput="$$productAttributeThirdOption.option[store_labels][0][label]$$" stepKey="selectThirdOptionSecondTime"/>
         <waitForAjaxLoad stepKey="waitForElementVisible3"/>
         <see selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 2 left" stepKey="seeThirdOptionQtySecondTime"/>
-        <!--Configure visual swatch attribute-->
         <comment userInput="Configure visual swatch attribute" stepKey="commentConfigureSecondAttribute"/>
         <actionGroup ref="navigateToEditProductAttribute" stepKey="goToEditPage">
             <argument name="ProductAttribute" value="$$createVisualSwatchAttribute.attribute[frontend_labels][0][label]$$"/>
@@ -153,7 +143,6 @@
             <argument name="index" value="2"/>
         </actionGroup>
         <click selector="{{AttributePropertiesSection.Save}}" stepKey="saveAttribute"/>
-        <!--Generate configurations for second product-->
         <comment userInput="Generate configurations for second product" stepKey="commentGenerateSecondConfigs"/>
         <amOnPage url="{{AdminProductEditPage.url($$createSecondConfigProduct.id$$)}}" stepKey="navigateToSecondConfigProductPage"/>
         <waitForPageLoad stepKey="waitForSecondProductPageLoad"/>
@@ -161,7 +150,6 @@
             <argument name="attributeCode" value="$$createVisualSwatchAttribute.attribute_code$$"/>
         </actionGroup>
         <waitForPageLoad stepKey="waitForBulkPriceQuantityPageLoad"/>
-        <!--Add quantity to product visual swatch attribute options-->
         <comment userInput="Add quantity to product visual swatch attribute options" stepKey="commentAddQuantityVisualSwatch"/>
         <actionGroup ref="addUniqueQuantityToConfigurableProductOption" stepKey="addUniqueQtyForFirstVisualSwatchOption">
             <argument name="frontend_label" value="$$createVisualSwatchAttribute.attribute[frontend_labels][0][label]$$"/>
@@ -183,7 +171,6 @@
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButtonToGenerateConfigsSecondTime"/>
         <waitForPageLoad stepKey="waitForConfigurableProductPageLoadSecondTime"/>
         <actionGroup ref="saveConfiguredProduct" stepKey="saveSecondProductForm"/>
-        <!--Check second product options on storefront-->
         <comment userInput="Check second product options on storefront" stepKey="commentCheckSecondProductOptions"/>
         <amOnPage url="{{StorefrontProductPage.url($$createSecondConfigProduct.custom_attributes[url_key]$$)}}" stepKey="openSecondProductPage"/>
         <waitForPageLoad stepKey="waitForStorefrontSecondProductPage"/>
@@ -195,7 +182,6 @@
         <see selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 1 left" stepKey="seeSecondSwatchOptionQty"/>
         <click selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(visualSwatchOption3.admin_label)}}" stepKey="clickThirdSwatchOption"/>
         <dontSee selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 2 left" stepKey="seeThirdSwatchOptionQty"/>
-        <!--Add second product third variation to cart and place for order-->
         <comment userInput="Add second product third variation to cart and place for order" stepKey="commentPlaceSecondOrder"/>
         <actionGroup ref="StorefrontAddToCartCustomOptionsProductPageActionGroup" stepKey="addSecondProductToCard">
             <argument name="productName" value="$$createSecondConfigProduct.name$$"/>
@@ -216,7 +202,6 @@
         <click selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(visualSwatchOption3.admin_label)}}" stepKey="clickThirdSwatchOptionSecondTime"/>
         <waitForAjaxLoad stepKey="waitForElementVisible10"/>
         <see selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 2 left" stepKey="seeThirdSwatchOptionQtySecondTime"/>
-        <!--Configure text swatch attribute-->
         <comment userInput="Configure text swatch attribute" stepKey="commentConfigureThirdAttribute"/>
         <actionGroup ref="navigateToEditProductAttribute" stepKey="goToThirdAttributeEditPage">
             <argument name="ProductAttribute" value="$$createTextSwatchAttribute.attribute[frontend_labels][0][label]$$"/>
@@ -238,7 +223,6 @@
             <argument name="description" value="{{textSwatchOption3.description}}"/>
         </actionGroup>
         <click selector="{{AttributePropertiesSection.Save}}" stepKey="saveThirdAttribute"/>
-        <!--Generate configurations for third product-->
         <comment userInput="Generate configurations for third product" stepKey="commentGenerateThirdConfigs"/>
         <amOnPage url="{{AdminProductEditPage.url($$createThirdConfigProduct.id$$)}}" stepKey="navigateToThirdConfigProductPage"/>
         <waitForPageLoad stepKey="waitForThirdProductPageLoad"/>
@@ -246,7 +230,6 @@
             <argument name="attributeCode" value="$$createTextSwatchAttribute.attribute_code$$"/>
         </actionGroup>
         <waitForPageLoad stepKey="waitForBulkPriceQuantityPageLoadThirdTime"/>
-        <!--Add quantity to product text swatch attribute options-->
         <comment userInput="Add quantity to product text swatch attribute options" stepKey="commentAddQuantityTextSwatch"/>
         <actionGroup ref="addUniqueQuantityToConfigurableProductOption" stepKey="addUniqueQtyForFirstTextSwatchOption">
             <argument name="frontend_label" value="$$createTextSwatchAttribute.attribute[frontend_labels][0][label]$$"/>
@@ -268,7 +251,6 @@
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnNextButtonToGenerateConfigsThirdTime"/>
         <waitForPageLoad stepKey="waitForConfigurableProductPageLoadThirdTime"/>
         <actionGroup ref="saveConfiguredProduct" stepKey="saveThirdProductForm"/>
-        <!--Check third product options on storefront-->
         <comment userInput="Check third product options on storefront" stepKey="commentCheckThirdProductOptions"/>
         <amOnPage url="{{StorefrontProductPage.url($$createThirdConfigProduct.custom_attributes[url_key]$$)}}" stepKey="openThirdProductPage"/>
         <waitForPageLoad stepKey="waitForStorefrontThirdProductPage"/>
@@ -280,7 +262,6 @@
         <see selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 1 left" stepKey="seeSecondTextSwatchOptionQty"/>
         <click selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(textSwatchOption3.admin_label)}}" stepKey="clickThirdTextSwatchOption"/>
         <dontSee selector="{{StorefrontProductInfoMainSection.configurableVariationQty}}" userInput="Only 2 left" stepKey="seeThirdTextSwatchOptionQty"/>
-        <!--Add third product third variation to cart and place for order-->
         <comment userInput="Add third product third variation to cart and place for order" stepKey="commentPlaceThirdOrder"/>
         <actionGroup ref="StorefrontAddToCartCustomOptionsProductPageActionGroup" stepKey="addThirdProductToCard">
             <argument name="productName" value="$$createThirdConfigProduct.name$$"/>

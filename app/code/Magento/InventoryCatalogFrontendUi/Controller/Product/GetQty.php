@@ -16,6 +16,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Get product qty left.
@@ -82,13 +83,16 @@ class GetQty extends Action implements HttpGetActionInterface
         $salesChannel = $this->getRequest()->getParam('channel');
 
         if (!$productId || !$salesChannel) {
-            $resultForward = $this->resultPageFactory->create(ResultFactory::TYPE_FORWARD);
-            $resultForward->forward('noroute');
-            return $resultForward;
+            return $this->getResultForward();
         }
 
-        $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
-        $websiteCode = $this->storeManager->getWebsite((int)$this->storeManager->getStore()->getWebsiteId())->getCode();
+        try {
+            $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
+        } catch (NoSuchEntityException $e) {
+            return $this->getResultForward();
+        }
+
+        $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stockId = $this->stockResolver->execute($salesChannel, $websiteCode)->getStockId();
 
         $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
@@ -99,5 +103,17 @@ class GetQty extends Action implements HttpGetActionInterface
         );
 
         return $resultJson;
+    }
+
+    /**
+     * Get result forward.
+     *
+     * @return ResultInterface
+     */
+    private function getResultForward()
+    {
+        $resultForward = $this->resultPageFactory->create(ResultFactory::TYPE_FORWARD);
+        $resultForward->forward('noroute');
+        return $resultForward;
     }
 }
