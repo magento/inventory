@@ -116,11 +116,11 @@ class SourceItemConfiguration extends AbstractModifier
                 $sourceConfiguration[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY];
 
             $notifyQtyConfigValue = $this->getNotifyQtyConfigValue();
+
+            $source['notify_stock_qty_use_default'] = '0';
+
             if ($source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === null) {
                 $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $notifyQtyConfigValue;
-            }
-            $source['notify_stock_qty_use_default'] = '0';
-            if ((float)$source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === $notifyQtyConfigValue) {
                 $source['notify_stock_qty_use_default'] = '1';
             }
         }
