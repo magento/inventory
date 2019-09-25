@@ -59,7 +59,7 @@ class GetShippingAddressBySourceCodeAndOriginalAddress
     }
 
     /**
-     * Get Shipping Address from Source by its sourceCode and original Shipping Address
+     * Get Shipping Address from Source by its source code and original Shipping Address
      *
      * @param string $sourceCode
      * @param AddressInterface $originalAddress
