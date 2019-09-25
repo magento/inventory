@@ -226,6 +226,7 @@
         "magento/module-inventory-in-store-pickup-shipping": "*",
         "magento/module-inventory-in-store-pickup-shipping-admin-ui": "*",
         "magento/module-inventory-in-store-pickup-shipping-api": "*",
+        "magento/module-inventory-in-store-pickup-webapi-extension": "*",
         "magento/module-inventory-multi-dimensional-indexer-api": "*",
         "magento/module-inventory-low-quantity-notification": "*",
         "magento/module-inventory-low-quantity-notification-api": "*",
