@@ -35,4 +35,7 @@
         <plugin name="update_legacy_stock_item_configuration_at_source_item_configuration_save"
                 type="Magento\InventoryLowQuantityNotification\Plugin\InventoryLowQuantityNotificationApi\UpdateLegacyStockItemConfigurationAtSourceItemConfigurationSavePlugin"/>
     </type>
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="process_stock_item_configuration_after_product_save" type="Magento\InventoryLowQuantityNotification\Plugin\Catalog\Api\ProductRepositoryInterface\ProcessStockItemConfiguration"/>
+    </type>
 </config>
