@@ -59,8 +59,12 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignAdditionalSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <!--Set Low Stock Notification quantity and source quantity for created product.-->
+
+        <!-- Checking that unchecked "Use Default" for notify qty will be unchecked after save -->
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyQuantityUseDefaultIsNotChecked"/>
+        <!--Set Low Stock Notification quantity and source quantity for created product.-->
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="95" stepKey="setLowStockNotification"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQty"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
