@@ -49,6 +49,8 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
     /**
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SourceItemsConfigurationProcessor $sourceItemsConfigurationProcessor
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
@@ -63,6 +65,8 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
     }
 
     /**
+     * Process stock items configuration after proudct save in admin ui.
+     *
      * @param EventObserver $observer
      * @return void
      */
