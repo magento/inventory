@@ -78,7 +78,7 @@ class SourceItemConfiguration extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
@@ -100,6 +100,8 @@ class SourceItemConfiguration extends AbstractModifier
     }
 
     /**
+     * Get configuration data for source items.
+     *
      * @param array $assignedSources
      * @param ProductInterface $product
      * @return array
@@ -159,6 +161,8 @@ class SourceItemConfiguration extends AbstractModifier
     }
 
     /**
+     * Get config value for notify qty.
+     *
      * @return float
      */
     private function getNotifyQtyConfigValue(): float
