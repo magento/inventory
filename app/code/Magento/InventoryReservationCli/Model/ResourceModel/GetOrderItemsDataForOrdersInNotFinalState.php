@@ -51,6 +51,16 @@ class GetOrderItemsDataForOrdersInNotFinalState
         $orderItemTableName = $this->resourceConnection->getTableName('sales_order_item');
         $storeTableName = $this->resourceConnection->getTableName('store');
 
+        $orderEntityIdSelectQuery = $connection
+            ->select()
+            ->from(
+                ['main_table' => $orderTableName],
+                ['main_table.entity_id']
+            )
+            ->where('main_table.state NOT IN (?)', $this->getCompleteOrderStateList->execute())
+            ->limitPage($page, $bunchSize);
+        $entityIds = $connection->fetchCol($orderEntityIdSelectQuery);
+
         $query = $connection
             ->select()
             ->from(
@@ -71,9 +81,8 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 'item.order_id = main_table.entity_id',
                 ['item.sku', 'item.qty_ordered']
             )
-            ->where('main_table.state NOT IN (?)', $this->getCompleteOrderStateList->execute())
-            ->where('item.product_type IN (?)', ['simple'])
-            ->limitPage($page, $bunchSize);
+            ->where('main_table.entity_id IN (?)', $entityIds)
+            ->where('item.product_type IN (?)', ['simple']);
         return $connection->fetchAll($query);
     }
 }
