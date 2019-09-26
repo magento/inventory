@@ -20,7 +20,7 @@
         </annotations>
 
         <before>
-            <!--Crate additional source.-->
+            <!--Create additional source.-->
             <createData entity="_minimalSource" stepKey="additionalSource"/>
             <!--Create category and product.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
