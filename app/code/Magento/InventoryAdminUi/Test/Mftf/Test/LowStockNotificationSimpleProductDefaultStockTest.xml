@@ -20,13 +20,13 @@
         </annotations>
 
         <before>
-            <!--Crate additional source.-->
-            <createData entity="_minimalSource" stepKey="additionalSource"/>
             <!--Create category and product.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <!--Create additional source.-->
+            <createData entity="_minimalSource" stepKey="additionalSource"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">

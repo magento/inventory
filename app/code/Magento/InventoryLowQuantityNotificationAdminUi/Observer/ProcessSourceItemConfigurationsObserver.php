@@ -16,7 +16,7 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
-use Magento\InventoryLowQuantityNotificationAdminUi\Model\SourceItemsConfigurationProcessor;
+use Magento\InventoryLowQuantityNotification\Model\SourceItemsConfigurationProcessor;
 
 /**
  * Save source relations (configuration) during product persistence via controller
