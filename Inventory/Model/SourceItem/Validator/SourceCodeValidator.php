@@ -9,6 +9,9 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\ValidationChecker\NotAnEmptyString;
+use Magento\Inventory\Model\ValidationChecker\NoWhitespaceInString;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -23,11 +26,28 @@ class SourceCodeValidator implements SourceItemValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var NotAnEmptyString
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $notAnEmptyString;
+
+    /**
+     * @var NoWhitespaceInString
+     */
+    private $noWhitespaceInString;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param NotAnEmptyString $notAnEmptyString
+     * @param NoWhitespaceInString $noWhitespaceInString
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        NotAnEmptyString $notAnEmptyString,
+        NoWhitespaceInString $noWhitespaceInString
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->notAnEmptyString = $notAnEmptyString;
+        $this->noWhitespaceInString = $noWhitespaceInString;
     }
 
     /**
@@ -37,13 +57,11 @@ class SourceCodeValidator implements SourceItemValidatorInterface
     {
         $value = (string)$source->getSourceCode();
 
-        if ('' === trim($value)) {
-            $errors[] = __('"%field" can not be empty.', ['field' => SourceItemInterface::SOURCE_CODE]);
-        } elseif (preg_match('/\s/', $value)) {
-            $errors[] = __('"%field" can not contain whitespaces.', ['field' => SourceItemInterface::SOURCE_CODE]);
-        } else {
-            $errors = [];
-        }
+        $errors = [];
+        $errors[] = $this->notAnEmptyString->execute(SourceItemInterface::SOURCE_CODE, $value);
+        $errors[] = $this->noWhitespaceInString->execute(SourceItemInterface::SOURCE_CODE, $value);
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
+
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }

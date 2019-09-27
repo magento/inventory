@@ -9,6 +9,8 @@ namespace Magento\Inventory\Model\Source\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\ValidationChecker\NoSpecialCharsInString;
+use Magento\Inventory\Model\ValidationChecker\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Model\SourceValidatorInterface;
 
@@ -23,11 +25,28 @@ class NameValidator implements SourceValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var NotAnEmptyString
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $notAnEmptyString;
+
+    /**
+     * @var NoSpecialCharsInString
+     */
+    private $noSpecialCharsInString;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param NotAnEmptyString $notAnEmptyString
+     * @param NoSpecialCharsInString $noSpecialCharsInString
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        NotAnEmptyString $notAnEmptyString,
+        NoSpecialCharsInString $noSpecialCharsInString
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->notAnEmptyString = $notAnEmptyString;
+        $this->noSpecialCharsInString = $noSpecialCharsInString;
     }
 
     /**
@@ -37,13 +56,11 @@ class NameValidator implements SourceValidatorInterface
     {
         $value = (string)$source->getName();
 
-        if ('' === trim($value)) {
-            $errors[] = __('"%field" can not be empty.', ['field' => SourceInterface::NAME]);
-        } elseif (preg_match('/\$[:]*{(.)*}/', $value)) {
-            $errors[] = __('Validation Failed');
-        } else {
-            $errors = [];
-        }
+        $errors = [];
+        $errors[] = $this->notAnEmptyString->execute(SourceInterface::NAME, $value);
+        $errors[] = $this->noSpecialCharsInString->execute($value);
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
+
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }
