@@ -8,9 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Test\Api;
 
 use Magento\Framework\Api\SortOrder;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Assert\AssertArrayContains;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
@@ -18,6 +23,16 @@ class GetPickupLocationsTest extends WebapiAbstract
 {
     private const RESOURCE_PATH = '/V1/inventory/in-store-pickup/pickup-locations';
     private const SERVICE_NAME = 'inventoryInStorePickupApiGetPickupLocationsV1';
+
+    /**
+     * @var GetPickupLocationInterface
+     */
+    private $getPickupLocation;
+
+    public function setUp()
+    {
+        $this->getPickupLocation = ObjectManager::getInstance()->get(GetPickupLocationInterface::class);
+    }
 
     /**
      * Run combined tests with multiple params/filters.
@@ -41,6 +56,8 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
+     *
+     * @throws NoSuchEntityException
      */
     public function testExecuteCombined(
         array $searchRequestData,
@@ -55,6 +72,12 @@ class GetPickupLocationsTest extends WebapiAbstract
 
         $responseLocationCodes = $this->extractLocationCodesFromResponse($response);
         AssertArrayContains::assert($sortedPickupLocationCodes, $responseLocationCodes);
+
+        $this->comparePickupLocations(
+            $response['items'],
+            $sortedPickupLocationCodes,
+            $searchRequestData['scopeCode']
+        );
 
         $this->assertEquals($expectedTotalCount, $response['total_count']);
         $this->assertCount(count($sortedPickupLocationCodes), $response['items']);
@@ -183,6 +206,8 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
+     *
+     * @throws NoSuchEntityException
      */
     public function testExecuteDistanceFilterOffline(
         array $searchRequestData,
@@ -196,6 +221,12 @@ class GetPickupLocationsTest extends WebapiAbstract
 
         $responseLocationCodes = $this->extractLocationCodesFromResponse($response);
         AssertArrayContains::assert($sortedPickupLocationCodes, $responseLocationCodes);
+
+        $this->comparePickupLocations(
+            $response['items'],
+            $sortedPickupLocationCodes,
+            $searchRequestData['scopeCode']
+        );
 
         $this->assertEquals(count($sortedPickupLocationCodes), $response['total_count']);
         $this->assertCount(count($sortedPickupLocationCodes), $response['items']);
@@ -393,6 +424,8 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
+     *
+     * @throws NoSuchEntityException
      */
     public function testExecuteFilterSet(
         array $searchRequestData,
@@ -410,6 +443,12 @@ class GetPickupLocationsTest extends WebapiAbstract
 
         $responseLocationCodes = $this->extractLocationCodesFromResponse($response);
         AssertArrayContains::assert($sortedPickupLocationCodes, $responseLocationCodes);
+
+        $this->comparePickupLocations(
+            $response['items'],
+            $sortedPickupLocationCodes,
+            $salesChannelCode
+        );
 
         $this->assertEquals(count($sortedPickupLocationCodes), $response['total_count']);
         $this->assertCount(count($sortedPickupLocationCodes), $response['items']);
@@ -711,6 +750,8 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
+     *
+     * @throws NoSuchEntityException
      */
     public function testExecuteGeneral(
         string $salesChannelCode,
@@ -732,6 +773,13 @@ class GetPickupLocationsTest extends WebapiAbstract
 
         $responseLocationCodes = $this->extractLocationCodesFromResponse($response);
         AssertArrayContains::assert($sortedPickupLocationCodes, $responseLocationCodes);
+
+        $this->comparePickupLocations(
+            $response['items'],
+            $sortedPickupLocationCodes,
+            $salesChannelCode
+        );
+
         self::assertEquals($expectedTotalCount, $response['total_count']);
     }
 
@@ -863,5 +911,52 @@ class GetPickupLocationsTest extends WebapiAbstract
             $responseLocationCodes[] = $item['pickup_location_code'];
         }
         return $responseLocationCodes;
+    }
+
+    /**
+     * Compare received Pickup Locations.
+     *
+     * @param array $responseItems
+     * @param array $expected
+     * @param string $scopeCode
+     *
+     * @throws NoSuchEntityException
+     */
+    private function comparePickupLocations(array $responseItems, array $expected, string $scopeCode)
+    {
+        $index = 0;
+        foreach ($responseItems as $item) {
+            $pickupLocation = $this->getPickupLocation->execute(
+                $expected[$index],
+                SalesChannelInterface::TYPE_WEBSITE,
+                $scopeCode
+            );
+            $this->compareFields($pickupLocation, $item);
+            $index++;
+        }
+    }
+
+    /**
+     * Compare if received Pickup Location data match to the original entity.
+     *
+     * @param PickupLocationInterface $pickupLocation
+     * @param array $data
+     */
+    private function compareFields(PickupLocationInterface $pickupLocation, array $data): void
+    {
+        $this->assertEquals($pickupLocation->getPickupLocationCode(), $data['pickup_location_code']);
+        $this->assertEquals($pickupLocation->getName(), $data['name'] ?? null);
+        $this->assertEquals($pickupLocation->getEmail(), $data['email'] ?? null);
+        $this->assertEquals($pickupLocation->getFax(), $data['fax'] ?? null);
+        $this->assertEquals($pickupLocation->getDescription(), $data['description'] ?? null);
+        $this->assertEquals($pickupLocation->getLatitude(), $data['latitude'] ?? null);
+        $this->assertEquals($pickupLocation->getLongitude(), $data['longitude'] ?? null);
+        $this->assertEquals($pickupLocation->getCountryId(), $data['country_id'] ?? null);
+        $this->assertEquals($pickupLocation->getRegionId(), $data['region_id'] ?? null);
+        $this->assertEquals($pickupLocation->getRegion(), $data['region'] ?? null);
+        $this->assertEquals($pickupLocation->getCity(), $data['city'] ?? null);
+        $this->assertEquals($pickupLocation->getStreet(), $data['street'] ?? null);
+        $this->assertEquals($pickupLocation->getPostcode(), $data['postcode'] ?? null);
+        $this->assertEquals($pickupLocation->getPhone(), $data['phone'] ?? null);
     }
 }
