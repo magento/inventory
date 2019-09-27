@@ -5,7 +5,8 @@
 
 define(
     [
-        'jquery'
+        'jquery',
+        'prototype'
     ],
     function ($) {
         'use strict';
@@ -42,7 +43,7 @@ define(
              *
              * @param {String} method
              */
-            window.order.prototype.setShippingMethod = function (method) {
+            window.AdminOrder.prototype.setShippingMethod = function (method) {
                 var data = {};
 
                 data['order[shipping_method]'] = method;
