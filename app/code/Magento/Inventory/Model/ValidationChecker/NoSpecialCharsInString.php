@@ -8,11 +8,13 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ValidationChecker;
 
 /**
- * Checks whether given string is empty
+ * Checks whether given string contains special chars
  */
 class NoSpecialCharsInString
 {
     /**
+     * Checks whether given string contains special chars
+     *
      * @param mixed $value
      * @return array
      */

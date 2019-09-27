@@ -13,6 +13,8 @@ namespace Magento\Inventory\Model\ValidationChecker;
 class IsNumericValue
 {
     /**
+     * Checks whether given string is empty
+     *
      * @param string $fieldName
      * @param mixed $value
      * @return array
