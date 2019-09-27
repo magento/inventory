@@ -7,28 +7,34 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Observer;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\ResourceModel\GridInterface;
 
+/**
+ * Update the order grid when order was placed with Pickup Location Code.
+ */
 class UpdateOrderGrid implements ObserverInterface
 {
     /**
-     * @var \Magento\Sales\Model\ResourceModel\GridInterface
+     * @var GridInterface
      */
-    protected $entityGrid;
+    private $entityGrid;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
-    protected $globalConfig;
+    private $globalConfig;
 
     /**
-     * @param \Magento\Sales\Model\ResourceModel\GridInterface $entityGrid
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $globalConfig
+     * @param GridInterface $entityGrid
+     * @param ScopeConfigInterface $globalConfig
      */
     public function __construct(
-        \Magento\Sales\Model\ResourceModel\GridInterface $entityGrid,
-        \Magento\Framework\App\Config\ScopeConfigInterface $globalConfig
+        GridInterface $entityGrid,
+        ScopeConfigInterface $globalConfig
     ) {
         $this->entityGrid = $entityGrid;
         $this->globalConfig = $globalConfig;
@@ -37,10 +43,10 @@ class UpdateOrderGrid implements ObserverInterface
     /**
      * Update the Order Grid in case Pickup Location was added to the order.
      *
-     * @param \Magento\Framework\Event\Observer $observer
+     * @param Observer $observer
      * @return void
      */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(Observer $observer)
     {
         if (!$this->globalConfig->getValue('dev/grid/async_indexing')) {
             /** @var OrderInterface $order */
