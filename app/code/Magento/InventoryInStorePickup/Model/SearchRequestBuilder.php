@@ -26,7 +26,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     private const FILTER_SET = 'filterSet';
     private const DISTANCE_FILTER = 'distanceFilter';
-    private const SORT_ORDERS = 'sortOrders';
+    private const SORT_ORDERS = 'sort';
     private const PAGE_SIZE = 'pageSize';
     private const CURRENT_PAGE = 'currentPage';
     private const SCOPE_CODE = 'scopeCode';
