@@ -35,6 +35,11 @@
             <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Indexer\SelectNotManagableBuilder">
+        <arguments>
+            <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
+        </arguments>
+    </type>
     <!-- Source Item -->
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
         <plugin name="reindex_after_source_items_save" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceItemsSavePlugin"/>

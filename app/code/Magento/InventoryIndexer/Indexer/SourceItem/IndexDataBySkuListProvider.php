@@ -11,6 +11,7 @@ use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryIndexer\Indexer\SelectBuilder;
+use Magento\InventoryIndexer\Indexer\SelectNotManagableBuilder;
 
 /**
  * Returns all data for the index by SKU List condition
@@ -23,9 +24,14 @@ class IndexDataBySkuListProvider
     private $resourceConnection;
 
     /**
-     * @var SelectBuilder
+     * @var SelectManagableBuilder
      */
-    private $selectBuilder;
+    private $selectManagableBuilder;
+
+    /**
+     * @var SelectNotManagableBuilder
+     */
+    private $selectNotManagableBuilder;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -33,10 +39,12 @@ class IndexDataBySkuListProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        SelectBuilder $selectBuilder
+        SelectBuilder $selectManagableBuilder,
+        SelectNotManagableBuilder $selectNotManagableBuilder
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->selectBuilder = $selectBuilder;
+        $this->selectManagableBuilder = $selectManagableBuilder;
+        $this->selectNotManagableBuilder = $selectNotManagableBuilder;
     }
 
     /**
@@ -46,13 +54,19 @@ class IndexDataBySkuListProvider
      */
     public function execute(int $stockId, array $skuList): ArrayIterator
     {
-        $select = $this->selectBuilder->execute($stockId);
+        $selectManagable = $this->selectManagableBuilder->execute($stockId);
 
         if (count($skuList)) {
-            $select->where('source_item.' . SourceItemInterface::SKU . ' IN (?)', $skuList);
+            $selectManagable->where('source_item.' . SourceItemInterface::SKU . ' IN (?)', $skuList);
+        }
+
+        $selectNotManagable = $this->selectNotManagableBuilder->execute($stockId);
+        if (count($skuList)) {
+            $selectNotManagable->where('product.' . SourceItemInterface::SKU . ' IN (?)', $skuList);
         }
 
         $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()->union(array($selectManagable, $selectNotManagable));
         return new ArrayIterator($connection->fetchAll($select));
     }
 }

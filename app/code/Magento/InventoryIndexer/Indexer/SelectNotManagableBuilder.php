@@ -20,8 +20,13 @@ use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIs
 /**
  * Select builder
  */
-class SelectBuilder
+class SelectNotManagableBuilder
 {
+    /**
+     * Constants for represent fields values in index table
+     */
+    const IS_SALABLE_VALUE = 1;
+
     /**
      * @var ResourceConnection
      */
@@ -39,16 +44,13 @@ class SelectBuilder
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
      * @param string $productTableName
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
         string $productTableName
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
         $this->productTableName = $productTableName;
     }
 
@@ -59,36 +61,23 @@ class SelectBuilder
     public function execute(int $stockId): Select
     {
         $connection = $this->resourceConnection->getConnection();
-        $sourceItemTable = $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM);
-
-        $quantityExpression = (string)$this->resourceConnection->getConnection()->getCheckSql(
-            'source_item.' . SourceItemInterface::STATUS . ' = ' . SourceItemInterface::STATUS_OUT_OF_STOCK,
-            0,
-            SourceItemInterface::QUANTITY
-        );
-        $sourceCodes = $this->getSourceCodes($stockId);
-
         $select = $connection->select();
+        $select->from(
+            ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+            [
+                'product.'.SourceItemInterface::SKU,
+                IndexStructure::QUANTITY => new \Zend_Db_Expr(0),
+                IndexStructure::IS_SALABLE => new \Zend_Db_Expr(self::IS_SALABLE_VALUE),
+            ]
+        );
         $select->joinLeft(
             ['product' => $this->resourceConnection->getTableName($this->productTableName)],
-            'product.sku = source_item.' . SourceItemInterface::SKU,
-            []
-        )->joinLeft(
-            ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
             'product.entity_id = legacy_stock_item.product_id',
             []
         );
-
-        $select->from(
-            ['source_item' => $sourceItemTable],
-            [
-                SourceItemInterface::SKU,
-                IndexStructure::QUANTITY => 'SUM(' . $quantityExpression . ')',
-                IndexStructure::IS_SALABLE => $this->getIsStockItemSalableCondition->execute($select),
-            ]
-        )
-            ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?) and !(legacy_stock_item.manage_stock = 0 AND legacy_stock_item.use_config_manage_stock=0)', $sourceCodes)
+        $select->where('legacy_stock_item.manage_stock = 0 AND legacy_stock_item.use_config_manage_stock=0')
             ->group([SourceItemInterface::SKU]);
+
 
         return $select;
     }

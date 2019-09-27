@@ -10,6 +10,7 @@ namespace Magento\InventoryIndexer\Indexer\Stock;
 use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Indexer\SelectBuilder;
+use Magento\InventoryIndexer\Indexer\SelectNotManagableBuilder;
 
 /**
  * Returns all data for the index
@@ -22,9 +23,14 @@ class IndexDataProviderByStockId
     private $resourceConnection;
 
     /**
-     * @var SelectBuilder
+     * @var SelectManagableBuilder
      */
-    private $selectBuilder;
+    private $selectManagableBuilder;
+
+    /**
+     * @var SelectNotManagableBuilder
+     */
+    private $selectNotManagableBuilder;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -32,10 +38,12 @@ class IndexDataProviderByStockId
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        SelectBuilder $selectBuilder
+        SelectBuilder $selectManagableBuilder,
+        SelectNotManagableBuilder $selectNotManagableBuilder
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->selectBuilder = $selectBuilder;
+        $this->selectManagableBuilder = $selectManagableBuilder;
+        $this->selectNotManagableBuilder = $selectNotManagableBuilder;
     }
 
     /**
@@ -44,9 +52,11 @@ class IndexDataProviderByStockId
      */
     public function execute(int $stockId): ArrayIterator
     {
-        $select = $this->selectBuilder->execute($stockId);
+        $selectManagable = $this->selectManagableBuilder->execute($stockId);
+        $selectNotManagable = $this->selectNotManagableBuilder->execute($stockId);
 
         $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()->union(array($selectManagable, $selectNotManagable));
         return new ArrayIterator($connection->fetchAll($select));
     }
 }

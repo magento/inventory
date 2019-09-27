@@ -60,7 +60,7 @@ class AdaptStockStatusFilterPlugin
     /**
      * @var StockConfigurationInterface
      */
-    private $configuration;
+    private $stockConfiguration;
 
     /**
      * @param ConditionManager $conditionManager
@@ -77,8 +77,8 @@ class AdaptStockStatusFilterPlugin
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         ResourceConnection $resourceConnection,
-        DefaultStockProviderInterface $defaultStockProvider = null,
-        StockConfigurationInterface $stockConfiguration
+        StockConfigurationInterface $stockConfiguration,
+        DefaultStockProviderInterface $defaultStockProvider = null
     ) {
         $this->conditionManager = $conditionManager;
         $this->storeManager = $storeManager;
