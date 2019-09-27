@@ -1,0 +1,5 @@
+"PickupLocation type not defined in schema.","PickupLocation type not defined in schema."
+"Region or city or postcode must be specified for the filter by distance.","Region or city or postcode must be specified for the filter by distance."
+"currentPage value must be greater than 0.","current_page value must be greater than 0."
+"pageSize value must be greater than 0.","page_size value must be greater than 0."
+"currentPage value %1 specified is greater than the %2 page(s) available.","current_page value %1 specified is greater than the %2 page(s) available."
