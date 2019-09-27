@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickup\Model;
 use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 
@@ -44,6 +45,11 @@ class SearchRequest implements SearchRequestInterface
     private $sort;
 
     /**
+     * @var SearchRequestExtensionInterface|null
+     */
+    private $searchRequestExtension;
+
+    /**
      * @var int|null
      */
     private $pageSize;
@@ -59,6 +65,7 @@ class SearchRequest implements SearchRequestInterface
      * @param DistanceFilterInterface|null $distanceFilter
      * @param FilterSetInterface|null $filterSet
      * @param SortOrder[]|null $sort
+     * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
      * @param int $currentPage
      */
@@ -68,6 +75,7 @@ class SearchRequest implements SearchRequestInterface
         ?DistanceFilterInterface $distanceFilter = null,
         ?FilterSetInterface $filterSet = null,
         ?array $sort = null,
+        ?SearchRequestExtensionInterface $searchRequestExtension = null,
         ?int $pageSize = null,
         int $currentPage = 1
     ) {
@@ -76,6 +84,7 @@ class SearchRequest implements SearchRequestInterface
         $this->distanceFilter = $distanceFilter;
         $this->filterSet = $filterSet;
         $this->sort = $sort;
+        $this->searchRequestExtension = $searchRequestExtension;
         $this->pageSize = $pageSize;
         $this->currentPage = $currentPage;
     }
@@ -134,5 +143,21 @@ class SearchRequest implements SearchRequestInterface
     public function getSort(): ?array
     {
         return $this->sort;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setExtensionAttributes(?SearchRequestExtensionInterface $extensionAttributes): void
+    {
+        $this->searchRequestExtension = $extensionAttributes;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtensionAttributes(): ?SearchRequestExtensionInterface
+    {
+        return $this->searchRequestExtension;
     }
 }
