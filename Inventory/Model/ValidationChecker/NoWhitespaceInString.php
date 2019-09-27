@@ -8,11 +8,13 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ValidationChecker;
 
 /**
- * Checks whether given string is empty
+ * Checks whether given value contains whitespace
  */
 class NoWhitespaceInString
 {
     /**
+     * Checks whether given value contains whitespace
+     *
      * @param string $fieldName
      * @param mixed $value
      * @return array

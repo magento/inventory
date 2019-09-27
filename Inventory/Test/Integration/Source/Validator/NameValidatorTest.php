@@ -7,16 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Test\Integration\Source\Validator;
 
-use Magento\Inventory\Model\Source\Validator\CodeValidator;
+use Magento\Inventory\Model\Source\Validator\NameValidator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class CodeValidatorTest extends TestCase
+class NameValidatorTest extends TestCase
 {
     /**
-     * @var CodeValidator
+     * @var NameValidator
      */
     private $validator;
 
@@ -29,22 +29,22 @@ class CodeValidatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->validator = Bootstrap::getObjectManager()->get(CodeValidator::class);
+        $this->validator = Bootstrap::getObjectManager()->get(NameValidator::class);
         $this->sourceFactory = Bootstrap::getObjectManager()->get(SourceInterfaceFactory::class);
     }
 
     /**
      * @dataProvider dataProvider
-     * @param string $sourceCode
+     * @param string $value
      * @param int $errorCount
      * @param array $errorStrings
      */
-    public function testValidation($sourceCode, $errorCount, $errorStrings)
+    public function testValidation($value, $errorCount, $errorStrings)
     {
         $source = $this->sourceFactory->create(
             [
                 'data' => [
-                    SourceInterface::SOURCE_CODE => $sourceCode
+                    SourceInterface::NAME => $value
                 ]
             ]
         );
@@ -67,55 +67,52 @@ class CodeValidatorTest extends TestCase
     {
         return [
             'valid code string' => [
-                'sourceCode' => 'valid_code',
+                'value' => 'valid_code',
                 'errorCount' => 0,
                 'errorStrings' => []
             ],
             'empty value' => [
-                'sourceCode' => '',
+                'value' => '',
                 'errorCount' => 1,
                 'errorStrings' => [
                     'can not be empty'
                 ]
             ],
             'whitespace as value' => [
-                'sourceCode' => ' ',
-                'errorCount' => 2,
+                'value' => ' ',
+                'errorCount' => 1,
                 'errorStrings' => [
-                    'can not be empty',
-                    'can not contain whitespaces'
+                    'can not be empty'
                 ]
             ],
             'value contains whitespace' => [
-                'sourceCode' => 'test test',
-                'errorCount' => 1,
-                'errorStrings' => [
-                    'can not contain whitespaces'
-                ]
+                'value' => 'test test',
+                'errorCount' => 0,
+                'errorStrings' => []
             ],
             'special chars 1' => [
-                'sourceCode' => 'some${test}',
+                'value' => 'some${test}',
                 'errorCount' => 1,
                 'errorStrings' => [
                     'Validation Failed'
                 ]
             ],
             'special chars 2' => [
-                'sourceCode' => '${test}',
+                'value' => '${test}',
                 'errorCount' => 1,
                 'errorStrings' => [
                     'Validation Failed'
                 ]
             ],
             'special chars 3' => [
-                'sourceCode' => 'foo$::{test}',
+                'value' => 'foo$::{test}',
                 'errorCount' => 1,
                 'errorStrings' => [
                     'Validation Failed'
                 ]
             ],
             'special chars 4' => [
-                'sourceCode' => '${}',
+                'value' => '${}',
                 'errorCount' => 1,
                 'errorStrings' => [
                     'Validation Failed'
