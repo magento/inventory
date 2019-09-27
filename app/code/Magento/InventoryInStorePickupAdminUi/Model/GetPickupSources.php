@@ -48,12 +48,8 @@ class GetPickupSources
         return array_filter(
             $stockSources,
             function (SourceInterface $source): bool {
-                $extension = $source->getExtensionAttributes();
-                if ($extension) {
-                    return (bool)$extension->getIsPickupLocationActive();
-                }
-
-                return false;
+                return $source->getExtensionAttributes() && (bool)$source->getExtensionAttributes()
+                                                                         ->getIsPickupLocationActive();
             }
         );
     }
