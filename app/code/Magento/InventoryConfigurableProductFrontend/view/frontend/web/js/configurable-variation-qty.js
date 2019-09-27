@@ -13,18 +13,18 @@ define([
 ], function ($, _, urlBuilder) {
     'use strict';
 
-    return function (productId, salesChannel, code) {
+    return function (productSku, salesChannel, code) {
         var selectorInfoStockSkuQty = '.availability.only',
             selectorInfoStockSkuQtyValue = '.availability.only > strong',
             productQtyInfoBlock = $(selectorInfoStockSkuQty),
             productQtyInfo = $(selectorInfoStockSkuQtyValue);
 
-        if (!_.isUndefined(productId) && productId !== null) {
+        if (!_.isUndefined(productSku) && productSku !== null) {
             $.ajax({
                 url: urlBuilder.build('inventory_catalog/product/getQty/'),
                 dataType: 'json',
                 data: {
-                    'id': productId,
+                    'sku': productSku,
                     'channel': salesChannel,
                     'code': code
                 }

@@ -13,9 +13,9 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Class for adding info about sales channel.
+ * Class for adding info about sales channel and skus.
  */
-class AddSalesChannelInfo
+class AddAdditionalInfo
 {
     /**
      * @var Json
@@ -40,12 +40,11 @@ class AddSalesChannelInfo
     }
 
     /**
-     * Add data about sales channel info.
+     * Add data about sales channel info and sku.
      *
      * @param Subject $configurable
      * @param string $result
      * @return string
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetJsonConfig(Subject $configurable, string $result): string
     {
@@ -53,7 +52,24 @@ class AddSalesChannelInfo
 
         $jsonConfig['channel'] = SalesChannelInterface::TYPE_WEBSITE;
         $jsonConfig['code'] = $this->storeManager->getWebsite()->getCode();
+        $jsonConfig['sku'] = $this->getProductVariationsSku($configurable);
 
         return $this->jsonSerializer->serialize($jsonConfig);
+    }
+
+    /**
+     * Get product variations sku.
+     *
+     * @param Subject $configurable
+     * @return array
+     */
+    private function getProductVariationsSku(Subject $configurable): array
+    {
+        $skus = [];
+        foreach ($configurable->getAllowProducts() as $product) {
+            $skus[$product->getId()] = $product->getSku();
+        }
+
+        return $skus;
     }
 }

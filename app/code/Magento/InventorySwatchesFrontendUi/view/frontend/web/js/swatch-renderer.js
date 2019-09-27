@@ -15,10 +15,11 @@ define([
             /** @inheritdoc */
             _OnClick: function ($this, widget) {
                 var salesChannel = this.options.jsonConfig.channel,
-                    salesChannelCode = this.options.jsonConfig.code;
+                    salesChannelCode = this.options.jsonConfig.code,
+                    productVariationsSku = this.options.jsonConfig.sku;
 
                 this._super($this, widget);
-                configurableVariationQty(widget.getProductId(), salesChannel, salesChannelCode);
+                configurableVariationQty(productVariationsSku[widget.getProductId()], salesChannel, salesChannelCode);
             }
         });
 
