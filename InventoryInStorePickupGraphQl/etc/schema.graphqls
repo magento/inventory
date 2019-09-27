@@ -1,0 +1,75 @@
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+
+type Query {
+    pickupLocations (
+        distance: DistanceFilterInput @doc(description: "Perform search by distance using radius and the address for the search.")
+        filter: PickupLocationFilterInput @doc(description: "Apply filters by attributes.")
+        sort: PickupLocationSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
+        pageSize: Int = 20 @doc(description: "The maximum number of pickup locations to return at once. The attribute is optional.")
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
+    ): PickupLocations
+    @resolver(class: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations") @doc(description: "The pickup locations query searches for locations that match the search request requirements.") @cache(cacheIdentity: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations\\Identity")
+}
+
+input DistanceFilterInput @doc(description: "DistanceFilterInput defines the parameters which will be used for filter by distance.") {
+    radius: Int! @doc(description: "The radius for the search in KM.")
+    country_code: String! @doc(description: "The country code where search must be performed. Required parameter together with region, city or postcode.")
+    region: String @doc(description: "The region where search must be performed.")
+    city: String @doc(description: "The city where search must be performed.")
+    postcode: String @doc(description: "The postcode which will be used for the search.")
+}
+
+input PickupLocationFilterInput @doc(description: "PickupLocationFilterInput defines the list of attributes and filters for the search.") {
+    name: FilterTypeInput @doc(description: "Filter by pickup location name."),
+    pickup_location_code: FilterTypeInput @doc(description: "Filter by pickup location code.")
+    country_id: FilterTypeInput @doc(description: "Filter by country.")
+    postcode: FilterTypeInput @doc(description: "Filter by postcode.")
+    region: FilterTypeInput @doc(description: "Filter by region.")
+    region_id: FilterTypeInput @doc(description: "Filter by region id.")
+    city: FilterTypeInput @doc(description: "Filter by city.")
+    street: FilterTypeInput @doc(description: "Filter by street.")
+}
+
+input PickupLocationSortInput @doc(description: "PickupLocationSortInput specifies attribute to use for sorting search results and indicates whether the results are sorted in ascending or descending order.") {
+    name: SortEnum @doc(description: "The pickup location name. Customer use this to identify the pickup location.")
+    pickup_location_code: SortEnum @doc(description: "A code assigned to pickup location to identify the source.")
+    distance: SortEnum @doc(description: "Distance to the address, requested by distance filter. Applicable only with distance filter. If distance sort order is present, all other sort orders will be ignored.")
+    country_id: SortEnum @doc(description: "Id of the country in two letters.")
+    region: SortEnum @doc(description: "Name of the region.")
+    region_id: SortEnum @doc(description: "Id of the region.")
+    city: SortEnum @doc(description: "City where pickup location is placed.")
+    street: SortEnum @doc(description: "Street where pickup location is placed.")
+    postcode: SortEnum @doc(description: "Postcode where pickup location is placed.")
+    longitude: SortEnum @doc(description: "Geographic longitude where pickup location is placed.")
+    latitude: SortEnum @doc(description: "Geographic latitude where pickup location is placed.")
+    email: SortEnum @doc(description: "Contact email of the pickup location.")
+    fax: SortEnum @doc(description: "Contact fax of the pickup location.")
+    phone: SortEnum @doc(description: "Contact phone number of the pickup location.")
+    contact_name: SortEnum @doc(description: "Name of the contact person.")
+    description: SortEnum @doc(description: "Description of the pickup location.")
+}
+
+type PickupLocations @doc(description: "Top level object returned in a pickup locations search.") {
+    items: [PickupLocation] @doc(description: "An array of pickup locations that match the specific search request.")
+    page_info: SearchResultPageInfo @doc(description: "An object that includes the page_info and currentPage values specified in the query.")
+    total_count: Int @doc(description: "The number of products returned.")
+}
+
+type PickupLocation @doc(description: "Defines Pickup Location information.") {
+    pickup_location_code: String
+    name: String
+    email: String
+    fax: String
+    contact_name: String
+    description: String
+    latitude: Float
+    longitude: Float
+    country_id: String
+    region_id: Int
+    region: String
+    city: String
+    street: String
+    postcode: String
+    phone: String
+}

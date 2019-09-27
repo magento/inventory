@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupApi\Model;
 
 use Magento\Framework\Api\SortOrder;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 
 /**
@@ -128,6 +129,15 @@ interface SearchRequestBuilderInterface
      * @return SearchRequestBuilderInterface
      */
     public function setDistanceFilterCountry(string $country): self;
+
+    /**
+     * Set Search Request Extension.
+     *
+     * @param SearchRequestExtensionInterface $extension
+     *
+     * @return SearchRequestBuilderInterface
+     */
+    public function setSearchRequestExtension(SearchRequestExtensionInterface $extension): self;
 
     /**
      * Set Sort Orders.
