@@ -20,7 +20,7 @@
         <data key="country">United States</data>
         <data key="country_id">US</data>
         <data key="region_id">12</data>
-        <data key="stateProvince">California</data>
+        <data key="region">California</data>
         <data key="postcode">00000</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
@@ -31,7 +31,7 @@
         <data key="enabled">1</data>
         <data key="country_id">US</data>
         <data key="region_id">12</data>
-        <data key="stateProvince">California</data>
+        <data key="region">California</data>
         <data key="postcode">90230</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
@@ -50,7 +50,7 @@
         <data key="fax">123-456-7890</data>
         <data key="country">United States</data>
         <data key="country_id">US</data>
-        <data key="stateProvince">California</data>
+        <data key="region">California</data>
         <data key="region_id">12</data>
         <data key="city">Culver City</data>
         <data key="street">6161 West Centinela Avenue</data>
@@ -72,7 +72,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -94,7 +94,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -116,7 +116,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -138,7 +138,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -160,7 +160,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -182,7 +182,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -204,7 +204,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -226,7 +226,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -248,7 +248,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -270,7 +270,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -292,7 +292,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -314,7 +314,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -336,7 +336,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -358,7 +358,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -380,7 +380,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -402,7 +402,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -424,7 +424,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -446,7 +446,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -468,7 +468,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -490,7 +490,7 @@
         <data key="fax">987-654-3210</data>
         <data key="country">Canada</data>
         <data key="country_id">CA</data>
-        <data key="stateProvince">Quebec</data>
+        <data key="region">Quebec</data>
         <data key="region_id">76</data>
         <data key="city">Québec City</data>
         <data key="street">1234 Test Avenue</data>
@@ -512,7 +512,7 @@
         <data key="fax">123-456-7890</data>
         <data key="country">United States</data>
         <data key="country_id">US</data>
-        <data key="stateProvince">Texas</data>
+        <data key="region">Texas</data>
         <data key="region_id">57</data>
         <data key="city">Austin</data>
         <data key="street">700 San Jacinto Blvd</data>
@@ -533,7 +533,7 @@
         <data key="fax">123-456-7890</data>
         <data key="country">Ukraine</data>
         <data key="country_id">UA</data>
-        <data key="stateProvince">Kyivska</data>
+        <data key="region">Kyivska</data>
         <data key="region_id">57</data>
         <data key="city">Kyiv</data>
         <data key="street">Peremohy Ave, 37</data>
@@ -554,7 +554,7 @@
         <data key="fax">123-456-7890</data>
         <data key="country">United States</data>
         <data key="country_id">US</data>
-        <data key="stateProvince">California</data>
+        <data key="region">California</data>
         <data key="region_id">12</data>
         <data key="city">Culver City</data>
         <data key="street">6161 West Centinela Avenue</data>
@@ -570,7 +570,7 @@
         <data key="enabled">1</data>
         <data key="country_id">US</data>
         <data key="region_id">12</data>
-        <data key="stateProvince">California</data>
+        <data key="region">California</data>
         <data key="postcode">90230</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
@@ -582,7 +582,7 @@
         <data key="enabled">1</data>
         <data key="country_id">US</data>
         <data key="region_id">12</data>
-        <data key="stateProvince">California</data>
+        <data key="region">California</data>
         <data key="postcode">90230</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
