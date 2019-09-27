@@ -29,17 +29,17 @@ class QtyLeftChecker
     }
 
     /**
-     * Use qty left for viewing.
+     * Is salable quantity available for displaying.
      *
      * @param float $productSalableQty
      * @return bool
      */
-    public function useQtyForViewing(float $productSalableQty): bool
+    public function isSalableQtyAvailableForDisplaying(float $productSalableQty): bool
     {
         return ($this->stockItemConfig->getBackorders() === StockItemConfigurationInterface::BACKORDERS_NO
             || $this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
             && $this->stockItemConfig->getMinQty() < 0)
-            && $productSalableQty <= $this->stockItemConfig->getStockThresholdQty()
+            && bccomp((string)$productSalableQty, (string)$this->stockItemConfig->getStockThresholdQty(), 12) !== 1
             && $productSalableQty > 0;
     }
 }

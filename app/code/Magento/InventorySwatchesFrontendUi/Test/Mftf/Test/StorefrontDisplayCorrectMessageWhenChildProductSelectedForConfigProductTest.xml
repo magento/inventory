@@ -20,7 +20,7 @@
         </annotations>
         <before>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <magentoCLI command="config:set {{StorefrontCatalogInventoryStockThresholdQtyConfigData.path}} {{StorefrontCatalogInventoryStockThresholdQtyConfigData.value}}" stepKey="setQty2"/>
+            <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyConfigData.value}}" stepKey="setQty2"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <comment userInput="Create 1 configurable product with 3 variations" stepKey="commentCreateConfigProducts"/>
             <createData entity="ApiConfigurableProduct" stepKey="createFirstConfigProduct">
@@ -52,7 +52,7 @@
         </before>
         <after>
             <comment userInput="Reset configs" stepKey="commentResetConfigs"/>
-            <magentoCLI command="config:set {{StorefrontCatalogInventoryStockThresholdQtyDefaultConfigData.path}} {{StorefrontCatalogInventoryStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultValue"/>
+            <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultValue"/>
             <comment userInput="Delete created data" stepKey="commentDeleteData"/>
             <deleteData createDataKey="createFirstConfigProduct" stepKey="deleteFirstConfigProduct"/>
             <deleteData createDataKey="createSecondConfigProduct" stepKey="deleteSecondConfigProduct"/>

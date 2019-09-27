@@ -13,20 +13,20 @@ define([
 ], function ($, _, urlBuilder) {
     'use strict';
 
-    return function (productId) {
+    return function (productId, salesChannel, code) {
         var selectorInfoStockSkuQty = '.availability.only',
             selectorInfoStockSkuQtyValue = '.availability.only > strong',
-            salesChannel = 'website',
             productQtyInfoBlock = $(selectorInfoStockSkuQty),
             productQtyInfo = $(selectorInfoStockSkuQtyValue);
 
         if (!_.isUndefined(productId) && productId !== null) {
             $.ajax({
-                url: urlBuilder.build('catalog/product/getQty/'),
+                url: urlBuilder.build('inventory_catalog/product/getQty/'),
                 dataType: 'json',
                 data: {
                     'id': productId,
-                    'channel': salesChannel
+                    'channel': salesChannel,
+                    'code': code
                 }
             }).done(function (response) {
                 if (response.qty !== null) {

@@ -14,8 +14,11 @@ define([
 
             /** @inheritdoc */
             _configureElement: function (element) {
+                var salesChannel = this.options.spConfig.channel,
+                    salesChannelCode = this.options.spConfig.code;
+
                 this._super(element);
-                configurableVariationQty(this.simpleProduct);
+                configurableVariationQty(this.simpleProduct, salesChannel, salesChannelCode);
             }
         });
 

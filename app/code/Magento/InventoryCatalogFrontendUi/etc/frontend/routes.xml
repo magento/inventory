@@ -7,7 +7,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route id="catalog" frontName="catalog">
+        <route id="inventory_catalog" frontName="inventory_catalog">
             <module name="Magento_InventoryCatalogFrontendUi" />
         </route>
     </router>

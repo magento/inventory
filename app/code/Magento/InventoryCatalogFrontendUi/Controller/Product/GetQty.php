@@ -13,7 +13,6 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\App\Action\Context;
 use Magento\InventoryCatalogFrontendUi\Model\GetProductQtyLeft;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -34,11 +33,6 @@ class GetQty extends Action implements HttpGetActionInterface
     private $productQty;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var GetSkusByProductIdsInterface
      */
     private $getSkusByProductIds;
@@ -52,7 +46,6 @@ class GetQty extends Action implements HttpGetActionInterface
      * @param Context $context
      * @param ResultFactory $resultPageFactory
      * @param GetProductQtyLeft $productQty
-     * @param StoreManagerInterface $storeManager
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StockResolverInterface $stockResolver
      */
@@ -60,13 +53,11 @@ class GetQty extends Action implements HttpGetActionInterface
         Context $context,
         ResultFactory $resultPageFactory,
         GetProductQtyLeft $productQty,
-        StoreManagerInterface $storeManager,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockResolverInterface $stockResolver
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->productQty = $productQty;
-        $this->storeManager = $storeManager;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->stockResolver = $stockResolver;
         parent::__construct($context);
@@ -81,6 +72,7 @@ class GetQty extends Action implements HttpGetActionInterface
     {
         $productId = (int) $this->getRequest()->getParam('id');
         $salesChannel = $this->getRequest()->getParam('channel');
+        $salesChannelCode = $this->getRequest()->getParam('code');
 
         if (!$productId || !$salesChannel) {
             return $this->getResultForward();
@@ -92,8 +84,7 @@ class GetQty extends Action implements HttpGetActionInterface
             return $this->getResultForward();
         }
 
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stockId = $this->stockResolver->execute($salesChannel, $websiteCode)->getStockId();
+        $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
 
         $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
         $resultJson->setData(
@@ -110,7 +101,7 @@ class GetQty extends Action implements HttpGetActionInterface
      *
      * @return ResultInterface
      */
-    private function getResultForward()
+    private function getResultForward(): ResultInterface
     {
         $resultForward = $this->resultPageFactory->create(ResultFactory::TYPE_FORWARD);
         $resultForward->forward('noroute');
