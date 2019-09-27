@@ -3,18 +3,16 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\CatalogSearch\Model\Indexer\Fulltext\Action;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\CatalogInventory\Api\Data\StockStatusInterface;
-use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\CatalogInventory\Api\StockStatusCriteriaInterface;
-use Magento\CatalogInventory\Api\StockStatusRepositoryInterface;
+use Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider\FilterOutOfStockProducts;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Store\Model\Store;
-use Magento\Framework\App\ObjectManager;
 
 /**
  * Catalog search full test search data provider.
@@ -130,14 +128,9 @@ class DataProvider
     private $antiGapMultiplier;
 
     /**
-     * @var StockConfigurationInterface
+     * @var FilterOutOfStockProducts
      */
-    private $stockConfiguration;
-
-    /**
-     * @var StockStatusRepositoryInterface
-     */
-    private $stockStatusRepository;
+    private $filterOutOfStockProducts;
 
     /**
      * @param ResourceConnection $resource
@@ -149,6 +142,8 @@ class DataProvider
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
      * @param int $antiGapMultiplier
+     * @param FilterOutOfStockProducts $filterOutOfStockProducts
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         ResourceConnection $resource,
@@ -159,7 +154,8 @@ class DataProvider
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\EntityManager\MetadataPool $metadataPool,
-        int $antiGapMultiplier = 5
+        int $antiGapMultiplier = 5,
+        FilterOutOfStockProducts $filterOutOfStockProducts = null
     ) {
         $this->resource = $resource;
         $this->connection = $resource->getConnection();
@@ -171,6 +167,8 @@ class DataProvider
         $this->engine = $engineProvider->get();
         $this->metadata = $metadataPool->getMetadata(ProductInterface::class);
         $this->antiGapMultiplier = $antiGapMultiplier;
+        $this->filterOutOfStockProducts = $filterOutOfStockProducts
+            ?: ObjectManager::getInstance()->get(FilterOutOfStockProducts::class);
     }
 
     /**
@@ -239,7 +237,7 @@ class DataProvider
         $batch
     ) {
         $websiteId = (int)$this->storeManager->getStore($storeId)->getWebsiteId();
-        $lastProductId = (int) $lastProductId;
+        $lastProductId = (int)$lastProductId;
 
         $select = $this->connection->select()
             ->useStraightJoin(true)
@@ -338,7 +336,7 @@ class DataProvider
                 'catelogsearch_searchable_attributes_load_after',
                 ['engine' => $this->engine, 'attributes' => $attributes]
             );
-            
+
             $this->eventManager->dispatch(
                 'catalogsearch_searchable_attributes_load_after',
                 ['engine' => $this->engine, 'attributes' => $attributes]
@@ -563,7 +561,7 @@ class DataProvider
     {
         $index = [];
 
-        $indexData = $this->filterOutOfStockProducts($indexData, $storeId);
+        $indexData = $this->filterOutOfStockProducts->execute($indexData, $storeId);
 
         foreach ($this->getSearchableAttributes('static') as $attribute) {
             $attributeCode = $attribute->getAttributeCode();
@@ -593,7 +591,7 @@ class DataProvider
                     if (!isset($index[$attributeId])) {
                         $index[$attributeId] = [];
                     }
-                        $index[$attributeId][$entityId] = $value;
+                    $index[$attributeId][$entityId] = $value;
                 }
             }
         }
@@ -688,69 +686,5 @@ class DataProvider
     private function filterAttributeValue($value)
     {
         return preg_replace('/\s+/iu', ' ', trim(strip_tags($value)));
-    }
-
-    /**
-     * Filter out of stock products for products.
-     *
-     * @param array $indexData
-     * @param int $storeId
-     * @return array
-     */
-    private function filterOutOfStockProducts($indexData, $storeId): array
-    {
-        if (!$this->getStockConfiguration()->isShowOutOfStock($storeId)) {
-            $productIds = array_keys($indexData);
-            $stockStatusCriteria = $this->createStockStatusCriteria();
-            $stockStatusCriteria->setProductsFilter($productIds);
-            $stockStatusCollection = $this->getStockStatusRepository()->getList($stockStatusCriteria);
-            $stockStatuses = $stockStatusCollection->getItems();
-            $stockStatuses = array_filter(
-                $stockStatuses,
-                function (StockStatusInterface $stockStatus) {
-                    return StockStatusInterface::STATUS_IN_STOCK == $stockStatus->getStockStatus();
-                }
-            );
-            $indexData = array_intersect_key($indexData, $stockStatuses);
-        }
-        return $indexData;
-    }
-
-    /**
-     * Get stock configuration.
-     *
-     * @return StockConfigurationInterface
-     */
-    private function getStockConfiguration()
-    {
-        if (null === $this->stockConfiguration) {
-            $this->stockConfiguration = ObjectManager::getInstance()->get(StockConfigurationInterface::class);
-        }
-        return $this->stockConfiguration;
-    }
-
-    /**
-     * Create stock status criteria.
-     *
-     * Substitution of autogenerated factory in backward compatibility reasons.
-     *
-     * @return StockStatusCriteriaInterface
-     */
-    private function createStockStatusCriteria()
-    {
-        return ObjectManager::getInstance()->create(StockStatusCriteriaInterface::class);
-    }
-
-    /**
-     * Get stock status repository.
-     *
-     * @return StockStatusRepositoryInterface
-     */
-    private function getStockStatusRepository()
-    {
-        if (null === $this->stockStatusRepository) {
-            $this->stockStatusRepository = ObjectManager::getInstance()->get(StockStatusRepositoryInterface::class);
-        }
-        return $this->stockStatusRepository;
     }
 }
