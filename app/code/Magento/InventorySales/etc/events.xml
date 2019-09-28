@@ -15,4 +15,7 @@
     <event name="sales_order_creditmemo_save_after">
         <observer name="deduct_source_item_quantity_on_refund" instance="Magento\InventorySales\Observer\SalesInventory\DeductSourceItemQuantityOnRefundObserver"/>
     </event>
+    <event name="catalog_product_is_salable_after">
+        <observer name="is_salable_check_after" instance="Magento\InventorySales\Observer\Product\IsProductSalable"/>
+    </event>
 </config>
