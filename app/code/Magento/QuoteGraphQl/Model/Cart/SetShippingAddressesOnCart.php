@@ -9,8 +9,11 @@ namespace Magento\QuoteGraphQl\Model\Cart;
 
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
+use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\GraphQl\Model\Query\ContextInterface;
+use Magento\Quote\Api\Data\AddressExtensionFactory;
 use Magento\Quote\Api\Data\CartInterface;
+use Magento\Quote\Model\Quote\Address;
 
 /**
  * Set single shipping address for a specified shopping cart
@@ -28,15 +31,23 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
     private $assignShippingAddressToCart;
 
     /**
+     * @var AddressExtensionFactory
+     */
+    private $addressExtensionFactory;
+
+    /**
      * @param QuoteAddressFactory $quoteAddressFactory
      * @param AssignShippingAddressToCart $assignShippingAddressToCart
+     * @param AddressExtensionFactory $addressExtensionFactory
      */
     public function __construct(
         QuoteAddressFactory $quoteAddressFactory,
-        AssignShippingAddressToCart $assignShippingAddressToCart
+        AssignShippingAddressToCart $assignShippingAddressToCart,
+        AddressExtensionFactory $addressExtensionFactory
     ) {
         $this->quoteAddressFactory = $quoteAddressFactory;
         $this->assignShippingAddressToCart = $assignShippingAddressToCart;
+        $this->addressExtensionFactory = $addressExtensionFactory;
     }
 
     /**
@@ -50,6 +61,25 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
             );
         }
         $shippingAddressInput = current($shippingAddressesInput);
+        $shippingAddress = $this->getShippingAddress($shippingAddressInput, $context);
+        $this->assignPickupLocation($shippingAddress, $shippingAddressInput);
+
+        $this->assignShippingAddressToCart->execute($cart, $shippingAddress);
+    }
+
+    /**
+     * Prepare Quote Address object, based on provided input.
+     *
+     * @param array $shippingAddressInput
+     * @param ContextInterface $context
+     *
+     * @return Address
+     * @throws GraphQlAuthorizationException
+     * @throws GraphQlInputException
+     * @throws GraphQlNoSuchEntityException
+     */
+    private function getShippingAddress(array $shippingAddressInput, ContextInterface $context): Address
+    {
         $customerAddressId = $shippingAddressInput['customer_address_id'] ?? null;
         $addressInput = $shippingAddressInput['address'] ?? null;
 
@@ -70,6 +100,7 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
         }
 
         if (null === $customerAddressId) {
+            $addressInput['country_code'] = strtoupper($addressInput['country_code']);
             $shippingAddress = $this->quoteAddressFactory->createBasedOnInputData($addressInput);
         } else {
             if (false === $context->getExtensionAttributes()->getIsCustomer()) {
@@ -82,6 +113,29 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
             );
         }
 
-        $this->assignShippingAddressToCart->execute($cart, $shippingAddress);
+        return $shippingAddress;
+    }
+
+    /**
+     * Set to Quote Address Pickup Location Code, if it was provided.
+     *
+     * @param Address $address
+     * @param array $shippingAddressInput
+     */
+    private function assignPickupLocation(Address $address, array $shippingAddressInput): void
+    {
+        $pickupLocationCode = $shippingAddressInput['pickup_location_code'] ?? null;
+
+        if ($pickupLocationCode === null) {
+            return;
+        }
+
+        $extension = $address->getExtensionAttributes();
+        if (!$extension) {
+            $extension = $this->addressExtensionFactory->create();
+            $address->setExtensionAttributes($extension);
+        }
+
+        $extension->setPickupLocationCode($pickupLocationCode);
     }
 }
