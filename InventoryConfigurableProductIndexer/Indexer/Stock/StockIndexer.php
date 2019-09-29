@@ -20,6 +20,10 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterface;
 
+/**
+ * Configurable product stock indexer class
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) Will be removed after deleting DefaultStockProviderInterface
+ */
 class StockIndexer
 {
     /**
@@ -58,7 +62,7 @@ class StockIndexer
     private $defaultStockProvider;
 
     /**
-     * @var PrepareIndexDataForClearingIndex|null
+     * @var PrepareIndexDataForClearingIndex
      */
     private $prepareIndexDataForClearingIndex;
 
@@ -96,31 +100,37 @@ class StockIndexer
     }
 
     /**
+     * Executes full index
+     *
      * @return void
      * @throws StateException
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $stockIds = $this->getAllStockIds->execute();
         $this->executeList($stockIds);
     }
 
     /**
+     * Executes row index by stock Id
+     *
      * @param int $stockId
      * @return void
      * @throws StateException
      */
-    public function executeRow(int $stockId)
+    public function executeRow(int $stockId): void
     {
         $this->executeList([$stockId]);
     }
 
     /**
+     * Executes index by list of stock ids
+     *
      * @param array $stockIds
      * @return void
      * @throws StateException
      */
-    public function executeList(array $stockIds)
+    public function executeList(array $stockIds): void
     {
         foreach ($stockIds as $stockId) {
             if ($this->defaultStockProvider->getId() === $stockId) {
