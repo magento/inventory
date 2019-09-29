@@ -277,33 +277,4 @@ class OrderCreateTest extends OrderPlacementBase
         $this->assertEquals($expectedAddressData['lastname'], $actualAddress->getLastname());
         $this->assertEquals($expectedAddressData['telephone'], $actualAddress->getTelephone());
     }
-
-    /**
-     * Get fresh address list;
-     *
-     * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    private function getCustomerAddressList(): array
-    {
-        $customer = $this->getCustomerByEmail('customer@example.com');
-
-        /** @var \Magento\Customer\Api\AddressRepositoryInterface $addressRepo */
-        $addressRepo = $this->objectManager->get(\Magento\Customer\Api\AddressRepositoryInterface::class);
-        /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $this->objectManager->get(\Magento\Framework\Api\SearchCriteriaBuilder::class);
-        /** @var \Magento\Framework\Api\FilterBuilder $filterBuilder */
-        $filterBuilder = $this->objectManager->get(\Magento\Framework\Api\FilterBuilder::class);
-
-        $filter =  $filterBuilder->setField('parent_id')
-            ->setValue($customer->getId())
-            ->setConditionType('eq')
-            ->create();
-        $addresses = (array)($addressRepo->getList(
-            $searchCriteriaBuilder->addFilters([$filter])->create()
-        )->getItems());
-
-        return $addresses;
-    }
 }
