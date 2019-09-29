@@ -55,7 +55,6 @@ abstract class OrderPlacementBase extends WebapiAbstract
     protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
-
     }
 
     /**
@@ -265,15 +264,15 @@ abstract class OrderPlacementBase extends WebapiAbstract
         if ($addressId) {
             $addressData['id'] = $addressId;
         }
+
         if ($saveInAddressBook) {
             $addressData['saveInAddressBook'] = 1;
         }
+
         $body = [
             'addressInformation' => [
                 'shipping_address' => array_merge($addressData, [
-                    'extension_attributes' => [
-                        'pickup_location_code' => 'eu-1'
-                    ]
+                    'extension_attributes' => ['pickup_location_code' => 'eu-1']
                 ]),
                 'billing_address' => $addressData,
                 'shipping_carrier_code' => 'flatrate',
@@ -286,9 +285,11 @@ abstract class OrderPlacementBase extends WebapiAbstract
     /**
      * Submit payment information for given customer cart.
      *
+     * @param bool $billingSameAsShipping
+     *
      * @return int
      */
-    public function submitPaymentInformation(): int
+    public function submitPaymentInformation($billingSameAsShipping = false): int
     {
         $serviceInfo = [
             'rest' => [
@@ -308,9 +309,12 @@ abstract class OrderPlacementBase extends WebapiAbstract
 
         $body = [
             'email' => 'customer@example.com',
-            'paymentMethod' => ['method' => 'checkmo'],
-            'billing_address' => $this->getBaseAddressData()
+            'paymentMethod' => ['method' => 'checkmo']
         ];
+
+        if (!$billingSameAsShipping) {
+            $body['billing_address'] = $this->getBaseAddressData();
+        }
 
         return (int)$this->_webApiCall($serviceInfo, $body, null, $this->storeViewCode);
     }
