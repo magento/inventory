@@ -238,6 +238,9 @@ abstract class OrderPlacementBase extends WebapiAbstract
     /**
      * Set shipping and billing information for given customer cart.
      *
+     * @param string|null $addressId
+     * @param bool $saveInAddressBook
+     *
      * @return void
      */
     public function setShippingAndBillingInformation($addressId = null, $saveInAddressBook = false): void
