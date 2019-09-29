@@ -49,6 +49,41 @@ class OrderCreateTest extends OrderPlacementBase
     }
 
     /**
+     * Create order  - guest customer, `eu-1` pickup location.
+     *
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     *
+     * @return void
+     */
+    public function testPlaceOrderGuest(): void
+    {
+        $this->_markTestAsRestOnly();
+        $this->setStoreView('store_for_eu_website');
+
+        // create guest customer cart;
+        $this->customerToken = null;
+        $this->createCustomerCart();
+
+        $this->addProduct('SKU-1');
+        $this->estimateShippingCosts();
+        $this->setShippingAndBillingInformation();
+
+        $orderId = $this->submitPaymentInformation();
+
+        $this->verifyCreatedOrder($orderId);
+        $this->cancelOrder($orderId);
+    }
+
+    /**
      * Create order  - registered customer, new address, `eu-1` pickup location.
      *
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
