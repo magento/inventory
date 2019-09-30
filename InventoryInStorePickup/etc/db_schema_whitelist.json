@@ -21,7 +21,7 @@
             "pickup_location_code": true
         },
         "index": {
-            "SALES_ORDER_GRID_STATUS_PICKUP_LOCATION_CODE": true
+            "SALES_ORDER_GRID_PICKUP_LOCATION_CODE": true
         }
     }
 }
