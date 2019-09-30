@@ -4,13 +4,12 @@
   "require": {
     "php": "~7.1.3||~7.2.0||~7.3.0",
     "magento/framework": "*",
-    "magento/module-inventory-catalog-api": "*",
     "magento/module-inventory-sales-api": "*",
-    "magento/module-store": "*",
     "magento/module-inventory-configuration-api": "*"
   },
   "suggest": {
-    "magento/module-inventory-catalog": "*"
+    "magento/module-inventory-catalog": "*",
+    "magento/module-inventory-catalog-api": "*"
   },
   "type": "magento2-module",
   "license": [

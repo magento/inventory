@@ -87,7 +87,7 @@ class AbstractStockqtyPlugin
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
         $productSalableQty = $this->getProductSalableQty->execute($sku, $stockId);
 
-        return $this->qtyLeftChecker->useQtyForViewing($productSalableQty);
+        return $this->qtyLeftChecker->isSalableQtyAvailableForDisplaying($productSalableQty);
     }
 
     /**
