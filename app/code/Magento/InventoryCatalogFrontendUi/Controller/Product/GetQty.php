@@ -59,7 +59,7 @@ class GetQty extends Action implements HttpGetActionInterface
      *
      * @return ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $sku = $this->getRequest()->getParam('sku');
         $salesChannel = $this->getRequest()->getParam('channel');
