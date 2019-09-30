@@ -51,8 +51,9 @@ class UpdateOrderGrid implements ObserverInterface
         if (!$this->globalConfig->getValue('dev/grid/async_indexing')) {
             /** @var OrderInterface $order */
             $order = $observer->getOrder();
+            $extension = $order ? $order->getExtensionAttributes() : null;
 
-            if ($order->getExtensionAttributes() && $order->getExtensionAttributes()->getPickupLocationCode()) {
+            if ($extension && $extension->getPickupLocationCode()) {
                 $this->entityGrid->refresh($order->getId());
             }
         }
