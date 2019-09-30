@@ -43,6 +43,11 @@
         <data key="scope_id">0</data>
         <data key="value">0</data>
     </entity>
+    <entity name="SetOnlyXLeftThresholdFive">
+        <data key="path">cataloginventory/options/stock_threshold_qty </data>
+        <data key="scope_id">0</data>
+        <data key="value">5</data>
+    </entity>
     <entity name="SetMaxQtyAllowedInShoppingCart">
         <data key="path">cataloginventory/item_options/max_sale_qty</data>
         <data key="scope_id">0</data>

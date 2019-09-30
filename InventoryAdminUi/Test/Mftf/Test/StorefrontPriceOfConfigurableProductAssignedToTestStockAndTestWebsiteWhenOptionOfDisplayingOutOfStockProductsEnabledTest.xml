@@ -16,7 +16,7 @@
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/457025/scenarios/3537373"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
-            <group value="multi_mode1"/>
+            <group value="multi_mode"/>
         </annotations>
 
         <before>
@@ -111,14 +111,14 @@
             <argument name="sourceName" value="$$customSource.source[name]$$"/>
         </actionGroup>
 
-        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage2"/>
+        <amOnPage url="{{customStore.code}}" stepKey="amOnsecondStoreFront"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName2">
             <argument name="phrase" value="{{ConfigurableMsiProduct.sku}}"/>
         </actionGroup>
         <see userInput="{{ConfigurableMsiProduct.name}}" stepKey="verifyProductPresentOnStorefront"/>
-        <grabTextFrom selector="{{StorefrontCategoryMainSection.asLowAs}}" stepKey="PriceTextOnCategoryPage"/>
+        <grabTextFrom selector="{{StorefrontCategoryMainSection.productPrice}}" stepKey="PriceTextOnCategoryPage"/>
         <assertEquals stepKey="assertTierPriceTextOnCategoryPage">
-            <expectedResult type="string">As low as 100$</expectedResult>
+            <expectedResult type="string">As low as $100.00</expectedResult>
             <actualResult type="variable">PriceTextOnCategoryPage</actualResult>
         </assertEquals>
     </test>
