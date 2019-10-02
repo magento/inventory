@@ -11,11 +11,14 @@
     <entity name="defaultProductQty">
         <data key="value">100</data>
     </entity>
-    <entity name="defaultProductQtyBoughtWith5Pieces">
-        <data key="value">95</data>
+    <entity name="defaultProductQtyBoughtWithOnePiece">
+        <data key="value">99</data>
     </entity>
     <entity name="defaultProductQtyBoughtWithTwoPieces">
         <data key="value">98</data>
+    </entity>
+    <entity name="defaultProductQtyBoughtWith5Pieces">
+        <data key="value">95</data>
     </entity>
     <entity name="defaultProductQtyBoughtWith10Pieces">
         <data key="value">90</data>
