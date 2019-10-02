@@ -39,6 +39,7 @@ class CreateStockTableTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDbIsolation disabled
      */
     public function testExecute()
     {
