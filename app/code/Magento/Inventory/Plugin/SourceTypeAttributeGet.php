@@ -11,7 +11,7 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Inventory\Model\SourceTypeLinkManagement;
 
-class SourceTypeAttribute
+class SourceTypeAttributeGet
 {
     /**
      * @var SourceTypeLinkManagement
@@ -37,25 +37,8 @@ class SourceTypeAttribute
         SourceRepositoryInterface $subject,
         SourceInterface $source
     ) {
-        $this->sourceTypeLinkManagement->loadTypeLinksBySource($source);
+        $sourceResult = $this->sourceTypeLinkManagement->loadTypeLinksBySource($source);
 
-        return $source;
-    }
-
-    /**
-     * @param SourceRepositoryInterface $subject
-     * @param callable $proceed
-     * @param SourceInterface $source
-     */
-    public function aroundSave(
-        SourceRepositoryInterface $subject,
-        callable $proceed,
-        SourceInterface $source
-    ) {
-        $proceed($source);
-
-        $type_code = $source->getExtensionAttributes()->getTypeCode();
-
-        $this->sourceTypeLinkManagement->saveTypeLinksBySource($source, $type_code);
+        return $sourceResult;
     }
 }

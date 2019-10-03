@@ -34,7 +34,7 @@ interface SourceTypeLinkManagementInterface
      * Load carrier links by source and set its to source object
      *
      * @param SourceInterface $source
-     * @return void
+     * @return SourceInterface
      */
-    public function loadTypeLinksBySource(SourceInterface $source): void;
+    public function loadTypeLinksBySource(SourceInterface $source): SourceInterface;
 }
