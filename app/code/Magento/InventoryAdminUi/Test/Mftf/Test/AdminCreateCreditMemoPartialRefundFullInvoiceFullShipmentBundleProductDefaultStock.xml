@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateCreditMemoPartialRefundFullInvoiceFullShipmentBundleProductDefaultStock">
+        <annotations>
+            <stories value="Bundle Product Default Stock."/>
+            <title value="Create Credit Memo With Partial Refund After Full Invoice And Full Shipment With Bundle Product On Default stock."/>
+            <description value="Verify, admin able to create credit memo with partial refund after full invoice and full shipment with bundle product on default stock."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735178/scenarios/2491031"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="SimpleProduct" stepKey="product1">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product2">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption">
+                <requiredEntity createDataKey="bundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink1">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product1"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink2">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product2"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Set default source product1 quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($$product1.id$$)}}" stepKey="openSimple1ProductPage"/>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceProduct1Quantity"/>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct1"/>
+            <!--Set default source product2 quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($$product2.id$$)}}" stepKey="openSimple2ProductPage"/>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceProduct2Quantity"/>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct2"/>
+        </before>
+        <after>
+            <!--Delete test data.-->
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="product1" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="product2" stepKey="deleteProduct2"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Login to storefront.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$customer$"/>
+        </actionGroup>
+        <!--Add product to cart.-->
+        <amOnPage url="{{StorefrontProductPage.url($bundleProduct.custom_attributes[url_key]$)}}" stepKey="navigateToBundlePDP"/>
+        <actionGroup ref="StorefrontAddBundleProductToTheCartActionGroup" stepKey="addBundleProductToTheCart">
+            <argument name="productName" value="$product1.name$"/>
+            <argument name="quantity" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Process full invoice and shipment.-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="createShipment"/>
+        <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>
+        <!--Process credit memo partial refund.-->
+        <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="startToCreateCreditMemo">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="partialRefund"/>
+        <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>
+        <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
+        <!--Admin Area Check quantities after Credit Memo-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct1Grid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct1BySkuToCheckQtyAfterCreditMemo">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product1.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="checkProduct1SourceQty">
+            <argument name="sourceName" value="{{_defaultSource.name}}"/>
+            <argument name="stockName" value="{{_defaultStock.name}}"/>
+            <argument name="sourceQty" value="{{defaultProductQtyBoughtWith5Pieces.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWith5Pieces.value}}"/>
+        </actionGroup>
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct2Grid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct2BySkuToCheckQtyAfterCreditMemo">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product2.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="checkProduct2SourceQty">
+            <argument name="sourceName" value="{{_defaultSource.name}}"/>
+            <argument name="stockName" value="{{_defaultStock.name}}"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQty.value}}"/>
+        </actionGroup>
+    </test>
+</tests>
