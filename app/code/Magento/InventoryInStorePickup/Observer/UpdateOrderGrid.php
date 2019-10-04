@@ -10,6 +10,7 @@ namespace Magento\InventoryInStorePickup\Observer;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\InventoryInStorePickup\Model\Order\GetPickupLocationCode;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\GridInterface;
 
@@ -27,17 +28,24 @@ class UpdateOrderGrid implements ObserverInterface
      * @var ScopeConfigInterface
      */
     private $globalConfig;
+    /**
+     * @var GetPickupLocationCode
+     */
+    private $getPickupLocationCode;
 
     /**
      * @param GridInterface $entityGrid
      * @param ScopeConfigInterface $globalConfig
+     * @param GetPickupLocationCode $getPickupLocationCode
      */
     public function __construct(
         GridInterface $entityGrid,
-        ScopeConfigInterface $globalConfig
+        ScopeConfigInterface $globalConfig,
+        GetPickupLocationCode $getPickupLocationCode
     ) {
         $this->entityGrid = $entityGrid;
         $this->globalConfig = $globalConfig;
+        $this->getPickupLocationCode = $getPickupLocationCode;
     }
 
     /**
@@ -51,9 +59,8 @@ class UpdateOrderGrid implements ObserverInterface
         if (!$this->globalConfig->getValue('dev/grid/async_indexing')) {
             /** @var OrderInterface $order */
             $order = $observer->getOrder();
-            $extension = $order ? $order->getExtensionAttributes() : null;
 
-            if ($extension && $extension->getPickupLocationCode()) {
+            if ($order && $this->getPickupLocationCode->execute($order)) {
                 $this->entityGrid->refresh($order->getId());
             }
         }
