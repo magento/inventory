@@ -22,6 +22,7 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterfac
 
 /**
  * Configurable product stock indexer class
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) Will be removed after deleting DefaultStockProviderInterface
  */
 class StockIndexer
