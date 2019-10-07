@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontPriceOfConfigurableProductAssignedToTestStockAndTestWebsiteWhenOptionOfDisplayingOutOfStockProductsEnabledTest">
+        <annotations>
+            <stories value="Configurable Product assigned to Test Stock."/>
+            <title value="Price of Configurable Product assigned to Test Stock and Test website when option of displaying out-of-stock products enabled"/>
+            <description value="Price of Configurable Product assigned to Test Stock and Test website when option of displaying out-of-stock products enabled"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/457025/scenarios/3537373"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="_minimalSource" stepKey="customSource"/>
+            <createData entity="BasicMsiStock1" stepKey="customStock"/>
+            <createData entity="Msi_US_Customer" stepKey="customer"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
+                <requiredEntity createDataKey="customStock"/>
+                <requiredEntity createDataKey="customSource"/>
+            </createData>
+            <!-- Create first attribute with 2 options -->
+            <createData entity="productAttributeWithTwoOptionsNotVisible" stepKey="createFirstConfigProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="createConfigProductAttributeOptionOne">
+                <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="createConfigProductAttributeOptionTwo">
+                <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
+            </createData>
+
+            <!-- Create second attribute with 2 options -->
+            <createData entity="productAttributeWithTwoOptions" stepKey="createSecondConfigProductAttribute"/>
+            <createData entity="productAttributeOption3" stepKey="createConfigProductAttributeOptionThree">
+                <requiredEntity createDataKey="createSecondConfigProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption4" stepKey="createConfigProductAttributeOptionFour">
+                <requiredEntity createDataKey="createSecondConfigProductAttribute"/>
+            </createData>
+
+            <createData entity="AddToDefaultSet" stepKey="createConfigAddToAttributeSet">
+                <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
+                <requiredEntity createDataKey="createSecondConfigProductAttribute"/>
+            </createData>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="adminCreateNewWebsite">
+                <argument name="newWebsiteName" value="{{NewWebSiteData.name}}"/>
+                <argument name="websiteCode" value="{{NewWebSiteData.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="adminCreateNewStore">
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+                <argument name="storeGroupName" value="{{NewStoreData.name}}"/>
+                <argument name="storeGroupCode" value="{{NewStoreData.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="adminCreateNewStoreView">
+                <argument name="StoreGroup" value="NewStoreData"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!--Assign Custom Stock to Additional Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+        </before>
+        <after>
+            <!--Assign Default Stock to Main Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
+                <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
+            </actionGroup>
+            <!-- Delete configurable product -->
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteProduct">
+                <argument name="product" value="ConfigurableMsiProduct"/>
+            </actionGroup>
+            <deleteData createDataKey="createFirstConfigProductAttribute" stepKey="deleteFirstConfigProductAttribute"/>
+            <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+        </after>
+
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
+        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateConfigurableProduct">
+            <argument name="product" value="ConfigurableMsiProduct"/>
+        </actionGroup>
+        <actionGroup ref="fillMainProductForm" stepKey="fillProductForm">
+            <argument name="product" value="ConfigurableMsiProduct"/>
+        </actionGroup>
+        <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite" >
+            <argument name="website" value="{{NewWebSiteData.name}}"/>
+        </actionGroup>
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="fillCategory"/>
+        <actionGroup ref="createConfigurationsForTwoAttributeCustomSource" stepKey="createConfigurationsWithCustomStock">
+            <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
+            <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
+            <argument name="sourceName" value="$$customSource.source[name]$$"/>
+        </actionGroup>
+
+        <amOnPage url="{{customStore.code}}" stepKey="amOnsecondStoreFront"/>
+        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName2">
+            <argument name="phrase" value="{{ConfigurableMsiProduct.sku}}"/>
+        </actionGroup>
+        <see userInput="{{ConfigurableMsiProduct.name}}" stepKey="verifyProductPresentOnStorefront"/>
+        <grabTextFrom selector="{{StorefrontCategoryMainSection.productPrice}}" stepKey="PriceTextOnCategoryPage"/>
+        <assertEquals stepKey="assertTierPriceTextOnCategoryPage">
+            <expectedResult type="string">As low as $100.00</expectedResult>
+            <actualResult type="variable">PriceTextOnCategoryPage</actualResult>
+        </assertEquals>
+    </test>
+</tests>
