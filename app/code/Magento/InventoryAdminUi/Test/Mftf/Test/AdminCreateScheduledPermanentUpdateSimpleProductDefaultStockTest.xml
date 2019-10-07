@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateScheduledPermanentUpdateSimpleProductDefaultStockTest" extends="AdminCreateScheduledPermanentUpdateProductTest">
+        <annotations>
+            <stories value="Simple Product Default Stock."/>
+            <title value="Create Schedule Update With Simple Product On Default Stock."/>
+            <description value="Verify, simple product on default stock should be visible on storefront after schedule update."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1936305"/>
+            <group value="msi_ee"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Create simple product.-->
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!--Create source.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        </before>
+        <after>
+            <deleteData createDataKey="product" stepKey="deleteProduct" before="disableSource"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+        </after>
+
+        <!--Verify product on storefront.-->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyProductOnStorefront">
+            <argument name="category" value="$createCategory$"/>
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+    </test>
+</tests>
