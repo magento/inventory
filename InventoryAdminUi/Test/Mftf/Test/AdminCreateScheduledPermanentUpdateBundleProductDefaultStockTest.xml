@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateScheduledPermanentUpdateBundleProductDefaultStockTest" extends="AdminCreateScheduledPermanentUpdateProductTest">
+        <annotations>
+            <stories value="Bundle Product Default Stock."/>
+            <title value="Create Schedule Update With Bundle Product On Default Stock."/>
+            <description value="Verify, bundle product on default stock should be visible on storefront after schedule update."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1936216"/>
+            <group value="msi_ee"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Create bundle and virtual products.-->
+            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="VirtualProduct" stepKey="product"/>
+            <!--Add virtual product to bundle.-->
+            <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
+            <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
+            <click selector="{{AdminProductFormBundleSection.addOption}}" stepKey="clickAddOption"/>
+            <waitForElementVisible selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" stepKey="waitForBundleOptions"/>
+            <fillField selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" userInput="{{BundleProduct.optionTitle1}}" stepKey="fillOptionTitle"/>
+            <selectOption selector="{{AdminProductFormBundleSection.bundleOptionXInputType('0')}}" userInput="{{BundleProduct.optionInputType1}}" stepKey="selectInputType"/>
+            <waitForElementVisible selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="waitForAddProductsToBundle"/>
+            <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
+            <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
+            <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+                <argument name="product" value="$$product$$"/>
+            </actionGroup>
+            <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>
+            <click selector="{{AdminAddProductsToOptionPanel.addSelectedProducts}}" stepKey="clickAddSelectedBundleProducts"/>
+            <fillField selector="{{AdminProductFormBundleSection.bundleOptionXProductYQuantity('0', '0')}}" userInput="{{minimalProductQty.value}}" stepKey="fillProductDefaultQty"/>
+            <scrollToTopOfPage stepKey="scrollToTheTopOfCategoryPage"/>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
+                <argument name="categoryName" value="$createCategory.name$"/>
+            </actionGroup>
+            <!--Create source.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        </before>
+        <after>
+            <deleteData createDataKey="product" stepKey="deleteVirtualProduct" before="deleteBundleProduct"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct" before="disableSource"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+        </after>
+
+        <!--Verify bundle product on storefront.-->
+        <amOnPage url="{{StorefrontCategoryPage.url($createCategory.name$)}}" stepKey="navigateToCategoryPage"/>
+        <waitForPageLoad stepKey="waitForCategory"/>
+        <see userInput="$bundleProduct.name$" stepKey="assertProductPresent"/>
+        <see userInput="$product.price$" stepKey="assertProductPricePresent"/>
+    </test>
+</tests>

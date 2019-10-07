@@ -21,6 +21,9 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/2219820
+ */
 class ProductTest extends TestCase
 {
     /**
@@ -199,12 +202,13 @@ class ProductTest extends TestCase
                 'directory' => $directory
             ]
         );
-        $this->productImporter
-            ->setParameters([
+        $this->productImporter->setParameters(
+            [
                 'behavior' => $behavior,
                 'entity' => \Magento\Catalog\Model\Product::ENTITY
-            ])
-            ->setSource($source);
+            ]
+        )->setSource($source);
+
         return $this->productImporter;
     }
 }
