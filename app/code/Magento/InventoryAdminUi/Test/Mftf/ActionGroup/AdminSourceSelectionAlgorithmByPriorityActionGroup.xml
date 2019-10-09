@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminSourceSelectionAlgorithmByPriorityActionGroup">
+        <annotations>
+            <description>Create shipment with source selection algorithm. Starts on order page.</description>
+        </annotations>
+        <arguments>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+            <argument name="sourceQty" type="string" defaultValue="{{minimalProductQty.value}}"/>
+        </arguments>
+
+        <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
+        <waitForPageLoad stepKey="waitForSourceSelectionPageLoad"/>
+        <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="{{sourceName}}" stepKey="selectSourceToCreateShipment"/>
+        <waitForPageLoad stepKey="waitForSourceSelected"/>
+        <fillField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0', '0')}}" userInput="{{sourceQty}}" stepKey="fillQuantity"/>
+        <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
+        <waitForElementVisible selector="{{AdminShipmentInventorySection.sourceList}}" stepKey="waitForShipmentPage"/>
+        <see selector="{{AdminShipmentInventorySection.sourceList}}" userInput="{{sourceName}}" stepKey="checkSourceNameOnShipmentPage"/>
+        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment"/>
+        <waitForPageLoad stepKey="waitForShipmentSubmit"/>
+        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="seeShipmentCreateSuccess"/>
+    </actionGroup>
+</actionGroups>
