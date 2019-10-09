@@ -141,7 +141,7 @@
                         </select>
                     </formElements>
                 </field>
-                <field name="quantity" formElement="input" sortOrder="50">
+                <field name="quantity" component="Magento_CatalogInventory/js/components/qty-validator-changer" formElement="input" sortOrder="50">
                     <argument name="data" xsi:type="array">
                         <item name="config" xsi:type="array">
                             <item name="default" xsi:type="number">0.0</item>
@@ -159,6 +159,7 @@
                         <disabled>true</disabled>
                         <imports>
                             <link name="disabled">!${ $.provider }:data.product.stock_data.manage_stock</link>
+                            <link name="handleChanges">${$.provider}:data.product.stock_data.is_qty_decimal</link>
                         </imports>
                     </settings>
                 </field>
