@@ -6,11 +6,13 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\InventoryInStorePickupApi\Api\MapperInterface" type="Magento\InventoryInStorePickupApi\Model\Mapper" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\MapperInterface" type="Magento\InventoryInStorePickupApi\Model\Mapper" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface" type="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverChain" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractorInterface" type="Magento\InventoryInStorePickupApi\Model\SearchResult\Extractor" />
     <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
         <arguments>
             <argument name="map" xsi:type="array">
-                <item name="source_code" xsi:type="string">source_code</item>
+                <item name="source_code" xsi:type="string">pickup_location_code</item>
                 <item name="email" xsi:type="string">email</item>
                 <item name="fax" xsi:type="string">fax</item>
                 <item name="contact_name" xsi:type="string">contact_name</item>
@@ -25,6 +27,11 @@
                 <item name="postcode" xsi:type="string">postcode</item>
                 <item name="phone" xsi:type="string">phone</item>
             </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator">
+        <arguments>
+            <argument name="criteriaBuilder" shared="false" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
         </arguments>
     </type>
 </config>

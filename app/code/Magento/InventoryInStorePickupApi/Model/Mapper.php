@@ -13,7 +13,6 @@ use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Api\MapperInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 
 /**

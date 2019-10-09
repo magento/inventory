@@ -8,14 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupQuote\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Save Quote Address Pickup Location.
  */
 class SaveQuoteAddressPickupLocation
 {
-    private const ADDRESS_ID           = 'address_id';
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
+    private const ADDRESS_ID = 'address_id';
 
     /**
      * @var ResourceConnection
@@ -46,7 +46,7 @@ class SaveQuoteAddressPickupLocation
 
         $data = [
             self::ADDRESS_ID => $addressId,
-            self::PICKUP_LOCATION_CODE => $pickupLocationCode
+            PickupLocationInterface::PICKUP_LOCATION_CODE => $pickupLocationCode
         ];
 
         $connection->insertOnDuplicate($table, $data);

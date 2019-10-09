@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\ResourceModel\OrderPickupLocation;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
  * Get Pickup Location identifier by order identifier.
@@ -15,8 +16,6 @@ use Magento\Framework\App\ResourceConnection;
 class GetPickupLocationCodeByOrderId
 {
     private const ORDER_ID = 'order_id';
-
-    private const PICKUP_LOCATION_CODE = 'pickup_location_code';
 
     /**
      * @var ResourceConnection
@@ -44,10 +43,11 @@ class GetPickupLocationCodeByOrderId
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_pickup_location_order');
 
+        $columns = [PickupLocationInterface::PICKUP_LOCATION_CODE => PickupLocationInterface::PICKUP_LOCATION_CODE];
         $select = $connection->select()
-             ->from($table, [self::PICKUP_LOCATION_CODE => self::PICKUP_LOCATION_CODE])
-             ->where(self::ORDER_ID . '= ?', $orderId)
-             ->limit(1);
+                             ->from($table, $columns)
+                             ->where(self::ORDER_ID . '= ?', $orderId)
+                             ->limit(1);
 
         $id = $connection->fetchOne($select);
 

@@ -15,13 +15,7 @@
         <plugin name="load_in_store_pickup_on_get" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetPlugin"/>
         <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
     </type>
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbySourcesByPostcodeInterface" type="Magento\InventoryInStorePickup\Model\GetNearbySourcesByPostcode"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetNearbyPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetNearbyPickupLocations"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchCriteria\GetNearbyLocationsCriteriaInterface" type="Magento\InventoryInStorePickup\Model\SearchCriteria\GetNearbyLocationsCriteria" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsAssignedToSalesChannelInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocationsAssignedToSalesChannel" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetIsAnyPickupLocationAvailableInterface" type="Magento\InventoryInStorePickup\Model\GetIsAnyPickupLocationAvailable"/>
-
     <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
     <type name="Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender">
@@ -36,7 +30,6 @@
                 <item name="extension_attributes.frontend_description" xsi:type="string">description</item>
             </argument>
             <argument name="preProcessors" xsi:type="array">
-                <item name="extension_attributes.frontend_name" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendName</item>
                 <item name="extension_attributes.frontend_description" xsi:type="object">Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendDescription</item>
             </argument>
         </arguments>
@@ -51,7 +44,41 @@
         </arguments>
     </type>
     <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface" type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder"/>
+    <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface" type="Magento\InventoryInStorePickup\Model\SearchResult\ExtractStrategy" />
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="resolve-default-filters" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDefaultFilters</item>
+                <item name="resolve-filter-set" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveFilterSet</item>
+                <item name="resolve-distance-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDistanceFilter</item>
+                <item name="resolve-scope-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveScopeFilter</item>
+                <item name="resolve-meta" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveMeta</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\FilterSet" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface" type="Magento\InventoryInStorePickup\Model\SearchRequestBuilder" />
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchResult\Extractor">
+        <arguments>
+            <argument name="strategies" xsi:type="array">
+                <item name="distance-based" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchResult\Strategy\DistanceBased</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryApi\Model\SourceValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="city" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\CityValidator</item>
+                <item name="street" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\StreetValidator</item>
+                <item name="default_source_use_as_pickup_location_validator" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\DefaultSourceUseForPickupLocationValidator</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
