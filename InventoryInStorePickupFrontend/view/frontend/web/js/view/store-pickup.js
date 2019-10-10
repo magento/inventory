@@ -190,13 +190,14 @@ define([
             } else if (shippingAddress.city && shippingAddress.postcode) {
                 pickupLocationsService
                     .getNearbyLocations({
-                        radius: this.nearbySearchRadius,
+                        distanceFilter: {
+                            radius: this.nearbySearchRadius,
+                            country: shippingAddress.countryId || this.defaultCountry,
+                            postcode: shippingAddress.postcode,
+                            city: shippingAddress.city,
+                            region: shippingAddress.region,
+                        },
                         pageSize: this.nearbySearchLimit,
-                        country: shippingAddress.countryId,
-                        city: shippingAddress.city,
-                        postcode: shippingAddress.postcode,
-                        region: shippingAddress.region,
-                        country: this.defaultCountry,
                     })
                     .then(function(locations) {
                         var nearestLocation = locations[0];

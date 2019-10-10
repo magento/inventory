@@ -12,27 +12,30 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
     return {
         /**
          * Returns URL for REST API to fetch nearby pickup locations defined for given sales channel.
-         * @param {string} salesChannelType Type of the sales channel, e.g. website.
          * @param {string} salesChannelCode Code of the sales channel.
+         * @param {object} searchCriteria.
          */
         getUrlForNearbyPickupLocations: function(
-            salesChannelType,
             salesChannelCode,
             searchCriteria
         ) {
-            var params = {
-                    salesChannelType: salesChannelType,
-                    salesChannelCode: salesChannelCode,
-                },
-                urls = {
+            var urls = {
                     default:
-                        '/inventory/in-store-pickup/get-nearby-pickup-locations/:salesChannelType/:salesChannelCode',
+                        '/inventory/in-store-pickup/pickup-locations/',
+                },
+                criteria = {
+                    searchRequest: {
+                        scopeCode: salesChannelCode
+                    }
                 };
 
+            searchCriteria = {
+                searchRequest: searchCriteria,
+            };
             return (
-                resourceUrlManager.getUrl(urls, params) +
+                resourceUrlManager.getUrl(urls, {}) +
                 '?' +
-                $.param(searchCriteria)
+                $.param($.extend(true, criteria, searchCriteria))
             );
         },
         /**
@@ -57,26 +60,30 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
         },
         /**
          * Returns URL for REST API to fetch pickup location with given code defined for given sales channel.
-         * @param {string} salesChannelType Type of the sales channel, e.g. website.
          * @param {string} salesChannelCode Code of the sales channel.
          * @param {string} pickupLocationCode Code of the pickup location.
          */
         getUrlForPickupLocation: function(
-            salesChannelType,
             salesChannelCode,
             pickupLocationCode
         ) {
-            var params = {
-                    salesChannelType: salesChannelType,
-                    salesChannelCode: salesChannelCode,
-                    pickupLocationCode: pickupLocationCode,
+            var urls = {
+                    default: '/inventory/in-store-pickup/pickup-locations/',
                 },
-                urls = {
-                    default:
-                        '/inventory/in-store-pickup/pickup-location/:salesChannelType/:salesChannelCode/:pickupLocationCode',
+                searchRequest = {
+                    searchRequest: {
+                        filterSet: {
+                            pickupLocationCodeFilter: {
+                                value: pickupLocationCode
+                            }
+                        },
+                        scopeCode: salesChannelCode
+                    }
                 };
 
-            return resourceUrlManager.getUrl(urls, params);
+            return resourceUrlManager.getUrl(urls, {})
+                + '?'
+                + $.param(searchRequest);
         },
     };
 });
