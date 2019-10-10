@@ -23,19 +23,17 @@ class ForceLoadExtensionAttributes
      * Activate backend cart to add store pickup information.
      *
      * @param LoadHandler $loadHandler
-     * @param Closure $method
+     * @param Closure $proceed
      * @param CartInterface $cart
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundLoad(
         LoadHandler $loadHandler,
-        Closure $method,
+        Closure $proceed,
         CartInterface $cart
     ) {
         $isActive = $cart->getIsActive();
-
-        $method($cart->setIsActive(true));
-
+        $proceed($cart->setIsActive(true));
         $cart->setIsActive($isActive);
     }
 }

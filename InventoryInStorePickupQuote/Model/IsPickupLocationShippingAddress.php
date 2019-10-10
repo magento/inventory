@@ -56,9 +56,8 @@ class IsPickupLocationShippingAddress
      */
     public function execute(PickupLocationInterface $pickupLocation, AddressInterface $shippingAddress): bool
     {
-        $data = $this->getShippingAddressData->execute() + $this->extractPickupLocationShippingAddressData->execute(
-            $pickupLocation
-        );
+        $data = $this->getShippingAddressData->execute() +
+            $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
 
         if (!$shippingAddress->getExtensionAttributes() ||
             !$shippingAddress->getExtensionAttributes()->getPickupLocationCode()
@@ -69,7 +68,7 @@ class IsPickupLocationShippingAddress
         $shippingAddressData = $this->extractQuoteAddressShippingAddressData->execute($shippingAddress);
 
         foreach ($data as $key => $value) {
-            if (!array_key_exists($key, $shippingAddressData) || $shippingAddressData[$key] != $value) {
+            if (!array_key_exists($key, $shippingAddressData) || $shippingAddressData[$key] !== $value) {
                 return false;
             }
         }

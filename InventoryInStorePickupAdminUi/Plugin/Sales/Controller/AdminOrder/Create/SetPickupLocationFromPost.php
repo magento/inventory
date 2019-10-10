@@ -65,10 +65,9 @@ class SetPickupLocationFromPost
      * Add pickup location code to the shipping address
      *
      * @param Save $subject
-     *
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeExecute(Save $subject)
     {
@@ -76,7 +75,7 @@ class SetPickupLocationFromPost
         $address = $quote->getShippingAddress();
         $pickupLocationCode = $this->request->getParam(self::PARAM_KEY);
 
-        if ($address->getShippingMethod() == InStorePickup::DELIVERY_METHOD && $pickupLocationCode) {
+        if ($address->getShippingMethod() === InStorePickup::DELIVERY_METHOD && $pickupLocationCode) {
             $this->setAddressPickupLocation->execute($address, $pickupLocationCode);
             $quote->setShippingAddress(
                 $this->getShippingAddressBySourceCodeAndOriginalAddress->execute($pickupLocationCode, $address)

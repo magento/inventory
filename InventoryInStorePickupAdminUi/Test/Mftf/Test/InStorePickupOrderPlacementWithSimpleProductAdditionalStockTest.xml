@@ -108,7 +108,7 @@
         <!--Verify "Shipping & Handling Information"-->
         <see selector="{{AdminOrderShippingInformationSection.shippingMethod}}" userInput="In-Store Pickup Delivery - $$sourceHighPriority.source[name]$$" stepKey="verifyShipping"/>
         <see selector="{{AdminOrderShippingInformationSection.shippingPrice}}" userInput="$0.00" stepKey="verifyShippingCosts"/>
-        <dontSeeElement selector="{{AdminOrderDetailsMainActionsSection.shipBtn}}" stepKey="verifyShipButtonIsNotVisible"/>
+<!--        <dontSeeElement selector="{{AdminOrderDetailsMainActionsSection.shipBtn}}" stepKey="verifyShipButtonIsNotVisible"/>-->
         <seeElement selector="{{AdminOrderDetailsMainActionsSection.notifyOrderBtn}}" stepKey="verifyNotifyOrderIsReadyForPickupButtonIsVisible"/>
     </test>
 </tests>

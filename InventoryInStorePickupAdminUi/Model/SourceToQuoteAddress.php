@@ -85,7 +85,7 @@ class SourceToQuoteAddress
 
         $quoteAddressData = $this->objectCopyService->getDataFromFieldset(
             'sales_convert_quote_address',
-            'to_store_pickup_shipping_address',
+            'to_in_store_pickup_shipping_address',
             $originalAddress
         );
 

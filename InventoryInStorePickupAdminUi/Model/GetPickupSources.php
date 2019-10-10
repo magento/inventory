@@ -14,7 +14,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 
 /**
- * Get list of sources marked as pickup location by website
+ * Get list of sources marked as pickup location by stock
  */
 class GetPickupSources
 {
@@ -33,10 +33,9 @@ class GetPickupSources
     }
 
     /**
-     * Get list of sources marked as pickup location by website.
+     * Get list of sources marked as pickup location by stock.
      *
      * @param int $stockId
-     *
      * @return array
      * @throws InputException
      * @throws LocalizedException
