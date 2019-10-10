@@ -14,6 +14,9 @@ if (!$viewModel) {
 }
 /** @var Magento\Backend\Block\Template $block */
 $sources = $viewModel->getPickupSourcesOptionsList();
+if (empty($sources)) {
+    return '';
+}
 ?>
 <fieldset class="admin__fieldset payment-method"
           id="shipping_form_pickup_location_source" style="display: none"
