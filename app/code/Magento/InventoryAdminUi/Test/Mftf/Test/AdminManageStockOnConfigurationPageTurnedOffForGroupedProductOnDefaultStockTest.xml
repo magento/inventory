@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminManageStockOnConfigurationPageTurnedOffForGroupedProductOnDefaultStockTest">
+        <annotations>
+            <stories value="Downloadable Product Default Stock."/>
+            <title value="Manage Stock on Configuration page turned off for Grouped Product on default stock."/>
+            <description value="Manage Stock on Configuration page turned off for Grouped Product on default stock."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/457017/scenarios/1699976"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
+            <!--Assign source to stock.-->
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource"/>
+            </createData>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="GroupedProduct" stepKey="groupedProduct">
+                <field key="name">CustomGroupedProduct</field>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="simpleProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="VirtualProduct" stepKey="virtualProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <!--Clean up created data.-->
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="virtualProduct" stepKey="deleteProduct2"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
+        </after>
+
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid2"/>
+        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct2">
+            <argument name="product" value="$$groupedProduct$$"/>
+        </actionGroup>
+
+        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="AdminAssignProductToGroup" stepKey="addFirstSimpleToGroup">
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+
+        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct1">
+            <argument name="productName" value="$$simpleProduct.name$$"/>
+            <argument name="qty" value="2"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminAssignProductToGroup" stepKey="addSecondSimpleToGroup">
+            <argument name="product" value="$$virtualProduct$$"/>
+        </actionGroup>
+
+        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct2">
+            <argument name="productName" value="$$virtualProduct.name$$"/>
+            <argument name="qty" value="2"/>
+        </actionGroup>
+
+        <selectOption selector="{{AdminProductFormBundleSection.stockStatusField}}" userInput="Out of Stock" stepKey="stockStatus"/>
+
+        <scrollToTopOfPage stepKey="scrollOnTopOfProductPagePage"/>
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage"/>
+        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">
+            <argument name="phrase" value="$$groupedProduct.sku$$"/>
+        </actionGroup>
+        <dontSee userInput="$$groupedProduct.name$$" stepKey="verifyProductNotPresentOnStorefront"/>
+        <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="manageStockToNo"/>
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage2"/>
+        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName2">
+            <argument name="phrase" value="$$groupedProduct.sku$$"/>
+        </actionGroup>
+        <see userInput="$$groupedProduct.name$$" stepKey="verifyProductPresentOnStorefront"/>
+    </test>
+</tests>
