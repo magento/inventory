@@ -32,7 +32,7 @@ define([
          * @return {String}
          */
         getCountryName: function(countryId) {
-            return countryData()[countryId] != undefined
+            return  _.isUndefined(countryData()[countryId])
                 ? countryData()[countryId].name
                 : ''; //eslint-disable-line
         },

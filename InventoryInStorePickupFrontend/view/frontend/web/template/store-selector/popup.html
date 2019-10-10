@@ -8,43 +8,35 @@
     <div class="block block-search store-selector-search">
         <div class="field search">
             <label class="label" for="store-selector-search-input">
-                <span data-bind="i18n: 'Search'"></span>
+                <translate args="'Search'"/>
             </label>
             <div class="control">
-                <input
-                    id="store-selector-search-input"
-                    type="text"
-                    name="store-selector-search-query"
-                    class="input-text"
-                    maxlength="128"
-                    data-bind="textInput: searchQuery, attr: { placeholder: $t('Search with postcode or city name...') }"
+                <input id="store-selector-search-input"
+                       type="text"
+                       name="store-selector-search-query"
+                       class="input-text"
+                       maxlength="128"
+                       data-bind="textInput: searchQuery, attr: { placeholder: $t('Search with postcode or city name...') }"
                 />
             </div>
         </div>
         <div class="actions">
-            <button
-                type="submit"
-                title="Search"
-                class="action search"
-                aria-label="Search"
+            <button type="submit"
+                    title="Search"
+                    class="action search"
+                    aria-label="Search"
             >
-                <span data-bind="i18n: 'Search'"></span>
+                <translate args="'Search'"/>
             </button>
         </div>
     </div>
-    <p
-        class="store-selector-popup-no-locations"
-        if="searchQuery() && nearbyLocations() && !nearbyLocations().length"
-    >
-        <!-- ko i18n: 'We were unable to find nearby locations for provided search query.'--><!-- /ko -->
+    <p class="store-selector-popup-no-locations" if="searchQuery() && nearbyLocations() && !nearbyLocations().length">
+        <translate args="'We were unable to find nearby locations for provided search query.'"/>
     </p>
     <p class="store-selector-popup-empty-query" ifnot="searchQuery()">
-        <!-- ko i18n: 'Please provide postcode or city name to find nearest pickup locations.'--><!-- /ko -->
+        <translate args="'Please provide postcode or city name to find nearest pickup locations.'"/>
     </p>
-    <table
-        class="store-selector-popup-table"
-        data-bind="blockLoader: isLoading, visible: nearbyLocations() && nearbyLocations().length"
-    >
+    <table class="store-selector-popup-table" data-bind="blockLoader: isLoading, visible: nearbyLocations() && nearbyLocations().length">
         <thead>
             <tr class="row">
                 <th class="col col-method" translate="'Location Details'"></th>
@@ -52,8 +44,9 @@
             </tr>
         </thead>
         <tbody>
+<!--            <each args="data: nearbyLocations(), as: 'location'" render="{ name:$parent.storeSelectorPopupItemTemplate}"/>-->
             <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
-            <!--ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
+                <!-- ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
             <!-- /ko -->
         </tbody>
     </table>
