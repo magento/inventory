@@ -24,36 +24,36 @@ define([
 ) {
     'use strict';
 
-    var websiteCode = window.checkoutConfig.websiteCode;
-    var countryData = customerData.get('directory-data');
+    var websiteCode = window.checkoutConfig.websiteCode,
+        countryData = customerData.get('directory-data');
 
     return {
         isLoading: ko.observable(false),
         selectedLocation: ko.observable(null),
+
         /**
          * Get shipping rates for specified address.
-         * @param {Object} address
+         * @param {string} sourceCode
          */
         getLocation: function(sourceCode) {
-            var self = this;
             var serviceUrl = resourceUrlManager.getUrlForPickupLocation(
                 websiteCode,
                 sourceCode
             );
-            self.isLoading(true);
+            this.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
                 .then(function(address) {
-                    return self.formatAddress(address);
-                })
+                    return this.formatAddress(address);
+                }.bind(this))
                 .fail(function(response) {
-                    self.processError(response);
+                    this.processError(response);
                     return [];
-                })
+                }.bind(this))
                 .always(function() {
-                    self.isLoading(false);
-                });
+                    this.isLoading(false);
+                }.bind(this));
         },
         /**
          * Get all pickup locations defined for given sales channel.
@@ -215,8 +215,6 @@ define([
                     return error.parameters.shift();
                 });
             }
-
-            console.error(error);
         },
     };
 });

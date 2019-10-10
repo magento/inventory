@@ -4,17 +4,14 @@
  * See COPYING.txt for license details.
  */
 -->
-<li
-    id="store-pickup"
-    data-bind="fadeVisible: isVisible()"
+<li id="store-pickup"
+    if="isVisible"
     css="'selected-shipping': !isStorePickupSelected(), 'selected-store-pickup': isStorePickupSelected()"
 >
     <render args="deliveryMethodSelectorTemplate"/>
-
-    <!-- ko if: isStorePickupSelected -->
-        <!-- ko foreach: getRegion('store-selector') -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-    <!--/ko-->
+    <if args="isStorePickupSelected">
+        <each args="getRegion('store-selector')">
+            <div template=" {name: getTemplate()}"></div>
+        </each>
+    </if>
 </li>
-
