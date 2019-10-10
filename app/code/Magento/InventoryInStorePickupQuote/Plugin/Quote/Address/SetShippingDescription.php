@@ -59,7 +59,6 @@ class SetShippingDescription
      * @param TotalsCollector $subject
      * @param Total $total
      * @param Quote $quote
-     *
      * @return Total
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -70,7 +69,7 @@ class SetShippingDescription
         Quote $quote
     ) {
         $address = $quote->getShippingAddress();
-        if ($address->getShippingMethod() == InStorePickup::DELIVERY_METHOD
+        if ($address->getShippingMethod() === InStorePickup::DELIVERY_METHOD
             && $this->getAddressPickupLocationCode->execute($address)
         ) {
             $description = $this->getShippingDescription(

@@ -39,7 +39,7 @@ class ExtractSourceAddressData
     {
         return $this->objectCopyService->getDataFromFieldset(
             'inventory_convert_pickup_location',
-            'to_store_pickup_shipping_address',
+            'to_in_store_pickup_shipping_address',
             $source
         );
     }

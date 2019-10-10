@@ -35,9 +35,9 @@ class SourcesForm implements ArgumentInterface
     private $getPickupSources;
 
     /**
-     * @var array|null
+     * @var array
      */
-    private $pickupSources;
+    private $pickupSources = [];
 
     /**
      * @var StockResolverInterface
@@ -69,29 +69,18 @@ class SourcesForm implements ArgumentInterface
      */
     public function getPickupSourcesOptionsList(): array
     {
-        if ($this->pickupSources === null) {
-            $this->loadPickupSources();
+        if (!empty($this->pickupSources)) {
+            return $this->pickupSources;
         }
 
-        return $this->pickupSources;
-    }
-
-    /**
-     * Load list of pickup sources.
-     *
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     */
-    private function loadPickupSources(): void
-    {
         $pickupSources = $this->getPickupSources->execute($this->getStockId());
-
         $this->pickupSources = [];
         /** @var SourceInterface $source */
         foreach ($pickupSources as $source) {
             $this->pickupSources[$source->getSourceCode()] = $source->getName();
         }
+
+        return $this->pickupSources;
     }
 
     /**

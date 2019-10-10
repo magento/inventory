@@ -10,9 +10,7 @@ namespace Magento\InventoryInStorePickupAdminUi\Model;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickup\Model\ExtractSourceAddressData;
 use Magento\InventoryInStorePickupAdminUi\Model\SourceToQuoteAddress as ToQuoteAddress;
-use Magento\InventoryInStorePickupQuote\Model\GetShippingAddressData;
 use Magento\Quote\Api\Data\AddressInterface;
 
 /**
@@ -26,36 +24,20 @@ class GetShippingAddressBySourceCodeAndOriginalAddress
     private $sourceRepository;
 
     /**
-     * @var ExtractSourceAddressData
-     */
-    private $dataExtractor;
-
-    /**
      * @var ToQuoteAddress
      */
     private $sourceToQuoteAddress;
 
     /**
-     * @var GetShippingAddressData
-     */
-    private $getShippingAddressData;
-
-    /**
      * @param SourceRepositoryInterface $sourceRepository
-     * @param ExtractSourceAddressData $dataExtractor
      * @param ToQuoteAddress $sourceToQuoteAddress
-     * @param GetShippingAddressData $getShippingAddressData
      */
     public function __construct(
         SourceRepositoryInterface $sourceRepository,
-        ExtractSourceAddressData $dataExtractor,
-        ToQuoteAddress $sourceToQuoteAddress,
-        GetShippingAddressData $getShippingAddressData
+        ToQuoteAddress $sourceToQuoteAddress
     ) {
         $this->sourceRepository = $sourceRepository;
-        $this->dataExtractor = $dataExtractor;
         $this->sourceToQuoteAddress = $sourceToQuoteAddress;
-        $this->getShippingAddressData = $getShippingAddressData;
     }
 
     /**
