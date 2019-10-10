@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminSimpleProductDisabledManageStockInConfigurationDefaultStockTest">
+        <annotations>
+            <stories value="Simple Product Default Stock."/>
+            <title value="Simple Product Default Stock with Disabled Manage Stock In Configuration."/>
+            <description value="Verify, simple product will be visible on storefront with out of stock status on default stock and turned off manage stock in configuration."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/911767/scenarios/2717987"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create test data.-->
+            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Set product quantity and set to out of stock.-->
+            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductPage"/>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
+            <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="setProductToOutOfStock"/>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!-- Turn On Manage Stock-->
+            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <!--Delete created data.-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+        </after>
+        <!--Verify product is not visible on storefront.-->
+        <actionGroup ref="StorefrontAssertProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductNotVisibleOnStorefront">
+            <argument name="category" value="$category$"/>
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!-- Turn off Manage Stock-->
+        <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <!--Verify product is visible on storefront.-->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
+            <argument name="category" value="$category$"/>
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+    </test>
+</tests>
