@@ -86,16 +86,16 @@ define([
             var shippingAddress = quote.shippingAddress();
 
             if (this.validatePickupInformation()) {
-                var sourceCode = _.findWhere(shippingAddress.customAttributes, {
-                    attribute_code: 'sourceCode',
+                var pickupLocationCode = _.findWhere(shippingAddress.customAttributes, {
+                    attribute_code: 'pickup_location_code',
                 });
 
                 shippingAddress = $.extend(true, quote.shippingAddress(), {
                     extension_attributes: {
-                        pickup_location_code: sourceCode.value,
+                        pickup_location_code: pickupLocationCode.value,
                     },
                     custom_attributes: {
-                        sourceCode: sourceCode.value,
+                        pickup_location_code: pickupLocationCode.value,
                     },
                 });
 
@@ -142,12 +142,14 @@ define([
 
             return pickupLocationsService
                 .getNearbyLocations({
-                    radius: this.nearbySearchRadius,
-                    pageSize: this.nearbySearchLimit,
-                    country: this.defaultCountryId,
-                    city: address.city,
-                    postcode: address.postcode,
-                    region: address.region,
+                    distanceFilter: {
+                        radius: this.nearbySearchRadius,
+                        country: this.defaultCountryId,
+                        city: address.city,
+                        postcode: address.postcode,
+                        region: address.region,
+                    },
+                    pageSize: this.nearbySearchLimit
                 })
                 .then(function(locations) {
                     self.nearbyLocations(locations);

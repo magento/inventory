@@ -37,7 +37,6 @@ define([
         getLocation: function(sourceCode) {
             var self = this;
             var serviceUrl = resourceUrlManager.getUrlForPickupLocation(
-                'website',
                 websiteCode,
                 sourceCode
             );
@@ -89,14 +88,10 @@ define([
          * @see Magento/InventoryInStorePickup/Model/SearchCriteria/GetNearbyLocationsCriteria.php
          */
         getNearbyLocations: function(searchCriteria) {
-            var self = this;
-            var query = {
-                searchCriteria: searchCriteria,
-            };
-            var serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(
-                'website',
+            var self = this,
+                serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(
                 websiteCode,
-                query
+                searchCriteria
             );
             self.isLoading(true);
 
@@ -129,8 +124,8 @@ define([
                     region_id: location.region_id,
                     save_in_address_book: 0,
                     custom_attributes: {
-                        sourceCode: location.source_code,
-                    },
+                        pickup_location_code: location.pickup_location_code
+                    }
                 }),
                 {
                     canUseForBilling: function() {
@@ -167,7 +162,7 @@ define([
                     address.country_id,
                     address.region_id
                 ),
-                source_code: address.source_code,
+                pickup_location_code: address.pickup_location_code,
             };
         },
         /**
