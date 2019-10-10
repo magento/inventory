@@ -47,6 +47,9 @@
     <entity name="tenPiecesAddToCart">
         <data key="value">10</data>
     </entity>
+    <entity name="zeroProductQuantity">
+        <data key="value">0</data>
+    </entity>
     <entity name="SourceStatusInStock">
         <data key="value">In Stock</data>
     </entity>
