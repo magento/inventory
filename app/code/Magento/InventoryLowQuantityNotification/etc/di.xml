@@ -38,4 +38,13 @@
     <type name="Magento\Catalog\Api\ProductRepositoryInterface">
         <plugin name="process_stock_item_configuration_after_product_save" type="Magento\InventoryLowQuantityNotification\Plugin\Catalog\Api\ProductRepositoryInterface\ProcessStockItemConfiguration"/>
     </type>
+    <type name="Magento\InventoryLowQuantityNotification\Model\SourceItemConfiguration\Get">
+        <arguments>
+            <!-- @deprecated following parameters have been deprecated and not used anymore -->
+            <argument name="getDataResourceModel" xsi:type="null"/>
+            <argument name="getDefaultValues" xsi:type="null"/>
+            <argument name="sourceItemConfigurationFactory" xsi:type="null"/>
+            <argument name="dataObjectHelper" xsi:type="null"/>
+        </arguments>
+    </type>
 </config>

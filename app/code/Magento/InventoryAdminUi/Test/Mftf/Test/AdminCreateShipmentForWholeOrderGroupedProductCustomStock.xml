@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateShipmentForWholeOrderGroupedProductCustomStock" extends="additionalStockAdminCreateCreditMemoTotalRefundFullInvoiceGroupedProductWithDefaultStock">
+    <test name="AdminCreateShipmentForWholeOrderGroupedProductCustomStock">
         <annotations>
             <stories value="Grouped Product Custom Stock."/>
             <title value="Create Shipment for Grouped product on Custom stock."/>
@@ -20,62 +20,105 @@
         </annotations>
 
         <before>
-            <remove keyForRemoval="product"/>
-            <createData entity="_defaultCategory" stepKey="category" after="groupedProduct"/>
-            <createData entity="SimpleProduct" stepKey="product" after="category">
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <!--Create additional stock and link additional source to stock.-->
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" after="additionalSource"/>
-            <createData entity="SourceStockLinked1" stepKey="sourceStockLink" after="additionalStock">
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="FullSource1" stepKey="additionalSource1"/>
+            <createData entity="FullSource1" stepKey="additionalSource2"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
                 <requiredEntity createDataKey="additionalStock"/>
-                <requiredEntity createDataKey="additionalSource"/>
+                <requiredEntity createDataKey="additionalSource1"/>
             </createData>
-            <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource2"/>
+            </createData>
+            <createData entity="GroupedProduct" stepKey="groupedProduct"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
+            <deleteData createDataKey="category" after="deleteStock" stepKey="deleteCategory"/>
             <!--Assign Default Stock to Default Website.-->
-            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" after="disableSource">
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="additionalStock" after="logoutOfAdmin" stepKey="deleteStock"/>
-            <deleteData createDataKey="category" after="deleteStock" stepKey="deleteCategory"/>
+            <!--Disable sources.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
+                <argument name="sourceCode" value="$$additionalSource1.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
+                <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Assign simple product to additional source.-->
-        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openVirtualProductEditPage" before="assignTestSourceToCreatedProduct"/>
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" before="setCustomSourceQuantity">
-            <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+        <!--Assign simple product to additional sources.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductPage"/>
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+            <argument name="sourceCode" value="{{_defaultSource.name}}"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity" before="saveSimpleProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct" before="openGroupedProductEditPage"/>
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSource1ToCreatedProduct">
+            <argument name="sourceCode" value="$$additionalSource1.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSource2ToCreatedProduct">
+            <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct"/>
+        <!--Assign simple product to grouped product.-->
+        <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
+        <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
+        <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
+        <actionGroup ref="filterProductGridBySku" stepKey="filterGroupedProductOptionsBySimple">
+            <argument name="product" value="$$product$$"/>
+        </actionGroup>
+        <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProductFilterResult"/>
+        <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
+        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct">
+            <argument name="productName" value="$$product.name$$"/>
+            <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseGroupedProduct"/>
+        <!--Login to storefront.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!--Add product to cart.-->
+        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+            <argument name="product" value="$$groupedProduct$$"/>
+        </actionGroup>
         <!--Place order.-->
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext" after="waitForCheckoutPage"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton" after="clickNext"/>
-        <!--Verify product quantity after order placement.-->
-        <remove keyForRemoval="checkProductSourceQtyAfterPlaceOrder"/>
-        <remove keyForRemoval="checkSalableQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', $$additionalSource.source[name]$$)}}" userInput="100" stepKey="checkProductSourceQtyAfterPlaceOrder" after="findProductBySkuToCheckQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1', $additionalStock.stock[name]$$)}}" userInput="98" stepKey="checkSalableQtyAfterPlaceOrder" after="checkProductSourceQtyAfterPlaceOrder"/>
-        <!--Admin Area Process Partial Shipment.-->
-        <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShipAction" after="checkSuccessMessage"/>
-        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment" after="clickShipAction"/>
-        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="checkShipmentSuccessMessage" after="clickSubmitShipment"/>
-        <!--Remove Credit Memo creation.-->
-        <remove keyForRemoval="onOrdersPageToCreateCreditMemo"/>
-        <remove keyForRemoval="waitForOrdersPageLoadingMaskCreditMemo"/>
-        <remove keyForRemoval="searchOrderNumCreditMemo"/>
-        <remove keyForRemoval="submitSearchCreditMemo"/>
-        <remove keyForRemoval="waitForSubmitSearchLoadingMaskCreditMemo"/>
-        <remove keyForRemoval="clickOrderRowCreditMemo"/>
-        <remove keyForRemoval="clickCreditMemo"/>
-        <remove keyForRemoval="updateQuantityLoadingMask"/>
-        <remove keyForRemoval="clickSubmit"/>
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminSourceSelectionAlgorithmByPriorityActionGroup" stepKey="createShipment">
+            <argument name="sourceName" value="$additionalSource1.source[name]$"/>
+            <argument name="sourceQty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
         <!--Verify product quantity.-->
-        <remove keyForRemoval="checkProductSourceQtyAfterCreditMemo"/>
-        <remove keyForRemoval="checkSalableQtyAfterCreditMemo"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',$$additionalSource.source[name]$$)}}" userInput="98" stepKey="checkProductSourceQtyAfterCreditMemo" after="findProductBySkuToCheckQtyAfterCreditMemo"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1', $$additionalStock.stock[name]$$)}}" userInput="98" stepKey="checkSalableQtyAfterCreditMemo" after="checkProductSourceQtyAfterCreditMemo"/>
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterCreditMemo"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterCreditMemo">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQty">
+            <argument name="sourceName" value="$additionalSource1.source[name]$"/>
+            <argument name="stockName" value="$additionalStock.stock[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
+            <argument name="stockQty" value="{{defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>

@@ -11,6 +11,10 @@ Welcome to Magento 2 installation! We're glad you chose to install Magento 2, a 
 
 *	[Installation Guide](https://devdocs.magento.com/guides/v2.3/install-gde/bk-install-guide.html).
 
+## Learn More About GraphQL in Magento 2
+
+* [GraphQL Developer Guide](https://devdocs.magento.com/guides/v2.3/graphql/index.html)
+
 <h2>Contributing to the Magento 2 Code Base</h2>
 Contributions can take the form of new components or features, changes to existing features, tests, documentation (such as developer guides, user guides, examples, or specifications), bug fixes, optimizations, or just good suggestions.
 
@@ -60,8 +64,7 @@ Please see LICENSE_EE.txt for the full text of the MEE License or visit https://
 
 ## Community Engineering Slack
 
-To connect with Magento and the Community, join us on the [Magento Community Engineering Slack](https://magentocommeng.slack.com). If you are interested in joining Slack, or a specific channel, send us request at [engcom@adobe.com](mailto:engcom@adobe.com) or [self signup](https://tinyurl.com/engcom-slack).
-
+To connect with Magento and the Community, join us on the [Magento Community Engineering Slack](https://magentocommeng.slack.com). If you are interested in joining Slack, or a specific channel, [sign up yourself](https://opensource.magento.com/slack) or send us a request at [engcom@adobe.com](mailto:engcom@adobe.com).
 
 We have channels for each project. These channels are recommended for new members:
 
