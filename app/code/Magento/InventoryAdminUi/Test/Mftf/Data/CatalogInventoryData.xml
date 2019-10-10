@@ -32,6 +32,12 @@
     <entity name="productWithThousandQtyBoughtWithTwoPieces">
         <data key="value">998</data>
     </entity>
+    <entity name="productWithThousandQtyBoughtWith10Pieces">
+        <data key="value">990</data>
+    </entity>
+    <entity name="defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces">
+        <data key="value">190</data>
+    </entity>
     <entity name="minimalProductQty">
         <data key="value">1</data>
     </entity>
