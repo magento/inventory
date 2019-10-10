@@ -19,7 +19,14 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
  */
 class PreventDefaultSourceDisablingTest extends WebapiAbstract
 {
+    /**
+     * Resource path
+     */
     const RESOURCE_PATH = '/V1/inventory/sources';
+
+    /**
+     * Service name
+     */
     const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
 
     /**
