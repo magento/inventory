@@ -12,7 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\GraphQl\Quote\GetMaskedQuoteIdByReservedOrderId;
 use Magento\Integration\Api\CustomerTokenServiceInterface;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationInterface;
+use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventorySales\Model\SalesChannel;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -158,7 +158,7 @@ QUERY;
                     'label' => $pickupLocation->getCountryId()
                 ]
             ],
-            ['response_field' => 'pickup_location_code', 'expected_value' => $pickupLocation->getSourceCode()]
+            ['response_field' => 'pickup_location_code', 'expected_value' => $pickupLocation->getPickupLocationCode()]
         ];
 
         $this->assertResponseFields($shippingAddressResponse, $assertionMap);
@@ -280,7 +280,7 @@ QUERY;
                     'label' => $pickupLocation->getCountryId()
                 ]
             ],
-            ['response_field' => 'pickup_location_code', 'expected_value' => $pickupLocation->getSourceCode()],
+            ['response_field' => 'pickup_location_code', 'expected_value' => $pickupLocation->getPickupLocationCode()],
             ['response_field' => '__typename', 'expected_value' => 'ShippingCartAddress']
         ];
 
