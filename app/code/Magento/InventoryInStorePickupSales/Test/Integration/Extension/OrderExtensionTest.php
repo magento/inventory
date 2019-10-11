@@ -5,41 +5,40 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupMultishipping\Test\Integration\Carrier;
+namespace Magento\InventoryInStorePickupSales\Test\Integration\Extension;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Api\Data\ShippingAssignmentInterface;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Sales\Api\Data\OrderExtensionFactory;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\Quote\Api\Data\ShippingAssignmentInterfaceFactory;
 use PHPUnit\Framework\TestCase;
-use Magento\Quote\Api\Data\ShippingInterfaceFactory;
 
 /**
- * Integration tests coverage for @see \Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup
- * Validate cases when In-Store Pickup delivery is used for Multishipping Quote.
+ * @inheritdoc
  */
-class InStorePickupWithMultishippingTest extends TestCase
+class OrderExtensionTest extends TestCase
 {
-    /**
-     * @var SearchCriteriaBuilder
-     */
+    /** @var ObjectManagerInterface */
+    private $objectManager;
+
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
+    /** @var SearchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
-    /**
-     * @var CartRepositoryInterface
-     */
-    private $cartRepository;
+    /** @var  OrderExtensionFactory */
+    private $orderExtensionFactory;
 
-    /**
-     * @inheritdoc
-     */
-    public function setUp()
+    protected function setUp()
     {
-        $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
-        $this->cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
+        $this->objectManager = Bootstrap::getObjectManager();
+
+        $this->orderRepository = $this->objectManager->get(OrderRepositoryInterface::class);
+        $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
+        $this->orderExtensionFactory = $this->objectManager->get(OrderExtensionFactory::class);
     }
 
     /**
@@ -54,29 +53,23 @@ class InStorePickupWithMultishippingTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSales/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSales/Test/_files/place_order.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
      *
-     * @magentoAppArea frontend
-     *
      * @magentoDbIsolation disabled
-     * @throws NoSuchEntityException
      */
-    public function testShippingMethodWithoutPickupLocations()
+    public function testPickupLocationSaveWithOrder()
     {
+        $sourceId = 'eu-1';
+
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('reserved_order_id', 'in_store_pickup_test_order')
+            ->addFilter('increment_id', 'in_store_pickup_test_order')
             ->create();
-        /** @var \Magento\Quote\Model\Quote $cart */
-        $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
-        $cart->setIsMultiShipping(1);
+        /** @var OrderInterface $createdOrder */
+        $createdOrder = current($this->orderRepository->getList($searchCriteria)->getItems());
 
-        $this->cartRepository->save($cart);
-
-        $cart = $this->cartRepository->get($cart->getId());
-
-        $this->assertEmpty($cart->getShippingAddress()->getShippingMethod());
-        $this->assertEquals(0, $cart->getShippingAddress()->getShippingAmount());
+        $this->assertEquals($createdOrder->getExtensionAttributes()->getPickupLocationCode(), $sourceId);
     }
 }
