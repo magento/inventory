@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickupSalesAdminUi\Block\Adminhtml\Order\View;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Backend\Block\Widget\Form\Container;
 use Magento\InventoryInStorePickupSalesAdminUi\Controller\Adminhtml\Order\NotifyPickup;
-use Magento\InventoryInStorePickupAdminUi\Model\IsRenderReadyForPickupButton;
+use Magento\InventoryInStorePickupSalesAdminUi\Model\IsRenderReadyForPickupButton;
 use Magento\Sales\Block\Adminhtml\Order\View;
 
 /**
