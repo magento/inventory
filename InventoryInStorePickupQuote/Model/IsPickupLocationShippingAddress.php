@@ -68,7 +68,7 @@ class IsPickupLocationShippingAddress
         $shippingAddressData = $this->extractQuoteAddressShippingAddressData->execute($shippingAddress);
 
         foreach ($data as $key => $value) {
-            if (!array_key_exists($key, $shippingAddressData) || $shippingAddressData[$key] !== $value) {
+            if (!array_key_exists($key, $shippingAddressData) || $shippingAddressData[$key] != $value) {
                 return false;
             }
         }
