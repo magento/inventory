@@ -37,8 +37,7 @@ define([
     return Component.extend({
         defaults: {
             template: 'Magento_InventoryInStorePickupFrontend/store-pickup',
-            deliveryMethodSelectorTemplate:
-                'Magento_InventoryInStorePickupFrontend/delivery-method-selector',
+            deliveryMethodSelectorTemplate: 'Magento_InventoryInStorePickupFrontend/delivery-method-selector',
             isVisible: false,
             isAvailable: false,
             isStorePickupSelected: false,
@@ -53,13 +52,13 @@ define([
         rates: shippingService.getShippingRates(),
         inStoreMethod: null,
 
+        /**
+         * @inheritdoc
+         */
         initialize: function() {
             this._super();
 
-            shippingRateService.registerProcessor(
-                'store-pickup-address',
-                shippingRateProcessor
-            );
+            shippingRateService.registerProcessor('store-pickup-address', shippingRateProcessor);
 
             quote.shippingAddress.subscribe(function(shippingAddress) {
                 this.convertAddressType(shippingAddress);
@@ -73,6 +72,10 @@ define([
 
             this.syncWithShipping();
         },
+
+        /**
+         * @inheritDoc
+         */
         initObservable: function() {
             this._super().observe(['isVisible']);
 
@@ -89,18 +92,24 @@ define([
 
             return this;
         },
+
         /**
          * Synchronize store pickup visibility with shipping step.
+         *
+         * @returns void
          */
         syncWithShipping: function() {
-            var shippingStep = _.findWhere(stepNavigator.steps(), {
-                code: 'shipping',
-            });
+            var shippingStep = _.findWhere(stepNavigator.steps(), {code: 'shipping'});
+
             shippingStep.isVisible.subscribe(function(isShippingVisible) {
                 this.isVisible(this.isAvailable && isShippingVisible);
             }, this);
             this.isVisible(this.isAvailable && shippingStep.isVisible());
         },
+
+        /**
+         * @returns void
+         */
         selectShipping: function() {
             var nonPickupShippingMethod = _.find(
                 this.rates(),
@@ -123,6 +132,10 @@ define([
                 checkoutProvider.trigger('data.reset');
             });
         },
+
+        /**
+         * @returns void
+         */
         selectStorePickup: function() {
             var pickupShippingMethod = _.find(
                 this.rates(),
@@ -138,6 +151,7 @@ define([
             this.preselectLocation();
             this.selectShippingMethod(pickupShippingMethod);
         },
+
         /**
          * @param {Object} shippingMethod
          */
@@ -147,6 +161,11 @@ define([
                 quote.shippingAddress().getKey()
             );
         },
+
+        /**
+         * @param {Object} shippingAddress
+         * @returns void
+         */
         convertAddressType: function(shippingAddress) {
             if (
                 !this.isStorePickupAddress(shippingAddress) &&
@@ -164,20 +183,30 @@ define([
                 );
             }
         },
+
+        /**
+         * @returns void
+         */
         preselectLocation: function() {
+            var selectedLocation,
+                shippingAddress,
+                customAttributes,
+                selectedSourceCode,
+                nearestLocation;
+
             if (!this.isStorePickupSelected()) {
                 return;
             }
 
-            var selectedLocation = pickupLocationsService.selectedLocation();
+            selectedLocation = pickupLocationsService.selectedLocation();
             if (selectedLocation) {
                 pickupLocationsService.selectForShipping(selectedLocation);
                 return;
             }
 
-            var shippingAddress = quote.shippingAddress();
-            var customAttributes = shippingAddress.customAttributes || [];
-            var selectedSourceCode = _.findWhere(customAttributes, {
+            shippingAddress = quote.shippingAddress();
+            customAttributes = shippingAddress.customAttributes || [];
+            selectedSourceCode = _.findWhere(customAttributes, {
                 attribute_code: 'sourceCode',
             });
 
@@ -200,7 +229,7 @@ define([
                         pageSize: this.nearbySearchLimit,
                     })
                     .then(function(locations) {
-                        var nearestLocation = locations[0];
+                        nearestLocation = locations[0];
 
                         if (nearestLocation) {
                             pickupLocationsService.selectForShipping(
@@ -210,6 +239,11 @@ define([
                     });
             }
         },
+
+        /**
+         * @param address
+         * @returns {boolean}
+         */
         isStorePickupAddress: function(address) {
             return address.getType() === 'store-pickup-address';
         },

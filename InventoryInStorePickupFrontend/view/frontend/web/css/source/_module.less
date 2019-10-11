@@ -23,6 +23,9 @@
 @checkout-pickup-location-popup-note_margin: 0 0 @indent__base;
 
 & when (@media-common = true) {
+    /**
+     * @codingStandardsIgnoreStart
+     */
     #store-pickup {
         &.selected-shipping {
             ~ #store-selector {
@@ -38,7 +41,9 @@
         }
     }
 
+
     #delivery-method-selector {
+        //  @codingStandardsIgnoreEnd
         .lib-vendor-prefix-display(flex);
 
         .action {
@@ -46,31 +51,34 @@
 
             &.selected {
                 .lib-css(
-                    background,
-                    @checkout-delivery-method-selector-action__background
+                background,
+                @checkout-delivery-method-selector-action__background
                 );
             }
         }
 
         .action-select-shipping {
-            border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
         }
 
         .action-select-store-pickup {
+            border-bottom-left-radius: 0;
             border-left: 0;
             border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
         }
     }
 
+    /**
+      * @codingStandardsIgnoreStart
+      */
     #store-selector {
         .form-login {
             border-bottom: 0;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
+        //  @codingStandardsIgnoreEnd
         .form-continue {
             margin: @indent__base 0 0;
 
@@ -100,8 +108,11 @@
             padding-bottom: 0;
         }
     }
-
+    /**
+      * @codingStandardsIgnoreStart
+      */
     #opc-store-selector-popup {
+        //  @codingStandardsIgnoreEnd
         display: none;
 
         .block-search {
@@ -110,8 +121,8 @@
             .lib-css(margin, @checkout-pickup-location-popup-search_margin);
             .lib-css(padding, @checkout-pickup-location-popup-search_padding);
             .lib-css(
-                border-bottom,
-                @checkout-pickup-location-popup-search_border
+            border-bottom,
+            @checkout-pickup-location-popup-search_border
             );
         }
     }
@@ -133,15 +144,15 @@
             .location {
                 .location-name {
                     .lib-css(
-                        font-size,
-                        @checkout-pickup-location-name-popup_font-size
+                    font-size,
+                    @checkout-pickup-location-name-popup_font-size
                     );
                 }
 
                 + .location {
                     .lib-css(
-                        border-top,
-                        @checkout-source-selector-popup-location_border
+                    border-top,
+                    @checkout-source-selector-popup-location_border
                     );
                 }
             }
@@ -178,11 +189,15 @@
 //  _____________________________________________
 
 .media-width(@extremum, @break)
-    when
+when
     (@extremum = 'min')
-    and
+and
     (@break = @screen__m) {
+    /**
+     * @codingStandardsIgnoreStart
+     */
     #store-selector {
+        //  @codingStandardsIgnoreEnd
         .form-continue {
             .actions-toolbar {
                 > .primary {

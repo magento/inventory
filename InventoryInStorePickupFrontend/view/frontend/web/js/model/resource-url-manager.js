@@ -12,6 +12,7 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
     return {
         /**
          * Returns URL for REST API to fetch nearby pickup locations defined for given sales channel.
+         *
          * @param {string} salesChannelCode Code of the sales channel.
          * @param {object} searchCriteria.
          */
@@ -38,8 +39,10 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
                 $.param($.extend(true, criteria, searchCriteria))
             );
         },
+
         /**
          * Returns URL for REST API to fetch all pickup locations defined for given sales channel.
+         *
          * @param {string} salesChannelType Type of the sales channel, e.g. website.
          * @param {string} salesChannelCode Code of the sales channel.
          */
@@ -52,14 +55,16 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
                     salesChannelCode: salesChannelCode,
                 },
                 urls = {
-                    default:
-                        '/inventory/in-store-pickup/pickup-locations-assigned-to-sales-channel/:salesChannelType/:salesChannelCode',
+                    default: '/inventory/in-store-pickup/pickup-locations-assigned-to-sales-channel/'
+                        + ':salesChannelType/:salesChannelCode',
                 };
 
             return resourceUrlManager.getUrl(urls, params);
         },
+
         /**
          * Returns URL for REST API to fetch pickup location with given code defined for given sales channel.
+         *
          * @param {string} salesChannelCode Code of the sales channel.
          * @param {string} pickupLocationCode Code of the pickup location.
          */

@@ -7,9 +7,8 @@ define(['underscore'], function(_) {
 
     return {
         formatAddressToPickupAddress: function(address) {
-            var sourceCode = _.findWhere(address.customAttributes, {
-                attribute_code: 'sourceCode',
-            });
+            var sourceCode = _.findWhere(address.customAttributes, {attribute_code: 'sourceCode'});
+
             if (sourceCode && address.getType() !== 'store-pickup-address') {
                 address = _.extend({}, address, {
                     saveInAddressBook: 0,

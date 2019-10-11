@@ -11,6 +11,7 @@ define([
 
     return function(quote) {
         var shippingAddress = quote.shippingAddress;
+
         /**
          * Makes sure that shipping address gets appropriate type when it points
          * to a store pickup location.
