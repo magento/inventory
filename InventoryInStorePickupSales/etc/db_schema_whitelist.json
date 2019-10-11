@@ -1,0 +1,12 @@
+{
+  "inventory_pickup_location_order": {
+    "column": {
+      "order_id": true,
+      "pickup_location_code": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "INVENTORY_PICKUP_LOCATION_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+    }
+  }
+}
