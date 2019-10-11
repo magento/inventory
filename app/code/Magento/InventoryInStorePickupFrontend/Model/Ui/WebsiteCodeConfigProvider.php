@@ -10,6 +10,9 @@ namespace Magento\InventoryInStorePickupFrontend\Model\Ui;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\InventoryInStorePickupFrontend\Model\GetCurrentWebsiteCode;
 
+/**
+ * Provide website for current store.
+ */
 class WebsiteCodeConfigProvider implements ConfigProviderInterface
 {
     /**
@@ -17,6 +20,9 @@ class WebsiteCodeConfigProvider implements ConfigProviderInterface
      */
     private $getCurrentWebsiteCode;
 
+    /**
+     * @param GetCurrentWebsiteCode $getCurrentWebsiteCode
+     */
     public function __construct(GetCurrentWebsiteCode $getCurrentWebsiteCode)
     {
         $this->getCurrentWebsiteCode = $getCurrentWebsiteCode;

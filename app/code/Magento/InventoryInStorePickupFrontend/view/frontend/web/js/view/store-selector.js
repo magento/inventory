@@ -54,11 +54,17 @@ define([
         isLoading: pickupLocationsService.isLoading,
         popup: null,
 
+        /**
+         * @inheritDoc
+         */
         initialize: function() {
+            var updateNearbyLocations,
+                postcode,
+                city;
+
             this._super();
 
-            var updateNearbyLocations = _.debounce(function(searchQuery) {
-                var postcode, city;
+            updateNearbyLocations = _.debounce(function(searchQuery) {
                 city = searchQuery.replace(/(\d+[\-]?\d+)/, function(match) {
                     postcode = match;
 
@@ -76,17 +82,22 @@ define([
             this.searchQuery.subscribe(updateNearbyLocations);
         },
 
+        /**
+         * @inheritDoc
+         */
         initObservable: function() {
             return this._super().observe(['nearbyLocations', 'searchQuery']);
         },
+
         /**
          * Set shipping information handler
          */
         setPickupInformation: function() {
-            var shippingAddress = quote.shippingAddress();
+            var shippingAddress = quote.shippingAddress(),
+                pickupLocationCode;
 
             if (this.validatePickupInformation()) {
-                var pickupLocationCode = _.findWhere(shippingAddress.customAttributes, {
+                pickupLocationCode = _.findWhere(shippingAddress.customAttributes, {
                     attribute_code: 'pickup_location_code',
                 });
 
@@ -108,6 +119,7 @@ define([
                 });
             }
         },
+
         /**
          * @return {*}
          */
@@ -121,6 +133,10 @@ define([
 
             return this.popup;
         },
+
+        /**
+         * @returns void
+         */
         openPopup: function() {
             var shippingAddress = quote.shippingAddress();
 
@@ -130,13 +146,28 @@ define([
                 this.updateNearbyLocations(shippingAddress);
             }
         },
+
+        /**
+         * @param location
+         * @returns void
+         */
         selectPickupLocation: function(location) {
             pickupLocationsService.selectForShipping(location);
             this.getPopup().closeModal();
         },
+
+        /**
+         * @param location
+         * @returns {*|boolean}
+         */
         isPickupLocationSelected: function(location) {
             return _.isEqual(this.selectedLocation(), location);
         },
+
+        /**
+         * @param address
+         * @returns {*}
+         */
         updateNearbyLocations: function(address) {
             var self = this;
 
@@ -159,6 +190,9 @@ define([
                 });
         },
 
+        /**
+         * @returns {boolean}
+         */
         validatePickupInformation: function() {
             var emailValidationResult,
                 loginFormSelector = this.loginFormSelector;

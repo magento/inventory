@@ -12,6 +12,8 @@ define([
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/select-shipping-address',
+    'underscore',
+    'mage/translate'
 ], function(
     $,
     ko,
@@ -20,7 +22,9 @@ define([
     customerData,
     checkoutData,
     addressConverter,
-    selectShippingAddressAction
+    selectShippingAddressAction,
+    _,
+    $t
 ) {
     'use strict';
 
@@ -33,13 +37,12 @@ define([
 
         /**
          * Get shipping rates for specified address.
+         *
          * @param {string} sourceCode
          */
         getLocation: function(sourceCode) {
-            var serviceUrl = resourceUrlManager.getUrlForPickupLocation(
-                websiteCode,
-                sourceCode
-            );
+            var serviceUrl = resourceUrlManager.getUrlForPickupLocation(websiteCode, sourceCode);
+
             this.isLoading(true);
 
             return storage
@@ -55,15 +58,13 @@ define([
                     this.isLoading(false);
                 }.bind(this));
         },
+
         /**
          * Get all pickup locations defined for given sales channel.
          */
         getLocations: function() {
             var self = this;
-            var serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel(
-                'website',
-                websiteCode
-            );
+            var serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel('website', websiteCode);
 
             self.isLoading(true);
 
@@ -82,17 +83,17 @@ define([
                     self.isLoading(false);
                 });
         },
+
         /**
          * Get nearby pickup locations based on given search criteria.
+         *
          * @param {object} searchCriteria Search criteria object.
          * @see Magento/InventoryInStorePickup/Model/SearchCriteria/GetNearbyLocationsCriteria.php
          */
         getNearbyLocations: function(searchCriteria) {
             var self = this,
-                serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(
-                websiteCode,
-                searchCriteria
-            );
+                serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(websiteCode, searchCriteria);
+
             self.isLoading(true);
 
             return storage
@@ -110,6 +111,13 @@ define([
                     self.isLoading(false);
                 });
         },
+
+        /**
+         * Select location for sipping.
+         *
+         * @param {Object} location
+         * @returns void
+         */
         selectForShipping: function(location) {
             var address = $.extend(
                 {},
@@ -141,8 +149,10 @@ define([
             selectShippingAddressAction(address);
             checkoutData.setSelectedShippingAddress(address.getKey());
         },
+
         /**
          * Formats address returned by REST endpoint to match checkout address field naming.
+         *
          * @param {object} address Address object returned by REST endpoint.
          */
         formatAddress: function(address) {
@@ -165,17 +175,22 @@ define([
                 pickup_location_code: address.pickup_location_code,
             };
         },
+
         /**
+         * Get country name by id.
+         *
          * @param {*} countryId
          * @return {String}
          */
         getCountryName: function(countryId) {
-            return countryData()[countryId] != undefined
+            return countryData()[countryId] !== undefined
                 ? countryData()[countryId].name
                 : ''; //eslint-disable-line
         },
+
         /**
          * Returns region name based on given country and region identifiers.
+         *
          * @param {string} countryId Country identifier.
          * @param {string} regionId Region identifier.
          */
@@ -186,11 +201,18 @@ define([
 
             return regions && regions[regionId] ? regions[regionId].name : '';
         },
+
+        /**
+         * Process response errors.
+         *
+         * @param {Object} response
+         * @returns void
+         */
         processError: function(response) {
             var expr = /([%])\w+/g,
                 error;
 
-            if (response.status == 401) {
+            if (response.status === 401) {
                 //eslint-disable-line eqeqeq
                 window.location.replace(url.build('customer/account/login/'));
                 return;
