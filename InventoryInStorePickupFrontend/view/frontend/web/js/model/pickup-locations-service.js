@@ -13,7 +13,8 @@ define([
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/select-shipping-address',
     'underscore',
-    'mage/translate'
+    'mage/translate',
+    'mage/url'
 ], function(
     $,
     ko,
@@ -24,7 +25,8 @@ define([
     addressConverter,
     selectShippingAddressAction,
     _,
-    $t
+    $t,
+    url
 ) {
     'use strict';
 
