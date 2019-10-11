@@ -35,7 +35,7 @@ class InventorySourceExtensionTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
      *
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
@@ -86,7 +86,7 @@ class InventorySourceExtensionTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
      */
     public function testGetListOfSourcesWithPickupLocationExtensionAfterSave(): void
     {
@@ -126,7 +126,7 @@ class InventorySourceExtensionTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
      *
      * @dataProvider dataProvider
      *
