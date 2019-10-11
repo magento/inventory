@@ -5,13 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupApi\Api;
+namespace Magento\InventoryInStorePickupSalesApi\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * Send an email to the customer and ship the order to reserve pickup location`s QTY
+ * Service to send an email to the customer and ship the order to reserve QTY to be picked up.
+ *
+ * @api
  */
 interface NotifyOrderIsReadyForPickupInterface
 {

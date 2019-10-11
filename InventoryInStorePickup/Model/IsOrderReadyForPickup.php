@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\InventoryInStorePickup\Model\Order\IsFulfillable;
-use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;

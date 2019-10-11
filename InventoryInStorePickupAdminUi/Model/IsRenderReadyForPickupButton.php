@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Model;
 
-use Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\IsStorePickupOrderInterface;
 use Magento\Sales\Model\Order;
 
 /**

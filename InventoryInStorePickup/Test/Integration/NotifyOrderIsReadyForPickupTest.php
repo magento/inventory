@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Test\Integration;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderExtensionInterface;
 use Magento\Sales\Api\Data\OrderInterface;

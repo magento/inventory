@@ -9,8 +9,8 @@ namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier;
-use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
-use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\ShipmentCreationArgumentsExtensionInterfaceFactory;
 use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterface;
