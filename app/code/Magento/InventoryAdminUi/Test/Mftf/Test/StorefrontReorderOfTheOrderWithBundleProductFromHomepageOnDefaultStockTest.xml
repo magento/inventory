@@ -11,7 +11,7 @@
     <test name="StorefrontReorderOfTheOrderWithBundleProductFromHomepageOnDefaultStockTest">
         <annotations>
             <stories value="Bundle Product Default Stock."/>
-            <title value="Re-order button for bundle product on default stock."/>
+            <title value="Re-order bundle product on default stock."/>
             <description value="Reorder of the Order with Bundle product from Homepage on Default stock."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735206/scenarios/1677047"/>
             <severity value="CRITICAL"/>
@@ -23,120 +23,76 @@
             <!--Create test data.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
-            <createData entity="FullSource1" stepKey="additionalSource"/>
-            <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
-            <!--Assign source to stock.-->
-            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
-                <requiredEntity createDataKey="additionalStock"/>
-                <requiredEntity createDataKey="additionalSource"/>
-            </createData>
-            <!--Create  simple products-->
-            <createData entity="SimpleProduct2" stepKey="simpleProduct1">
-                <field key="quantity">2</field>
-            </createData>
-            <createData entity="SimpleProduct2" stepKey="simpleProduct2">
-                <field key="quantity">2</field>
-            </createData>
-            <!--Create Bundle product-->
-            <createData entity="BundleProductPriceViewRange" stepKey="createBundleProduct">
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="DropDownBundleOption" stepKey="createBundleOption1_1">
-                <requiredEntity createDataKey="createBundleProduct"/>
-                <field key="required">True</field>
+            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="DropDownBundleOption" stepKey="bundleProductOption">
+                <requiredEntity createDataKey="bundleProduct"/>
             </createData>
-            <createData entity="ApiBundleLink" stepKey="linkOptionToProduct">
-                <requiredEntity createDataKey="createBundleProduct"/>
-                <requiredEntity createDataKey="createBundleOption1_1"/>
-                <requiredEntity createDataKey="simpleProduct1"/>
-                <field key="qty">2</field>
-                <field key="is_default">1</field>
-            </createData>
-            <createData entity="ApiBundleLink" stepKey="linkOptionToProduct2">
-                <requiredEntity createDataKey="createBundleProduct"/>
-                <requiredEntity createDataKey="createBundleOption1_1"/>
-                <requiredEntity createDataKey="simpleProduct2"/>
-                <field key="qty">2</field>
+            <createData entity="ApiBundleLink" stepKey="bundleLink">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleProductOption"/>
+                <requiredEntity createDataKey="product"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <!--Disable additional source.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
-                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
-            <!--Clean up created data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <deleteData createDataKey="simpleProduct1" stepKey="simpleProduct1"/>
-            <deleteData createDataKey="simpleProduct2" stepKey="simpleProduct2"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
-
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
-        </actionGroup>
-
+        <!--Set simple product qty.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProduct1EditPage"/>
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource">
             <argument name="sourceCode" value="_defaultSource.source_code"/>
-            <argument name="qty" value="20" />
+            <argument name="qty" value="{{defaultProductQty.value}}" />
         </actionGroup>
-
         <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
-
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct2">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct2.product[sku]$$"/>
-        </actionGroup>
-
-        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource2">
-            <argument name="sourceCode" value="_defaultSource.source_code"/>
-            <argument name="qty" value="20" />
-        </actionGroup>
-
-        <actionGroup ref="saveProductForm" stepKey="saveProduct2"/>
-
+        <!--Create order with bundle product.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
-
-        <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToFrontPage"/>
-        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="searchStorefront">
-            <argument name="phrase" value="$createBundleProduct.name$"/>
-        </actionGroup>
-
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="openAndCheckProduct">
-            <argument name="productName" value="$createBundleProduct.name$"/>
-            <argument name="productUrlKey" value="$createBundleProduct.custom_attributes[url_key]$"/>
-        </actionGroup>
-
+        <amOnPage url="{{StorefrontProductPage.url($$bundleProduct.custom_attributes[url_key]$$)}}" stepKey="goProductPageOnStorefront"/>
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCart">
-            <argument name="productName" value="$$createBundleProduct.name$$"/>
+            <argument name="productName" value="$$bundleProduct.name$$"/>
         </actionGroup>
-
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
         <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskAfterClickNext"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectPaymentMethod"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
-
-        <amOnPage url="{{StorefrontCustomerDashboardPage.url}}" stepKey="goToCustomerDashboardPage"/>
-        <waitForPageLoad stepKey="waitForCustomerDashboardPageLoad"/>
-        <actionGroup ref="StorefrontCustomerGoToSidebarMenu" stepKey="goToMyOrdersPage">
-            <argument name="menu" value="My Orders"/>
+        <!--Reorder bundle product.-->
+        <actionGroup ref="StorefrontCustomerReorderActionGroup" stepKey="reorderBundleProduct">
+            <argument name="orderNumber" value="${orderNumber}"/>
         </actionGroup>
-
-        <click selector="//td[text()='{$orderNumber}']/following-sibling::td[@class='col actions']/a[contains(@class, 'order')]" stepKey="clickReorderBtn"/>
+        <waitForElement selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="waitForProceedToCheckoutVisible"/>
         <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPaymentToReorder"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext2"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskAfterClickNext2"/>
-
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectPaymentMethod2"/>
-        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder2"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlacedToReorder2"/>
+        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextToReorder"/>
+        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrderToReorder"/>
+        <waitForPageLoad stepKey="waitUntilOrderPlacedToReorder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessageAfterReorder"/>
+        <!--Verify reorder.-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$reorderNumber}"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 1" stepKey="orderedQuantity"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterPlaceOrder">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$product.sku$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="{{_defaultSource.name}}"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="{{_defaultStock.name}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWithTwoPieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>

@@ -9,7 +9,7 @@ define([
     'use strict';
 
     /**
-     * TODO Remove when issue will be resolved in core.
+     * TODO Remove when issue is resolved in core.
      * @see Please check issue in core for more details: https://github.com/magento/magento2/issues/22067.
      */
     return Fieldset.extend(ko).extend(
