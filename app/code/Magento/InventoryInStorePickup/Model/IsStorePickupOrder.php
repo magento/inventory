@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\InventoryInStorePickup\Model\Order\GetPickupLocationCode;
-use Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\IsStorePickupOrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**

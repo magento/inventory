@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Order\View\ShippingAddress;
 
-use Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\IsStorePickupOrderInterface;
 use Magento\Sales\Block\Adminhtml\Order\View\Info;
 use Magento\Sales\Model\Order\Address;
 

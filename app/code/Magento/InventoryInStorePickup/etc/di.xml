@@ -16,8 +16,8 @@
         <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
     </type>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
+    <preference for="Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
+    <preference for="Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
     <type name="Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender">
         <arguments>
             <argument name="identityContainer" xsi:type="object">\Magento\InventoryInStorePickup\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
@@ -44,7 +44,7 @@
         </arguments>
     </type>
     <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface" type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder"/>
+    <preference for="Magento\InventoryInStorePickupSalesApi\Model\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
     <preference for="Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
