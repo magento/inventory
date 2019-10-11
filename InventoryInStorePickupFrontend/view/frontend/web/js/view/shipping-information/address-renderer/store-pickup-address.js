@@ -32,9 +32,9 @@ define([
          * @return {String}
          */
         getCountryName: function(countryId) {
-            return  _.isUndefined(countryData()[countryId])
-                ? countryData()[countryId].name
-                : ''; //eslint-disable-line
+            return _.isUndefined(countryData()[countryId])
+                ? ''
+                : countryData()[countryId].name; //eslint-disable-line
         },
 
         extractPickupLocationFromAddress: function(address) {
