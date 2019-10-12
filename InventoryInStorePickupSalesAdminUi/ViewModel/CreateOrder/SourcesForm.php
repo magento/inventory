@@ -14,7 +14,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryInStorePickupAdminUi\Model\GetPickupSources;
+use Magento\InventoryInStorePickupSalesAdminUi\Model\GetPickupSources;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
