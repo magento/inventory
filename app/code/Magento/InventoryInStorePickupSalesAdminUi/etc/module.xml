@@ -17,7 +17,6 @@
             <module name="Magento_InventoryApi" />
             <module name="Magento_InventorySalesApi" />
             <module name="Magento_Quote"/>
-            <module name="Magento_Ui" />
         </sequence>
     </module>
 </config>
