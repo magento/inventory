@@ -14,7 +14,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PrepareIndexDataForClearingIndexTest
+ * Test that index is cleared correctly.
  */
 class PrepareIndexDataForClearingIndexTest extends TestCase
 {
@@ -28,7 +28,8 @@ class PrepareIndexDataForClearingIndexTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->prepareIndexDataForClearingIndexService = Bootstrap::getObjectManager()->get(PrepareIndexDataForClearingIndex::class);
+        $this->prepareIndexDataForClearingIndexService =
+            Bootstrap::getObjectManager()->get(PrepareIndexDataForClearingIndex::class);
     }
 
     /**
@@ -40,15 +41,18 @@ class PrepareIndexDataForClearingIndexTest extends TestCase
     {
         $indexData = new ArrayIterator(
             [
-                ['sku' => 'SKU-1',
+                [
+                    'sku' => 'SKU-1',
                     GetStockItemDataInterface::QUANTITY => '10',
                     GetStockItemDataInterface::IS_SALABLE => '0'
                 ],
-                ['sku' => 'SKU-2',
+                [
+                    'sku' => 'SKU-2',
                     GetStockItemDataInterface::QUANTITY => 10,
                     GetStockItemDataInterface::IS_SALABLE => 0
                 ],
-                ['sku' => 'SKU-3',
+                [
+                    'sku' => 'SKU-3',
                     GetStockItemDataInterface::QUANTITY => 10,
                     GetStockItemDataInterface::IS_SALABLE => null
                 ]

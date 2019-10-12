@@ -8,12 +8,12 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateShipmentForWholeOrderWithConfigurableProductFromCustomSourceTest">
+    <test name="AdminCancelOrderConfigurableProductWithDropDownAttributeAndCustomSourceTest">
         <annotations>
-            <stories value="Sales-Shipments"/>
-            <title value="Admin user created shipment for whole order with Configurable product from Test source and Main Website"/>
-            <description value="You should be able to create shipment for whole order from Custom Source."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735290/scenarios/1479373"/>
+            <stories value="Configurable Product Custom Stock."/>
+            <title value="Admin Cancel Order with Configurable Product on Custom Stock."/>
+            <description value="Verify admin able to cancel order with configurable product with drop-down attribute on custom stock."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735176/scenarios/1446500"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -49,16 +49,11 @@
                 <requiredEntity createDataKey="configurableChildProduct"/>
             </createData>
             <createData entity="Simple_US_Customer" stepKey="customer"/>
-            <createData entity="_minimalSource" stepKey="source1"/>
-            <createData entity="_minimalSource" stepKey="source2"/>
+            <createData entity="_minimalSource" stepKey="source"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
-            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
                 <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="source1"/>
-            </createData>
-            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
-                <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="source2"/>
+                <requiredEntity createDataKey="source"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <!--Assign additional source to configurable product.-->
@@ -66,11 +61,8 @@
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSource2ToProduct">
-                <argument name="sourceCode" value="$source1.source[source_code]$"/>
-            </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSource1ToProduct">
-                <argument name="sourceCode" value="$source2.source[source_code]$"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
         </before>
@@ -85,7 +77,9 @@
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <!--Disable source.-->
-            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
             <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
         </after>
 
@@ -104,14 +98,14 @@
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
-        <!--Create Shipment-->
+        <!--Verify Order.-->
         <actionGroup ref="OpenOrderById" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
-        <actionGroup ref="AdminSourceSelectionAlgorithmByPriorityActionGroup" stepKey="createShipment">
-            <argument name="sourceName" value="$source1.source[name]$"/>
-            <argument name="sourceQty" value="{{tenPiecesAddToCart.value}}"/>
-        </actionGroup>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered {{tenPiecesAddToCart.value}}" stepKey="verifyOrderedQuantity"/>
+        <!--Cancel Order.-->
+        <actionGroup ref="cancelPendingOrder" stepKey="cancelPendingOrder"/>
         <!--Verify product quantity.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProductVariation">
@@ -119,11 +113,10 @@
             <argument name="value" value="$configurableChildProduct.sku$"/>
         </actionGroup>
         <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
-            <argument name="sourceName" value="$source1.source[name]$"/>
+            <argument name="sourceName" value="$source.source[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
             <argument name="stockName" value="$stock.stock[name]$"/>
-            <argument name="sourceQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
-            <argument name="stockQty" value="{{defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQty.value}}"/>
         </actionGroup>
     </test>
 </tests>
-

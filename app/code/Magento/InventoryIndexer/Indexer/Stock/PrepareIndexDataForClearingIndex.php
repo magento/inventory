@@ -10,7 +10,7 @@ namespace Magento\InventoryIndexer\Indexer\Stock;
 use ArrayIterator;
 
 /**
- * Class PrepareIndexDataForClearingIndex
+ * Process SKU list to clear index data correctly.
  */
 class PrepareIndexDataForClearingIndex
 {
@@ -18,7 +18,6 @@ class PrepareIndexDataForClearingIndex
      * Deletes all unnecessary data from indexData for clearing
      *
      * @param ArrayIterator $indexData
-     *
      * @return ArrayIterator
      */
     public function execute(ArrayIterator $indexData): ArrayIterator
