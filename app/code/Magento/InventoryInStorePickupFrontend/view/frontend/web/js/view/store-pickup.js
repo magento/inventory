@@ -48,9 +48,9 @@ define([
             nearbySearchRadius: 5000,
             nearbySearchLimit: 50,
             defaultCountry: window.checkoutConfig.defaultCountryId,
+            rates: shippingService.getShippingRates(),
+            inStoreMethod: null,
         },
-        rates: shippingService.getShippingRates(),
-        inStoreMethod: null,
 
         /**
          * @inheritdoc
@@ -137,13 +137,11 @@ define([
          * @returns void
          */
         selectStorePickup: function() {
-            var pickupShippingMethod = _.find(
+            var pickupShippingMethod = _.findWhere(
                 this.rates(),
-                function(rate) {
-                    return (
-                        rate.carrier_code === this.rate.carrier_code &&
-                        rate.method_code === this.rate.method_code
-                    );
+                {
+                    carrier_code: this.rate.carrier_code,
+                    method_code: this.rate.method_code
                 },
                 this
             );

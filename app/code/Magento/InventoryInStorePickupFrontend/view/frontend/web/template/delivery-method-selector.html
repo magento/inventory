@@ -8,11 +8,13 @@
     <button
         class="action action-select-shipping"
         css="'selected': !isStorePickupSelected()"
-        data-bind="click: selectShipping, i18n: 'Shipping'"
+        click="selectShipping"
+        translate="'Shipping'"
     ></button>
     <button
         class="action action-select-store-pickup"
         css="'selected': isStorePickupSelected()"
-        data-bind="click: selectStorePickup , i18n: 'Pick in Store'"
+        click="selectStorePickup"
+        translate="'Pick in Store'"
     ></button>
 </div>
