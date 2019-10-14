@@ -42,17 +42,18 @@ define([
             loginFormSelector:
                 '#store-selector form[data-role=email-with-possible-login]',
             defaultCountryId: window.checkoutConfig.defaultCountryId,
+            selectedLocation: pickupLocationsService.selectedLocation,
+            quoteIsVirtual: quote.isVirtual,
+            searchQuery: '',
+            nearbyLocations: null,
+            isLoading: pickupLocationsService.isLoading,
+            popup: null,
+            searchDebounceTimeout: 300,
             imports: {
                 nearbySearchRadius: '${ $.parentName }:nearbySearchRadius',
                 nearbySearchLimit: '${ $.parentName }:nearbySearchLimit',
             },
         },
-        selectedLocation: pickupLocationsService.selectedLocation,
-        quoteIsVirtual: quote.isVirtual(),
-        searchQuery: '',
-        nearbyLocations: null,
-        isLoading: pickupLocationsService.isLoading,
-        popup: null,
 
         /**
          * @inheritDoc
@@ -78,8 +79,10 @@ define([
                         country_id: quote.shippingAddress().countryId,
                     })
                 );
-            }, 300).bind(this);
+            }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
+
+            return this;
         },
 
         /**
@@ -95,6 +98,7 @@ define([
         setPickupInformation: function() {
             var shippingAddress = quote.shippingAddress(),
                 pickupLocationCode;
+            debugger;
 
             if (this.validatePickupInformation()) {
                 pickupLocationCode = _.findWhere(shippingAddress.customAttributes, {
@@ -110,13 +114,13 @@ define([
                     },
                 });
 
-                registry.async('checkoutProvider')(function(checkoutProvider) {
-                    checkoutProvider.set('shippingAddress', shippingAddress);
+                // registry.async('checkoutProvider')(function(checkoutProvider) {
+                    // checkoutProvider.set('shippingAddress', shippingAddress);
 
-                    setShippingInformationAction().done(function() {
+                    // setShippingInformationAction().done(function() {
                         stepNavigator.next();
-                    });
-                });
+                    // });
+                // });
             }
         },
 
@@ -199,9 +203,7 @@ define([
 
             if (!customer.isLoggedIn()) {
                 $(loginFormSelector).validation();
-                emailValidationResult = Boolean(
-                    $(loginFormSelector + ' input[name=username]').valid()
-                );
+                emailValidationResult = $(loginFormSelector + ' input[name=username]').valid() ? true : false;
 
                 if (!emailValidationResult) {
                     $(this.loginFormSelector + ' input[name=username]').focus();

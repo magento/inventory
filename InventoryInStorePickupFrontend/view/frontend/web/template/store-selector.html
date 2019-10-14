@@ -4,15 +4,15 @@
  * See COPYING.txt for license details.
  */
 -->
-<div id="store-selector" data-bind="blockLoader: $parent.isLoading, css: { 'store-selected': $parent.selectedLocation }">
-    <each if="!quoteIsVirtual" args="getRegion('customer-email')" render="" />
+<div id="store-selector" data-bind="blockLoader: $parent.isLoading" css="'store-selected': $parent.selectedLocation">
+    <each if="!quoteIsVirtual()" args="getRegion('customer-email')" render="" />
     <div class="step-title" data-role="title">
         <translate args="'Store'"/>
     </div>
     <div id="checkout-step-store-selector" class="step-content" data-role="content">
         <render args="selectedLocationTemplate"/>
-        <each args="getRegion('after-selected-location')" render="" />
-        <form class="form-continue" data-bind="submit: setPickupInformation" novalidate="novalidate">
+        <each args="getRegion('after-selected-location')" render=""/>
+        <form class="form-continue" submit="setPickupInformation" novalidate="novalidate">
             <div class="actions-toolbar">
                 <div class="secondary">
                     <button type="button" class="button action" click="openPopup">
@@ -28,7 +28,8 @@
                     <button data-role="opc-continue"
                             type="submit"
                             class="button action continue primary"
-                            data-bind="enable: selectedLocation, css: {disabled: !selectedLocation}"
+                            css="disabled: !selectedLocation"
+                            enable="selectedLocation"
                             disabled
                     >
                         <span>
