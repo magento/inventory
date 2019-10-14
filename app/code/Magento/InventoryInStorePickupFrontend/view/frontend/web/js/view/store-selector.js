@@ -15,6 +15,7 @@ define([
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
+    'Magento_Checkout/js/checkout-data',
 ], function(
     $,
     _,
@@ -26,7 +27,8 @@ define([
     stepNavigator,
     addressConverter,
     setShippingInformationAction,
-    pickupLocationsService
+    pickupLocationsService,
+    checkoutData
 ) {
     'use strict';
 
@@ -96,29 +98,13 @@ define([
          * Set shipping information handler
          */
         setPickupInformation: function() {
-            var shippingAddress = quote.shippingAddress(),
-                pickupLocationCode;
+            var shippingAddress = quote.shippingAddress();
 
             if (this.validatePickupInformation()) {
-                pickupLocationCode = _.findWhere(shippingAddress.customAttributes, {
-                    attribute_code: 'pickup_location_code',
-                });
-
-                shippingAddress = $.extend(true, quote.shippingAddress(), {
-                    extension_attributes: {
-                        pickup_location_code: pickupLocationCode.value,
-                    },
-                    custom_attributes: {
-                        pickup_location_code: pickupLocationCode.value,
-                    },
-                });
-
-                registry.async('checkoutProvider')(function(checkoutProvider) {
-                    checkoutProvider.set('shippingAddress', shippingAddress);
-
-                    setShippingInformationAction().done(function() {
-                        stepNavigator.next();
-                    });
+                shippingAddress = addressConverter.quoteAddressToFormAddressData(shippingAddress);
+                checkoutData.setShippingAddressFromData(shippingAddress);
+                setShippingInformationAction().done(function() {
+                    stepNavigator.next();
                 });
             }
         },
