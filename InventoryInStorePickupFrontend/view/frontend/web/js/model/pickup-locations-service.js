@@ -133,9 +133,6 @@ define([
                     telephone: location.telephone,
                     region_id: location.region_id,
                     save_in_address_book: 0,
-                    custom_attributes: {
-                        pickup_location_code: location.pickup_location_code
-                    }
                 }),
                 {
                     canUseForBilling: function() {
@@ -143,6 +140,9 @@ define([
                     },
                     getType: function() {
                         return 'store-pickup-address';
+                    },
+                    extension_attributes: {
+                        pickup_location_code: location.pickup_location_code,
                     },
                 }
             );
