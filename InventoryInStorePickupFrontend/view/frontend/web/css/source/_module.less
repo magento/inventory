@@ -36,7 +36,9 @@
         &.selected-store-pickup {
             ~ #shipping,
             ~ #opc-shipping_method {
-                display: none !important;
+                visibility: hidden;
+                height: 0;
+                overflow: hidden;
             }
         }
     }
