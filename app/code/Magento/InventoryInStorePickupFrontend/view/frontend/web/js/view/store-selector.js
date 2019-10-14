@@ -98,7 +98,6 @@ define([
         setPickupInformation: function() {
             var shippingAddress = quote.shippingAddress(),
                 pickupLocationCode;
-            debugger;
 
             if (this.validatePickupInformation()) {
                 pickupLocationCode = _.findWhere(shippingAddress.customAttributes, {
@@ -114,13 +113,13 @@ define([
                     },
                 });
 
-                // registry.async('checkoutProvider')(function(checkoutProvider) {
-                    // checkoutProvider.set('shippingAddress', shippingAddress);
+                registry.async('checkoutProvider')(function(checkoutProvider) {
+                    checkoutProvider.set('shippingAddress', shippingAddress);
 
-                    // setShippingInformationAction().done(function() {
+                    setShippingInformationAction().done(function() {
                         stepNavigator.next();
-                    // });
-                // });
+                    });
+                });
             }
         },
 
