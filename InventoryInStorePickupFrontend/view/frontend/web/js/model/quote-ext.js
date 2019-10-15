@@ -5,11 +5,11 @@
 
 define([
     'ko',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-address-converter',
-], function(ko, pickupAddressConverter) {
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-address-converter'
+], function (ko, pickupAddressConverter) {
     'use strict';
 
-    return function(quote) {
+    return function (quote) {
         var shippingAddress = quote.shippingAddress;
 
         /**
@@ -17,14 +17,21 @@ define([
          * to a store pickup location.
          */
         quote.shippingAddress = ko.pureComputed({
-            read: function() {
+            /**
+             * Return quote shipping address
+             */
+            read: function () {
                 return shippingAddress();
             },
-            write: function(address) {
+
+            /**
+             * Set quote shipping address
+             */
+            write: function (address) {
                 shippingAddress(
                     pickupAddressConverter.formatAddressToPickupAddress(address)
                 );
-            },
+            }
         });
 
         return quote;

@@ -16,8 +16,8 @@ define([
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/model/shipping-rate-service',
     'Magento_InventoryInStorePickupFrontend/js/model/shipping-rate-processor/store-pickup-address',
-    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-], function(
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service'
+], function (
     Component,
     _,
     $,
@@ -42,30 +42,30 @@ define([
             isAvailable: false,
             isStorePickupSelected: false,
             rate: {
-                carrier_code: 'in_store',
-                method_code: 'pickup',
+                'carrier_code': 'in_store',
+                'method_code': 'pickup'
             },
             nearbySearchRadius: 5000,
             nearbySearchLimit: 50,
             defaultCountry: window.checkoutConfig.defaultCountryId,
             rates: shippingService.getShippingRates(),
-            inStoreMethod: null,
+            inStoreMethod: null
         },
 
         /**
          * @inheritdoc
          */
-        initialize: function() {
+        initialize: function () {
             this._super();
 
             shippingRateService.registerProcessor('store-pickup-address', shippingRateProcessor);
 
-            quote.shippingAddress.subscribe(function(shippingAddress) {
+            quote.shippingAddress.subscribe(function (shippingAddress) {
                 this.convertAddressType(shippingAddress);
             }, this);
             this.convertAddressType(quote.shippingAddress());
 
-            this.isStorePickupSelected.subscribe(function() {
+            this.isStorePickupSelected.subscribe(function () {
                 this.preselectLocation();
             }, this);
             this.preselectLocation();
@@ -74,19 +74,21 @@ define([
         },
 
         /**
-         * @inheritDoc
+         * Init component observable variables
+         *
+         * @return {exports}
          */
-        initObservable: function() {
+        initObservable: function () {
             this._super().observe(['isVisible']);
 
-            this.isStorePickupSelected = ko.pureComputed(function() {
+            this.isStorePickupSelected = ko.pureComputed(function () {
                 return _.isMatch(quote.shippingMethod(), this.rate);
             }, this);
 
-            this.isAvailable = ko.pureComputed(function() {
+            this.isAvailable = ko.pureComputed(function () {
                 return _.findWhere(this.rates(), {
-                    carrier_code: this.rate.carrier_code,
-                    method_code: this.rate.method_code,
+                    'carrier_code': this.rate['carrier_code'],
+                    'method_code': this.rate['method_code']
                 });
             }, this);
 
@@ -98,10 +100,12 @@ define([
          *
          * @returns void
          */
-        syncWithShipping: function() {
-            var shippingStep = _.findWhere(stepNavigator.steps(), {code: 'shipping'});
+        syncWithShipping: function () {
+            var shippingStep = _.findWhere(stepNavigator.steps(), {
+                code: 'shipping'
+            });
 
-            shippingStep.isVisible.subscribe(function(isShippingVisible) {
+            shippingStep.isVisible.subscribe(function (isShippingVisible) {
                 this.isVisible(this.isAvailable && isShippingVisible);
             }, this);
             this.isVisible(this.isAvailable && shippingStep.isVisible());
@@ -110,13 +114,13 @@ define([
         /**
          * @returns void
          */
-        selectShipping: function() {
+        selectShipping: function () {
             var nonPickupShippingMethod = _.find(
                 this.rates(),
-                function(rate) {
+                function (rate) {
                     return (
-                        rate.carrier_code !== this.rate.carrier_code &&
-                        rate.method_code !== this.rate.method_code
+                        rate['carrier_code'] !== this.rate['carrier_code'] &&
+                        rate['method_code'] !== this.rate['method_code']
                     );
                 },
                 this
@@ -124,7 +128,7 @@ define([
 
             this.selectShippingMethod(nonPickupShippingMethod);
 
-            registry.async('checkoutProvider')(function(checkoutProvider) {
+            registry.async('checkoutProvider')(function (checkoutProvider) {
                 checkoutProvider.set(
                     'shippingAddress',
                     quote.shippingAddress()
@@ -136,12 +140,12 @@ define([
         /**
          * @returns void
          */
-        selectStorePickup: function() {
+        selectStorePickup: function () {
             var pickupShippingMethod = _.findWhere(
                 this.rates(),
                 {
-                    carrier_code: this.rate.carrier_code,
-                    method_code: this.rate.method_code
+                    'carrier_code': this.rate['carrier_code'],
+                    'method_code': this.rate['method_code']
                 },
                 this
             );
@@ -153,7 +157,7 @@ define([
         /**
          * @param {Object} shippingMethod
          */
-        selectShippingMethod: function(shippingMethod) {
+        selectShippingMethod: function (shippingMethod) {
             selectShippingMethodAction(shippingMethod);
             checkoutData.setSelectedShippingAddress(
                 quote.shippingAddress().getKey()
@@ -164,19 +168,30 @@ define([
          * @param {Object} shippingAddress
          * @returns void
          */
-        convertAddressType: function(shippingAddress) {
+        convertAddressType: function (shippingAddress) {
             if (
                 !this.isStorePickupAddress(shippingAddress) &&
                 this.isStorePickupSelected()
             ) {
                 quote.shippingAddress(
                     $.extend({}, shippingAddress, {
-                        canUseForBilling: function() {
+                        /**
+                         * Is address can be used for billing
+                         *
+                         * @return {Boolean}
+                         */
+                        canUseForBilling: function () {
                             return false;
                         },
-                        getType: function() {
+
+                        /**
+                         * Returns address type
+                         *
+                         * @return {String}
+                         */
+                        getType: function () {
                             return 'store-pickup-address';
-                        },
+                        }
                     })
                 );
             }
@@ -185,7 +200,7 @@ define([
         /**
          * @returns void
          */
-        preselectLocation: function() {
+        preselectLocation: function () {
             var selectedLocation,
                 shippingAddress,
                 customAttributes,
@@ -197,21 +212,23 @@ define([
             }
 
             selectedLocation = pickupLocationsService.selectedLocation();
+
             if (selectedLocation) {
                 pickupLocationsService.selectForShipping(selectedLocation);
+
                 return;
             }
 
             shippingAddress = quote.shippingAddress();
             customAttributes = shippingAddress.customAttributes || [];
             selectedSourceCode = _.findWhere(customAttributes, {
-                attribute_code: 'sourceCode',
+                'attribute_code': 'sourceCode'
             });
 
             if (selectedSourceCode) {
                 pickupLocationsService
                     .getLocation(selectedSourceCode.value)
-                    .then(function(location) {
+                    .then(function (location) {
                         pickupLocationsService.selectForShipping(location);
                     });
             } else if (shippingAddress.city && shippingAddress.postcode) {
@@ -222,11 +239,11 @@ define([
                             country: shippingAddress.countryId || this.defaultCountry,
                             postcode: shippingAddress.postcode,
                             city: shippingAddress.city,
-                            region: shippingAddress.region,
+                            region: shippingAddress.region
                         },
-                        pageSize: this.nearbySearchLimit,
+                        pageSize: this.nearbySearchLimit
                     })
-                    .then(function(locations) {
+                    .then(function (locations) {
                         nearestLocation = locations[0];
 
                         if (nearestLocation) {
@@ -239,11 +256,11 @@ define([
         },
 
         /**
-         * @param address
-         * @returns {boolean}
+         * @param {Object} address
+         * @returns {Boolean}
          */
-        isStorePickupAddress: function(address) {
+        isStorePickupAddress: function (address) {
             return address.getType() === 'store-pickup-address';
-        },
+        }
     });
 });

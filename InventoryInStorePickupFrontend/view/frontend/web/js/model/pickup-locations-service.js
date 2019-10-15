@@ -15,7 +15,7 @@ define([
     'underscore',
     'mage/translate',
     'mage/url'
-], function(
+], function (
     $,
     ko,
     resourceUrlManager,
@@ -40,23 +40,24 @@ define([
         /**
          * Get shipping rates for specified address.
          *
-         * @param {string} sourceCode
+         * @param {String} sourceCode
          */
-        getLocation: function(sourceCode) {
+        getLocation: function (sourceCode) {
             var serviceUrl = resourceUrlManager.getUrlForPickupLocation(websiteCode, sourceCode);
 
             this.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
-                .then(function(address) {
+                .then(function (address) {
                     return this.formatAddress(address);
                 }.bind(this))
-                .fail(function(response) {
+                .fail(function (response) {
                     this.processError(response);
+
                     return [];
                 }.bind(this))
-                .always(function() {
+                .always(function () {
                     this.isLoading(false);
                 }.bind(this));
         },
@@ -64,24 +65,25 @@ define([
         /**
          * Get all pickup locations defined for given sales channel.
          */
-        getLocations: function() {
-            var self = this;
-            var serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel('website', websiteCode);
+        getLocations: function () {
+            var self = this,
+                serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel('website', websiteCode);
 
             self.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
-                .then(function(result) {
-                    return _.map(result.items, function(address) {
+                .then(function (result) {
+                    return _.map(result.items, function (address) {
                         return self.formatAddress(address);
                     });
                 })
-                .fail(function(response) {
+                .fail(function (response) {
                     self.processError(response);
+
                     return [];
                 })
-                .always(function() {
+                .always(function () {
                     self.isLoading(false);
                 });
         },
@@ -89,10 +91,10 @@ define([
         /**
          * Get nearby pickup locations based on given search criteria.
          *
-         * @param {object} searchCriteria Search criteria object.
+         * @param {Object} searchCriteria - Search criteria object.
          * @see Magento/InventoryInStorePickup/Model/SearchCriteria/GetNearbyLocationsCriteria.php
          */
-        getNearbyLocations: function(searchCriteria) {
+        getNearbyLocations: function (searchCriteria) {
             var self = this,
                 serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(websiteCode, searchCriteria);
 
@@ -100,16 +102,17 @@ define([
 
             return storage
                 .get(serviceUrl, {}, false)
-                .then(function(result) {
-                    return _.map(result.items, function(address) {
+                .then(function (result) {
+                    return _.map(result.items, function (address) {
                         return self.formatAddress(address);
                     });
                 })
-                .fail(function(response) {
+                .fail(function (response) {
                     self.processError(response);
+
                     return [];
                 })
-                .always(function() {
+                .always(function () {
                     self.isLoading(false);
                 });
         },
@@ -120,7 +123,7 @@ define([
          * @param {Object} location
          * @returns void
          */
-        selectForShipping: function(location) {
+        selectForShipping: function (location) {
             var address = $.extend(
                 {},
                 addressConverter.formAddressDataToQuoteAddress({
@@ -129,21 +132,31 @@ define([
                     street: location.street,
                     city: location.city,
                     postcode: location.postcode,
-                    country_id: location.country_id,
+                    'country_id': location['country_id'],
                     telephone: location.telephone,
-                    region_id: location.region_id,
-                    save_in_address_book: 0,
+                    'region_id': location['region_id'],
+                    'save_in_address_book': 0
                 }),
                 {
-                    canUseForBilling: function() {
+                    /**
+                     * Is address can be used for billing
+                     *
+                     * @return {Boolean}
+                     */
+                    canUseForBilling: function () {
                         return false;
                     },
-                    getType: function() {
+                    /**
+                     * Returns address type
+                     *
+                     * @return {String}
+                     */
+                    getType: function () {
                         return 'store-pickup-address';
                     },
-                    extension_attributes: {
-                        pickup_location_code: location.pickup_location_code,
-                    },
+                    'extension_attributes': {
+                        'pickup_location_code': location['pickup_location_code']
+                    }
                 }
             );
 
@@ -155,9 +168,9 @@ define([
         /**
          * Formats address returned by REST endpoint to match checkout address field naming.
          *
-         * @param {object} address Address object returned by REST endpoint.
+         * @param {Object} address - Address object returned by REST endpoint.
          */
-        formatAddress: function(address) {
+        formatAddress: function (address) {
             return {
                 name: address.name,
                 description: address.description,
@@ -166,15 +179,15 @@ define([
                 street: [address.street],
                 city: address.city,
                 postcode: address.postcode,
-                country_id: address.country_id,
-                country: this.getCountryName(address.country_id),
+                'country_id': address['country_id'],
+                country: this.getCountryName(address['country_id']),
                 telephone: address.phone,
-                region_id: address.region_id,
+                'region_id': address['region_id'],
                 region: this.getRegionName(
-                    address.country_id,
-                    address.region_id
+                    address['country_id'],
+                    address['region_id']
                 ),
-                pickup_location_code: address.pickup_location_code,
+                'pickup_location_code': address['pickup_location_code']
             };
         },
 
@@ -184,21 +197,21 @@ define([
          * @param {*} countryId
          * @return {String}
          */
-        getCountryName: function(countryId) {
-            return countryData()[countryId] !== undefined
-                ? countryData()[countryId].name
+        getCountryName: function (countryId) {
+            return countryData()[countryId] !== undefined ?
+                countryData()[countryId].name
                 : ''; //eslint-disable-line
         },
 
         /**
          * Returns region name based on given country and region identifiers.
          *
-         * @param {string} countryId Country identifier.
-         * @param {string} regionId Region identifier.
+         * @param {String} countryId - Country identifier.
+         * @param {String} regionId - Region identifier.
          */
-        getRegionName: function(countryId, regionId) {
-            var regions = countryData()[countryId]
-                ? countryData()[countryId].regions
+        getRegionName: function (countryId, regionId) {
+            var regions = countryData()[countryId] ?
+                countryData()[countryId].regions
                 : null;
 
             return regions && regions[regionId] ? regions[regionId].name : '';
@@ -210,13 +223,14 @@ define([
          * @param {Object} response
          * @returns void
          */
-        processError: function(response) {
+        processError: function (response) {
             var expr = /([%])\w+/g,
                 error;
 
             if (response.status === 401) {
                 //eslint-disable-line eqeqeq
                 window.location.replace(url.build('customer/account/login/'));
+
                 return;
             }
 
@@ -229,7 +243,7 @@ define([
             }
 
             if (error.hasOwnProperty('parameters')) {
-                error = error.message.replace(expr, function(varName) {
+                error = error.message.replace(expr, function (varName) {
                     varName = varName.substr(1);
 
                     if (error.parameters.hasOwnProperty(varName)) {
@@ -239,6 +253,6 @@ define([
                     return error.parameters.shift();
                 });
             }
-        },
+        }
     };
 });

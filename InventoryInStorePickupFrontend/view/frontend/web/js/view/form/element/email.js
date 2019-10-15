@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-define(['jquery', 'Magento_Checkout/js/view/form/element/email'], function(
+define(['jquery', 'Magento_Checkout/js/view/form/element/email'], function (
     $,
     Component
 ) {
@@ -15,8 +15,8 @@ define(['jquery', 'Magento_Checkout/js/view/form/element/email'], function(
                 'Magento_InventoryInStorePickupFrontend/form/element/email',
             links: {
                 email:
-                    'checkout.steps.shipping-step.shippingAddress.customer-email:email',
-            },
-        },
+                    'checkout.steps.shipping-step.shippingAddress.customer-email:email'
+            }
+        }
     });
 });

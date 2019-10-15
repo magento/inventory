@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-define([], function() {
+define([], function () {
     'use strict';
 
     return {
@@ -11,6 +11,6 @@ define([], function() {
         /**
          * @param {Object} address
          */
-        getRates: function(address) {},
+        getRates: function (address) {}
     };
 });
