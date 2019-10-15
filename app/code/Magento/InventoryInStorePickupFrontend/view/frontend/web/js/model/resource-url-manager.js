@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
+define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function (
     $,
     resourceUrlManager
 ) {
@@ -13,16 +13,16 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
         /**
          * Returns URL for REST API to fetch nearby pickup locations defined for given sales channel.
          *
-         * @param {string} salesChannelCode Code of the sales channel.
-         * @param {object} searchCriteria.
+         * @param {String} salesChannelCode - Code of the sales channel.
+         * @param {Object} searchCriteria
          */
-        getUrlForNearbyPickupLocations: function(
+        getUrlForNearbyPickupLocations: function (
             salesChannelCode,
             searchCriteria
         ) {
             var urls = {
                     default:
-                        '/inventory/in-store-pickup/pickup-locations/',
+                        '/inventory/in-store-pickup/pickup-locations/'
                 },
                 criteria = {
                     searchRequest: {
@@ -31,8 +31,9 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
                 };
 
             searchCriteria = {
-                searchRequest: searchCriteria,
+                searchRequest: searchCriteria
             };
+
             return (
                 resourceUrlManager.getUrl(urls, {}) +
                 '?' +
@@ -43,20 +44,20 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
         /**
          * Returns URL for REST API to fetch all pickup locations defined for given sales channel.
          *
-         * @param {string} salesChannelType Type of the sales channel, e.g. website.
-         * @param {string} salesChannelCode Code of the sales channel.
+         * @param {String} salesChannelType - Type of the sales channel, e.g. website.
+         * @param {String} salesChannelCode - Code of the sales channel.
          */
-        getUrlForPickupLocationsAssignedToSalesChannel: function(
+        getUrlForPickupLocationsAssignedToSalesChannel: function (
             salesChannelType,
             salesChannelCode
         ) {
             var params = {
                     salesChannelType: salesChannelType,
-                    salesChannelCode: salesChannelCode,
+                    salesChannelCode: salesChannelCode
                 },
                 urls = {
-                    default: '/inventory/in-store-pickup/pickup-locations-assigned-to-sales-channel/'
-                        + ':salesChannelType/:salesChannelCode',
+                    default: '/inventory/in-store-pickup/pickup-locations-assigned-to-sales-channel/' +
+                        ':salesChannelType/:salesChannelCode'
                 };
 
             return resourceUrlManager.getUrl(urls, params);
@@ -65,15 +66,15 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
         /**
          * Returns URL for REST API to fetch pickup location with given code defined for given sales channel.
          *
-         * @param {string} salesChannelCode Code of the sales channel.
-         * @param {string} pickupLocationCode Code of the pickup location.
+         * @param {String} salesChannelCode - Code of the sales channel.
+         * @param {String} pickupLocationCode - Code of the pickup location.
          */
-        getUrlForPickupLocation: function(
+        getUrlForPickupLocation: function (
             salesChannelCode,
             pickupLocationCode
         ) {
             var urls = {
-                    default: '/inventory/in-store-pickup/pickup-locations/',
+                    default: '/inventory/in-store-pickup/pickup-locations/'
                 },
                 searchRequest = {
                     searchRequest: {
@@ -86,9 +87,9 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function(
                     }
                 };
 
-            return resourceUrlManager.getUrl(urls, {})
-                + '?'
-                + $.param(searchRequest);
-        },
+            return resourceUrlManager.getUrl(urls, {}) +
+                '?' +
+                $.param(searchRequest);
+        }
     };
 });

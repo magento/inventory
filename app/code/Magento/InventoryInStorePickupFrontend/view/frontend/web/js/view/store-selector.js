@@ -15,8 +15,8 @@ define([
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-    'Magento_Checkout/js/checkout-data',
-], function(
+    'Magento_Checkout/js/checkout-data'
+], function (
     $,
     _,
     Component,
@@ -53,22 +53,24 @@ define([
             searchDebounceTimeout: 300,
             imports: {
                 nearbySearchRadius: '${ $.parentName }:nearbySearchRadius',
-                nearbySearchLimit: '${ $.parentName }:nearbySearchLimit',
-            },
+                nearbySearchLimit: '${ $.parentName }:nearbySearchLimit'
+            }
         },
 
         /**
-         * @inheritDoc
+         * Init component
+         *
+         * @return {exports}
          */
-        initialize: function() {
+        initialize: function () {
             var updateNearbyLocations,
                 postcode,
                 city;
 
             this._super();
 
-            updateNearbyLocations = _.debounce(function(searchQuery) {
-                city = searchQuery.replace(/(\d+[\-]?\d+)/, function(match) {
+            updateNearbyLocations = _.debounce(function (searchQuery) {
+                city = searchQuery.replace(/(\d+[\-]?\d+)/, function (match) {
                     postcode = match;
 
                     return '';
@@ -78,7 +80,7 @@ define([
                     addressConverter.formAddressDataToQuoteAddress({
                         city: city,
                         postcode: postcode,
-                        country_id: quote.shippingAddress().countryId,
+                        'country_id': quote.shippingAddress().countryId
                     })
                 );
             }, this.searchDebounceTimeout).bind(this);
@@ -88,22 +90,24 @@ define([
         },
 
         /**
-         * @inheritDoc
+         * Init component observable variables
+         *
+         * @return {exports}
          */
-        initObservable: function() {
+        initObservable: function () {
             return this._super().observe(['nearbyLocations', 'searchQuery']);
         },
 
         /**
          * Set shipping information handler
          */
-        setPickupInformation: function() {
+        setPickupInformation: function () {
             var shippingAddress = quote.shippingAddress();
 
             if (this.validatePickupInformation()) {
                 shippingAddress = addressConverter.quoteAddressToFormAddressData(shippingAddress);
                 checkoutData.setShippingAddressFromData(shippingAddress);
-                setShippingInformationAction().done(function() {
+                setShippingInformationAction().done(function () {
                     stepNavigator.next();
                 });
             }
@@ -112,7 +116,7 @@ define([
         /**
          * @return {*}
          */
-        getPopup: function() {
+        getPopup: function () {
             if (!this.popup) {
                 this.popup = modal(
                     this.popUpList.options,
@@ -126,7 +130,7 @@ define([
         /**
          * @returns void
          */
-        openPopup: function() {
+        openPopup: function () {
             var shippingAddress = quote.shippingAddress();
 
             this.getPopup().openModal();
@@ -137,27 +141,27 @@ define([
         },
 
         /**
-         * @param location
+         * @param {Object} location
          * @returns void
          */
-        selectPickupLocation: function(location) {
+        selectPickupLocation: function (location) {
             pickupLocationsService.selectForShipping(location);
             this.getPopup().closeModal();
         },
 
         /**
-         * @param location
-         * @returns {*|boolean}
+         * @param {Object} location
+         * @returns {*|Boolean}
          */
-        isPickupLocationSelected: function(location) {
+        isPickupLocationSelected: function (location) {
             return _.isEqual(this.selectedLocation(), location);
         },
 
         /**
-         * @param address
+         * @param {Object} address
          * @returns {*}
          */
-        updateNearbyLocations: function(address) {
+        updateNearbyLocations: function (address) {
             var self = this;
 
             return pickupLocationsService
@@ -167,22 +171,22 @@ define([
                         country: this.defaultCountryId,
                         city: address.city,
                         postcode: address.postcode,
-                        region: address.region,
+                        region: address.region
                     },
                     pageSize: this.nearbySearchLimit
                 })
-                .then(function(locations) {
+                .then(function (locations) {
                     self.nearbyLocations(locations);
                 })
-                .fail(function() {
+                .fail(function () {
                     self.nearbyLocations([]);
                 });
         },
 
         /**
-         * @returns {boolean}
+         * @returns {Boolean}
          */
-        validatePickupInformation: function() {
+        validatePickupInformation: function () {
             var emailValidationResult,
                 loginFormSelector = this.loginFormSelector;
 
@@ -198,6 +202,6 @@ define([
             }
 
             return true;
-        },
+        }
     });
 });
