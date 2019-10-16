@@ -41,6 +41,16 @@
             </skip>
         </annotations>
     </test>
+
+    <!-- MAGETWO-87435 -->
+    <test name="EndToEndB2CGuestUserMysqlTest">
+        <annotations>
+            <skip>
+                <issueId value="MSI-1631"/>
+            </skip>
+        </annotations>
+    </test>
+
     <!-- MAGETWO-87653 -->
     <test name="EndToEndB2CLoggedInUserTest">
         <annotations>
