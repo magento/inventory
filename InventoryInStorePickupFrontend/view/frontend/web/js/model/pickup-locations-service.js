@@ -146,6 +146,7 @@ define([
                     canUseForBilling: function () {
                         return false;
                     },
+
                     /**
                      * Returns address type
                      *
