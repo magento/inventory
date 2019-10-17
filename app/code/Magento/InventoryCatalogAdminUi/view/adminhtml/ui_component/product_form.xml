@@ -141,12 +141,7 @@
                         </select>
                     </formElements>
                 </field>
-                <field name="quantity" formElement="input" sortOrder="50">
-                    <argument name="data" xsi:type="array">
-                        <item name="config" xsi:type="array">
-                            <item name="default" xsi:type="number">0.0</item>
-                        </item>
-                    </argument>
+                <field name="quantity" component="Magento_InventoryCatalogAdminUi/js/product/form/sources/qty" formElement="input" sortOrder="50">
                     <settings>
                         <dataType>text</dataType>
                         <dataScope>quantity</dataScope>
@@ -159,6 +154,8 @@
                         <disabled>true</disabled>
                         <imports>
                             <link name="disabled">!${ $.provider }:data.product.stock_data.manage_stock</link>
+                            <link name="handleChanges">${$.provider}:data.product.stock_data.is_qty_decimal</link>
+                            <link name="setDefaultValue">${$.provider}:data.product.stock_data.is_qty_decimal</link>
                         </imports>
                     </settings>
                 </field>
