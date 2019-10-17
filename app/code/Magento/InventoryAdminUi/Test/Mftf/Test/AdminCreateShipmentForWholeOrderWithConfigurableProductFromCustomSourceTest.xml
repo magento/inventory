@@ -20,195 +20,110 @@
         </annotations>
 
         <before>
-            <createData entity="Simple_US_Customer" stepKey="createCustomer"/>
-            <createData entity="_minimalSource" stepKey="createSource1"/>
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
-            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-
-            <!-- Assign Sources to Stock -->
-            <actionGroup ref="AssignSourceToStockActionGroup" stepKey="assignSourceToStock1">
-                <argument name="stockName" value="$$createStock.stock[name]$$"/>
-                <argument name="sourceName" value="$$createSource1.source[name]$$"/>
+            <!--Create test data.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="ApiConfigurableProduct" stepKey="configurableProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="productAttributeWithTwoOptions" stepKey="configurableProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="configurableProductAttributeOption">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <createData entity="AddToDefaultSet" stepKey="createConfigAddToAttributeSet">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <getData entity="ProductAttributeOptionGetter" index="1" stepKey="getConfigAttributeOption">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </getData>
+            <createData entity="ApiSimpleOne" stepKey="configurableChildProduct">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductTwoOptions" stepKey="configurableProductOption">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="configurableProductAddChild">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableChildProduct"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="_minimalSource" stepKey="source1"/>
+            <createData entity="_minimalSource" stepKey="source2"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source1"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source2"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <!--Assign additional source to configurable product.-->
+            <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
-
-            <!-- Create Configurable Product -->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGrid"/>
-            <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>
-            <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickOnAddProductToggle"/>
-            <click selector="{{AdminProductGridActionSection.addTypeProduct('configurable')}}"
-                   stepKey="addConfigurableProduct"/>
-            <waitForPageLoad time="30" stepKey="waitForConfigurableProductNewPageLoad"/>
-
-            <fillField userInput="{{ConfigurableMsiProduct.name}}" selector="{{AdminProductFormSection.productName}}"
-                       stepKey="fillProductName"/>
-            <fillField userInput="{{ConfigurableMsiProduct.price}}" selector="{{AdminProductFormSection.productPrice}}"
-                       stepKey="fillProductPrice"/>
-            <fillField userInput="{{ConfigurableMsiProduct.sku}}" selector="{{AdminProductFormSection.productSku}}"
-                       stepKey="fillProductSku"/>
-            <fillField userInput="{{ConfigurableMsiProduct.quantity}}"
-                       selector="{{AdminConfigurableProductFormSection.productQuantity}}"
-                       stepKey="fillProductQuantity"/>
-            <fillField userInput="{{ConfigurableMsiProduct.weight}}"
-                       selector="{{AdminConfigurableProductFormSection.productWeight}}" stepKey="fillProductWeight"/>
-
-            <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
-                                        parameterArray="[$$createCategory.name$$]" stepKey="searchAndSelectCategory"/>
-            <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}"
-                   stepKey="clickOnTheCreateConfigurationsButton"/>
-            <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30"
-                                   stepKey="waitForGridPresents"/>
-
-            <click selector="{{AdminGridRow.checkboxByValue('color')}}" stepKey="selectColorAttribute"/>
-            <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToSecondStep"/>
-
-            <click selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="addNewColorWhite"/>
-            <fillField userInput="{{colorProductAttribute1.name}}"
-                       selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="setNameWhite"/>
-            <click selector="{{AdminCreateProductConfigurationsPanel.saveAttribute}}" stepKey="saveWhiteColor"/>
-
-            <click selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="addNewColorRed"/>
-            <fillField userInput="{{colorProductAttribute2.name}}"
-                       selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="setNameRed"/>
-            <click selector="{{AdminCreateProductConfigurationsPanel.saveAttribute}}" stepKey="saveRedColor"/>
-
-            <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToThirdStep"/>
-
-            <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}"
-                   stepKey="clickOnApplySingleQuantityToEachSku"/>
-
-            <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}"
-                   stepKey="openSelectSourcesModalWindow1"/>
-            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
-                              dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
-                              stepKey="clearSourcesFilter"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomSourceByNameForAssignment">
-                <argument name="keyword" value="$$createSource1.source[name]$$"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSource2ToProduct">
+                <argument name="sourceCode" value="$source1.source[source_code]$"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}"
-                   stepKey="selectCustomSource1"/>
-            <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources1"/>
-            <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSource('0')}}"
-                       userInput="100" stepKey="fillQuantityForCustomSource1"/>
-
-            <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToFourthStep"/>
-            <click selector="{{AdminCreateProductConfigurationsPanel.next}}"
-                   stepKey="doneGeneratingConfigurableVariations"/>
-
-            <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableProduct"/>
-            <conditionalClick selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}"
-                              dependentSelector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" visible="true"
-                              stepKey="confirmDefaultAttributeSetForConfigurableProduct"/>
-            <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductSavedMessage"/>
-
-            <seeNumberOfElements selector="{{AdminProductFormConfigurationsSection.currentVariationsRows}}"
-                                 userInput="2" stepKey="checkConfigurableMatrix"/>
-            <see selector="{{AdminProductFormConfigurationsSection.currentVariationsNameCells}}"
-                 userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteAttributeVariationName"/>
-            <see selector="{{AdminProductFormConfigurationsSection.currentVariationsNameCells}}"
-                 userInput="{{colorProductAttribute2.name}}" stepKey="checkRedAttributeVariationName"/>
-            <see selector="{{AdminProductFormConfigurationsSection.currentVariationsSkuCells}}"
-                 userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteAttributeVariationSku"/>
-            <see selector="{{AdminProductFormConfigurationsSection.currentVariationsSkuCells}}"
-                 userInput="{{colorProductAttribute2.name}}" stepKey="checkRedAttributeVariationSku"/>
-            <see selector="{{AdminConfigurableProductFormSection.currentVariationsQuantityCells}}" userInput="100"
-                 stepKey="checkQtyIsCorrectForCustomSource"/>
-
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSource1ToProduct">
+                <argument name="sourceCode" value="$source2.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
         </before>
         <after>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
-                <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
-            </actionGroup>
+            <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="configurableChildProduct" stepKey="deleteConfigurableProductVariation"/>
+            <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigurableProductAttribute"/>
             <!--Assign Default Stock to Main Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
-            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
-            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
-            <deleteData createDataKey="createStock" stepKey="deleteCustomStock"/>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
         </after>
 
-        <!-- Login as Customer and add Product to Cart-->
-        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="customerLogin">
-            <argument name="Customer" value="$$createCustomer$$"/>
+        <!--Add configurable product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$" />
         </actionGroup>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategory"/>
-        <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
-        <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo(ConfigurableMsiProduct.name)}}"
-               stepKey="openProductPage"/>
-        <waitForAjaxLoad stepKey="waitForImageLoader"/>
-        <selectOption selector="{{StorefrontConfigurableProductPage.productAttributeDropDown}}"
-                      userInput="{{colorProductAttribute1.name}}" stepKey="selectWhiteVariation"/>
-        <seeOptionIsSelected selector="{{StorefrontConfigurableProductPage.productAttributeDropDown}}"
-                             userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteVariationIsSelected"/>
-        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="5" stepKey="fillQuantity"/>
-        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
-        <waitForElementVisible selector="{{StorefrontProductPageSection.successMsg}}" time="30"
-                               stepKey="waitForProductAdded"/>
-
-        <!-- Place Order -->
-        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <conditionalClick selector="{{CheckoutPaymentSection.cartItemsArea}}"
-                          dependentSelector="{{CheckoutPaymentSection.cartItemsArea}}" visible="true"
-                          stepKey="exposeMiniCart"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForCartItem"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForPayment"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="checkMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
-        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
-
-        <!-- Source Selection -->
+        <actionGroup ref="StorefrontAddConfigurableProductToTheCartActionGroup" stepKey="addConfigurableProductToCart">
+            <argument name="urlKey" value="$configurableProduct.custom_attributes[url_key]$" />
+            <argument name="productAttribute" value="$configurableProductAttribute.default_value$"/>
+            <argument name="productOption" value="$getConfigAttributeOption.value$"/>
+            <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Create Shipment-->
         <actionGroup ref="OpenOrderById" stepKey="openOrder">
-            <argument name="orderId" value="{$grabOrderNumber}"/>
+            <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
-        <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForShipLoadingMask"/>
-
-        <!--<see selector="{{AdminItemsOrderedSection.sku('0')}}" userInput="{{ConfigurableMsiProduct.sku}}"-->
-             <!--stepKey="sourceSelectionCheckSku"/>-->
-        <!--<see selector="{{AdminItemsOrderedSection.qtyToShip('0')}}" userInput="5" stepKey="sourceSelectionCheckQty"/>-->
-
-        <!--<selectOption selector="{{AdminSelectSourceSection.sourceSelection}}" userInput="$$createSource1.source[name]$$"-->
-                      <!--stepKey="sourceSelectionSelectFirstSource"/>-->
-
-        <!--<click selector="{{AdminSourceSelectionControlsSection.proceedToShipmentButton}}" stepKey="proceedToShipment"/>-->
-        <!--<waitForPageLoad stepKey="waitShipmentPage"/>-->
-        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="submitShipment"/>
-
-        <!--Verify message "The shipment has been created." -->
-        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created."
-             stepKey="seeShipmentCreateSuccess"/>
-
-        <!-- Verify that your Order got status "Processing" -->
-        <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="Processing"
-             stepKey="seeOrderStatus"/>
-
-        <!-- Verify Shipment is present in "Shipments" tab of Order -->
-        <click selector="{{AdminOrderDetailsOrderViewSection.shipments}}" stepKey="clickOrderShipmentsTab"/>
-        <waitForLoadingMaskToDisappear stepKey="waitToSeeShipmentCreated"/>
-        <seeElement selector="{{AdminOrderShipmentsTabSection.gridRow('1')}}" stepKey="seeShipmentInGrid"/>
-
-        <!-- Verify Source Quantities and Salable Quantity are Correct-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexToFinalCheck"/>
-        <waitForPageLoad time="30" stepKey="waitFoProductIndexrPageLoad"/>
-
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsToFinalCheck">
+        <actionGroup ref="AdminSourceSelectionAlgorithmByPriorityActionGroup" stepKey="createShipment">
+            <argument name="sourceName" value="$source1.source[name]$"/>
+            <argument name="sourceQty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProductVariation">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="{{ConfigurableMsiProduct.sku}}"/>
+            <argument name="value" value="$configurableChildProduct.sku$"/>
         </actionGroup>
-
-        <see selector="{{AdminGridRow.rowOne}}" userInput="{{colorProductAttribute1.name}}"
-             stepKey="seeProductNameInGrid"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="100" stepKey="seeProductPriceInGrid"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createSource1.source[name]$$: 95" stepKey="seeProductQuantityInGridSource1"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createStock.stock[name]$$: 95" stepKey="seeProductSalableQuantityInGridSource"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="Enabled" stepKey="seeProductStatusInGrid"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="Main Website" stepKey="seeProductWebsiteInGrid"/>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$source1.source[name]$"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
+            <argument name="stockQty" value="{{defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>
 
