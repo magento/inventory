@@ -19,6 +19,8 @@ use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
  */
 class SourceDeductionService implements SourceDeductionServiceInterface
 {
+    private const ZERO_STOCK_QUANTITY = 0.0;
+
     /**
      * @var SourceItemsSaveInterface
      */
@@ -112,7 +114,7 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         StockItemConfigurationInterface $stockItemConfiguration,
         SourceItemInterface $sourceItem
     ): int {
-        $sourceItemQty = $sourceItem->getQuantity() ?: 0.0;
+        $sourceItemQty = $sourceItem->getQuantity() ?: self::ZERO_STOCK_QUANTITY;
         return $sourceItemQty === $stockItemConfiguration->getMinQty() && !$stockItemConfiguration->getBackorders()
             ? SourceItemInterface::STATUS_OUT_OF_STOCK
             : SourceItemInterface::STATUS_IN_STOCK;
