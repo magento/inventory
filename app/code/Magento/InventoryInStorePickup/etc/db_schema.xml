@@ -20,4 +20,10 @@
         <column xsi:type="varchar" name="frontend_name" nullable="true" default=""/>
         <column xsi:type="text" name="frontend_description" nullable="true" />
     </table>
+    <table name="sales_order_grid">
+        <column xsi:type="varchar" name="pickup_location_code" nullable="true" comment="Pickup Location Code"/>
+        <index referenceId="SALES_ORDER_GRID_PICKUP_LOCATION_CODE" indexType="btree">
+            <column name="pickup_location_code"/>
+        </index>
+    </table>
 </schema>
