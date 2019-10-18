@@ -63,32 +63,6 @@ define([
         },
 
         /**
-         * Get all pickup locations defined for given sales channel.
-         */
-        getLocations: function () {
-            var self = this,
-                serviceUrl = resourceUrlManager.getUrlForPickupLocationsAssignedToSalesChannel('website', websiteCode);
-
-            self.isLoading(true);
-
-            return storage
-                .get(serviceUrl, {}, false)
-                .then(function (result) {
-                    return _.map(result.items, function (address) {
-                        return self.formatAddress(address);
-                    });
-                })
-                .fail(function (response) {
-                    self.processError(response);
-
-                    return [];
-                })
-                .always(function () {
-                    self.isLoading(false);
-                });
-        },
-
-        /**
          * Get nearby pickup locations based on given search criteria.
          *
          * @param {Object} searchCriteria - Search criteria object.

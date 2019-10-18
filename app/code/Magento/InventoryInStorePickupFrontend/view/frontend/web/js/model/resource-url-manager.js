@@ -21,8 +21,7 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function (
             searchCriteria
         ) {
             var urls = {
-                    default:
-                        '/inventory/in-store-pickup/pickup-locations/'
+                    default: '/inventory/in-store-pickup/pickup-locations/'
                 },
                 criteria = {
                     searchRequest: {

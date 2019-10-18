@@ -70,6 +70,7 @@ define([
             this._super();
 
             updateNearbyLocations = _.debounce(function (searchQuery) {
+                postcode = null;
                 city = searchQuery.replace(/(\d+[\-]?\d+)/, function (match) {
                     postcode = match;
 
