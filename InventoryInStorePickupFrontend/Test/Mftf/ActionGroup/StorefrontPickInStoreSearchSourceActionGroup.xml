@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontPickInStoreSelectSourceActionGroup">
+        <annotations>
+            <description>Fills search string and select source.</description>
+        </annotations>
+        <arguments>
+            <argument name="searchString" type="string" defaultValue="{{US_Address_TX.city}}"/>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+        </arguments>
+        <fillField selector="{{PickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
+        <waitForElement selector="{{PickInStoreModalSection.shipBtn(sourceName)}}" stepKey="waitForResult"/>
+        <click selector="{{PickInStoreModalSection.shipBtn(sourceName)}}" stepKey="clickShipBtn"/>
+        <waitForPageLoad stepKey="waitForSourceSelection"/>
+    </actionGroup>
+</actionGroups>
