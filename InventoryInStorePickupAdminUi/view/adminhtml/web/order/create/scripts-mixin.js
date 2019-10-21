@@ -13,7 +13,9 @@ define(
 
         return function () {
             var STORE_PICKUP_METHOD = 'in_store_pickup',
-                SOURCES_FIELD_SELECTOR = '#shipping_form_pickup_location_source';
+                SOURCES_FIELD_SELECTOR = '#shipping_form_pickup_location_source',
+                SAME_AS_BILLING_SELECTOR = '#order-shipping_same_as_billing',
+                IN_STORE_PICKUP_CHECKBOX_SELECTOR = '#s_method_in_store_pickup';
 
             /**
              * Disable billing address form;
@@ -24,7 +26,7 @@ define(
              */
             function setStorePickupMethod(isStorePickup) {
                 var sourcesInput = jQuery(SOURCES_FIELD_SELECTOR),
-                    theSameAsBilling = jQuery('#order-shipping_same_as_billing + label');
+                    theSameAsBilling = jQuery(SAME_AS_BILLING_SELECTOR + ' + label');
 
                 if (isStorePickup) {
                     window.order.disableShippingAddress(true);
@@ -33,7 +35,7 @@ define(
 
                     return;
                 }
-                window.order.disableShippingAddress(jQuery('#order-shipping_same_as_billing').prop('checked'));
+                window.order.disableShippingAddress(jQuery(SAME_AS_BILLING_SELECTOR).prop('checked'));
                 theSameAsBilling.show();
                 sourcesInput.hide();
             }
@@ -69,7 +71,7 @@ define(
              */
             window.AdminOrder.prototype.resetShippingMethod = function () {
                 if (!this.isOnlyVirtualProduct) {
-                    var storePickupCheckbox = jQuery('#s_method_in_store_pickup');
+                    var storePickupCheckbox = jQuery(IN_STORE_PICKUP_CHECKBOX_SELECTOR);
 
                     $(this.getAreaId('shipping_method')).update(this.shippingTemplate);
 
