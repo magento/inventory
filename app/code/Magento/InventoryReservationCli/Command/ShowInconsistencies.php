@@ -202,7 +202,7 @@ class ShowInconsistencies extends Command
                 $inconsistencies = $this->filterIncompleteOrders->execute($inconsistencies);
             }
 
-            $hasInconsistencies = true;
+            $hasInconsistencies = !empty($inconsistencies);
 
             if ($isRawOutput) {
                 $this->rawOutput($output, $inconsistencies);
