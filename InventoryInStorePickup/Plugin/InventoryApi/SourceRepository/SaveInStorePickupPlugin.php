@@ -59,7 +59,7 @@ class SaveInStorePickupPlugin
     private function setFrontendName(SourceInterface $source, ?SourceExtensionInterface $extensionAttributes): void
     {
         if ($extensionAttributes === null && $source->getData(Location::FRONTEND_NAME) === null ||
-            $extensionAttributes && $extensionAttributes->getFrontendName() === null
+            $extensionAttributes && !$extensionAttributes->getFrontendName()
         ) {
             $source->setData(Location::FRONTEND_NAME, $source->getName());
             return;
