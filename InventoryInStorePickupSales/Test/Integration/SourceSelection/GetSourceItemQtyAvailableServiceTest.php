@@ -121,7 +121,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSales/Test/_files/set_order_pickup_location.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSales/Test/_files/create_multiple_quotes_on_eu_website.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSales/Test/_files/place_multiple_orders_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_orders_pickup_location.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSales/Test/_files/set_orders_pickup_location.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
