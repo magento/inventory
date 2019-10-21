@@ -10,8 +10,7 @@ namespace Magento\InventoryInStorePickupShipping\Model;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface;
 use Magento\Quote\Api\Data\CartInterface;
-use Magento\Quote\Api\Data\ShippingAssignmentInterface;
-use Magento\Quote\Api\Data\ShippingInterface;
+use Magento\Quote\Model\Quote;
 
 /**
  * @inheritdoc
@@ -23,16 +22,11 @@ class IsInStorePickupDeliveryCart implements IsInStorePickupDeliveryCartInterfac
      */
     public function execute(CartInterface $cart): bool
     {
-        if (!$cart->getExtensionAttributes() || !$cart->getExtensionAttributes()->getShippingAssignments()) {
+        if (!$cart->getShippingAddress() || !$cart->getShippingAddress()->getShippingMethod()) {
             return false;
         }
 
-        $shippingAssignments = $cart->getExtensionAttributes()->getShippingAssignments();
-        /** @var ShippingAssignmentInterface $shippingAssignment */
-        $shippingAssignment = current($shippingAssignments);
-        /** @var ShippingInterface $shipping */
-        $shipping = $shippingAssignment->getShipping();
-
-        return $shipping->getMethod() === InStorePickup::DELIVERY_METHOD;
+        /** @var Quote $cart */
+        return $cart->getShippingAddress()->getShippingMethod() === InStorePickup::DELIVERY_METHOD;
     }
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateScheduledPermanentUpdateVirtualProductDefaultStockTest" extends="AdminCreateScheduledPermanentUpdateProductTest">
+        <annotations>
+            <stories value="Virtual Product Default Stock."/>
+            <title value="Create Schedule Update With Virtual Product On Default Stock."/>
+            <description value="Verify, virtual product on default stock should be visible on storefront after schedule update."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1936382"/>
+            <group value="msi_ee"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Create virtual product.-->
+            <createData entity="VirtualProduct" stepKey="product"/>
+            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToVirtualProduct">
+                <argument name="categoryName" value="$createCategory.name$"/>
+            </actionGroup>
+            <!--Create source.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        </before>
+        <after>
+            <deleteData createDataKey="product" stepKey="deleteProduct" before="disableSource"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+        </after>
+
+        <!--Verify product on storefront.-->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyProductOnStorefront">
+            <argument name="category" value="$createCategory$"/>
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+    </test>
+</tests>
