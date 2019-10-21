@@ -70,9 +70,9 @@ define(
              * Restore store pickup shipping method if it was already selected.
              */
             window.AdminOrder.prototype.resetShippingMethod = function () {
-                if (!this.isOnlyVirtualProduct) {
-                    var storePickupCheckbox = jQuery(IN_STORE_PICKUP_CHECKBOX_SELECTOR);
+                var storePickupCheckbox = jQuery(IN_STORE_PICKUP_CHECKBOX_SELECTOR);
 
+                if (!this.isOnlyVirtualProduct) {
                     $(this.getAreaId('shipping_method')).update(this.shippingTemplate);
 
                     if (storePickupCheckbox.length && storePickupCheckbox.prop('checked')) {
