@@ -15,4 +15,10 @@
             <column name="order_id"/>
         </constraint>
     </table>
+    <table name="sales_order_grid">
+        <column xsi:type="varchar" name="pickup_location_code" nullable="true" comment="Pickup Location Code"/>
+        <index referenceId="SALES_ORDER_GRID_PICKUP_LOCATION_CODE" indexType="btree">
+            <column name="pickup_location_code"/>
+        </index>
+    </table>
 </schema>
