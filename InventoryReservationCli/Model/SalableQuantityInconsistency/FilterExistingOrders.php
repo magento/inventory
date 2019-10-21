@@ -25,7 +25,7 @@ class FilterExistingOrders
         return array_filter(
             $inconsistencies,
             function (SalableQuantityInconsistency $inconsistency) {
-                return $inconsistency->hasAssignedOrder() !== false;
+                return $inconsistency->hasAssignedOrder();
             }
         );
     }

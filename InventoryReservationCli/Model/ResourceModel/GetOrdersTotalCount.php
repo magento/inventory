@@ -42,7 +42,7 @@ class GetOrdersTotalCount
             ->select()
             ->from(
                 ['main_table' => $orderTableName],
-                ['count' => 'count(main_table.entity_id)']
+                ['count' => new \Zend_Db_Expr('COUNT(main_table.entity_id)')]
             );
         return (int)$connection->fetchOne($query);
     }
