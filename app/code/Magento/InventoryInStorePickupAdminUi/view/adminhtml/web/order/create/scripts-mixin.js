@@ -8,7 +8,7 @@ define(
         'jquery',
         'prototype'
     ],
-    function ($) {
+    function (jQuery) {
         'use strict';
 
         return function () {
@@ -23,8 +23,8 @@ define(
              * @param {Boolean} isStorePickup
              */
             function setStorePickupMethod(isStorePickup) {
-                var sourcesInput = $(SOURCES_FIELD_SELECTOR),
-                    theSameAsBilling = $('#order-shipping_same_as_billing + label');
+                var sourcesInput = jQuery(SOURCES_FIELD_SELECTOR),
+                    theSameAsBilling = jQuery('#order-shipping_same_as_billing + label');
 
                 if (isStorePickup) {
                     window.order.disableShippingAddress(true);
@@ -33,7 +33,7 @@ define(
 
                     return;
                 }
-                window.order.disableShippingAddress($('#order-shipping_same_as_billing').prop('checked'));
+                window.order.disableShippingAddress(jQuery('#order-shipping_same_as_billing').prop('checked'));
                 theSameAsBilling.show();
                 sourcesInput.hide();
             }
@@ -61,6 +61,22 @@ define(
                         setStorePickupMethod(method === STORE_PICKUP_METHOD);
                     }
                 );
+            };
+
+            /**
+             * Replace shipping method area.
+             * Restore store pickup shipping method if it was already selected.
+             */
+            window.AdminOrder.prototype.resetShippingMethod = function () {
+                if (!this.isOnlyVirtualProduct) {
+                    var storePickupCheckbox = jQuery('#s_method_in_store_pickup');
+
+                    $(this.getAreaId('shipping_method')).update(this.shippingTemplate);
+
+                    if (storePickupCheckbox.length && storePickupCheckbox.prop('checked')) {
+                        window.order.setShippingMethod(storePickupCheckbox.val());
+                    }
+                }
             };
         };
     }
