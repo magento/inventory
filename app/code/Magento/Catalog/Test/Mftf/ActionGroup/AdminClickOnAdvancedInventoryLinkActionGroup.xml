@@ -15,7 +15,7 @@
             <description>Clicks on the 'Advanced Inventory' link on the Admin Product creation/edit page.</description>
         </annotations>
 
-        <click selector="{{AdminProductFormSection.advancedInventoryButton}}" stepKey="clickOnAdvancedInventoryLink"/>
+        <click selector="{{AdminProductFormSection.advancedInventoryLink}}" stepKey="clickOnAdvancedInventoryLink"/>
         <waitForPageLoad stepKey="waitForAdvancedInventoryPageToLoad"/>
     </actionGroup>
 </actionGroups>
