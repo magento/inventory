@@ -44,6 +44,8 @@ class GetInStockSourceItemsBySkusAndSortedSource
     }
 
     /**
+     * Retrieve source items for a defined set of SKUs and sorted source codes
+     *
      * @param array $skus
      * @param array $sortedSourceCodes
      * @return SourceItemInterface[]
