@@ -11,8 +11,7 @@
         <annotations>
             <stories value="Registered Customer created Order with 'In Store Pickup' delivery method."/>
             <title value="Order Placement with 'In Store Pickup' delivery method."/>
-            <description
-                    value="Registered Customer created Order with 'In Store Pickup' delivery method with simple product and additional sources."/>
+            <description value="Registered Customer created Order with 'In Store Pickup' delivery method with simple product and additional sources."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3296742"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
@@ -20,70 +19,65 @@
         </annotations>
 
         <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Enable 'In Store Pickup' shipping method.-->
-            <magentoCLI command="config:set carriers/in_store/active 1" stepKey="enableInStorePickupMethod"/>
-            <!--Create two additional sources and stock.-->
-            <createData entity="StorePickupEnabledSource" stepKey="sourceLowPriority"/>
-            <createData entity="StorePickupEnabledSource" stepKey="sourceHighPriority"/>
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
-            <!--Link sources with stock.-->
-            <createData entity="SourceStockLinked1" stepKey="linkHighPrioritySource">
-                <requiredEntity createDataKey="additionalStock"/>
-                <requiredEntity createDataKey="sourceHighPriority"/>
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Create test data.-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkAustinSource">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
             </createData>
-            <createData entity="SourceStockLinked1" stepKey="linkLowPrioritySource">
-                <requiredEntity createDataKey="additionalStock"/>
-                <requiredEntity createDataKey="sourceLowPriority"/>
+            <createData entity="SourceStockLinked1" stepKey="linkCulverSource">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
             </createData>
-            <!--Create category and product.-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="_defaultProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <!--Create customer.-->
-            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <!--Assign sources to product.-->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
         </before>
         <after>
-            <!-- Assign Main Website to Default Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByKeyword">
-                <argument name="keyword" value="_defaultStock.name"/>
-            </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickOnEditForDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <!--Disable created sources.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableHighPrioritySource">
-                <argument name="sourceCode" value="$$sourceHighPriority.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableLowPrioritySource">
-                <argument name="sourceCode" value="$$sourceLowPriority.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Disable 'In Store Pickup' shipping method.-->
-            <magentoCLI command="config:set carriers/in_store/active 0" stepKey="disableInStorePickupMethod"/>
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
             <!--Delete created category, product, customer and stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
-            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <!-- Assign Main Website to Default Stock -->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable created sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Assign sources to product.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
-        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToAssignSources"/>
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignLowPrioritySourceToCreatedProduct">
-            <argument name="sourceCode" value="$$sourceLowPriority.source[source_code]$$"/>
-        </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantityLowPrioritySource"/>
-
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignHighPrioritySourceToCreatedProduct">
-            <argument name="sourceCode" value="$$sourceHighPriority.source[source_code]$$"/>
-        </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="setProductQuantityHighPrioritySource"/>
-        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
         <!--Create Order with "In Store Pickup' shipping method.-->
         <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="navigateToNewOrderWithExistingCustomer">
             <argument name="customer" value="$$customer$$"/>
@@ -95,20 +89,14 @@
             <argument name="price" value="$$product.price$$"/>
         </actionGroup>
         <!--Select "In Store Pickup" shipping method-->
-        <click selector="{{AdminOrderFormPaymentSection.header}}" stepKey="unfocus"/>
-        <waitForPageLoad stepKey="waitForJavascriptToFinish"/>
-        <click selector="{{AdminOrderFormPaymentSection.getShippingMethods}}" stepKey="clickShippingMethods"/>
-        <waitForElementVisible selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" stepKey="waitForShippingOptions"/>
-        <selectOption selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" userInput="in_store_pickup" stepKey="checkInStorePickup"/>
-        <selectOption selector="{{AdminOrderFormPaymentSection.pickupLocationSource}}" userInput="$$sourceHighPriority.source[source_code]$$" stepKey="selectSourceToPickup"/>
+        <actionGroup ref="AdminSelectInStorePickupShippingMethodActionGroup" stepKey="selectShippingMethod">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
         <!--Submit order-->
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="submitOrder"/>
-        <!--Verify general order information-->
         <actionGroup ref="verifyCreatedOrderInformation" stepKey="verifyCreatedOrderInformation"/>
-        <!--Verify "Shipping & Handling Information"-->
-        <see selector="{{AdminOrderShippingInformationSection.shippingMethod}}" userInput="In-Store Pickup Delivery - $$sourceHighPriority.source[name]$$" stepKey="verifyShipping"/>
-        <see selector="{{AdminOrderShippingInformationSection.shippingPrice}}" userInput="$0.00" stepKey="verifyShippingCosts"/>
-<!--        <dontSeeElement selector="{{AdminOrderDetailsMainActionsSection.shipBtn}}" stepKey="verifyShipButtonIsNotVisible"/>-->
-        <seeElement selector="{{AdminOrderDetailsMainActionsSection.notifyOrderBtn}}" stepKey="verifyNotifyOrderIsReadyForPickupButtonIsVisible"/>
+        <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
     </test>
 </tests>
