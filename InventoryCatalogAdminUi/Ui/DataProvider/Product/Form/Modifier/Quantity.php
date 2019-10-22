@@ -71,7 +71,7 @@ class Quantity extends AbstractModifier
     public function modifyMeta(array $meta)
     {
         $stockQtyPath = $this->arrayManager->findPath(
-            'container_quantity_and_stock_status_qty',
+            'quantity_and_stock_status_qty',
             $meta,
             null,
             'children'
