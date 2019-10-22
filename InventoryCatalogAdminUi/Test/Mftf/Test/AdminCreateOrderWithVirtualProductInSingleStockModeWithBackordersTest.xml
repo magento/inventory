@@ -48,7 +48,7 @@
             <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage"/>
             <waitForPageLoad time="30" stepKey="waitProductPageLoaded"/>
             <comment userInput="Config advanced inventory" stepKey="configAdvancedInventoryComment"/>
-            <click selector="{{AdminProductSourcesSection.advancedInventory}}" stepKey="goToAdvancedInventory"/>
+            <click selector="{{AdminProductFormSection.advancedInventoryLink}}" stepKey="goToAdvancedInventory"/>
             <waitForElement selector="{{AdminAdvancedInventorySection.outOfStockThresholdUseDefault}}" stepKey="waitTillOutOfStockThresholdIsFound"/>
             <uncheckOption selector="{{AdminAdvancedInventorySection.outOfStockThresholdUseDefault}}" stepKey="clickOnUseDefaultMinQty"/>
             <fillField selector="{{AdminAdvancedInventorySection.outOfStockThreshold}}" userInput="-50" stepKey="setNegativeOutOfStockTreshold"/>
