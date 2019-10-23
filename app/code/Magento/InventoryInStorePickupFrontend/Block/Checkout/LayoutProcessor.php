@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupFrontend\Block\Checkout;
 
 use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\ArrayManager;
 use Magento\InventoryInStorePickup\Model\IsStorePickupAvailableForWebsite;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -18,6 +20,8 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class LayoutProcessor implements LayoutProcessorInterface
 {
+    private const SEARCH_RADIUS = 'carriers/in_store/search_radius';
+
     /**
      * @var ArrayManager
      */
@@ -34,18 +38,26 @@ class LayoutProcessor implements LayoutProcessorInterface
     private $storeManager;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $config;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param ArrayManager $arrayManager
      * @param IsStorePickupAvailableForWebsite $availableForWebsite
+     * @param ScopeConfigInterface $config
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         ArrayManager $arrayManager,
-        IsStorePickupAvailableForWebsite $availableForWebsite
+        IsStorePickupAvailableForWebsite $availableForWebsite,
+        ScopeConfigInterface $config
     ) {
         $this->arrayManager = $arrayManager;
         $this->availableForWebsite = $availableForWebsite;
         $this->storeManager = $storeManager;
+        $this->config = $config;
     }
 
     /**
@@ -88,6 +100,9 @@ class LayoutProcessor implements LayoutProcessorInterface
             'children' => [
                 'store-pickup' => [
                     'component' => 'Magento_InventoryInStorePickupFrontend/js/view/store-pickup',
+                    'config' => [
+                        'nearbySearchRadius' => $this->getSearchRadius()
+                    ],
                     'sortOrder' => 0,
                     'deps' => ['checkout.steps.shipping-step.shippingAddress'],
                     'children' => [
@@ -169,5 +184,21 @@ class LayoutProcessor implements LayoutProcessorInterface
                 ],
             ],
         ];
+    }
+
+    /**
+     * Retrieve store pick-up search radius from config.
+     *
+     * @return float
+     */
+    private function getSearchRadius(): float
+    {
+        try {
+            $website = $this->storeManager->getWebsite();
+        } catch (LocalizedException $e) {
+            return (float)$this->config->getValue(self::SEARCH_RADIUS);
+        }
+
+        return (float)$this->config->getValue(self::SEARCH_RADIUS, ScopeInterface::SCOPE_WEBSITE, $website->getId());
     }
 }

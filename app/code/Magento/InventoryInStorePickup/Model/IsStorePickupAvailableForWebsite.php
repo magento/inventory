@@ -17,7 +17,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class IsStorePickupAvailableForWebsite
 {
-    const CONFIG_PATH = 'carriers/in_store/active';
+    private const CONFIG_PATH = 'carriers/in_store/active';
 
     /**
      * @var GetAssignedStockIdForWebsiteInterface
