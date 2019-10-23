@@ -162,10 +162,6 @@ class StockedProductFilterByInventoryStock
     private function getStockStatusesFromCustomStock(array $productIds, int $stockId): array
     {
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-        if (!$this->resourceConnection->getConnection()->isTableExists($stockTable)) {
-            return [];
-        }
-
         $connection = $this->resourceConnection->getConnection();
         if (!$connection->isTableExists($stockTable)) {
             return [];
