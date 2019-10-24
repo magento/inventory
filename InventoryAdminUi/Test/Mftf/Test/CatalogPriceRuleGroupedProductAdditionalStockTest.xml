@@ -49,6 +49,7 @@
             <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToGroupedProduct" after="openProductEditPageToAssignCategory">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         </before>
         <after>
             <deleteData createDataKey="simpleProduct" stepKey="deleteBundleOption" after="deleteProduct"/>
