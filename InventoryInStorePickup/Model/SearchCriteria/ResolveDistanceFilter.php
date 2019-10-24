@@ -9,7 +9,9 @@ namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetCommonSourceCodesBySkus;
 use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
@@ -17,7 +19,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilder
 /**
  * Calculate Distance Based Filter and resolve part for Search Criteria Builder.
  *
- * Apply filter by Source Codes, limited by distance and assignment to the Scope.
+ * Apply filter by Source Codes, limited by distance, product skus and assignment to the Scope.
  */
 class ResolveDistanceFilter implements BuilderPartsResolverInterface
 {
@@ -27,12 +29,20 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
     private $getDistanceToSources;
 
     /**
+     * @var GetCommonSourceCodesBySkus
+     */
+    private $codesBySkus;
+
+    /**
      * @param GetDistanceToSources $getDistanceToSources
+     * @param GetCommonSourceCodesBySkus $codesBySkus
      */
     public function __construct(
-        GetDistanceToSources $getDistanceToSources
+        GetDistanceToSources $getDistanceToSources,
+        GetCommonSourceCodesBySkus $codesBySkus
     ) {
         $this->getDistanceToSources = $getDistanceToSources;
+        $this->codesBySkus = $codesBySkus;
     }
 
     /**
@@ -44,32 +54,45 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
         SearchRequestInterface $searchRequest,
         SearchCriteriaBuilderDecorator $searchCriteriaBuilder
     ): void {
-        $codes = $this->getSourceCodes($searchRequest);
-
-        if ($codes !== null) {
-            $codes = implode(',', $codes);
-            $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, $codes, 'in');
+        $distanceFilter = $searchRequest->getDistanceFilter();
+        if (!$distanceFilter) {
+            return;
         }
+        $codes = $this->getSourceCodes($distanceFilter);
+        $codes = implode(',', $codes);
+        $searchCriteriaBuilder->addFilter(SourceInterface::SOURCE_CODE, $codes, 'in');
     }
 
     /**
-     * Get Source codes, filtered by Distance.
+     * Get Source codes, filtered by Distance and skus.
      *
-     * @param SearchRequestInterface $searchRequest
-     *
-     * @return array|null
+     * @param DistanceFilterInterface $distanceFilter
+     * @return array
      * @throws NoSuchEntityException
      */
-    private function getSourceCodes(SearchRequestInterface $searchRequest): ?array
+    private function getSourceCodes(DistanceFilterInterface $distanceFilter): array
     {
-        $distanceFilter = $searchRequest->getDistanceFilter();
-
-        if ($distanceFilter === null) {
-            return null;
-        }
-
+        $skus = $this->getSourceItemsSkus($distanceFilter);
+        $sourceCodes = $this->codesBySkus->execute($skus);
         $distances = $this->getDistanceToSources->execute($distanceFilter);
 
-        return array_keys($distances);
+        return array_intersect($sourceCodes, array_keys($distances));
+    }
+
+    /**
+     * Retrieve source items skus from request.
+     *
+     * @param DistanceFilterInterface $distanceFilter
+     * @return array
+     */
+    private function getSourceItemsSkus(DistanceFilterInterface $distanceFilter): array
+    {
+        $skus = [];
+        $extensionAttributes = $distanceFilter->getExtensionAttributes();
+        if ($extensionAttributes) {
+            $skus = $extensionAttributes->getSkus();
+        }
+
+        return $skus;
     }
 }
