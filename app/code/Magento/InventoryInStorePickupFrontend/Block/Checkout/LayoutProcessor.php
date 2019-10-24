@@ -88,6 +88,9 @@ class LayoutProcessor implements LayoutProcessorInterface
             'children' => [
                 'store-pickup' => [
                     'component' => 'Magento_InventoryInStorePickupFrontend/js/view/store-pickup',
+                    'config' => [
+                        'nearbySearchRadius' => $this->getSearchRadius()
+                    ],
                     'sortOrder' => 0,
                     'deps' => ['checkout.steps.shipping-step.shippingAddress'],
                     'children' => [
@@ -169,5 +172,21 @@ class LayoutProcessor implements LayoutProcessorInterface
                 ],
             ],
         ];
+    }
+
+    /**
+     * Retrieve store pick-up search radius from config.
+     *
+     * @return float
+     */
+    private function getSearchRadius(): float
+    {
+        try {
+            $website = $this->storeManager->getWebsite();
+        } catch (LocalizedException $e) {
+            return (float)$this->config->getValue(self::SEARCH_RADIUS);
+        }
+
+        return (float)$this->config->getValue(self::SEARCH_RADIUS, ScopeInterface::SCOPE_WEBSITE, $website->getId());
     }
 }
