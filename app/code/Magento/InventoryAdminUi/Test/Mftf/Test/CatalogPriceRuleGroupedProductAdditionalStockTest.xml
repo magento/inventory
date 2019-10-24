@@ -51,6 +51,7 @@
             </actionGroup>
         </before>
         <after>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteBundleOption" after="deleteProduct"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" after="deleteCategory">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -62,7 +63,6 @@
             </actionGroup>
             <!--Delete stock.-->
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" after="assignMainWebsiteToDefaultStock"/>
-            <deleteData createDataKey="simpleProduct" stepKey="deleteBundleOption" after="deleteStock"/>
         </after>
     </test>
 </tests>
