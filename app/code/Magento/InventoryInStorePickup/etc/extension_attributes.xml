@@ -18,4 +18,7 @@
         <attribute code="frontend_name" type="string"/>
         <attribute code="frontend_description" type="string"/>
     </extension_attributes>
+    <extension_attributes for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface">
+        <attribute code="skus" type="string[]"/>
+    </extension_attributes>
 </config>
