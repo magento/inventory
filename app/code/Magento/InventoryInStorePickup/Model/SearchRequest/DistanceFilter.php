@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest;
 
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 
 /**
@@ -38,6 +39,11 @@ class DistanceFilter implements DistanceFilterInterface
      * @var string|null
      */
     private $postcode;
+
+    /**
+     * @var DistanceFilterExtensionInterface
+     */
+    private $extensionAttributes;
 
     /**
      * @param int $radius
@@ -98,5 +104,27 @@ class DistanceFilter implements DistanceFilterInterface
     public function getPostcode(): ?string
     {
         return $this->postcode;
+    }
+
+    /**
+     * Set Extension Attributes for Distance Filter.
+     *
+     * @param DistanceFilterExtensionInterface|null $extensionAttributes
+     *
+     * @return void
+     */
+    public function setExtensionAttributes(?DistanceFilterExtensionInterface $extensionAttributes): void
+    {
+        $this->extensionAttributes = $extensionAttributes;
+    }
+
+    /**
+     * Get Extension Attributes for Distance Filter.
+     *
+     * @return DistanceFilterExtensionInterface|null
+     */
+    public function getExtensionAttributes(): ?DistanceFilterExtensionInterface
+    {
+        return $this->extensionAttributes;
     }
 }

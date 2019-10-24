@@ -163,8 +163,13 @@ define([
          * @returns {*}
          */
         updateNearbyLocations: function (address) {
-            var self = this;
+            var self = this,
+                skus = [],
+                items = quote.getItems();
 
+            _.each(items, function (item) {
+                skus.push(item.sku);
+            });
             return pickupLocationsService
                 .getNearbyLocations({
                     distanceFilter: {
@@ -172,7 +177,10 @@ define([
                         country: this.defaultCountryId,
                         city: address.city,
                         postcode: address.postcode,
-                        region: address.region
+                        region: address.region,
+                        extensionAttributes: {
+                            skus: skus
+                        }
                     },
                     pageSize: this.nearbySearchLimit
                 })
@@ -193,7 +201,7 @@ define([
 
             if (!customer.isLoggedIn()) {
                 $(loginFormSelector).validation();
-                emailValidationResult = $(loginFormSelector + ' input[name=username]').valid() ? true : false;
+                emailValidationResult = !!$(loginFormSelector + ' input[name=username]').valid();
 
                 if (!emailValidationResult) {
                     $(this.loginFormSelector + ' input[name=username]').focus();
