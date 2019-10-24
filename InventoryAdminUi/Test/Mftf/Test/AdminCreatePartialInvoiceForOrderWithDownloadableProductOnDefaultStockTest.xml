@@ -20,6 +20,7 @@
         </annotations>
 
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com"/>
             <!--Create test data.-->
             <createData entity="FullSource1" stepKey="additionalSource"/>
             <createData entity="_defaultCategory" stepKey="category"/>
@@ -47,6 +48,7 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
         </after>
 
         <!--Set product quantity.-->
