@@ -78,34 +78,36 @@ class Save extends Action implements HttpPostActionInterface
             $this->processRedirectAfterFailureSave($resultRedirect);
             return $resultRedirect;
         }
-
-        $sourceCodeQueryParam = $request->getQuery(SourceInterface::SOURCE_CODE);
+        $sourceCode = $requestData['general'][SourceInterface::SOURCE_CODE];
         try {
-            $source = (null !== $sourceCodeQueryParam)
-                ? $this->sourceRepository->get($sourceCodeQueryParam)
-                : $this->sourceFactory->create();
-
+            $source = $this->sourceRepository->get($sourceCode);
+            if ($source->getPostcode() !== $requestData['general'][SourceInterface::POSTCODE]) {
+                unset($requestData['general'][SourceInterface::LATITUDE]);
+                unset($requestData['general'][SourceInterface::LONGITUDE]);
+                $source->setLatitude(null);
+                $source->setLongitude(null);
+            }
+        } catch (NoSuchEntityException $e) {
+            $source = $this->sourceFactory->create();
+        }
+        try {
             $this->processSave($source, $requestData);
-
             $this->messageManager->addSuccessMessage(__('The Source has been saved.'));
             $this->processRedirectAfterSuccessSave($resultRedirect, $source->getSourceCode());
-        } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('The Source does not exist.'));
-            $this->processRedirectAfterFailureSave($resultRedirect);
         } catch (ValidationException $e) {
             foreach ($e->getErrors() as $localizedError) {
                 $this->messageManager->addErrorMessage($localizedError->getMessage());
             }
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCodeQueryParam ?? $sourceCodeQueryParam);
+            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCode);
         } catch (CouldNotSaveException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCodeQueryParam ?? $sourceCodeQueryParam);
+            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCode);
         } catch (Exception $e) {
             $this->messageManager->addErrorMessage(__('Could not save Source.'));
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCodeQueryParam ?? $sourceCodeQueryParam);
+            $this->processRedirectAfterFailureSave($resultRedirect, $sourceCode);
         }
         return $resultRedirect;
     }
@@ -114,6 +116,8 @@ class Save extends Action implements HttpPostActionInterface
      * @param SourceInterface $source
      * @param array $requestData
      * @return void
+     * @throws CouldNotSaveException
+     * @throws ValidationException
      */
     private function processSave(SourceInterface $source, array $requestData)
     {
