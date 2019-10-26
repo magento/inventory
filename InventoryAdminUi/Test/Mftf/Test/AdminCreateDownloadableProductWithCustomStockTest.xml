@@ -18,8 +18,9 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com"/>
             <createData entity="SimpleSubCategory" stepKey="simpleCategory1"/>
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct1">
                 <requiredEntity createDataKey="simpleCategory1"/>
@@ -36,6 +37,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com"/>
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="20" stepKey="waitForStockListPageLoad"/>
