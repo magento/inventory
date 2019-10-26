@@ -20,6 +20,7 @@
         </annotations>
 
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com"/>
             <!--Create test data.-->
             <createData entity="FullSource1" stepKey="source"/>
             <createData entity="BasicMsiStock1" stepKey="stock"/>
@@ -30,6 +31,9 @@
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="MsiDownloadableProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="downloadableLink1" stepKey="downloadableLink">
+                <requiredEntity createDataKey="product"/>
             </createData>
             <!--Assign created source to product and set product sock status to out of stock.-->
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
@@ -65,6 +69,7 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
         </after>
 
         <!--Verify product is not visible on storefront.-->

@@ -20,6 +20,7 @@
         </annotations>
 
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com" before="category"/>
             <remove keyForRemoval="simpleProduct"/>
             <!-- Create downloadable Product -->
             <createData entity="DownloadableProductWithTwoLink100" stepKey="simpleProduct" after="cleanCache">
@@ -32,6 +33,9 @@
                 <requiredEntity createDataKey="simpleProduct"/>
             </createData>
         </before>
+        <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+        </after>
 
         <remove keyForRemoval="seeOrderSubTotal"/>
         <remove keyForRemoval="selectShippingMethodComment"/>
