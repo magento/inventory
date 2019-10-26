@@ -62,8 +62,6 @@
             </actionGroup>
         </before>
         <after>
-            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!--Delete configurable product.-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGridToDeleteProducts"/>
             <actionGroup ref="DeleteProductActionGroup" stepKey="deleteConfigurableProduct">
@@ -79,6 +77,8 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalWebsiteSource">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
