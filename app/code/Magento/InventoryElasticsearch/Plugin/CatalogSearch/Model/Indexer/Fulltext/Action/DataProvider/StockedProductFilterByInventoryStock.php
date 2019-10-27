@@ -12,7 +12,6 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockStatusCriteriaInterfaceFactory;
 use Magento\CatalogInventory\Api\StockStatusRepositoryInterface;
 use Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider;
-use Magento\Elasticsearch\Model\Config;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
@@ -24,11 +23,6 @@ use Magento\Store\Api\StoreRepositoryInterface;
  */
 class StockedProductFilterByInventoryStock
 {
-    /**
-     * @var Config
-     */
-    private $config;
-
     /**
      * @var StockConfigurationInterface
      */
@@ -70,7 +64,6 @@ class StockedProductFilterByInventoryStock
     private $storeRepository;
 
     /**
-     * @param Config $config
      * @param StockConfigurationInterface $stockConfiguration
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param ResourceConnection $resourceConnection
@@ -81,7 +74,6 @@ class StockedProductFilterByInventoryStock
      * @param StoreRepositoryInterface $storeRepository
      */
     public function __construct(
-        Config $config,
         StockConfigurationInterface $stockConfiguration,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         ResourceConnection $resourceConnection,
@@ -91,7 +83,6 @@ class StockedProductFilterByInventoryStock
         DefaultStockProviderInterface $defaultStockProvider,
         StoreRepositoryInterface $storeRepository
     ) {
-        $this->config = $config;
         $this->stockConfiguration = $stockConfiguration;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resourceConnection = $resourceConnection;
@@ -118,7 +109,7 @@ class StockedProductFilterByInventoryStock
         $productData,
         $storeId
     ) {
-        if ($this->config->isElasticsearchEnabled() && !$this->stockConfiguration->isShowOutOfStock($storeId)) {
+        if (!$this->stockConfiguration->isShowOutOfStock($storeId)) {
             $productIds = array_keys($indexData);
             $store = $this->storeRepository->getById($storeId);
             $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
@@ -153,9 +144,12 @@ class StockedProductFilterByInventoryStock
         $stockStatusCollection = $this->stockStatusRepository->getList($stockStatusCriteria);
         $stockStatuses = $stockStatusCollection->getItems();
 
-        return array_filter($stockStatuses, function (StockStatusInterface $stockStatus) {
-            return StockStatusInterface::STATUS_IN_STOCK === (int)$stockStatus->getStockStatus();
-        });
+        return array_filter(
+            $stockStatuses,
+            function (StockStatusInterface $stockStatus) {
+                return StockStatusInterface::STATUS_IN_STOCK === (int)$stockStatus->getStockStatus();
+            }
+        );
     }
 
     /**
@@ -169,6 +163,10 @@ class StockedProductFilterByInventoryStock
     {
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
         $connection = $this->resourceConnection->getConnection();
+        if (!$connection->isTableExists($stockTable)) {
+            return [];
+        }
+
         $select = $connection->select();
         $select->from(
             ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],

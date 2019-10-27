@@ -1,0 +1,20 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div id="delivery-method-selector" class="step-content">
+    <button
+        class="action action-select-shipping"
+        css="'selected': !isStorePickupSelected()"
+        click="selectShipping"
+        translate="'Shipping'"
+    ></button>
+    <button
+        class="action action-select-store-pickup"
+        css="'selected': isStorePickupSelected()"
+        click="selectStorePickup"
+        translate="'Pick in Store'"
+    ></button>
+</div>

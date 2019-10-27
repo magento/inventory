@@ -81,4 +81,23 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryInStorePickup\Observer\UpdateOrderGrid">
+        <arguments>
+            <argument name="entityGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid">
+        <arguments>
+            <argument name="joins" xsi:type="array">
+                <item name="inventory_pickup_location_order" xsi:type="array">
+                    <item name="table" xsi:type="string">inventory_pickup_location_order</item>
+                    <item name="origin_column" xsi:type="string">entity_id</item>
+                    <item name="target_column" xsi:type="string">order_id</item>
+                </item>
+            </argument>
+            <argument name="columns" xsi:type="array">
+                <item name="pickup_location_code" xsi:type="string">inventory_pickup_location_order.pickup_location_code</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
