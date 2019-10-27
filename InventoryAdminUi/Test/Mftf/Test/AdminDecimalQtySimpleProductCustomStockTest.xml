@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminDecimalQtySimpleProductCustomStockTest">
+        <annotations>
+            <stories value="Simple Product Default Stock."/>
+            <title value="Quantity field in source grid with simple product with default stock. "/>
+            <description value="Verify, quantity field in source grid has validation and depends on decimal quantity filed in advanced inventory modal window."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/908790/scenarios/3659258"/>
+            <severity value="MINOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Verify quantity field on edit product page.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{decimalProductQty.value}}" stepKey="setProductDecimalQuantity"/>
+        <see selector="{{AdminProductSourcesGrid.quantityFieldError('0')}}" userInput="Please enter a valid integer in this field." stepKey="verifyError"/>
+        <actionGroup ref="AdminApplyUseDecimalsOnProductEditPageActionGroup" stepKey="enableDecimalQuantity">
+            <argument name="useDecimals" value="Yes"/>
+        </actionGroup>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{decimalProductQty.value}}" stepKey="setProductDecimalQuantityAgain"/>
+        <dontSeeElement selector="{{AdminProductSourcesGrid.quantityFieldError('0')}}" stepKey="verifyErrorIsAbsent"/>
+    </test>
+</tests>

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Model;
 
+use Magento\InventoryInStorePickup\Model\ExtractPickupLocationAddressData;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 
@@ -16,7 +17,7 @@ use Magento\Quote\Api\Data\AddressInterface;
 class IsPickupLocationShippingAddress
 {
     /**
-     * @var ExtractPickupLocationShippingAddressData
+     * @var ExtractPickupLocationAddressData
      */
     private $extractPickupLocationShippingAddressData;
 
@@ -26,15 +27,23 @@ class IsPickupLocationShippingAddress
     private $extractQuoteAddressShippingAddressData;
 
     /**
-     * @param ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData
+     * @var GetShippingAddressData
+     */
+    private $getShippingAddressData;
+
+    /**
+     * @param ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData
      * @param ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
+     * @param GetShippingAddressData $getShippingAddressData
      */
     public function __construct(
-        ExtractPickupLocationShippingAddressData $extractPickupLocationShippingAddressData,
-        ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
+        ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData,
+        ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData,
+        GetShippingAddressData $getShippingAddressData
     ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
         $this->extractQuoteAddressShippingAddressData = $extractQuoteAddressShippingAddressData;
+        $this->getShippingAddressData = $getShippingAddressData;
     }
 
     /**
@@ -47,7 +56,8 @@ class IsPickupLocationShippingAddress
      */
     public function execute(PickupLocationInterface $pickupLocation, AddressInterface $shippingAddress): bool
     {
-        $data = $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
+        $data = $this->getShippingAddressData->execute() +
+            $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
 
         if (!$shippingAddress->getExtensionAttributes() ||
             !$shippingAddress->getExtensionAttributes()->getPickupLocationCode()
