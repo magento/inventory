@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalogSearch\Test\Integration\Model\Indexer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Indexer\Model\Indexer;
 use Magento\Search\Model\QueryFactory;
@@ -127,13 +126,10 @@ class FulltextTest extends TestCase
         $query->setQueryText($text);
         $query->saveIncrementalPopularity();
 
-        /** @var Collection $collection */
-        $collection = Bootstrap::getObjectManager()->create(
-            Collection::class,
-            [
-                'searchRequestName' => 'quick_search_container'
-            ]
-        );
+        /** @var \Magento\Catalog\Model\Layer\Search $layer */
+        $layer = Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Layer\Search::class);
+        $collection = $layer->getProductCollection();
+
         $products = $collection
             ->addSearchFilter($text)
             ->getItems();
