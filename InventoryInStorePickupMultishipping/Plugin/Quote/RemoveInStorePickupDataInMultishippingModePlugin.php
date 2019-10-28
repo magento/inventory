@@ -37,7 +37,7 @@ class RemoveInStorePickupDataInMultishippingModePlugin
 
         $assignments = $extension->getShippingAssignments();
 
-        if ($assignments === null) {
+        if (!$assignments) {
             return [$cart];
         }
 
