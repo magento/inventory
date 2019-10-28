@@ -158,9 +158,6 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <!-- Delete the simple product and category -->
-            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
-            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <!-- Delete the catalog rule -->
             <amOnPage url="{{CatalogRulePage.url}}" stepKey="goToRulePage"/>
             <waitForPageLoad stepKey="waitForRulePage"/>
@@ -168,6 +165,9 @@
                 <argument name="name" value="{{_defaultCatalogRule.name}}"/>
                 <argument name="searchInput" value="{{AdminSecondaryGridSection.catalogRuleIdentifierSearch}}"/>
             </actionGroup>
+            <!-- Delete the simple product and category -->
+            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <amOnPage url="{{AdminLogoutPage.url}}" stepKey="amOnLogoutPage"/>
         </after>
 
