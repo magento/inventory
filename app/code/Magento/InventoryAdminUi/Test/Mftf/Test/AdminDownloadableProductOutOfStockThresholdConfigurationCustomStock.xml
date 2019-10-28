@@ -19,6 +19,7 @@
         </annotations>
 
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com"/>
             <!--Create test data.-->
             <createData entity="_minimalSource" stepKey="source"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
@@ -56,6 +57,7 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="logout" stepKey="logout"/>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
         </after>
 
         <!--Assign source to product.-->
