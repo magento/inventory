@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Block\Adminhtml\Order;
 
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Sales\Block\Adminhtml\Order\View;
 
 /**
@@ -18,7 +19,7 @@ class ProcessShipButtonPlugin
      * Remove 'Ship' button in case order shipping method is 'in_store_pickup'.
      *
      * @param View $subject
-     * @param $proceed
+     * @param callable $proceed
      * @param string $buttonId
      * @param array $data
      * @param int $level
@@ -36,7 +37,7 @@ class ProcessShipButtonPlugin
         $region = 'toolbar'
     ): View {
         if ($buttonId === 'order_ship') {
-            if ($subject->getOrder()->getShippingMethod() === 'in_store_pickup') {
+            if ($subject->getOrder()->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
                 return $subject;
             }
         }
