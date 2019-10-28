@@ -22,7 +22,7 @@ use Magento\InventoryAdminUi\Model\Source\SourceHydrator;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 
 /**
- * Save Controller
+ * Source save controller.
  */
 class Save extends Action implements HttpPostActionInterface
 {
@@ -113,6 +113,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Hydrate data from request and save source.
+     *
      * @param SourceInterface $source
      * @param array $requestData
      * @return void
@@ -143,6 +145,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Get redirect url after source save.
+     *
      * @param Redirect $resultRedirect
      * @param string $sourceCode
      * @return void
@@ -150,20 +154,28 @@ class Save extends Action implements HttpPostActionInterface
     private function processRedirectAfterSuccessSave(Redirect $resultRedirect, string $sourceCode)
     {
         if ($this->getRequest()->getParam('back')) {
-            $resultRedirect->setPath('*/*/edit', [
-                SourceInterface::SOURCE_CODE => $sourceCode,
-                '_current' => true,
-            ]);
+            $resultRedirect->setPath(
+                '*/*/edit',
+                [
+                    SourceInterface::SOURCE_CODE => $sourceCode,
+                    '_current' => true,
+                ]
+            );
         } elseif ($this->getRequest()->getParam('redirect_to_new')) {
-            $resultRedirect->setPath('*/*/new', [
-                '_current' => true,
-            ]);
+            $resultRedirect->setPath(
+                '*/*/new',
+                [
+                    '_current' => true,
+                ]
+            );
         } else {
             $resultRedirect->setPath('*/*/');
         }
     }
 
     /**
+     * Get redirect url after unsuccessful source save.
+     *
      * @param Redirect $resultRedirect
      * @param string|null $sourceCode
      * @return void
@@ -173,10 +185,13 @@ class Save extends Action implements HttpPostActionInterface
         if (null === $sourceCode) {
             $resultRedirect->setPath('*/*/new');
         } else {
-            $resultRedirect->setPath('*/*/edit', [
-                SourceInterface::SOURCE_CODE => $sourceCode,
-                '_current' => true,
-            ]);
+            $resultRedirect->setPath(
+                '*/*/edit',
+                [
+                    SourceInterface::SOURCE_CODE => $sourceCode,
+                    '_current' => true,
+                ]
+            );
         }
     }
 }
