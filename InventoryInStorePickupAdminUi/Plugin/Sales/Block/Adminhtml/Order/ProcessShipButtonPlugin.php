@@ -19,7 +19,7 @@ class ProcessShipButtonPlugin
      * Remove 'Ship' button in case order shipping method is 'in_store_pickup'.
      *
      * @param View $subject
-     * @param callable $proceed
+     * @param \Closure $proceed
      * @param string $buttonId
      * @param array $data
      * @param int $level
@@ -29,12 +29,12 @@ class ProcessShipButtonPlugin
      */
     public function aroundAddButton(
         View $subject,
-        $proceed,
-        $buttonId,
-        $data,
-        $level = 0,
-        $sortOrder = 0,
-        $region = 'toolbar'
+        \Closure $proceed,
+        string $buttonId,
+        array $data,
+        int $level = 0,
+        int $sortOrder = 0,
+        string $region = 'toolbar'
     ): View {
         if ($buttonId === 'order_ship') {
             if ($subject->getOrder()->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
