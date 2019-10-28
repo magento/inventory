@@ -41,7 +41,7 @@ class DistanceFilter implements DistanceFilterInterface
     private $postcode;
 
     /**
-     * @var DistanceFilterExtensionInterface
+     * @var DistanceFilterExtensionInterface|null
      */
     private $extensionAttributes;
 

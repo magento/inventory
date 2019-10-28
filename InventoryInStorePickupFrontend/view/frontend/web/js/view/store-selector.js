@@ -170,6 +170,7 @@ define([
             _.each(items, function (item) {
                 skus.push(item.sku);
             });
+
             return pickupLocationsService
                 .getNearbyLocations({
                     distanceFilter: {

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterfaceFactory;
 
@@ -20,6 +21,7 @@ class DistanceFilterBuilder
     private const CITY = 'city';
     private const REGION = 'region';
     private const POSTCODE = 'postcode';
+    private const EXTENSION_ATTRIBUTES = 'extensionAttributes';
 
     /**
      * Filter data.
@@ -50,8 +52,16 @@ class DistanceFilterBuilder
     {
         $data = $this->data;
         $this->data = [];
+        $distanceFilter = null;
+        if ($data) {
+            $distanceFilter = $this->distanceFilterFactory->create($data);
+            $extensionAttributes = $data[self::EXTENSION_ATTRIBUTES] ?? null;
+            if ($extensionAttributes) {
+                $distanceFilter->setExtensionAttributes($extensionAttributes);
+            }
+        }
 
-        return empty($data) ? null : $this->distanceFilterFactory->create($data);
+        return $distanceFilter;
     }
 
     /**
@@ -117,5 +127,16 @@ class DistanceFilterBuilder
     {
         $this->data[self::COUNTRY] = $country;
         return $this;
+    }
+
+    /**
+     * Set distance filter extension attributes.
+     *
+     * @param DistanceFilterExtensionInterface $extensionAttributes
+     * @return void
+     */
+    public function setExtensionAttributes(DistanceFilterExtensionInterface $extensionAttributes): void
+    {
+        $this->data[self::EXTENSION_ATTRIBUTES] = $extensionAttributes;
     }
 }

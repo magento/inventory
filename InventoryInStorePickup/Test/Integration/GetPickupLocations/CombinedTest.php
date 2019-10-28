@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocations;
 
+use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryInStorePickup\Model\GetPickupLocations;
@@ -39,15 +40,25 @@ class CombinedTest extends TestCase
      */
     private $sortOrderBuilder;
 
+    /**
+     * @var ExtensionAttributesFactory
+     */
+    private $extensionAttributesFactory;
+
+    /**
+     * @inheritDoc
+     */
     protected function setUp()
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
         $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilderInterface::class);
         $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);
+        $this->extensionAttributesFactory = Bootstrap::getObjectManager()->get(ExtensionAttributesFactory::class);
     }
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -64,6 +75,8 @@ class CombinedTest extends TestCase
      */
     public function testExecuteDistanceFilterWithAddressFilters()
     {
+        $extensionAttributes = $this->extensionAttributesFactory->create(DistanceFilterInterface::class);
+        $extensionAttributes->setSkus(['SKU-1']);
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
                                                     ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
                                                     ->setDistanceFilterRadius(750)
@@ -72,6 +85,7 @@ class CombinedTest extends TestCase
                                                     ->setCityFilter('Kolbermoor,Mitry-Mory', 'in')
                                                     ->setRegionIdFilter('259')
                                                     ->setRegionFilter('Seine-et-Marne')
+                                                    ->setDistanceFilterExtension($extensionAttributes)
                                                     ->create();
 
         /** @var SearchResultInterface $result */
@@ -84,6 +98,7 @@ class CombinedTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -100,6 +115,8 @@ class CombinedTest extends TestCase
      */
     public function testExecuteDistanceFilterWithGeneralFilters()
     {
+        $extensionAttributes = $this->extensionAttributesFactory->create(DistanceFilterInterface::class);
+        $extensionAttributes->setSkus(['SKU-1']);
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
                                                     ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
                                                     ->setDistanceFilterRadius(750)
@@ -107,6 +124,7 @@ class CombinedTest extends TestCase
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setNameFilter('source', 'fulltext')
                                                     ->setPickupLocationCodeFilter('eu%', 'like')
+                                                    ->setDistanceFilterExtension($extensionAttributes)
                                                     ->setCurrentPage(2)
                                                     ->setPageSize(1)
                                                     ->create();
@@ -121,6 +139,7 @@ class CombinedTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -137,6 +156,8 @@ class CombinedTest extends TestCase
      */
     public function testExecuteWithAll()
     {
+        $extensionAttributes = $this->extensionAttributesFactory->create(DistanceFilterInterface::class);
+        $extensionAttributes->setSkus(['SKU-7']);
         $sort = $this->sortOrderBuilder->setField(DistanceFilterInterface::DISTANCE_FIELD)
             ->setDirection(SortOrder::SORT_DESC)
             ->create();
@@ -151,6 +172,7 @@ class CombinedTest extends TestCase
                                                         'Kolbermoor,Mitry-Mory,Burlingame',
                                                         'in'
                                                     )->setCountryFilter('DE', 'neq')
+                                                    ->setDistanceFilterExtension($extensionAttributes)
                                                     ->setPageSize(2)
                                                     ->setCurrentPage(2)
                                                     ->setSortOrders([$sort])
@@ -168,6 +190,7 @@ class CombinedTest extends TestCase
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -184,10 +207,13 @@ class CombinedTest extends TestCase
      */
     public function testExecuteDistanceFilterWithPaging()
     {
+        $extensionAttributes = $this->extensionAttributesFactory->create(DistanceFilterInterface::class);
+        $extensionAttributes->setSkus(['SKU-1']);
         $searchRequest = $this->searchRequestBuilder->setDistanceFilterRadius(750)
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setScopeCode('global_website')
+                                                    ->setDistanceFilterExtension($extensionAttributes)
                                                     ->setPageSize(1)
                                                     ->setCurrentPage(1)
                                                     ->create();
