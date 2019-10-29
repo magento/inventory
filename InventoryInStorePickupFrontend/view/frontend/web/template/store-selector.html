@@ -1,0 +1,44 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div id="store-selector" data-bind="blockLoader: $parent.isLoading" css="'store-selected': $parent.selectedLocation">
+    <each if="!quoteIsVirtual()" args="getRegion('customer-email')" render="" />
+    <div class="step-title" data-role="title">
+        <translate args="'Store'"/>
+    </div>
+    <div id="checkout-step-store-selector" class="step-content" data-role="content">
+        <render args="selectedLocationTemplate"/>
+        <each args="getRegion('after-selected-location')" render=""/>
+        <form class="form-continue" submit="setPickupInformation" novalidate="novalidate">
+            <div class="actions-toolbar">
+                <div class="secondary">
+                    <button type="button" class="button action" click="openPopup">
+                        <span if="selectedLocation">
+                            <translate args="'Select Other'"/>
+                        </span>
+                        <span ifnot="selectedLocation">
+                            <translate args="'Select Store'"/>
+                        </span>
+                    </button>
+                </div>
+                <div class="primary">
+                    <button data-role="opc-continue"
+                            type="submit"
+                            class="button action continue primary"
+                            css="disabled: !selectedLocation"
+                            enable="selectedLocation"
+                            disabled
+                    >
+                        <span>
+                            <translate args="'Next'"/>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="opc-store-selector-popup" render="storeSelectorPopupTemplate" />
