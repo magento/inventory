@@ -58,8 +58,8 @@
         <seeInField selector="{{AdminEditSourceGeneralSection.name}}" userInput="{{FullSource2.name}}" stepKey="seeNameInField1"/>
         <seeInField selector="{{AdminEditSourceGeneralSection.code}}" userInput="$$createFullSource1.source[source_code]$$" stepKey="seeCodeInField1"/>
         <seeInField selector="{{AdminEditSourceGeneralSection.description}}" userInput="{{FullSource2.description}}" stepKey="seeDescriptionInField1"/>
-        <seeInField selector="{{AdminEditSourceGeneralSection.latitude}}" userInput="0" stepKey="seeLatitudeInField1"/>
-        <seeInField selector="{{AdminEditSourceGeneralSection.longitude}}" userInput="0" stepKey="seeLongitudeInField1"/>
+        <seeInField selector="{{AdminEditSourceGeneralSection.latitude}}" userInput="" stepKey="seeLatitudeInField1"/>
+        <seeInField selector="{{AdminEditSourceGeneralSection.longitude}}" userInput="" stepKey="seeLongitudeInField1"/>
 
         <conditionalClick selector="{{AdminEditSourceContactInfoSection.closed}}" dependentSelector="{{AdminEditSourceContactInfoSection.opened}}" visible="false" stepKey="clickOnContactInfo3"/>
         <waitForPageLoad stepKey="waitForPageLoad2"/>
