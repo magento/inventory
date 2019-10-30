@@ -17,7 +17,7 @@
 
         <see selector="{{AdminOrderShippingInformationSection.shippingMethod}}" userInput="In-Store Pickup Delivery - {{sourceName}}" stepKey="verifySource"/>
         <see selector="{{AdminOrderShippingInformationSection.shippingPrice}}" userInput="$0.00" stepKey="verifyShippingCosts"/>
-        <!--<dontSeeElement selector="{{AdminOrderDetailsMainActionsSection.shipBtn}}" stepKey="verifyShipButtonIsNotVisible"/>-->
+        <dontSeeElement selector="{{AdminOrderDetailsMainActionsSection.shipBtn}}" stepKey="verifyShipButtonIsNotVisible"/>
         <seeElement selector="{{AdminOrderDetailsMainActionsSection.notifyOrderBtn}}" stepKey="verifyNotifyOrderIsReadyForPickupButtonIsVisible"/>
     </actionGroup>
 </actionGroups>
