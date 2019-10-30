@@ -11,16 +11,13 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
-use Magento\InventoryIndexer\Indexer\IndexStructure;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
 /**
- * Class GetSimpleProductStockByBundleSkus
+ * Class GetBundleOptionsByBundleSkus
  */
-class GetSimpleProductStockByBundleSkus
+class GetBundleOptionsByBundleSkus
 {
     /**
      * @var ResourceConnection
@@ -61,52 +58,39 @@ class GetSimpleProductStockByBundleSkus
     }
 
     /**
+     * Provides array of bundle options with simple product ids by bundle sku
+     *
      * @param Collection $bundleProductsCollection
-     * @param int $stockId
+     *
      * @return array
      * @throws \Exception
      */
-    public function execute(Collection $bundleProductsCollection, int $stockId): array
+    public function execute(Collection $bundleProductsCollection): array
     {
         $connection = $this->resourceConnection->getConnection();
-        $indexName = $this->indexNameBuilder
-            ->setIndexId(InventoryIndexer::INDEXER_ID)
-            ->addDimension('stock_', (string)$stockId)
-            ->setAlias(Alias::ALIAS_MAIN)
-            ->build();
-
-        $indexTableName = $this->indexNameResolver->resolveName($indexName);
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
         $select = $connection->select()
             ->from(
-                ['bundle_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                [
-                    IndexStructure::SKU => 'simple_product.sku',
-                    IndexStructure::QUANTITY => 'MIN(inventory.quantity)',
-                    IndexStructure::IS_SALABLE => 'MAX(inventory.is_salable)',
-                ]
-            )->joinInner(
                 ['bundle_selection' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
+                ['*']
+            )->joinInner(
+                ['bundle_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'bundle_product.' . $linkField . '=bundle_selection.parent_product_id',
-                []
+                ['sku']
             )->joinInner(
-                ['simple_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'bundle_selection.product_id=simple_product.' . $linkField,
-                []
-            )->joinInner(
-                ['inventory' => $indexTableName],
-                'inventory.sku=simple_product.sku',
-                []
+                ['bundle_option' => $this->resourceConnection->getTableName('catalog_product_bundle_option')],
+                'bundle_option.parent_id=bundle_selection.parent_product_id AND bundle_option.option_id=bundle_selection.option_id',
+                [
+                    'is_required' => 'required',
+                    'type',
+                ]
             )->where(
                 'bundle_product.sku IN (' . $this->getBundleProductSkusAsStringByCollection($bundleProductsCollection) . ')'
-            )->group(['simple_product.sku']);
+            );
 
-        $stockData = $connection->fetchAll($select);
-        $result = [];
-        array_walk($stockData, function (&$value, &$key) use (&$result) {
-            $result[$value['sku']] = $value;
-        });
+        $optionData = $connection->fetchAll($select);
+        $result = $this->formatOptionArray($optionData);
 
         return $result;
     }
@@ -127,5 +111,27 @@ class GetSimpleProductStockByBundleSkus
         }
 
         return '\'' . implode('\',\'', $skus) . '\'';
+    }
+
+    /**
+     * @param array $optionData
+     * @return array
+     */
+    private function formatOptionArray(array $optionData): array
+    {
+        $result = [];
+        foreach ($optionData as $option) {
+            $result[$option['sku']][$option['option_id']]['is_required'] = $option['is_required'];
+            $result[$option['sku']][$option['option_id']]['type'] = $option['type'];
+            $result[$option['sku']][$option['option_id']]['option_id'] = $option['option_id'];
+            $result[$option['sku']][$option['option_id']]['bundle_product_id'] = $option['parent_product_id'];
+            $result[$option['sku']][$option['option_id']][$option['selection_id']] = [
+                'product_id' => $option['product_id'],
+                'is_default' => $option['is_default'],
+                'selection_qty' => $option['selection_qty'],
+                'selection_can_change_qty' => $option['selection_can_change_qty'],
+            ];
+        }
+        return $result;
     }
 }

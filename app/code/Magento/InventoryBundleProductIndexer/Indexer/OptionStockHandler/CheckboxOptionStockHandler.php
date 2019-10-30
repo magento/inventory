@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandler;
 
-use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandlerInterface;
 
 /**
@@ -18,11 +17,8 @@ class CheckboxOptionStockHandler implements OptionStockHandlerInterface
     /**
      * @inheritDoc
      */
-    public function isOptionInStock(OptionInterface $option, array $stockId): bool
+    public function isOptionInStock(array $option, array $stockId): bool
     {
-        foreach ($option->getProductLinks() as $productLink) {
-
-        }
-        return false;
+        return true;
     }
 }

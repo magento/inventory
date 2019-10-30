@@ -43,21 +43,18 @@ class GetBundleProductStockStatus
     /**
      * Provides bundle product stock status
      *
-     * @param string $sku
+     * @param array $bundleOptions
      * @param array $stock
      *
      * @return bool
-     * @throws InputException
-     * @throws NoSuchEntityException
      */
-    public function execute(string $sku, array $stock): bool
+    public function execute(array $bundleOptions, array $stock): bool
     {
-        $optionList = $this->optionRepository->getList($sku);
-        foreach ($optionList as $option) {
-            if ((int)$option->getRequired() === 0) {
+        foreach ($bundleOptions as $option) {
+            if ((int)$option['is_required'] === 0) {
                 continue;
             }
-            $optionStockHandler = $this->optionStockHandlerPool->get($option->getType());
+            $optionStockHandler = $this->optionStockHandlerPool->get($option['type']);
             if (!$optionStockHandler->isOptionInStock($option, $stock)) {
                 return false;
             }

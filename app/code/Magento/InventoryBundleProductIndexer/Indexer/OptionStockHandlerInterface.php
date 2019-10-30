@@ -17,10 +17,10 @@ interface OptionStockHandlerInterface
     /**
      * Provides stock status of all simple products which take part in bundle option
      *
-     * @param OptionInterface $option
+     * @param array $option
      * @param array $stockId
      *
      * @return bool
      */
-    public function isOptionInStock(OptionInterface $option, array $stockId): bool;
+    public function isOptionInStock(array $option, array $stockId): bool;
 }

@@ -5,7 +5,6 @@
  */
 declare(strict_types=1);
 
-
 namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use InvalidArgumentException;

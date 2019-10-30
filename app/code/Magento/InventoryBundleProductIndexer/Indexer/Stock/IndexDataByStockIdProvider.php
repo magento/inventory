@@ -38,21 +38,29 @@ class IndexDataByStockIdProvider
     private $getSimpleProductStockByBundleSkus;
 
     /**
+     * @var GetBundleOptionsByBundleSkus
+     */
+    private $getBundleOptionsByBundleSkus;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param GetAllBundleProductsService $getAllBundleProductsService
      * @param GetBundleProductStockStatus $getBundleProductStockStatus
      * @param GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus
+     * @param GetBundleOptionsByBundleSkus $getBundleOptionsByBundleSkus
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         GetAllBundleProductsService $getAllBundleProductsService,
         GetBundleProductStockStatus $getBundleProductStockStatus,
-        GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus
+        GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus,
+        GetBundleOptionsByBundleSkus $getBundleOptionsByBundleSkus
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getAllBundleProductsService = $getAllBundleProductsService;
         $this->getBundleProductStockStatus = $getBundleProductStockStatus;
         $this->getSimpleProductStockByBundleSkus = $getSimpleProductStockByBundleSkus;
+        $this->getBundleOptionsByBundleSkus = $getBundleOptionsByBundleSkus;
     }
 
     /**
@@ -74,11 +82,13 @@ class IndexDataByStockIdProvider
             $bundleProductCollection->load();
 
             $stockData = $this->getSimpleProductStockByBundleSkus->execute($bundleProductCollection, $stockId);
+            $bundleOptionsData =$this->getBundleOptionsByBundleSkus->execute($bundleProductCollection);
             foreach ($bundleProductCollection as $bundleProduct) {
                 $inventory[] = [
                     'sku' => $bundleProduct->getSku(),
                     'quantity' => 0,
-                    'is_salable' => (int) $this->getBundleProductStockStatus->execute($bundleProduct->getSku(), $stockData)
+                    'is_salable' => (int) $this->getBundleProductStockStatus
+                        ->execute($bundleOptionsData[$bundleProduct->getSku()], $stockData)
                 ];
             }
             $bundleProductCollection->clear();

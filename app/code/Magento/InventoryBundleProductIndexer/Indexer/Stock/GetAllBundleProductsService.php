@@ -18,6 +18,7 @@ use Magento\Framework\App\ResourceConnection;
  */
 class GetAllBundleProductsService
 {
+    private const BULK_SIZE = 500;
     /**
      * @var ResourceConnection
      */
@@ -51,7 +52,7 @@ class GetAllBundleProductsService
         $productCollection = $this->productCollectionFactory->create();
         $productCollection->addFieldToSelect('sku');
         $productCollection->addFieldToFilter('type_id', Type::TYPE_CODE);
-        $productCollection->setPageSize(1);
+        $productCollection->setPageSize(self::BULK_SIZE);
 
         return $productCollection;
     }
