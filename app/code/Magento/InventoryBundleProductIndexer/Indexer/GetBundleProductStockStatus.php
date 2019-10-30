@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer;
 
+use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Bundle\Model\OptionRepository;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class GetBundleProductStockStatus
@@ -43,23 +42,26 @@ class GetBundleProductStockStatus
     /**
      * Provides bundle product stock status
      *
-     * @param array $bundleOptions
+     * @param OptionInterface[] $bundleOptions
      * @param array $stock
      *
      * @return bool
      */
     public function execute(array $bundleOptions, array $stock): bool
     {
+        $bundleOptionsStockStatus = 0;
         foreach ($bundleOptions as $option) {
-            if ((int)$option['is_required'] === 0) {
-                continue;
-            }
-            $optionStockHandler = $this->optionStockHandlerPool->get($option['type']);
-            if (!$optionStockHandler->isOptionInStock($option, $stock)) {
+            $optionStockHandler = $this->optionStockHandlerPool->get($option->getType());
+            $isOptionInStock = $optionStockHandler->isOptionInStock($option, $stock);
+            if ($option->getRequired() && !$isOptionInStock) {
                 return false;
             }
+            $bundleOptionsStockStatus += (int)$isOptionInStock;
+        }
+        if ($bundleOptionsStockStatus > 0) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

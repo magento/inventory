@@ -11,6 +11,9 @@ use Magento\Framework\Exception\StateException;
 use Magento\InventoryBundleProductIndexer\Indexer\Stock\StockIndexer as BundleProductsStockIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 
+/**
+ * Class StockIndexerPlugin
+ */
 class StockIndexerPlugin
 {
     /**

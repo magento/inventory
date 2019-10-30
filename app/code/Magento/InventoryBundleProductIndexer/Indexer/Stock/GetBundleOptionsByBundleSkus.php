@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer\Stock;
 
+use Magento\Bundle\Model\LinkFactory;
+use Magento\Bundle\Model\OptionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
@@ -40,21 +42,37 @@ class GetBundleOptionsByBundleSkus
     private $metadataPool;
 
     /**
+     * @var LinkFactory
+     */
+    private $optionLinkFactory;
+
+    /**
+     * @var OptionFactory
+     */
+    private $optionFactory;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
+     * @param LinkFactory $optionLinkFactory
+     * @param OptionFactory $optionFactory
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool
+        MetadataPool $metadataPool,
+        LinkFactory $optionLinkFactory,
+        OptionFactory $optionFactory
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
+        $this->optionLinkFactory = $optionLinkFactory;
+        $this->optionFactory = $optionFactory;
     }
 
     /**
@@ -77,20 +95,25 @@ class GetBundleOptionsByBundleSkus
             )->joinInner(
                 ['bundle_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'bundle_product.' . $linkField . '=bundle_selection.parent_product_id',
-                ['sku']
+                ['parent_sku' => 'sku']
+            )->joinInner(
+                ['child_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'child_product.' . $linkField . '=bundle_selection.product_id',
+                ['child_sku' => 'sku']
             )->joinInner(
                 ['bundle_option' => $this->resourceConnection->getTableName('catalog_product_bundle_option')],
                 'bundle_option.parent_id=bundle_selection.parent_product_id AND bundle_option.option_id=bundle_selection.option_id',
                 [
                     'is_required' => 'required',
                     'type',
+                    'option_position' => 'position'
                 ]
             )->where(
                 'bundle_product.sku IN (' . $this->getBundleProductSkusAsStringByCollection($bundleProductsCollection) . ')'
             );
 
         $optionData = $connection->fetchAll($select);
-        $result = $this->formatOptionArray($optionData);
+        $result = $this->formatToOptionsArray($optionData);
 
         return $result;
     }
@@ -114,24 +137,48 @@ class GetBundleOptionsByBundleSkus
     }
 
     /**
-     * @param array $optionData
+     * @param array $optionsData
      * @return array
      */
-    private function formatOptionArray(array $optionData): array
+    private function formatToOptionsArray(array $optionsData): array
     {
         $result = [];
-        foreach ($optionData as $option) {
-            $result[$option['sku']][$option['option_id']]['is_required'] = $option['is_required'];
-            $result[$option['sku']][$option['option_id']]['type'] = $option['type'];
-            $result[$option['sku']][$option['option_id']]['option_id'] = $option['option_id'];
-            $result[$option['sku']][$option['option_id']]['bundle_product_id'] = $option['parent_product_id'];
-            $result[$option['sku']][$option['option_id']][$option['selection_id']] = [
-                'product_id' => $option['product_id'],
-                'is_default' => $option['is_default'],
-                'selection_qty' => $option['selection_qty'],
-                'selection_can_change_qty' => $option['selection_can_change_qty'],
-            ];
+        foreach ($optionsData as $optionData) {
+            $optionLink = $this->optionLinkFactory->create(
+                [
+                    'data' => [
+                        'id' => $optionData['selection_id'],
+                        'option_id' => $optionData['option_id'],
+                        'position' => $optionData['position'],
+                        'price_type' => $optionData['selection_price_type'],
+                        'price' => $optionData['selection_price_value'],
+                        'is_default' => $optionData['is_default'],
+                        'sku' => $optionData['child_sku'],
+                        'qty' => $optionData['selection_qty'],
+                        'can_change_qty' => $optionData['selection_can_change_qty']
+                    ]
+                ]
+            );
+            if (!isset($result[$optionData['parent_sku']][$optionData['option_id']])) {
+                $option = $this->optionFactory->create(
+                    [
+                        'data' => [
+                            'option_id' => $optionData['option_id'],
+                            'required' => $optionData['is_required'],
+                            'type' => $optionData['type'],
+                            'position' => $optionData['option_position'],
+                            'sku' => $optionData['parent_sku']
+                        ]
+                    ]
+                );
+                $result[$optionData['parent_sku']][$optionData['option_id']] = $option;
+            }
+            $productLinks = $result[$optionData['parent_sku']][$optionData['option_id']]->getProductLinks() ?? [];
+            $result[$optionData['parent_sku']][$optionData['option_id']]->setProductLinks(
+                array_merge($productLinks, [$optionLink])
+            );
         }
+
         return $result;
     }
 }

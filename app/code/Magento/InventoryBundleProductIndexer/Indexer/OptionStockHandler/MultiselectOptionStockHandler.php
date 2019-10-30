@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandler;
 
 use Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandlerInterface;
+use Magento\Bundle\Api\Data\OptionInterface;
 
 /**
  * Class MultiselectOptionStockHandler
@@ -17,7 +18,7 @@ class MultiselectOptionStockHandler implements OptionStockHandlerInterface
     /**
      * @inheritDoc
      */
-    public function isOptionInStock(array $option, array $stockId): bool
+    public function isOptionInStock(OptionInterface $option, array $stockId): bool
     {
         return true;
     }
