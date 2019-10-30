@@ -158,7 +158,7 @@
             <argument name="Customer" value="Simple_US_Customer"/>
             <argument name="storeCode" value="customStore.code"/>
         </actionGroup>
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$configurableProduct.sku$$.html" stepKey="goToDetailProductPageOnStorefront" after="clickCreateAccountButton"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$configurableProduct.sku$$.html" stepKey="goToDetailProductPageOnStorefront" after="registerCustomer"/>
         <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="option1" stepKey="selectOption" after="goToDetailProductPageOnStorefront"/>
         <see selector="{{StorefrontProductPageSection.successMsg}}" userInput="Product $$configurableProduct.name$$ has been added to the requisition list RL {{SimpleProduct.name}}." stepKey="seeSuccessMessage" after="clickSaveButton"/>
         <!--Add product from requisition list to cart.-->
