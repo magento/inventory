@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminAssertOrderWithStorePickupShippingMethodActionGroup">
+        <annotations>
+            <description>Verify order info after order place from admin area.</description>
+        </annotations>
+        <arguments>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+        </arguments>
+
+        <see selector="{{AdminOrderShippingInformationSection.shippingMethod}}" userInput="In-Store Pickup Delivery - {{sourceName}}" stepKey="verifySource"/>
+        <see selector="{{AdminOrderShippingInformationSection.shippingPrice}}" userInput="$0.00" stepKey="verifyShippingCosts"/>
+        <dontSeeElement selector="{{AdminOrderDetailsMainActionsSection.shipBtn}}" stepKey="verifyShipButtonIsNotVisible"/>
+        <seeElement selector="{{AdminOrderDetailsMainActionsSection.notifyOrderBtn}}" stepKey="verifyNotifyOrderIsReadyForPickupButtonIsVisible"/>
+    </actionGroup>
+</actionGroups>
