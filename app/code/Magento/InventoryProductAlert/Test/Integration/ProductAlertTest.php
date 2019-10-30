@@ -183,7 +183,7 @@ class ProductAlertTest extends TestCase
         $sourceItem = reset($items);
         $sourceItem->setStatus($isInStock);
         if ($isInStock) {
-            $sourceItem->setQuantity($sourceItem->getQuantity() ?: 1);
+            $sourceItem->setQuantity($sourceItem->getQuantity() ?: 1.0);
         }
         $this->sourceItemsSaveInterface->execute([$sourceItem]);
     }

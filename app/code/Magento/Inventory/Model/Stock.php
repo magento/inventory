@@ -13,12 +13,20 @@ use Magento\InventoryApi\Api\Data\StockExtensionInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
 
 /**
- * {@inheritdoc}
+ * @inheritdoc
  *
  * @codeCoverageIgnore
  */
 class Stock extends AbstractExtensibleModel implements StockInterface
 {
+
+    /**
+     * Prefix of stock model events.
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'inventory_stock';
+
     /**
      * @inheritdoc
      */
