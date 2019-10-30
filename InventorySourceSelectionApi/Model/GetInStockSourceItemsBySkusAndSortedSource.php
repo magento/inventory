@@ -44,12 +44,15 @@ class GetInStockSourceItemsBySkusAndSortedSource
     }
 
     /**
+     * Retrieve source items for a defined set of SKUs and sorted source codes
+     *
      * @param array $skus
      * @param array $sortedSourceCodes
      * @return SourceItemInterface[]
      */
     public function execute(array $skus, array $sortedSourceCodes): array
     {
+        $skus = array_map('strval', $skus);
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceItemInterface::SKU, $skus, 'in')
             ->addFilter(SourceItemInterface::SOURCE_CODE, $sortedSourceCodes, 'in')
