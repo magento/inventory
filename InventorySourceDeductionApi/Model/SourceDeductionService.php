@@ -19,6 +19,9 @@ use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
  */
 class SourceDeductionService implements SourceDeductionServiceInterface
 {
+    /**
+     * Constant for zero stock quantity value.
+     */
     private const ZERO_STOCK_QUANTITY = 0.0;
 
     /**
