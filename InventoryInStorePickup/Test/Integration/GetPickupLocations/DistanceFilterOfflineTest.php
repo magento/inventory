@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocations;
 
-use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -40,25 +39,15 @@ class DistanceFilterOfflineTest extends TestCase
      */
     private $sortOrderBuilder;
 
-    /**
-     * @var ExtensionAttributesFactory
-     */
-    private $extensionAttributesFactory;
-
-    /**
-     * @inheritDoc
-     */
     protected function setUp()
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
         $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilderInterface::class);
         $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);
-        $this->extensionAttributesFactory = Bootstrap::getObjectManager()->get(ExtensionAttributesFactory::class);
     }
 
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
@@ -85,11 +74,8 @@ class DistanceFilterOfflineTest extends TestCase
         ?array $sortOrder,
         array $sortedPickupLocationCodes
     ) {
-        $extensionAttributes = $this->extensionAttributesFactory->create(DistanceFilterInterface::class);
-        $extensionAttributes->setSkus(['SKU-7']);
         $this->searchRequestBuilder->setDistanceFilterRadius($searchRequestData['radius'])
                                    ->setDistanceFilterCountry($searchRequestData['country'])
-                                   ->setDistanceFilterExtension($extensionAttributes)
                                    ->setScopeCode($salesChannelCode);
 
         if (isset($searchRequestData['postcode'])) {

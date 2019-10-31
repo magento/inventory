@@ -11,7 +11,6 @@ use InvalidArgumentException;
 use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FilterSetBuilder;
 use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\DistanceFilterBuilder;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
@@ -200,17 +199,6 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     public function setDistanceFilterCountry(string $country): SearchRequestBuilderInterface
     {
         $this->distanceFilterBuilder->setCountry($country);
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setDistanceFilterExtension(
-        DistanceFilterExtensionInterface $extension
-    ): SearchRequestBuilderInterface {
-        $this->distanceFilterBuilder->setExtensionAttributes($extension);
 
         return $this;
     }
