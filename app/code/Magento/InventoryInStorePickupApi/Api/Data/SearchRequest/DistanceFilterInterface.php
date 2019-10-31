@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
-use Magento\Framework\Api\ExtensibleDataInterface;
-
 /**
  * Filter by Distance to the Address.
  * Pickup Locations will be filtered by distance according to the geo-position of the entered address.
@@ -16,7 +14,7 @@ use Magento\Framework\Api\ExtensibleDataInterface;
  *
  * @api
  */
-interface DistanceFilterInterface extends ExtensibleDataInterface
+interface DistanceFilterInterface
 {
     public const DISTANCE_FIELD = 'distance';
 
@@ -54,21 +52,4 @@ interface DistanceFilterInterface extends ExtensibleDataInterface
      * @return string|null
      */
     public function getPostcode(): ?string;
-
-    /**
-     * Set Extension Attributes for Distance Filter.
-     *
-     * phpcs:disable Magento2.Files.LineLength.MaxExceeded
-     *
-     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterExtensionInterface|null $extensionAttributes
-     * @return void
-     */
-    public function setExtensionAttributes(?DistanceFilterExtensionInterface $extensionAttributes): void;
-
-    /**
-     * Get Extension Attributes for Distance Filter.
-     *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterExtensionInterface|null
-     */
-    public function getExtensionAttributes(): ?DistanceFilterExtensionInterface;
 }

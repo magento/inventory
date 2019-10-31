@@ -163,15 +163,7 @@ define([
          * @returns {*}
          */
         updateNearbyLocations: function (address) {
-            var self = this,
-                skus = [],
-                items = quote.getItems();
-
-            _.each(items, function (item) {
-                if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
-                    skus.push(item.sku);
-                }
-            });
+            var self = this;
 
             return pickupLocationsService
                 .getNearbyLocations({
@@ -180,10 +172,7 @@ define([
                         country: this.defaultCountryId,
                         city: address.city,
                         postcode: address.postcode,
-                        region: address.region,
-                        extensionAttributes: {
-                            skus: skus
-                        }
+                        region: address.region
                     },
                     pageSize: this.nearbySearchLimit
                 })
@@ -204,7 +193,7 @@ define([
 
             if (!customer.isLoggedIn()) {
                 $(loginFormSelector).validation();
-                emailValidationResult = !!$(loginFormSelector + ' input[name=username]').valid();
+                emailValidationResult = $(loginFormSelector + ' input[name=username]').valid() ? true : false;
 
                 if (!emailValidationResult) {
                     $(this.loginFormSelector + ' input[name=username]').focus();

@@ -10,7 +10,6 @@
         <arguments>
             <argument name="configProviders" xsi:type="array">
                 <item name="website_code_config_provider" xsi:type="object">Magento\InventoryInStorePickupFrontend\Model\Ui\WebsiteCodeConfigProvider</item>
-                <item name="product_option_sku_provider" xsi:type="object">Magento\InventoryInStorePickupFrontend\Model\Ui\ProductOptionSkuConfigProvider</item>
             </argument>
         </arguments>
     </type>
