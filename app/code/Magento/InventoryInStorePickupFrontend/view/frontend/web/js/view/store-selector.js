@@ -168,7 +168,9 @@ define([
                 items = quote.getItems();
 
             _.each(items, function (item) {
-                skus.push(item.sku);
+                if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
+                    skus.push(item.sku);
+                }
             });
 
             return pickupLocationsService

@@ -11,7 +11,7 @@ use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\ArrayManager;
-use Magento\InventoryInStorePickupFrontend\Model\Validator\StorePickUpValidator;
+use Magento\InventoryInStorePickupFrontend\Model\Validator\IsStorePickUpAvailableForWebsiteValidator;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -21,6 +21,8 @@ use Magento\Store\Model\StoreManagerInterface;
 class LayoutProcessor implements LayoutProcessorInterface
 {
     private const SEARCH_RADIUS = 'carriers/in_store/search_radius';
+    private const STORE_PICKUP_PATH = 'store-pickup';
+    private const SHIP_TO_PATH = 'ship-to';
 
     /**
      * @var ArrayManager
@@ -28,7 +30,7 @@ class LayoutProcessor implements LayoutProcessorInterface
     private $arrayManager;
 
     /**
-     * @var StorePickUpValidator
+     * @var IsStorePickUpAvailableForWebsiteValidator
      */
     private $storePickUpValidator;
 
@@ -45,13 +47,13 @@ class LayoutProcessor implements LayoutProcessorInterface
     /**
      * @param StoreManagerInterface $storeManager
      * @param ArrayManager $arrayManager
-     * @param StorePickUpValidator $storePickUpValidator
+     * @param IsStorePickUpAvailableForWebsiteValidator $storePickUpValidator
      * @param ScopeConfigInterface $config
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         ArrayManager $arrayManager,
-        StorePickUpValidator $storePickUpValidator,
+        IsStorePickUpAvailableForWebsiteValidator $storePickUpValidator,
         ScopeConfigInterface $config
     ) {
         $this->arrayManager = $arrayManager;
@@ -65,125 +67,36 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     public function process($jsLayout)
     {
-        try {
-            $website = $this->storeManager->getWebsite();
-        } catch (LocalizedException $e) {
-            return $jsLayout;
+        $website = $this->storeManager->getWebsite();
+        if (!$this->storePickUpValidator->execute($website->getCode())) {
+            return $this->removeStorePickup($jsLayout);
         }
 
-        if ($this->storePickUpValidator->execute($website->getCode())) {
-            $stepsPath = $this->arrayManager->findPath('steps', $jsLayout);
-            $jsLayout = $this->arrayManager->merge(
-                $stepsPath,
-                $jsLayout,
-                $this->getStepConfig()
-            );
-            $sidebarPath = $this->arrayManager->findPath('shipping-information', $jsLayout);
-            $jsLayout = $this->arrayManager->merge(
-                $sidebarPath,
-                $jsLayout,
-                $this->getStorePickupSideBarConfig()
-            );
-        }
+        return $this->arrayManager->merge(
+            $this->arrayManager->findPath(self::STORE_PICKUP_PATH, $jsLayout),
+            $jsLayout,
+            [
+                'config' => [
+                    'nearbySearchRadius' => $this->getSearchRadius(),
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Remove store pickup ui components from layout.
+     *
+     * @param array $jsLayout
+     * @return array
+     */
+    public function removeStorePickup(array $jsLayout): array
+    {
+        $storePickupPath = $this->arrayManager->findPath(self::STORE_PICKUP_PATH, $jsLayout);
+        $shipToPath = $this->arrayManager->findPath(self::SHIP_TO_PATH, $jsLayout);
+        $jsLayout = $this->arrayManager->remove($storePickupPath, $jsLayout);
+        $jsLayout = $this->arrayManager->remove($shipToPath, $jsLayout);
 
         return $jsLayout;
-    }
-
-    /**
-     * Get store pickup steps component configuration.
-     *
-     * @return array
-     */
-    private function getStepConfig(): array
-    {
-        return [
-            'children' => [
-                'store-pickup' => [
-                    'component' => 'Magento_InventoryInStorePickupFrontend/js/view/store-pickup',
-                    'config' => [
-                        'nearbySearchRadius' => $this->getSearchRadius(),
-                    ],
-                    'sortOrder' => 0,
-                    'deps' => ['checkout.steps.shipping-step.shippingAddress'],
-                    'children' => [
-                        'store-selector' => [
-                            'component' => 'Magento_InventoryInStorePickupFrontend/js/view/store-selector',
-                            'displayArea' => 'store-selector',
-                            'children' => [
-                                'customer-email' => $this->getCustomerEmailConfig(),
-                            ],
-                            'config' => [
-                                'popUpList' => [
-                                    'element' => '#opc-store-selector-popup',
-                                    'options' => [
-                                        'type' => 'popup',
-                                        'responsive' => true,
-                                        'innerScroll' => true,
-                                        'title' => __('Select Store'),
-                                        'trigger' => 'opc-store-selector-popup',
-                                        'buttons' => [],
-                                        'modalClass' => 'store-selector-popup',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Get side bar ui component configuration.
-     *
-     * @return array
-     * phpcs:disable Magento2.Files.LineLength.MaxExceeded
-     */
-    private function getStorePickupSideBarConfig(): array
-    {
-        return [
-            'children' => [
-                'ship-to' => [
-                    'rendererTemplates' => [
-                        'store-pickup-address' => [
-                            'component' => 'Magento_InventoryInStorePickupFrontend/js/view/shipping-information/address-renderer/store-pickup-address',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Get customer email ui component configuration.
-     *
-     * @return array
-     */
-    private function getCustomerEmailConfig(): array
-    {
-        return [
-            'component' => 'Magento_InventoryInStorePickupFrontend/js/view/form/element/email',
-            'displayArea' => 'customer-email',
-            'tooltip' => [
-                'description' => __('We\'ll send your order confirmation here.'),
-            ],
-            'children' => [
-                'before-login-form' => [
-                    'component' => 'uiComponent',
-                    'displayArea' => 'before-login-form',
-                    'children' => [
-                        /* before login form fields */
-                    ],
-                ],
-                'additional-login-form-fields' => [
-                    'component' => 'uiComponent',
-                    'displayArea' => 'additional-login-form-fields',
-                    'children' => [
-                        /* additional login form fields */
-                    ],
-                ],
-            ],
-        ];
     }
 
     /**
