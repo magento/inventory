@@ -16,9 +16,9 @@ use Magento\Store\Model\ScopeInterface;
 /**
  * Verify, if store pick-up available for given website.
  */
-class StorePickUpValidator
+class IsStorePickUpAvailableForWebsiteValidator
 {
-    const CONFIG_PATH = 'carriers/in_store/active';
+    private const CONFIG_PATH = 'carriers/in_store/active';
 
     /**
      * @var ValidationResultFactory
