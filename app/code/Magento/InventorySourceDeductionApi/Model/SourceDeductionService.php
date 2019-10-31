@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventorySourceDeductionApi\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
 
@@ -17,6 +19,11 @@ use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
  */
 class SourceDeductionService implements SourceDeductionServiceInterface
 {
+    /**
+     * Constant for zero stock quantity value.
+     */
+    private const ZERO_STOCK_QUANTITY = 0.0;
+
     /**
      * @var SourceItemsSaveInterface
      */
@@ -81,6 +88,11 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             $sourceItem = $this->getSourceItemBySourceCodeAndSku->execute($sourceCode, $itemSku);
             if (($sourceItem->getQuantity() - $qty) >= 0) {
                 $sourceItem->setQuantity($sourceItem->getQuantity() - $qty);
+                $stockStatus = $this->getSourceStockStatus(
+                    $stockItemConfiguration,
+                    $sourceItem
+                );
+                $sourceItem->setStatus($stockStatus);
                 $sourceItems[] = $sourceItem;
             } else {
                 throw new LocalizedException(
@@ -92,5 +104,22 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         if (!empty($sourceItems)) {
             $this->sourceItemsSave->execute($sourceItems);
         }
+    }
+
+    /**
+     * Get source item stock status after quantity deduction.
+     *
+     * @param StockItemConfigurationInterface $stockItemConfiguration
+     * @param SourceItemInterface $sourceItem
+     * @return int
+     */
+    private function getSourceStockStatus(
+        StockItemConfigurationInterface $stockItemConfiguration,
+        SourceItemInterface $sourceItem
+    ): int {
+        $sourceItemQty = $sourceItem->getQuantity() ?: self::ZERO_STOCK_QUANTITY;
+        return $sourceItemQty === $stockItemConfiguration->getMinQty() && !$stockItemConfiguration->getBackorders()
+            ? SourceItemInterface::STATUS_OUT_OF_STOCK
+            : SourceItemInterface::STATUS_IN_STOCK;
     }
 }
