@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Shipping\Controller\Adminhtml\Order\Shipment\View">
+        <plugin name="shipment_tracking" type="Magento\InventoryInStorePickupShippingAdminUi\Plugin\Shipping\Controller\Order\Shipment\View\ShipmentTrackingPlugin"/>
+    </type>
+    <type name="Magento\Shipping\Block\Adminhtml\View">
+        <plugin name="shipment_tracking_button" type="Magento\InventoryInStorePickupShippingAdminUi\Plugin\Shipping\Block\Adminhtml\View\ShipmentTrackingButtonPlugin"/>
+    </type>
+</config>

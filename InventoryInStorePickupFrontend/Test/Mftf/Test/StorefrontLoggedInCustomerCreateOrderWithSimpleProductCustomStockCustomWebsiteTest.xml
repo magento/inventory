@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontLoggedInCustomerCreateOrderWithSimpleProductCustomStockCustomWebsiteTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Registered customer place order with simple product with store pickup from custom website."/>
+            <description value="Verify, registered customer able to place order with store pickup from custom website."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3696789"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Add store code to url.-->
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Create test data.-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStock1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!--Create website, store and store view.-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!--Assign additional stock to additional website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="$stock.stock[name]$"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Assign product to sources.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <!--Assign product to additional website-->
+            <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Disable 'add store code to url'-->
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Delete created website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Register customer.-->
+        <actionGroup ref="RegisterCustomOnStorefrontActionGroup" stepKey="registerCustomer">
+            <argument name="Customer" value="Simple_US_Customer"/>
+            <argument name="storeCode" value="customStore.code"/>
+        </actionGroup>
+        <!--Add product to cart.-->
+        <actionGroup ref="StorefrontAddSimpleProductToCartCustomWebsiteActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
+            <argument name="customerVar" value="Simple_US_Customer"/>
+            <argument name="customerAddressVar" value="US_Address_TX"/>
+        </actionGroup>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <waitForPageLoad stepKey="waitForSuccess"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Verify order-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered {{minimalProductQty.value}}" stepKey="orderedQuantity"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterCreditMemo"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterCreditMemo">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$product.sku$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWithOnePiece.value}}"/>
+        </actionGroup>
+    </test>
+</tests>
