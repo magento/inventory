@@ -50,7 +50,6 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Add simple product to shopping cart -->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
         <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
@@ -64,6 +63,9 @@
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
+        <!--Verify product default stock status.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="navigateToProductEditPage"/>
+        <see selector="{{AdminProductSourcesGrid.rowStatusBySourceCode(_defaultSource.source_code)}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyStockStatus"/>
         <!--Verify product is not visible on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
         <see selector="{{StorefrontCategoryMainSection.emptyProductMessage}}" userInput="We can't find products matching the selection." stepKey="seeEmptyProductMessage"/>
