@@ -6,14 +6,15 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontPickUpSourceInfoSimpleProductCustomStockTest">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontReviewAndPaymentPageWithSimpleProductCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Source information in store pick up modal window."/>
-            <description value="Verify, source has all necessary info in store pick up modal window."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3640923"/>
-            <severity value="MAJOR"/>
+            <title value="Verify Review And Payment page with store pickup and simple product on custom source."/>
+            <description value="Verify, Review and Payment page has correct info with store pickup and simple product on custom source."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3651803"/>
+            <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
@@ -28,9 +29,9 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Create test data.-->
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
             <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="culverSource"/>
@@ -44,7 +45,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <!--Assign product to source.-->
+            <!--Assign product to sources.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
@@ -74,25 +75,27 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Add product to cart.-->
+        <!--Register customer and add simple product to cart.-->
+        <actionGroup ref="RegisterCustomOnStorefrontActionGroup" stepKey="registerCustomer">
+            <argument name="Customer" value="Simple_US_Customer"/>
+            <argument name="storeCode" value="_defaultStore.code"/>
+        </actionGroup>
         <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
-        <!--Verify source information.-->
+        <!--Navigate to Review & Payment page.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
-        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchCulverSource">
-            <argument name="searchString" value="$culverSource.source[postcode]$"/>
-        </actionGroup>
-        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifySource">
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
             <argument name="sourceName" value="$culverSource.source[name]$"/>
-            <argument name="sourcePhone" value="$culverSource.source[phone]$"/>
-            <argument name="sourceCountry" value="{{CulverStorePickupEnabledSource.country}}"/>
-            <argument name="sourcePostcode" value="$culverSource.source[postcode]$"/>
-            <argument name="sourceStreet" value="$culverSource.source[street]$"/>
-            <argument name="sourceCity" value="$culverSource.source[city]$"/>
-            <argument name="sourceRegion" value="$culverSource.source[region]$"/>
         </actionGroup>
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
+            <argument name="customerVar" value="Simple_US_Customer"/>
+            <argument name="customerAddressVar" value="US_Address_TX"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertPaymentInformationActionGroup" stepKey="verifyPaymentInformation"/>
     </test>
 </tests>

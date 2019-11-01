@@ -12,5 +12,6 @@
             <description>Click on 'next' button pick in store checkout page.</description>
         </annotations>
         <click selector="{{SelectStoreSection.nextBtn}}" stepKey="clickNextButton"/>
+        <waitForPageLoad stepKey="waitForPaymentPageLoad"/>
     </actionGroup>
 </actionGroups>

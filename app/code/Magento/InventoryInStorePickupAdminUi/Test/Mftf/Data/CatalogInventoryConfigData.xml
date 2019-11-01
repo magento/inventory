@@ -7,14 +7,6 @@
 -->
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
-    <entity name="OfflineDistanceProviderForDistanceBasedSSA">
-        <data key="path">cataloginventory/source_selection_distance_based/provider</data>
-        <data key="value">offline</data>
-    </entity>
-    <entity name="OnlineDistanceProviderForDistanceBasedSSA">
-        <data key="path">cataloginventory/source_selection_distance_based/provider</data>
-        <data key="value">google</data>
-    </entity>
     <entity name="EnableInStorePickup">
         <data key="path">carriers/in_store/active</data>
         <data key="value">1</data>
@@ -23,10 +15,12 @@
         <data key="path">carriers/in_store/active</data>
         <data key="value">0</data>
     </entity>
-    <entity name="ImportTables">
-        <data key="path">inventory-geonames:import</data>
+    <entity name="SetDefaultSearchRadius">
+        <data key="path">carriers/in_store/search_radius</data>
+        <data key="value">200</data>
     </entity>
-    <entity name="USTable">
-        <data key="value">us</data>
+    <entity name="IncreaseSearchRadius">
+        <data key="path">carriers/in_store/search_radius</data>
+        <data key="value">10000</data>
     </entity>
 </entities>
