@@ -6,14 +6,15 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontPickUpSourceInfoSimpleProductCustomStockTest">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateCreditMemoWithSimpleProductCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Source information in store pick up modal window."/>
-            <description value="Verify, source has all necessary info in store pick up modal window."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3640923"/>
-            <severity value="MAJOR"/>
+            <title value="Admin create credit memo with simple product with store pickup."/>
+            <description value="Verify, qty will be returned correctly after credit memo created with simple product on custom stock with store pickup shipping method."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3747224"/>
+            <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
@@ -28,9 +29,10 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Create test data.-->
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
             <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="culverSource"/>
@@ -44,7 +46,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <!--Assign product to source.-->
+            <!--Assign product to sources.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
@@ -62,6 +64,7 @@
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Disable 'In Store Pickup' shipping method.-->
             <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <!--Assign Default Stock to Default Website.-->
@@ -75,24 +78,50 @@
         </after>
 
         <!--Add product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$customer$"/>
+        </actionGroup>
         <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
-        <!--Verify source information.-->
+        <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
-        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchCulverSource">
-            <argument name="searchString" value="$culverSource.source[postcode]$"/>
-        </actionGroup>
-        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifySource">
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
             <argument name="sourceName" value="$culverSource.source[name]$"/>
-            <argument name="sourcePhone" value="$culverSource.source[phone]$"/>
-            <argument name="sourceCountry" value="{{CulverStorePickupEnabledSource.country}}"/>
-            <argument name="sourcePostcode" value="$culverSource.source[postcode]$"/>
-            <argument name="sourceStreet" value="$culverSource.source[street]$"/>
-            <argument name="sourceCity" value="$culverSource.source[city]$"/>
-            <argument name="sourceRegion" value="$culverSource.source[region]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <waitForPageLoad stepKey="waitForSuccess"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Create invoice.-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>
+        <!--Create shipment-->
+        <actionGroup ref="AdminCreateShipmentWithStorePickupActionGroup" stepKey="createShipment"/>
+        <!--Create Credit Memo-->
+        <actionGroup ref="AdminCreateCreditMemoWithReturnToStockActionGroup" stepKey="createCreditMemo"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQty"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQty">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$product.sku$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantityCulverSource">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockQty" value="{{defaultProductStockQtyWithTwoSources.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantityAustinSource">
+            <argument name="sourceName" value="$austinSource.source[name]$"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockQty" value="{{defaultProductStockQtyWithTwoSources.value}}"/>
         </actionGroup>
     </test>
 </tests>
