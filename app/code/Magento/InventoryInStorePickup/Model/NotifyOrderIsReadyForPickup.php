@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
@@ -54,12 +56,18 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     private $argumentExtensionFactory;
 
     /**
+     * @var DateTime
+     */
+    private $timezone;
+
+    /**
      * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
      * @param OrderRepositoryInterface $orderRepository
      * @param ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory
      * @param ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory
+     * @param DateTime $timezone
      */
     public function __construct(
         IsOrderReadyForPickupInterface $isOrderReadyForPickup,
@@ -67,7 +75,8 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         ReadyForPickupNotifier $emailNotifier,
         OrderRepositoryInterface $orderRepository,
         ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory,
-        ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory
+        ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory,
+        TimezoneInterface $timezone
     ) {
         $this->isOrderReadyForPickup = $isOrderReadyForPickup;
         $this->shipOrder = $shipOrder;
@@ -75,6 +84,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         $this->orderRepository = $orderRepository;
         $this->shipmentArgumentsFactory = $shipmentArgumentsFactory;
         $this->argumentExtensionFactory = $argumentExtensionFactory;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -90,9 +100,6 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
 
         /** @noinspection PhpParamsInspection */
         $this->emailNotifier->notify($order);
-
-        /* TODO: add order comment? */
-
         $this->shipOrder->execute(
             $orderId,
             [],
@@ -103,6 +110,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
             [],
             $this->getShipmentArguments($order)
         );
+        $this->addCommentToOrder($order);
     }
 
     /**
@@ -123,5 +131,23 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         $arguments->setExtensionAttributes($extension);
 
         return $arguments;
+    }
+
+    /**
+     * Add notification date to order comment.
+     *
+     * @param OrderInterface $order
+     * @return void
+     */
+    private function addCommentToOrder(OrderInterface $order): void
+    {
+        $time = $this->timezone->formatDateTime(
+            new \DateTime(),
+            \IntlDateFormatter::LONG,
+            \IntlDateFormatter::MEDIUM
+        );
+        $comment = __('Order notified for pickup at: ' . $time);
+        $order->addCommentToStatusHistory($comment, $order->getStatus(), true)->setIsCustomerNotified(1);
+        $this->orderRepository->save($order);
     }
 }
