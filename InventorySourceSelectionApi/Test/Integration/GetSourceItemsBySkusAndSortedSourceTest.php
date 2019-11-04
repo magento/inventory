@@ -86,4 +86,52 @@ class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
 
         self::assertSame(array_keys($expected), $keys, 'Sources sorting is not preserved');
     }
+
+    /**
+     * @return array
+     */
+    public function numericOnlySkusDataProvider(): array
+    {
+        return [
+            [
+                [123, 456],
+                ['eu-1'],
+                [
+                    'eu-1/123',
+                    'eu-1/456',
+                ]
+            ],
+            [
+                [123, '456DEF'],
+                ['eu-1'],
+                [
+                    'eu-1/123',
+                    'eu-1/456DEF',
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_numeric_skus.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @dataProvider numericOnlySkusDataProvider
+     * @param array $skus
+     * @param array $sortedSourceCodes
+     * @param array $expected
+     */
+    public function testNumericOnlySkus(array $skus, array $sortedSourceCodes, array $expected): void
+    {
+        $sourceItems = $this->subject->execute($skus, $sortedSourceCodes);
+
+        self::assertCount(count($expected), $sourceItems, 'Expected and actual product count mismatch');
+
+        $keys = [];
+        foreach ($sourceItems as $sourceItem) {
+            $keys[] = $sourceItem->getSourceCode() . '/' . $sourceItem->getSku();
+        }
+        self::assertSame($expected, $keys, 'Expected and actual product SKUs mismatch');
+    }
 }

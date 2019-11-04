@@ -6,16 +6,13 @@
   */
 -->
 
-<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
-    <entity name="StorePickupEnabledSource" type="source">
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="CulverStorePickupEnabledSource" type="source">
         <data key="id_field_name">source_code</data>
-        <data key="name" unique="suffix">Test Store Pickup Source </data>
-        <data key="source_code" unique="suffix">test_store_pickup_source_</data>
+        <data key="name" unique="suffix">Culver Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">culver_test_store_pickup_source_</data>
         <data key="enabled">1</data>
-        <data key="description">Source for "In Store Pickup" shipping method.</data>
-        <data key="latitude">0</data>
-        <data key="longitude">0</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Culver City address.</data>
         <data key="priority">100</data>
         <data key="contact_name">John Doe</data>
         <data key="email" unique="prefix">john.doe@example.com</data>
@@ -28,6 +25,27 @@
         <data key="city">Culver City</data>
         <data key="street">6161 West Centinela Avenue</data>
         <data key="postcode">90230</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+    <entity name="AustinStorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Austin Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">austin_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Austin address.</data>
+        <data key="priority">100</data>
+        <data key="city">Austin</data>
+        <data key="region">Texas</data>
+        <data key="region_code">TX</data>
+        <data key="region_id">57</data>
+        <data key="street">7700 West Parmer Lane</data>
+        <data key="postcode">78729</data>
+        <data key="email" unique="prefix">joe.buyer@email.com</data>
+        <data key="phone">512-345-6789</data>
+        <data key="contact_name">John Doe</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
         <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
     </entity>
 </entities>
