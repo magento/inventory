@@ -19,6 +19,8 @@
             <group value="multi_mode"/>
         </annotations>
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
+
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -45,6 +47,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
         </after>
 
         <!--Verify product on storefront.-->
