@@ -12,7 +12,7 @@
             <stories value="Simple Product Custom Stock."/>
             <title value="Source information in store pick up modal window."/>
             <description value="Verify, source has all necessary info in store pick up modal window."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3640923"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3640923"/>
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>

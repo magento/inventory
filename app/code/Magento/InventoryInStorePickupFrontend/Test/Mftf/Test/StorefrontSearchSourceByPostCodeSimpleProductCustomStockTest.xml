@@ -6,14 +6,13 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="StorefrontSearchSourceByPostCodeSimpleProductCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
             <title value="Search source by postcode on storefront."/>
             <description value="Verify, customer able to find source by postcode."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3702827"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3702827"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
