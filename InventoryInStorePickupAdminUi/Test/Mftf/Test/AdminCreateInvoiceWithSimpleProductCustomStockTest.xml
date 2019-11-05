@@ -13,7 +13,7 @@
             <stories value="Simple Product Custom Stock."/>
             <title value="Admin create invoice with simple product with store pickup."/>
             <description value="Verify, admin able to create invoice with simple product on custom stock with store pickup shipping method."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3746825"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3746825"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>

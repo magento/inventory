@@ -13,7 +13,7 @@
             <stories value="Simple Product Custom Stock."/>
             <title value="Verify billing address will be automatically filled for customer with store pickup and simple product on custom source."/>
             <description value="Verify, billing address will be automatically filled for customer with address with store pickup and simple product on custom source."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3670236"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3670236"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>

@@ -12,7 +12,7 @@
             <stories value="Simple Product Custom Stock."/>
             <title value="Search source by city name on storefront."/>
             <description value="Verify, customer able to find source by city name."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3702577"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3702577"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
