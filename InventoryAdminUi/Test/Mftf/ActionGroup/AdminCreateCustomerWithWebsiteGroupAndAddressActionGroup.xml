@@ -25,7 +25,7 @@
         <fillField selector="{{AdminCustomerAddressesSection.firstNameForAddress}}" userInput="{{address.firstname}}" stepKey="fillFirstNameForAddress"/>
         <fillField selector="{{AdminCustomerAddressesSection.lastNameForAddress}}" userInput="{{address.lastname}}" stepKey="fillLastNameForAddress"/>
         <fillField selector="{{AdminCustomerAddressesSection.streetAddress}}" userInput="{{address.street[0]}}" stepKey="fillStreetAddress"/>
-        <fillField selector="{{AdminCustomerAddressesSection.city}}" userInput="{{address.city}}" stepKey="fillStreetAddress"/>
+        <fillField selector="{{AdminCustomerAddressesSection.city}}" userInput="{{address.city}}" stepKey="fillCityAddress"/>
         <selectOption selector="{{AdminCustomerAddressesSection.country}}" userInput="{{address.country}}" stepKey="selectCountry"/>
         <selectOption selector="{{AdminCustomerAddressesSection.state}}" userInput="{{address.state}}" stepKey="selectState"/>
         <fillField selector="{{AdminCustomerAddressesSection.zip}}" userInput="{{address.postcode}}" stepKey="fillZip"/>
