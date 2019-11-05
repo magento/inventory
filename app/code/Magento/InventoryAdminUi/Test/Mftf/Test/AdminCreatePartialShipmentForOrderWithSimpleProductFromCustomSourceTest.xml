@@ -70,6 +70,10 @@
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+
+            <!-- Perform reindex and flush cache -->
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
             <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
