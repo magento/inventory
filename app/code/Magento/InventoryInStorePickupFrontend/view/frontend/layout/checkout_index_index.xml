@@ -72,6 +72,7 @@
                                 <item name="sidebar" xsi:type="array">
                                     <item name="children" xsi:type="array">
                                         <item name="shipping-information" xsi:type="array">
+                                            <item name="component" xsi:type="string">Magento_InventoryInStorePickupFrontend/js/view/shipping-information</item>
                                             <item name="children" xsi:type="array">
                                                 <item name="ship-to" xsi:type="array">
                                                     <item name="rendererTemplates" xsi:type="array">
