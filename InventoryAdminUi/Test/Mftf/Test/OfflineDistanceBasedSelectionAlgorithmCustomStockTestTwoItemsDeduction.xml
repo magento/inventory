@@ -64,6 +64,8 @@
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="5" stepKey="setUASource1Quantity"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
             <!--Disable created sources.-->
@@ -147,7 +149,7 @@
         <!--Verify Distance Based Source Selection Algorithm.-->
         <click selector="{{AdminSourceSelectionFormSection.sourceSelectionAlgorithmToggle}}" stepKey="openSourceSelectionAlgorithmList"/>
         <click selector="{{AdminSourceSelectionFormSection.selectDistancePriority}}" stepKey="selectDistancePriorityAlgorithm"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForDistanceFilterApplied"/>
 
         <!--Verify Distance Based Algorithm applied correctly.-->
         <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowProductSku('0')}}" userInput="$$simpleProduct.sku$$" stepKey="checkProductSku"/>
