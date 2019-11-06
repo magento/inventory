@@ -15,7 +15,8 @@
     <event name="sales_order_creditmemo_save_after">
         <observer name="deduct_source_item_quantity_on_refund" instance="Magento\InventorySales\Observer\SalesInventory\DeductSourceItemQuantityOnRefundObserver"/>
     </event>
-    <event name="catalog_product_is_salable_after">
-        <observer name="is_salable_check_after" instance="Magento\InventorySales\Observer\Product\IsProductSalable"/>
+    <!--There is no need to register product sale and reindex stock items, as in multi source inventory only reservations are created after order placement.-->
+    <event name="checkout_submit_all_after">
+        <observer name="inventory" instance="Magento\CatalogInventory\Observer\CheckoutAllSubmitAfterObserver" disabled="true"/>
     </event>
 </config>

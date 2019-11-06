@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontQuickOrderSimpleProductsCustomStockTest" extends="StorefrontQuickOrderAddToCartTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Storefront Quick Order With Simple Products On Custom Stock."/>
+            <description value="Verify, customer able to create quick order with couple simple products on custom stock."/>
+            <severity value="MAJOR"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/987821/scenarios/3356756"/>
+            <group value="msi_b2b"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="SimpleProduct2" stepKey="product"/>
+            <!--Create sources and stock.-->
+            <createData entity="_minimalSource" stepKey="source1"/>
+            <createData entity="_minimalSource" stepKey="source2"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <!--Link additional sources with stock.-->
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source1"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source2"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdmin"/>
+            <!--Assign source1 to product1 and set quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($createProduct.id$)}}" stepKey="openSimple1ProductPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct1">
+                <argument name="sourceCode" value="$source1.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct1"/>
+            <!--Assign source2 to product2 and set quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openSimple2ProductPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct2">
+                <argument name="sourceCode" value="$source2.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct2"/>
+        </before>
+        <after>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable created additional source1.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
+                <argument name="sourceCode" value="$source1.source[source_code]$"/>
+            </actionGroup>
+            <!--Disable created additional source2.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
+                <argument name="sourceCode" value="$source2.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logout"/>
+        </after>
+
+        <!--Quick order second simple product.-->
+        <amOnPage url="{{StorefrontQuickOrderPage.url}}" stepKey="goQuickOrderPageForProduct2"/>
+        <actionGroup ref="StorefrontQuickOrderAddProductToCart" stepKey="quickOrderAddProduct2ToCart">
+            <argument name="productSku" value="$product.sku$"/>
+        </actionGroup>
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Verify Order.-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered {{minimalProductQty.value}}" stepKey="verifyOrderedQuantityProduct"/>
+        <!--Verify product1 quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct1Grid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct1">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$createProduct.sku$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProduct1Quantity">
+            <argument name="sourceName" value="$source1.source[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWithOnePiece.value}}"/>
+        </actionGroup>
+        <!--Verify product2 quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct2Grid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct2">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$product.sku$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProduct2Quantity">
+            <argument name="sourceName" value="$source2.source[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWithOnePiece.value}}"/>
+        </actionGroup>
+    </test>
+</tests>

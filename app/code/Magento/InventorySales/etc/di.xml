@@ -178,4 +178,7 @@
                 type="Magento\InventoryCatalog\Plugin\InventoryConfigurationApi\GetStockItemConfiguration\LoadIsInStockPlugin"/>
     </type>
     <preference for="Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface" type="Magento\InventorySales\Model\GetSkuFromOrderItem"/>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="inventory_is_salable_check_after" type="Magento\InventorySales\Plugin\Catalog\Model\Product"/>
+    </type>
 </config>

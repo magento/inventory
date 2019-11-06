@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 
-use Magento\InventoryReservationCli\Model\GetCompleteOrderStatusList;
+use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 
 /**
@@ -16,15 +16,15 @@ use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 class FilterCompleteOrders
 {
     /**
-     * @var GetCompleteOrderStatusList
+     * @var GetCompleteOrderStateList
      */
     private $getCompleteOrderStatusList;
 
     /**
-     * @param GetCompleteOrderStatusList $getCompleteOrderStatusList
+     * @param GetCompleteOrderStateList $getCompleteOrderStatusList
      */
     public function __construct(
-        GetCompleteOrderStatusList $getCompleteOrderStatusList
+        GetCompleteOrderStateList $getCompleteOrderStatusList
     ) {
         $this->getCompleteOrderStatusList = $getCompleteOrderStatusList;
     }
@@ -40,7 +40,7 @@ class FilterCompleteOrders
         return array_filter(
             $inconsistencies,
             function (SalableQuantityInconsistency $inconsistency) {
-                return in_array($inconsistency->getOrder()->getStatus(), $this->getCompleteOrderStatusList->execute());
+                return in_array($inconsistency->getOrderStatus(), $this->getCompleteOrderStatusList->execute());
             }
         );
     }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminCreateCustomerWithWebsiteGroupAndAddressActionGroup" extends="AdminCreateCustomerWithWebSiteAndGroup">
+        <annotations>
+            <description>Create new customer with group, specified website and address</description>
+        </annotations>
+        <arguments>
+            <argument name="address" defaultValue="US_Address_NY"/>
+        </arguments>
+        <remove keyForRemoval="save"/>
+        <click selector="{{AdminCustomerAccountInformationSection.saveCustomerAndContinueEdit}}" after="waitForCustomerStoreViewExpand" stepKey="saveCustomer"/>
+        <click selector="{{AdminCustomerAccountInformationSection.addressesButton}}" stepKey="navigateToAddresses"/>
+        <waitForPageLoad stepKey="waitForAddresses"/>
+        <click selector="{{AdminCustomerAddressesSection.addNewAddress}}" stepKey="addNewAddress"/>
+        <waitForPageLoad stepKey="waitForAddressFields"/>
+        <click selector="{{AdminCustomerAddressesSection.defaultBillingAddress}}" stepKey="checkDefaulBillingAddress"/>
+        <click selector="{{AdminCustomerAddressesSection.defaultShippingAddress}}" stepKey="checkDefaultShippingAddress"/>
+        <fillField selector="{{AdminCustomerAddressesSection.firstNameForAddress}}" userInput="{{address.firstname}}" stepKey="fillFirstNameForAddress"/>
+        <fillField selector="{{AdminCustomerAddressesSection.lastNameForAddress}}" userInput="{{address.lastname}}" stepKey="fillLastNameForAddress"/>
+        <fillField selector="{{AdminCustomerAddressesSection.streetAddress}}" userInput="{{address.street[0]}}" stepKey="fillStreetAddress"/>
+        <fillField selector="{{AdminCustomerAddressesSection.city}}" userInput="{{address.city}}" stepKey="fillCityAddress"/>
+        <selectOption selector="{{AdminCustomerAddressesSection.country}}" userInput="{{address.country}}" stepKey="selectCountry"/>
+        <selectOption selector="{{AdminCustomerAddressesSection.state}}" userInput="{{address.state}}" stepKey="selectState"/>
+        <fillField selector="{{AdminCustomerAddressesSection.zip}}" userInput="{{address.postcode}}" stepKey="fillZip"/>
+        <fillField selector="{{AdminCustomerAddressesSection.phoneNumber}}" userInput="{{address.telephone}}" stepKey="fillPhoneNumber"/>
+        <click selector="{{AdminCustomerAddressesSection.saveAddress}}" stepKey="saveAddress"/>
+        <waitForPageLoad stepKey="waitForAddressSave"/>
+    </actionGroup>
+</actionGroups>
