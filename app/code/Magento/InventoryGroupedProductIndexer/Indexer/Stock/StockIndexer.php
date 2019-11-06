@@ -7,17 +7,24 @@ declare(strict_types=1);
 
 namespace Magento\InventoryGroupedProductIndexer\Indexer\Stock;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
+use Magento\InventoryIndexer\Indexer\Stock\PrepareIndexDataForClearingIndex;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterface;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
 
+/**
+ * Grouped product stock indexer class
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) Will be removed after deleting DefaultStockProviderInterface
+ */
 class StockIndexer
 {
     /**
@@ -56,6 +63,11 @@ class StockIndexer
     private $defaultStockProvider;
 
     /**
+     * @var PrepareIndexDataForClearingIndex
+     */
+    private $prepareIndexDataForClearingIndex;
+
+    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -65,6 +77,7 @@ class StockIndexer
      * @param IndexDataByStockIdProvider $indexDataByStockIdProvider
      * @param IndexTableSwitcherInterface $indexTableSwitcher
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param PrepareIndexDataForClearingIndex|null $prepareIndexDataForClearingIndex
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
@@ -73,7 +86,8 @@ class StockIndexer
         IndexNameBuilder $indexNameBuilder,
         IndexDataByStockIdProvider $indexDataByStockIdProvider,
         IndexTableSwitcherInterface $indexTableSwitcher,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex = null
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructure;
@@ -82,34 +96,42 @@ class StockIndexer
         $this->indexDataByStockIdProvider = $indexDataByStockIdProvider;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex ?: ObjectManager::getInstance()
+            ->get(PrepareIndexDataForClearingIndex::class);
     }
 
     /**
+     * Executes full index
+     *
      * @return void
      * @throws StateException
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $stockIds = $this->getAllStockIds->execute();
         $this->executeList($stockIds);
     }
 
     /**
+     * Executes row index by stock Id
+     *
      * @param int $stockId
      * @return void
      * @throws StateException
      */
-    public function executeRow(int $stockId)
+    public function executeRow(int $stockId): void
     {
         $this->executeList([$stockId]);
     }
 
     /**
+     * Executes index by list of stock ids
+     *
      * @param array $stockIds
      * @return void
      * @throws StateException
      */
-    public function executeList(array $stockIds)
+    public function executeList(array $stockIds): void
     {
         foreach ($stockIds as $stockId) {
             if ($this->defaultStockProvider->getId() === $stockId) {
@@ -130,7 +152,7 @@ class StockIndexer
 
             $this->indexHandler->cleanIndex(
                 $mainIndexName,
-                $indexData,
+                $this->prepareIndexDataForClearingIndex->execute($indexData),
                 ResourceConnection::DEFAULT_CONNECTION
             );
 

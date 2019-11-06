@@ -11,14 +11,38 @@
     <entity name="defaultProductQty">
         <data key="value">100</data>
     </entity>
+    <entity name="defaultProductQtyBoughtWithOnePiece">
+        <data key="value">99</data>
+    </entity>
+    <entity name="defaultProductQtyBoughtWith5Pieces">
+        <data key="value">95</data>
+    </entity>
+    <entity name="defaultProductQtyBoughtWithTwoPieces">
+        <data key="value">98</data>
+    </entity>
     <entity name="defaultProductQtyBoughtWith5Pieces">
         <data key="value">95</data>
     </entity>
     <entity name="defaultProductQtyBoughtWith10Pieces">
         <data key="value">90</data>
     </entity>
+    <entity name="productWithThousandQty">
+        <data key="value">1000</data>
+    </entity>
+    <entity name="productWithThousandQtyBoughtWithTwoPieces">
+        <data key="value">998</data>
+    </entity>
+    <entity name="productWithThousandQtyBoughtWith10Pieces">
+        <data key="value">990</data>
+    </entity>
+    <entity name="defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces">
+        <data key="value">190</data>
+    </entity>
     <entity name="minimalProductQty">
         <data key="value">1</data>
+    </entity>
+    <entity name="decimalProductQty">
+        <data key="value">1.5</data>
     </entity>
     <entity name="101ProductQty">
         <data key="value">101</data>
@@ -28,6 +52,9 @@
     </entity>
     <entity name="tenPiecesAddToCart">
         <data key="value">10</data>
+    </entity>
+    <entity name="zeroProductQuantity">
+        <data key="value">0</data>
     </entity>
     <entity name="SourceStatusInStock">
         <data key="value">In Stock</data>

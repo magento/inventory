@@ -18,4 +18,8 @@
     <event name="catalog_product_is_salable_after">
         <observer name="is_salable_check_after" instance="Magento\InventorySales\Observer\Product\IsProductSalable"/>
     </event>
+    <!--There is no need to register product sale and reindex stock items, as in multi source inventory only reservations are created after order placement.-->
+    <event name="checkout_submit_all_after">
+        <observer name="inventory" instance="Magento\CatalogInventory\Observer\CheckoutAllSubmitAfterObserver" disabled="true"/>
+    </event>
 </config>
