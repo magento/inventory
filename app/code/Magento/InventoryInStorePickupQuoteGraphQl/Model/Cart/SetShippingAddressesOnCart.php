@@ -80,6 +80,16 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
         $shippingAddress = $this->getShippingAddress($shippingAddressInput, $context);
         $this->assignPickupLocation($shippingAddress, $shippingAddressInput);
 
+        $errors = $shippingAddress->validate();
+
+        if (true !== $errors) {
+            $e = new GraphQlInputException(__('Shipping address errors'));
+            foreach ($errors as $error) {
+                $e->addError(new GraphQlInputException($error));
+            }
+            throw $e;
+        }
+
         $this->assignShippingAddressToCart->execute($cart, $shippingAddress);
     }
 

@@ -94,8 +94,7 @@ class ModifySelectInProductPriceIndexFilter
             $select->from(['price_index' => $priceTable->getTableName()], []);
             $priceEntityField = $priceTable->getEntityField();
 
-            if (!$this->isDefaultStock($stock)
-                && $this->resourceConnection->getConnection()->isTableExists($stockTable)) {
+            if (!$this->isDefaultStock($stock)) {
                 $select->joinInner(
                     ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                     "product_entity.entity_id = price_index.{$priceEntityField}",
