@@ -27,6 +27,7 @@ class IsProductAssignedToStockCache
      * @param string $sku
      * @param int $stockId
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(IsProductAssignedToStock $subject, callable $proceed, string $sku, int $stockId): bool
     {
