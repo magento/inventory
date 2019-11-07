@@ -9,7 +9,7 @@ namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Validation\ValidationException;
-use Magento\InventoryReservationCli\Model\GetOrdersInNotFinalState;
+use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderItemsDataForOrdersInNotFinalState;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
@@ -18,11 +18,6 @@ use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
  */
 class AddExpectedReservations
 {
-    /**
-     * @var GetOrdersInNotFinalState
-     */
-    private $getOrdersInNotFinalState;
-
     /**
      * @var ReservationBuilderInterface
      */
@@ -39,49 +34,51 @@ class AddExpectedReservations
     private $serializer;
 
     /**
-     * @param GetOrdersInNotFinalState $getOrdersInNotFinalState
+     * @var GetOrderItemsDataForOrdersInNotFinalState
+     */
+    private $getOrderItemsDataForOrderInNotFinalState;
+
+    /**
      * @param ReservationBuilderInterface $reservationBuilder
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param SerializerInterface $serializer
+     * @param GetOrderItemsDataForOrdersInNotFinalState $getOrderItemsDataForOrderInNotFinalState
      */
     public function __construct(
-        GetOrdersInNotFinalState $getOrdersInNotFinalState,
         ReservationBuilderInterface $reservationBuilder,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        GetOrderItemsDataForOrdersInNotFinalState $getOrderItemsDataForOrderInNotFinalState
     ) {
-        $this->getOrdersInNotFinalState = $getOrdersInNotFinalState;
         $this->reservationBuilder = $reservationBuilder;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->serializer = $serializer;
+        $this->getOrderItemsDataForOrderInNotFinalState = $getOrderItemsDataForOrderInNotFinalState;
     }
 
     /**
      * Add expected reservations by current incomplete orders.
      *
      * @param Collector $collector
+     * @param int $bunchSize
+     * @param int $page
      * @throws ValidationException
      */
-    public function execute(Collector $collector): void
+    public function execute(Collector $collector, int $bunchSize = 50, int $page = 1): void
     {
-        foreach ($this->getOrdersInNotFinalState->execute() as $order) {
-            $websiteId = (int)$order->getStore()->getWebsiteId();
+        foreach ($this->getOrderItemsDataForOrderInNotFinalState->execute($bunchSize, $page) as $data) {
+            $websiteId = (int)$data['website_id'];
             $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
-            foreach ($order->getItems() as $item) {
-                if ($item->getHasChildren()) {
-                    continue;
-                }
-                $reservation = $this->reservationBuilder
-                    ->setSku($item->getSku())
-                    ->setQuantity((float)$item->getQtyOrdered())
-                    ->setStockId($stockId)
-                    ->setMetadata($this->serializer->serialize(['object_id' => (int)$order->getEntityId()]))
-                    ->build();
+            $reservation = $this->reservationBuilder
+                ->setSku($data['sku'])
+                ->setQuantity((float)$data['qty_ordered'])
+                ->setStockId($stockId)
+                ->setMetadata($this->serializer->serialize(['object_id' => (int)$data['entity_id']]))
+                ->build();
 
-                $collector->addReservation($reservation);
-                $collector->addOrder($order);
-            }
+            $collector->addReservation($reservation);
+            $collector->addOrderData($data);
         }
     }
 }

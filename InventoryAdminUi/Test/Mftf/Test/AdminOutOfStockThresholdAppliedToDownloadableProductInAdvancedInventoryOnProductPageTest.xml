@@ -67,7 +67,7 @@
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             <argument name="qty" value="100" />
         </actionGroup>
-        <actionGroup ref="AdminClickOnAdvancedInventoryLinkActionGroup" stepKey="clickOnAdvancedInventoryLink"/>
+        <actionGroup ref="AdminClickOnAdvancedInventoryButtonActionGroup" stepKey="clickOnAdvancedInventoryButton"/>
         <actionGroup ref="AdminFillAdvancedInventoryOutOfStockThresholdActionGroup" stepKey="fillAdvancedInventoryOutOfStockThreshold">
             <argument name="qty" value="101"/>
         </actionGroup>
