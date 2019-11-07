@@ -10,6 +10,9 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
+/**
+ * Add order comment regarding store pickup notification.
+ */
 class AddCommentToOrder
 {
     /**
@@ -34,6 +37,7 @@ class AddCommentToOrder
         $this->orderRepository = $orderRepository;
         $this->timezone = $timezone;
     }
+
     /**
      * @param OrderInterface $order
      * @throws \Exception
@@ -46,7 +50,7 @@ class AddCommentToOrder
             \IntlDateFormatter::LONG,
             \IntlDateFormatter::MEDIUM
         );
-        $comment = __('Order notified for pickup at: %1',  $time);
+        $comment = __('Order notified for pickup at: %1', $time);
         $order->addCommentToStatusHistory($comment, $order->getStatus(), true)->setIsCustomerNotified(1);
         $this->orderRepository->save($order);
     }
