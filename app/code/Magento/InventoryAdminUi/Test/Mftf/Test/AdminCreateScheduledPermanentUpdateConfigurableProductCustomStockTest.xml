@@ -79,6 +79,9 @@
             <argument name="sourceCode" value="$source.source[source_code]$"/>
         </actionGroup>
         <actionGroup ref="saveProductForm" stepKey="saveConfigurableVariation"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
         <!--Verify configurable product on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableProductIsPresentOnCategoryPage">
             <argument name="category" value="$createCategory$"/>
