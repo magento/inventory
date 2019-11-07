@@ -48,10 +48,8 @@
                 <argument name="StoreGroup" value="NewStoreData"/>
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
-            <actionGroup ref="AdminCreateCustomerWithWebsiteAndStoreViewActionGroup"
-                         stepKey="adminCreateCustomerCustomWebsite">
-                <argument name="customerData" value="MsiCustomer1"/>
-                <argument name="address" value="US_Address_TX"/>
+            <actionGroup ref="AdminCreateCustomerWithWebsiteGroupAndAddressActionGroup" stepKey="adminCreateCustomerCustomWebsite">
+                <argument name="customerData" value="Simple_US_Customer"/>
                 <argument name="website" value="{{NewWebSiteData.name}}"/>
                 <argument name="storeView" value="{{customStore.name}}"/>
             </actionGroup>
@@ -81,6 +79,8 @@
             </actionGroup>
             <deleteData createDataKey="createProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </after>
         <actionGroup ref="goToProductPageViaID" stepKey="goToProduct1">
             <argument name="productId" value="$createProduct1.id$"/>
@@ -103,7 +103,7 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad11"/>
         <click selector="{{AdminOrdersGridSection.createNewOrder}}" stepKey="clickOnCreateNewOrder1"/>
         <waitForPageLoad stepKey="waitForCustomerGridLoad"/>
-        <fillField userInput="{{MsiCustomer1.email}}" selector="{{AdminOrderCustomersGridSection.emailInput}}"
+        <fillField userInput="{{Simple_US_Customer.email}}" selector="{{AdminOrderCustomersGridSection.emailInput}}"
                    stepKey="filterEmail"/>
         <click selector="{{AdminOrderCustomersGridSection.apply}}" stepKey="applyFilter"/>
         <waitForPageLoad stepKey="waitForFilteredCustomerGridLoad"/>
