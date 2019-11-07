@@ -39,6 +39,8 @@ class AddCommentToOrder
     }
 
     /**
+     * Add notification comment to the order.
+     *
      * @param OrderInterface $order
      * @throws \Exception
      * @return void
