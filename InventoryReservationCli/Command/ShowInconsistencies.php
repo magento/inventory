@@ -7,11 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Command;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Validation\ValidationException;
+use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventoryReservationCli\Model\GetSalableQuantityInconsistencies;
+use Magento\InventoryReservationCli\Model\ResourceModel\GetOrdersTotalCount;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterCompleteOrders;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterIncompleteOrders;
 use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -41,19 +46,35 @@ class ShowInconsistencies extends Command
     private $filterIncompleteOrders;
 
     /**
+     * @var GetOrdersTotalCount
+     */
+    private $getOrdersTotalCount;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param GetSalableQuantityInconsistencies $getSalableQuantityInconsistencies
      * @param FilterCompleteOrders $filterCompleteOrders
      * @param FilterIncompleteOrders $filterIncompleteOrders
+     * @param GetOrdersTotalCount $getOrdersTotalCount
+     * @param LoggerInterface $logger
      */
     public function __construct(
         GetSalableQuantityInconsistencies $getSalableQuantityInconsistencies,
         FilterCompleteOrders $filterCompleteOrders,
-        FilterIncompleteOrders $filterIncompleteOrders
+        FilterIncompleteOrders $filterIncompleteOrders,
+        GetOrdersTotalCount $getOrdersTotalCount,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->getSalableQuantityInconsistencies = $getSalableQuantityInconsistencies;
         $this->filterCompleteOrders = $filterCompleteOrders;
         $this->filterIncompleteOrders = $filterIncompleteOrders;
+        $this->getOrdersTotalCount = $getOrdersTotalCount;
+        $this->logger = $logger;
     }
 
     /**
@@ -77,6 +98,13 @@ class ShowInconsistencies extends Command
                 'Show only inconsistencies for incomplete orders'
             )
             ->addOption(
+                'bunch-size',
+                'b',
+                InputOption::VALUE_OPTIONAL,
+                'Defines how many orders will be loaded at once',
+                50
+            )
+            ->addOption(
                 'raw',
                 'r',
                 InputOption::VALUE_NONE,
@@ -94,16 +122,16 @@ class ShowInconsistencies extends Command
      */
     private function prettyOutput(OutputInterface $output, array $inconsistencies): void
     {
-        $output->writeln('<info>Inconsistencies found on following entries:</info>');
-
         /** @var Order $order */
         foreach ($inconsistencies as $inconsistency) {
             $inconsistentItems = $inconsistency->getItems();
 
-            $output->writeln(sprintf(
-                'Order <comment>%s</comment>:',
-                $inconsistency->getOrder()->getIncrementId()
-            ));
+            $output->writeln(
+                sprintf(
+                    'Order <comment>%s</comment>:',
+                    $inconsistency->getOrderIncrementId()
+                )
+            );
 
             foreach ($inconsistentItems as $sku => $qty) {
                 $output->writeln(
@@ -135,7 +163,7 @@ class ShowInconsistencies extends Command
                 $output->writeln(
                     sprintf(
                         '%s:%s:%f:%s',
-                        $inconsistency->getOrder()->getIncrementId(),
+                        $inconsistency->getOrderIncrementId(),
                         $sku,
                         -$qty,
                         $inconsistency->getStockId()
@@ -146,33 +174,78 @@ class ShowInconsistencies extends Command
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws LocalizedException
+     * @throws ValidationException
+     * @throws SkuIsNotAssignedToStockException
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $startTime = microtime(true);
+        $isRawOutput = (bool)$input->getOption('raw');
+        $bunchSize = (int)$input->getOption('bunch-size');
 
-        if ($input->getOption('complete-orders')) {
-            $inconsistencies = $this->filterCompleteOrders->execute($inconsistencies);
-        } elseif ($input->getOption('incomplete-orders')) {
-            $inconsistencies = $this->filterIncompleteOrders->execute($inconsistencies);
+        $maxPage = $this->retrieveMaxPage($bunchSize);
+        $hasInconsistencies = false;
+
+        for ($page = 1; $page <= $maxPage; $page++) {
+            $startBunchExecution = microtime(true);
+
+            $inconsistencies = $this->getSalableQuantityInconsistencies->execute($bunchSize, $page);
+            if ($input->getOption('complete-orders')) {
+                $inconsistencies = $this->filterCompleteOrders->execute($inconsistencies);
+            } elseif ($input->getOption('incomplete-orders')) {
+                $inconsistencies = $this->filterIncompleteOrders->execute($inconsistencies);
+            }
+
+            $hasInconsistencies = !empty($inconsistencies);
+
+            if ($isRawOutput) {
+                $this->rawOutput($output, $inconsistencies);
+            } else {
+                $this->prettyOutput($output, $inconsistencies);
+            }
+
+            $this->logger->debug(
+                'Bunch processed for reservation inconsistency check',
+                [
+                    'duration' => sprintf('%.2fs', (microtime(true) - $startBunchExecution)),
+                    'memory_usage' => sprintf('%.2fMB', (memory_get_peak_usage(true) / 1024 / 1024)),
+                    'bunch_size' => $bunchSize,
+                    'page' => $page,
+                ]
+            );
         }
 
-        if (empty($inconsistencies)) {
+        if ($hasInconsistencies === false) {
             $output->writeln('<info>No order inconsistencies were found</info>');
             return 0;
         }
 
-        if ($input->getOption('raw')) {
-            $this->rawOutput($output, $inconsistencies);
-        } else {
-            $this->prettyOutput($output, $inconsistencies);
-        }
+        $this->logger->debug(
+            'Finished reservation inconsistency check',
+            [
+                'duration' => sprintf('%.2fs', (microtime(true) - $startTime)),
+                'memory_usage' => sprintf('%.2fMB', (memory_get_peak_usage(true) / 1024 / 1024)),
+            ]
+        );
 
         return -1;
+    }
+
+    /**
+     * Retrieve max page for given bunch size
+     *
+     * @param int $bunchSize
+     * @return int
+     */
+    private function retrieveMaxPage(int $bunchSize): int
+    {
+        $ordersTotalCount = $this->getOrdersTotalCount->execute();
+        return (int)ceil($ordersTotalCount / $bunchSize);
     }
 }
