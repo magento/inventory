@@ -17,6 +17,9 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="https://github.com/magento/inventory/issues/2690"/>
+            </skip>
         </annotations>
 
         <before>
