@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryInStorePickup\Model\Order\AddCommentToOrder;
 use Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface;
@@ -54,12 +55,19 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     private $argumentExtensionFactory;
 
     /**
+     * @var Order\AddCommentToOrder
+     */
+    private $addCommentToOrder;
+
+    /**
+     * NotifyOrderIsReadyForPickup constructor.
      * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
      * @param OrderRepositoryInterface $orderRepository
      * @param ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory
      * @param ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory
+     * @param AddCommentToOrder $addCommentToOrder
      */
     public function __construct(
         IsOrderReadyForPickupInterface $isOrderReadyForPickup,
@@ -67,7 +75,8 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         ReadyForPickupNotifier $emailNotifier,
         OrderRepositoryInterface $orderRepository,
         ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory,
-        ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory
+        ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory,
+        AddCommentToOrder $addCommentToOrder
     ) {
         $this->isOrderReadyForPickup = $isOrderReadyForPickup;
         $this->shipOrder = $shipOrder;
@@ -75,6 +84,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         $this->orderRepository = $orderRepository;
         $this->shipmentArgumentsFactory = $shipmentArgumentsFactory;
         $this->argumentExtensionFactory = $argumentExtensionFactory;
+        $this->addCommentToOrder = $addCommentToOrder;
     }
 
     /**
@@ -90,9 +100,6 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
 
         /** @noinspection PhpParamsInspection */
         $this->emailNotifier->notify($order);
-
-        /* TODO: add order comment? */
-
         $this->shipOrder->execute(
             $orderId,
             [],
@@ -103,6 +110,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
             [],
             $this->getShipmentArguments($order)
         );
+        $this->addCommentToOrder->execute($order);
     }
 
     /**

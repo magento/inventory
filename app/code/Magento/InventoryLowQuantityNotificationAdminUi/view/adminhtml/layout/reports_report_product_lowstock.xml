@@ -9,7 +9,8 @@
     <update handle="inventorylowquantitynotification_lowstock_grid"/>
     <body>
         <referenceContainer name="content">
-            <block class="Magento\Reports\Block\Adminhtml\Product\Lowstock" name="adminhtml.report.grid.container"/>
+            <referenceBlock name="adminhtml.report.grid.container" remove="true"/>
+            <block class="Magento\Reports\Block\Adminhtml\Product\Lowstock" name="adminhtml.report.grid.container.inventory"/>
         </referenceContainer>
     </body>
 </page>
