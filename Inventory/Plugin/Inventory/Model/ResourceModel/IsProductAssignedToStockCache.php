@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Plugin;
+namespace Magento\Inventory\Plugin\Inventory\Model\ResourceModel;
 
 use Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock;
 
@@ -17,7 +17,7 @@ class IsProductAssignedToStockCache
     /**
      * @var array
      */
-    private $skuToStockIdAssignation = [];
+    private $skuToStockIdAssignment = [];
 
     /**
      * Cache service result to avoid multiple database calls for same item
@@ -31,9 +31,9 @@ class IsProductAssignedToStockCache
      */
     public function aroundExecute(IsProductAssignedToStock $subject, callable $proceed, string $sku, int $stockId): bool
     {
-        if (!isset($this->skuToStockIdAssignation[$sku][$stockId])) {
-            $this->skuToStockIdAssignation[$sku][$stockId] = $proceed($sku, $stockId);
+        if (!isset($this->skuToStockIdAssignment[$sku][$stockId])) {
+            $this->skuToStockIdAssignment[$sku][$stockId] = $proceed($sku, $stockId);
         }
-        return $this->skuToStockIdAssignation[$sku][$stockId];
+        return $this->skuToStockIdAssignment[$sku][$stockId];
     }
 }
