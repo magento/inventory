@@ -1,0 +1,217 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+//
+//
+//  ---------------------------------------------
+
+@checkout-source-selector-popup-location_border: @border-width__base solid
+    @color-gray80;
+@checkout-delivery-method-selector-action__background: @color-white;
+
+@checkout-pickup-location-name_font-size: @font-size__l;
+@checkout-pickup-location-name_font-weight: @font-weight__bold;
+
+@checkout-pickup-location-name-popup_font-size: @font-size__l;
+
+@checkout-pickup-location-popup-search_padding: 0 0 @indent__s;
+@checkout-pickup-location-popup-search_margin: 0 0 @indent__base;
+@checkout-pickup-location-popup-search_border: @modal-title__border;
+
+@checkout-pickup-location-popup-note_margin: 0 0 @indent__base;
+
+& when (@media-common = true) {
+    /**
+     * @codingStandardsIgnoreStart
+     */
+    #store-pickup {
+        &.selected-shipping {
+            ~ #store-selector {
+                display: none;
+            }
+        }
+
+        &.selected-store-pickup {
+            ~ #shipping,
+            ~ #opc-shipping_method {
+                visibility: hidden;
+                height: 0;
+                overflow: hidden;
+            }
+        }
+    }
+
+
+    #delivery-method-selector {
+        //  @codingStandardsIgnoreEnd
+        .lib-vendor-prefix-display(flex);
+
+        .action {
+            .lib-button-l();
+
+            &.selected {
+                .lib-css(
+                background,
+                @checkout-delivery-method-selector-action__background
+                );
+            }
+        }
+
+        .action-select-shipping {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .action-select-store-pickup {
+            border-bottom-left-radius: 0;
+            border-left: 0;
+            border-top-left-radius: 0;
+        }
+    }
+
+    /**
+      * @codingStandardsIgnoreStart
+      */
+    #store-selector {
+        .form-login {
+            border-bottom: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        //  @codingStandardsIgnoreEnd
+        .form-continue {
+            margin: @indent__base 0 0;
+
+            .actions-toolbar {
+                .action {
+                    &.primary {
+                        &:extend(.abs-button-l all);
+                    }
+                }
+            }
+        }
+    }
+
+    .location-details {
+        .location-name {
+            .lib-css(font-size, @checkout-pickup-location-name_font-size);
+            .lib-css(font-weight, @checkout-pickup-location-name_font-weight);
+        }
+    }
+
+    .store-selector-popup {
+        .modal-title {
+            border-bottom: 0;
+        }
+
+        .modal-header {
+            padding-bottom: 0;
+        }
+    }
+    /**
+      * @codingStandardsIgnoreStart
+      */
+    #opc-store-selector-popup {
+        //  @codingStandardsIgnoreEnd
+        display: none;
+
+        .block-search {
+            float: none;
+            width: 100%;
+            .lib-css(margin, @checkout-pickup-location-popup-search_margin);
+            .lib-css(padding, @checkout-pickup-location-popup-search_padding);
+            .lib-css(
+            border-bottom,
+            @checkout-pickup-location-popup-search_border
+            );
+        }
+    }
+
+    .modal-content {
+        #opc-store-selector-popup {
+            display: block;
+        }
+    }
+
+    .store-selector-popup-table {
+        thead {
+            th {
+                display: none;
+            }
+        }
+
+        tbody {
+            .location {
+                .location-name {
+                    .lib-css(
+                    font-size,
+                    @checkout-pickup-location-name-popup_font-size
+                    );
+                }
+
+                + .location {
+                    .lib-css(
+                    border-top,
+                    @checkout-source-selector-popup-location_border
+                    );
+                }
+            }
+
+            .col-location-details {
+                padding-left: 0;
+
+                p {
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            .col-location-actions {
+                padding-right: 0;
+                vertical-align: middle;
+
+                .action {
+                    float: right;
+                }
+            }
+        }
+    }
+
+    .store-selector-popup-empty-query,
+    .store-selector-popup-no-locations {
+        .lib-css(margin, @checkout-pickup-location-popup-note_margin);
+    }
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break)
+when
+    (@extremum = 'min')
+and
+    (@break = @screen__m) {
+    /**
+     * @codingStandardsIgnoreStart
+     */
+    #store-selector {
+        //  @codingStandardsIgnoreEnd
+        .form-continue {
+            .actions-toolbar {
+                > .primary {
+                    float: right;
+                }
+
+                .action {
+                    &.primary {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}

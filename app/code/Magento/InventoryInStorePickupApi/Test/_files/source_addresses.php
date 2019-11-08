@@ -22,7 +22,8 @@ $sourceAddressMap = [
         SourceInterface::REGION_ID => 259,
         SourceInterface::CITY => 'Mitry-Mory',
         SourceInterface::POSTCODE => '77292 CEDEX',
-        SourceInterface::STREET => 'Rue Paul Vaillant Couturier 31'
+        SourceInterface::STREET => 'Rue Paul Vaillant Couturier 31',
+        SourceInterface::CONTACT_NAME => 'Raul Mars'
     ],
     'eu-2' => [
         SourceInterface::DESCRIPTION => 'Near Marseille',
@@ -33,7 +34,8 @@ $sourceAddressMap = [
         SourceInterface::REGION_ID => 194,
         SourceInterface::CITY => 'Aix-en-Provence',
         SourceInterface::POSTCODE => '13100',
-        SourceInterface::STREET => 'Rue Marius Reynaud 5'
+        SourceInterface::STREET => 'Rue Marius Reynaud 5',
+        SourceInterface::CONTACT_NAME => 'Federico Revolver'
     ],
     'eu-3' => [
         SourceInterface::DESCRIPTION => 'Near Munich',
@@ -44,7 +46,8 @@ $sourceAddressMap = [
         SourceInterface::REGION_ID => 81,
         SourceInterface::CITY => 'Kolbermoor',
         SourceInterface::POSTCODE => '83059',
-        SourceInterface::STREET => 'Rosenheimer Str. 30'
+        SourceInterface::STREET => 'Rosenheimer Str. 30',
+        SourceInterface::CONTACT_NAME => 'Martin Kellerman'
     ],
     'eu-disabled' => [
         SourceInterface::DESCRIPTION => 'In the middle of Germany',
@@ -55,7 +58,8 @@ $sourceAddressMap = [
         SourceInterface::REGION_ID => 94,
         SourceInterface::CITY => 'Erfurt',
         SourceInterface::POSTCODE => '99098',
-        SourceInterface::STREET => 'Juri-Gagarin-Ring 152'
+        SourceInterface::STREET => 'Juri-Gagarin-Ring 152',
+        SourceInterface::CONTACT_NAME => 'John Dou'
     ],
     'us-1' => [
         SourceInterface::DESCRIPTION => 'In the middle of US',
@@ -66,7 +70,8 @@ $sourceAddressMap = [
         SourceInterface::REGION_ID => 12,
         SourceInterface::CITY => 'Burlingame',
         SourceInterface::POSTCODE => '66413',
-        SourceInterface::STREET => 'Bloomquist Dr 100'
+        SourceInterface::STREET => 'Bloomquist Dr 100',
+        SourceInterface::CONTACT_NAME => 'Jessica Moon'
     ],
 ];
 
@@ -81,5 +86,6 @@ foreach ($sourceAddressMap as $sourceCode => $addressData) {
     $source->setCity($addressData[SourceInterface::CITY]);
     $source->setPostcode($addressData[SourceInterface::POSTCODE]);
     $source->setStreet($addressData[SourceInterface::STREET]);
+    $source->setContactName($addressData[SourceInterface::CONTACT_NAME]);
     $sourceRepository->save($source);
 }

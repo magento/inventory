@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminSelectInStorePickupShippingMethodActionGroup">
+        <annotations>
+            <description>Select "In Store Pickup" shipping method for given source. Starts on admin order create page.</description>
+        </annotations>
+        <arguments>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+        </arguments>
+        <click selector="{{AdminOrderFormPaymentSection.header}}" stepKey="unFocus"/>
+        <waitForPageLoad stepKey="waitForJavascriptToFinish"/>
+        <click selector="{{AdminOrderFormPaymentSection.getShippingMethods}}" stepKey="clickShippingMethods"/>
+        <waitForElementVisible selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" stepKey="waitForShippingOptions"/>
+        <selectOption selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" userInput="in_store_pickup" stepKey="checkInStorePickup"/>
+        <selectOption selector="{{AdminOrderFormPaymentSection.pickupLocationSource}}" userInput="{{sourceName}}" stepKey="selectSourceToPickup"/>
+    </actionGroup>
+</actionGroups>

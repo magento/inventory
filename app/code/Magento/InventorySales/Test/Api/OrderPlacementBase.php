@@ -31,28 +31,28 @@ abstract class OrderPlacementBase extends WebapiAbstract
     /**
      * @var ObjectManagerInterface
      */
-    private $objectManager;
+    protected $objectManager;
 
     /**
      * Registered customer token.
      *
      * @var string
      */
-    private $customerToken;
+    protected $customerToken;
 
     /**
      * Registered or guest customer cart id.
      *
      * @var string
      */
-    private $cartId;
+    protected $cartId;
 
     /**
      * Store code to make request to specific website.
      *
      * @var string
      */
-    private $storeViewCode = 'default';
+    protected $storeViewCode = 'default';
 
     /**
      * @inheritDoc
@@ -215,7 +215,7 @@ abstract class OrderPlacementBase extends WebapiAbstract
      *
      * @return array
      */
-    private function getAddProductServiceInfo(): array
+    protected function getAddProductServiceInfo(): array
     {
         $serviceInfo = [
             'rest' => [
