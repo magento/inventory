@@ -62,6 +62,10 @@
             <argument name="manageStock" value="No"/>
         </actionGroup>
         <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct"/>
+
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>
