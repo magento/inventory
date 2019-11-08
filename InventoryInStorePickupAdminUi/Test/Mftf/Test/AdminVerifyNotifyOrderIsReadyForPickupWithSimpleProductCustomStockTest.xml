@@ -6,17 +6,15 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontGuestNotAbleToSelectStorePickupWithSimpleProductCustomStockTest">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminVerifyNotifyOrderIsReadyForPickupWithSimpleProductCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Logged in customer not able to place order with simple product with store pickup."/>
-            <description value="Verify, logged in customer not able to place order with store pickup in case there are no sources with store pickup."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3616322"/>
+            <title value="Notify order is ready for pickup."/>
+            <description value="Verify, not possible to notify order for pickup in case source qty is not enough."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3737246"/>
             <severity value="CRITICAL"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2647"/>
-            </skip>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
@@ -32,24 +30,24 @@
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
-            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
                 <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="source"/>
+                <requiredEntity createDataKey="culverSource"/>
             </createData>
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <!--Assign product to source.-->
+            <!--Assign product to sources.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignsourceAndSetQty">
-                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
         </before>
@@ -75,11 +73,34 @@
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$customer$"/>
         </actionGroup>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
-            <argument name="product" value="$product$"/>
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$$product$$"/>
+            <argument name="quantity" value="{{fivePiecesAddToCart.value}}"/>
         </actionGroup>
-        <!--Verify pick in store is disabled.-->
+        <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
-        <actionGroup ref="StorefrontAssertPickInStoreButtonIsAbsentActionGroup" stepKey="verifyPickInStoreDisabled"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <waitForPageLoad stepKey="waitForSuccess"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Change product quantity-->
+        <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity">
+            <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            <argument name="qty" value="{{minimalProductQty.value}}" />
+        </actionGroup>
+        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <!--Try to 'ship' order.-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateShipmentWithStorePickupActionGroup" stepKey="clickNotifyOrderReadyForPickUp"/>
+        <actionGroup ref="AdminAssertShipmentHasNotBeenCreatedActionGroup" stepKey="verifyErrorMsg"/>
     </test>
 </tests>

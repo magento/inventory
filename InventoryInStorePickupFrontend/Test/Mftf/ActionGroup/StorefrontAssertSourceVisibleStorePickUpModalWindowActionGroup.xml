@@ -9,10 +9,9 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup">
         <annotations>
-            <description>Fills search string to assert source info.</description>
+            <description>Verify, source visible in modal search window.</description>
         </annotations>
         <arguments>
-            <argument name="searchString" type="string" defaultValue="{{US_Address_TX.city}}"/>
             <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
             <argument name="sourcePhone" type="string" defaultValue="{{_defaultSource.phone}}"/>
             <argument name="sourceCountry" type="string" defaultValue="{{_defaultSource.country}}"/>
@@ -21,8 +20,6 @@
             <argument name="sourceCity" type="string" defaultValue="{{_defaultSource.city}}"/>
             <argument name="sourceRegion" type="string" defaultValue="{{_defaultSource.region}}"/>
         </arguments>
-        <fillField selector="{{PickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
-        <waitForElement selector="{{PickInStoreModalSection.sourceName}}" stepKey="waitForResults"/>
         <see selector="{{PickInStoreModalSection.sourceName}}" userInput="{{sourceName}}" stepKey="verifySourceName"/>
         <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceCountry}}" stepKey="verifySourceCountry"/>
         <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourcePostcode}}" stepKey="verifySourcePostcode"/>
