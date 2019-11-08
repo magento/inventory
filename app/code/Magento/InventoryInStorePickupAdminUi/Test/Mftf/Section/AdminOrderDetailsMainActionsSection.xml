@@ -10,5 +10,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminOrderDetailsMainActionsSection">
         <element name="notifyOrderBtn" type="button" selector="//button[@title='Notify Order is Ready for Pickup']"/>
+        <element name="notifyOrderAcceptBtn" type="button" selector="//button[contains(@class, 'action-accept')]"/>
+        <element name="errorMsg" type="text" selector="//div[contains(@data-ui-id, 'messages-message-error')]"/>
     </section>
 </sections>
