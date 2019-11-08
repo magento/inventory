@@ -90,8 +90,7 @@
         </arguments>
     </type>
     <preference for="Magento\InventoryApi\Model\IsProductAssignedToStockInterface" type="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock"/>
-
     <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
-        <plugin name="cache_product_stock_assignation" type="Magento\Inventory\Plugin\IsProductAssignedToStockCache"/>
+        <plugin name="cache_product_stock_assignment_check" type="Magento\Inventory\Plugin\Inventory\Model\ResourceModel\IsProductAssignedToStockCache"/>
     </type>
 </config>
