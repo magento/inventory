@@ -71,7 +71,7 @@ class LayoutProcessor implements LayoutProcessorInterface
         }
 
         return $this->arrayManager->merge(
-            $this->arrayManager->findPath(self::STORE_PICKUP_PATH, $jsLayout),
+            $this->arrayManager->findPath('store-pickup', $jsLayout),
             $jsLayout,
             [
                 'config' => [
