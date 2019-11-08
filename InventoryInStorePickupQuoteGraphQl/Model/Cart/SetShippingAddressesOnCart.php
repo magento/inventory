@@ -17,6 +17,7 @@ use Magento\Quote\Model\Quote\Address;
 use Magento\QuoteGraphQl\Model\Cart\AssignShippingAddressToCart;
 use Magento\QuoteGraphQl\Model\Cart\QuoteAddressFactory;
 use Magento\QuoteGraphQl\Model\Cart\SetShippingAddressesOnCartInterface;
+use Magento\QuoteGraphQl\Model\Cart\Address\SaveQuoteAddressToCustomerAddressBook;
 
 /**
  * Set shipping address to the cart. Proceed with passed Pickup Location code.
@@ -39,18 +40,27 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
     private $addressExtensionFactory;
 
     /**
+     * @var SaveQuoteAddressToCustomerAddressBook
+     */
+    private $saveQuoteAddressToCustomerAddressBook;
+
+    /**
+     * SetShippingAddressesOnCart constructor.
      * @param AssignShippingAddressToCart $assignShippingAddressToCart
      * @param QuoteAddressFactory $quoteAddressFactory
      * @param AddressExtensionFactory $addressExtensionFactory
+     * @param SaveQuoteAddressToCustomerAddressBook $saveQuoteAddressToCustomerAddressBook
      */
     public function __construct(
         AssignShippingAddressToCart $assignShippingAddressToCart,
         QuoteAddressFactory $quoteAddressFactory,
-        AddressExtensionFactory $addressExtensionFactory
+        AddressExtensionFactory $addressExtensionFactory,
+        SaveQuoteAddressToCustomerAddressBook $saveQuoteAddressToCustomerAddressBook
     ) {
         $this->assignShippingAddressToCart = $assignShippingAddressToCart;
         $this->quoteAddressFactory = $quoteAddressFactory;
         $this->addressExtensionFactory = $addressExtensionFactory;
+        $this->saveQuoteAddressToCustomerAddressBook = $saveQuoteAddressToCustomerAddressBook;
     }
 
     /**
@@ -69,6 +79,16 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
         $shippingAddressInput = current($shippingAddressesInput);
         $shippingAddress = $this->getShippingAddress($shippingAddressInput, $context);
         $this->assignPickupLocation($shippingAddress, $shippingAddressInput);
+
+        $errors = $shippingAddress->validate();
+
+        if (true !== $errors) {
+            $e = new GraphQlInputException(__('Shipping address errors'));
+            foreach ($errors as $error) {
+                $e->addError(new GraphQlInputException($error));
+            }
+            throw $e;
+        }
 
         $this->assignShippingAddressToCart->execute($cart, $shippingAddress);
     }
@@ -117,6 +137,14 @@ class SetShippingAddressesOnCart implements SetShippingAddressesOnCartInterface
                 (int)$customerAddressId,
                 $context->getUserId()
             );
+        }
+
+        // need to save address only for registered user and if save_in_address_book = true
+        if (0 !== $context->getUserId()
+            && isset($addressInput['save_in_address_book'])
+            && (bool)$addressInput['save_in_address_book'] === true
+        ) {
+            $this->saveQuoteAddressToCustomerAddressBook->execute($shippingAddress, $context->getUserId());
         }
 
         return $shippingAddress;

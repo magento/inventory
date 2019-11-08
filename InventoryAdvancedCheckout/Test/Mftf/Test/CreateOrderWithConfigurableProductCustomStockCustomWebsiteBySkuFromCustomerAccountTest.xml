@@ -96,7 +96,7 @@
         <remove keyForRemoval="loginAsCustomer"/>
         <remove keyForRemoval="goToMyAccountPage"/>
         <!--Register customer.-->
-        <actionGroup ref="RegisterCustomOnStorefrontActionGroup" stepKey="registerCustomer">
+        <actionGroup ref="RegisterCustomOnStorefrontActionGroup" stepKey="registerCustomer" before="goToSidebarMenu">
             <argument name="Customer" value="Simple_US_Customer"/>
             <argument name="storeCode" value="customStore.code"/>
         </actionGroup>

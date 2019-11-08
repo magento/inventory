@@ -8,12 +8,14 @@ define(
         'jquery',
         'prototype'
     ],
-    function ($) {
+    function (jQuery) {
         'use strict';
 
         return function () {
             var STORE_PICKUP_METHOD = 'in_store_pickup',
-                SOURCES_FIELD_SELECTOR = '#shipping_form_pickup_location_source';
+                SOURCES_FIELD_SELECTOR = '#shipping_form_pickup_location_source',
+                SAME_AS_BILLING_SELECTOR = '#order-shipping_same_as_billing',
+                IN_STORE_PICKUP_CHECKBOX_SELECTOR = '#s_method_in_store_pickup';
 
             /**
              * Disable billing address form;
@@ -23,8 +25,8 @@ define(
              * @param {Boolean} isStorePickup
              */
             function setStorePickupMethod(isStorePickup) {
-                var sourcesInput = $(SOURCES_FIELD_SELECTOR),
-                    theSameAsBilling = $('#order-shipping_same_as_billing + label');
+                var sourcesInput = jQuery(SOURCES_FIELD_SELECTOR),
+                    theSameAsBilling = jQuery(SAME_AS_BILLING_SELECTOR + ' + label');
 
                 if (isStorePickup) {
                     window.order.disableShippingAddress(true);
@@ -33,7 +35,7 @@ define(
 
                     return;
                 }
-                window.order.disableShippingAddress($('#order-shipping_same_as_billing').prop('checked'));
+                window.order.disableShippingAddress(jQuery(SAME_AS_BILLING_SELECTOR).prop('checked'));
                 theSameAsBilling.show();
                 sourcesInput.hide();
             }
@@ -61,6 +63,22 @@ define(
                         setStorePickupMethod(method === STORE_PICKUP_METHOD);
                     }
                 );
+            };
+
+            /**
+             * Replace shipping method area.
+             * Restore store pickup shipping method if it was already selected.
+             */
+            window.AdminOrder.prototype.resetShippingMethod = function () {
+                var storePickupCheckbox = jQuery(IN_STORE_PICKUP_CHECKBOX_SELECTOR);
+
+                if (!this.isOnlyVirtualProduct) {
+                    $(this.getAreaId('shipping_method')).update(this.shippingTemplate);
+
+                    if (storePickupCheckbox.length && storePickupCheckbox.prop('checked')) {
+                        window.order.setShippingMethod(storePickupCheckbox.val());
+                    }
+                }
             };
         };
     }
