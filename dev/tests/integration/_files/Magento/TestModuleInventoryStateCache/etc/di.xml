@@ -9,6 +9,9 @@
     <type name="Magento\InventoryConfiguration\Model\GetLegacyStockItem">
         <plugin name="cache_legacy_stock_item" disabled="true"/>
     </type>
+    <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
+        <plugin name="cache_product_stock_assignment_check" disabled="true"/>
+    </type>
     <preference for="Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface" type="Magento\Inventory\Model\Source\Command\GetSourcesAssignedToStockOrderedByPriority"/>
     <preference for="Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface" type="Magento\InventoryCatalog\Model\GetProductIdsBySkus"/>
     <preference for="Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface" type="Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkus" />
