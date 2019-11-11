@@ -26,7 +26,12 @@
                     <label>Price</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
-                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="search_radius" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Search Radius</label>
+                    <comment>Radius in kilometers for store pick-up search on storefront checkout.</comment>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Displayed Error Message</label>
                 </field>
             </group>
