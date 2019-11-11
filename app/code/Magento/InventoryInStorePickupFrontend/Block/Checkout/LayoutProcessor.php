@@ -21,8 +21,6 @@ use Magento\Store\Model\StoreManagerInterface;
 class LayoutProcessor implements LayoutProcessorInterface
 {
     private const SEARCH_RADIUS = 'carriers/in_store/search_radius';
-    private const STORE_PICKUP_PATH = 'store-pickup';
-    private const SHIP_TO_PATH = 'ship-to';
 
     /**
      * @var ArrayManager
@@ -73,7 +71,7 @@ class LayoutProcessor implements LayoutProcessorInterface
         }
 
         return $this->arrayManager->merge(
-            $this->arrayManager->findPath(self::STORE_PICKUP_PATH, $jsLayout),
+            $this->arrayManager->findPath('store-pickup', $jsLayout),
             $jsLayout,
             [
                 'config' => [
@@ -89,10 +87,10 @@ class LayoutProcessor implements LayoutProcessorInterface
      * @param array $jsLayout
      * @return array
      */
-    public function removeStorePickup(array $jsLayout): array
+    private function removeStorePickup(array $jsLayout): array
     {
-        $storePickupPath = $this->arrayManager->findPath(self::STORE_PICKUP_PATH, $jsLayout);
-        $shipToPath = $this->arrayManager->findPath(self::SHIP_TO_PATH, $jsLayout);
+        $storePickupPath = $this->arrayManager->findPath('store-pickup', $jsLayout);
+        $shipToPath = $this->arrayManager->findPath('store-pickup-address', $jsLayout);
         $jsLayout = $this->arrayManager->remove($storePickupPath, $jsLayout);
         $jsLayout = $this->arrayManager->remove($shipToPath, $jsLayout);
 
