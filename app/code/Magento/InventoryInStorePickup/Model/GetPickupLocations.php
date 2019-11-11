@@ -12,7 +12,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
-use Magento\InventoryInStorePickupApi\Model\MapperInterface;
+use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractorInterface;
 
@@ -22,7 +22,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractorInterface;
 class GetPickupLocations implements GetPickupLocationsInterface
 {
     /**
-     * @var MapperInterface
+     * @var Mapper
      */
     private $mapper;
 
@@ -47,14 +47,14 @@ class GetPickupLocations implements GetPickupLocationsInterface
     private $searchResultFactory;
 
     /**
-     * @param MapperInterface $mapper
+     * @param Mapper $mapper
      * @param SourceRepositoryInterface $sourceRepository
      * @param ExtractorInterface $extractor
      * @param SearchCriteriaResolverInterface $searchCriteriaResolver
      * @param SearchResultInterfaceFactory $searchResultFactory
      */
     public function __construct(
-        MapperInterface $mapper,
+        Mapper $mapper,
         SourceRepositoryInterface $sourceRepository,
         ExtractorInterface $extractor,
         SearchCriteriaResolverInterface $searchCriteriaResolver,
