@@ -45,7 +45,6 @@ define([
                 'carrier_code': 'in_store',
                 'method_code': 'pickup'
             },
-            nearbySearchRadius: 500, //Should be configurable
             nearbySearchLimit: 50,
             defaultCountry: window.checkoutConfig.defaultCountryId,
             rates: shippingService.getShippingRates(),
