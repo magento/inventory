@@ -278,7 +278,7 @@ class OrderCreateTest extends OrderPlacementBase
             'city' => 'Mitry-Mory',
             'country_id' => 'FR',
             'email' => 'customer@example.com',
-            'firstname' => 'John',
+            'firstname' => 'Raul Mars',
             'lastname' => 'Smith',
             'postcode' => '77292 CEDEX',
             'region' => 'Seine-et-Marne',
