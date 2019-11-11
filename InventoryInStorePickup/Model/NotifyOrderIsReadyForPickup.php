@@ -92,7 +92,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
      * Notify customer that the order is ready for pickup by sending notification email. Ship the order to deduct the
      * item quantity from the appropriate source.
      *
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function execute(int $orderId): void
     {
