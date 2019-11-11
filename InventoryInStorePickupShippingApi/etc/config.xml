@@ -15,6 +15,7 @@
                 <name>Pick in Store</name>
                 <title>In-Store Pickup Delivery</title>
                 <price>0.00</price>
+                <search_radius>200</search_radius>
                 <specificerrmsg>In-Store Delivery is not available. To use this delivery method, please contact us.</specificerrmsg>
             </in_store>
         </carriers>
