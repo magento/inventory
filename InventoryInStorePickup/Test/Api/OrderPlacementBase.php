@@ -8,176 +8,17 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Test\Api;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Webapi\Rest\Request;
-use Magento\Integration\Api\CustomerTokenServiceInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
-use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\InventorySales\Test\Api\OrderPlacementBase as OrderPlacementBaseSales;
 
 /**
  * Base class for order placement.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-abstract class OrderPlacementBase extends WebapiAbstract
+abstract class OrderPlacementBase extends OrderPlacementBaseSales
 {
-    /**
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
-
-    /**
-     * Registered customer token.
-     *
-     * @var string
-     */
-    protected $customerToken;
-
-    /**
-     * Registered or guest customer cart id.
-     *
-     * @var string
-     */
-    protected $cartId;
-
-    /**
-     * Store code to make request to specific website.
-     *
-     * @var string
-     */
-    protected $storeViewCode = 'default';
-
-    /**
-     * @inheritDoc
-     */
-    protected function setUp()
-    {
-        $this->objectManager = Bootstrap::getObjectManager();
-    }
-
-    /**
-     * Set store view for test.
-     *
-     * @param $storeViewCode
-     */
-    public function setStoreView($storeViewCode)
-    {
-        $this->storeViewCode = $storeViewCode;
-    }
-
-    /**
-     * Retrieve registered customer token.
-     *
-     * @param string $customerEmail
-     * @param string $customerPassword
-     * @return string
-     */
-    public function getCustomerToken(string $customerEmail, string $customerPassword): string
-    {
-        if (!$this->customerToken) {
-            $customerTokenService = $this->objectManager->create(CustomerTokenServiceInterface::class);
-            $this->customerToken = $customerTokenService->createCustomerAccessToken($customerEmail, $customerPassword);
-        }
-
-        return $this->customerToken;
-    }
-
-    /**
-     * Assign customer to additional website.
-     *
-     * @param string $customerEmail
-     * @param string $websiteCode
-     * @return void
-     */
-    public function assignCustomerToCustomWebsite(string $customerEmail, string $websiteCode): void
-    {
-        $websiteRepository = $this->objectManager->get(WebsiteRepositoryInterface::class);
-        $websiteId = $websiteRepository->get($websiteCode)->getId();
-        $customerRepository = $this->objectManager->get(CustomerRepositoryInterface::class);
-        $customer = $customerRepository->get($customerEmail);
-        $customer->setWebsiteId($websiteId);
-        $customerRepository->save($customer);
-    }
-
-    /**
-     * Get customer empty cart.
-     *
-     * @return void
-     */
-    public function createCustomerCart(): void
-    {
-        $serviceInfo = [
-            'rest' => [
-                'resourcePath' => '/V1/guest-carts/',
-                'httpMethod' => Request::HTTP_METHOD_POST,
-            ],
-        ];
-
-        if ($this->customerToken) {
-            $serviceInfo = [
-                'rest' => [
-                    'resourcePath' => '/V1/carts/mine',
-                    'httpMethod' => Request::HTTP_METHOD_POST,
-                    'token' => $this->customerToken
-                ],
-            ];
-
-        }
-
-        $this->cartId = (string)$this->_webApiCall($serviceInfo, [], null, $this->storeViewCode);
-    }
-
-    /**
-     * Add simple, virtual or downloadable product to cart.
-     *
-     * @param string $sku
-     * @param int $qty
-     * @return void
-     */
-    public function addProduct(string $sku, $qty = 1): void
-    {
-        $serviceInfo = $this->getAddProductServiceInfo();
-
-        $product = [
-            'cartItem' => [
-                'sku' => $sku,
-                'qty' => $qty,
-                'quote_id' => $this->cartId,
-            ],
-        ];
-        $this->_webApiCall($serviceInfo, $product, null, $this->storeViewCode);
-    }
-
-    /**
-     * Get service info for add product to cart.
-     *
-     * @return array
-     */
-    protected function getAddProductServiceInfo(): array
-    {
-        $serviceInfo = [
-            'rest' => [
-                'resourcePath' => '/V1/guest-carts/' . $this->cartId . '/items',
-                'httpMethod' => Request::HTTP_METHOD_POST,
-            ],
-
-        ];
-        if ($this->customerToken) {
-            $serviceInfo = [
-                'rest' => [
-                    'resourcePath' => '/V1/carts/mine/items',
-                    'httpMethod' => Request::HTTP_METHOD_POST,
-                    'token' => $this->customerToken
-                ],
-
-            ];
-        }
-
-        return $serviceInfo;
-    }
-
     /**
      * Estimate shipping costs for given customer cart.
      * @return void
@@ -211,9 +52,12 @@ abstract class OrderPlacementBase extends WebapiAbstract
 
     /**
      * Estimate shipping costs for given customer cart by addressId.
+     *
+     * @var string $addressId
+     *
      * @return void
      */
-    public function estimateShippingCostsByAddressId($addressId): void
+    public function estimateShippingCostsByAddressId(string $addressId): void
     {
         if (!$this->customerToken) {
             return;
@@ -315,40 +159,6 @@ abstract class OrderPlacementBase extends WebapiAbstract
         }
 
         return (int)$this->_webApiCall($serviceInfo, $body, null, $this->storeViewCode);
-    }
-
-    /**
-     * Retrieve order by id.
-     *
-     * @param int $orderId
-     * @return array
-     */
-    public function getOrder(int $orderId): array
-    {
-        $serviceInfo = [
-            'rest' => [
-                'resourcePath' => '/V1/orders/' . $orderId,
-                'httpMethod' => Request::HTTP_METHOD_GET,
-            ],
-        ];
-        return $this->_webApiCall($serviceInfo, [], null, $this->storeViewCode);
-    }
-
-    /**
-     * Cancel order by id.
-     *
-     * @param int $orderId
-     * @return void
-     */
-    public function cancelOrder(int $orderId): void
-    {
-        $serviceInfo = [
-            'rest' => [
-                'resourcePath' => '/V1/orders/' . $orderId . '/cancel',
-                'httpMethod' => Request::HTTP_METHOD_POST,
-            ],
-        ];
-        $this->_webApiCall($serviceInfo, [], null, $this->storeViewCode);
     }
 
     /**
