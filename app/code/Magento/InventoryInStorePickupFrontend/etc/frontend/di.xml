@@ -13,4 +13,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\Block\Onepage">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="storePickup" xsi:type="object">Magento\InventoryInStorePickupFrontend\Block\Checkout\LayoutProcessor</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
