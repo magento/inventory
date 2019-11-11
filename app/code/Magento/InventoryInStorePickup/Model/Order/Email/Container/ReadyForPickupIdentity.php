@@ -44,7 +44,7 @@ class ReadyForPickupIdentity extends Container
     {
         $data = $this->getConfigValue(self::XML_PATH_EMAIL_COPY_TO, $this->getStore()->getStoreId());
         if (!empty($data)) {
-            return explode(',', $data);
+            return array_map('trim', explode(',', $data));
         }
 
         return false;

@@ -42,8 +42,8 @@ class AddCommentToOrder
      * Add notification comment to the order.
      *
      * @param OrderInterface $order
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function execute(OrderInterface $order) : void
     {
@@ -52,8 +52,9 @@ class AddCommentToOrder
             \IntlDateFormatter::LONG,
             \IntlDateFormatter::MEDIUM
         );
+        $notified = $order->getEmailSent();
         $comment = __('Order notified for pickup at: %1', $time);
-        $order->addCommentToStatusHistory($comment, $order->getStatus(), true)->setIsCustomerNotified(1);
+        $order->addCommentToStatusHistory($comment, $order->getStatus(), true)->setIsCustomerNotified($notified);
         $this->orderRepository->save($order);
     }
 }
