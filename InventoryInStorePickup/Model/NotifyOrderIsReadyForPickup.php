@@ -60,7 +60,6 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     private $addCommentToOrder;
 
     /**
-     * NotifyOrderIsReadyForPickup constructor.
      * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
@@ -88,7 +87,14 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     }
 
     /**
-     * @inheritdoc
+     * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY.
+     *
+     * Notify customer that the order is ready for pickup by sending notification email. Ship the order to deduct the
+     * item quantity from the appropriate source.
+     *
+     * @param int $orderId
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\MailException
      */
     public function execute(int $orderId): void
     {
