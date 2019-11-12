@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupSalesApi\Model;
 
 /**
- * Service to check if order is ready to be picked up by customer at the Pickup Location.
+ * Check if order is ready to be picked up by customer at the pickup location.
  *
  * @api
  */
