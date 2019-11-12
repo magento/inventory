@@ -54,9 +54,6 @@
                 <imports>
                     <link name="required">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
                 </imports>
-                <validation>
-                    <rule name="validate-phoneLax" xsi:type="boolean">true</rule>
-                </validation>
             </settings>
         </field>
     </fieldset>
