@@ -42,8 +42,7 @@ class GetFreePackages implements GetFreePackagesInterface
         if ($request->getAllItems()) {
             /** @var QuoteItem|ItemAlias $item */
             foreach ($request->getAllItems() as $item) {
-                /** @var Product $product */
-                $product = $this->productRepository->get($item->getSku(), false, $item->getStoreId());
+                $product = $item->getProduct();
                 if ($product->isVirtual() || $item->getParentItem()) {
                     continue;
                 }

@@ -22,7 +22,7 @@ use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
  *
  * @api
  */
-class Mapper implements MapperInterface
+class Mapper
 {
     private const MAPPING_ERROR_MESSAGE = "Wrong mapping provided for %s. Field '%s' is not found.";
 

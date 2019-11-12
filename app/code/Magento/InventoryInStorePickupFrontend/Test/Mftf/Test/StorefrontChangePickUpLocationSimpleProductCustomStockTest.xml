@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontChangePickUpLocationSimpleProductCustomStockTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Change Pick-up location on storefront with simple product on custom stock."/>
+            <description value="Verify, customer able to change pick-up location on storefront with simple product on custom stock."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3651186"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Create test data.-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="SanDiegoStorePickupEnabledSource" stepKey="sanDiegoSource"/>
+            <createData entity="DallasStorePickupEnabledSource" stepKey="dallasSource"/>
+            <createData entity="LosAngelesStorePickupEnabledSource" stepKey="losAngelesSource"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="sanDiegoSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink3">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="dallasSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink4">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="losAngelesSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!--Assign sources to product.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignsanDiegoSourceAndSetQty">
+                <argument name="sourceCode" value="$sanDiegoSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignDallasSourceAndSetQty">
+                <argument name="sourceCode" value="$dallasSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignLosAngelesSourceAndSetQty">
+                <argument name="sourceCode" value="$losAngelesSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Add product to cart.-->
+        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!--Search multiple store pick-up sources.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchCulverSource">
+            <argument name="searchString" value="$culverSource.source[postcode]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifyCulverSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.postcode}}"/>
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+            <argument name="sourcePhone" value="$culverSource.source[phone]$"/>
+            <argument name="sourceCountry" value="{{CulverStorePickupEnabledSource.country}}"/>
+            <argument name="sourcePostcode" value="$culverSource.source[postcode]$"/>
+            <argument name="sourceStreet" value="$culverSource.source[street]$"/>
+            <argument name="sourceCity" value="$culverSource.source[city]$"/>
+            <argument name="sourceRegion" value="$culverSource.source[region]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchDallasSource">
+            <argument name="searchString" value="$dallasSource.source[postcode]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifyDallasSource">
+            <argument name="sourceName" value="$dallasSource.source[name]$"/>
+            <argument name="sourcePhone" value="$dallasSource.source[phone]$"/>
+            <argument name="sourceCountry" value="{{DallasStorePickupEnabledSource.country}}"/>
+            <argument name="sourcePostcode" value="$dallasSource.source[postcode]$"/>
+            <argument name="sourceStreet" value="$dallasSource.source[street]$"/>
+            <argument name="sourceCity" value="$dallasSource.source[city]$"/>
+            <argument name="sourceRegion" value="$dallasSource.source[region]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchSanDiegoSource">
+            <argument name="searchString" value="$sanDiegoSource.source[postcode]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifySanDiegoSource">
+            <argument name="sourceName" value="$sanDiegoSource.source[name]$"/>
+            <argument name="sourcePhone" value="$sanDiegoSource.source[phone]$"/>
+            <argument name="sourceCountry" value="{{SanDiegoStorePickupEnabledSource.country}}"/>
+            <argument name="sourcePostcode" value="$sanDiegoSource.source[postcode]$"/>
+            <argument name="sourceStreet" value="$sanDiegoSource.source[street]$"/>
+            <argument name="sourceCity" value="$sanDiegoSource.source[city]$"/>
+            <argument name="sourceRegion" value="$sanDiegoSource.source[region]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchLosAngelesSource">
+            <argument name="searchString" value="$losAngelesSource.source[postcode]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifyLosAngelesSource">
+            <argument name="sourceName" value="$losAngelesSource.source[name]$"/>
+            <argument name="sourcePhone" value="$losAngelesSource.source[phone]$"/>
+            <argument name="sourceCountry" value="{{LosAngelesStorePickupEnabledSource.country}}"/>
+            <argument name="sourcePostcode" value="$losAngelesSource.source[postcode]$"/>
+            <argument name="sourceStreet" value="$losAngelesSource.source[street]$"/>
+            <argument name="sourceCity" value="$losAngelesSource.source[city]$"/>
+            <argument name="sourceRegion" value="$losAngelesSource.source[region]$"/>
+        </actionGroup>
+    </test>
+</tests>
