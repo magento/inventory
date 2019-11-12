@@ -14,9 +14,6 @@
             <title value="Verify, summary shipping section information."/>
             <description value="Verify, summary shipping section information contains source pickup name."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3788915"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2679"/>
-            </skip>
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
