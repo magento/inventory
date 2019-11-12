@@ -158,9 +158,6 @@
             <field name="save_in_address_book">
                 <aspect name="shipping_address_data"/>
             </field>
-            <field name="customer_address_id">
-                <aspect name="shipping_address_data"/>
-            </field>
         </fieldset>
     </scope>
 </config>
