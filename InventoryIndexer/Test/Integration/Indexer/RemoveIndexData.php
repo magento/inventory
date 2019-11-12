@@ -10,8 +10,8 @@ namespace Magento\InventoryIndexer\Test\Integration\Indexer;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
-use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
 class RemoveIndexData
 {
@@ -21,20 +21,29 @@ class RemoveIndexData
     private $indexNameBuilder;
 
     /**
-     * @var IndexStructure
+     * @var ResourceConnection
      */
-    private $indexStructure;
+    private $resourceConnection;
 
     /**
+     * @var
+     */
+    private $indexNameResolver;
+
+    /**
+     * RemoveIndexData constructor.
      * @param IndexNameBuilder $indexNameBuilder
-     * @param IndexStructure $indexStructure
+     * @param ResourceConnection $resourceConnection
+     * @param IndexNameResolverInterface $indexNameResolver
      */
     public function __construct(
         IndexNameBuilder $indexNameBuilder,
-        IndexStructure $indexStructure
+        ResourceConnection $resourceConnection,
+        IndexNameResolverInterface $indexNameResolver
     ) {
         $this->indexNameBuilder = $indexNameBuilder;
-        $this->indexStructure = $indexStructure;
+        $this->resourceConnection = $resourceConnection;
+        $this->indexNameResolver = $indexNameResolver;
     }
 
     /**
@@ -49,7 +58,10 @@ class RemoveIndexData
                 ->addDimension('stock_', (string)$stockId)
                 ->setAlias(Alias::ALIAS_MAIN)
                 ->build();
-            $this->indexStructure->delete($indexName, ResourceConnection::DEFAULT_CONNECTION);
+
+            $connection = $this->resourceConnection->getConnection(ResourceConnection::DEFAULT_CONNECTION);
+            $tableName = $this->indexNameResolver->resolveName($indexName);
+            $connection->truncateTable($this->resourceConnection->getTableName($tableName));
         }
     }
 }

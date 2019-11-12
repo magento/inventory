@@ -12,7 +12,7 @@
             <stories value="Registered Customer created Order with 'In Store Pickup' delivery method."/>
             <title value="Order Placement with 'In Store Pickup' delivery method."/>
             <description value="Registered Customer created Order with 'In Store Pickup' delivery method with simple product and additional sources."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3296742"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3296742"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>

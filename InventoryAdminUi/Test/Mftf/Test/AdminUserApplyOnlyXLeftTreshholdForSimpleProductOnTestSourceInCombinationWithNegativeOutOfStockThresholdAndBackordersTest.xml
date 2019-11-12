@@ -69,7 +69,7 @@
         </actionGroup>
 
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
-        <actionGroup ref="AdminClickOnAdvancedInventoryLinkActionGroup" stepKey="clickOnAdvancedInventoryLink"/>
+        <actionGroup ref="AdminClickOnAdvancedInventoryButtonActionGroup" stepKey="clickOnAdvancedInventoryButton"/>
         <actionGroup ref="AdminFillAdvancedInventoryOutOfStockThresholdActionGroup" stepKey="fillAdvancedInventoryOutOfStockThreshold">
             <argument name="qty" value="-10"/>
         </actionGroup>
