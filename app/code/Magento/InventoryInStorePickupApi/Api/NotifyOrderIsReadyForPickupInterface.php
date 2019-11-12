@@ -11,12 +11,14 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * Send an email to the customer and ship the order to reserve pickup location`s QTY
+ * Send an email to the customer that order is ready to be picked up.
+ *
+ * @api
  */
 interface NotifyOrderIsReadyForPickupInterface
 {
     /**
-     * Send an email to the customer and ship the order to reserve pickup location`s QTY.
+     * Notify customer that the order is ready for pickup.
      *
      * @param int $orderId
      *
