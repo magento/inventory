@@ -115,7 +115,10 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
 
         $body = [
             'addressInformation' => [
-                'shipping_address' => array_merge($addressData, ['extension_attributes' => ['pickup_location_code' => 'eu-1']]),
+                'shipping_address' => array_merge(
+                    $addressData,
+                    ['extension_attributes' => ['pickup_location_code' => 'eu-1']]
+                ),
                 'billing_address' => $addressData,
                 'shipping_carrier_code' => 'flatrate',
                 'shipping_method_code' => 'flatrate'
