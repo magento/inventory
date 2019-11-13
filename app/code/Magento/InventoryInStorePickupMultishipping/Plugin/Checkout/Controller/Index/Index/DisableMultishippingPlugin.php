@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickupMultishipping\Plugin\Checkout\Controller
 use Magento\Checkout\Model\Cart;
 
 /**
- * Turns Off Multishipping mode for Quote.
+ * Turns Off multiple address checkout for Quote.
  *
  * @TODO remove when fix from core will be delivered. @see https://github.com/magento/magento2/pull/24072
  */
@@ -19,7 +19,7 @@ class DisableMultishippingPlugin
     /**
      * @var Cart
      */
-    protected $cart;
+    private $cart;
 
     /**
      * @param Cart $cart
@@ -30,7 +30,7 @@ class DisableMultishippingPlugin
     }
 
     /**
-     * Disable multishipping.
+     * Disable multiple address checkout.
      *
      * @param \Magento\Framework\App\Action\Action $subject
      * @return void
