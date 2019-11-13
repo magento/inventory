@@ -12,7 +12,7 @@
             <stories value="Simple Product Custom Stock."/>
             <title value="Registered customer place order with simple product with store pickup from custom website."/>
             <description value="Verify, registered customer able to place order with store pickup from custom website."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/971547/scenarios/3696789"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3696789"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>

@@ -5,8 +5,7 @@
  * See COPYING.txt for license details.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:DataObject/etc/fieldset.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:DataObject/etc/fieldset.xsd">
     <scope id="global">
         <fieldset id="inventory_convert_pickup_location">
             <field name="country_id">
@@ -31,7 +30,6 @@
                 <aspect name="to_in_store_pickup_shipping_address"/>
             </field>
         </fieldset>
-
         <fieldset id="sales_convert_quote_address">
             <field name="prefix">
                 <aspect name="to_in_store_pickup_shipping_address"/>
@@ -158,9 +156,6 @@
                 <aspect name="shipping_address_data"/>
             </field>
             <field name="save_in_address_book">
-                <aspect name="shipping_address_data"/>
-            </field>
-            <field name="customer_address_id">
                 <aspect name="shipping_address_data"/>
             </field>
         </fieldset>

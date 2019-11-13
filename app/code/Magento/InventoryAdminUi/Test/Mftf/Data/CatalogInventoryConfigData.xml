@@ -106,14 +106,6 @@
         <data key="path">cataloginventory/source_selection_distance_based/provider</data>
         <data key="value">google</data>
     </entity>
-    <entity name="EnableIsStorePickup">
-        <data key="path">config:set carriers/in_store/active</data>
-        <data key="value">1</data>
-    </entity>
-    <entity name="DisableIsStorePickup">
-        <data key="path">config:set carriers/in_store/active</data>
-        <data key="value">0</data>
-    </entity>
     <entity name="ImportTables">
         <data key="path">inventory-geonames:import</data>
     </entity>
