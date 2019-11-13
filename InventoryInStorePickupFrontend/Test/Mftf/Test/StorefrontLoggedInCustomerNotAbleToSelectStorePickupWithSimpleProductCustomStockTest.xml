@@ -18,7 +18,7 @@
                 <issueId value="https://github.com/magento/inventory/issues/2647"/>
             </skip>
             <group value="msi"/>
-            <group value="multi_mode"/>
+            <group value="store_pickup"/>
         </annotations>
 
         <before>
