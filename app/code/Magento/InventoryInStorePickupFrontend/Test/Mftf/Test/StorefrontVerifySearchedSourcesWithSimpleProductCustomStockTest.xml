@@ -13,9 +13,6 @@
             <title value="Verify all sources visible in search results."/>
             <description value="Verify, customer able see all sources in search results with simple product on custom stock."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3641396"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2650"/>
-            </skip>
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
