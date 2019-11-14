@@ -28,25 +28,14 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
-            <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForDefaultStockPageLoaded"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
 
             <!--Set advanced inventory config for Out-of-Stock Threshold and backorders-->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSimpleProductBySku">
-                <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-                <argument name="value" value="$$createSimpleProduct.sku$$"/>
-            </actionGroup>
-            <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage"/>
-            <waitForPageLoad time="30" stepKey="waitProductPageLoaded"/>
+            <amOnPage url="{{AdminProductEditPage.url($$createSimpleProduct.id$$)}}" stepKey="openProductEditPage"/>
             <comment userInput="Config advanced inventory" stepKey="configAdvancedInventoryComment"/>
             <click selector="{{AdminProductFormSection.advancedInventoryLink}}" stepKey="goToAdvancedInventory"/>
             <waitForElement selector="{{AdminAdvancedInventorySection.outOfStockThresholdUseDefault}}" stepKey="waitTillOutOfStockThresholdIsFound"/>
@@ -57,6 +46,8 @@
             <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetOutOfStockThreshold"/>
 
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
             <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
