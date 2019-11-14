@@ -7,13 +7,13 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="InStorePickupOrderPlacementWithSimpleProductAdditionalStockTest">
+    <test name="StorefrontChangeSearchRadiusWithSimpleProductCustomStockTest">
         <annotations>
-            <stories value="Registered Customer created Order with 'In Store Pickup' delivery method."/>
-            <title value="Order Placement with 'In Store Pickup' delivery method."/>
-            <description value="Registered Customer created Order with 'In Store Pickup' delivery method with simple product and additional sources."/>
-            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3296742"/>
-            <severity value="CRITICAL"/>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Change search radius."/>
+            <description value="Verify, search radius affect on sources search result."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3819510"/>
+            <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
         </annotations>
@@ -21,6 +21,7 @@
         <before>
             <!--Set Distance Provider for Distance Based SSA to offline-->
             <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <magentoCLI command="config:set {{IncreaseSearchRadius.path}} {{IncreaseSearchRadius.value}}" stepKey="increaseSearchRadius"/>
             <!--Enable 'In Store Pickup' shipping method.-->
             <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
             <!--Download tables for 'US'-->
@@ -28,24 +29,23 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Create test data.-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
             <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
-            <createData entity="SourceStockLinked1" stepKey="linkAustinSource">
-                <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="austinSource"/>
-            </createData>
-            <createData entity="SourceStockLinked1" stepKey="linkCulverSource">
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="culverSource"/>
             </createData>
-            <createData entity="MsiCustomer1" stepKey="customer"/>
-            <createData entity="SimpleSubCategory" stepKey="category"/>
-            <createData entity="_defaultProduct" stepKey="product">
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink5">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <!--Assign sources to product.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
@@ -56,47 +56,54 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
                 <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
             </actionGroup>
-            <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
         </before>
         <after>
             <!--Revert Distance Provider for Distance Based SSA to online.-->
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <magentoCLI command="config:set {{SetDefaultSearchRadius.path}} {{SetDefaultSearchRadius.value}}" stepKey="setSearchRadiusToDefault"/>
             <!--Disable 'In Store Pickup' shipping method.-->
             <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
-            <!--Delete created category, product, customer and stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
-            <!-- Assign Main Website to Default Stock -->
+            <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
-            <!--Disable created sources.-->
-            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Create Order with "In Store Pickup' shipping method.-->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="navigateToNewOrderWithExistingCustomer">
-            <argument name="customer" value="$$customer$$"/>
+        <!--Add product to cart.-->
+        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
         </actionGroup>
-        <!--Add simple product to order and check product price in grid-->
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addProductToOrder">
-            <argument name="product" value="$$product$$"/>
-            <argument name="quantity" value="1"/>
-            <argument name="price" value="$$product.price$$"/>
+        <!--Verify sources information.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <actionGroup ref="StorefrontSearchSourceWithStorePickupActionGroup" stepKey="searchCulverSource">
+            <argument name="searchString" value="$culverSource.source[postcode]$"/>
         </actionGroup>
-        <!--Select "In Store Pickup" shipping method-->
-        <actionGroup ref="AdminSelectInStorePickupShippingMethodActionGroup" stepKey="selectShippingMethod">
+        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifyCulverSource">
             <argument name="sourceName" value="$culverSource.source[name]$"/>
+            <argument name="sourcePhone" value="$culverSource.source[phone]$"/>
+            <argument name="sourceCountry" value="{{CulverStorePickupEnabledSource.country}}"/>
+            <argument name="sourcePostcode" value="$culverSource.source[postcode]$"/>
+            <argument name="sourceStreet" value="$culverSource.source[street]$"/>
+            <argument name="sourceCity" value="$culverSource.source[city]$"/>
+            <argument name="sourceRegion" value="$culverSource.source[region]$"/>
         </actionGroup>
-        <!--Submit order-->
-        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="submitOrder"/>
-        <actionGroup ref="verifyCreatedOrderInformation" stepKey="verifyCreatedOrderInformation"/>
-        <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
-            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        <actionGroup ref="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup" stepKey="verifyAustinSource">
+            <argument name="sourceName" value="$austinSource.source[name]$"/>
+            <argument name="sourcePhone" value="$austinSource.source[phone]$"/>
+            <argument name="sourceCountry" value="{{LosAngelesStorePickupEnabledSource.country}}"/>
+            <argument name="sourcePostcode" value="$austinSource.source[postcode]$"/>
+            <argument name="sourceStreet" value="$austinSource.source[street]$"/>
+            <argument name="sourceCity" value="$austinSource.source[city]$"/>
+            <argument name="sourceRegion" value="$austinSource.source[region]$"/>
         </actionGroup>
     </test>
 </tests>
