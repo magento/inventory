@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminManageSourceGridChangeColumnOrderByDragAndDropTest">
+        <remove keyForRemoval="assertDefaultOrder"/>
+        <remove keyForRemoval="assertOrderAfterCodeColumnMoved"/>
+        <remove keyForRemoval="assertOrderAfterNameColumnMoved"/>
+        <assertEquals stepKey="assertDefaultOrderInclStorePickup" after="grabColumnsDefaultOrder">
+            <actualResult type="variable">grabColumnsDefaultOrder</actualResult>
+            <expectedResult type="array">["Code", "Name", "Is Enabled", "Pickup Location", "Action"]</expectedResult>
+        </assertEquals>
+        <assertEquals stepKey="assertOrderAfterCodeColumnMovedInclStorePickup" after="grabColumnsAfterCodeColumnMoved">
+            <actualResult type="variable">grabColumnsAfterCodeColumnMoved</actualResult>
+            <expectedResult type="array">["Name", "Is Enabled", "Code", "Pickup Location", "Action"]</expectedResult>
+        </assertEquals>
+        <assertEquals stepKey="assertOrderAfterNameColumnMovedInclStorePickup" after="grabColumnsAfterNameColumnMoved">
+            <actualResult type="variable">grabColumnsAfterNameColumnMoved</actualResult>
+            <expectedResult type="array">["Is Enabled", "Name", "Code", "Pickup Location", "Action"]</expectedResult>
+        </assertEquals>
+    </test>
+</tests>

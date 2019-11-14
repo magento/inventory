@@ -98,4 +98,18 @@
         <data key="path">cataloginventory/item_options/notify_stock_qty</data>
         <data key="value">0</data>
     </entity>
+    <entity name="OfflineDistanceProviderForDistanceBasedSSA">
+        <data key="path">cataloginventory/source_selection_distance_based/provider</data>
+        <data key="value">offline</data>
+    </entity>
+    <entity name="OnlineDistanceProviderForDistanceBasedSSA">
+        <data key="path">cataloginventory/source_selection_distance_based/provider</data>
+        <data key="value">google</data>
+    </entity>
+    <entity name="ImportTables">
+        <data key="path">inventory-geonames:import</data>
+    </entity>
+    <entity name="USTable">
+        <data key="value">us</data>
+    </entity>
 </entities>

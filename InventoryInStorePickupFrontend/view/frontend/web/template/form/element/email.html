@@ -1,0 +1,78 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<ifnot args="isCustomerLoggedIn()">
+    <each args="getRegion('before-login-form')">
+        <div template=" {name: getTemplate()}"></div>
+    </each>
+    <form class="form form-login" data-role="email-with-possible-login"
+          data-bind="submit:login"
+          method="post">
+        <fieldset id="store-pickup-customer-email-fieldset" class="fieldset" data-bind="blockLoader: isLoading">
+            <div class="field required">
+                <label class="label" for="checkout-customer-email">
+                    <span data-bind="i18n: 'Email Address'"></span>
+                </label>
+                <div class="control _with-tooltip">
+                    <input class="input-text"
+                           type="email"
+                           data-bind="
+                                textInput: email,
+                                hasFocus: emailFocused,
+                                mageInit: {'mage/trim-input':{}}"
+                           name="username"
+                           data-validate="{required:true, 'validate-email':true}"
+                           id="store-pickup-checkout-customer-email" />
+                    <!-- ko template: 'ui/form/element/helper/tooltip' --><!-- /ko -->
+                    <span class="note" data-bind="fadeVisible: isPasswordVisible() == false">
+                        <translate args="'You can create an account after checkout.'"/>
+                    </span>
+                </div>
+            </div>
+
+            <!--Hidden fields -->
+            <fieldset class="fieldset hidden-fields" data-bind="fadeVisible: isPasswordVisible">
+                <div class="field">
+                    <label class="label" for="customer-password">
+                        <translate args="'Password'"/>
+                    </label>
+                    <div class="control">
+                        <input class="input-text"
+                               data-bind="
+                                    attr: {
+                                        placeholder: $t('Password'),
+                                    }"
+                               type="password"
+                               name="password"
+                               id="store-pickup-customer-password"
+                               data-validate="{required:true}"
+                               autocomplete="off"/>
+                        <span class="note"
+                              translate="'You already have an account with us. Sign in or continue as guest.'"/>
+                    </div>
+
+                </div>
+                <each args="getRegion('additional-login-form-fields')">
+                    <div template=" {name: getTemplate()}"></div>
+                </each>
+                <div class="actions-toolbar">
+                    <input name="context" type="hidden" value="checkout" />
+                    <div class="primary">
+                        <button type="submit" class="action login primary" data-action="checkout-method-login">
+                            <translate args="'Login'"></translate>
+                        </button>
+                    </div>
+                    <div class="secondary">
+                        <a class="action remind" data-bind="attr: { href: forgotPasswordUrl }">
+                            <span data-bind="i18n: 'Forgot Your Password?'"></span>
+                        </a>
+                    </div>
+                </div>
+            </fieldset>
+            <!--Hidden fields -->
+        </fieldset>
+    </form>
+</ifnot>

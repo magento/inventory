@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface" type="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverChain" />
+    <preference for="Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractorInterface" type="Magento\InventoryInStorePickupApi\Model\SearchResult\Extractor" />
+    <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
+        <arguments>
+            <argument name="map" xsi:type="array">
+                <item name="source_code" xsi:type="string">pickup_location_code</item>
+                <item name="email" xsi:type="string">email</item>
+                <item name="fax" xsi:type="string">fax</item>
+                <item name="contact_name" xsi:type="string">contact_name</item>
+                <item name="description" xsi:type="string">description</item>
+                <item name="latitude" xsi:type="string">latitude</item>
+                <item name="longitude" xsi:type="string">longitude</item>
+                <item name="country_id" xsi:type="string">country_id</item>
+                <item name="region_id" xsi:type="string">region_id</item>
+                <item name="region" xsi:type="string">region</item>
+                <item name="city" xsi:type="string">city</item>
+                <item name="street" xsi:type="string">street</item>
+                <item name="postcode" xsi:type="string">postcode</item>
+                <item name="phone" xsi:type="string">phone</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator">
+        <arguments>
+            <argument name="criteriaBuilder" shared="false" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
+        </arguments>
+    </type>
+</config>

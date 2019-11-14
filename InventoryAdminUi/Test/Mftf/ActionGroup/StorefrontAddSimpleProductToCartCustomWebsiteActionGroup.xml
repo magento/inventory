@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontAddSimpleProductToCartCustomWebsiteActionGroup" extends="AddSimpleProductToCart">
+        <arguments>
+            <argument name="storeCode" type="string" defaultValue="{{customStore.code}}"/>
+        </arguments>
+        <remove keyForRemoval="goToProductPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{storeCode}}/{{product.custom_attributes[url_key]}}.html" stepKey="goToProductPage" before="waitForProductPage"/>
+    </actionGroup>
+</actionGroups>

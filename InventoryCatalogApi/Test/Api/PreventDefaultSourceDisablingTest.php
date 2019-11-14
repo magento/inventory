@@ -15,18 +15,12 @@ use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 
 /**
- * @inheritDoc
+ * Verify, default source cannot be disabled via API.
  */
 class PreventDefaultSourceDisablingTest extends WebapiAbstract
 {
-    /**
-     * Resource path
-     */
     const RESOURCE_PATH = '/V1/inventory/sources';
 
-    /**
-     * Service name
-     */
     const SERVICE_NAME = 'inventoryApiSourceRepositoryV1';
 
     /**
@@ -44,7 +38,9 @@ class PreventDefaultSourceDisablingTest extends WebapiAbstract
     }
 
     /**
-     * @throws \Exception
+     * Verify, default source cannot be disabled via API call.
+     *
+     * @return void
      */
     public function testPreventDefaultSourceDisabling(): void
     {
@@ -81,6 +77,8 @@ class PreventDefaultSourceDisablingTest extends WebapiAbstract
     }
 
     /**
+     * Perform API request for test.
+     *
      * @param array $serviceInfo
      * @param array $data
      * @param array $expectedErrorData

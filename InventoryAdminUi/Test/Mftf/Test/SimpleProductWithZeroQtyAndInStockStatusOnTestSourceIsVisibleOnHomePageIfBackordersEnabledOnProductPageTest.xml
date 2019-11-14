@@ -27,6 +27,9 @@
             <remove keyForRemoval="additionalStock"/>
             <!--Create additional source and stock.-->
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" after="simpleProduct"/>
+
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->

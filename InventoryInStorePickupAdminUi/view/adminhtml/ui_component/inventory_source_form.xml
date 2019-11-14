@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="general">
+        <field name="is_pickup_location_active" formElement="checkbox" sortOrder="70">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <dataScope>extension_attributes.is_pickup_location_active</dataScope>
+                <dataType>boolean</dataType>
+                <label translate="true">Use as Pickup Location</label>
+                <notice translate="true">The Default Source can not be used for In-Store Pickup Delivery.</notice>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+    </fieldset>
+    <fieldset name="address">
+        <field name="street" component="Magento_InventoryInStorePickupAdminUi/js/form/element/conditional-required">
+            <settings>
+                <imports>
+                    <link name="required">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
+                </imports>
+            </settings>
+        </field>
+        <field name="city" component="Magento_InventoryInStorePickupAdminUi/js/form/element/conditional-required">
+            <settings>
+                <imports>
+                    <link name="required">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
+                </imports>
+            </settings>
+        </field>
+    </fieldset>
+    <fieldset name="pickup_location" sortOrder="100" component="Magento_InventoryInStorePickupAdminUi/js/form/components/fieldset">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Pickup Location</label>
+            <dataScope>general</dataScope>
+            <imports>
+                <link name="visible">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
+            </imports>
+        </settings>
+        <field name="frontend_name" formElement="input">
+            <settings>
+                <dataScope>extension_attributes.frontend_name</dataScope>
+                <dataType>string</dataType>
+                <label translate="true">Frontend Name</label>
+                <tooltip>
+                    <description translate="true">Pickup Location Name visible for the customer on checkout.</description>
+                </tooltip>
+            </settings>
+        </field>
+        <field name="frontend_description" template="ui/form/field" formElement="wysiwyg">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="add_variables" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
+                        <item name="add_images" xsi:type="boolean">true</item>
+                        <item name="add_directives" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <dataScope>extension_attributes.frontend_description</dataScope>
+                <dataType>string</dataType>
+                <label translate="true">Frontend Description</label>
+            </settings>
+            <formElements>
+                <wysiwyg>
+                    <settings>
+                        <wysiwyg>true</wysiwyg>
+                    </settings>
+                </wysiwyg>
+            </formElements>
+        </field>
+    </fieldset>
+</form>

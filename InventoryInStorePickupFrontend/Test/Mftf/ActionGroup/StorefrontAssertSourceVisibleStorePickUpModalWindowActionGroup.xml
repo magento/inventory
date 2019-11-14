@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontAssertSourceVisibleStorePickUpModalWindowActionGroup">
+        <annotations>
+            <description>Verify, source visible in modal search window.</description>
+        </annotations>
+        <arguments>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+            <argument name="sourcePhone" type="string" defaultValue="{{_defaultSource.phone}}"/>
+            <argument name="sourceCountry" type="string" defaultValue="{{_defaultSource.country}}"/>
+            <argument name="sourcePostcode" type="string" defaultValue="{{_defaultSource.postcode}}"/>
+            <argument name="sourceStreet" type="string" defaultValue="{{_defaultSource.street}}"/>
+            <argument name="sourceCity" type="string" defaultValue="{{_defaultSource.city}}"/>
+            <argument name="sourceRegion" type="string" defaultValue="{{_defaultSource.region}}"/>
+        </arguments>
+        <see selector="{{PickInStoreModalSection.sourceName}}" userInput="{{sourceName}}" stepKey="verifySourceName"/>
+        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceCountry}}" stepKey="verifySourceCountry"/>
+        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourcePostcode}}" stepKey="verifySourcePostcode"/>
+        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourcePhone}}" stepKey="verifySourcePhone"/>
+        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceStreet}}" stepKey="verifySourceStreet"/>
+        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceCity}}" stepKey="verifySourceCity"/>
+        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceRegion}}" stepKey="verifySourceRegion"/>
+    </actionGroup>
+</actionGroups>

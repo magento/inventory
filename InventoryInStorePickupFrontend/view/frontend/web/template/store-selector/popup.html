@@ -1,0 +1,54 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div id="store-selector-popup">
+    <div class="block block-search store-selector-search">
+        <div class="field search">
+            <label class="label" for="store-selector-search-input">
+                <translate args="'Search'"/>
+            </label>
+            <div class="control">
+                <input id="store-selector-search-input"
+                       type="text"
+                       name="store-selector-search-query"
+                       class="input-text"
+                       maxlength="128"
+                       textInput="searchQuery"
+                       attr="placeholder: $t('Search with postcode or city name...')"
+                />
+            </div>
+        </div>
+        <div class="actions">
+            <button type="submit"
+                    title="Search"
+                    class="action search"
+                    aria-label="Search"
+            >
+                <translate args="'Search'"/>
+            </button>
+        </div>
+    </div>
+    <p class="store-selector-popup-no-locations" if="searchQuery() && nearbyLocations() && !nearbyLocations().length">
+        <translate args="'We were unable to find nearby locations for provided search query.'"/>
+    </p>
+    <p class="store-selector-popup-empty-query" ifnot="searchQuery()">
+        <translate args="'Please provide postcode or city name to find nearest pickup locations.'"/>
+    </p>
+    <table class="store-selector-popup-table" data-bind="blockLoader: isLoading, visible: nearbyLocations() && nearbyLocations().length">
+        <thead>
+            <tr class="row">
+                <th class="col col-method" translate="'Location Details'"></th>
+                <th class="col col-carrier" translate="'Action'"></th>
+            </tr>
+        </thead>
+        <tbody>
+<!--            <each args="data: nearbyLocations(), as: 'location'" render="{ name:$parent.storeSelectorPopupItemTemplate}"/>-->
+            <!-- ko foreach: { data: nearbyLocations(), as: 'location' } -->
+                <!-- ko template: { name: $parent.storeSelectorPopupItemTemplate } --><!-- /ko -->
+            <!-- /ko -->
+        </tbody>
+    </table>
+</div>
