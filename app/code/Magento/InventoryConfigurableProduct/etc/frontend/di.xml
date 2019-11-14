@@ -9,4 +9,7 @@
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Attribute\OptionSelectBuilderInterface">
         <plugin name="Magento_ConfigurableProduct_Plugin_Model_ResourceModel_Attribute_InStockOptionSelectBuilder" type="Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Attribute\IsSalableOptionSelectBuilder"/>
     </type>
+    <type name="Magento\ConfigurableProduct\Model\AttributeOptionProviderInterface">
+        <plugin name="is_option_salable" type="Magento\InventoryConfigurableProduct\Plugin\Model\AttributeOptionProvider\IsSalableOptionPlugin"/>
+    </type>
 </config>
