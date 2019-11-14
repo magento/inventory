@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="InStorePickupOrderPlacementWithSimpleProductAdditionalStockTest">
+        <annotations>
+            <stories value="Registered Customer created Order with 'In Store Pickup' delivery method."/>
+            <title value="Order Placement with 'In Store Pickup' delivery method."/>
+            <description value="Registered Customer created Order with 'In Store Pickup' delivery method with simple product and additional sources."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3296742"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="store_pickup"/>
+        </annotations>
+
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Create test data.-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkAustinSource">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="linkCulverSource">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="_defaultProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Assign sources to product.-->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Delete created category, product, customer and stock.-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!-- Assign Main Website to Default Stock -->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable created sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Create Order with "In Store Pickup' shipping method.-->
+        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="navigateToNewOrderWithExistingCustomer">
+            <argument name="customer" value="$$customer$$"/>
+        </actionGroup>
+        <!--Add simple product to order and check product price in grid-->
+        <actionGroup ref="addSimpleProductToOrder" stepKey="addProductToOrder">
+            <argument name="product" value="$$product$$"/>
+            <argument name="quantity" value="1"/>
+            <argument name="price" value="$$product.price$$"/>
+        </actionGroup>
+        <!--Select "In Store Pickup" shipping method-->
+        <actionGroup ref="AdminSelectInStorePickupShippingMethodActionGroup" stepKey="selectShippingMethod">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <!--Submit order-->
+        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="submitOrder"/>
+        <actionGroup ref="verifyCreatedOrderInformation" stepKey="verifyCreatedOrderInformation"/>
+        <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+    </test>
+</tests>

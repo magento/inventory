@@ -3,3 +3,5 @@
 app/code/Magento/Inventory*
 dev/tests/static/testsuite/Magento/Test/Integrity/Xml/SchemaTest.php
 dev/tests/static/framework/autoload.php
+dev/tests/api-functional/_files/Magento/TestModuleJoinDirectives/etc/extension_attributes.xml
+dev/tests/static/testsuite/Magento/Test/Php/_files*

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="PickInStoreModalSection">
+        <element name="search" type="input" selector="//input[contains(@id, 'store-selector-search-input')]"/>
+        <element name="shipBtn" type="input" selector="//td[contains(*, '{{sourceName}}')]//following::button[contains(@class, 'action-select-shipping-item')][1]" parameterized="true"/>
+        <element name="sourceName" type="text" selector="//p[contains(@class, 'location-name')]"/>
+        <element name="sourceAddress" type="text" selector="//p[contains(@class, 'location-address')]"/>
+    </section>
+</sections>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="CulverStorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Culver Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">culver_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Culver City address.</data>
+        <data key="priority">100</data>
+        <data key="contact_name">John Doe</data>
+        <data key="email" unique="prefix">john.doe@example.com</data>
+        <data key="phone">123-456-7890</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <data key="region">California</data>
+        <data key="region_id">12</data>
+        <data key="city">Culver City</data>
+        <data key="street">6161 West Centinela Avenue</data>
+        <data key="postcode">90230</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+    <entity name="CulverStorePickupEnabledSource2" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Culver Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">culver_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Culver City address.</data>
+        <data key="priority">100</data>
+        <data key="contact_name">John Doe</data>
+        <data key="email" unique="prefix">john.doe@example.com</data>
+        <data key="phone">123-456-7890</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <data key="region">California</data>
+        <data key="region_id">12</data>
+        <data key="city">Culver City</data>
+        <data key="street">Culver Blvd</data>
+        <data key="postcode">90231</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+    <entity name="AustinStorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Austin Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">austin_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Austin address.</data>
+        <data key="priority">100</data>
+        <data key="city">Austin</data>
+        <data key="region">Texas</data>
+        <data key="region_code">TX</data>
+        <data key="region_id">57</data>
+        <data key="street">7700 West Parmer Lane</data>
+        <data key="postcode">78729</data>
+        <data key="email" unique="prefix">joe.buyer@email.com</data>
+        <data key="phone">512-345-6789</data>
+        <data key="contact_name">John Doe</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+    <entity name="SanDiegoStorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">San Diego Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">san_diego_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with San Diego address.</data>
+        <data key="priority">100</data>
+        <data key="city">San Diego</data>
+        <data key="region">California</data>
+        <data key="region_code">CA</data>
+        <data key="region_id">12</data>
+        <data key="street">231 North Trees Avenue</data>
+        <data key="postcode">92102</data>
+        <data key="email" unique="prefix">joe.buyer@email.com</data>
+        <data key="phone">512-345-6789</data>
+        <data key="contact_name">John Doe</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+    <entity name="DallasStorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Dallas Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">dallas_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Dallas address.</data>
+        <data key="priority">100</data>
+        <data key="city">Dallas</data>
+        <data key="region">Texas</data>
+        <data key="region_code">TX</data>
+        <data key="region_id">57</data>
+        <data key="street">1441 N Beckley Ave</data>
+        <data key="postcode">75203</data>
+        <data key="email" unique="prefix">joe.buyer@email.com</data>
+        <data key="phone">512-345-6789</data>
+        <data key="contact_name">John Doe</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+    <entity name="LosAngelesStorePickupEnabledSource" type="source">
+        <data key="id_field_name">source_code</data>
+        <data key="name" unique="suffix">Los Angeles Test Store Pickup Source </data>
+        <data key="source_code" unique="suffix">los_angeles_test_store_pickup_source_</data>
+        <data key="enabled">1</data>
+        <data key="description">Source for "In Store Pickup" shipping method with Los Angeles address.</data>
+        <data key="priority">100</data>
+        <data key="city">Los Angeles</data>
+        <data key="region">California</data>
+        <data key="region_code">CA</data>
+        <data key="region_id">12</data>
+        <data key="street">6800 McKinley Ave</data>
+        <data key="postcode">90001</data>
+        <data key="email" unique="prefix">joe.buyer@email.com</data>
+        <data key="phone">512-345-6789</data>
+        <data key="contact_name">John Doe</data>
+        <data key="fax">123-456-7890</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <requiredEntity type="source_extension_attribute">StorePickupEnabled</requiredEntity>
+    </entity>
+</entities>

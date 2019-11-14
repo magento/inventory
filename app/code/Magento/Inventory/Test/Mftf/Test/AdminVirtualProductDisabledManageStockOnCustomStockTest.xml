@@ -23,7 +23,7 @@
         </annotations>
 
         <before>
-            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="setAutoReturnOn"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
 
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="customStock"/>
@@ -35,7 +35,8 @@
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource1"/>
             </createData>
-
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
         <after>
