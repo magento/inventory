@@ -12,4 +12,7 @@
     <type name="Magento\ConfigurableProduct\Model\AttributeOptionProviderInterface">
         <plugin name="is_option_salable" type="Magento\InventoryConfigurableProduct\Plugin\Model\AttributeOptionProvider\IsSalableOptionPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Helper\Stock">
+        <plugin name="adapt_assign_stock_status_to_configurable_product" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
+    </type>
 </config>
