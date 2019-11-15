@@ -1,4 +1,4 @@
-# InventoryInStorePickupAdminUi module
+# InventoryInStorePickupSalesAdminUi module
 
 The `InventoryInStorePickupSalesAdminUi` module extends the Magento Admin UI to add Inventory In-Store Pickup functionality Sales operations enhancement.
 

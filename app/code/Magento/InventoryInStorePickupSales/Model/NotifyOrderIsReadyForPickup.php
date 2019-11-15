@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupSales\Model;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryInStorePickup\Model\Order\AddCommentToOrder;
-use \Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
+use Magento\InventoryInStorePickupSales\Model\Order\AddCommentToOrder;
+use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
