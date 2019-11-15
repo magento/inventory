@@ -7,6 +7,8 @@
 <!--@subject {{trans "Your %store_name order is ready for pickup" store_name=$store.getFrontendName()}} @-->
 <!--@vars {
 "var order.getEmailCustomerNote()":"Email Order Note",
+"var order.getCustomerName()":"Customer Name",
+"var store.getFrontendName()":"Store Name",
 "var order.increment_id":"Order Id",
 "var formattedShippingAddress|raw":"Shipping Address",
 "var order.getShippingDescription()":"Shipping Description",
@@ -29,7 +31,7 @@
         <td>
             <h1>{{trans 'Your Order <span class="no-link">#%increment_id</span> is complete'
                 increment_id=$order.increment_id |raw}}</h1>
-            <p>{{trans "Please fell free to pickup your order now."}}</p>
+            <p>{{trans "Please feel free to pickup your order now."}}</p>
         </td>
     </tr>
     <tr class="email-information">

@@ -1,4 +1,4 @@
-# InventoryInStorePickupApi module
+# InventoryInStorePickupSalesApi module
 
 The `InventoryInStorePickupSalesApi` module provides service contracts for In-Store Pickup functionality in scope of Sales operations.
 

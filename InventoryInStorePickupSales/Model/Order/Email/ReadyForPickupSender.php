@@ -60,7 +60,12 @@ class ReadyForPickupSender extends Sender
      */
     public function send(Order $order): bool
     {
-        return $this->checkAndSend($order);
+        $result = $this->checkAndSend($order);
+        if (!$result) {
+            $order->setEmailSent(0);
+        }
+
+        return $result;
     }
 
     /**

@@ -13,6 +13,9 @@
         <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Controller\AdminOrder\Create\SetPickupLocationFromPost" />
     </type>
     <type name="Magento\Sales\Block\Adminhtml\Order\View">
-        <plugin name="process_ship_button" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Block\Adminhtml\Order\ProcessShipButtonPlugin" />
+        <plugin name="process_ship_button" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\ProcessShipButtonPlugin" />
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Invoice\Create\Form">
+        <plugin name="create_shipment_checkbox_processor" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\Invoice\Create\ProcessCreateShipment"/>
     </type>
 </config>

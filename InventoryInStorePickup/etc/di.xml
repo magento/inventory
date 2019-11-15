@@ -55,6 +55,7 @@
             <argument name="validators" xsi:type="array">
                 <item name="city" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\CityValidator</item>
                 <item name="street" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\StreetValidator</item>
+                <item name="phone" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\PhoneValidator</item>
                 <item name="default_source_use_as_pickup_location_validator" xsi:type="object">Magento\InventoryInStorePickup\Model\Source\Validator\DefaultSourceUseForPickupLocationValidator</item>
             </argument>
         </arguments>
