@@ -18,12 +18,12 @@ class ReadyForPickupIdentity extends Container
     /**
      * Configuration paths
      */
-    private const XML_PATH_EMAIL_COPY_METHOD = 'storepickup_email/order_ready_for_pickup/copy_method';
-    private const XML_PATH_EMAIL_COPY_TO = 'storepickup_email/order_ready_for_pickup/copy_to';
-    private const XML_PATH_EMAIL_IDENTITY = 'storepickup_email/order_ready_for_pickup/identity';
-    private const XML_PATH_EMAIL_GUEST_TEMPLATE = 'storepickup_email/order_ready_for_pickup/guest_template';
-    private const XML_PATH_EMAIL_TEMPLATE = 'storepickup_email/order_ready_for_pickup/template';
-    private const XML_PATH_EMAIL_ENABLED = 'storepickup_email/order_ready_for_pickup/enabled';
+    private const XML_PATH_EMAIL_COPY_METHOD = 'sales_email/order_ready_for_pickup/copy_method';
+    private const XML_PATH_EMAIL_COPY_TO = 'sales_email/order_ready_for_pickup/copy_to';
+    private const XML_PATH_EMAIL_IDENTITY = 'sales_email/order_ready_for_pickup/identity';
+    private const XML_PATH_EMAIL_GUEST_TEMPLATE = 'sales_email/order_ready_for_pickup/guest_template';
+    private const XML_PATH_EMAIL_TEMPLATE = 'sales_email/order_ready_for_pickup/template';
+    private const XML_PATH_EMAIL_ENABLED = 'sales_email/order_ready_for_pickup/enabled';
 
     /**
      * @inheritdoc
@@ -44,7 +44,7 @@ class ReadyForPickupIdentity extends Container
     {
         $data = $this->getConfigValue(self::XML_PATH_EMAIL_COPY_TO, $this->getStore()->getStoreId());
         if (!empty($data)) {
-            return explode(',', $data);
+            return array_map('trim', explode(',', $data));
         }
 
         return false;
