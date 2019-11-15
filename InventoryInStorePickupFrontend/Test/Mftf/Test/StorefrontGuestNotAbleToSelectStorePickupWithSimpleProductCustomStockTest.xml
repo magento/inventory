@@ -14,11 +14,8 @@
             <description value="Verify, guest customer not able to place order with store pickup in case there are no sources with store pickup."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3616361"/>
             <severity value="CRITICAL"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2647"/>
-            </skip>
             <group value="msi"/>
-            <group value="multi_mode"/>
+            <group value="store_pickup"/>
         </annotations>
 
         <before>

@@ -27,7 +27,7 @@
                 <aspect name="to_in_store_pickup_shipping_address"/>
             </field>
             <field name="pickup_location_code">
-                <aspect name="to_in_store_pickup_shipping_address"/>
+                <aspect name="to_in_store_pickup_shipping_address" targetField="extension_attribute_pickup_location_code_pickup_location_code" />
             </field>
         </fieldset>
         <fieldset id="sales_convert_quote_address">
@@ -150,15 +150,12 @@
                 <aspect name="shipping_address_data"/>
             </field>
             <field name="pickup_location_code">
-                <aspect name="shipping_address_data"/>
+                <aspect name="shipping_address_data" targetField="extension_attribute_pickup_location_code_pickup_location_code"/>
             </field>
             <field name="same_as_billing">
                 <aspect name="shipping_address_data"/>
             </field>
             <field name="save_in_address_book">
-                <aspect name="shipping_address_data"/>
-            </field>
-            <field name="customer_address_id">
                 <aspect name="shipping_address_data"/>
             </field>
         </fieldset>
