@@ -48,6 +48,15 @@
             </settings>
         </field>
     </fieldset>
+    <fieldset name="contact_info">
+        <field name="phone" component="Magento_InventoryInStorePickupAdminUi/js/form/element/conditional-required">
+            <settings>
+                <imports>
+                    <link name="required">${ $.provider }:data.general.extension_attributes.is_pickup_location_active</link>
+                </imports>
+            </settings>
+        </field>
+    </fieldset>
     <fieldset name="pickup_location" sortOrder="100" component="Magento_InventoryInStorePickupAdminUi/js/form/components/fieldset">
         <settings>
             <collapsible>true</collapsible>
