@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryDistanceBasedSourceSelection\Model;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Io\File;
@@ -71,19 +72,20 @@ class ImportGeoNames
      * Download a country
      *
      * @param string $countryCode
+     * @param string $url
      * @return string
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
-    private function downloadCountry(string $countryCode): string
+    private function downloadCountry(string $countryCode, string $url): string
     {
-        $countryZipFile = $this->geoNamesBaseUrl . $countryCode. '.zip';
+        $countryZipFile = $url . $countryCode . '.zip';
         $this->client->get($countryZipFile);
 
         $varDir = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
         $exportPath = $varDir->getAbsolutePath('geonames');
         $this->file->mkdir($exportPath, 0770, true);
 
-        $destinationFile = $exportPath . '/' . $countryCode. '.zip';
+        $destinationFile = $exportPath . '/' . $countryCode . '.zip';
         $this->file->write($destinationFile, $this->client->getBody());
 
         return $destinationFile;
@@ -139,8 +141,8 @@ class ImportGeoNames
                 'city' => $parts[2],
                 'region' => $parts[3],
                 'province' => $parts[6],
-                'latitude' => (float) $parts[9],
-                'longitude' => (float) $parts[10],
+                'latitude' => (float)$parts[9],
+                'longitude' => (float)$parts[10],
             ];
         }
 
@@ -152,18 +154,20 @@ class ImportGeoNames
      * Import geonames and return the amount of items
      *
      * @param string $countryCode
+     * @param string|null $url
      * @return int
      * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
-    public function execute(string $countryCode): int
+    public function execute(string $countryCode, string $url = null): int
     {
+        $url = $url ?: $this->geoNamesBaseUrl;
         $countryCode = strtoupper(preg_replace('/\W/', '', $countryCode));
         if (!$countryCode) {
             throw new LocalizedException(__('Undefined country code'));
         }
 
-        $zipFile = $this->downloadCountry($countryCode);
+        $zipFile = $this->downloadCountry($countryCode, $url);
         $tsvFile = $this->unpackZipFile($zipFile, $countryCode);
 
         return $this->importTsv($tsvFile, $countryCode);
