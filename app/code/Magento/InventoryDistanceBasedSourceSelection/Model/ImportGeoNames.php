@@ -111,6 +111,7 @@ class ImportGeoNames
 
         $contents = '';
         while (!feof($resource)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $contents .= fread($resource, 1024);
         }
 

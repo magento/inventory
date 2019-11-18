@@ -61,19 +61,21 @@ class ImportGeoNamesCommand extends Command
     {
         $this->setName('inventory-geonames:import')
             ->setDescription('Download and import geo names for source selection algorithm')
-            ->setDefinition([
-                new InputArgument(
-                    self::COUNTRIES,
-                    InputArgument::IS_ARRAY | InputArgument::REQUIRED,
-                    'List of country codes to import'
-                ),
-                new InputOption(
-                    self::URL,
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Url from which download counties data.'
-                ),
-            ]);
+            ->setDefinition(
+                [
+                    new InputArgument(
+                        self::COUNTRIES,
+                        InputArgument::IS_ARRAY | InputArgument::REQUIRED,
+                        'List of country codes to import'
+                    ),
+                    new InputOption(
+                        self::URL,
+                        null,
+                        InputOption::VALUE_OPTIONAL,
+                        'Url from which download counties data.'
+                    ),
+                ]
+            );
 
         parent::configure();
     }
