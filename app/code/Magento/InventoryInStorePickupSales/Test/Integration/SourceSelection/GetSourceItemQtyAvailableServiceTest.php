@@ -6,13 +6,13 @@
 
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Integration\SourceSelection;
+namespace Magento\InventoryInStorePickupSales\Test\Integration\SourceSelection;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
-use Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService;
+use Magento\InventoryInStorePickupSales\Model\SourceSelection\GetSourceItemQtyAvailableService;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -76,15 +76,15 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_order.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_order_pickup_location.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_multiple_quotes_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_multiple_orders_on_eu_website.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/place_order.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/set_order_pickup_location.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_multiple_quotes_on_eu_website.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/place_multiple_orders_on_eu_website.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
@@ -112,16 +112,16 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_order.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_order_pickup_location.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/create_multiple_quotes_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/place_multiple_orders_on_eu_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickup/Test/_files/set_orders_pickup_location.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/place_order.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/set_order_pickup_location.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_multiple_quotes_on_eu_website.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/place_multiple_orders_on_eu_website.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/set_orders_pickup_location.php
      *
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
