@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Api;
+namespace Magento\InventoryInStorePickupApi\Test\Api;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Webapi\Rest\Request;
