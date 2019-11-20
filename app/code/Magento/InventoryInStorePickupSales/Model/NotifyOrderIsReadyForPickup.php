@@ -18,6 +18,8 @@ use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterface;
 use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\ResultInterfaceFactory;
 
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY.
@@ -60,6 +62,11 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
     private $addCommentToOrder;
 
     /**
+     * @var ResultInterfaceFactory
+     */
+    private $resultFactory;
+
+    /**
      * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
@@ -67,6 +74,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
      * @param ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory
      * @param ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory
      * @param AddCommentToOrder $addCommentToOrder
+     * @param ResultInterfaceFactory $resultFactory
      */
     public function __construct(
         IsOrderReadyForPickupInterface $isOrderReadyForPickup,
@@ -75,7 +83,8 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         OrderRepositoryInterface $orderRepository,
         ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory,
         ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory,
-        AddCommentToOrder $addCommentToOrder
+        AddCommentToOrder $addCommentToOrder,
+        ResultInterfaceFactory $resultFactory
     ) {
         $this->isOrderReadyForPickup = $isOrderReadyForPickup;
         $this->shipOrder = $shipOrder;
@@ -84,6 +93,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
         $this->shipmentArgumentsFactory = $shipmentArgumentsFactory;
         $this->argumentExtensionFactory = $argumentExtensionFactory;
         $this->addCommentToOrder = $addCommentToOrder;
+        $this->resultFactory = $resultFactory;
     }
 
     /**
@@ -92,29 +102,58 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
      * Notify customer that the order is ready for pickup by sending notification email. Ship the order to deduct the
      * item quantity from the appropriate source.
      *
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function execute(int $orderId): void
+    public function execute(array $orderIds): ResultInterface
     {
-        if (!$this->isOrderReadyForPickup->execute($orderId)) {
-            throw new LocalizedException(__('The order is not ready for pickup'));
+        $failed = [];
+        foreach ($orderIds as $orderId) {
+            if (!$this->isOrderReadyForPickup->execute($orderId)) {
+                $failed[] = [
+                    'id' => $orderId,
+                    'message' => 'Order is not ready for pick up.'
+                ];
+                continue;
+            }
+
+            try {
+                $order = $this->orderRepository->get($orderId);
+
+                if (!$this->emailNotifier->notify($order)) {
+                    $failed[] = [
+                        'id' => $orderId,
+                        'message' => 'Cannot notify user.'
+                    ];
+                    continue;
+                }
+
+                $this->shipOrder->execute(
+                    $orderId,
+                    [],
+                    false,
+                    false,
+                    null,
+                    [],
+                    [],
+                    $this->getShipmentArguments($order)
+                );
+                $this->addCommentToOrder->execute($order);
+            } catch (LocalizedException $exception) {
+                $failed[] = [
+                    'id' => $orderId,
+                    'message' => $exception->getMessage()
+                ];
+                continue;
+            } catch (\Exception $exception) {
+                $failed[] = [
+                    'id' => $orderId,
+                    'message' => 'We can\'t notify the customer right now.'
+                ];
+                continue;
+            }
         }
 
-        $order = $this->orderRepository->get($orderId);
-
-        /** @noinspection PhpParamsInspection */
-        $this->emailNotifier->notify($order);
-        $this->shipOrder->execute(
-            $orderId,
-            [],
-            false,
-            false,
-            null,
-            [],
-            [],
-            $this->getShipmentArguments($order)
-        );
-        $this->addCommentToOrder->execute($order);
+        return $this->resultFactory->create(['failed' => $failed]);
     }
 
     /**

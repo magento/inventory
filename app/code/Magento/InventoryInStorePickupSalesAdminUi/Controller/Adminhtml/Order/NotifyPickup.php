@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSalesAdminUi\Controller\Adminhtml\Order;
 
-use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
@@ -79,18 +78,17 @@ class NotifyPickup extends Action implements HttpGetActionInterface
             return $this->resultRedirectFactory->create()->setPath('sales/*/');
         }
 
-        try {
-            $this->notifyOrderIsReadyForPickup->execute((int)$order->getEntityId());
+        $result = $this->notifyOrderIsReadyForPickup->execute([(int)$order->getEntityId()]);
+
+        if ($result->isSuccessful()) {
             if ($order->getEmailSent()) {
                 $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
             } else {
                 $this->messageManager->addSuccessMessage(__('Shipment has been created.'));
             }
-        } catch (LocalizedException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-        } catch (Exception $e) {
-            $this->messageManager->addErrorMessage(__('We can\'t notify the customer right now.'));
-            $this->logger->critical($e);
+        } else {
+            $error = current($result->getFailed());
+            $this->messageManager->addErrorMessage($error['message']);
         }
 
         return $this->resultRedirectFactory->create()->setPath(
