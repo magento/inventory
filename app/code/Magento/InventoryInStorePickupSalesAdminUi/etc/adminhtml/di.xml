@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Block\Adminhtml\Order\View\Info">
+        <plugin name="hide-edit-link" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Order\View\ShippingAddress\HideEditLink"/>
+    </type>
+    <type name="Magento\Sales\Controller\Adminhtml\Order\Create\Save">
+        <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Controller\AdminOrder\Create\SetPickupLocationFromPost" />
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\View">
+        <plugin name="process_ship_button" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\ProcessShipButtonPlugin" />
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Invoice\Create\Form">
+        <plugin name="create_shipment_checkbox_processor" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\Invoice\Create\ProcessCreateShipment"/>
+    </type>
+</config>

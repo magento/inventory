@@ -6,23 +6,12 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Sales\Api\OrderRepositoryInterface">
-        <plugin name="get_pickup_location_for_order" type="Magento\InventoryInStorePickup\Plugin\Sales\Order\GetPickupLocationForOrderPlugin"/>
-        <plugin name="save_pickup_location_for_order" type="Magento\InventoryInStorePickup\Plugin\Sales\Order\SavePickupLocationForOrderPlugin"/>
-    </type>
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
         <plugin name="load_in_store_pickup_on_get_list" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetListPlugin"/>
         <plugin name="load_in_store_pickup_on_get" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\LoadInStorePickupOnGetPlugin"/>
         <plugin name="save_in_store_pickup_links" type="Magento\InventoryInStorePickup\Plugin\InventoryApi\SourceRepository\SaveInStorePickupPlugin"/>
     </type>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface" type="Magento\InventoryInStorePickup\Model\PickupLocation" />
-    <preference for="Magento\InventoryInStorePickupApi\Api\NotifyOrderIsReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\NotifyOrderIsReadyForPickup"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\IsOrderReadyForPickupInterface" type="Magento\InventoryInStorePickup\Model\IsOrderReadyForPickup"/>
-    <type name="Magento\InventoryInStorePickup\Model\Order\Email\ReadyForPickupSender">
-        <arguments>
-            <argument name="identityContainer" xsi:type="object">\Magento\InventoryInStorePickup\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
-        </arguments>
-    </type>
     <type name="Magento\InventoryInStorePickupApi\Model\Mapper">
         <arguments>
             <argument name="map" xsi:type="array">
@@ -34,17 +23,6 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryInStorePickup\Model\SourceSelection\GetActiveStorePickupOrdersBySource">
-        <arguments>
-            <argument name="statesToFilter" xsi:type="array">
-                <item xsi:type="const" name="complete">Magento\Sales\Model\Order::STATE_COMPLETE</item>
-                <item xsi:type="const" name="closed">Magento\Sales\Model\Order::STATE_CLOSED</item>
-                <item xsi:type="const" name="canceled">Magento\Sales\Model\Order::STATE_CANCELED</item>
-            </argument>
-        </arguments>
-    </type>
-    <preference for="Magento\InventorySourceSelectionApi\Model\GetSourceItemQtyAvailableInterface" type="Magento\InventoryInStorePickup\Model\SourceSelection\GetSourceItemQtyAvailableService"/>
-    <preference for="Magento\InventoryInStorePickupApi\Api\IsStorePickupOrderInterface" type="Magento\InventoryInStorePickup\Model\IsStorePickupOrder"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
     <preference for="Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
@@ -82,23 +60,4 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryInStorePickup\Observer\UpdateOrderGrid">
-        <arguments>
-            <argument name="entityGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
-        </arguments>
-    </type>
-    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid">
-        <arguments>
-            <argument name="joins" xsi:type="array">
-                <item name="inventory_pickup_location_order" xsi:type="array">
-                    <item name="table" xsi:type="string">inventory_pickup_location_order</item>
-                    <item name="origin_column" xsi:type="string">entity_id</item>
-                    <item name="target_column" xsi:type="string">order_id</item>
-                </item>
-            </argument>
-            <argument name="columns" xsi:type="array">
-                <item name="pickup_location_code" xsi:type="string">inventory_pickup_location_order.pickup_location_code</item>
-            </argument>
-        </arguments>
-    </virtualType>
 </config>
