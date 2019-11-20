@@ -69,9 +69,7 @@ class LayoutProcessor implements LayoutProcessorInterface
         if (!$this->storePickUpValidator->execute($website->getCode())) {
             return $this->removeStorePickup($jsLayout);
         }
-        $jsLayout = $this->addStorePickupComponents($jsLayout);
-
-        return $jsLayout;
+        return $this->addStorePickupComponents($jsLayout);
     }
 
     /**
@@ -83,9 +81,7 @@ class LayoutProcessor implements LayoutProcessorInterface
     private function removeStorePickup(array $jsLayout): array
     {
         $storePickupPath = $this->arrayManager->findPath('store-pickup', $jsLayout);
-        $shipToPath = $this->arrayManager->findPath('store-pickup-address', $jsLayout);
         $jsLayout = $this->arrayManager->remove($storePickupPath, $jsLayout);
-        $jsLayout = $this->arrayManager->remove($shipToPath, $jsLayout);
 
         return $jsLayout;
     }
@@ -98,7 +94,7 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     private function addStorePickupComponents(array $jsLayout): array
     {
-        $jsLayout = $this->arrayManager->merge(
+        return $this->arrayManager->merge(
             $this->arrayManager->findPath('store-pickup', $jsLayout),
             $jsLayout,
             [
@@ -107,15 +103,6 @@ class LayoutProcessor implements LayoutProcessorInterface
                 ],
             ]
         );
-        $jsLayout = $this->arrayManager->merge(
-            $this->arrayManager->findPath('shipping-information', $jsLayout),
-            $jsLayout,
-            [
-                'component' => 'Magento_InventoryInStorePickupFrontend/js/view/shipping-information',
-            ]
-        );
-
-        return $jsLayout;
     }
 
     /**

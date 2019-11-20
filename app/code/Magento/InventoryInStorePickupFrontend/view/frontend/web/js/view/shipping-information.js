@@ -10,8 +10,18 @@ define([
     'use strict';
 
     return Shipping.extend({
-        defaults: {
-            template: 'Magento_InventoryInStorePickupFrontend/shipping-information'
+
+        /**
+         * Change template considering delivery method.
+         *
+         * @returns {string}
+         */
+        getTemplate: function () {
+            this.template = this.isStorePickup()
+                ? 'Magento_InventoryInStorePickupFrontend/shipping-information'
+                : 'Magento_Checkout/shipping-information';
+
+            return this.template;
         },
 
         /** @inheritdoc */
@@ -19,6 +29,11 @@ define([
             var shippingMethod = quote.shippingMethod(),
                 locationName = '',
                 title;
+
+            if (!this.isStorePickup()) {
+
+                return this._super();
+            }
 
             title = shippingMethod['carrier_title'] + ' - ' + shippingMethod['method_title'];
 
@@ -28,6 +43,23 @@ define([
             }
 
             return title;
+        },
+
+        /**
+         * Get is store pickup delivery method selected.
+         *
+         * @returns {boolean}
+         */
+        isStorePickup: function () {
+            var shippingMethod = quote.shippingMethod(),
+                isStorePickup = false;
+
+            if (shippingMethod !== null) {
+                isStorePickup = shippingMethod['carrier_code'] === 'in_store'
+                    && shippingMethod['method_code'] === 'pickup';
+            }
+
+            return isStorePickup;
         }
     });
 });
