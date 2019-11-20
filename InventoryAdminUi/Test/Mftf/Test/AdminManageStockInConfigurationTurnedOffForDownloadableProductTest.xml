@@ -49,6 +49,8 @@
                 <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
             <!--Turn on Manage Stock.-->
