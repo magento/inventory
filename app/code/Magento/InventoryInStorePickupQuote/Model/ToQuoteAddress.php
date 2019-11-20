@@ -96,9 +96,6 @@ class ToQuoteAddress
             AddressInterface::class
         );
 
-        $address->setFirstname($pickupLocation->getContactName());
-        $address->setExtensionAttributes($originalAddress->getExtensionAttributes());
-
         return $address;
     }
 }

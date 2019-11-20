@@ -7,15 +7,15 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <storepickup_email>
+        <sales_email>
             <order_ready_for_pickup>
                 <enabled>1</enabled>
-                <template>inventory_instorepickup_order_ready_for_pickup_template</template>
-                <guest_template>inventory_instorepickup_order_ready_for_pickup_template</guest_template>
+                <template>sales_email_order_ready_for_pickup_template</template>
+                <guest_template>sales_email_order_ready_for_pickup_guest_template</guest_template>
                 <identity>storepickup</identity>
                 <copy_method>bcc</copy_method>
             </order_ready_for_pickup>
-        </storepickup_email>
+        </sales_email>
         <trans_email>
             <ident_storepickup>
                 <email>sales@example.com</email>

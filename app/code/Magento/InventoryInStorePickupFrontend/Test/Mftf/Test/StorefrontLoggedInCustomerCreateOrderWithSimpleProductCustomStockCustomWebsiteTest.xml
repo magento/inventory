@@ -15,7 +15,7 @@
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3696789"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
-            <group value="multi_mode"/>
+            <group value="store_pickup"/>
         </annotations>
 
         <before>
