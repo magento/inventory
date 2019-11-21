@@ -10,16 +10,4 @@
         <plugin name="convert_is_pickup_location_active_boolean_to_string" type="Magento\InventoryInStorePickupAdminUi\Plugin\Ui\DataProvider\ConvertBooleanToStringPlugin" sortOrder="10"/>
         <plugin name="prevent_using_default_source_as_pickup_location_plugin" type="Magento\InventoryInStorePickupAdminUi\Plugin\InventoryAdminUi\DataProvider\PreventUsingDefaultSourceAsPickupLocationPlugin" sortOrder="20"/>
     </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\View\Info">
-        <plugin name="hide-edit-link" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Order\View\ShippingAddress\HideEditLink"/>
-    </type>
-    <type name="Magento\Sales\Controller\Adminhtml\Order\Create\Save">
-        <plugin name="set-order-pickup-location" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Controller\AdminOrder\Create\SetPickupLocationFromPost" />
-    </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\View">
-        <plugin name="process_ship_button" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Block\Adminhtml\Order\ProcessShipButtonPlugin" />
-    </type>
-    <type name="Magento\Sales\Block\Adminhtml\Order\Invoice\Create\Form">
-        <plugin name="create_shipment_checkbox_processor" type="Magento\InventoryInStorePickupAdminUi\Plugin\Sales\Block\Adminhtml\Order\Invoice\Create\ProcessCreateShipment"/>
-    </type>
 </config>

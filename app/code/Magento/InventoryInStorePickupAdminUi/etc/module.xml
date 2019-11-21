@@ -9,12 +9,10 @@
     <module name="Magento_InventoryInStorePickupAdminUi">
         <sequence>
             <module name="Magento_InventoryInStorePickupApi" />
-            <module name="Magento_InventoryInStorePickup" />
-            <module name="Magento_InventoryInStorePickupShippingApi" />
-            <module name="Magento_Sales" />
-            <module name="Magento_Backend" />
             <module name="Magento_InventoryCatalogApi"/>
-            <module name="Magento_Quote"/>
+            <module name="Magento_InventoryApi" />
+            <module name="Magento_InventoryAdminUi" />
+            <module name="Magento_Ui" />
         </sequence>
     </module>
 </config>
