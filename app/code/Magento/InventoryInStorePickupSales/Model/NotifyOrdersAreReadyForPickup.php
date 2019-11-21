@@ -9,20 +9,17 @@ namespace Magento\InventoryInStorePickupSales\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupSales\Model\Order\AddCommentToOrder;
+use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingArguments;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrdersAreReadyForPickupInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\Data\ShipmentCreationArgumentsExtensionInterfaceFactory;
-use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterface;
-use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
 use Magento\InventoryInStorePickupSalesApi\Model\ResultInterface;
 use Magento\InventoryInStorePickupSalesApi\Model\ResultInterfaceFactory;
 
 /**
- * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY.
+ * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY..
  */
 class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInterface
 {
@@ -47,16 +44,6 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $orderRepository;
 
     /**
-     * @var ShipmentCreationArgumentsInterfaceFactory
-     */
-    private $shipmentArgumentsFactory;
-
-    /**
-     * @var ShipmentCreationArgumentsExtensionInterfaceFactory
-     */
-    private $argumentExtensionFactory;
-
-    /**
      * @var Order\AddCommentToOrder
      */
     private $addCommentToOrder;
@@ -67,33 +54,35 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $resultFactory;
 
     /**
+     * @var CreateShippingArguments
+     */
+    private $createShippingArguments;
+
+    /**
      * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
      * @param OrderRepositoryInterface $orderRepository
-     * @param ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory
-     * @param ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory
      * @param AddCommentToOrder $addCommentToOrder
      * @param ResultInterfaceFactory $resultFactory
+     * @param CreateShippingArguments $createShippingArguments
      */
     public function __construct(
         IsOrderReadyForPickupInterface $isOrderReadyForPickup,
         ShipOrderInterface $shipOrder,
         ReadyForPickupNotifier $emailNotifier,
         OrderRepositoryInterface $orderRepository,
-        ShipmentCreationArgumentsInterfaceFactory $shipmentArgumentsFactory,
-        ShipmentCreationArgumentsExtensionInterfaceFactory $argumentExtensionFactory,
         AddCommentToOrder $addCommentToOrder,
-        ResultInterfaceFactory $resultFactory
+        ResultInterfaceFactory $resultFactory,
+        CreateShippingArguments $createShippingArguments
     ) {
         $this->isOrderReadyForPickup = $isOrderReadyForPickup;
         $this->shipOrder = $shipOrder;
         $this->emailNotifier = $emailNotifier;
         $this->orderRepository = $orderRepository;
-        $this->shipmentArgumentsFactory = $shipmentArgumentsFactory;
-        $this->argumentExtensionFactory = $argumentExtensionFactory;
         $this->addCommentToOrder = $addCommentToOrder;
         $this->resultFactory = $resultFactory;
+        $this->createShippingArguments = $createShippingArguments;
     }
 
     /**
@@ -135,7 +124,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
                     null,
                     [],
                     [],
-                    $this->getShipmentArguments($order)
+                    $this->createShippingArguments->execute($order)
                 );
                 $this->addCommentToOrder->execute($order);
             } catch (LocalizedException $exception) {
@@ -154,25 +143,5 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         }
 
         return $this->resultFactory->create(['failed' => $failed]);
-    }
-
-    /**
-     * Get shipping arguments from the Order extension attributes.
-     *
-     * @param OrderInterface $order
-     * @return ShipmentCreationArgumentsInterface
-     */
-    private function getShipmentArguments(OrderInterface $order): ShipmentCreationArgumentsInterface
-    {
-        $arguments = $this->shipmentArgumentsFactory->create();
-        /* We have already checked that PickupLocationCode exists */
-        $extension = $this->argumentExtensionFactory
-            ->create()
-            ->setSourceCode(
-                $order->getExtensionAttributes()->getPickupLocationCode()
-            );
-        $arguments->setExtensionAttributes($extension);
-
-        return $arguments;
     }
 }
