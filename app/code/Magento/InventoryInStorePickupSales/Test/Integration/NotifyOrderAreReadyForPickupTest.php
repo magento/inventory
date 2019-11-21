@@ -78,10 +78,10 @@ class NotifyOrderAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      * @dataProvider dataProvider
      *
      * @param string $sourceId
-     * @param string|null $expectedException
+     * @param string|null $errorMessage
      * @throws
      */
-    public function testExecute(string $sourceId, ?string $expectedException)
+    public function testExecuteForNotReadyForPickupOrders(string $sourceId, ?string $errorMessage)
     {
         $createdOrder = $this->getCreatedOrder();
         $this->setPickupLocation($createdOrder, $sourceId);
@@ -90,12 +90,40 @@ class NotifyOrderAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->request->setParams(['sourceCode' => $sourceId]);
 
         $orderId = (int)$createdOrder->getEntityId();
+        $result = $this->notifyOrderIsReadyForPickup->execute([$orderId]);
 
-        if ($expectedException !== null) {
-            // set expected exception before service execution;
-            $this->expectExceptionMessage($expectedException);
-        }
+        $this->assertFalse($result->isSuccessful());
+        $this->assertEquals(current($result->getFailed())['message'], $errorMessage);
+    }
 
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/place_order.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteReadyForPickUpOrders()
+    {
+        $sourceId = 'eu-2';
+        $createdOrder = $this->getCreatedOrder();
+        $this->setPickupLocation($createdOrder, $sourceId);
+
+        // @see \Magento\InventoryShipping\Plugin\Sales\Shipment\AssignSourceCodeToShipmentPlugin::afterCreate
+        $this->request->setParams(['sourceCode' => $sourceId]);
+
+        $orderId = (int)$createdOrder->getEntityId();
         $this->notifyOrderIsReadyForPickup->execute([$orderId]);
 
         /** @var ShipmentInterface $createdShipment */
@@ -175,7 +203,6 @@ class NotifyOrderAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['eu-1', 'The order is not ready for pickup'],
-            ['eu-2', null],
             ['eu-3', 'The order is not ready for pickup'],
             ['eu-disabled', 'The order is not ready for pickup'],
             ['us-1', 'The order is not ready for pickup'],

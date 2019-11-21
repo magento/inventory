@@ -107,15 +107,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
 
             try {
                 $order = $this->orderRepository->get($orderId);
-
-                if (!$this->emailNotifier->notify($order)) {
-                    $failed[] = [
-                        'id' => $orderId,
-                        'message' => 'Cannot notify user.'
-                    ];
-                    continue;
-                }
-
+                $this->emailNotifier->notify($order);
                 $this->shipOrder->execute(
                     $orderId,
                     [],
