@@ -14,7 +14,7 @@ define([
         /**
          * Change template considering delivery method.
          *
-         * @returns {string}
+         * @returns {String}
          */
         getTemplate: function () {
             this.template = this.isStorePickup()
@@ -48,7 +48,7 @@ define([
         /**
          * Get is store pickup delivery method selected.
          *
-         * @returns {boolean}
+         * @returns {Boolean}
          */
         isStorePickup: function () {
             var shippingMethod = quote.shippingMethod(),
