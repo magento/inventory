@@ -11,7 +11,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupSales\Model\Order\AddCommentToOrder;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
-use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\ShipmentCreationArgumentsExtensionInterfaceFactory;
 use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterface;
@@ -24,7 +24,7 @@ use Magento\InventoryInStorePickupSalesApi\Model\ResultInterfaceFactory;
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY.
  */
-class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterface
+class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInterface
 {
     /**
      * @var IsOrderReadyForPickupInterface
@@ -111,7 +111,7 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
             if (!$this->isOrderReadyForPickup->execute($orderId)) {
                 $failed[] = [
                     'id' => $orderId,
-                    'message' => 'Order is not ready for pick up.'
+                    'message' => 'The order is not ready for pickup'
                 ];
                 continue;
             }

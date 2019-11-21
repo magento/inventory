@@ -12,7 +12,7 @@ namespace Magento\InventoryInStorePickupSalesApi\Model;
  *
  * @api
  */
-interface NotifyOrderIsReadyForPickupInterface
+interface NotifyOrdersAreReadyForPickupInterface
 {
     /**
      * Notify customer that the orders is ready for pickup.

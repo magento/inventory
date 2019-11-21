@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickupSales\Test\Integration;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
 use Magento\Sales\Api\Data\OrderExtensionInterface;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -23,7 +23,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 /**
  * @inheritdoc
  */
-class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
+class NotifyOrderAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
 {
     /** @var ObjectManagerInterface */
     private $objectManager;
@@ -37,7 +37,7 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
     /** @var SearchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
-    /** @var NotifyOrderIsReadyForPickupInterface */
+    /** @var NotifyOrdersAreReadyForPickupInterface */
     private $notifyOrderIsReadyForPickup;
 
     /** @var OrderExtensionInterface */
@@ -53,7 +53,7 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $this->orderRepository = $this->objectManager->get(OrderRepositoryInterface::class);
         $this->shipmentRepository = $this->objectManager->get(ShipmentRepositoryInterface::class);
         $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
-        $this->notifyOrderIsReadyForPickup = $this->objectManager->get(NotifyOrderIsReadyForPickupInterface::class);
+        $this->notifyOrderIsReadyForPickup = $this->objectManager->get(NotifyOrdersAreReadyForPickupInterface::class);
         $this->orderExtensionFactory = $this->objectManager->get(OrderExtensionFactory::class);
         $this->request = $this->objectManager->get(RequestInterface::class);
     }
@@ -96,7 +96,7 @@ class NotifyOrderIsReadyForPickupTest extends \PHPUnit\Framework\TestCase
             $this->expectExceptionMessage($expectedException);
         }
 
-        $this->notifyOrderIsReadyForPickup->execute($orderId);
+        $this->notifyOrderIsReadyForPickup->execute([$orderId]);
 
         /** @var ShipmentInterface $createdShipment */
         $createdShipment = $this->getCreatedShipment($orderId);

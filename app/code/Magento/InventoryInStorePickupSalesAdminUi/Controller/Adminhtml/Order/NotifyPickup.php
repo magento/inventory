@@ -14,7 +14,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
@@ -32,7 +32,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
     const ADMIN_RESOURCE = 'Magento_Sales::emails';
 
     /**
-     * @var NotifyOrderIsReadyForPickupInterface
+     * @var NotifyOrdersAreReadyForPickupInterface
      */
     private $notifyOrderIsReadyForPickup;
 
@@ -48,13 +48,13 @@ class NotifyPickup extends Action implements HttpGetActionInterface
 
     /**
      * @param Context $context
-     * @param NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup
+     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
-        NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup,
+        NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
