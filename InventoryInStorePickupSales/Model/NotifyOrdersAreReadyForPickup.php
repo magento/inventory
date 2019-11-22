@@ -15,8 +15,8 @@ use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
-use Magento\InventoryInStorePickupSalesApi\Model\ResultInterface;
-use Magento\InventoryInStorePickupSalesApi\Model\ResultInterfaceFactory;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
 
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY..

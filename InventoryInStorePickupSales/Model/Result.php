@@ -6,8 +6,8 @@
 
 namespace Magento\InventoryInStorePickupSales\Model;
 
-use Magento\InventoryInStorePickupSalesApi\Model\ResultInterface;
-use Magento\InventoryInStorePickupSalesApi\Model\ResultExtensionInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultExtensionInterface;
 
 /**
  * Operation result object that contains statuses for each operation.

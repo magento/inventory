@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSalesApi\Api;
 
-use Magento\InventoryInStorePickupSalesApi\Model\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
 
 /**
  * Send an email to the customer that order is ready to be picked up.

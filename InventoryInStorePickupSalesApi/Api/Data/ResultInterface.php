@@ -4,10 +4,10 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\InventoryInStorePickupSalesApi\Model;
+namespace Magento\InventoryInStorePickupSalesApi\Api\Data;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
-use Magento\InventoryInStorePickupSalesApi\Model\ResultExtensionInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultExtensionInterface;
 
 /**
  * Operation result object that contains status of the operation.
@@ -33,7 +33,7 @@ interface ResultInterface extends ExtensibleDataInterface
     /**
      * Set Extension Attributes for Operation result.
      *
-     * @param \Magento\InventoryInStorePickupSalesApi\Model\ResultExtensionInterface|null $extensionAttributes
+     * @param \Magento\InventoryInStorePickupSalesApi\Api\Data\ResultExtensionInterface|null $extensionAttributes
      *
      * @return void
      */
@@ -42,7 +42,7 @@ interface ResultInterface extends ExtensibleDataInterface
     /**
      * Get Extension Attributes of Operation result.
      *
-     * @return \Magento\InventoryInStorePickupSalesApi\Model\ResultExtensionInterface|null
+     * @return \Magento\InventoryInStorePickupSalesApi\Api\Data\ResultExtensionInterface|null
      */
     public function getExtensionAttributes(): ?ResultExtensionInterface;
 }
