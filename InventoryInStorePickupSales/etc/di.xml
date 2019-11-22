@@ -10,7 +10,7 @@
         <plugin name="get_pickup_location_for_order" type="Magento\InventoryInStorePickupSales\Plugin\Sales\Order\GetPickupLocationForOrderPlugin"/>
         <plugin name="save_pickup_location_for_order" type="Magento\InventoryInStorePickupSales\Plugin\Sales\Order\SavePickupLocationForOrderPlugin"/>
     </type>
-    <preference for="Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface" type="Magento\InventoryInStorePickupSales\Model\NotifyOrderIsReadyForPickup"/>
+    <preference for="Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface" type="Magento\InventoryInStorePickupSales\Model\NotifyOrdersAreReadyForPickup"/>
     <preference for="Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface" type="Magento\InventoryInStorePickupSales\Model\IsOrderReadyForPickup"/>
     <type name="Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupSender">
         <arguments>
@@ -47,4 +47,5 @@
             </argument>
         </arguments>
     </virtualType>
+    <preference for="Magento\InventoryInStorePickupSalesApi\Model\ResultInterface" type="Magento\InventoryInStorePickupSales\Model\Result"/>
 </config>
