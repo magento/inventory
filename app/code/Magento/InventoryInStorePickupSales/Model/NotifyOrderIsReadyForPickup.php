@@ -18,6 +18,7 @@ use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterface;
 use Magento\Sales\Api\Data\ShipmentCreationArgumentsInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
+use Magento\Sales\Model\Order;
 
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY.
@@ -104,16 +105,18 @@ class NotifyOrderIsReadyForPickup implements NotifyOrderIsReadyForPickupInterfac
 
         /** @noinspection PhpParamsInspection */
         $this->emailNotifier->notify($order);
-        $this->shipOrder->execute(
-            $orderId,
-            [],
-            false,
-            false,
-            null,
-            [],
-            [],
-            $this->getShipmentArguments($order)
-        );
+        if ($order->canShip()) {
+            $this->shipOrder->execute(
+                $orderId,
+                [],
+                false,
+                false,
+                null,
+                [],
+                [],
+                $this->getShipmentArguments($order)
+            );
+        }
         $this->addCommentToOrder->execute($order);
     }
 

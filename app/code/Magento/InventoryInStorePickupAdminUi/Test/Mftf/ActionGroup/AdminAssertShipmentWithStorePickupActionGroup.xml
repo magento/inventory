@@ -13,6 +13,6 @@
         </annotations>
 
         <waitForElement selector="{{AdminOrderDetailsMessagesSection.successMessage}}" stepKey="waitForSuccessMessage"/>
-        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The customer has been notified and shipment created." stepKey="verifySuccessMessage"/>
+        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="Customer has been notified and shipment created." stepKey="verifySuccessMessage"/>
     </actionGroup>
 </actionGroups>
