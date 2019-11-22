@@ -23,7 +23,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 /**
  * @inheritdoc
  */
-class NotifyOrderAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
+class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
 {
     /** @var ObjectManagerInterface */
     private $objectManager;
