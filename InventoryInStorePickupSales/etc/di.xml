@@ -47,5 +47,5 @@
             </argument>
         </arguments>
     </virtualType>
-    <preference for="Magento\InventoryInStorePickupSalesApi\Model\ResultInterface" type="Magento\InventoryInStorePickupSales\Model\Result"/>
+    <preference for="Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface" type="Magento\InventoryInStorePickupSales\Model\Result"/>
 </config>
