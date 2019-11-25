@@ -103,7 +103,10 @@ class ProcessSourceItemsObserver implements ObserverInterface
         if (!$this->isSingleSourceMode->execute()) {
             $sources = $controller->getRequest()->getParam('sources', []);
             $assignedSources = $sources['assigned_sources'] ?? [];
-            $this->sourceItemsProcessor->process($productData['sku'], $assignedSources);
+            $origSku = $product->getOrigData('sku') !== $productData['sku']
+                ? $product->getOrigData('sku')
+                : null;
+            $this->sourceItemsProcessor->process($productData['sku'], $assignedSources, $origSku);
         } elseif (!empty($singleSourceData)) {
             /** @var StockItemInterface $stockItem */
             $stockItem = $product->getExtensionAttributes()->getStockItem();

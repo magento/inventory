@@ -81,12 +81,14 @@ class SourceItemsProcessor
     /**
      * @param string $sku
      * @param array $sourceItemsData
+     * @param string|null $origSku
      * @return void
      * @throws InputException
      */
-    public function process($sku, array $sourceItemsData)
+    public function process($sku, array $sourceItemsData, $origSku = null)
     {
-        $sourceItemsForDelete = $this->getCurrentSourceItemsMap($sku);
+        $origSku = $origSku ?: $sku;
+        $sourceItemsForDelete = $this->getCurrentSourceItemsMap($origSku);
         $sourceItemsForSave = [];
 
         foreach ($sourceItemsData as $sourceItemData) {
@@ -94,7 +96,7 @@ class SourceItemsProcessor
 
             $sourceCode = $sourceItemData[SourceItemInterface::SOURCE_CODE];
             if (isset($sourceItemsForDelete[$sourceCode])) {
-                $sourceItem = $sourceItemsForDelete[$sourceCode];
+                $sourceItem = clone $sourceItemsForDelete[$sourceCode];
             } else {
                 /** @var SourceItemInterface $sourceItem */
                 $sourceItem = $this->sourceItemFactory->create();
@@ -107,13 +109,12 @@ class SourceItemsProcessor
             $this->dataObjectHelper->populateWithArray($sourceItem, $sourceItemData, SourceItemInterface::class);
 
             $sourceItemsForSave[] = $sourceItem;
-            unset($sourceItemsForDelete[$sourceCode]);
-        }
-        if ($sourceItemsForSave) {
-            $this->sourceItemsSave->execute($sourceItemsForSave);
         }
         if ($sourceItemsForDelete) {
             $this->sourceItemsDelete->execute($sourceItemsForDelete);
+        }
+        if ($sourceItemsForSave) {
+            $this->sourceItemsSave->execute($sourceItemsForSave);
         }
     }
 
