@@ -19,7 +19,8 @@ use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 
 /**
- * At the time of processing Product save form this class used to save source items correctly
+ * At the time of processing Product save form this class used to save source items correctly.
+ *
  * Perform replace strategy of sources for the product
  */
 class SourceItemsProcessor
@@ -79,6 +80,8 @@ class SourceItemsProcessor
     }
 
     /**
+     * Save source items for given sku.
+     *
      * @param string $sku
      * @param array $sourceItemsData
      * @param string|null $origSku
@@ -109,6 +112,9 @@ class SourceItemsProcessor
             $this->dataObjectHelper->populateWithArray($sourceItem, $sourceItemData, SourceItemInterface::class);
 
             $sourceItemsForSave[] = $sourceItem;
+            if ($origSku === $sku) {
+                unset($sourceItemsForDelete[$sourceCode]);
+            }
         }
         if ($sourceItemsForDelete) {
             $this->sourceItemsDelete->execute($sourceItemsForDelete);
@@ -141,6 +147,8 @@ class SourceItemsProcessor
     }
 
     /**
+     * Verify, source item has source code.
+     *
      * @param array $sourceItemData
      * @return void
      * @throws InputException
