@@ -24,6 +24,18 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{BasicMsiWebsite1.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite2">
+                <argument name="websiteName" value="{{BasicMsiWebsite2.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite3">
+                <argument name="websiteName" value="{{BasicMsiWebsite3.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite4">
+                <argument name="websiteName" value="{{BasicMsiWebsite4.name}}"/>
+            </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
