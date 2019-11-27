@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterfaceFactory;
 
 /**
@@ -56,9 +56,9 @@ class FilterSetBuilder
     /**
      * Build Filter Set.
      *
-     * @return FilterSetInterface|null
+     * @return FiltersInterface|null
      */
-    public function create(): ?FilterSetInterface
+    public function create(): ?FiltersInterface
     {
         $data = $this->data;
         $this->data = [];

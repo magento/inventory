@@ -106,46 +106,46 @@ class SearchRequestBuilderTest extends TestCase
 
         $searchRequest = $this->searchRequestBuilder->create();
 
-        $filterSet = $searchRequest->getFilterSet();
-        $this->assertEquals($addressStreetFilter[self::VALUE], $filterSet->getStreetFilter()->getValue());
+        $filterSet = $searchRequest->getFilters();
+        $this->assertEquals($addressStreetFilter[self::VALUE], $filterSet->getStreet()->getValue());
         $this->assertEquals(
             $addressStreetFilter[self::CONDITION_TYPE],
-            $filterSet->getStreetFilter()->getConditionType()
+            $filterSet->getStreet()->getConditionType()
         );
-        $this->assertEquals($addressPostcodeFilter[self::VALUE], $filterSet->getPostcodeFilter()->getValue());
+        $this->assertEquals($addressPostcodeFilter[self::VALUE], $filterSet->getPostcode()->getValue());
         $this->assertEquals(
             $addressPostcodeFilter[self::CONDITION_TYPE],
-            $filterSet->getPostcodeFilter()->getConditionType()
+            $filterSet->getPostcode()->getConditionType()
         );
-        $this->assertEquals($addressCityFilter[self::VALUE], $filterSet->getCityFilter()->getValue());
+        $this->assertEquals($addressCityFilter[self::VALUE], $filterSet->getCity()->getValue());
         $this->assertEquals(
             $addressCityFilter[self::CONDITION_TYPE],
-            $filterSet->getCityFilter()->getConditionType()
+            $filterSet->getCity()->getConditionType()
         );
-        $this->assertEquals($addressRegionId[self::VALUE], $filterSet->getRegionIdFilter()->getValue());
+        $this->assertEquals($addressRegionId[self::VALUE], $filterSet->getRegionId()->getValue());
         $this->assertEquals(
             $addressRegionId[self::CONDITION_TYPE],
-            $filterSet->getRegionIdFilter()->getConditionType()
+            $filterSet->getRegionId()->getConditionType()
         );
-        $this->assertEquals($addressRegion[self::VALUE], $filterSet->getRegionFilter()->getValue());
+        $this->assertEquals($addressRegion[self::VALUE], $filterSet->getRegion()->getValue());
         $this->assertEquals(
             $addressRegion[self::CONDITION_TYPE],
-            $filterSet->getRegionFilter()->getConditionType()
+            $filterSet->getRegion()->getConditionType()
         );
-        $this->assertEquals($addressCountry[self::VALUE], $filterSet->getCountryFilter()->getValue());
+        $this->assertEquals($addressCountry[self::VALUE], $filterSet->getCountry()->getValue());
         $this->assertEquals(
             $addressCountry[self::CONDITION_TYPE],
-            $filterSet->getCountryFilter()->getConditionType()
+            $filterSet->getCountry()->getConditionType()
         );
 
-        $this->assertEquals($codeFilter[self::VALUE], $filterSet->getPickupLocationCodeFilter()->getValue());
+        $this->assertEquals($codeFilter[self::VALUE], $filterSet->getPickupLocationCode()->getValue());
         $this->assertEquals(
             $codeFilter[self::CONDITION_TYPE],
-            $filterSet->getPickupLocationCodeFilter()->getConditionType()
+            $filterSet->getPickupLocationCode()->getConditionType()
         );
 
-        $this->assertEquals($nameFilter[self::VALUE], $filterSet->getNameFilter()->getValue());
-        $this->assertEquals($nameFilter[self::CONDITION_TYPE], $filterSet->getNameFilter()->getConditionType());
+        $this->assertEquals($nameFilter[self::VALUE], $filterSet->getName()->getValue());
+        $this->assertEquals($nameFilter[self::CONDITION_TYPE], $filterSet->getName()->getConditionType());
 
         $distanceFilter = $searchRequest->getDistanceFilter();
 

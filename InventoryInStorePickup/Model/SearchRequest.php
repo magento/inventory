@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Api\SortOrder;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
@@ -35,7 +35,7 @@ class SearchRequest implements SearchRequestInterface
     private $distanceFilter;
 
     /**
-     * @var FilterSetInterface|null
+     * @var FiltersInterface|null
      */
     private $filterSet;
 
@@ -63,7 +63,7 @@ class SearchRequest implements SearchRequestInterface
      * @param string $scopeCode
      * @param string $scopeType
      * @param DistanceFilterInterface|null $distanceFilter
-     * @param FilterSetInterface|null $filterSet
+     * @param FiltersInterface|null $filterSet
      * @param SortOrder[]|null $sort
      * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
@@ -73,7 +73,7 @@ class SearchRequest implements SearchRequestInterface
         string $scopeCode,
         string $scopeType = SalesChannelInterface::TYPE_WEBSITE,
         ?DistanceFilterInterface $distanceFilter = null,
-        ?FilterSetInterface $filterSet = null,
+        ?FiltersInterface $filterSet = null,
         ?array $sort = null,
         ?SearchRequestExtensionInterface $searchRequestExtension = null,
         ?int $pageSize = null,
@@ -100,7 +100,7 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @inheritdoc
      */
-    public function getFilterSet(): ?FilterSetInterface
+    public function getFilters(): ?FiltersInterface
     {
         return $this->filterSet;
     }

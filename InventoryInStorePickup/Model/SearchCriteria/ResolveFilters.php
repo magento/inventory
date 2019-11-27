@@ -17,7 +17,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilder
 /**
  * Resolve Search Criteria Builder parts from the Filter Set.
  */
-class ResolveFilterSet implements BuilderPartsResolverInterface
+class ResolveFilters implements BuilderPartsResolverInterface
 {
     /**
      * @inheritdoc
@@ -44,23 +44,20 @@ class ResolveFilterSet implements BuilderPartsResolverInterface
      */
     private function extractFilters(SearchRequestInterface $searchRequest): array
     {
-        $filters = [];
-
-        $filterSet = $searchRequest->getFilterSet();
-
+        $filterSet = $searchRequest->getFilters();
         if ($filterSet === null) {
-            return $filters;
+            return [];
         }
 
-        $filters[SourceInterface::COUNTRY_ID] = $filterSet->getCountryFilter();
-        $filters[SourceInterface::REGION] = $filterSet->getRegionFilter();
-        $filters[SourceInterface::REGION_ID] = $filterSet->getRegionIdFilter();
-        $filters[SourceInterface::POSTCODE] = $filterSet->getPostcodeFilter();
-        $filters[SourceInterface::CITY] = $filterSet->getCityFilter();
-        $filters[SourceInterface::STREET] = $filterSet->getStreetFilter();
-        $filters[SourceInterface::SOURCE_CODE] = $filterSet->getPickupLocationCodeFilter();
-        $filters[PickupLocationInterface::FRONTEND_NAME] = $filterSet->getNameFilter();
-
-        return $filters;
+        return [
+            SourceInterface::COUNTRY_ID => $filterSet->getCountry(),
+            SourceInterface::REGION_ID => $filterSet->getRegionId(),
+            SourceInterface::REGION => $filterSet->getRegion(),
+            SourceInterface::POSTCODE => $filterSet->getPostcode(),
+            SourceInterface::CITY => $filterSet->getCity(),
+            SourceInterface::STREET => $filterSet->getStreet(),
+            SourceInterface::SOURCE_CODE => $filterSet->getPickupLocationCode(),
+            PickupLocationInterface::FRONTEND_NAME => $filterSet->getName(),
+        ];
     }
 }

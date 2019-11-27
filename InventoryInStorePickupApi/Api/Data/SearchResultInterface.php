@@ -10,6 +10,8 @@ namespace Magento\InventoryInStorePickupApi\Api\Data;
 
 /**
  * Search results for providing pickup locations.
+ *
+ * @api
  */
 interface SearchResultInterface
 {
