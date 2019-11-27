@@ -81,7 +81,7 @@
             </actionGroup>
             <!--Delete created website.-->
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite" >
-                <argument name="websiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
             </actionGroup>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>

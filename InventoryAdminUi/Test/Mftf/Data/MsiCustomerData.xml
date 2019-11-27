@@ -30,8 +30,8 @@
         <data key="lastname">Doe</data>
         <data key="fullname">John Doe</data>
         <data key="password">pwdTest123!</data>
-        <data key="store_id">1</data>
-        <data key="website_id">1</data>
+        <data key="store_id">0</data>
+        <data key="website_id">0</data>
         <requiredEntity type="address">US_Address_TX</requiredEntity>
     </entity>
 </entities>
