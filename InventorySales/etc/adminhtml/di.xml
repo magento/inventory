@@ -9,4 +9,9 @@
     <type name="Magento\Sales\Block\Adminhtml\Order\Create\Messages">
         <plugin name="process_error_messages" type="Magento\InventorySales\Plugin\Sales\Block\Order\Create\Messages\ProcessMessagesPlugin"/>
     </type>
+    <type name="Magento\InventorySales\Plugin\InventoryApi\StockRepository\SaveSalesChannelsLinksPlugin">
+        <arguments>
+            <argument name="getAssignedSalesChannelsForStock" xsi:type="object">Magento\InventorySales\Model\GetAssignedSalesChannelsForStock</argument>
+        </arguments>
+    </type>
 </config>
