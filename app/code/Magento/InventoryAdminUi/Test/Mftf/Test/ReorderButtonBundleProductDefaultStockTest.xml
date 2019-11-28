@@ -97,19 +97,14 @@
 
         <actionGroup ref="saveProductForm" stepKey="saveProduct2"/>
 
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
-        <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToFrontPage"/>
-        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="searchStorefront">
-            <argument name="phrase" value="$createBundleProduct.name$"/>
-        </actionGroup>
-
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="openAndCheckProduct">
-            <argument name="productName" value="$createBundleProduct.name$"/>
-            <argument name="productUrlKey" value="$createBundleProduct.custom_attributes[url_key]$"/>
-        </actionGroup>
+        <amOnPage url="{{StorefrontProductPage.url($createBundleProduct.custom_attributes[url_key]$)}}" stepKey="goProductPageOnStorefront"/>
 
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="productName" value="$$createBundleProduct.name$$"/>
