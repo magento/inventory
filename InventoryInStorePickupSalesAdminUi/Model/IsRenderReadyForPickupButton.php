@@ -37,6 +37,7 @@ class IsRenderReadyForPickupButton
      */
     public function execute(Order $order): bool
     {
-        return $this->isStorePickupOrder->execute((int)$order->getEntityId()) && $order->canShip();
+        return !$order->isCanceled() && $order->getState() !== Order::STATE_CLOSED
+            && $this->isStorePickupOrder->execute((int)$order->getEntityId());
     }
 }
