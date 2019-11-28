@@ -6,6 +6,8 @@
         "magento/framework": "*",
         "magento/module-checkout": "*",
         "magento/module-inventory-in-store-pickup-api": "*",
+        "magento/module-inventory-in-store-pickup-sales-api": "*",
+        "magento/module-sales": "*",
         "magento/module-store": "*"
     },
     "type": "magento2-module",
