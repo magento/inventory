@@ -8,15 +8,12 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontSummaryShippingSectionyWithSimpleProductCustomStockTest">
+    <test name="StorefrontSummaryShippingSectionWithSimpleProductCustomStockTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
             <title value="Verify, summary shipping section information."/>
             <description value="Verify, summary shipping section information contains source pickup name."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/1063873/scenarios/3788915"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2679"/>
-            </skip>
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
