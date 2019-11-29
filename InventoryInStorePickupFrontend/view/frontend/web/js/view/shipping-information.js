@@ -17,9 +17,11 @@ define([
          * @returns {String}
          */
         getTemplate: function () {
-            this.template = this.isStorePickup()
-                ? 'Magento_InventoryInStorePickupFrontend/shipping-information'
-                : 'Magento_Checkout/shipping-information';
+            this.template = 'Magento_Checkout/shipping-information';
+
+            if (this.isStorePickup()) {
+                this.template = 'Magento_InventoryInStorePickupFrontend/shipping-information';
+            }
 
             return this.template;
         },
@@ -55,8 +57,8 @@ define([
                 isStorePickup = false;
 
             if (shippingMethod !== null) {
-                isStorePickup = shippingMethod['carrier_code'] === 'in_store'
-                    && shippingMethod['method_code'] === 'pickup';
+                isStorePickup = shippingMethod['carrier_code'] === 'in_store' &&
+                    shippingMethod['method_code'] === 'pickup';
             }
 
             return isStorePickup;
