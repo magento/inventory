@@ -36,20 +36,20 @@ class GetSourceItemIds
     public function execute(array $sourceItems): array
     {
         $connection = $this->resourceConnection->getConnection();
-        $select = $connection->select()
-            ->from(
-                $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM),
-                [SourceItemResourceModel::ID_FIELD_NAME]
-            );
+        $skusBySourceCode = [];
+        $sourceItemIds = [];
         foreach ($sourceItems as $sourceItem) {
-            $sku = $connection->quote($sourceItem->getSku());
-            $sourceCode = $connection->quote($sourceItem->getSourceCode());
-            $select->orWhere(
-                SourceItemInterface::SKU . " = {$sku} AND " .
-                SourceItemInterface::SOURCE_CODE ." = {$sourceCode}"
-            );
+            $skusBySourceCode[$sourceItem->getSourceCode()][] = $sourceItem->getSku();
+        }
+        foreach ($skusBySourceCode as $sourceCode => $skus) {
+            $select = $connection->select()
+                ->from(
+                    $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM),
+                    [SourceItemResourceModel::ID_FIELD_NAME]
+                )->where('sku IN (?)', $skus)->where('source_code = ?', $sourceCode);
+            $sourceItemIds = array_merge($sourceItemIds, $connection->fetchCol($select));
         }
 
-        return $connection->fetchCol($select, SourceItemResourceModel::ID_FIELD_NAME);
+        return $sourceItemIds;
     }
 }
