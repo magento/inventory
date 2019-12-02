@@ -160,10 +160,12 @@ class GetDefaultSortedSourcesResultTest extends TestCase
             $requestItems[] = $this->itemRequestFactory->create($requestItemData);
         }
 
-        $inventoryRequest = $this->inventoryRequestFactory->create([
-            'stockId' => $stockId,
-            'items'   => $requestItems
-        ]);
+        $inventoryRequest = $this->inventoryRequestFactory->create(
+            [
+                'stockId' => $stockId,
+                'items'   => $requestItems
+            ]
+        );
 
         $sortedSources = [];
         foreach ($sortedSourcesCodes as $sortedSourceCode) {
@@ -184,5 +186,29 @@ class GetDefaultSortedSourcesResultTest extends TestCase
             self::assertSame((float) $expected[$key]['deduct'], $selectionItem->getQtyToDeduct());
             self::assertSame((float) $expected[$key]['avail'], $selectionItem->getQtyAvailable());
         }
+    }
+
+    /**
+     * Check that "Undefined index" exception is not thrown when SKU case does not match
+     *
+     * SKU is not updated in source item table if the new SKU value is insensitively equal to the old value
+     *
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     */
+    public function testShouldNotThrowExceptionIfSkuCaseDoesNotMatch()
+    {
+        $requestItems[] = $this->itemRequestFactory->create(['sku' => 'sku-1', 'qty' => 15]);
+        $inventoryRequest = $this->inventoryRequestFactory->create(
+            [
+                'stockId' => 10,
+                'items'   => $requestItems
+            ]
+        );
+        $sortedSources = [];
+        $sortedSources[] = $this->sourceRepository->get('eu-1');
+        $this->assertNotNull($this->subject->execute($inventoryRequest, $sortedSources));
     }
 }
