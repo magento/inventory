@@ -15,14 +15,14 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterfaceFac
  */
 class FiltersBuilder
 {
-    private const COUNTRY_FILTER = 'countryFilter';
-    private const POSTCODE_FILTER = 'postcodeFilter';
-    private const REGION_FILTER = 'regionFilter';
-    private const REGION_ID_FILTER = 'regionIdFilter';
-    private const CITY_FILTER = 'cityFilter';
-    private const STREET_FILTER = 'streetFilter';
-    private const NAME_FILTER = 'nameFilter';
-    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCodeFilter';
+    private const COUNTRY_FILTER = 'country';
+    private const POSTCODE_FILTER = 'postcode';
+    private const REGION_FILTER = 'region';
+    private const REGION_ID_FILTER = 'regionId';
+    private const CITY_FILTER = 'city';
+    private const STREET_FILTER = 'street';
+    private const NAME_FILTER = 'name';
+    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCode';
 
     /**
      * Filter data.

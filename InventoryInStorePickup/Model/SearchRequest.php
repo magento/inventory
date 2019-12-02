@@ -37,7 +37,7 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @var FiltersInterface|null
      */
-    private $filterSet;
+    private $filters;
 
     /**
      * @var SortOrder[]|null
@@ -63,7 +63,7 @@ class SearchRequest implements SearchRequestInterface
      * @param string $scopeCode
      * @param string $scopeType
      * @param DistanceFilterInterface|null $distanceFilter
-     * @param FiltersInterface|null $filterSet
+     * @param FiltersInterface|null $filters
      * @param SortOrder[]|null $sort
      * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
@@ -73,7 +73,7 @@ class SearchRequest implements SearchRequestInterface
         string $scopeCode,
         string $scopeType = SalesChannelInterface::TYPE_WEBSITE,
         ?DistanceFilterInterface $distanceFilter = null,
-        ?FiltersInterface $filterSet = null,
+        ?FiltersInterface $filters = null,
         ?array $sort = null,
         ?SearchRequestExtensionInterface $searchRequestExtension = null,
         ?int $pageSize = null,
@@ -82,7 +82,7 @@ class SearchRequest implements SearchRequestInterface
         $this->scopeCode = $scopeCode;
         $this->scopeType = $scopeType;
         $this->distanceFilter = $distanceFilter;
-        $this->filterSet = $filterSet;
+        $this->filters = $filters;
         $this->sort = $sort;
         $this->searchRequestExtension = $searchRequestExtension;
         $this->pageSize = $pageSize;
@@ -102,7 +102,7 @@ class SearchRequest implements SearchRequestInterface
      */
     public function getFilters(): ?FiltersInterface
     {
-        return $this->filterSet;
+        return $this->filters;
     }
 
     /**

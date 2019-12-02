@@ -24,7 +24,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * Search Request Fields.
      */
-    private const FILTER_SET = 'filterSet';
+    private const FILTERS = 'filters';
     private const DISTANCE_FILTER = 'distanceFilter';
     private const SORT_ORDERS = 'sort';
     private const PAGE_SIZE = 'pageSize';
@@ -89,7 +89,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     private function buildComposite(): void
     {
-        $this->data[self::FILTER_SET] = $this->filtersBuilder->create();
+        $this->data[self::FILTERS] = $this->filtersBuilder->create();
         $this->data[self::DISTANCE_FILTER] = $this->distanceFilterBuilder->create();
     }
 
