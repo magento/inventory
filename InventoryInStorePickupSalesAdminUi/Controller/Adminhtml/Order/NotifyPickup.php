@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSalesAdminUi\Controller\Adminhtml\Order;
 
-use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
@@ -15,7 +14,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupSalesApi\Model\NotifyOrderIsReadyForPickupInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
@@ -33,7 +32,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
     const ADMIN_RESOURCE = 'Magento_Sales::emails';
 
     /**
-     * @var NotifyOrderIsReadyForPickupInterface
+     * @var NotifyOrdersAreReadyForPickupInterface
      */
     private $notifyOrderIsReadyForPickup;
 
@@ -49,13 +48,13 @@ class NotifyPickup extends Action implements HttpGetActionInterface
 
     /**
      * @param Context $context
-     * @param NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup
+     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
-        NotifyOrderIsReadyForPickupInterface $notifyOrderIsReadyForPickup,
+        NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
@@ -79,18 +78,17 @@ class NotifyPickup extends Action implements HttpGetActionInterface
             return $this->resultRedirectFactory->create()->setPath('sales/*/');
         }
 
-        try {
-            $this->notifyOrderIsReadyForPickup->execute((int)$order->getEntityId());
+        $result = $this->notifyOrderIsReadyForPickup->execute([(int)$order->getEntityId()]);
+
+        if ($result->isSuccessful()) {
             if ($order->getEmailSent()) {
                 $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
             } else {
                 $this->messageManager->addSuccessMessage(__('Shipment has been created.'));
             }
-        } catch (LocalizedException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-        } catch (Exception $e) {
-            $this->messageManager->addErrorMessage(__('We can\'t notify the customer right now.'));
-            $this->logger->critical($e);
+        } else {
+            $error = current($result->getFailed());
+            $this->messageManager->addErrorMessage($error['message']);
         }
 
         return $this->resultRedirectFactory->create()->setPath(
