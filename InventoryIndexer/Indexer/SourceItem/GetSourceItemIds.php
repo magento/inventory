@@ -30,6 +30,8 @@ class GetSourceItemIds
     }
 
     /**
+     * Retrieve source items ids.
+     *
      * @param SourceItemInterface[] $sourceItems
      * @return array
      */
@@ -37,7 +39,7 @@ class GetSourceItemIds
     {
         $connection = $this->resourceConnection->getConnection();
         $skusBySourceCode = [];
-        $sourceItemIds = [];
+        $sourceItemIds = [[]];
         foreach ($sourceItems as $sourceItem) {
             $skusBySourceCode[$sourceItem->getSourceCode()][] = $sourceItem->getSku();
         }
@@ -47,8 +49,9 @@ class GetSourceItemIds
                     $this->resourceConnection->getTableName(SourceItemResourceModel::TABLE_NAME_SOURCE_ITEM),
                     [SourceItemResourceModel::ID_FIELD_NAME]
                 )->where('sku IN (?)', $skus)->where('source_code = ?', $sourceCode);
-            $sourceItemIds = array_merge($sourceItemIds, $connection->fetchCol($select));
+            $sourceItemIds[] = $connection->fetchCol($select);
         }
+        $sourceItemIds = array_merge(...$sourceItemIds);
 
         return $sourceItemIds;
     }
