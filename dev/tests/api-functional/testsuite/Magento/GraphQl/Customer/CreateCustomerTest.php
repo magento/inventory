@@ -68,6 +68,7 @@ mutation {
 QUERY;
         $response = $this->graphQlMutation($query);
 
+        $this->assertEquals(null, $response['createCustomer']['customer']['id']);
         $this->assertEquals($newFirstname, $response['createCustomer']['customer']['firstname']);
         $this->assertEquals($newLastname, $response['createCustomer']['customer']['lastname']);
         $this->assertEquals($newEmail, $response['createCustomer']['customer']['email']);
@@ -139,7 +140,7 @@ QUERY;
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Required parameters are missing: Email
+     * @expectedExceptionMessage  Required parameters are missing: Email
      */
     public function testCreateCustomerIfEmailMissed()
     {
@@ -274,7 +275,7 @@ mutation {
 QUERY;
         $this->graphQlMutation($query);
     }
- 
+
     /**
      * @magentoConfigFixture default_store newsletter/general/active 0
      */
