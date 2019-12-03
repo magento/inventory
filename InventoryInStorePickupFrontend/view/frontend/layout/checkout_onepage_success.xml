@@ -7,6 +7,10 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="checkout.success" class="Magento\InventoryInStorePickupFrontend\Block\Checkout\Onepage\Success" template="Magento_InventoryInStorePickupFrontend::success.phtml"/>
+        <referenceBlock name="checkout.success" template="Magento_InventoryInStorePickupFrontend::success.phtml">
+            <arguments>
+                <argument name="is_order_store_pickup" xsi:type="object">Magento\InventoryInStorePickupFrontend\Block\Checkout\Onepage\Success\IsOrderStorePickup</argument>
+            </arguments>
+        </referenceBlock>
     </body>
 </page>

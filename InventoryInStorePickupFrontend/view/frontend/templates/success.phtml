@@ -5,7 +5,6 @@
  */
 
 ?>
-<?php /** @var $block \Magento\Checkout\Block\Onepage\Success */ ?>
 <div class="checkout-success">
     <?php if ($block->getOrderId()) : ?>
         <?php if ($block->getCanViewOrder()) : ?>
@@ -13,7 +12,7 @@
         <?php else : ?>
             <p><?= $block->escapeHtml(__('Your order # is: <span>%1</span>.', $block->getOrderId()), ['span']) ?></p>
         <?php endif; ?>
-        <?php if ($block->isOrderStorePickup()) : ?>
+        <?php if ($block->getIsOrderStorePickup()->execute()) : ?>
             <p><?= $block->escapeHtml(__('We\'ll email you an order and pick-up confirmation with details.')) ?></p>
         <?php else : ?>
             <p><?= $block->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?></p>
