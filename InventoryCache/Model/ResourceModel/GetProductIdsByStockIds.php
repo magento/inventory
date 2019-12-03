@@ -56,6 +56,8 @@ class GetProductIdsByStockIds
     }
 
     /**
+     * Get product ids for given stock form index table.
+     *
      * @param array $stockIds
      * @return array
      */
@@ -69,7 +71,6 @@ class GetProductIdsByStockIds
             $stockIndexTableName = $this->stockIndexTableNameResolver->execute($stockId);
             $connection = $this->resource->getConnection();
 
-            if ($connection->isTableExists($stockIndexTableName)) {
                 $sql = $connection->select()
                     ->from(['stock_index' => $stockIndexTableName], [])
                     ->join(
@@ -78,7 +79,6 @@ class GetProductIdsByStockIds
                         ['product.entity_id']
                     );
                 $productIds[] = $connection->fetchCol($sql);
-            }
         }
         $productIds = array_merge(...$productIds);
 
