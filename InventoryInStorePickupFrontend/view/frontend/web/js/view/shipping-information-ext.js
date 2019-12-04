@@ -4,29 +4,20 @@
  */
 
 define([
-    'Magento_Checkout/js/view/shipping-information',
     'Magento_Checkout/js/model/quote'
-], function (Shipping, quote) {
+], function (quote) {
     'use strict';
 
-    return Shipping.extend({
-
-        /**
-         * Change template considering delivery method.
-         *
-         * @returns {String}
-         */
-        getTemplate: function () {
-            this.template = 'Magento_Checkout/shipping-information';
-
-            if (this.isStorePickup()) {
-                this.template = 'Magento_InventoryInStorePickupFrontend/shipping-information';
-            }
-
-            return this.template;
+    var storePickupShippingInformation = {
+        defaults: {
+            template: 'Magento_InventoryInStorePickupFrontend/shipping-information'
         },
 
-        /** @inheritdoc */
+        /**
+         * Get shipping method title based on delivery method.
+         *
+         * @return {String}
+         */
         getShippingMethodTitle: function () {
             var shippingMethod = quote.shippingMethod(),
                 locationName = '',
@@ -63,5 +54,9 @@ define([
 
             return isStorePickup;
         }
-    });
+    };
+
+    return function (shippingInformation) {
+        return shippingInformation.extend(storePickupShippingInformation);
+    };
 });
