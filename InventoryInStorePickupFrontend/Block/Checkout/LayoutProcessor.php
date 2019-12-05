@@ -69,16 +69,7 @@ class LayoutProcessor implements LayoutProcessorInterface
         if (!$this->storePickUpValidator->execute($website->getCode())) {
             return $this->removeStorePickup($jsLayout);
         }
-
-        return $this->arrayManager->merge(
-            $this->arrayManager->findPath('store-pickup', $jsLayout),
-            $jsLayout,
-            [
-                'config' => [
-                    'nearbySearchRadius' => $this->getSearchRadius(),
-                ],
-            ]
-        );
+        return $this->addStorePickupComponents($jsLayout);
     }
 
     /**
@@ -90,11 +81,28 @@ class LayoutProcessor implements LayoutProcessorInterface
     private function removeStorePickup(array $jsLayout): array
     {
         $storePickupPath = $this->arrayManager->findPath('store-pickup', $jsLayout);
-        $shipToPath = $this->arrayManager->findPath('store-pickup-address', $jsLayout);
         $jsLayout = $this->arrayManager->remove($storePickupPath, $jsLayout);
-        $jsLayout = $this->arrayManager->remove($shipToPath, $jsLayout);
 
         return $jsLayout;
+    }
+
+    /**
+     * Add ui store pickup components to layout.
+     *
+     * @param array $jsLayout
+     * @return array
+     */
+    private function addStorePickupComponents(array $jsLayout): array
+    {
+        return $this->arrayManager->merge(
+            $this->arrayManager->findPath('store-pickup', $jsLayout),
+            $jsLayout,
+            [
+                'config' => [
+                    'nearbySearchRadius' => $this->getSearchRadius(),
+                ],
+            ]
+        );
     }
 
     /**
