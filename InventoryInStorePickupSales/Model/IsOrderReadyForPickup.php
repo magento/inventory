@@ -7,10 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Model;
 
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupSales\Model\Order\IsFulfillable;
 use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 
 /**
  * Check if order can be shipped and the pickup location has enough QTY
@@ -44,12 +45,26 @@ class IsOrderReadyForPickup implements IsOrderReadyForPickupInterface
      *
      * @param int $orderId
      * @return bool
-     * @throws NoSuchEntityException
      */
     public function execute(int $orderId): bool
     {
         $order = $this->orderRepository->get($orderId);
 
-        return $this->isFulfillable->execute($order);
+        return $this->canShip($order) && $this->isFulfillable->execute($order);
+    }
+
+    /**
+     * Retrieve order shipment availability.
+     *
+     * @param OrderInterface $order
+     * @return bool
+     */
+    private function canShip(OrderInterface $order): bool
+    {
+        if ($order instanceof Order) {
+            return $order->canShip();
+        }
+
+        return true;
     }
 }

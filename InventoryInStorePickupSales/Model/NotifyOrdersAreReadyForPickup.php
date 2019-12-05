@@ -11,12 +11,12 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupSales\Model\Order\AddCommentToOrder;
 use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingArguments;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
-use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
+use Magento\InventoryInStorePickupSales\Model\Order\IsFulfillable;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
 
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY..
@@ -24,9 +24,9 @@ use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
 class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInterface
 {
     /**
-     * @var IsOrderReadyForPickupInterface
+     * @var IsFulfillable
      */
-    private $isOrderReadyForPickup;
+    private $isFulfillable;
 
     /**
      * @var ShipOrderInterface
@@ -59,7 +59,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $createShippingArguments;
 
     /**
-     * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
+     * @param IsFulfillable $isFulfillable
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
      * @param OrderRepositoryInterface $orderRepository
@@ -68,7 +68,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
      * @param CreateShippingArguments $createShippingArguments
      */
     public function __construct(
-        IsOrderReadyForPickupInterface $isOrderReadyForPickup,
+        IsFulfillable $isFulfillable,
         ShipOrderInterface $shipOrder,
         ReadyForPickupNotifier $emailNotifier,
         OrderRepositoryInterface $orderRepository,
@@ -76,7 +76,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         ResultInterfaceFactory $resultFactory,
         CreateShippingArguments $createShippingArguments
     ) {
-        $this->isOrderReadyForPickup = $isOrderReadyForPickup;
+        $this->isFulfillable = $isFulfillable;
         $this->shipOrder = $shipOrder;
         $this->emailNotifier = $emailNotifier;
         $this->orderRepository = $orderRepository;
@@ -97,16 +97,15 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     {
         $failed = [];
         foreach ($orderIds as $orderId) {
-            if (!$this->isOrderReadyForPickup->execute($orderId)) {
-                $failed[] = [
-                    'id' => $orderId,
-                    'message' => 'The order is not ready for pickup'
-                ];
-                continue;
-            }
-
             try {
                 $order = $this->orderRepository->get($orderId);
+                if (!$this->isFulfillable->execute($order) && $order->canShip()) {
+                    $failed[] = [
+                        'id' => $orderId,
+                        'message' => 'The order is not ready for pickup',
+                    ];
+                    continue;
+                }
                 $this->emailNotifier->notify($order);
                 if ($order->canShip()) {
                     $this->shipOrder->execute(
@@ -124,13 +123,13 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
             } catch (LocalizedException $exception) {
                 $failed[] = [
                     'id' => $orderId,
-                    'message' => $exception->getMessage()
+                    'message' => $exception->getMessage(),
                 ];
                 continue;
             } catch (\Exception $exception) {
                 $failed[] = [
                     'id' => $orderId,
-                    'message' => 'We can\'t notify the customer right now.'
+                    'message' => 'We can\'t notify the customer right now.',
                 ];
                 continue;
             }
