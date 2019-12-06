@@ -17,6 +17,5 @@
     <preference for="Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface" type="Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkus" />
     <preference for="Magento\InventorySalesApi\Model\GetStockItemDataInterface" type="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData"/>
     <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface" type="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity"/>
-    <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStock"/>
     <preference for="Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface" type="Magento\InventorySales\Model\GetStockBySalesChannel"/>
 </config>
