@@ -8,7 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- SalesChannel -->
     <preference for="Magento\InventorySalesApi\Api\Data\SalesChannelInterface" type="Magento\InventorySales\Model\SalesChannel"/>
-    <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStockCache"/>
+    <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStock"/>
     <preference for="Magento\InventorySalesApi\Model\ReplaceSalesChannelsForStockInterface" type="Magento\InventorySales\Model\ResourceModel\ReplaceSalesChannelsDataForStock"/>
     <preference for="Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface" type="Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite"/>
     <preference for="Magento\InventorySalesApi\Model\DeleteSalesChannelToStockLinkInterface" type="Magento\InventorySales\Model\ResourceModel\DeleteSalesChannelToStockLink"/>
