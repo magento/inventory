@@ -12,7 +12,7 @@ use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\GetPickupLocations;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -74,7 +74,7 @@ class DistanceFilterOfflineTest extends TestCase
         ?array $sortOrder,
         array $sortedPickupLocationCodes
     ) {
-        $this->searchRequestBuilder->setDistanceFilterRadius($searchRequestData['radius'])
+        $this->searchRequestBuilder->setAreaRadius($searchRequestData['radius'])
                                    ->setDistanceFilterCountry($searchRequestData['country'])
                                    ->setScopeCode($salesChannelCode);
 
@@ -169,7 +169,7 @@ class DistanceFilterOfflineTest extends TestCase
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                      SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                      SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                   ]
               ],
               ['eu-1', 'eu-3']
@@ -184,7 +184,7 @@ class DistanceFilterOfflineTest extends TestCase
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                      SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                      SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                   ]
               ],
               []
@@ -211,7 +211,7 @@ class DistanceFilterOfflineTest extends TestCase
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                      SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                      SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                   ]
               ],
               ['eu-3', 'eu-1']
@@ -236,7 +236,7 @@ class DistanceFilterOfflineTest extends TestCase
               [
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                      SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                      SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                   ]
               ],
               ['eu-1', 'eu-3']
@@ -270,7 +270,7 @@ class DistanceFilterOfflineTest extends TestCase
                   ],
                   [
                       SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                      SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                      SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                   ]
               ],
               ['eu-1', 'eu-3']

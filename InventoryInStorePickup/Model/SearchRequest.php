@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -30,9 +30,9 @@ class SearchRequest implements SearchRequestInterface
     private $scopeType;
 
     /**
-     * @var DistanceFilterInterface|null
+     * @var AreaInterface|null
      */
-    private $distanceFilter;
+    private $area;
 
     /**
      * @var FiltersInterface|null
@@ -62,7 +62,7 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @param string $scopeCode
      * @param string $scopeType
-     * @param DistanceFilterInterface|null $distanceFilter
+     * @param AreaInterface|null $area
      * @param FiltersInterface|null $filters
      * @param SortOrder[]|null $sort
      * @param SearchRequestExtensionInterface|null $searchRequestExtension
@@ -72,7 +72,7 @@ class SearchRequest implements SearchRequestInterface
     public function __construct(
         string $scopeCode,
         string $scopeType = SalesChannelInterface::TYPE_WEBSITE,
-        ?DistanceFilterInterface $distanceFilter = null,
+        ?AreaInterface $area = null,
         ?FiltersInterface $filters = null,
         ?array $sort = null,
         ?SearchRequestExtensionInterface $searchRequestExtension = null,
@@ -81,7 +81,7 @@ class SearchRequest implements SearchRequestInterface
     ) {
         $this->scopeCode = $scopeCode;
         $this->scopeType = $scopeType;
-        $this->distanceFilter = $distanceFilter;
+        $this->area = $area;
         $this->filters = $filters;
         $this->sort = $sort;
         $this->searchRequestExtension = $searchRequestExtension;
@@ -92,9 +92,9 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @inheritdoc
      */
-    public function getDistanceFilter(): ?DistanceFilterInterface
+    public function getArea(): ?AreaInterface
     {
-        return $this->distanceFilter;
+        return $this->area;
     }
 
     /**

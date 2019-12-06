@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model;
 use InvalidArgumentException;
 use Magento\Framework\Api\SortOrder;
 use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FiltersBuilder;
-use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\DistanceFilterBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\AreaBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
@@ -25,7 +25,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      * Search Request Fields.
      */
     private const FILTERS = 'filters';
-    private const DISTANCE_FILTER = 'distanceFilter';
+    private const AREA = 'area';
     private const SORT_ORDERS = 'sort';
     private const PAGE_SIZE = 'pageSize';
     private const CURRENT_PAGE = 'currentPage';
@@ -51,23 +51,23 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     private $filtersBuilder;
 
     /**
-     * @var DistanceFilterBuilder
+     * @var AreaBuilder
      */
-    private $distanceFilterBuilder;
+    private $areaBuilder;
 
     /**
      * @param FiltersBuilder $filterSetBuilderFactory
-     * @param DistanceFilterBuilder $distanceFilterBuilderFactory
+     * @param AreaBuilder $areaBuilderFactory
      * @param SearchRequestInterfaceFactory $searchRequestFactory
      */
     public function __construct(
         FiltersBuilder $filterSetBuilderFactory,
-        DistanceFilterBuilder $distanceFilterBuilderFactory,
+        AreaBuilder $areaBuilderFactory,
         SearchRequestInterfaceFactory $searchRequestFactory
     ) {
         $this->searchRequestFactory = $searchRequestFactory;
         $this->filtersBuilder = $filterSetBuilderFactory;
-        $this->distanceFilterBuilder = $distanceFilterBuilderFactory;
+        $this->areaBuilder = $areaBuilderFactory;
     }
 
     /**
@@ -90,7 +90,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     private function buildComposite(): void
     {
         $this->data[self::FILTERS] = $this->filtersBuilder->create();
-        $this->data[self::DISTANCE_FILTER] = $this->distanceFilterBuilder->create();
+        $this->data[self::AREA] = $this->areaBuilder->create();
     }
 
     /**
@@ -156,9 +156,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setDistanceFilterRadius(int $radius): SearchRequestBuilderInterface
+    public function setAreaRadius(int $radius): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setRadius($radius);
+        $this->areaBuilder->setRadius($radius);
 
         return $this;
     }
@@ -168,7 +168,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterPostcode(string $postcode): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setPostcode($postcode);
+        $this->areaBuilder->setPostcode($postcode);
 
         return $this;
     }
@@ -178,7 +178,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterCity(string $city): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setCity($city);
+        $this->areaBuilder->setCity($city);
 
         return $this;
     }
@@ -188,7 +188,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterRegion(string $region): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setRegion($region);
+        $this->areaBuilder->setRegion($region);
 
         return $this;
     }
@@ -198,7 +198,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterCountry(string $country): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setCountry($country);
+        $this->areaBuilder->setCountry($country);
 
         return $this;
     }

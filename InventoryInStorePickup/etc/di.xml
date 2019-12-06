@@ -32,13 +32,13 @@
             <argument name="resolvers" xsi:type="array">
                 <item name="resolve-default-filters" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDefaultFilters</item>
                 <item name="resolve-filter-set" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveFilters</item>
-                <item name="resolve-distance-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveDistanceFilter</item>
+                <item name="resolve-distance-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveArea</item>
                 <item name="resolve-scope-filter" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveScopeFilter</item>
                 <item name="resolve-meta" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveMeta</item>
             </argument>
         </arguments>
     </type>
-    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter" />
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Area" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filters" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest\Filter" />
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface" type="Magento\InventoryInStorePickup\Model\SearchRequest" />

@@ -92,7 +92,7 @@ interface SearchRequestBuilderInterface
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setDistanceFilterRadius(int $radius): self;
+    public function setAreaRadius(int $radius): self;
 
     /**
      * Set Postcode for Distance Filter.

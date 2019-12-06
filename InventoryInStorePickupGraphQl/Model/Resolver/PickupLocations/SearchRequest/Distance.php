@@ -31,7 +31,7 @@ class Distance implements ResolverInterface
     ): SearchRequestBuilderInterface {
         $filterData = $argument[$argumentName];
 
-        $searchRequestBuilder->setDistanceFilterRadius($filterData[self::RADIUS_FIELD]);
+        $searchRequestBuilder->setAreaRadius($filterData[self::RADIUS_FIELD]);
         $searchRequestBuilder->setDistanceFilterCountry($filterData[self::COUNTRY_FIELD]);
 
         if (isset($filterData[self::POSTCODE_FIELD])) {

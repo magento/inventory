@@ -11,7 +11,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 
 /**
  * Get Distance to Sources.
@@ -57,11 +57,11 @@ class GetOrderedDistanceToSources
                                     'source_code',
                                     $this->createDistanceColumn(
                                         $latLng
-                                    ) . ' AS ' . DistanceFilterInterface::DISTANCE_FIELD
+                                    ) . ' AS ' . AreaInterface::DISTANCE_FIELD
                                 ]
                             )
-                            ->having(DistanceFilterInterface::DISTANCE_FIELD . ' <= ?', $radius)
-                            ->order(DistanceFilterInterface::DISTANCE_FIELD . ' ASC');
+                            ->having(AreaInterface::DISTANCE_FIELD . ' <= ?', $radius)
+                            ->order(AreaInterface::DISTANCE_FIELD . ' ASC');
 
         $distances = $connection->fetchPairs($query);
 

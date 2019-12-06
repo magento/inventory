@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
@@ -63,9 +63,9 @@ class ResolveMeta implements BuilderPartsResolverInterface
     ): void {
         $sorts = [];
         foreach ($searchRequest->getSort() as $sortOrder) {
-            if ($sortOrder->getField() === DistanceFilterInterface::DISTANCE_FIELD) {
+            if ($sortOrder->getField() === AreaInterface::DISTANCE_FIELD) {
                 // If sort order need to be done by distance, not other sort orders are allowed.
-                if ($searchRequest->getDistanceFilter()) {
+                if ($searchRequest->getArea()) {
                     return;
                 }
                 // Sort Order by 'distance' must be skipped in case that Distance Filter is missed.

@@ -12,7 +12,7 @@ use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\SearchRequestBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -76,7 +76,7 @@ class SearchRequestBuilderTest extends TestCase
                                    ->setField(SourceInterface::CITY)
                                    ->create(),
             $this->sortOrderBuilder->setDirection(SortOrder::SORT_DESC)
-                                   ->setField(DistanceFilterInterface::DISTANCE_FIELD)
+                                   ->setField(AreaInterface::DISTANCE_FIELD)
                                    ->create(),
             $this->sortOrderBuilder->setDirection(SortOrder::SORT_ASC)
                                    ->setField(PickupLocationInterface::PICKUP_LOCATION_CODE)
@@ -91,7 +91,7 @@ class SearchRequestBuilderTest extends TestCase
             ->setRegionIdFilter($addressRegionId[self::VALUE], $addressRegionId[self::CONDITION_TYPE])
             ->setRegionFilter($addressRegion[self::VALUE], $addressRegion[self::CONDITION_TYPE])
             ->setCountryFilter($addressCountry[self::VALUE], $addressCountry[self::CONDITION_TYPE])
-            ->setDistanceFilterRadius($distanceFilterRadius)
+            ->setAreaRadius($distanceFilterRadius)
             ->setDistanceFilterCountry($distanceFilterCountry)
             ->setDistanceFilterRegion($distanceFilterRegion)
             ->setDistanceFilterCity($distanceFilterCity)
@@ -147,13 +147,13 @@ class SearchRequestBuilderTest extends TestCase
         $this->assertEquals($nameFilter[self::VALUE], $filterSet->getName()->getValue());
         $this->assertEquals($nameFilter[self::CONDITION_TYPE], $filterSet->getName()->getConditionType());
 
-        $distanceFilter = $searchRequest->getDistanceFilter();
+        $area = $searchRequest->getArea();
 
-        $this->assertEquals($distanceFilterRadius, $distanceFilter->getRadius());
-        $this->assertEquals($distanceFilterCity, $distanceFilter->getCity());
-        $this->assertEquals($distanceFilterPostcode, $distanceFilter->getPostcode());
-        $this->assertEquals($distanceFilterRegion, $distanceFilter->getRegion());
-        $this->assertEquals($distanceFilterCountry, $distanceFilter->getCountry());
+        $this->assertEquals($distanceFilterRadius, $area->getRadius());
+        $this->assertEquals($distanceFilterCity, $area->getCity());
+        $this->assertEquals($distanceFilterPostcode, $area->getPostcode());
+        $this->assertEquals($distanceFilterRegion, $area->getRegion());
+        $this->assertEquals($distanceFilterCountry, $area->getCountry());
 
         $this->assertEquals($scopeCode, $searchRequest->getScopeCode());
         $this->assertEquals($scopeType, $searchRequest->getScopeType());
