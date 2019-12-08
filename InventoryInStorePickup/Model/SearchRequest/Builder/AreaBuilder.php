@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterfaceFactory;
 
 /**
  * Distance Filter Builder.
  */
-class DistanceFilterBuilder
+class AreaBuilder
 {
     private const RADIUS = 'radius';
     private const COUNTRY = 'country';
@@ -29,29 +29,29 @@ class DistanceFilterBuilder
     private $data = [];
 
     /**
-     * @var DistanceFilterInterfaceFactory
+     * @var AreaInterfaceFactory
      */
-    private $distanceFilterFactory;
+    private $areaFactory;
 
     /**
-     * @param DistanceFilterInterfaceFactory $distanceFilterFactory
+     * @param AreaInterfaceFactory $areaFactory
      */
-    public function __construct(DistanceFilterInterfaceFactory $distanceFilterFactory)
+    public function __construct(AreaInterfaceFactory $areaFactory)
     {
-        $this->distanceFilterFactory = $distanceFilterFactory;
+        $this->areaFactory = $areaFactory;
     }
 
     /**
      * Build Distance Filter.
      *
-     * @return DistanceFilterInterface|null
+     * @return AreaInterface|null
      */
-    public function create(): ?DistanceFilterInterface
+    public function create(): ?AreaInterface
     {
         $data = $this->data;
         $this->data = [];
 
-        return empty($data) ? null : $this->distanceFilterFactory->create($data);
+        return empty($data) ? null : $this->areaFactory->create($data);
     }
 
     /**

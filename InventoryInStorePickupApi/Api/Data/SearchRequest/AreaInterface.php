@@ -14,8 +14,9 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
  *
  * @api
  */
-interface DistanceFilterInterface
+interface AreaInterface
 {
+    // TODO: try to move constant from interface
     public const DISTANCE_FIELD = 'distance';
 
     /**

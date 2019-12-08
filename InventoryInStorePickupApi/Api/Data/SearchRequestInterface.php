@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 
 /**
  * Endpoint used to search Pickup Locations by different parameters:
- * - by attribute filters fields @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface
- * - by distance to the address @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface
+ * - by attribute filters fields @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface
+ * - by distance to the address @see \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface
  * Also, endpoint supports paging and sort orders.
  *
  * @api
@@ -23,16 +23,17 @@ interface SearchRequestInterface extends \Magento\Framework\Api\ExtensibleDataIn
     /**
      * Get Filter by Distance Filter.
      *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface|null
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface|null
+     * TODO: Find better name for the interface
      */
-    public function getDistanceFilter(): ?DistanceFilterInterface;
+    public function getArea(): ?AreaInterface;
 
     /**
      * Get set of filter.
      *
-     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface|null
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface|null
      */
-    public function getFilterSet(): ?FilterSetInterface;
+    public function getFilters(): ?FiltersInterface;
 
     /**
      * Get page size.

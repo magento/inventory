@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\Framework\Api\SortOrder;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -30,14 +30,14 @@ class SearchRequest implements SearchRequestInterface
     private $scopeType;
 
     /**
-     * @var DistanceFilterInterface|null
+     * @var AreaInterface|null
      */
-    private $distanceFilter;
+    private $area;
 
     /**
-     * @var FilterSetInterface|null
+     * @var FiltersInterface|null
      */
-    private $filterSet;
+    private $filters;
 
     /**
      * @var SortOrder[]|null
@@ -62,8 +62,8 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @param string $scopeCode
      * @param string $scopeType
-     * @param DistanceFilterInterface|null $distanceFilter
-     * @param FilterSetInterface|null $filterSet
+     * @param AreaInterface|null $area
+     * @param FiltersInterface|null $filters
      * @param SortOrder[]|null $sort
      * @param SearchRequestExtensionInterface|null $searchRequestExtension
      * @param int|null $pageSize
@@ -72,8 +72,8 @@ class SearchRequest implements SearchRequestInterface
     public function __construct(
         string $scopeCode,
         string $scopeType = SalesChannelInterface::TYPE_WEBSITE,
-        ?DistanceFilterInterface $distanceFilter = null,
-        ?FilterSetInterface $filterSet = null,
+        ?AreaInterface $area = null,
+        ?FiltersInterface $filters = null,
         ?array $sort = null,
         ?SearchRequestExtensionInterface $searchRequestExtension = null,
         ?int $pageSize = null,
@@ -81,8 +81,8 @@ class SearchRequest implements SearchRequestInterface
     ) {
         $this->scopeCode = $scopeCode;
         $this->scopeType = $scopeType;
-        $this->distanceFilter = $distanceFilter;
-        $this->filterSet = $filterSet;
+        $this->area = $area;
+        $this->filters = $filters;
         $this->sort = $sort;
         $this->searchRequestExtension = $searchRequestExtension;
         $this->pageSize = $pageSize;
@@ -92,17 +92,17 @@ class SearchRequest implements SearchRequestInterface
     /**
      * @inheritdoc
      */
-    public function getDistanceFilter(): ?DistanceFilterInterface
+    public function getArea(): ?AreaInterface
     {
-        return $this->distanceFilter;
+        return $this->area;
     }
 
     /**
      * @inheritdoc
      */
-    public function getFilterSet(): ?FilterSetInterface
+    public function getFilters(): ?FiltersInterface
     {
-        return $this->filterSet;
+        return $this->filters;
     }
 
     /**

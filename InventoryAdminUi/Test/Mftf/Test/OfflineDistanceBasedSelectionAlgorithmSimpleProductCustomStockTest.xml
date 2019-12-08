@@ -150,7 +150,7 @@
         <!--Verify Distance Based Source Selection Algorithm.-->
         <click selector="{{AdminSourceSelectionFormSection.sourceSelectionAlgorithmToggle}}" stepKey="openSourceSelectionAlgorithmList"/>
         <click selector="{{AdminSourceSelectionFormSection.selectDistancePriority}}" stepKey="selectDistancePriorityAlgorithm"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForDistanceFilterApplied"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForAreaApplied"/>
 
         <!--Verify Distance Based Algorithm applied correctly.-->
         <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowProductSku('0')}}" userInput="$$simpleProduct.sku$$" stepKey="checkProductSku"/>

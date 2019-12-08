@@ -7,22 +7,22 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Builder;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterSetInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterfaceFactory;
 
 /**
  * Filter Set Builder.
  */
-class FilterSetBuilder
+class FiltersBuilder
 {
-    private const COUNTRY_FILTER = 'countryFilter';
-    private const POSTCODE_FILTER = 'postcodeFilter';
-    private const REGION_FILTER = 'regionFilter';
-    private const REGION_ID_FILTER = 'regionIdFilter';
-    private const CITY_FILTER = 'cityFilter';
-    private const STREET_FILTER = 'streetFilter';
-    private const NAME_FILTER = 'nameFilter';
-    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCodeFilter';
+    private const COUNTRY_FILTER = 'country';
+    private const POSTCODE_FILTER = 'postcode';
+    private const REGION_FILTER = 'region';
+    private const REGION_ID_FILTER = 'regionId';
+    private const CITY_FILTER = 'city';
+    private const STREET_FILTER = 'street';
+    private const NAME_FILTER = 'name';
+    private const PICKUP_LOCATION_CODE_FILTER = 'pickupLocationCode';
 
     /**
      * Filter data.
@@ -37,28 +37,28 @@ class FilterSetBuilder
     private $filterBuilderFactory;
 
     /**
-     * @var FilterSetInterfaceFactory
+     * @var FiltersInterfaceFactory
      */
-    private $filterSetFactory;
+    private $filtersFactory;
 
     /**
      * @param FilterBuilderFactory $filterBuilderFactory
-     * @param FilterSetInterfaceFactory $filterSetFactory
+     * @param FiltersInterfaceFactory $filtersFactory
      */
     public function __construct(
         FilterBuilderFactory $filterBuilderFactory,
-        FilterSetInterfaceFactory $filterSetFactory
+        FiltersInterfaceFactory $filtersFactory
     ) {
         $this->filterBuilderFactory = $filterBuilderFactory;
-        $this->filterSetFactory = $filterSetFactory;
+        $this->filtersFactory = $filtersFactory;
     }
 
     /**
      * Build Filter Set.
      *
-     * @return FilterSetInterface|null
+     * @return FiltersInterface|null
      */
-    public function create(): ?FilterSetInterface
+    public function create(): ?FiltersInterface
     {
         $data = $this->data;
         $this->data = [];
@@ -71,7 +71,7 @@ class FilterSetBuilder
             $data[$key] = $value->create();
         }
 
-        return empty($data) ? null : $this->filterSetFactory->create($data);
+        return empty($data) ? null : $this->filtersFactory->create($data);
     }
 
     /**
@@ -80,9 +80,9 @@ class FilterSetBuilder
      * @param string $name
      * @param string|null $condition
      *
-     * @return FilterSetBuilder
+     * @return FiltersBuilder
      */
-    public function setNameFilter(string $name, ?string $condition = null): self
+    public function setName(string $name, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($name)->setConditionType($condition);
         $this->data[self::NAME_FILTER] = $filterBuilder;
@@ -96,9 +96,9 @@ class FilterSetBuilder
      * @param string $code
      * @param string|null $condition
      *
-     * @return FilterSetBuilder
+     * @return FiltersBuilder
      */
-    public function setPickupLocationCodeFilter(string $code, ?string $condition = null): self
+    public function setPickupLocationCode(string $code, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($code)->setConditionType($condition);
         $this->data[self::PICKUP_LOCATION_CODE_FILTER] = $filterBuilder;
@@ -114,7 +114,7 @@ class FilterSetBuilder
      *
      * @return self
      */
-    public function setStreetFilter(string $street, ?string $condition = null): self
+    public function setStreet(string $street, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($street)->setConditionType($condition);
         $this->data[self::STREET_FILTER] = $filterBuilder;
@@ -130,7 +130,7 @@ class FilterSetBuilder
      *
      * @return self
      */
-    public function setPostcodeFilter(string $postcode, ?string $condition = null): self
+    public function setPostcode(string $postcode, ?string $condition = null): self
     {
         $filter = $this->filterBuilderFactory->create()->setValue($postcode)->setConditionType($condition);
         $this->data[self::POSTCODE_FILTER] = $filter;
@@ -146,7 +146,7 @@ class FilterSetBuilder
      *
      * @return self
      */
-    public function setCityFilter(string $city, ?string $condition = null): self
+    public function setCity(string $city, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($city)->setConditionType($condition);
         $this->data[self::CITY_FILTER] = $filterBuilder;
@@ -162,7 +162,7 @@ class FilterSetBuilder
      *
      * @return self
      */
-    public function setRegionIdFilter(string $regionId, ?string $condition = null): self
+    public function setRegionId(string $regionId, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($regionId)->setConditionType($condition);
         $this->data[self::REGION_ID_FILTER] = $filterBuilder;
@@ -178,7 +178,7 @@ class FilterSetBuilder
      *
      * @return self
      */
-    public function setRegionFilter(string $region, ?string $condition = null): self
+    public function setRegion(string $region, ?string $condition = null): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($region)->setConditionType($condition);
         $this->data[self::REGION_FILTER] = $filterBuilder;
@@ -194,7 +194,7 @@ class FilterSetBuilder
      *
      * @return self
      */
-    public function setCountryFilter(string $country, ?string $condition): self
+    public function setCountry(string $country, ?string $condition): self
     {
         $filterBuilder = $this->filterBuilderFactory->create()->setValue($country)->setConditionType($condition);
         $this->data[self::COUNTRY_FILTER] = $filterBuilder;

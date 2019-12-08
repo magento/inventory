@@ -13,7 +13,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Assert\AssertArrayContains;
@@ -110,12 +110,12 @@ class GetPickupLocationsTest extends WebapiAbstract
         return [
             [ /* Data set #0 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'radius' => 750,
                         'postcode' => '86559',
                         'country' => 'DE'
                     ],
-                    'filterSet' => [
+                    'filters' => [
                         'cityFilter' => [
                             'value' => 'Kolbermoor,Mitry-Mory',
                             'conditionType' => 'in'
@@ -136,12 +136,12 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #1 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'radius' => 6371000,
                         'postcode' => '86559',
                         'country' => 'DE'
                     ],
-                    'filterSet' => [
+                    'filters' => [
                         'nameFilter' => [
                             'value' => 'source',
                             'conditionType' => 'fulltext'
@@ -161,7 +161,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                            SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                         ]
                     ]
                 ],
@@ -170,7 +170,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #2 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'radius' => 750,
                         'postcode' => '86559',
                         'country' => 'DE'
@@ -202,14 +202,14 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param array $searchRequestData
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeDistanceFilterOfflineDataProvider
+     * @dataProvider executeareaOfflineDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
-    public function testExecuteDistanceFilterOffline(
+    public function testExecuteareaOffline(
         array $searchRequestData,
         array $sortedPickupLocationCodes
     ) : void {
@@ -254,12 +254,12 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeDistanceFilterOfflineDataProvider(): array
+    public function executeareaOfflineDataProvider(): array
     {
         return [
             [ /* Data set #0 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'DE',
                         'postcode' => '81671',
                         'radius' => 500
@@ -270,7 +270,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #1 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'FR',
                         'region' => 'Bretagne',
                         'radius' => 1000
@@ -281,7 +281,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #2 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'FR',
                         'city' => 'Saint-Saturnin-lès-Apt',
                         'radius' => 1000],
@@ -289,7 +289,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                         ]
                     ],
                 ],
@@ -297,7 +297,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #3 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'IT',
                         'postcode' => '12022',
                         'radius' => 350],
@@ -305,7 +305,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                         ]
                     ],
                 ],
@@ -313,7 +313,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #4 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'IT',
                         'postcode' => '39030',
                         'region' => 'Trentino-Alto Adige',
@@ -325,7 +325,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #5 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'DE',
                         'postcode' => '86559',
                         'radius' => 750],
@@ -333,7 +333,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                         ]
                     ],
                 ],
@@ -341,7 +341,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #6 */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'US',
                         'region' => 'Kansas',
                         'radius' => 1000],
@@ -351,7 +351,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #7. Test with descending distance sort. */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'DE',
                         'postcode' => '86559',
                         'radius' => 750],
@@ -359,7 +359,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                            SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                         ]
                     ],
                 ],
@@ -367,7 +367,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #8. Test without distance sort. */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'FR',
                         'city' => 'Saint-Saturnin-lès-Apt',
                         'radius' => 1000
@@ -384,7 +384,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             ],
             [ /* Data set #9. Test with multiple sorts. Distance must be in priority. */
                 [
-                    'distanceFilter' => [
+                    'area' => [
                         'country' => 'FR',
                         'city' => 'Saint-Saturnin-lès-Apt',
                         'radius' => 1000],
@@ -396,7 +396,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                         ],
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => DistanceFilterInterface::DISTANCE_FIELD
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
                         ]
                     ],
                 ],
@@ -420,21 +420,21 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param string $salesChannelCode
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeFilterSetDataProvider
+     * @dataProvider executefiltersDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
-    public function testExecuteFilterSet(
+    public function testExecutefilters(
         array $searchRequestData,
         string $salesChannelCode,
         array $sortedPickupLocationCodes
     ): void {
         $requestData = [
             'searchRequest' => [
-                'filterSet' => $searchRequestData,
+                'filters' => $searchRequestData,
                 'scopeCode' => $salesChannelCode,
             ]
         ];
@@ -474,7 +474,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeFilterSetDataProvider(): array
+    public function executefiltersDataProvider(): array
     {
         return [
             [ /* Data set #0 */

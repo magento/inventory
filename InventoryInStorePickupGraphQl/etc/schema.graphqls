@@ -3,7 +3,7 @@
 
 type Query {
     pickupLocations (
-        distance: DistanceFilterInput @doc(description: "Perform search by distance using radius and the address for the search.")
+        distance: AreaInput @doc(description: "Perform search by location using radius and search term.")
         filter: PickupLocationFilterInput @doc(description: "Apply filters by attributes.")
         sort: PickupLocationSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
         pageSize: Int = 20 @doc(description: "The maximum number of pickup locations to return at once. The attribute is optional.")
@@ -12,7 +12,7 @@ type Query {
     @resolver(class: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations") @doc(description: "The pickup locations query searches for locations that match the search request requirements.") @cache(cacheIdentity: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations\\Identity")
 }
 
-input DistanceFilterInput @doc(description: "DistanceFilterInput defines the parameters which will be used for filter by distance.") {
+input AreaInput @doc(description: "AreaInput defines the parameters which will be used for filter by specified location.") {
     radius: Int! @doc(description: "The radius for the search in KM.")
     country_code: String! @doc(description: "The country code where search must be performed. Required parameter together with region, city or postcode.")
     region: String @doc(description: "The region where search must be performed.")
