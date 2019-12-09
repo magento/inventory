@@ -5,13 +5,13 @@
         "php": "~7.1.3||~7.2.0||~7.3.0",
         "magento/framework": "*",
         "magento/module-catalog": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-indexer": "*",
-        "magento/module-inventory-multi-dimensional-indexer-api": "*"
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-indexer": "1.0.*",
+        "magento/module-inventory-multi-dimensional-indexer-api": "1.0.*"
     },
     "suggest": {
-        "magento/module-inventory": "*"
+        "magento/module-inventory": "1.0.*"
     },
     "type": "magento2-module",
     "license": [
@@ -25,5 +25,6 @@
         "psr-4": {
             "Magento\\InventoryConfigurableProductIndexer\\": ""
         }
-    }
+    },
+    "version": "1.0.6"
 }

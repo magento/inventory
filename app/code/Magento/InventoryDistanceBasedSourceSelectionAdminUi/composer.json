@@ -17,5 +17,6 @@
         "psr-4": {
             "Magento\\InventoryDistanceBasedSourceSelectionAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.0.2"
 }

@@ -17,5 +17,6 @@
         "psr-4": {
             "Magento\\InventoryReservationsApi\\": ""
         }
-    }
+    },
+    "version": "1.0.6"
 }
