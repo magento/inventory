@@ -44,7 +44,7 @@
 
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="clickOnMainWebsite1"/>
         <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources1"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword2">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createSource1.source[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource2"/>

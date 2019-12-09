@@ -31,7 +31,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByKeyword">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
                 <argument name="keyword" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickOnEditForCustomStock"/>
@@ -80,7 +80,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="20" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
