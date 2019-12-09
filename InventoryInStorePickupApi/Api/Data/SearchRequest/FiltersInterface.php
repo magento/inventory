@@ -14,61 +14,61 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
  *
  * @api
  */
-interface FilterSetInterface
+interface FiltersInterface
 {
     /**
      * Get Filter by Country.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getCountryFilter(): ?FilterInterface;
+    public function getCountry(): ?FilterInterface;
 
     /**
      * Get Filter by Postcode.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getPostcodeFilter(): ?FilterInterface;
+    public function getPostcode(): ?FilterInterface;
 
     /**
      * Get Filter by Region.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getRegionFilter(): ?FilterInterface;
+    public function getRegion(): ?FilterInterface;
 
     /**
      * Get Filter by Region Id.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getRegionIdFilter(): ?FilterInterface;
+    public function getRegionId(): ?FilterInterface;
 
     /**
      * Get Filter by City.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getCityFilter(): ?FilterInterface;
+    public function getCity(): ?FilterInterface;
 
     /**
      * Get Filter by Street.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getStreetFilter(): ?FilterInterface;
+    public function getStreet(): ?FilterInterface;
 
     /**
      * Get Filter by Name.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getNameFilter(): ?FilterInterface;
+    public function getName(): ?FilterInterface;
 
     /**
      * Get Filter by Pickup Location Code.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
-    public function getPickupLocationCodeFilter(): ?FilterInterface;
+    public function getPickupLocationCode(): ?FilterInterface;
 }

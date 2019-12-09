@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest;
 
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 
 /**
  * @inheritdoc
  */
-class DistanceFilter implements DistanceFilterInterface
+class Area implements AreaInterface
 {
     /**
      * @var int

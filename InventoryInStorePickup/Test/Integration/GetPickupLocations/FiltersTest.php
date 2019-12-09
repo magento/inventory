@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  *
  * Cover usage of Filter Set.
  */
-class FilterSetTest extends TestCase
+class FiltersTest extends TestCase
 {
     /**
      * @var GetPickupLocations

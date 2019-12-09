@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Test\Integration\GetPickupLocations;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\InventoryInStorePickup\Model\GetPickupLocations;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -66,7 +66,7 @@ class CombinedTest extends TestCase
     {
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
                                                     ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-                                                    ->setDistanceFilterRadius(750)
+                                                    ->setAreaRadius(750)
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setCityFilter('Kolbermoor,Mitry-Mory', 'in')
@@ -102,7 +102,7 @@ class CombinedTest extends TestCase
     {
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
                                                     ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-                                                    ->setDistanceFilterRadius(750)
+                                                    ->setAreaRadius(750)
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setNameFilter('source', 'fulltext')
@@ -137,13 +137,13 @@ class CombinedTest extends TestCase
      */
     public function testExecuteWithAll()
     {
-        $sort = $this->sortOrderBuilder->setField(DistanceFilterInterface::DISTANCE_FIELD)
+        $sort = $this->sortOrderBuilder->setField(AreaInterface::DISTANCE_FIELD)
             ->setDirection(SortOrder::SORT_DESC)
             ->create();
 
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
                                                     ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-                                                    ->setDistanceFilterRadius(6371000)
+                                                    ->setAreaRadius(6371000)
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setNameFilter('source', 'fulltext')
@@ -184,7 +184,7 @@ class CombinedTest extends TestCase
      */
     public function testExecuteDistanceFilterWithPaging()
     {
-        $searchRequest = $this->searchRequestBuilder->setDistanceFilterRadius(750)
+        $searchRequest = $this->searchRequestBuilder->setAreaRadius(750)
                                                     ->setDistanceFilterCountry('DE')
                                                     ->setDistanceFilterPostcode('86559')
                                                     ->setScopeCode('global_website')

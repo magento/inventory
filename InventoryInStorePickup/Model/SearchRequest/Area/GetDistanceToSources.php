@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter;
+namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
@@ -60,17 +60,17 @@ class GetDistanceToSources
     /**
      * Get sourted by distance associated pair of Source Code and Distance to it.
      *
-     * @param DistanceFilterInterface $distanceFilter
+     * @param AreaInterface $area
      *
      * @return float[]
      * @throws NoSuchEntityException
      */
-    public function execute(DistanceFilterInterface $distanceFilter): array
+    public function execute(AreaInterface $area): array
     {
-        $key = $this->getKey($distanceFilter);
+        $key = $this->getKey($area);
 
         if (!isset($this->calculatedRequests[$key])) {
-            $this->calculatedRequests[$key] = $this->getDistanceToSources($distanceFilter);
+            $this->calculatedRequests[$key] = $this->getDistanceToSources($area);
         }
 
         return $this->calculatedRequests[$key];
@@ -79,53 +79,53 @@ class GetDistanceToSources
     /**
      * Get key, based on filter state.
      *
-     * @param DistanceFilterInterface $distanceFilter
+     * @param AreaInterface $area
      *
      * @return string
      */
-    private function getKey(DistanceFilterInterface $distanceFilter): string
+    private function getKey(AreaInterface $area): string
     {
-        return $distanceFilter->getRadius() .
-            $distanceFilter->getCountry() .
-            $distanceFilter->getRegion() .
-            $distanceFilter->getCity() .
-            $distanceFilter->getPostcode();
+        return $area->getRadius() .
+            $area->getCountry() .
+            $area->getRegion() .
+            $area->getCity() .
+            $area->getPostcode();
     }
 
     /**
      * Get Distance to Sources.
      *
-     * @param DistanceFilterInterface $distanceFilter
+     * @param AreaInterface $area
      *
      * @return float[]
      * @throws NoSuchEntityException
      */
-    private function getDistanceToSources(DistanceFilterInterface $distanceFilter): array
+    private function getDistanceToSources(AreaInterface $area): array
     {
-        $sourceSelectionAddress = $this->toSourceSelectionAddress($distanceFilter);
+        $sourceSelectionAddress = $this->toSourceSelectionAddress($area);
         try {
             $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
         } catch (LocalizedException $exception) {
             throw new NoSuchEntityException(__($exception->getMessage()), $exception);
         }
 
-        return $this->getOrderedDistanceToSources->execute($latLng, $distanceFilter->getRadius());
+        return $this->getOrderedDistanceToSources->execute($latLng, $area->getRadius());
     }
 
     /**
      * Create Source Selection Address based on Distance Fitler from Search Request.
      *
-     * @param DistanceFilterInterface $distanceFilter
+     * @param AreaInterface $area
      *
      * @return AddressInterface
      */
-    private function toSourceSelectionAddress(DistanceFilterInterface $distanceFilter)
+    private function toSourceSelectionAddress(AreaInterface $area)
     {
         $data = [
-            'country' => $distanceFilter->getCountry(),
-            'postcode' => $distanceFilter->getPostcode() ?? '',
-            'region' => $distanceFilter->getRegion() ?? '',
-            'city' => $distanceFilter->getCity() ?? '',
+            'country' => $area->getCountry(),
+            'postcode' => $area->getPostcode() ?? '',
+            'region' => $area->getRegion() ?? '',
+            'city' => $area->getCity() ?? '',
             'street' => ''
         ];
 

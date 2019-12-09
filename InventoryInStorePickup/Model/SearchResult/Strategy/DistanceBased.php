@@ -11,8 +11,8 @@ use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
-use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\DistanceFilterInterface;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Area\GetDistanceToSources;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchResult\StrategyInterface;
 
@@ -46,7 +46,7 @@ class DistanceBased implements StrategyInterface
         SourceSearchResultsInterface $sourcesSearchResult
     ): array {
         $sortOrder = $this->getDistanceSort($searchRequest);
-        $distanceToSources = $this->getDistanceToSources->execute($searchRequest->getDistanceFilter());
+        $distanceToSources = $this->getDistanceToSources->execute($searchRequest->getArea());
         $sources = $sourcesSearchResult->getItems();
 
         if ($sortOrder) {
@@ -105,7 +105,7 @@ class DistanceBased implements StrategyInterface
         }
 
         foreach ($sorts as $sortOrder) {
-            if ($sortOrder->getField() === DistanceFilterInterface::DISTANCE_FIELD) {
+            if ($sortOrder->getField() === AreaInterface::DISTANCE_FIELD) {
                 return $sortOrder;
             }
         }
@@ -120,6 +120,6 @@ class DistanceBased implements StrategyInterface
         SearchRequestInterface $searchRequest,
         SourceSearchResultsInterface $sourcesSearchResult
     ): bool {
-        return (bool)$searchRequest->getDistanceFilter();
+        return (bool)$searchRequest->getArea();
     }
 }

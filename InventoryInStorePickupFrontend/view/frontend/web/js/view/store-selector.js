@@ -167,7 +167,7 @@ define([
 
             return pickupLocationsService
                 .getNearbyLocations({
-                    distanceFilter: {
+                    area: {
                         radius: this.nearbySearchRadius,
                         country: this.defaultCountryId,
                         city: address.city,

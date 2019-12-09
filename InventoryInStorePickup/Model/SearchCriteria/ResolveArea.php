@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryInStorePickup\Model\SearchRequest\DistanceFilter\GetDistanceToSources;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Area\GetDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
@@ -19,7 +19,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilder
  *
  * Apply filter by Source Codes, limited by distance and assignment to the Scope.
  */
-class ResolveDistanceFilter implements BuilderPartsResolverInterface
+class ResolveArea implements BuilderPartsResolverInterface
 {
     /**
      * @var GetDistanceToSources
@@ -62,13 +62,13 @@ class ResolveDistanceFilter implements BuilderPartsResolverInterface
      */
     private function getSourceCodes(SearchRequestInterface $searchRequest): ?array
     {
-        $distanceFilter = $searchRequest->getDistanceFilter();
+        $area = $searchRequest->getArea();
 
-        if ($distanceFilter === null) {
+        if ($area === null) {
             return null;
         }
 
-        $distances = $this->getDistanceToSources->execute($distanceFilter);
+        $distances = $this->getDistanceToSources->execute($area);
 
         return array_keys($distances);
     }
