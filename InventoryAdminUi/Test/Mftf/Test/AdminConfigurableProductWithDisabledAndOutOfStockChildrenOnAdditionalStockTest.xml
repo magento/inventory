@@ -93,7 +93,7 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="checkConfigurableOnProductViewPage">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="checkConfigurableOnProductViewPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <!--Disable white configurable option.-->
