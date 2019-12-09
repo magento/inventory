@@ -7,32 +7,24 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Model;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryInStorePickupSales\Model\Order\AddCommentToOrder;
-use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingArguments;
+use Magento\InventoryInStorePickupSales\Model\Order\AddStorePickupAttributesToOrder;
+use Magento\InventoryInStorePickupSales\Model\Order\CreateShipment;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
-use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
+use Magento\InventoryInStorePickupSales\Model\Order\setOrderStatus;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Api\ShipOrderInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
 use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
+use Psr\Log\LoggerInterface;
 
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY..
  */
 class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInterface
 {
-    /**
-     * @var IsOrderReadyForPickupInterface
-     */
-    private $isOrderReadyForPickup;
-
-    /**
-     * @var ShipOrderInterface
-     */
-    private $shipOrder;
-
     /**
      * @var ReadyForPickupNotifier
      */
@@ -44,9 +36,9 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $orderRepository;
 
     /**
-     * @var Order\AddCommentToOrder
+     * @var Order\AddStorePickupAttributesToOrder
      */
-    private $addCommentToOrder;
+    private $addStorePickupAttributesToOrder;
 
     /**
      * @var ResultInterfaceFactory
@@ -54,35 +46,53 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $resultFactory;
 
     /**
-     * @var CreateShippingArguments
+     * @var ShipmentRepositoryInterface
      */
-    private $createShippingArguments;
+    private $shipmentRepository;
 
     /**
-     * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
-     * @param ShipOrderInterface $shipOrder
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
+     * @var CreateShipment
+     */
+    private $createShipment;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param ReadyForPickupNotifier $emailNotifier
      * @param OrderRepositoryInterface $orderRepository
-     * @param AddCommentToOrder $addCommentToOrder
+     * @param AddStorePickupAttributesToOrder $addStorePickupAttributesToOrder
      * @param ResultInterfaceFactory $resultFactory
-     * @param CreateShippingArguments $createShippingArguments
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param CreateShipment $createShipment
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        IsOrderReadyForPickupInterface $isOrderReadyForPickup,
-        ShipOrderInterface $shipOrder,
         ReadyForPickupNotifier $emailNotifier,
         OrderRepositoryInterface $orderRepository,
-        AddCommentToOrder $addCommentToOrder,
+        AddStorePickupAttributesToOrder $addStorePickupAttributesToOrder,
         ResultInterfaceFactory $resultFactory,
-        CreateShippingArguments $createShippingArguments
+        ShipmentRepositoryInterface $shipmentRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        CreateShipment $createShipment,
+        LoggerInterface $logger
     ) {
-        $this->isOrderReadyForPickup = $isOrderReadyForPickup;
-        $this->shipOrder = $shipOrder;
         $this->emailNotifier = $emailNotifier;
         $this->orderRepository = $orderRepository;
-        $this->addCommentToOrder = $addCommentToOrder;
+        $this->addStorePickupAttributesToOrder = $addStorePickupAttributesToOrder;
         $this->resultFactory = $resultFactory;
-        $this->createShippingArguments = $createShippingArguments;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->createShipment = $createShipment;
+        $this->logger = $logger;
     }
 
     /**
@@ -100,50 +110,32 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
             try {
                 $order = $this->orderRepository->get($orderId);
 
-                $isShipmentCreated = $order->getShipmentsCollection()->getSize() > 0;
+                $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $orderId);
+                $shipments = $this->shipmentRepository->getList($searchCriteria->create());
+                $isShipmentCreated = $shipments->getTotalCount() > 0;
                 if ($isShipmentCreated === false) {
-                    $this->createShipment($order);
+                    $this->createShipment->execute($order);
                 }
 
                 $this->emailNotifier->notify($order);
-                $this->addCommentToOrder->execute($order);
+                $this->addStorePickupAttributesToOrder->execute($order);
             } catch (LocalizedException $exception) {
                 $failed[] = [
                     'id' => $orderId,
                     'message' => $exception->getMessage(),
                 ];
+                $this->logger->critical($exception);
                 continue;
             } catch (\Exception $exception) {
                 $failed[] = [
                     'id' => $orderId,
                     'message' => 'We can\'t notify the customer right now.',
                 ];
+                $this->logger->critical($exception);
                 continue;
             }
         }
 
         return $this->resultFactory->create(['failed' => $failed]);
-    }
-
-    /**
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
-     * @throws LocalizedException
-     */
-    private function createShipment(\Magento\Sales\Api\Data\OrderInterface $order)
-    {
-        if (!$this->isOrderReadyForPickup->execute((int)$order->getEntityId())) {
-            throw new LocalizedException(__('The order is not ready for pickup'));
-        }
-
-        $this->shipOrder->execute(
-            (int)$order->getEntityId(),
-            [],
-            false,
-            false,
-            null,
-            [],
-            [],
-            $this->createShippingArguments->execute($order)
-        );
     }
 }

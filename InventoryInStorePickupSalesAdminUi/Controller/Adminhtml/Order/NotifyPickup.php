@@ -34,7 +34,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
     /**
      * @var NotifyOrdersAreReadyForPickupInterface
      */
-    private $notifyOrderAreReadyForPickup;
+    private $notifyOrdersAreReadyForPickup;
 
     /**
      * @var OrderRepositoryInterface
@@ -48,17 +48,17 @@ class NotifyPickup extends Action implements HttpGetActionInterface
 
     /**
      * @param Context $context
-     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrderAreReadyForPickup
+     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrdersAreReadyForPickup
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
-        NotifyOrdersAreReadyForPickupInterface $notifyOrderAreReadyForPickup,
+        NotifyOrdersAreReadyForPickupInterface $notifyOrdersAreReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
-        $this->notifyOrderAreReadyForPickup = $notifyOrderAreReadyForPickup;
+        $this->notifyOrdersAreReadyForPickup = $notifyOrdersAreReadyForPickup;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
 
@@ -78,7 +78,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
             return $this->resultRedirectFactory->create()->setPath('sales/*/');
         }
 
-        $result = $this->notifyOrderAreReadyForPickup->execute([(int)$order->getEntityId()]);
+        $result = $this->notifyOrdersAreReadyForPickup->execute([(int)$order->getEntityId()]);
         if ($result->isSuccessful()) {
             if ($order->getEmailSent()) {
                 $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));

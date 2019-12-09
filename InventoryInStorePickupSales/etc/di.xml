@@ -48,7 +48,4 @@
         </arguments>
     </virtualType>
     <preference for="Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface" type="Magento\InventoryInStorePickupSales\Model\Result"/>
-    <type name="Magento\Sales\Model\ResourceModel\Order\Handler\State">
-        <plugin name="adapt_order_status" type="Magento\InventoryInStorePickupSales\Plugin\Sales\Model\ResourceModel\Order\Handler\State\AdaptOrderStatusPlugin"/>
-    </type>
 </config>

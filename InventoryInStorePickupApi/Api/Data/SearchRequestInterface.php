@@ -24,7 +24,6 @@ interface SearchRequestInterface extends \Magento\Framework\Api\ExtensibleDataIn
      * Get Filter by Distance Filter.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface|null
-     * TODO: Find better name for the interface
      */
     public function getArea(): ?AreaInterface;
 

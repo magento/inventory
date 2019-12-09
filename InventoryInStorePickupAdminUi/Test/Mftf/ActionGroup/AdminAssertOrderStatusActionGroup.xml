@@ -14,6 +14,6 @@
         <arguments>
             <argument name="orderStatus" type="string" defaultValue="{{OrderStatus.processing}}"/>
         </arguments>
-        <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="{{orderStatus}}" stepKey="seeOrderStatusCanceled"/>
+        <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="{{orderStatus}}" stepKey="seeOrderStatus"/>
     </actionGroup>
 </actionGroups>
