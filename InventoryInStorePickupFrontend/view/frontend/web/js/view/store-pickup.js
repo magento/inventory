@@ -233,7 +233,7 @@ define([
             } else if (shippingAddress.city && shippingAddress.postcode) {
                 pickupLocationsService
                     .getNearbyLocations({
-                        distanceFilter: {
+                        area: {
                             radius: this.nearbySearchRadius,
                             country: shippingAddress.countryId || this.defaultCountry,
                             postcode: shippingAddress.postcode,

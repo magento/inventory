@@ -9,8 +9,8 @@ namespace Magento\InventoryInStorePickup\Model;
 
 use InvalidArgumentException;
 use Magento\Framework\Api\SortOrder;
-use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FilterSetBuilder;
-use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\DistanceFilterBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\FiltersBuilder;
+use Magento\InventoryInStorePickup\Model\SearchRequest\Builder\AreaBuilder;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterfaceFactory;
@@ -24,8 +24,8 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * Search Request Fields.
      */
-    private const FILTER_SET = 'filterSet';
-    private const DISTANCE_FILTER = 'distanceFilter';
+    private const FILTERS = 'filters';
+    private const AREA = 'area';
     private const SORT_ORDERS = 'sort';
     private const PAGE_SIZE = 'pageSize';
     private const CURRENT_PAGE = 'currentPage';
@@ -46,28 +46,28 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     private $searchRequestFactory;
 
     /**
-     * @var FilterSetBuilder
+     * @var FiltersBuilder
      */
-    private $filterSetBuilder;
+    private $filtersBuilder;
 
     /**
-     * @var DistanceFilterBuilder
+     * @var AreaBuilder
      */
-    private $distanceFilterBuilder;
+    private $areaBuilder;
 
     /**
-     * @param FilterSetBuilder $filterSetBuilderFactory
-     * @param DistanceFilterBuilder $distanceFilterBuilderFactory
+     * @param FiltersBuilder $filterSetBuilderFactory
+     * @param AreaBuilder $areaBuilderFactory
      * @param SearchRequestInterfaceFactory $searchRequestFactory
      */
     public function __construct(
-        FilterSetBuilder $filterSetBuilderFactory,
-        DistanceFilterBuilder $distanceFilterBuilderFactory,
+        FiltersBuilder $filterSetBuilderFactory,
+        AreaBuilder $areaBuilderFactory,
         SearchRequestInterfaceFactory $searchRequestFactory
     ) {
         $this->searchRequestFactory = $searchRequestFactory;
-        $this->filterSetBuilder = $filterSetBuilderFactory;
-        $this->distanceFilterBuilder = $distanceFilterBuilderFactory;
+        $this->filtersBuilder = $filterSetBuilderFactory;
+        $this->areaBuilder = $areaBuilderFactory;
     }
 
     /**
@@ -89,8 +89,8 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     private function buildComposite(): void
     {
-        $this->data[self::FILTER_SET] = $this->filterSetBuilder->create();
-        $this->data[self::DISTANCE_FILTER] = $this->distanceFilterBuilder->create();
+        $this->data[self::FILTERS] = $this->filtersBuilder->create();
+        $this->data[self::AREA] = $this->areaBuilder->create();
     }
 
     /**
@@ -98,7 +98,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setStreetFilter(string $street, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setStreetFilter($street, $condition);
+        $this->filtersBuilder->setStreet($street, $condition);
 
         return $this;
     }
@@ -108,7 +108,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setPostcodeFilter(string $postcode, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setPostcodeFilter($postcode, $condition);
+        $this->filtersBuilder->setPostcode($postcode, $condition);
 
         return $this;
     }
@@ -118,7 +118,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setCityFilter(string $city, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setCityFilter($city, $condition);
+        $this->filtersBuilder->setCity($city, $condition);
 
         return $this;
     }
@@ -128,7 +128,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setRegionIdFilter(string $regionId, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setRegionIdFilter($regionId, $condition);
+        $this->filtersBuilder->setRegionId($regionId, $condition);
 
         return $this;
     }
@@ -138,7 +138,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setRegionFilter(string $region, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setRegionFilter($region, $condition);
+        $this->filtersBuilder->setRegion($region, $condition);
 
         return $this;
     }
@@ -148,7 +148,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setCountryFilter(string $country, ?string $condition): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setCountryFilter($country, $condition);
+        $this->filtersBuilder->setCountry($country, $condition);
 
         return $this;
     }
@@ -156,9 +156,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setDistanceFilterRadius(int $radius): SearchRequestBuilderInterface
+    public function setAreaRadius(int $radius): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setRadius($radius);
+        $this->areaBuilder->setRadius($radius);
 
         return $this;
     }
@@ -168,7 +168,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterPostcode(string $postcode): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setPostcode($postcode);
+        $this->areaBuilder->setPostcode($postcode);
 
         return $this;
     }
@@ -178,7 +178,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterCity(string $city): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setCity($city);
+        $this->areaBuilder->setCity($city);
 
         return $this;
     }
@@ -188,7 +188,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterRegion(string $region): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setRegion($region);
+        $this->areaBuilder->setRegion($region);
 
         return $this;
     }
@@ -198,7 +198,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setDistanceFilterCountry(string $country): SearchRequestBuilderInterface
     {
-        $this->distanceFilterBuilder->setCountry($country);
+        $this->areaBuilder->setCountry($country);
 
         return $this;
     }
@@ -269,7 +269,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setPickupLocationCodeFilter(string $code, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setPickupLocationCodeFilter($code, $condition);
+        $this->filtersBuilder->setPickupLocationCode($code, $condition);
 
         return $this;
     }
@@ -279,7 +279,7 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
      */
     public function setNameFilter(string $name, ?string $condition = null): SearchRequestBuilderInterface
     {
-        $this->filterSetBuilder->setNameFilter($name, $condition);
+        $this->filtersBuilder->setName($name, $condition);
 
         return $this;
     }
