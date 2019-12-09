@@ -11,12 +11,12 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupSales\Model\Order\AddCommentToOrder;
 use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingArguments;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
-use Magento\InventoryInStorePickupSales\Model\Order\IsFulfillable;
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
+use Magento\InventoryInStorePickupSalesApi\Model\IsOrderReadyForPickupInterface;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipOrderInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
 
 /**
  * Send an email to the customer and ship the order to reserve (deduct) pickup location`s QTY..
@@ -24,9 +24,9 @@ use Magento\Sales\Api\ShipOrderInterface;
 class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInterface
 {
     /**
-     * @var IsFulfillable
+     * @var IsOrderReadyForPickupInterface
      */
-    private $isFulfillable;
+    private $isOrderReadyForPickup;
 
     /**
      * @var ShipOrderInterface
@@ -59,7 +59,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $createShippingArguments;
 
     /**
-     * @param IsFulfillable $isFulfillable
+     * @param IsOrderReadyForPickupInterface $isOrderReadyForPickup
      * @param ShipOrderInterface $shipOrder
      * @param ReadyForPickupNotifier $emailNotifier
      * @param OrderRepositoryInterface $orderRepository
@@ -68,7 +68,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
      * @param CreateShippingArguments $createShippingArguments
      */
     public function __construct(
-        IsFulfillable $isFulfillable,
+        IsOrderReadyForPickupInterface $isOrderReadyForPickup,
         ShipOrderInterface $shipOrder,
         ReadyForPickupNotifier $emailNotifier,
         OrderRepositoryInterface $orderRepository,
@@ -76,7 +76,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         ResultInterfaceFactory $resultFactory,
         CreateShippingArguments $createShippingArguments
     ) {
-        $this->isFulfillable = $isFulfillable;
+        $this->isOrderReadyForPickup = $isOrderReadyForPickup;
         $this->shipOrder = $shipOrder;
         $this->emailNotifier = $emailNotifier;
         $this->orderRepository = $orderRepository;
@@ -99,26 +99,13 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         foreach ($orderIds as $orderId) {
             try {
                 $order = $this->orderRepository->get($orderId);
-                if (!$this->isFulfillable->execute($order) && $order->canShip()) {
-                    $failed[] = [
-                        'id' => $orderId,
-                        'message' => 'The order is not ready for pickup',
-                    ];
-                    continue;
+
+                $isShipmentCreated = $order->getShipmentsCollection()->getSize() > 0;
+                if ($isShipmentCreated === false) {
+                    $this->createShipment($order);
                 }
+
                 $this->emailNotifier->notify($order);
-                if ($order->canShip()) {
-                    $this->shipOrder->execute(
-                        $orderId,
-                        [],
-                        false,
-                        false,
-                        null,
-                        [],
-                        [],
-                        $this->createShippingArguments->execute($order)
-                    );
-                }
                 $this->addCommentToOrder->execute($order);
             } catch (LocalizedException $exception) {
                 $failed[] = [
@@ -136,5 +123,27 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         }
 
         return $this->resultFactory->create(['failed' => $failed]);
+    }
+
+    /**
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @throws LocalizedException
+     */
+    private function createShipment(\Magento\Sales\Api\Data\OrderInterface $order)
+    {
+        if (!$this->isOrderReadyForPickup->execute((int)$order->getEntityId())) {
+            throw new LocalizedException(__('The order is not ready for pickup'));
+        }
+
+        $this->shipOrder->execute(
+            (int)$order->getEntityId(),
+            [],
+            false,
+            false,
+            null,
+            [],
+            [],
+            $this->createShippingArguments->execute($order)
+        );
     }
 }

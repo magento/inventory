@@ -70,10 +70,9 @@ class ReadyForPickup extends Container
             return;
         }
 
-        $order = $this->viewBlock->getOrder();
-        $message = $order->canShip()
-            ? __('Are you sure you want to notify the customer that order is ready for pickup and create shipment?')
-            : __('Are you sure you want to notify the customer that order is ready for pickup?');
+        $message = $this->viewBlock->getOrder()->getShipmentsCollection()->getSize() > 0
+            ? __('Are you sure you want to notify the customer that order is ready for pickup?')
+            : __('Are you sure you want to notify the customer that order is ready for pickup and create shipment?');
         $this->addButton(
             'ready_for_pickup',
             [

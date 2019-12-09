@@ -17,7 +17,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -35,7 +34,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
     /**
      * @var NotifyOrdersAreReadyForPickupInterface
      */
-    private $notifyOrderIsReadyForPickup;
+    private $notifyOrderAreReadyForPickup;
 
     /**
      * @var OrderRepositoryInterface
@@ -49,17 +48,17 @@ class NotifyPickup extends Action implements HttpGetActionInterface
 
     /**
      * @param Context $context
-     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup
+     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrderAreReadyForPickup
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
-        NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup,
+        NotifyOrdersAreReadyForPickupInterface $notifyOrderAreReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
-        $this->notifyOrderIsReadyForPickup = $notifyOrderIsReadyForPickup;
+        $this->notifyOrderAreReadyForPickup = $notifyOrderAreReadyForPickup;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
 
@@ -79,10 +78,13 @@ class NotifyPickup extends Action implements HttpGetActionInterface
             return $this->resultRedirectFactory->create()->setPath('sales/*/');
         }
 
-        $shipmentCreated = $order->canShip();
-        $result = $this->notifyOrderIsReadyForPickup->execute([(int)$order->getEntityId()]);
+        $result = $this->notifyOrderAreReadyForPickup->execute([(int)$order->getEntityId()]);
         if ($result->isSuccessful()) {
-            $this->addSuccessMessage($order, $shipmentCreated);
+            if ($order->getEmailSent()) {
+                $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
+            } else {
+                $this->messageManager->addSuccessMessage(__('Shipment has been created.'));
+            }
         } else {
             $error = current($result->getFailed());
             $this->messageManager->addErrorMessage($error['message']);
@@ -116,24 +118,5 @@ class NotifyPickup extends Action implements HttpGetActionInterface
         }
 
         return $order;
-    }
-
-    /**
-     * Add success message to message manager considering order statuses and order shipment.
-     *
-     * @param OrderInterface $order
-     * @param bool $shipmentCreated
-     */
-    private function addSuccessMessage(OrderInterface $order, bool $shipmentCreated): void
-    {
-        if ($order->getEmailSent() && $shipmentCreated) {
-            $this->messageManager->addSuccessMessage(__('Customer has been notified and shipment created.'));
-        } elseif ($order->getEmailSent() && !$shipmentCreated) {
-            $this->messageManager->addSuccessMessage(__('Customer has been notified.'));
-        } elseif (!$order->getEmailSent() && !$shipmentCreated) {
-            $this->messageManager->addSuccessMessage(__('Order notified for pickup.'));
-        } else {
-            $this->messageManager->addSuccessMessage(__('Shipment has been created.'));
-        }
     }
 }
