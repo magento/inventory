@@ -32,14 +32,14 @@
             <comment userInput="Assign source and sales channel to stock." stepKey="assignCustomSourceToCustomStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByName">
                 <argument name="keyword" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickEditCustomStock"/>
             <waitForPageLoad time="30" stepKey="waitCustomStockPageLoad"/>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannelForCustomStock"/>
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="openAssignSourcesModalWindow"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByName">
                 <argument name="keyword" value="$$customSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$customSource.source[name]$$)}}" stepKey="selectCustomSourceAsAssignment"/>
@@ -64,7 +64,7 @@
             <comment userInput=" Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockGridPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGrigPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="editDefaultStock"/>

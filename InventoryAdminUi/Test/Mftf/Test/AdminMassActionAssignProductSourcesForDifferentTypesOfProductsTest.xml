@@ -90,35 +90,35 @@
             <comment userInput="Assign all created source to stock" stepKey="assignSourcesToStock"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignCustomSourcesToCustomStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByName">
                 <argument name="keyword" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickEditCustomStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
             <!--Assign first source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForFirstSource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchFirstCustomSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchFirstCustomSourceByName">
                 <argument name="keyword" value="$$createFirstCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createFirstCustomSource.source[name]$$)}}" stepKey="selectFirstCustomSourceForCustomStock"/>
             <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneFirstCustomSourceAssignment"/>
             <!--Assign second source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForSecondSource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchSecondCustomSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchSecondCustomSourceByName">
                 <argument name="keyword" value="$$createSecondCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSecondCustomSource.source[name]$$)}}" stepKey="selectSecondCustomSourceForCustomStock"/>
             <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneSecondCustomSourceAssignment"/>
             <!--Assign third source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForThirdSource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchThirdCustomSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchThirdCustomSourceByName">
                 <argument name="keyword" value="$$createThirdCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createThirdCustomSource.source[name]$$)}}" stepKey="selectThirdCustomSourceForCustomStock"/>
             <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneThirdCustomSourceAssignment"/>
             <!--Assign fourth source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForFourthSource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchFourthCustomSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchFourthCustomSourceByName">
                 <argument name="keyword" value="$$createFourthCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createFourthCustomSource.source[name]$$)}}" stepKey="selectFourthCustomSourceForCustomStock"/>
@@ -128,7 +128,7 @@
             <comment userInput="Assign main website to default stock" stepKey="assignMainWebsiteChannelToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
