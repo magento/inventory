@@ -72,7 +72,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSource1ToProduct">
                 <argument name="sourceCode" value="$source2.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>

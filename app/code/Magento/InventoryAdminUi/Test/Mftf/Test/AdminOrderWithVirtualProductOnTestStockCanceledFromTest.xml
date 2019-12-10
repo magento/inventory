@@ -59,7 +59,7 @@
             <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
         </actionGroup>
 
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
             <argument name="customer" value="$$customer$$"/>

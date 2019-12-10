@@ -42,7 +42,7 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
                 <argument name="sourceQty" value="{{minimalProductQty.value}}"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <!--Revert 'Out of Stock' configuration.-->

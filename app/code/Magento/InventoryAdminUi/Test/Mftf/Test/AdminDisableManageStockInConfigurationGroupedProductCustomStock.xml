@@ -65,7 +65,7 @@
             <argument name="sourceCode" value="$source.source[source_code]$"/>
             <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
         </actionGroup>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Assign virtual to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>

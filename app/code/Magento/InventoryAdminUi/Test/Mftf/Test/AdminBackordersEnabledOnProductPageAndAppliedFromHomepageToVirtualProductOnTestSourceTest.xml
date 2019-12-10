@@ -61,7 +61,7 @@
             <argument name="sourceQty" value="3"/>
         </actionGroup>
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>

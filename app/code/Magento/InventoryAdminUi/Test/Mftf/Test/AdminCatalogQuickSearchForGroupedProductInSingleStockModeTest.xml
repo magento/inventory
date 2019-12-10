@@ -41,11 +41,11 @@
         <comment userInput="Create grouped product." stepKey="createGroupedProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndex"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridColumnsInitial"/>
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridColumnsInitial"/>
         <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProduct">
             <argument name="product" value="GroupedProduct"/>
         </actionGroup>
-        <actionGroup ref="fillGroupedProductForm" stepKey="fillProductForm">
+        <actionGroup ref="FillGroupedProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="GroupedProduct"/>
         </actionGroup>
 

@@ -54,7 +54,7 @@
             <argument name="qty" value="10"/>
             <argument name="rowIndex" value="0"/>
         </actionGroup>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="AssertAdminNotifyQtyActionGroup" stepKey="AssertNotifyQty">
             <argument name="qty" value="10"/>

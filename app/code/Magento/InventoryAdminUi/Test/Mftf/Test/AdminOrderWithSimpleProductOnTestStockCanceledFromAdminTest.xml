@@ -44,7 +44,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="0" after="assignSourceToProduct" stepKey="setDefaultSourceQuantity"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" after="setDefaultSourceQuantity" stepKey="setCustomSourceQuantity"/>
         <!-- Save product -->
-        <actionGroup ref="saveProductForm" stepKey="saveProduct" after="setCustomSourceQuantity"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct" after="setCustomSourceQuantity"/>
 
         <remove keyForRemoval="checkProductSourceQty"/>
         <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="checkProductSourceQty" after="findProductBySkuToCheckQty">

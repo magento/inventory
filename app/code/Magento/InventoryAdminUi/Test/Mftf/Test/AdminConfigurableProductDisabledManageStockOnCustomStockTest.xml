@@ -124,8 +124,8 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGrid"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterWhiteConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGrid"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterWhiteConfigurableVariation">
             <argument name="product" value="colorProductAttribute1"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editWhiteConfigurableVariation"/>
@@ -135,7 +135,7 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToEditRedConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoadToFindRedConfigurableVariation"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterProductGridToFindConfigurableRedVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterProductGridToFindConfigurableRedVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariation"/>
