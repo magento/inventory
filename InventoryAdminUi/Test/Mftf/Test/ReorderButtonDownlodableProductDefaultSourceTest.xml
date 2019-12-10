@@ -63,7 +63,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$downloadableProduct$$"/>
             <argument name="productCount" value="1"/>
         </actionGroup>

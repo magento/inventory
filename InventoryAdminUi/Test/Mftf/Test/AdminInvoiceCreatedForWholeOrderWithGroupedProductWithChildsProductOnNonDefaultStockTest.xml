@@ -100,7 +100,7 @@
             <argument name="productUrl" value="$$groupedProduct.custom_attributes[url_key]$$"/>
         </actionGroup>
 
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addGroupedProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addGroupedProductToCart">
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
 

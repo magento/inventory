@@ -80,7 +80,7 @@
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addBundleProductToCart">
             <argument name="productName" value="$bundleProduct.name$"/>
         </actionGroup>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addSimpleProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addSimpleProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
         <!--Place order.-->

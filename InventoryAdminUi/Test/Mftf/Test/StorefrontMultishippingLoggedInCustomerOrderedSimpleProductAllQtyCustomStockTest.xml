@@ -62,7 +62,7 @@
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
             <argument name="Customer" value="$customer$" />
         </actionGroup>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addSimpleProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addSimpleProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
         <!--Proceed to multi shipping and place order.-->
