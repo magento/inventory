@@ -51,7 +51,7 @@
         </actionGroup>
         <!-- Add simple product to shopping cart -->
         <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
             <argument name="productCount" value="1"/>
         </actionGroup>

@@ -50,7 +50,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Add simple product to shopping cart -->
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
         <!--Place order.-->

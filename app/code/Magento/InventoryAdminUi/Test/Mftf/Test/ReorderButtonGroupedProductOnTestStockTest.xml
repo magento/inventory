@@ -71,7 +71,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Add grouped product to shopping cart -->
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addGroupedProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addGroupedProductToCart">
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
         <!--Place order.-->
