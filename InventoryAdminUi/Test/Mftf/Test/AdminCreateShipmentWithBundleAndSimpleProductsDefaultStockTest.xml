@@ -51,7 +51,7 @@
         <!--Set default source quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openSimpleProductEditPage"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQtyBySourceCode(_defaultSource.source_code)}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Add simple product to bundle.-->
         <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
         <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>

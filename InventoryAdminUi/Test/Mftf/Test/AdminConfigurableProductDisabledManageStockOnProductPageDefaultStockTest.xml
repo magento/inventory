@@ -119,8 +119,8 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGrid"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterBlueConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGrid"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterBlueConfigurableVariation">
             <argument name="product" value="colorProductAttribute3"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editBlueConfigurableVariation"/>
@@ -130,7 +130,7 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToEditRedConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoadToFindRedConfigurableVariation"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterProductGridToFindConfigurableRedVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterProductGridToFindConfigurableRedVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariation"/>
@@ -145,8 +145,8 @@
         <comment userInput="Set 'Manage Stock' to no for configurable children" stepKey="setManageStockToNoForConfigurableChildrenComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToSetManageStockToNoForChildren"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoadedToSetManageStockToNoForChildren"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridToSetManageStockToNoForBlue"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterBlueConfigurableVariationToSetManageStockToNoForBlue">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridToSetManageStockToNoForBlue"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterBlueConfigurableVariationToSetManageStockToNoForBlue">
             <argument name="product" value="colorProductAttribute3"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editBlueConfigurableVariationToSetManageStockToNoForBlue"/>
@@ -156,8 +156,8 @@
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetManageStockToNoForBlue"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseToSetManageStockToNoForBlue"/>
 
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridToSetManageStockToNoForRed"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterRedConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridToSetManageStockToNoForRed"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterRedConfigurableVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariationToSetManageStockToNoForRed"/>

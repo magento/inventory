@@ -38,7 +38,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="deleteProductBySku" stepKey="deleteCreatedConfigurableProduct">
+            <actionGroup ref="DeleteProductBySkuActionGroup" stepKey="deleteCreatedConfigurableProduct">
                 <argument name="sku" value="{{ConfigurableMsiProduct.sku}}"/>
             </actionGroup>
             <!--Disable additional source.-->
@@ -99,14 +99,14 @@
         <!--Disable white configurable option.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterWhiteConfigurableVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterWhiteConfigurableVariation">
             <argument name="product" value="colorProductAttribute1"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editWhiteConfigurableVariation"/>
         <click selector="{{AdminProductFormSection.enableProductLabel}}" stepKey="disableProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
         <!--Set 'Out of Stock' red configurable option.-->
-        <actionGroup ref="filterProductGridByName" stepKey="filterRedConfigurableVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterRedConfigurableVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editRedConfigurableVariation"/>

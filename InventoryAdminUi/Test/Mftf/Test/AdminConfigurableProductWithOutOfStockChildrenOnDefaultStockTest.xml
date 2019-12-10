@@ -91,7 +91,7 @@
         <!--Set to "Out Of Stock" configurable option.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterWhiteConfigurableVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterWhiteConfigurableVariation">
             <argument name="product" value="colorProductAttribute1"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editWhiteConfigurableVariation"/>

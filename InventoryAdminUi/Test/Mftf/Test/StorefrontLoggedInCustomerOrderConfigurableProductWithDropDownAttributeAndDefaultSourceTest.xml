@@ -59,7 +59,7 @@
             <!--Assign additional source to configurable product.-->
             <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct.id$)}}" stepKey="openProductEditPage"/>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceQuantity"/>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>

@@ -89,7 +89,7 @@
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
             <argument name="sourceName" value="$$createSource.source[name]$$"/>
         </actionGroup>
-        <actionGroup ref="saveProductForm" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>

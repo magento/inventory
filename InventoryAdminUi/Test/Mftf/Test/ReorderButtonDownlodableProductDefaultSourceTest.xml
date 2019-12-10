@@ -57,7 +57,7 @@
             <argument name="qty" value="1" />
         </actionGroup>
 
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>

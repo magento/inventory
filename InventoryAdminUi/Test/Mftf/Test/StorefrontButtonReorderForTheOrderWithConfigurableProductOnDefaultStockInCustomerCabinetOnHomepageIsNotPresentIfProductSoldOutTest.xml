@@ -94,7 +94,7 @@
         </actionGroup>
 
         <!-- Save configurable product -->
-        <actionGroup ref="saveProductForm" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
 
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
