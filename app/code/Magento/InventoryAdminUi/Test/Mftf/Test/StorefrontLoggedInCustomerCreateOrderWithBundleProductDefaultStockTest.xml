@@ -72,7 +72,7 @@
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="visitAdminProductPageBundle"/>
         <waitForPageLoad stepKey="waitForProductPageLoadBundle"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateBundleProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateBundleProduct">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="searchAndSelectCategory"/>

@@ -72,7 +72,7 @@
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateConfigurableProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <actionGroup ref="fillMainProductForm" stepKey="fillProductForm">

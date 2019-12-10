@@ -46,7 +46,7 @@
 
             <!--Go to product page-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
-            <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage">
+            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
                 <argument name="product" value="SimpleMsiProduct"/>
             </actionGroup>
             <actionGroup ref="FillMainProductFormInMultiSourceModeActionGroup" stepKey="fillMainProductFieldsInAdmin">

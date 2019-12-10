@@ -42,7 +42,7 @@
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndex"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
         <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridColumnsInitial"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProduct">
             <argument name="product" value="GroupedProduct"/>
         </actionGroup>
         <actionGroup ref="fillGroupedProductForm" stepKey="fillProductForm">

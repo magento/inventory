@@ -44,7 +44,7 @@
 
             <!--Go to product page-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
-            <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage">
+            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
                 <argument name="product" value="VirtualMsiProduct"/>
             </actionGroup>
             <fillField selector="{{AdminProductFormSection.productName}}" userInput="{{VirtualMsiProduct.name}}" stepKey="fillProductName"/>
