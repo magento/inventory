@@ -15,8 +15,8 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="store_pickup"/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/1063873/scenarios/3732304" />
         </annotations>
-
         <before>
             <!--Set Distance Provider for Distance Based SSA to offline-->
             <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
@@ -66,7 +66,6 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
-
         <!--Add product to cart.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$customer$"/>
