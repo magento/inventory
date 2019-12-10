@@ -35,21 +35,21 @@
         <remove keyForRemoval="checkOrderPlaceSuccessMessage"/>
 
         <!--- Place order via Admin -->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">
             <argument name="customer" value="MsiCustomer1"/>
             <argument name="storeView" value="customStore"/>
         </actionGroup>
         <waitForPageLoad time="20" stepKey="waitForPageLoad" after="createNewOrderForCustomer"/>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addSimpleProductToOrder" after="waitForPageLoad">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder" after="waitForPageLoad">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="productQty" value="5"/>
         </actionGroup>
-        <actionGroup ref="fillOrderCustomerInformation" stepKey="fillCustomerInfo" after="addSimpleProductToOrder">
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerInfo" after="addSimpleProductToOrder">
             <argument name="customer" value="MsiCustomer1"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
         <waitForPageLoad time="20" stepKey="waitForPageLoadOrder" after="fillCustomerInfo"/>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRateShipping" after="waitForPageLoadOrder"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping" after="waitForPageLoadOrder"/>
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder" after="selectFlatRateShipping"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." after="clickSubmitOrder" stepKey="seeSuccessMessageOrderPlaced"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber" after="seeSuccessMessageOrderPlaced"/>

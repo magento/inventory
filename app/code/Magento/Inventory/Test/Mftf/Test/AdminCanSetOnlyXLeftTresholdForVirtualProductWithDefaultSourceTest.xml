@@ -87,7 +87,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
@@ -96,7 +96,7 @@
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
 
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToOrder">
             <argument name="product" value="$$virtualProduct1$$"/>
         </actionGroup>
 

@@ -76,14 +76,14 @@
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <comment userInput="Create order with virtual product from admin area." stepKey="createOrderWithVirtualProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad20"/>
 
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToOrder">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
