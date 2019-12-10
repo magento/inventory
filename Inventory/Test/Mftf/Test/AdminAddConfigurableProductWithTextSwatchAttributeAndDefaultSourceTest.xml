@@ -141,7 +141,7 @@
 
         <!--@TODO Move cleanup to "after" when MQE-830 is resolved-->
         <comment userInput="Clean up configurable product" stepKey="cleanUpConfigurableProduct"/>
-        <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteConfigurableProduct">
+        <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteConfigurableProduct">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
     </test>

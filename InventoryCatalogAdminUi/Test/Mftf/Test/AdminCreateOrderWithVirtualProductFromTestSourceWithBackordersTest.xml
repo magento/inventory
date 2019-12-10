@@ -75,7 +75,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteCreatedProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteCreatedProduct">
                 <argument name="product" value="VirtualMsiProduct"/>
             </actionGroup>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>

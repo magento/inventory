@@ -60,7 +60,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
 
             <comment userInput="Clean up bundle product." stepKey="cleanUpBundleProductComment"/>
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteBundleProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteBundleProduct">
                 <argument name="product" value="BundleProduct"/>
             </actionGroup>
 
