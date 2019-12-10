@@ -54,7 +54,7 @@
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
 
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct1">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct1">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
@@ -72,7 +72,7 @@
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid1"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct2">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2">
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
 

@@ -20,7 +20,7 @@
         </annotations>
 
         <!--Create partial invoice.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToInvoice">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToInvoice">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>

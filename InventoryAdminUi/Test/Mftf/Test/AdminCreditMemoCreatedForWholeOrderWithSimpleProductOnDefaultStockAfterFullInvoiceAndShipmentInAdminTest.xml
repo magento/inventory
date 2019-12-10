@@ -68,7 +68,7 @@
             <argument name="stockQty" value="{{productWithThousandQtyBoughtWith5Pieces.value}}"/>
         </actionGroup>
         <!--Create Shipment-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToCreateShipment">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateShipment">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>

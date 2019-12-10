@@ -104,7 +104,7 @@
 
         <!--Admin Area Process and Verify Partial Invoice-->
         <comment userInput="Admin - Process Partial invoice" stepKey="PartialInvoice"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>

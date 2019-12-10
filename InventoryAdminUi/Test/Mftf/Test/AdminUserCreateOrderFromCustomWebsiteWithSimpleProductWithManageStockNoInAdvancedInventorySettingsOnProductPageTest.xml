@@ -77,7 +77,7 @@
 
         <!-- Assign product to custom website -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct1">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct1">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
 

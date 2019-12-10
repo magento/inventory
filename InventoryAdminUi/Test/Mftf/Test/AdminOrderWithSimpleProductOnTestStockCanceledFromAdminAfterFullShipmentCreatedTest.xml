@@ -35,7 +35,7 @@
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="goToProductIndexPage" before="newOrder"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct" after="goToProductIndexPage">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct" after="goToProductIndexPage">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
         <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct" stepKey="openSecondProductForEdit"/>
