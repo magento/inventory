@@ -56,7 +56,7 @@
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid2"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct2">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2">
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
 

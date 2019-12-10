@@ -56,7 +56,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Create Partial Shipment-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToCreateShipment">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateShipment">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminCreateShipmentFromOrderPage" stepKey="shipOrder">
@@ -78,7 +78,7 @@
             <argument name="stockQty" value="{{productWithThousandQtyBoughtWith10Pieces.value}}"/>
         </actionGroup>
         <!--Admin Area Process Full Invoice-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToCreateInvoice">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateInvoice">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="StartCreateInvoiceFromOrderPage" stepKey="startCreateInvoice"/>

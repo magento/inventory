@@ -55,7 +55,7 @@
         <click selector="body" stepKey="clickBodyToCorrectFocusGrouped"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroupToAddSimpleProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
-        <actionGroup ref="filterProductGridBySku2" stepKey="filterGroupedProductsToFindSimpleProduct">
+        <actionGroup ref="FilterProductGridBySku2ActionGroup" stepKey="filterGroupedProductsToFindSimpleProduct">
             <argument name="sku" value="$$simpleProduct.sku$$"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
@@ -64,7 +64,7 @@
         <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="addSimpleProduct"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroupToAddVirtualProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
-        <actionGroup ref="filterProductGridBySku2" stepKey="filterGroupedProductsToFindVirtualProduct">
+        <actionGroup ref="FilterProductGridBySku2ActionGroup" stepKey="filterGroupedProductsToFindVirtualProduct">
             <argument name="sku" value="$$virtualProduct.sku$$"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>

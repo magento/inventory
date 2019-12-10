@@ -56,7 +56,7 @@
 
         <!-- assign first simple product to custom source -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="goToProductIndexPage"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct" after="goToProductIndexPage">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct" after="goToProductIndexPage">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
         <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct" stepKey="openSecondProductForEdit"/>
@@ -68,7 +68,7 @@
 
         <!-- assign second simple product to custom source -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="goToProductIndexPage2"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct2" after="goToProductIndexPage2">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2" after="goToProductIndexPage2">
             <argument name="product" value="$$simpleProduct2$$"/>
         </actionGroup>
         <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct2" stepKey="openSecondProductForEdit2"/>
