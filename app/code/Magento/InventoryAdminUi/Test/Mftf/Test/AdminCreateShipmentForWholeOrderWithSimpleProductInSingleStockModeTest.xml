@@ -29,7 +29,7 @@
             <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>
             <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickAddProductDropDown"/>
             <click selector="{{AdminProductGridActionSection.addSimpleProduct}}" stepKey="clickAddSimpleProduct"/>
-            <actionGroup ref="fillMainProductForm" stepKey="fillSimpleProductMain">
+            <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillSimpleProductMain">
                 <argument name="product" value="SimpleProduct"/>
             </actionGroup>
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
