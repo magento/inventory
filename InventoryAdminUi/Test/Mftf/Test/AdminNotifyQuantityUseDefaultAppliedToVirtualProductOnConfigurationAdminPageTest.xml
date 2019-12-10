@@ -81,7 +81,7 @@
 
         <comment userInput="Create Virtual product with custom source." stepKey="createVirtualProductComment1"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGrid1"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="navigateToCreateProductPage1">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="navigateToCreateProductPage1">
             <argument name="product" value="VirtualMsiProduct"/>
         </actionGroup>
 

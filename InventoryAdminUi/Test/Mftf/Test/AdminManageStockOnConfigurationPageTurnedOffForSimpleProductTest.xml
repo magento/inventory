@@ -69,7 +69,7 @@
 
         <comment userInput="Create simple product with custom source." stepKey="createSimpleProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPage"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateSimpleProductPage">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateSimpleProductPage">
             <argument name="product" value="SimpleMsiProduct"/>
         </actionGroup>
         <fillField userInput="{{SimpleMsiProduct.name}}" selector="{{AdminProductFormSection.productName}}" stepKey="fillProductName"/>

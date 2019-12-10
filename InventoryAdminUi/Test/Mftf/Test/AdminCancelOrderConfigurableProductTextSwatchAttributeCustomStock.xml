@@ -42,7 +42,7 @@
             <!--Start creating configurable product.-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
             <waitForPageLoad stepKey="waitForProductGridPageLoad"/>
-            <actionGroup ref="goToCreateProductPage" stepKey="createConfigurableProduct">
+            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="createConfigurableProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <!--Fill main product fields.-->
