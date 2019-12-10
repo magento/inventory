@@ -57,7 +57,7 @@
         <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateBundleProduct">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
-        <actionGroup ref="fillProductNameAndSkuInProductForm" stepKey="fillBundleProductNameAndSku">
+        <actionGroup ref="FillProductNameAndSkuInProductFormActionGroup" stepKey="fillBundleProductNameAndSku">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
 

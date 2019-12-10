@@ -40,7 +40,7 @@
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
-        <actionGroup ref="fillProductNameAndSkuInProductForm" stepKey="fillBundleProductNameAndSku">
+        <actionGroup ref="FillProductNameAndSkuInProductFormActionGroup" stepKey="fillBundleProductNameAndSku">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
 
