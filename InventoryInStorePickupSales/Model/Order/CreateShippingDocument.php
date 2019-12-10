@@ -12,9 +12,9 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\ShipOrderInterface;
 
 /**
- * Create shipment for provided order.
+ * Create shipping document for provided order.
  */
-class CreateShipment
+class CreateShippingDocument
 {
     /**
      * @var IsOrderReadyForPickupInterface

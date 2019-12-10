@@ -10,9 +10,8 @@ namespace Magento\InventoryInStorePickupSales\Model;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupSales\Model\Order\AddStorePickupAttributesToOrder;
-use Magento\InventoryInStorePickupSales\Model\Order\CreateShipment;
+use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingDocument;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
-use Magento\InventoryInStorePickupSales\Model\Order\setOrderStatus;
 use Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
@@ -56,9 +55,9 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
     private $searchCriteriaBuilder;
 
     /**
-     * @var CreateShipment
+     * @var CreateShippingDocument
      */
-    private $createShipment;
+    private $createShippingDocument;
 
     /**
      * @var LoggerInterface
@@ -72,7 +71,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
      * @param ResultInterfaceFactory $resultFactory
      * @param ShipmentRepositoryInterface $shipmentRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param CreateShipment $createShipment
+     * @param CreateShippingDocument $createShippingDocument
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -82,7 +81,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         ResultInterfaceFactory $resultFactory,
         ShipmentRepositoryInterface $shipmentRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        CreateShipment $createShipment,
+        CreateShippingDocument $createShippingDocument,
         LoggerInterface $logger
     ) {
         $this->emailNotifier = $emailNotifier;
@@ -91,7 +90,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
         $this->resultFactory = $resultFactory;
         $this->shipmentRepository = $shipmentRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->createShipment = $createShipment;
+        $this->createShippingDocument = $createShippingDocument;
         $this->logger = $logger;
     }
 
@@ -114,7 +113,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
                 $shipments = $this->shipmentRepository->getList($searchCriteria->create());
                 $isShipmentCreated = $shipments->getTotalCount() > 0;
                 if ($isShipmentCreated === false) {
-                    $this->createShipment->execute($order);
+                    $this->createShippingDocument->execute($order);
                 }
 
                 $this->emailNotifier->notify($order);
