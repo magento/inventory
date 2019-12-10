@@ -63,27 +63,12 @@ define([
          * @return {exports}
          */
         initialize: function () {
-            var updateNearbyLocations,
-                postcode,
-                city;
+            var updateNearbyLocations;
 
             this._super();
 
             updateNearbyLocations = _.debounce(function (searchQuery) {
-                postcode = null;
-                city = searchQuery.replace(/(\d+[\-]?\d+)/, function (match) {
-                    postcode = match;
-
-                    return '';
-                });
-
-                this.updateNearbyLocations(
-                    addressConverter.formAddressDataToQuoteAddress({
-                        city: city,
-                        postcode: postcode,
-                        'country_id': quote.shippingAddress().countryId
-                    })
-                );
+                this.updateNearbyLocations(searchQuery);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
 
@@ -159,20 +144,17 @@ define([
         },
 
         /**
-         * @param {Object} address
+         * @param {String} address
          * @returns {*}
          */
-        updateNearbyLocations: function (address) {
+        updateNearbyLocations: function (searchQuery) {
             var self = this;
 
             return pickupLocationsService
                 .getNearbyLocations({
                     area: {
                         radius: this.nearbySearchRadius,
-                        country: this.defaultCountryId,
-                        city: address.city,
-                        postcode: address.postcode,
-                        region: address.region
+                        searchTerm: searchQuery
                     },
                     pageSize: this.nearbySearchLimit
                 })

@@ -235,10 +235,11 @@ define([
                     .getNearbyLocations({
                         area: {
                             radius: this.nearbySearchRadius,
-                            country: shippingAddress.countryId || this.defaultCountry,
-                            postcode: shippingAddress.postcode,
-                            city: shippingAddress.city,
-                            region: shippingAddress.region
+                            searchTerm: shippingAddress.postcode
+                            // country: shippingAddress.countryId || this.defaultCountry,
+                            // postcode: shippingAddress.postcode,
+                            // city: shippingAddress.city,
+                            // region: shippingAddress.region
                         },
                         pageSize: this.nearbySearchLimit
                     })

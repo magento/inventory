@@ -166,39 +166,9 @@ class SearchRequestBuilder implements SearchRequestBuilderInterface
     /**
      * @inheritdoc
      */
-    public function setDistanceFilterPostcode(string $postcode): SearchRequestBuilderInterface
+    public function setAreaSearchTerm(string $searchTerm): SearchRequestBuilderInterface
     {
-        $this->areaBuilder->setPostcode($postcode);
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setDistanceFilterCity(string $city): SearchRequestBuilderInterface
-    {
-        $this->areaBuilder->setCity($city);
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setDistanceFilterRegion(string $region): SearchRequestBuilderInterface
-    {
-        $this->areaBuilder->setRegion($region);
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setDistanceFilterCountry(string $country): SearchRequestBuilderInterface
-    {
-        $this->areaBuilder->setCountry($country);
+        $this->areaBuilder->setSearchTerm($searchTerm);
 
         return $this;
     }

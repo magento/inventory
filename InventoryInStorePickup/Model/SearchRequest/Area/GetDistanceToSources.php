@@ -85,11 +85,7 @@ class GetDistanceToSources
      */
     private function getKey(AreaInterface $area): string
     {
-        return $area->getRadius() .
-            $area->getCountry() .
-            $area->getRegion() .
-            $area->getCity() .
-            $area->getPostcode();
+        return $area->getRadius() . $area->getSearchTerm();
     }
 
     /**
@@ -121,11 +117,18 @@ class GetDistanceToSources
      */
     private function toSourceSelectionAddress(AreaInterface $area)
     {
+
+        // postcode = null;
+        // city = searchQuery.replace(/(\d+[\-]?\d+)/, function (match) {
+        //     postcode = match;
+        //
+        //     return '';
+        // });
         $data = [
-            'country' => $area->getCountry(),
-            'postcode' => $area->getPostcode() ?? '',
-            'region' => $area->getRegion() ?? '',
-            'city' => $area->getCity() ?? '',
+            'country' => 'US',
+            'postcode' => $area->getSearchTerm() ?? '',
+            'region' => '',
+            'city' => '',
             'street' => ''
         ];
 

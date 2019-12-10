@@ -16,10 +16,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterfaceFactor
 class AreaBuilder
 {
     private const RADIUS = 'radius';
-    private const COUNTRY = 'country';
-    private const CITY = 'city';
-    private const REGION = 'region';
-    private const POSTCODE = 'postcode';
+    private const SEARCH_TERM = 'search_term';
 
     /**
      * Filter data.
@@ -55,7 +52,7 @@ class AreaBuilder
     }
 
     /**
-     * Set Radius for Distance Filter.
+     * Set area Radius.
      *
      * @param int $radius
      *
@@ -68,54 +65,15 @@ class AreaBuilder
     }
 
     /**
-     * Set Postcode for Distance Filter.
+     * Set area search term.
      *
-     * @param string $postcode
-     *
-     * @return self
-     */
-    public function setPostcode(string $postcode): self
-    {
-        $this->data[self::POSTCODE] = $postcode;
-        return $this;
-    }
-
-    /**
-     * Set City for Distance filter.
-     *
-     * @param string $city
+     * @param string $searchTerm
      *
      * @return self
      */
-    public function setCity(string $city): self
+    public function setSearchTerm(string $searchTerm): self
     {
-        $this->data[self::CITY] = $city;
-        return $this;
-    }
-
-    /**
-     * Set Region for Distance filter.
-     *
-     * @param string $region
-     *
-     * @return self
-     */
-    public function setRegion(string $region): self
-    {
-        $this->data[self::REGION] = $region;
-        return $this;
-    }
-
-    /**
-     * Set Country for Distance filter.
-     *
-     * @param string $country
-     *
-     * @return self
-     */
-    public function setCountry(string $country): self
-    {
-        $this->data[self::COUNTRY] = $country;
+        $this->data[self::SEARCH_TERM] = $searchTerm;
         return $this;
     }
 }
