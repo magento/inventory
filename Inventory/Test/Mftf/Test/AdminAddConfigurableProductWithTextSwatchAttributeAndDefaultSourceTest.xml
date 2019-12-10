@@ -132,7 +132,7 @@
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
 
-        <actionGroup ref="AssertProductNameAndSkuInStorefrontProductPage" stepKey="assertProductInStorefront2">
+        <actionGroup ref="AssertProductNameAndSkuInStorefrontProductPageActionGroup" stepKey="assertProductInStorefront2">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <!-- Assert product text swatch -->
