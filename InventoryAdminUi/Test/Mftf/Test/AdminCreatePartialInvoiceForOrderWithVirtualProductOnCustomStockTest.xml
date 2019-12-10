@@ -91,18 +91,18 @@
 
         <!--Create Order with Virtual product from Admin-->
         <comment userInput="Create order with Virtual product from admin area." stepKey="createOrderWithSimpleProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
         <waitForPageLoad time="20" stepKey="waitForPageLoad"/>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToOrder">
             <argument name="product" value="$$virtualProduct$$"/>
         </actionGroup>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToOrder2">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToOrder2">
             <argument name="product" value="$$virtualProduct$$"/>
         </actionGroup>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToOrder3">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToOrder3">
             <argument name="product" value="$$virtualProduct$$"/>
         </actionGroup>
         <waitForPageLoad time="10" stepKey="waitForPageLoadOrder"/>

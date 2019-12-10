@@ -61,11 +61,11 @@
 
         <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="navigateToNewOrderWithExistingCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToTheOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToTheOrder">
             <argument name="product" value="$$virtualProduct$$"/>
         </actionGroup>
 

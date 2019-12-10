@@ -21,7 +21,7 @@
         </annotations>
 
         <!-- Invoice the order and assert the status -->
-        <actionGroup ref="goToInvoiceIntoOrder" stepKey="goToInvoiceIntoOrderPage" before="cancelPendingOrder" />
+        <actionGroup ref="GoToInvoiceIntoOrderActionGroup" stepKey="goToInvoiceIntoOrderPage" before="cancelPendingOrder" />
         <fillField selector="{{AdminInvoiceItemsSection.qtyToInvoiceColumn}}" after="goToInvoiceIntoOrderPage" userInput="2" stepKey="ChangeQtyToInvoice"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="updateQuantity" after="ChangeQtyToInvoice"/>
         <waitForPageLoad time="20" stepKey="WaitForInvoiceQtyUpdate" after="updateQuantity"/>

@@ -49,17 +49,17 @@
         </after>
 
         <!--Create order with all simple product quantity.-->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$customer$"/>
         </actionGroup>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">
             <argument name="product" value="$product$"/>
             <argument name="productQty" value="{{productWithThousandQty.value}}"/>
         </actionGroup>
         <dontSeeElement selector="{{AdminOrderFormItemsSection.itemError}}" stepKey="verifyNoErrorsOccurred"/>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRateShipping"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
         <actionGroup ref="SelectCheckMoneyPaymentMethod" stepKey="selectCheckMoneyPayment"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
-        <actionGroup ref="verifyCreatedOrderInformation" stepKey="verifyCreatedOrderInformation"/>
+        <actionGroup ref="VerifyCreatedOrderInformationActionGroup" stepKey="verifyCreatedOrderInformation"/>
     </test>
 </tests>

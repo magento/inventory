@@ -77,7 +77,7 @@
         <actionGroup ref="AdminSubmitAdvancedInventoryFormActionGroup" stepKey="clickDoneBtn"/>
         <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="newOrder">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
@@ -90,7 +90,7 @@
         <click selector="{{AdminOrderFormItemsSection.updateItemsAndQuantities}}" stepKey="clickUpdateItemsAndQuantitiesButton"/>
         <waitForPageLoad  stepKey="waitForPageLoad3"/>
 
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRate"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
 
         <magentoCLI command="cache:flush" stepKey="flushCache2"/>

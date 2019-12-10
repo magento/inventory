@@ -99,7 +99,7 @@
         <actionGroup ref="saveProductForm" stepKey="saveConfigurableProduct"/>
 
         <!-- Create order -->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="newOrder">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AdminFilterProductInCreateOrderActionGroup" stepKey="filterConfigProduct">
@@ -115,7 +115,7 @@
                       value="$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
             <argument name="quantity" value="5"/>
         </actionGroup>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRate"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
         <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>

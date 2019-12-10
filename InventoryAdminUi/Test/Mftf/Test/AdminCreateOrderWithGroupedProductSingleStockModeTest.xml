@@ -77,7 +77,7 @@
 
         <!--Create Order with Grouped product from Admin-->
         <comment userInput="Create order with grouped product from admin area." stepKey="createOrderWithGroupedProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent1"/>
@@ -95,7 +95,7 @@
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitForPageLoadVirtualCreate"/>
         <comment userInput="Select shipping method and check grand total and shipping cost." stepKey="selectShippingMethodComment"/>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRateShipping"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
         <comment userInput="Submit order." stepKey="submitOrderComment"/>
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
         <seeElement selector="{{AdminOrderDetailsMessagesSection.successMessage}}" stepKey="seeSuccessMessage"/>

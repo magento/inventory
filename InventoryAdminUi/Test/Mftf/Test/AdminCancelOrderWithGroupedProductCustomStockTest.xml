@@ -67,7 +67,7 @@
         </actionGroup>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedGroupedProduct"/>
         <!--Create order with grouped product.-->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent1"/>

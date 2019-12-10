@@ -165,7 +165,7 @@
         <click selector="#order-search .action-add" stepKey="clickOnAddSelectedProductsToOrder1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad19"/>
 
-        <actionGroup ref="fillOrderCustomerInformation" stepKey="fillCustomerAddress">
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerAddress">
             <argument name="customer" value="$$createCustomer1$$"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
