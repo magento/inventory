@@ -59,7 +59,7 @@
             </actionGroup>
         </before>
         <after>
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
