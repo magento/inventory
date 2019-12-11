@@ -59,7 +59,7 @@
         <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct" after="goToProductIndexPage">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct" stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup" after="filterProduct" stepKey="openSecondProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" after="openSecondProductForEdit">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
@@ -71,7 +71,7 @@
         <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2" after="goToProductIndexPage2">
             <argument name="product" value="$$simpleProduct2$$"/>
         </actionGroup>
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct2" stepKey="openSecondProductForEdit2"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup" after="filterProduct2" stepKey="openSecondProductForEdit2"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct2" after="openSecondProductForEdit2">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>

@@ -58,7 +58,7 @@
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openFirstProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openFirstProductForEdit"/>
 
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
@@ -76,13 +76,13 @@
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openSecondProductForEdit"/>
 
         <actionGroup ref="AdminAssignProductToGroupActionGroup" stepKey="addFirstSimpleToGroup">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>

@@ -37,7 +37,7 @@
         <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct" after="goToProductIndexPage">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct" stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup" after="filterProduct" stepKey="openSecondProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" after="openSecondProductForEdit">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
