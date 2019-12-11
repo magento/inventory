@@ -46,7 +46,7 @@
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <!--Fill main product fields.-->
-            <actionGroup ref="fillMainProductFormNoWeight" stepKey="fillMainProductForm">
+            <actionGroup ref="FillMainProductFormNoWeightActionGroup" stepKey="fillMainProductForm">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <!--Generate variations.-->
@@ -54,7 +54,7 @@
                 <argument name="attributeCode" value="{{ProductColorAttribute.attribute_code}}"/>
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveConfigurableProduct" stepKey="saveConfigurable">
+            <actionGroup ref="SaveConfigurableProductActionGroup" stepKey="saveConfigurable">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToConfigurableProduct">
