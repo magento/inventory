@@ -106,7 +106,7 @@
             <argument name="phrase" value="$createBundleProduct.name$"/>
         </actionGroup>
 
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="openAndCheckProduct">
+        <actionGroup ref="StorefrontOpenProductFromQuickSearchActionGroup" stepKey="openAndCheckProduct">
             <argument name="productName" value="$createBundleProduct.name$"/>
             <argument name="productUrlKey" value="$createBundleProduct.custom_attributes[url_key]$"/>
         </actionGroup>
