@@ -78,7 +78,7 @@
 
         <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openSecondProductForEdit"/>
 
-        <actionGroup ref="AdminAssignProductToGroup" stepKey="addFirstSimpleToGroup">
+        <actionGroup ref="AdminAssignProductToGroupActionGroup" stepKey="addFirstSimpleToGroup">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
