@@ -56,7 +56,7 @@
                         stepKey="displayOutOfStockNo"/>
         </after>
 
-        <actionGroup ref="goToProductPageViaID" stepKey="goToProduct1">
+        <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createSimpleProduct.id$"/>
         </actionGroup>
         <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock"
