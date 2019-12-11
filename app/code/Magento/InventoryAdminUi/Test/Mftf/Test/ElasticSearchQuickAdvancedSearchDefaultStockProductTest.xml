@@ -63,7 +63,7 @@
             <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <!--Revert ElasticSearch as search engine.-->
-            <actionGroup ref="ResetSearchEngineConfiguration" stepKey="resetCatalogSearchConfiguration"/>
+            <actionGroup ref="ResetSearchEngineConfigurationActionGroup" stepKey="resetCatalogSearchConfiguration"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
@@ -74,7 +74,7 @@
             <argument name="phrase" value="$$simpleProduct1.name$$"/>
         </actionGroup>
         <!--Verify searched product.-->
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="verifyFoundProduct">
+        <actionGroup ref="StorefrontOpenProductFromQuickSearchActionGroup" stepKey="verifyFoundProduct">
             <argument name="productName" value="$$simpleProduct1.name$$"/>
             <argument name="productUrlKey" value="$$simpleProduct1.custom_attributes[url_key]$$"/>
         </actionGroup>

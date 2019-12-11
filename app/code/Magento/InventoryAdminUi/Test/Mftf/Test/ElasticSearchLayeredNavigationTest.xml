@@ -63,7 +63,7 @@
             <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <!--Revert ElasticSearch as search engine.-->
-            <actionGroup ref="ResetSearchEngineConfiguration" stepKey="resetCatalogSearchConfiguration"/>
+            <actionGroup ref="ResetSearchEngineConfigurationActionGroup" stepKey="resetCatalogSearchConfiguration"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
