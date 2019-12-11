@@ -69,7 +69,7 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
-        <actionGroup ref="cancelPendingOrder" stepKey="cancelOrder"/>
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelOrder"/>
         <!--Add downloadable product to cart with improper quantity.-->
         <amOnPage url="{{StorefrontProductPage.url($product.custom_attributes[url_key]$)}}" stepKey="goToPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{101ProductQty.value}}" stepKey="fillQuantity"/>

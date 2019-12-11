@@ -113,7 +113,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
 
-        <actionGroup ref="filterOrderGridById" stepKey="filterByOrderId">
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterByOrderId">
             <argument name="orderId" value="$orderNumber"/>
         </actionGroup>
 
