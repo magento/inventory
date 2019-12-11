@@ -16,9 +16,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/magento2/issues/23940"/>
-            </skip>
         </annotations>
 
         <before>
@@ -37,6 +34,8 @@
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         </before>
         <after>
             <!--Disable additional source.-->
@@ -86,7 +85,7 @@
         <actionGroup ref="OpenOrderById" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
-        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1.5')}}" stepKey="waitForViewOrderedQuantity"/>
-        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1.5')}}" userInput="Ordered 1.5" stepKey="verifyOrderedQty"/>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 1.5" stepKey="verifyOrderedQty"/>
     </test>
 </tests>

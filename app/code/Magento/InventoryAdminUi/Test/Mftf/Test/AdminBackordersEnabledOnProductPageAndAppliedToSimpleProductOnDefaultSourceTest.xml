@@ -80,7 +80,8 @@
             <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetOutOfStockThreshold"/>
 
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
-            <waitForPageLoad time="30" stepKey="waitForProductFormSaved"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
             <comment userInput="Disable created source." stepKey="disableCreatedSourceComment"/>
