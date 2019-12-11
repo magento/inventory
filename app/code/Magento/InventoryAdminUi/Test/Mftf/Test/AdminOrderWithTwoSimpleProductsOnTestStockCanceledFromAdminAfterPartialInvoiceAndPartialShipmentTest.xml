@@ -101,7 +101,7 @@
         <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('2')}}" after="ChangeQtyToInvoice" userInput="3" stepKey="ChangeQtyToInvoice2"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="updateQuantity" after="ChangeQtyToInvoice2"/>
         <waitForPageLoad time="20" stepKey="WaitForInvoiceQtyUpdate" after="updateQuantity"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
 
         <!-- Ship the order -->
         <actionGroup ref="goToShipmentIntoOrder" stepKey="goToShipment"  after="submitInvoice"/>

@@ -70,7 +70,7 @@
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." stepKey="verifyOrderHasBeenPlaced"/>
         <!--Cancel created order-->
-        <actionGroup ref="cancelPendingOrder" stepKey="cancelOrder"/>
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelOrder"/>
         <!--Verify virtual product quantity.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">

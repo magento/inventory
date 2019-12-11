@@ -107,12 +107,12 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
 
-        <actionGroup ref="filterOrderGridById" stepKey="filterByOrderId">
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterByOrderId">
             <argument name="orderId" value="$orderNumber"/>
         </actionGroup>
         <click selector="{{AdminDataGridTableSection.firstRow}}" stepKey="clickOrderRow"/>
-        <actionGroup ref="StartCreateInvoiceFromOrderPage" stepKey="startCreateInvoice"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <see selector="{{AdminMessagesSection.successMessage}}" userInput="The invoice has been created." stepKey="seeInvoiceCreateSuccess"/>
     </test>
 </tests>

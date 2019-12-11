@@ -71,7 +71,7 @@
 
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
 
-        <actionGroup ref="cancelPendingOrder" stepKey="cancelOrder"/>
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelOrder"/>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySkuToCheckQtyAfterPlaceOrder">

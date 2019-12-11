@@ -28,7 +28,7 @@
         <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="1" stepKey="InvoiceQuantityPartial"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="clickUpdateQty"/>
         <waitForPageLoad stepKey="waitPageToBeLoaded"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <waitForPageLoad time="60" stepKey="waitForPageLoadSubmitInvoice"/>
         <scrollToTopOfPage stepKey="scrollToTopMessage"/>
         <waitForPageLoad stepKey="waitForPageLoadSuccessMessage"/>

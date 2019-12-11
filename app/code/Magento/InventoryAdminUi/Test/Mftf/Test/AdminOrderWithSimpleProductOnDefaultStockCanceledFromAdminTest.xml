@@ -65,7 +65,7 @@
         <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
 
         <!-- Cancel whole  order from admin -->
-        <actionGroup ref="cancelPendingOrder" stepKey="cancelPendingOrder"/>
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelPendingOrder"/>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQty"/>

@@ -25,7 +25,7 @@
         <fillField selector="{{AdminInvoiceItemsSection.qtyToInvoiceColumn}}" after="goToInvoiceIntoOrderPage" userInput="2" stepKey="ChangeQtyToInvoice"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="updateQuantity" after="ChangeQtyToInvoice"/>
         <waitForPageLoad time="20" stepKey="WaitForInvoiceQtyUpdate" after="updateQuantity"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
 
         <!-- Ship the order and assert the status -->
         <actionGroup ref="goToShipmentIntoOrder" stepKey="goToShipment"  after="submitInvoice"/>
@@ -33,7 +33,7 @@
         <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment" after="ship2Items"/>
 
         <remove keyForRemoval="cancelPendingOrder"/>
-        <actionGroup ref="cancelPendingOrder" stepKey="cancelPendingOrder" after="assertOrderIdIsNotEmpty">
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelPendingOrder" after="assertOrderIdIsNotEmpty">
             <argument name="orderStatus" value="Complete"/>
         </actionGroup>
 
