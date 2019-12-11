@@ -173,7 +173,7 @@
 
         <grabTextFrom selector=".page-title" stepKey="grabTheOrderId1"/>
 
-        <actionGroup ref="verifyBasicOrderInformation" stepKey="verifyOrderInformation">
+        <actionGroup ref="VerifyBasicOrderInformationActionGroup" stepKey="verifyOrderInformation">
             <argument name="customer" value="$$createCustomer1$$"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>
