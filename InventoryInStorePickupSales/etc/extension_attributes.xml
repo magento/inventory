@@ -7,9 +7,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\Sales\Api\Data\ShipmentInterface">
-        <attribute code="is_notified" type="boolean" />
+        <attribute code="is_ready_for_pickup_notified" type="boolean" />
     </extension_attributes>
     <extension_attributes for="Magento\Sales\Api\Data\ShipmentCreationArgumentsInterface">
-        <attribute code="is_notified" type="boolean" />
+        <attribute code="is_ready_for_pickup_notified" type="boolean" />
     </extension_attributes>
 </config>

@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Model\Order;
 
@@ -52,7 +53,7 @@ class CreateShippingArguments
         $extension = $this->argumentExtensionFactory
             ->create()
             ->setSourceCode($order->getExtensionAttributes()->getPickupLocationCode());
-        $extension->setIsNotified(true);
+        $extension->setIsReadyForPickupNotified(true);
         $arguments->setExtensionAttributes($extension);
 
         return $arguments;

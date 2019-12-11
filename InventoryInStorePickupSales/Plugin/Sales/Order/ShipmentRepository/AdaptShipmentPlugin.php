@@ -44,7 +44,7 @@ class AdaptShipmentPlugin
     public function beforeSave(ShipmentRepositoryInterface $subject, ShipmentInterface $shipment): void
     {
         if ($this->isOrderStorePickup->execute((int)$shipment->getOrderId())
-            && !$shipment->getExtensionAttributes()->getIsNotified()
+            && !$shipment->getExtensionAttributes()->getIsReadyForPickupNotified()
         ) {
             throw new LocalizedException(
                 __(
