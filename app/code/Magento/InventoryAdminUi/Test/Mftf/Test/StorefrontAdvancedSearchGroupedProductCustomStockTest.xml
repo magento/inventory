@@ -82,7 +82,7 @@
             <argument name="name" value="$groupedProduct.name$"/>
         </actionGroup>
         <!--Verify searched product by name.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedByName">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedByName">
             <argument name="productName" value="$groupedProduct.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
@@ -92,7 +92,7 @@
             <argument name="sku" value="$groupedProduct.sku$$"/>
         </actionGroup>
         <!--Verify searched product by sku.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedBySku">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedBySku">
             <argument name="productName" value="$groupedProduct.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
