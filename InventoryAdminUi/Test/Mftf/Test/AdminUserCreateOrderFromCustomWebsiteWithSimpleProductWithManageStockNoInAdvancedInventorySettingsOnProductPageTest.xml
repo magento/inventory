@@ -81,7 +81,7 @@
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openFirstProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openFirstProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" >
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>

@@ -65,11 +65,11 @@
         <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkVirtualProductFilterResult"/>
         <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
         <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForSimpleProduct">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForSimpleProduct">
             <argument name="productName" value="$$simpleProduct.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
             <argument name="productName" value="$$virtualProduct.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>

@@ -60,12 +60,12 @@
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openSecondProductForEdit"/>
         <actionGroup ref="AdminAssignProductToGroupActionGroup" stepKey="addFirstSimpleToGroup">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct1">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct1">
             <argument name="productName" value="$$simpleProduct.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
@@ -74,7 +74,7 @@
             <argument name="product" value="$$virtualProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct2">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct2">
             <argument name="productName" value="$$virtualProduct.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
