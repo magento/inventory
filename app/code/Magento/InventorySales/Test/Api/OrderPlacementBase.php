@@ -31,28 +31,28 @@ abstract class OrderPlacementBase extends WebapiAbstract
     /**
      * @var ObjectManagerInterface
      */
-    private $objectManager;
+    protected $objectManager;
 
     /**
      * Registered customer token.
      *
      * @var string
      */
-    private $customerToken;
+    protected $customerToken;
 
     /**
      * Registered or guest customer cart id.
      *
      * @var string
      */
-    private $cartId;
+    protected $cartId;
 
     /**
      * Store code to make request to specific website.
      *
      * @var string
      */
-    private $storeViewCode = 'default';
+    protected $storeViewCode = 'default';
 
     /**
      * @inheritDoc
@@ -215,7 +215,7 @@ abstract class OrderPlacementBase extends WebapiAbstract
      *
      * @return array
      */
-    private function getAddProductServiceInfo(): array
+    protected function getAddProductServiceInfo(): array
     {
         $serviceInfo = [
             'rest' => [
@@ -454,8 +454,8 @@ abstract class OrderPlacementBase extends WebapiAbstract
      */
     public function assignStockToWebsite(int $stockId, string $websiteCode): void
     {
-        $stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);
-        $salesChannelFactory = Bootstrap::getObjectManager()->get(SalesChannelInterfaceFactory::class);
+        $stockRepository = $this->objectManager->get(StockRepositoryInterface::class);
+        $salesChannelFactory = $this->objectManager->get(SalesChannelInterfaceFactory::class);
         $stock = $stockRepository->get($stockId);
         $extensionAttributes = $stock->getExtensionAttributes();
         $salesChannels = $extensionAttributes->getSalesChannels();
@@ -467,5 +467,22 @@ abstract class OrderPlacementBase extends WebapiAbstract
 
         $extensionAttributes->setSalesChannels($salesChannels);
         $stockRepository->save($stock);
+    }
+
+    /**
+     * Cancel order by id.
+     *
+     * @param int $orderId
+     * @return void
+     */
+    public function cancelOrder(int $orderId): void
+    {
+        $serviceInfo = [
+            'rest' => [
+                'resourcePath' => '/V1/orders/' . $orderId . '/cancel',
+                'httpMethod' => Request::HTTP_METHOD_POST,
+            ],
+        ];
+        $this->_webApiCall($serviceInfo, [], null, $this->storeViewCode);
     }
 }

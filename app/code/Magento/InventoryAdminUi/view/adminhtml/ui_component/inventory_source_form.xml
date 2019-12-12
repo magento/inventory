@@ -152,9 +152,6 @@
         </field>
         <field name="fax" formElement="input" sortOrder="40">
             <settings>
-                <validation>
-                    <rule name="validate-fax" xsi:type="boolean">true</rule>
-                </validation>
                 <dataType>text</dataType>
                 <label translate="true">Fax</label>
             </settings>
@@ -183,7 +180,9 @@
                 </select>
             </formElements>
         </field>
-        <field name="region_id" formElement="select" sortOrder="20">
+        <field name="region_id"
+               component="Magento_InventoryAdminUi/js/form/element/region"
+               formElement="select" sortOrder="20">
             <settings>
                 <dataType>text</dataType>
                 <label translate="true">State/Province</label>

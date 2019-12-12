@@ -59,10 +59,24 @@ class SetShippingMethodsOnCartTest extends GraphQlAbstract
         self::assertArrayHasKey('selected_shipping_method', $shippingAddress);
 
         self::assertArrayHasKey('carrier_code', $shippingAddress['selected_shipping_method']);
-        self::assertEquals($carrierCode, $shippingAddress['selected_shipping_method']['carrier_code']);
+        self::assertEquals('flatrate', $shippingAddress['selected_shipping_method']['carrier_code']);
 
         self::assertArrayHasKey('method_code', $shippingAddress['selected_shipping_method']);
-        self::assertEquals($methodCode, $shippingAddress['selected_shipping_method']['method_code']);
+        self::assertEquals('flatrate', $shippingAddress['selected_shipping_method']['method_code']);
+
+        self::assertArrayHasKey('carrier_title', $shippingAddress['selected_shipping_method']);
+        self::assertEquals('Flat Rate', $shippingAddress['selected_shipping_method']['carrier_title']);
+
+        self::assertArrayHasKey('method_title', $shippingAddress['selected_shipping_method']);
+        self::assertEquals('Fixed', $shippingAddress['selected_shipping_method']['method_title']);
+
+        self::assertArrayHasKey('amount', $shippingAddress['selected_shipping_method']);
+        $amount = $shippingAddress['selected_shipping_method']['amount'];
+
+        self::assertArrayHasKey('value', $amount);
+        self::assertEquals(10, $amount['value']);
+        self::assertArrayHasKey('currency', $amount);
+        self::assertEquals('USD', $amount['currency']);
     }
 
     /**
@@ -93,7 +107,9 @@ class SetShippingMethodsOnCartTest extends GraphQlAbstract
     }
 
     /**
-     * @magentoApiDataFixture Magento/GraphQl/Quote/_files/enable_offline_shipping_methods.php
+     * @magentoConfigFixture default_store carriers/flatrate/active 1
+     * @magentoConfigFixture default_store carriers/tablerate/active 1
+     * @magentoConfigFixture default_store carriers/freeshipping/active 1
      * @magentoApiDataFixture Magento/GraphQl/Catalog/_files/simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
@@ -175,11 +191,12 @@ QUERY;
                     carrier_code: "flatrate"
                     method_code: "flatrate"
                 }]',
-                'Required parameter "cart_id" is missing'
+                'Field SetShippingMethodsOnCartInput.cart_id of required type String! was not provided.'
             ],
             'missed_shipping_methods' => [
                 'cart_id: "cart_id_value"',
-                'Required parameter "shipping_methods" is missing'
+                'Field SetShippingMethodsOnCartInput.shipping_methods of required type [ShippingMethodInput]!'
+                . ' was not provided.'
             ],
             'shipping_methods_are_empty' => [
                 'cart_id: "cart_id_value" shipping_methods: []',
@@ -209,7 +226,7 @@ QUERY;
                 'cart_id: "cart_id_value", shipping_methods: [{
                     carrier_code: "flatrate"
                 }]',
-                'Required parameter "method_code" is missing.'
+                'Field ShippingMethodInput.method_code of required type String! was not provided.'
             ],
             'empty_method_code' => [
                 'cart_id: "cart_id_value", shipping_methods: [{
@@ -243,7 +260,9 @@ QUERY;
     }
 
     /**
-     * @magentoApiDataFixture Magento/GraphQl/Quote/_files/enable_offline_shipping_methods.php
+     * @magentoConfigFixture default_store carriers/flatrate/active 1
+     * @magentoConfigFixture default_store carriers/tablerate/active 1
+     * @magentoConfigFixture default_store carriers/freeshipping/active 1
      * @magentoApiDataFixture Magento/GraphQl/Catalog/_files/simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
@@ -309,7 +328,7 @@ QUERY;
         );
         $this->graphQlMutation($query);
     }
-    
+
     /**
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_address.php
@@ -358,6 +377,12 @@ mutation {
         selected_shipping_method {
           carrier_code
           method_code
+          carrier_title
+          method_title
+          amount {
+            value
+            currency
+          }
         }
       }
     }

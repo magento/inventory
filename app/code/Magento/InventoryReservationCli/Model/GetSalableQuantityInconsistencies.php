@@ -18,6 +18,7 @@ use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\Collector
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterExistingOrders;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterManagedStockProducts;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency\FilterUnresolvedReservations;
+use Traversable;
 
 /**
  * Filter orders for missing initial reservation
@@ -88,16 +89,19 @@ class GetSalableQuantityInconsistencies
 
     /**
      * Filter orders for missing initial reservation
+     *
+     * @param int $bunchSize
+     * @param int $page
      * @return SalableQuantityInconsistency[]
-     * @throws ValidationException
      * @throws LocalizedException
      * @throws SkuIsNotAssignedToStockException
+     * @throws ValidationException
      */
-    public function execute(): array
+    public function execute(int $bunchSize = 50, int $page = 1): array
     {
         /** @var Collector $collector */
         $collector = $this->collectorFactory->create();
-        $this->addExpectedReservations->execute($collector);
+        $this->addExpectedReservations->execute($collector, $bunchSize, $page);
         $this->addExistingReservations->execute($collector);
         $this->addCompletedOrdersToUnresolved->execute($collector);
 
@@ -106,6 +110,7 @@ class GetSalableQuantityInconsistencies
         $items = $this->filterUnresolvedReservations->execute($items);
         $items = $this->filterExistingOrders->execute($items);
 
+        unset($collector);
         return $items;
     }
 }

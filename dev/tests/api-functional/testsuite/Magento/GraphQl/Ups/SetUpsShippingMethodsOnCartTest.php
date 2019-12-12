@@ -48,9 +48,9 @@ use Magento\TestFramework\TestCase\GraphQlAbstract;
 class SetUpsShippingMethodsOnCartTest extends GraphQlAbstract
 {
     /**
-     * Defines carrier label for "UPS" shipping method
+     * Defines carrier title for "UPS" shipping method
      */
-    const CARRIER_LABEL = 'United Parcel Service';
+    const CARRIER_TITLE = 'United Parcel Service';
 
     /**
      * Defines carrier code for "UPS" shipping method
@@ -83,13 +83,15 @@ class SetUpsShippingMethodsOnCartTest extends GraphQlAbstract
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/customer/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_address.php
-     * @magentoApiDataFixture Magento/GraphQl/Ups/_files/enable_ups_shipping_method.php
+     * @magentoConfigFixture default_store carriers/ups/active 1
+     * @magentoConfigFixture default_store carriers/ups/type UPS
      *
      * @dataProvider dataProviderShippingMethods
      * @param string $methodCode
-     * @param string $methodLabel
+     * @param string $methodTitle
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function testSetUpsShippingMethod(string $methodCode, string $methodLabel)
+    public function testSetUpsShippingMethod(string $methodCode, string $methodTitle)
     {
         $quoteReservedId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($quoteReservedId);
@@ -111,11 +113,11 @@ class SetUpsShippingMethodsOnCartTest extends GraphQlAbstract
         self::assertArrayHasKey('method_code', $shippingAddress['selected_shipping_method']);
         self::assertEquals($methodCode, $shippingAddress['selected_shipping_method']['method_code']);
 
-        self::assertArrayHasKey('label', $shippingAddress['selected_shipping_method']);
-        self::assertEquals(
-            self::CARRIER_LABEL . ' - ' . $methodLabel,
-            $shippingAddress['selected_shipping_method']['label']
-        );
+        self::assertArrayHasKey('carrier_title', $shippingAddress['selected_shipping_method']);
+        self::assertEquals(self::CARRIER_TITLE, $shippingAddress['selected_shipping_method']['carrier_title']);
+
+        self::assertArrayHasKey('method_title', $shippingAddress['selected_shipping_method']);
+        self::assertEquals($methodTitle, $shippingAddress['selected_shipping_method']['method_title']);
     }
 
     /**
@@ -138,13 +140,15 @@ class SetUpsShippingMethodsOnCartTest extends GraphQlAbstract
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/customer/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_canada_address.php
-     * @magentoApiDataFixture Magento/GraphQl/Ups/_files/enable_ups_shipping_method.php
+     * @magentoConfigFixture default_store carriers/ups/active 1
+     * @magentoConfigFixture default_store carriers/ups/type UPS
      *
      * @dataProvider dataProviderShippingMethodsBasedOnCanadaAddress
      * @param string $methodCode
-     * @param string $methodLabel
+     * @param string $methodTitle
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function testSetUpsShippingMethodBasedOnCanadaAddress(string $methodCode, string $methodLabel)
+    public function testSetUpsShippingMethodBasedOnCanadaAddress(string $methodCode, string $methodTitle)
     {
         $quoteReservedId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($quoteReservedId);
@@ -166,11 +170,11 @@ class SetUpsShippingMethodsOnCartTest extends GraphQlAbstract
         self::assertArrayHasKey('method_code', $shippingAddress['selected_shipping_method']);
         self::assertEquals($methodCode, $shippingAddress['selected_shipping_method']['method_code']);
 
-        self::assertArrayHasKey('label', $shippingAddress['selected_shipping_method']);
-        self::assertEquals(
-            self::CARRIER_LABEL . ' - ' . $methodLabel,
-            $shippingAddress['selected_shipping_method']['label']
-        );
+        self::assertArrayHasKey('carrier_title', $shippingAddress['selected_shipping_method']);
+        self::assertEquals(self::CARRIER_TITLE, $shippingAddress['selected_shipping_method']['carrier_title']);
+
+        self::assertArrayHasKey('method_title', $shippingAddress['selected_shipping_method']);
+        self::assertEquals($methodTitle, $shippingAddress['selected_shipping_method']['method_title']);
     }
 
     /**
@@ -216,7 +220,8 @@ mutation {
         selected_shipping_method {
           carrier_code
           method_code
-          label
+          carrier_title
+          method_title
         }
       }
     } 
