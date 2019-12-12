@@ -65,6 +65,8 @@
             <argument name="qty" value="2"/>
         </actionGroup>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseGroupedProduct"/>
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
