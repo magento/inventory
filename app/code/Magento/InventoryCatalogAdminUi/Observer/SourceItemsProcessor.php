@@ -19,7 +19,7 @@ use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 
 /**
- * At the time of processing Product save form this class used to save source items correctly.
+ * At the time of processing Product save form this class used to save source items correctly
  *
  * Perform replace strategy of sources for the product
  */
@@ -84,14 +84,12 @@ class SourceItemsProcessor
      *
      * @param string $sku
      * @param array $sourceItemsData
-     * @param string|null $origSku
      * @return void
      * @throws InputException
      */
-    public function process($sku, array $sourceItemsData, $origSku = null)
+    public function process($sku, array $sourceItemsData)
     {
-        $origSku = $origSku ?: $sku;
-        $sourceItemsForDelete = $this->getCurrentSourceItemsMap($origSku);
+        $sourceItemsForDelete = $this->getCurrentSourceItemsMap($sku);
         $sourceItemsForSave = [];
 
         foreach ($sourceItemsData as $sourceItemData) {
@@ -99,7 +97,7 @@ class SourceItemsProcessor
 
             $sourceCode = $sourceItemData[SourceItemInterface::SOURCE_CODE];
             if (isset($sourceItemsForDelete[$sourceCode])) {
-                $sourceItem = clone $sourceItemsForDelete[$sourceCode];
+                $sourceItem = $sourceItemsForDelete[$sourceCode];
             } else {
                 /** @var SourceItemInterface $sourceItem */
                 $sourceItem = $this->sourceItemFactory->create();
@@ -112,15 +110,13 @@ class SourceItemsProcessor
             $this->dataObjectHelper->populateWithArray($sourceItem, $sourceItemData, SourceItemInterface::class);
 
             $sourceItemsForSave[] = $sourceItem;
-            if ($origSku === $sku) {
-                unset($sourceItemsForDelete[$sourceCode]);
-            }
-        }
-        if ($sourceItemsForDelete) {
-            $this->sourceItemsDelete->execute($sourceItemsForDelete);
+            unset($sourceItemsForDelete[$sourceCode]);
         }
         if ($sourceItemsForSave) {
             $this->sourceItemsSave->execute($sourceItemsForSave);
+        }
+        if ($sourceItemsForDelete) {
+            $this->sourceItemsDelete->execute($sourceItemsForDelete);
         }
     }
 
