@@ -16,7 +16,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Quote\Model\QuoteFactory;
 
 /**
- * Place order on custom stock test.
+ * Test place order on inventory custom stock.
  */
 class PlaceOrderOnCustomStockTest extends TestCase
 {
@@ -24,6 +24,7 @@ class PlaceOrderOnCustomStockTest extends TestCase
      * @var \Magento\Framework\ObjectManagerInterface
      */
     private $objectManager;
+
     /**
      * @var ProductRepositoryInterface
      */
