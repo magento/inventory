@@ -20,7 +20,8 @@
         </annotations>
 
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="magentoCLI1"/>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="magentoCLI1"/>
             <createData entity="FullSource1" stepKey="customSource"/>
             <createData entity="BasicMsiStock1" stepKey="customStock"/>
             <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
@@ -50,6 +51,7 @@
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         </before>
         <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
@@ -117,7 +119,6 @@
 
         <comment userInput="Check order grand total and shipping cost." stepKey="checkOrderGrandTotalComment"/>
         <see selector="{{AdminOrderFormTotalSection.total('Subtotal')}}" userInput="$51.99" stepKey="seeOrderSubTotal"/>
-        <see selector="{{AdminOrderFormTotalSection.total('Shipping')}}" userInput="0" stepKey="seeOrderShipping"/>
         <see selector="{{AdminOrderFormTotalSection.grandTotal}}" userInput="$51.99" stepKey="seeCorrectGrandTotal"/>
 
         <comment userInput="Submit order." stepKey="submitOrderComment"/>

@@ -18,17 +18,15 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
-        <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="enableStockManagement1"/>
 
+        <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement1"/>
             <createData entity="SimpleSubCategory" stepKey="simpleCategory1"/>
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct1">
                 <requiredEntity createDataKey="simpleCategory1"/>
             </createData>
-
             <createData entity="FullSource1" stepKey="createSource1"/>
-
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
 
             <!-- Assign Sales Channel to Default Stock -->
@@ -43,10 +41,17 @@
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website"
                           stepKey="selectWebsiteAsSalesChannel"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         </before>
         <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
+                <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+            </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
-
+            <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
         </after>
 
