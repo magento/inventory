@@ -43,6 +43,11 @@ class GetDistanceToSources
     private $addressInterfaceFactory;
 
     /**
+     * @var HandleSearchTerm
+     */
+    private $handleSearchTerm;
+
+    /**
      * @param GetLatLngFromAddressInterface $getLatLngFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
@@ -50,11 +55,13 @@ class GetDistanceToSources
     public function __construct(
         GetLatLngFromAddressInterface $getLatLngFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
-        AddressInterfaceFactory $addressInterfaceFactory
+        AddressInterfaceFactory $addressInterfaceFactory,
+        HandleSearchTerm $handleSearchTerm
     ) {
         $this->getLatLngFromAddress = $getLatLngFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
+        $this->handleSearchTerm = $handleSearchTerm;
     }
 
     /**
@@ -117,7 +124,6 @@ class GetDistanceToSources
      */
     private function toSourceSelectionAddress(AreaInterface $area)
     {
-
         // postcode = null;
         // city = searchQuery.replace(/(\d+[\-]?\d+)/, function (match) {
         //     postcode = match;
@@ -125,13 +131,14 @@ class GetDistanceToSources
         //     return '';
         // });
         $data = [
-            'country' => 'US',
-            'postcode' => $area->getSearchTerm() ?? '',
+//            'country' => 'US',
+//            'postcode' => $area->getSearchTerm() ?? '',
+//            'city' => '',
             'region' => '',
-            'city' => '',
             'street' => ''
         ];
 
-        return $this->addressInterfaceFactory->create($data);
+        $searchTermData = $this->handleSearchTerm->execute($area->getSearchTerm());
+        return $this->addressInterfaceFactory->create(array_merge($data, $searchTermData));
     }
 }
