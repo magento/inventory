@@ -18,9 +18,10 @@
             <group value="msi"/>
             <group value="single_mode"/>
         </annotations>
-        
+
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="enableStockManagement1"/>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement1"/>
 
             <createData entity="SimpleSubCategory" stepKey="simpleCategory1"/>
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct1">
@@ -32,6 +33,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -102,12 +104,9 @@
         <see selector="{{CheckoutSuccessMainSection.successTitle}}" userInput="Thank you for your purchase!" stepKey="waitForLoadSuccessPage3"/>
         <grabTextFrom selector=".checkout-success .order-number strong" stepKey="grabOrderNumber"/>
 
-        <amOnPage url="{{AdminOrdersPage.url}}" stepKey="onOrdersPageToCreateShipment"/>
-        <waitForPageLoad stepKey="waitForPageLoad18"/>
-        <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$grabOrderNumber}" stepKey="searchOrderNum"/>
-        <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearch"/>
-        <waitForPageLoad stepKey="waitForPageLoad19"/>
-        <click selector="{{AdminOrdersGridSection.firstRow}}" stepKey="clickOrderRow"/>
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$grabOrderNumber}"/>
+        </actionGroup>
         <waitForPageLoad stepKey="waitForPageLoad20"/>
 
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
