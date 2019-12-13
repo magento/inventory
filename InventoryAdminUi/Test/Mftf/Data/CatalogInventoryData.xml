@@ -32,6 +32,9 @@
     <entity name="productWithThousandQtyBoughtWithTwoPieces">
         <data key="value">998</data>
     </entity>
+    <entity name="productWithThousandQtyBoughtWith5Pieces">
+        <data key="value">995</data>
+    </entity>
     <entity name="productWithThousandQtyBoughtWith10Pieces">
         <data key="value">990</data>
     </entity>
