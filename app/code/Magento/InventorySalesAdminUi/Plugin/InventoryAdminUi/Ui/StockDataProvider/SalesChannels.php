@@ -8,8 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventorySalesAdminUi\Plugin\InventoryAdminUi\Ui\StockDataProvider;
 
 use Magento\CatalogInventory\Model\Stock\StockRepository;
+use Magento\Framework\App\ObjectManager;
 use Magento\InventoryAdminUi\Ui\DataProvider\StockDataProvider;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface;
+use Magento\Store\Model\ResourceModel\Website\Collection;
 
 /**
  * Customize stock form. Add sales channels data
@@ -27,15 +30,23 @@ class SalesChannels
     private $stockRepository;
 
     /**
+     * @var Collection
+     */
+    private $websiteCollection;
+
+    /**
      * @param GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock
      * @param StockRepository $stockRepository
+     * @param Collection|null $websiteCollection
      */
     public function __construct(
         GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock,
-        StockRepository $stockRepository
+        StockRepository $stockRepository,
+        Collection $websiteCollection = null
     ) {
         $this->getAssignedSalesChannelsForStock = $getAssignedSalesChannelsForStock;
         $this->stockRepository = $stockRepository;
+        $this->websiteCollection = $websiteCollection ?: ObjectManager::getInstance()->get(Collection::class);
     }
 
     /**
@@ -75,10 +86,19 @@ class SalesChannels
      */
     private function getSalesChannelsDataForStock(array $stock): array
     {
+        $codes = [];
+        $websites = $this->websiteCollection->getItems();
+        foreach ($websites as $website) {
+            $codes[] = $website->getCode();
+        }
         $salesChannelsData = [];
         if (isset($stock['extension_attributes']) && isset($stock['extension_attributes']['sales_channels'])) {
             $salesChannels = $stock['extension_attributes']['sales_channels'];
             foreach ($salesChannels as $salesChannel) {
+                if ($salesChannel[SalesChannelInterface::TYPE] === SalesChannelInterface::TYPE_WEBSITE
+                    && !in_array($salesChannel[SalesChannelInterface::CODE], $codes)) {
+                    continue;
+                }
                 $salesChannelsData[$salesChannel['type']][] = $salesChannel['code'];
             }
         }

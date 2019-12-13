@@ -8,11 +8,16 @@ declare(strict_types=1);
 namespace Magento\InventoryAdminUi\Model\Stock;
 
 use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\EntityManager\EventManager;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\Data\StockInterfaceFactory;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\Store\Model\ResourceModel\Website\CollectionFactory;
 
 /**
  * Save stock processor for save stock controller
@@ -45,24 +50,32 @@ class StockSaveProcessor
     private $eventManager;
 
     /**
+     * @var CollectionFactory
+     */
+    private $collectionFactory;
+
+    /**
      * @param StockInterfaceFactory $stockFactory
      * @param StockRepositoryInterface $stockRepository
      * @param StockSourceLinkProcessor $stockSourceLinkProcessor
      * @param DataObjectHelper $dataObjectHelper
      * @param EventManager $eventManager
+     * @param CollectionFactory|null $websiteCollection
      */
     public function __construct(
         StockInterfaceFactory $stockFactory,
         StockRepositoryInterface $stockRepository,
         StockSourceLinkProcessor $stockSourceLinkProcessor,
         DataObjectHelper $dataObjectHelper,
-        EventManager $eventManager
+        EventManager $eventManager,
+        CollectionFactory $websiteCollection = null
     ) {
         $this->stockFactory = $stockFactory;
         $this->stockRepository = $stockRepository;
         $this->stockSourceLinkProcessor = $stockSourceLinkProcessor;
         $this->dataObjectHelper = $dataObjectHelper;
         $this->eventManager = $eventManager;
+        $this->collectionFactory = $websiteCollection ?: ObjectManager::getInstance()->get(CollectionFactory::class);
     }
 
     /**
@@ -71,6 +84,7 @@ class StockSaveProcessor
      * @param int|null $stockId
      * @param RequestInterface $request
      * @return int
+     * @throws LocalizedException
      */
     public function process($stockId, RequestInterface $request): int
     {
@@ -78,6 +92,7 @@ class StockSaveProcessor
             $stock = $this->stockFactory->create();
         } else {
             $stock = $this->stockRepository->get($stockId);
+            $this->verifySalesChannels($stock);
         }
         $requestData = $request->getParams();
         $this->dataObjectHelper->populateWithArray($stock, $requestData['general'], StockInterface::class);
@@ -117,10 +132,38 @@ class StockSaveProcessor
     {
         foreach ($assignedSources as $key => $source) {
             if (empty($source['priority'])) {
-                $source['priority'] = (int) $source['position'];
+                $source['priority'] = (int)$source['position'];
                 $assignedSources[$key] = $source;
             }
         }
         return $assignedSources;
+    }
+
+    /**
+     * Verify sales channels could be managed by admin.
+     *
+     * @param StockInterface $stock
+     * @throws CouldNotSaveException
+     * @return
+     */
+    private function verifySalesChannels(StockInterface $stock): void
+    {
+        $codes = [];
+        $allCodes = [];
+        $websites = $this->collectionFactory->create()->getItems();
+        $websitesData = $this->collectionFactory->create()->getData();
+        foreach ($websitesData as $websiteData) {
+            $allCodes[] = $websiteData['code'];
+        }
+        foreach ($websites as $website) {
+            $codes[] = $website->getCode();
+        }
+        $salesChannels = $stock->getExtensionAttributes()->getSalesChannels();
+        foreach ($salesChannels as $salesChannel) {
+            if ($salesChannel->getType() === SalesChannelInterface::TYPE_WEBSITE
+                && !in_array($salesChannel->getCode(), $codes) && in_array($salesChannel->getCode(), $allCodes)) {
+                throw new CouldNotSaveException(__('Not enough permissions to save stock.'));
+            }
+        }
     }
 }

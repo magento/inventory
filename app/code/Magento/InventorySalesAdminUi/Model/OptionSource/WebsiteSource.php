@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Model\OptionSource;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
+use Magento\Store\Model\ResourceModel\Website\Collection;
 
 /**
  * @api
@@ -22,12 +24,20 @@ class WebsiteSource implements OptionSourceInterface
     private $websiteRepository;
 
     /**
+     * @var Collection
+     */
+    private $websiteCollection;
+
+    /**
      * @param WebsiteRepositoryInterface $websiteRepository
+     * @param Collection|null $websiteCollection
      */
     public function __construct(
-        WebsiteRepositoryInterface $websiteRepository
+        WebsiteRepositoryInterface $websiteRepository,
+        Collection $websiteCollection = null
     ) {
         $this->websiteRepository = $websiteRepository;
+        $this->websiteCollection = $websiteCollection ?: ObjectManager::getInstance()->get(Collection::class);
     }
 
     /**
@@ -36,7 +46,7 @@ class WebsiteSource implements OptionSourceInterface
     public function toOptionArray(): array
     {
         $websites = [];
-        foreach ($this->websiteRepository->getList() as $website) {
+        foreach ($this->websiteCollection->getItems() as $website) {
             if ($website->getCode() === WebsiteInterface::ADMIN_CODE) {
                 continue;
             }
