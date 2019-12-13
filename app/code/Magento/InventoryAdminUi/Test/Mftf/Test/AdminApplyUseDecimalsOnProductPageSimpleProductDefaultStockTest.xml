@@ -34,8 +34,6 @@
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         </before>
         <after>
             <!--Disable additional source.-->
@@ -57,8 +55,9 @@
             <argument name="useDecimals" value="Yes"/>
         </actionGroup>
         <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct"/>
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         <!-- Login as customer -->
-        <comment userInput="Login to storefront as customer." stepKey="loginToStorefrontComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
