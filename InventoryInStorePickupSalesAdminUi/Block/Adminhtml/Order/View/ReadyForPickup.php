@@ -9,8 +9,10 @@ namespace Magento\InventoryInStorePickupSalesAdminUi\Block\Adminhtml\Order\View;
 
 use Magento\Backend\Block\Widget\Context;
 use Magento\Backend\Block\Widget\Form\Container;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryInStorePickupSalesAdminUi\Controller\Adminhtml\Order\NotifyPickup;
 use Magento\InventoryInStorePickupSalesAdminUi\Model\IsRenderReadyForPickupButton;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\Sales\Block\Adminhtml\Order\View;
 
 /**
@@ -38,21 +40,35 @@ class ReadyForPickup extends Container
     private $isDisplayButton;
 
     /**
-     * ReadyForPickup constructor.
-     *
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * @param Context $context
      * @param View $viewBlock
      * @param IsRenderReadyForPickupButton $isDisplayButton
+     * @param ShipmentRepositoryInterface $shipmentRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param array $data
      */
     public function __construct(
         Context $context,
         View $viewBlock,
         IsRenderReadyForPickupButton $isDisplayButton,
+        ShipmentRepositoryInterface $shipmentRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         array $data = []
     ) {
         $this->viewBlock = $viewBlock;
         $this->isDisplayButton = $isDisplayButton;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
 
         parent::__construct($context, $data);
     }
@@ -70,19 +86,23 @@ class ReadyForPickup extends Container
             return;
         }
 
-        $message = __(
-            'Are you sure you want to notify the customer that order is ready for pickup and create shipment?'
-        );
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $this->viewBlock->getOrderId());
+        $shipments = $this->shipmentRepository->getList($searchCriteria->create());
+        $isShipmentCreated = $shipments->getTotalCount() > 0;
+
+        $message = $isShipmentCreated
+            ? __('Are you sure you want to notify the customer that order is ready for pickup?')
+            : __('Are you sure you want to notify the customer that order is ready for pickup and create shipment?');
         $this->addButton(
             'ready_for_pickup',
             [
-                'label'   => __('Notify Order is Ready for Pickup'),
-                'class'   => 'action-default ready-for-pickup',
+                'label' => __('Notify Order is Ready for Pickup'),
+                'class' => 'action-default ready-for-pickup',
                 'onclick' => sprintf(
                     "confirmSetLocation('%s', '%s')",
                     $message,
                     $this->viewBlock->getUrl('sales/*/notifyPickup')
-                )
+                ),
             ]
         );
         $this->buttonList->remove('order_ship');

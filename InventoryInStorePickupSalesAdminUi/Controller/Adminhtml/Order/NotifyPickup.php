@@ -34,7 +34,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
     /**
      * @var NotifyOrdersAreReadyForPickupInterface
      */
-    private $notifyOrderIsReadyForPickup;
+    private $notifyOrdersAreReadyForPickup;
 
     /**
      * @var OrderRepositoryInterface
@@ -48,17 +48,17 @@ class NotifyPickup extends Action implements HttpGetActionInterface
 
     /**
      * @param Context $context
-     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup
+     * @param NotifyOrdersAreReadyForPickupInterface $notifyOrdersAreReadyForPickup
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
-        NotifyOrdersAreReadyForPickupInterface $notifyOrderIsReadyForPickup,
+        NotifyOrdersAreReadyForPickupInterface $notifyOrdersAreReadyForPickup,
         OrderRepositoryInterface $orderRepository,
         LoggerInterface $logger
     ) {
-        $this->notifyOrderIsReadyForPickup = $notifyOrderIsReadyForPickup;
+        $this->notifyOrdersAreReadyForPickup = $notifyOrdersAreReadyForPickup;
         $this->orderRepository = $orderRepository;
         $this->logger = $logger;
 
@@ -78,14 +78,9 @@ class NotifyPickup extends Action implements HttpGetActionInterface
             return $this->resultRedirectFactory->create()->setPath('sales/*/');
         }
 
-        $result = $this->notifyOrderIsReadyForPickup->execute([(int)$order->getEntityId()]);
-
+        $result = $this->notifyOrdersAreReadyForPickup->execute([(int)$order->getEntityId()]);
         if ($result->isSuccessful()) {
-            if ($order->getEmailSent()) {
-                $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
-            } else {
-                $this->messageManager->addSuccessMessage(__('Shipment has been created.'));
-            }
+            $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
         } else {
             $error = current($result->getFailed());
             $this->messageManager->addErrorMessage($error['message']);
