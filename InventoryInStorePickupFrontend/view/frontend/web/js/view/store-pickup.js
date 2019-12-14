@@ -236,10 +236,6 @@ define([
                         area: {
                             radius: this.nearbySearchRadius,
                             searchTerm: shippingAddress.postcode
-                            // country: shippingAddress.countryId || this.defaultCountry,
-                            // postcode: shippingAddress.postcode,
-                            // city: shippingAddress.city,
-                            // region: shippingAddress.region
                         },
                         pageSize: this.nearbySearchLimit
                     })

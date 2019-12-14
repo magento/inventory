@@ -144,7 +144,7 @@ define([
         },
 
         /**
-         * @param {String} address
+         * @param {String} searchQuery
          * @returns {*}
          */
         updateNearbyLocations: function (searchQuery) {

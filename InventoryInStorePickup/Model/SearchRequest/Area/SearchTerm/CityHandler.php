@@ -6,14 +6,25 @@
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
-class CityHandler
+use Magento\Framework\DataObject;
+use Magento\InventoryInStorePickupApi\Model\SearchResult\Area\SearchTerm\HandlerInterface;
+
+/**
+ * Extract city from Search Term.
+ */
+class CityHandler implements HandlerInterface
 {
+    public const CITY = 'city';
+
     /**
-     * @param string $searchTerm
-     * @return string
+     * @inheritdoc
      */
-    public function execute(string $searchTerm) : string
+    public function execute(string $searchTerm, DataObject $dataObject): void
     {
-        return '';
+        if (empty($dataObject->getData(PostCodeHandler::POSTCODE))) {
+            $dataObject->setData(self::CITY, $searchTerm);
+        } else {
+            $dataObject->setData(self::CITY, '');
+        }
     }
 }
