@@ -22,21 +22,26 @@ class CountryHandler implements HandlerInterface
      * @var Data
      */
     private $data;
+    /**
+     * @var Parser
+     */
+    private $parser;
 
     /**
      * @param Data $data
+     * @param Parser $parser
      */
-    public function __construct(Data $data)
+    public function __construct(Data $data, Parser $parser)
     {
         $this->data = $data;
+        $this->parser = $parser;
     }
 
     /**
      * @inheritdoc
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function execute(string $searchTerm, DataObject $result): void
     {
-        $result->setData(self::COUNTRY, $this->data->getDefaultCountry());
+        $result->setData(self::COUNTRY, $this->parser->getCountry($searchTerm) ?? $this->data->getDefaultCountry());
     }
 }

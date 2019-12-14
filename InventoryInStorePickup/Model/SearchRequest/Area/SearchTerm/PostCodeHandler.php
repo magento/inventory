@@ -22,13 +22,19 @@ class PostCodeHandler implements HandlerInterface
      * @var ValidatorInterface
      */
     private $validator;
+    /**
+     * @var Parser
+     */
+    private $parser;
 
     /**
      * @param ValidatorInterface $validator
+     * @param Parser $parser
      */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(ValidatorInterface $validator, Parser $parser)
     {
         $this->validator = $validator;
+        $this->parser = $parser;
     }
 
     /**
@@ -36,8 +42,9 @@ class PostCodeHandler implements HandlerInterface
      */
     public function execute(string $searchTerm, DataObject $dataObject): void
     {
-        if ($this->validator->validate($searchTerm, $dataObject->getData(CountryHandler::COUNTRY))) {
-            $dataObject->setData(self::POSTCODE, $searchTerm);
+        $searchQuery = $this->parser->getSearchQuery($searchTerm);
+        if ($this->validator->validate($searchQuery, $dataObject->getData(CountryHandler::COUNTRY))) {
+            $dataObject->setData(self::POSTCODE, $searchQuery);
         } else {
             $dataObject->setData(self::POSTCODE, '');
         }

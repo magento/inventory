@@ -68,7 +68,9 @@ define([
             this._super();
 
             updateNearbyLocations = _.debounce(function (searchQuery) {
-                this.updateNearbyLocations(searchQuery);
+                var country = quote.shippingAddress() && quote.shippingAddress().countryId ?
+                    quote.shippingAddress().countryId : this.defaultCountryId;
+                this.updateNearbyLocations(searchQuery + ":" + country);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
 
@@ -122,7 +124,9 @@ define([
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                this.updateNearbyLocations(shippingAddress);
+                var country = shippingAddress.countryId ?
+                    shippingAddress.countryId: this.defaultCountryId;
+                this.updateNearbyLocations(shippingAddress.postcode + ':' + country);
             }
         },
 

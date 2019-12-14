@@ -235,7 +235,8 @@ define([
                     .getNearbyLocations({
                         area: {
                             radius: this.nearbySearchRadius,
-                            searchTerm: shippingAddress.postcode
+                            searchTerm: shippingAddress.postcode + ':' +
+                                        shippingAddress.countryId || this.defaultCountry
                         },
                         pageSize: this.nearbySearchLimit
                     })

@@ -15,6 +15,18 @@ use Magento\InventoryInStorePickupApi\Model\SearchResult\Area\SearchTerm\Handler
 class CityHandler implements HandlerInterface
 {
     public const CITY = 'city';
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @param Parser $parser
+     */
+    public function __construct(Parser $parser)
+    {
+        $this->parser = $parser;
+    }
 
     /**
      * @inheritdoc
@@ -22,7 +34,7 @@ class CityHandler implements HandlerInterface
     public function execute(string $searchTerm, DataObject $dataObject): void
     {
         if (empty($dataObject->getData(PostCodeHandler::POSTCODE))) {
-            $dataObject->setData(self::CITY, $searchTerm);
+            $dataObject->setData(self::CITY, $this->parser->getSearchQuery($searchTerm));
         } else {
             $dataObject->setData(self::CITY, '');
         }
