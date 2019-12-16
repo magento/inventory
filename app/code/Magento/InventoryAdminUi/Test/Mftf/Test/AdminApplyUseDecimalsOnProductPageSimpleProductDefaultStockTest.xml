@@ -16,6 +16,9 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="https://github.com/magento/magento2/issues/23940"/>
+            </skip>
         </annotations>
         <before>
             <!--Create Customer.-->
