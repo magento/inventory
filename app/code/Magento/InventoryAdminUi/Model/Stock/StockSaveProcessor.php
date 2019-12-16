@@ -16,11 +16,12 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\Data\StockInterfaceFactory;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Store\Model\ResourceModel\Website\CollectionFactory;
 
 /**
- * Save stock processor for save stock controller
+ * Save stock processor for save stock controller.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class StockSaveProcessor
 {
@@ -160,7 +161,7 @@ class StockSaveProcessor
         }
         $salesChannels = $stock->getExtensionAttributes()->getSalesChannels();
         foreach ($salesChannels as $salesChannel) {
-            if ($salesChannel->getType() === SalesChannelInterface::TYPE_WEBSITE
+            if ($salesChannel->getType() === 'website'
                 && !in_array($salesChannel->getCode(), $codes) && in_array($salesChannel->getCode(), $allCodes)) {
                 throw new CouldNotSaveException(__('Not enough permissions to save stock.'));
             }

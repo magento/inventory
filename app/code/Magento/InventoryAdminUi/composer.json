@@ -9,6 +9,7 @@
         "magento/module-inventory-catalog-api": "*",
         "magento/module-backend": "*",
         "magento/module-directory": "*",
+        "magento/module-store": "*",
         "magento/module-ui": "*"
     },
     "type": "magento2-module",

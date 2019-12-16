@@ -13,21 +13,17 @@ use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
-use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\Store\Model\ResourceModel\Website\Collection;
+use Magento\InventoryApi\Model\IsSourceAllowedForUserInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
 
 /**
  * Data provider for admin source grid.
  *
  * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SourceDataProvider extends DataProvider
 {
@@ -56,19 +52,9 @@ class SourceDataProvider extends DataProvider
     private $sourceCount;
 
     /**
-     * @var Collection
+     * @var IsSourceAllowedForUserInterface
      */
-    private $websiteCollection;
-
-    /**
-     * @var GetStockSourceLinksInterface
-     */
-    private $getStockSourceLinks;
-
-    /**
-     * @var StockRepositoryInterface
-     */
-    private $stockRepository;
+    private $isSourceAllowedForUser;
 
     /**
      * @param string $name
@@ -83,9 +69,7 @@ class SourceDataProvider extends DataProvider
      * @param Session $session
      * @param array $meta
      * @param array $data
-     * @param Collection|null $websiteCollection
-     * @param GetStockSourceLinksInterface|null $getStockSourceLinks
-     * @param StockRepositoryInterface|null $stockRepository
+     * @param IsSourceAllowedForUserInterface|null $isSourceAllowedForUser
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -101,9 +85,7 @@ class SourceDataProvider extends DataProvider
         Session $session,
         array $meta = [],
         array $data = [],
-        Collection $websiteCollection = null,
-        GetStockSourceLinksInterface $getStockSourceLinks = null,
-        StockRepositoryInterface $stockRepository = null
+        IsSourceAllowedForUserInterface $isSourceAllowedForUser = null
     ) {
         parent::__construct(
             $name,
@@ -119,10 +101,8 @@ class SourceDataProvider extends DataProvider
         $this->sourceRepository = $sourceRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->session = $session;
-        $this->websiteCollection = $websiteCollection ?: ObjectManager::getInstance()->get(Collection::class);
-        $this->getStockSourceLinks = $getStockSourceLinks ?: ObjectManager::getInstance()
-            ->get(GetStockSourceLinksInterface::class);
-        $this->stockRepository = $stockRepository ?: ObjectManager::getInstance()->get(StockRepositoryInterface::class);
+        $this->isSourceAllowedForUser = $isSourceAllowedForUser ?: ObjectManager::getInstance()
+            ->get(IsSourceAllowedForUserInterface::class);
     }
 
     /**
@@ -162,25 +142,19 @@ class SourceDataProvider extends DataProvider
     {
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->sourceRepository->getList($searchCriteria);
-        $codes = [];
-        $websites = $this->websiteCollection->getItems();
-        foreach ($websites as $website) {
-            $codes[] = $website->getCode();
-        }
         $items = [];
         foreach ($result->getItems() as $item) {
-            if ($this->isSourceItemAllowed($item->getSourceCode(), $codes)) {
+            if ($this->isSourceAllowedForUser->execute($item->getSourceCode())) {
                 $items[] = $item;
             }
         }
 
-        $searchResult = $this->searchResultFactory->create(
+        return $this->searchResultFactory->create(
             $items,
             count($items),
             $searchCriteria,
             SourceInterface::SOURCE_CODE
         );
-        return $searchResult;
     }
 
     /**
@@ -198,42 +172,5 @@ class SourceDataProvider extends DataProvider
         }
 
         return $this->sourceCount;
-    }
-
-    /**
-     * Verify source items is not restricted to display for admin user.
-     *
-     * @param string $sourceCode
-     * @param array $codes
-     * @return bool
-     * @throws NoSuchEntityException
-     */
-    private function isSourceItemAllowed(string $sourceCode, array $codes): bool
-    {
-        $result = false;
-        $this->filterBuilder->setField(StockSourceLinkInterface::SOURCE_CODE);
-        $this->filterBuilder->setValue($sourceCode);
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter($this->filterBuilder->create())
-            ->create();
-        $salesChannels = [];
-        foreach ($this->getStockSourceLinks->execute($searchCriteria)->getItems() as $link) {
-            if (!isset($salesChannels[$link->getStockId()])) {
-                $stock = $this->stockRepository->get((int)$link->getStockId());
-                $salesChannels[$stock->getStockId()] = $stock->getExtensionAttributes()->getSalesChannels();
-            }
-        }
-        foreach ($salesChannels as $stockSalesChannels) {
-            foreach ($stockSalesChannels as $salesChannel) {
-                if ($salesChannel[SalesChannelInterface::TYPE] !== SalesChannelInterface::TYPE_WEBSITE
-                    || ($salesChannel[SalesChannelInterface::TYPE] === SalesChannelInterface::TYPE_WEBSITE
-                        && in_array($salesChannel[SalesChannelInterface::CODE], $codes))) {
-                    $result = true;
-                    break;
-                }
-            }
-        }
-
-        return $result;
     }
 }

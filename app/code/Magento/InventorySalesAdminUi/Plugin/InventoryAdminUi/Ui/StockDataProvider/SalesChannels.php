@@ -12,7 +12,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\InventoryAdminUi\Ui\DataProvider\StockDataProvider;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface;
-use Magento\Store\Model\ResourceModel\Website\Collection;
+use Magento\Store\Model\ResourceModel\Website\CollectionFactory;
 
 /**
  * Customize stock form. Add sales channels data
@@ -30,23 +30,24 @@ class SalesChannels
     private $stockRepository;
 
     /**
-     * @var Collection
+     * @var CollectionFactory
      */
-    private $websiteCollection;
+    private $websiteCollectionFactory;
 
     /**
      * @param GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock
      * @param StockRepository $stockRepository
-     * @param Collection|null $websiteCollection
+     * @param CollectionFactory|null $websiteCollectionFactory
      */
     public function __construct(
         GetAssignedSalesChannelsForStockInterface $getAssignedSalesChannelsForStock,
         StockRepository $stockRepository,
-        Collection $websiteCollection = null
+        CollectionFactory $websiteCollectionFactory = null
     ) {
         $this->getAssignedSalesChannelsForStock = $getAssignedSalesChannelsForStock;
         $this->stockRepository = $stockRepository;
-        $this->websiteCollection = $websiteCollection ?: ObjectManager::getInstance()->get(Collection::class);
+        $this->websiteCollectionFactory = $websiteCollectionFactory ?: ObjectManager::getInstance()
+            ->get(CollectionFactory::class);
     }
 
     /**
@@ -87,7 +88,8 @@ class SalesChannels
     private function getSalesChannelsDataForStock(array $stock): array
     {
         $codes = [];
-        $websites = $this->websiteCollection->getItems();
+        $websiteCollection = $this->websiteCollectionFactory->create();
+        $websites = $websiteCollection->getItems();
         foreach ($websites as $website) {
             $codes[] = $website->getCode();
         }
