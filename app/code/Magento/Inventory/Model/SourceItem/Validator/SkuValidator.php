@@ -9,7 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\Inventory\Model\ValidationChecker\NotAnEmptyString;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -45,10 +45,10 @@ class SkuValidator implements SourceItemValidatorInterface
      */
     public function validate(SourceItemInterface $source): ValidationResult
     {
-        $value = (string)$source->getSku();
-
-        $errors = [];
-        $errors[] = $this->notAnEmptyString->execute(SourceItemInterface::SKU, $value);
+        $value = $source->getSku();
+        $errors = [
+            $this->notAnEmptyString->execute(SourceItemInterface::SKU, $value)
+        ];
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);

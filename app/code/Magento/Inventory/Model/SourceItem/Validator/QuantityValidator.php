@@ -9,7 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\Inventory\Model\ValidationChecker\IsNumericValue;
+use Magento\Inventory\Model\Validators\IsNumericValue;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -46,9 +46,9 @@ class QuantityValidator implements SourceItemValidatorInterface
     public function validate(SourceItemInterface $source): ValidationResult
     {
         $value = $source->getQuantity();
-
-        $errors = [];
-        $errors[] = $this->isNumericValue->execute(SourceItemInterface::QUANTITY, $value);
+        $errors = [
+            $this->isNumericValue->execute(SourceItemInterface::QUANTITY, $value)
+        ];
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);

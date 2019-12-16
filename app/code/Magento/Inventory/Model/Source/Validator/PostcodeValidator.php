@@ -9,7 +9,7 @@ namespace Magento\Inventory\Model\Source\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\Inventory\Model\ValidationChecker\NotAnEmptyString;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Model\SourceValidatorInterface;
 
@@ -47,8 +47,9 @@ class PostcodeValidator implements SourceValidatorInterface
     {
         $value = (string)$source->getPostcode();
 
-        $errors = [];
-        $errors[] = $this->notAnEmptyString->execute(SourceInterface::POSTCODE, $value);
+        $errors = [
+            $this->notAnEmptyString->execute(SourceInterface::POSTCODE, $value)
+        ];
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);

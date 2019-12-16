@@ -9,9 +9,9 @@ namespace Magento\Inventory\Model\Source\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\Inventory\Model\ValidationChecker\NoSpecialCharsInString;
-use Magento\Inventory\Model\ValidationChecker\NotAnEmptyString;
-use Magento\Inventory\Model\ValidationChecker\NoWhitespaceInString;
+use Magento\Inventory\Model\Validators\NoSpecialCharsInString;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
+use Magento\Inventory\Model\Validators\NoWhitespaceInString;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Model\SourceValidatorInterface;
 
@@ -64,11 +64,11 @@ class CodeValidator implements SourceValidatorInterface
     public function validate(SourceInterface $source): ValidationResult
     {
         $value = (string)$source->getSourceCode();
-
-        $errors = [];
-        $errors[] = $this->notAnEmptyString->execute(SourceInterface::SOURCE_CODE, $value);
-        $errors[] = $this->noWhitespaceInString->execute(SourceInterface::SOURCE_CODE, $value);
-        $errors[] = $this->noSpecialCharsInString->execute($value);
+        $errors = [
+            $this->notAnEmptyString->execute(SourceInterface::SOURCE_CODE, $value),
+            $this->noWhitespaceInString->execute(SourceInterface::SOURCE_CODE, $value),
+            $this->noSpecialCharsInString->execute($value)
+        ];
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);

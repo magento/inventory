@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\ValidationChecker;
+namespace Magento\Inventory\Model\Validators;
 
 /**
  * Checks whether given string contains special chars
@@ -15,10 +15,10 @@ class NoSpecialCharsInString
     /**
      * Checks whether given string contains special chars
      *
-     * @param mixed $value
+     * @param string $value
      * @return array
      */
-    public function execute($value): array
+    public function execute(string $value): array
     {
         $errors = [];
 
