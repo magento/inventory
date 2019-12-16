@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\Source\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Model\SourceValidatorInterface;
 
@@ -23,11 +24,20 @@ class PostcodeValidator implements SourceValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var NotAnEmptyString
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $notAnEmptyString;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param NotAnEmptyString $notAnEmptyString
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        NotAnEmptyString $notAnEmptyString
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->notAnEmptyString = $notAnEmptyString;
     }
 
     /**
@@ -37,11 +47,11 @@ class PostcodeValidator implements SourceValidatorInterface
     {
         $value = (string)$source->getPostcode();
 
-        if ('' === trim($value)) {
-            $errors[] = __('"%field" can not be empty.', ['field' => SourceInterface::POSTCODE]);
-        } else {
-            $errors = [];
-        }
+        $errors = [
+            $this->notAnEmptyString->execute(SourceInterface::POSTCODE, $value)
+        ];
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
+
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }
