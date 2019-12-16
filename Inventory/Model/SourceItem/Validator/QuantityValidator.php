@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\IsNumericValue;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -23,11 +24,20 @@ class QuantityValidator implements SourceItemValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var IsNumericValue
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $isNumericValue;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param IsNumericValue $isNumericValue
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        IsNumericValue $isNumericValue
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->isNumericValue = $isNumericValue;
     }
 
     /**
@@ -35,13 +45,11 @@ class QuantityValidator implements SourceItemValidatorInterface
      */
     public function validate(SourceItemInterface $source): ValidationResult
     {
-        $errors = [];
-        if (!is_numeric($source->getQuantity())) {
-            $errors[] = __(
-                '"%field" should be numeric.',
-                ['field' => SourceItemInterface::QUANTITY]
-            );
-        }
+        $value = $source->getQuantity();
+        $errors = [
+            $this->isNumericValue->execute(SourceItemInterface::QUANTITY, $value)
+        ];
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
