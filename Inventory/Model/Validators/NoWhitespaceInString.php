@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\ValidationChecker;
+namespace Magento\Inventory\Model\Validators;
 
 /**
  * Checks whether given value contains whitespace
@@ -16,10 +16,10 @@ class NoWhitespaceInString
      * Checks whether given value contains whitespace
      *
      * @param string $fieldName
-     * @param mixed $value
+     * @param string $value
      * @return array
      */
-    public function execute(string $fieldName, $value): array
+    public function execute(string $fieldName, string $value): array
     {
         $errors = [];
 

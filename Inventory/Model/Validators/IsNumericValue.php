@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Model\ValidationChecker;
+namespace Magento\Inventory\Model\Validators;
 
 /**
  * Checks whether given string is empty
@@ -13,7 +13,7 @@ namespace Magento\Inventory\Model\ValidationChecker;
 class IsNumericValue
 {
     /**
-     * Checks whether given string is empty
+     * Checks whether given value is numeric.
      *
      * @param string $fieldName
      * @param mixed $value

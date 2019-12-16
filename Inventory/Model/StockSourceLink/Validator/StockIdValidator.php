@@ -9,7 +9,7 @@ namespace Magento\Inventory\Model\StockSourceLink\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\Inventory\Model\ValidationChecker\NotAnEmptyString;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Model\StockSourceLinkValidatorInterface;
 
@@ -46,9 +46,9 @@ class StockIdValidator implements StockSourceLinkValidatorInterface
     public function validate(StockSourceLinkInterface $link): ValidationResult
     {
         $value = (int)$link->getStockId();
-
-        $errors = [];
-        $errors[] = $this->notAnEmptyString->execute(StockSourceLinkInterface::STOCK_ID, $value);
+        $errors = [
+            $this->notAnEmptyString->execute(StockSourceLinkInterface::STOCK_ID, $value)
+        ];
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);
