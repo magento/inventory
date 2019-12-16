@@ -16,7 +16,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterfaceFactor
 class AreaBuilder
 {
     private const RADIUS = 'radius';
-    private const SEARCH_TERM = 'search_term';
+    private const SEARCH_TERM = 'searchTerm';
 
     /**
      * Filter data.
