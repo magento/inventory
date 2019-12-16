@@ -45,7 +45,7 @@ class StockIdValidator implements StockSourceLinkValidatorInterface
      */
     public function validate(StockSourceLinkInterface $link): ValidationResult
     {
-        $value = (int)$link->getStockId();
+        $value = (string)$link->getStockId();
         $errors = [
             $this->notAnEmptyString->execute(StockSourceLinkInterface::STOCK_ID, $value)
         ];
