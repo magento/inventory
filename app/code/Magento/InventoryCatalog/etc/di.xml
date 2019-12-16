@@ -160,4 +160,7 @@
     <type name="Magento\Catalog\Api\ProductRepositoryInterface">
         <plugin name="delete_source_items" type="Magento\InventoryCatalog\Plugin\Catalog\Model\ProductRepository\DeleteSourceItemsPlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="process_source_items_after_product_save" type="Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\ProcessSourceItemsPlugin"/>
+    </type>
 </config>

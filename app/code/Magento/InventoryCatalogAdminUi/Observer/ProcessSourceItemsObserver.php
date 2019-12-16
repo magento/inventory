@@ -8,17 +8,15 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogAdminUi\Observer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
-use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\InputException;
+use Magento\Framework\Event\Observer as EventObserver;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
-use Magento\InventoryCatalogApi\Model\DeleteSourceItemsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 
@@ -61,18 +59,12 @@ class ProcessSourceItemsObserver implements ObserverInterface
     private $sourceItemRepository;
 
     /**
-     * @var DeleteSourceItemsBySkusInterface
-     */
-    private $deleteSourceItems;
-
-    /**
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SourceItemsProcessor $sourceItemsProcessor
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param SourceItemRepositoryInterface $sourceItemRepository
-     * @param DeleteSourceItemsBySkusInterface $deleteSourceItems
      */
     public function __construct(
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
@@ -80,8 +72,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
         IsSingleSourceModeInterface $isSingleSourceMode,
         DefaultSourceProviderInterface $defaultSourceProvider,
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
-        SourceItemRepositoryInterface $sourceItemRepository,
-        DeleteSourceItemsBySkusInterface $deleteSourceItems
+        SourceItemRepositoryInterface $sourceItemRepository
     ) {
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->sourceItemsProcessor = $sourceItemsProcessor;
@@ -89,7 +80,6 @@ class ProcessSourceItemsObserver implements ObserverInterface
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->sourceItemRepository = $sourceItemRepository;
-        $this->deleteSourceItems = $deleteSourceItems;
     }
 
     /**
@@ -97,19 +87,15 @@ class ProcessSourceItemsObserver implements ObserverInterface
      *
      * @param EventObserver $observer
      * @return void
-     * @throws CouldNotSaveException
-     * @throws InputException
      */
     public function execute(EventObserver $observer)
     {
         /** @var ProductInterface $product */
         $product = $observer->getEvent()->getProduct();
-        if ($this->areSourceItemsShouldBeDeleted($product)) {
-            $this->deleteSourceItems->execute([(string)$product->getOrigData('sku')]);
-        }
         if ($this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId()) === false) {
             return;
         }
+        /** @var Save $controller */
         $controller = $observer->getEvent()->getController();
         $productData = $controller->getRequest()->getParam('product', []);
         $singleSourceData = $productData['quantity_and_stock_status'] ?? [];
@@ -127,7 +113,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
                 SourceItemInterface::SKU => $productData['sku'],
                 SourceItemInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
                 SourceItemInterface::QUANTITY => $qty,
-                SourceItemInterface::STATUS => $isInStock,
+                SourceItemInterface::STATUS => $isInStock
             ];
             $sourceItems = $this->getSourceItemsWithoutDefault($productData['sku']);
             $sourceItems[] = $defaultSourceData;
@@ -158,25 +144,10 @@ class ProcessSourceItemsObserver implements ObserverInterface
                     SourceItemInterface::SKU => $sourceItem->getSku(),
                     SourceItemInterface::SOURCE_CODE => $sourceItem->getSourceCode(),
                     SourceItemInterface::QUANTITY => $sourceItem->getQuantity(),
-                    SourceItemInterface::STATUS => $sourceItem->getStatus(),
+                    SourceItemInterface::STATUS => $sourceItem->getStatus()
                 ];
             }
         }
         return $sourceItemData;
-    }
-
-    /**
-     * Verify, if source items should be deleted for given product.
-     *
-     * @param ProductInterface $product
-     * @return bool
-     */
-    private function areSourceItemsShouldBeDeleted(ProductInterface $product): bool
-    {
-        return !$this->isSingleSourceMode->execute()
-            && (
-                $product->getOrigData('type_id') !== $product->getTypeId()
-                || $product->getOrigData('sku') !== $product->getSku()
-            );
     }
 }

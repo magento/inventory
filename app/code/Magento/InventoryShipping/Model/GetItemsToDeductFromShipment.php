@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryShipping\Model;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
+use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterfaceFactory;
@@ -37,18 +39,27 @@ class GetItemsToDeductFromShipment
     private $itemToDeduct;
 
     /**
+     * @var GetSourceItemsBySkuInterface
+     */
+    private $getSourceItemsBySku;
+
+    /**
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
      * @param Json $jsonSerializer
      * @param ItemToDeductInterfaceFactory $itemToDeduct
+     * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      */
     public function __construct(
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
         Json $jsonSerializer,
-        ItemToDeductInterfaceFactory $itemToDeduct
+        ItemToDeductInterfaceFactory $itemToDeduct,
+        GetSourceItemsBySkuInterface $getSourceItemsBySku = null
     ) {
         $this->jsonSerializer = $jsonSerializer;
         $this->itemToDeduct = $itemToDeduct;
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
+        $this->getSourceItemsBySku = $getSourceItemsBySku ?: ObjectManager::getInstance()
+            ->get(GetSourceItemsBySkuInterface::class);
     }
 
     /**
@@ -67,7 +78,7 @@ class GetItemsToDeductFromShipment
             $orderItem = $shipmentItem->getOrderItem();
             // This code was added as quick fix for merge mainline
             // https://github.com/magento-engcom/msi/issues/1586
-            if (null === $orderItem || $orderItem->getProduct() === null) {
+            if ($this->shouldBeExcluded($orderItem)) {
                 continue;
             }
             if ($orderItem->getHasChildren()) {
@@ -183,5 +194,18 @@ class GetItemsToDeductFromShipment
         }
 
         return $qty > 0 ? $qty : 0;
+    }
+
+    /**
+     * Verify, if product should be processed for deduction.
+     *
+     * @param OrderItem $orderItem
+     * @return bool
+     */
+    private function shouldBeExcluded(OrderItem $orderItem): bool
+    {
+        return null === $orderItem || $orderItem->getProduct() === null
+            || ($orderItem->getProductType() !== $orderItem->getProduct()->getTypeId()
+                && empty($this->getSourceItemsBySku->execute((string)$orderItem->getProduct()->getSku())));
     }
 }
