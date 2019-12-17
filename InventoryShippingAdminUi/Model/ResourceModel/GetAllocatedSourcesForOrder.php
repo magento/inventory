@@ -44,12 +44,12 @@ class GetAllocatedSourcesForOrder
 
         $select = $connection->select()
             ->from(
-                ["inv_source" => $inventorySourceTableName],
-                ['source_name' => 'inv_source.name']
+                ['inventory_source' => $inventorySourceTableName],
+                ['source_name' => 'inventory_source.name']
             )
             ->joinInner(
                 ['shipment_source' => $inventoryShipmentSourceTableName],
-                'shipment_source.source_code = inv_source.source_code',
+                'shipment_source.source_code = inventory_source.source_code',
                 []
             )
             ->joinInner(
@@ -57,6 +57,7 @@ class GetAllocatedSourcesForOrder
                 'shipment_source.shipment_id = sales_shipment.entity_id',
                 []
             )
+            ->group('inventory_source.source_code')
             ->where('sales_shipment.order_id = ?', $orderId);
 
         return $connection->fetchCol($select);
