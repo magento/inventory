@@ -140,7 +140,7 @@ QUERY;
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Required parameters are missing: Email
+     * @expectedExceptionMessage  Required parameters are missing: Email
      */
     public function testCreateCustomerIfEmailMissed()
     {
@@ -275,7 +275,7 @@ mutation {
 QUERY;
         $this->graphQlMutation($query);
     }
- 
+
     /**
      * @magentoConfigFixture default_store newsletter/general/active 0
      */

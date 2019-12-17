@@ -11,7 +11,7 @@
             <argument name="backOrders" type="string" defaultValue="Allow Qty Below 0"/>
         </arguments>
         <click selector="{{AdminProductSourcesSection.advancedInventory}}" stepKey="goToAdvancedInventory"/>
-        <waitForPageLoad time="30" stepKey="waitAdvancedInventoryLoaded"/>
+        <waitForElement selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="waitTillBackOrderIsFound"/>
         <uncheckOption selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="clickOnUseDefaultBackorders"/>
         <selectOption selector="{{AdminAdvancedInventorySection.backorders}}" userInput="{{backOrders}}" stepKey="selectBackordersType"/>
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDone"/>
