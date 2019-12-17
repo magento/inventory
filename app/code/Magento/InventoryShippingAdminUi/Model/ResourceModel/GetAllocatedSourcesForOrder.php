@@ -11,7 +11,7 @@ namespace Magento\InventoryShippingAdminUi\Model\ResourceModel;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Get allocated sources for order
+ * Get allocated sources for specified order.
  */
 class GetAllocatedSourcesForOrder
 {
