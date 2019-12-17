@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminUserCreateOrderFromCustomWebsiteWithSimpleProductWithManageStockNoInAdvancedInventorySettingsOnProductPageTest">
+        <annotations>
+            <stories value="Admin user create order from Custom websit"/>
+            <title value="Admin user create order from Custom website with Simple product with Manage Stock = No in Advanced Inventory settings on product page"/>
+            <description value="Admin user create order from Custom website with Simple product with Manage Stock = No in Advanced Inventory settings on product page"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419534/scenarios/3565390"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource"/>
+            </createData>
+            <createData entity="SimpleSubCategory" stepKey="createCategory1"/>
+            <createData entity="SimpleMsiProduct" stepKey="simpleProduct"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdmin1"/>
+
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="adminCreateNewWebsite">
+                <argument name="newWebsiteName" value="{{NewWebSiteData.name}}"/>
+                <argument name="websiteCode" value="{{NewWebSiteData.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="adminCreateNewStore">
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+                <argument name="storeGroupName" value="{{NewStoreData.name}}"/>
+                <argument name="storeGroupCode" value="{{NewStoreData.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="adminCreateNewStoreView">
+                <argument name="StoreGroup" value="NewStoreData"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateCustomerWithWebsiteGroupAndAddressActionGroup" stepKey="adminCreateCustomerCustomWebsite">
+                <argument name="customerData" value="Simple_US_Customer"/>
+                <argument name="website" value="{{NewWebSiteData.name}}"/>
+                <argument name="storeView" value="{{customStore.name}}"/>
+            </actionGroup>
+            <!--Assign Custom Stock to Additional Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <magentoCLI command="indexer:reindex" stepKey="doReindex"/>
+        </before>
+        <after>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="DeleteWebsite" after="deleteProduct">
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="createCategory1" stepKey="deleteCategory"/>
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        </after>
+
+        <!-- Assign product to custom website -->
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
+        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct1">
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+
+        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openFirstProductForEdit"/>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" >
+            <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource">
+            <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            <argument name="qty" value="20" />
+        </actionGroup>
+
+        <actionGroup ref="AdminChangeManageStockStatusOnProductEditPageActionGroup" stepKey="disableMangeStockOnProductEditPage">
+            <argument name="manageStock" value="No"/>
+        </actionGroup>
+
+        <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite" >
+            <argument name="website" value="{{NewWebSiteData.name}}"/>
+        </actionGroup>
+
+        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+            <argument name="customer" value="Simple_US_Customer"/>
+            <argument name="storeView" value="customStore"/>
+        </actionGroup>
+
+        <actionGroup ref="addSimpleProductToOrder" stepKey="addSimpleProductToTheOrder">
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="orderSelectFlatRateShipping" stepKey="orderSelectFlatRateShippingMethod"/>
+        <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
+    </test>
+</tests>

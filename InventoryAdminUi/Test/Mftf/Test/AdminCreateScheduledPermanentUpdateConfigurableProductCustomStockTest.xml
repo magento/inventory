@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateScheduledPermanentUpdateConfigurableProductCustomStockTest" extends="AdminCreateScheduledPermanentUpdateProductTest">
+        <annotations>
+            <stories value="Configurable Product Custom Stock."/>
+            <title value="Create Schedule Update With Configurable Product On Custom Stock."/>
+            <description value="Verify, configurable product on custom stock should be visible on storefront after schedule update."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1934685"/>
+            <group value="msi_ee"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create stock and source.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <!--Create configurable product.-->
+            <createData entity="ApiConfigurableProduct" stepKey="configurableProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="productAttributeWithTwoOptions" stepKey="configurableProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="configurableProductAttributeOption">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <createData entity="AddToDefaultSet" stepKey="addAttributeToDefaultAttributeSet">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <getData entity="ProductAttributeOptionGetter" index="1" stepKey="getConfigAttributeOption">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </getData>
+            <createData entity="ApiSimpleOne" stepKey="configurableChildProduct">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductOneOption" stepKey="configurableProductOption">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="configurableProductAddChild">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableChildProduct"/>
+            </createData>
+        </before>
+        <after>
+            <deleteData createDataKey="configurableChildProduct" stepKey="deleteConfigurableChildProduct" before="deleteConfigurableProduct"/>
+            <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct" before="deleteAttribute"/>
+            <deleteData createDataKey="configurableProductAttribute" stepKey="deleteAttribute" before="disableSource"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="assignMainWebsiteToDefaultStock">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" before="deleteStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock" before="amOnLogoutPage"/>
+        </after>
+
+        <!--Assign source to configurable product.-->
+        <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct.id$)}}" stepKey="openSimpleProductPage"/>
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+            <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct">
+            <argument name="sourceCode" value="$source.source[source_code]$"/>
+        </actionGroup>
+        <actionGroup ref="saveProductForm" stepKey="saveConfigurableVariation"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <!--Verify configurable product on storefront.-->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableProductIsPresentOnCategoryPage">
+            <argument name="category" value="$createCategory$"/>
+            <argument name="product" value="$configurableProduct$"/>
+        </actionGroup>
+    </test>
+</tests>
