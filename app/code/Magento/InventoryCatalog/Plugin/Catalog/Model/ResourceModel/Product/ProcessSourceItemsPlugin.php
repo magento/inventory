@@ -13,8 +13,6 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
-use Magento\InventoryCatalog\Model\IsSingleSourceMode;
-use Magento\InventoryCatalog\Model\ResourceModel\UpdateSourceItemsBySku;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -22,16 +20,6 @@ use Psr\Log\LoggerInterface;
  */
 class ProcessSourceItemsPlugin
 {
-    /**
-     * @var IsSingleSourceMode
-     */
-    private $isSingleSourceMode;
-
-    /**
-     * @var UpdateSourceItemsBySku
-     */
-    private $updateSourceItemsBySku;
-
     /**
      * @var DeleteSourceItemsBySkus
      */
@@ -48,24 +36,18 @@ class ProcessSourceItemsPlugin
     private $getSourceItemsBySku;
 
     /**
-     * @param IsSingleSourceMode $isSingleSourceMode
-     * @param UpdateSourceItemsBySku $updateSourceItemsBySku
      * @param DeleteSourceItemsBySkus $deleteSourceItemsBySkus
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param LoggerInterface $logger
      */
     public function __construct(
-        IsSingleSourceMode $isSingleSourceMode,
-        UpdateSourceItemsBySku $updateSourceItemsBySku,
         DeleteSourceItemsBySkus $deleteSourceItemsBySkus,
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
         LoggerInterface $logger
     ) {
-        $this->isSingleSourceMode = $isSingleSourceMode;
-        $this->updateSourceItemsBySku = $updateSourceItemsBySku;
         $this->deleteSourceItemsBySkus = $deleteSourceItemsBySkus;
-        $this->logger = $logger;
         $this->getSourceItemsBySku = $getSourceItemsBySku;
+        $this->logger = $logger;
     }
 
     /**
@@ -82,18 +64,9 @@ class ProcessSourceItemsPlugin
         Product $result,
         AbstractModel $product
     ): Product {
-        if ($this->isSingleSourceMode->execute()) {
-            return $result;
-        }
-
-        $origSku = $product->getOrigData('sku');
-        if ($origSku !== null && $origSku !== $product->getSku()) {
-            $this->updateSourceItemsBySku->execute($origSku, $product->getSku());
-        }
-
-        if ($product->getOrigData('type_id') !== null && $product->getOrigData('type_id') !== $product->getTypeId()) {
+        if ($this->areSourceItemsShouldBeDeleted($product)) {
             try {
-                $this->deleteSourceItemsBySkus->execute([(string)$product->getSku()]);
+                $this->deleteSourceItemsBySkus->execute([(string)$product->getOrigData('sku')]);
             } catch (CouldNotSaveException|InputException $e) {
                 $this->logger->error(
                     __(
@@ -105,5 +78,20 @@ class ProcessSourceItemsPlugin
         }
 
         return $result;
+    }
+
+    /**
+     * Verify, if source items for given product should be deleted.
+     *
+     * @param AbstractModel $product
+     * @return bool
+     */
+    private function areSourceItemsShouldBeDeleted(AbstractModel $product): bool
+    {
+        $origSku = $product->getOrigData('sku');
+        $origType = $product->getOrigData('type_id');
+
+        return $origSku !== null && $origSku !== $product->getSku()
+                || $origType !== null && $origType !== $product->getTypeId();
     }
 }

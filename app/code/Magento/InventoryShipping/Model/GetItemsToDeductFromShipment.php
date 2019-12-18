@@ -10,8 +10,8 @@ namespace Magento\InventoryShipping\Model;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
-use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
+use Magento\InventorySourceDeductionApi\Model\IsItemCouldBeDeductedByTypes;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterfaceFactory;
 use Magento\Sales\Model\Order\Item as OrderItem;
@@ -39,27 +39,27 @@ class GetItemsToDeductFromShipment
     private $itemToDeduct;
 
     /**
-     * @var GetSourceItemsBySkuInterface
+     * @var IsItemCouldBeDeductedByTypes
      */
-    private $getSourceItemsBySku;
+    private $itemCouldBeDeducted;
 
     /**
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
      * @param Json $jsonSerializer
      * @param ItemToDeductInterfaceFactory $itemToDeduct
-     * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
+     * @param IsItemCouldBeDeductedByTypes $itemCouldBeDeducted
      */
     public function __construct(
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
         Json $jsonSerializer,
         ItemToDeductInterfaceFactory $itemToDeduct,
-        GetSourceItemsBySkuInterface $getSourceItemsBySku = null
+        IsItemCouldBeDeductedByTypes $itemCouldBeDeducted = null
     ) {
         $this->jsonSerializer = $jsonSerializer;
         $this->itemToDeduct = $itemToDeduct;
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
-        $this->getSourceItemsBySku = $getSourceItemsBySku ?: ObjectManager::getInstance()
-            ->get(GetSourceItemsBySkuInterface::class);
+        $this->itemCouldBeDeducted = $itemCouldBeDeducted ?: ObjectManager::getInstance()
+            ->get(IsItemCouldBeDeductedByTypes::class);
     }
 
     /**
@@ -78,7 +78,7 @@ class GetItemsToDeductFromShipment
             $orderItem = $shipmentItem->getOrderItem();
             // This code was added as quick fix for merge mainline
             // https://github.com/magento-engcom/msi/issues/1586
-            if ($this->shouldBeExcluded($orderItem)) {
+            if (null === $orderItem || $this->shouldBeExcluded($orderItem)) {
                 continue;
             }
             if ($orderItem->getHasChildren()) {
@@ -204,8 +204,10 @@ class GetItemsToDeductFromShipment
      */
     private function shouldBeExcluded(OrderItem $orderItem): bool
     {
-        return null === $orderItem || $orderItem->getProduct() === null
-            || ($orderItem->getProductType() !== $orderItem->getProduct()->getTypeId()
-                && empty($this->getSourceItemsBySku->execute((string)$orderItem->getProduct()->getSku())));
+        return $orderItem->getProduct() === null
+            || !$this->itemCouldBeDeducted->execute(
+                $orderItem->getProductType(),
+                $orderItem->getProduct()->getTypeId()
+            );
     }
 }
