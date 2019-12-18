@@ -7,23 +7,25 @@
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Framework\DataObject;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\Area\SearchTerm\HandlerInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\ParserInterface;
 
 /**
  * Extract city from Search Term.
  */
-class CityHandler implements HandlerInterface
+class CityParser implements ParserInterface
 {
-    public const CITY = 'city';
+    private const CITY = 'city';
+    private const POSTCODE = 'postcode';
+
     /**
-     * @var Parser
+     * @var DelimiterParser
      */
     private $parser;
 
     /**
-     * @param Parser $parser
+     * @param DelimiterParser $parser
      */
-    public function __construct(Parser $parser)
+    public function __construct(DelimiterParser $parser)
     {
         $this->parser = $parser;
     }
@@ -33,7 +35,7 @@ class CityHandler implements HandlerInterface
      */
     public function execute(string $searchTerm, DataObject $dataObject): void
     {
-        if (empty($dataObject->getData(PostCodeHandler::POSTCODE))) {
+        if (empty($dataObject->getData(self::POSTCODE))) {
             $dataObject->setData(self::CITY, $this->parser->getSearchQuery($searchTerm));
         } else {
             $dataObject->setData(self::CITY, '');

@@ -10,7 +10,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 /**
  * Parse Search Term.
  */
-class Parser
+class DelimiterParser
 {
     private const DELIMITER = ':';
 

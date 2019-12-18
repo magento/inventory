@@ -120,12 +120,12 @@ define([
          */
         openPopup: function () {
             var shippingAddress = quote.shippingAddress();
+            var country = shippingAddress.countryId ? shippingAddress.countryId :
+                this.defaultCountryId;
 
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                var country = shippingAddress.countryId ?
-                    shippingAddress.countryId: this.defaultCountryId;
                 this.updateNearbyLocations(shippingAddress.postcode + ':' + country);
             }
         },

@@ -12,7 +12,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\Area\HandleSearchTerm;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\Pipeline;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
@@ -44,26 +44,26 @@ class GetDistanceToSources
     private $addressInterfaceFactory;
 
     /**
-     * @var HandleSearchTerm
+     * @var Pipeline
      */
-    private $handleSearchTerm;
+    private $searchTermPipeline;
 
     /**
      * @param GetLatLngFromAddressInterface $getLatLngFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
-     * @param HandleSearchTerm $handleSearchTerm
+     * @param Pipeline $searchTermPipeline
      */
     public function __construct(
         GetLatLngFromAddressInterface $getLatLngFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
         AddressInterfaceFactory $addressInterfaceFactory,
-        HandleSearchTerm $handleSearchTerm
+        Pipeline $searchTermPipeline
     ) {
         $this->getLatLngFromAddress = $getLatLngFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
-        $this->handleSearchTerm = $handleSearchTerm;
+        $this->searchTermPipeline = $searchTermPipeline;
     }
 
     /**
@@ -131,7 +131,7 @@ class GetDistanceToSources
             'street' => ''
         ];
 
-        $searchTermData = $this->handleSearchTerm->execute($area->getSearchTerm());
+        $searchTermData = $this->searchTermPipeline->execute($area->getSearchTerm());
         return $this->addressInterfaceFactory->create(array_merge($data, $searchTermData->getData()));
     }
 }

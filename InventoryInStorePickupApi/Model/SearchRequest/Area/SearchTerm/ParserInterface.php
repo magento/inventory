@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupApi\Model\SearchResult\Area\SearchTerm;
+namespace Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Framework\DataObject;
 
 /**
- * Search Term handler middleware interface.
+ * Search Term parser interface.
  */
-interface HandlerInterface
+interface ParserInterface
 {
     /**
      * Handle search term parsing.

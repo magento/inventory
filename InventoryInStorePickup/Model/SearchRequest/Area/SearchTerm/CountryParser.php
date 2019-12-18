@@ -9,29 +9,29 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Directory\Helper\Data;
 use Magento\Framework\DataObject;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\Area\SearchTerm\HandlerInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\ParserInterface;
 
 /**
- * Provide Default country for area search.
+ * Extract country from Search Term or provide default country for area search.
  */
-class CountryHandler implements HandlerInterface
+class CountryParser implements ParserInterface
 {
-    public const COUNTRY = 'country';
+    private const COUNTRY = 'country';
 
     /**
      * @var Data
      */
     private $data;
     /**
-     * @var Parser
+     * @var DelimiterParser
      */
     private $parser;
 
     /**
      * @param Data $data
-     * @param Parser $parser
+     * @param DelimiterParser $parser
      */
-    public function __construct(Data $data, Parser $parser)
+    public function __construct(Data $data, DelimiterParser $parser)
     {
         $this->data = $data;
         $this->parser = $parser;

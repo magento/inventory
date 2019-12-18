@@ -9,29 +9,30 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Directory\Model\Country\Postcode\ValidatorInterface;
 use Magento\Framework\DataObject;
-use Magento\InventoryInStorePickupApi\Model\SearchResult\Area\SearchTerm\HandlerInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\ParserInterface;
 
 /**
  * Extract postcode from search term if search term match postcode validation for store country.
  */
-class PostCodeHandler implements HandlerInterface
+class PostcodeParser implements ParserInterface
 {
-    public const POSTCODE = 'postcode';
+    private const POSTCODE = 'postcode';
+    private const COUNTRY = 'country';
 
     /**
      * @var ValidatorInterface
      */
     private $validator;
     /**
-     * @var Parser
+     * @var DelimiterParser
      */
     private $parser;
 
     /**
      * @param ValidatorInterface $validator
-     * @param Parser $parser
+     * @param DelimiterParser $parser
      */
-    public function __construct(ValidatorInterface $validator, Parser $parser)
+    public function __construct(ValidatorInterface $validator, DelimiterParser $parser)
     {
         $this->validator = $validator;
         $this->parser = $parser;
@@ -43,7 +44,7 @@ class PostCodeHandler implements HandlerInterface
     public function execute(string $searchTerm, DataObject $dataObject): void
     {
         $searchQuery = $this->parser->getSearchQuery($searchTerm);
-        if ($this->validator->validate($searchQuery, $dataObject->getData(CountryHandler::COUNTRY))) {
+        if ($this->validator->validate($searchQuery, $dataObject->getData(self::COUNTRY))) {
             $dataObject->setData(self::POSTCODE, $searchQuery);
         } else {
             $dataObject->setData(self::POSTCODE, '');
