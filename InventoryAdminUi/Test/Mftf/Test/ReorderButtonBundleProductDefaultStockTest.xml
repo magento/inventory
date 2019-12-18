@@ -59,6 +59,8 @@
                 <field key="qty">1</field>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         </before>
         <after>
             <!--Disable additional source.-->
