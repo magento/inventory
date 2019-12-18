@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Test\Integration\PickupLocation;
 
-use Magento\Framework\Filter\Template;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendDescription\Filter;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationExtensionInterface;
 use Magento\InventoryInStorePickupApi\Model\Mapper;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -36,7 +36,7 @@ class MapperTest extends TestCase
     private $sourceCode;
 
     /**
-     * @var Template
+     * @var Filter
      */
     private $templateFilter;
 
@@ -44,7 +44,7 @@ class MapperTest extends TestCase
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->sourceRepository = $this->objectManager->create(SourceRepositoryInterface::class);
-        $this->templateFilter = $this->objectManager->create(Template::class);
+        $this->templateFilter = $this->objectManager->create(Filter::class);
 
         $this->sourceCode = 'pickup';
     }
