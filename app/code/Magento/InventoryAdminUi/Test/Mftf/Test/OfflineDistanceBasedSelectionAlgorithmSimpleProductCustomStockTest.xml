@@ -17,11 +17,14 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="https://github.com/magento/inventory/issues/2690"/>
+            </skip>
         </annotations>
 
         <before>
             <!--Enable "Manage Stock", set distance based algorithm to offline and download tables.-->
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="enableManageStock"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="config:set cataloginventory/source_selection_distance_based/provider offline" stepKey="setSelectionAlgorithm"/>
             <magentoCLI command="inventory-geonames:import us ua" stepKey="downloadTables"/>
             <!--Create Category and Simple Product.-->
@@ -139,12 +142,9 @@
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 
         <!--Create Shipment-->
-        <amOnPage url="{{AdminOrdersPage.url}}" stepKey="navigateToOrderListPage"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
-        <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$grabOrderNumber}" stepKey="searchOrder"/>
-        <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearch"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>
-        <click selector="{{AdminOrdersGridSection.firstRow}}" stepKey="navigateToOrderViewPage"/>
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$grabOrderNumber}"/>
+        </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
 
         <!--Verify Distance Based Source Selection Algorithm.-->

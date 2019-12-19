@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontCacheValidationSimpleProductSoldOutOnDefaultStockTest">
+        <annotations>
+            <stories value="Simple Product Default Stock."/>
+            <title value="Cache Validation Simple Product Default Stock."/>
+            <description value="Verify, simple product is not visible on storefront after has been totally sold."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/911767/scenarios/2726452"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleMsiProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <!--Clean up created data.-->
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+        </after>
+
+        <!--Set product qty..-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{minimalProductQty.value}}" stepKey="setDefaultSourceQty"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        <!-- Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!-- Add simple product to shopping cart -->
+        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+            <argument name="product" value="$$product$$"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
+        <!--Verify product default stock status.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="navigateToProductEditPage"/>
+        <see selector="{{AdminProductSourcesGrid.rowStatusBySourceCode(_defaultSource.source_code)}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyStockStatus"/>
+        <!--Verify product is not visible on storefront.-->
+        <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
+        <see selector="{{StorefrontCategoryMainSection.emptyProductMessage}}" userInput="We can't find products matching the selection." stepKey="seeEmptyProductMessage"/>
+    </test>
+</tests>
