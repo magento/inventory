@@ -7,22 +7,21 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceTypeLink\Command;
 
-use Exception;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\InputException;
-use Magento\Inventory\Model\ResourceModel\SourceTypeLink\DeleteMultiple;
-use Magento\InventoryApi\Api\SourceTypeLinksDeleteInterface;
+use Magento\Inventory\Model\ResourceModel\SourceTypeLink\Delete;
+use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * @inheritdoc
  */
-class SourceTypeLinksDelete implements SourceTypeLinksDeleteInterface
+class SourceTypeLinkDelete implements SourceTypeLinkDeleteInterface
 {
     /**
-     * @var DeleteMultiple
+     * @var Delete
      */
-    private $deleteMultiple;
+    private $delete;
 
     /**
      * @var LoggerInterface
@@ -30,31 +29,31 @@ class SourceTypeLinksDelete implements SourceTypeLinksDeleteInterface
     private $logger;
 
     /**
-     * @param DeleteMultiple $deleteMultiple
+     * @param Delete $delete
      * @param LoggerInterface $logger
      */
     public function __construct(
-        DeleteMultiple $deleteMultiple,
+        Delete $delete,
         LoggerInterface $logger
     ) {
-        $this->deleteMultiple = $deleteMultiple;
+        $this->delete = $delete;
         $this->logger = $logger;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute(array $links): void
+    public function execute(string $sourceCode): void
     {
-        if (empty($links)) {
+        if (empty($sourceCode)) {
             throw new InputException(__('Input data is empty'));
         }
 
         try {
-            $this->deleteMultiple->execute($links);
-        } catch (Exception $e) {
+            $this->delete->execute($sourceCode);
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            throw new CouldNotDeleteException(__('Could not delete StockSourceLinks'), $e);
+            throw new CouldNotDeleteException(__('Could not delete SourceTypeLink'), $e);
         }
     }
 }

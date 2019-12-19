@@ -90,16 +90,17 @@
         </arguments>
     </type>
     <preference for="Magento\InventoryApi\Model\IsProductAssignedToStockInterface" type="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock"/>
+
     <!-- SourceTypeLink -->
     <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink"/>
     <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkSearchResultsInterface" type="Magento\Inventory\Model\SourceTypeLinkSearchResults"/>
-    <preference for="Magento\InventoryApi\Api\GetSourceTypeLinksInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\GetSourceTypeLinks"/>
-<!--    <preference for="Magento\InventoryApi\Api\SourceTypeLinksSaveInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinksSave"/>-->
-    <preference for="Magento\InventoryApi\Api\SourceTypeLinksDeleteInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinksDelete"/>
+    <preference for="Magento\InventoryApi\Api\GetSourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\GetSourceTypeLink"/>
+    <preference for="Magento\InventoryApi\Api\SourceTypeLinkSaveInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkSave"/>
+    <preference for="Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkDelete"/>
 
     <preference for="Magento\InventoryApi\Model\SourceTypeLinkManagementInterface" type="Magento\Inventory\Model\SourceCarrierLinkManagement"/>
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
         <plugin name="SourceTypeExtensionAttributeGet" type="Magento\Inventory\Plugin\SourceTypeAttributeGet"/>
-        <plugin name="SourceTypeExtensionAttributeSave" type="Magento\Inventory\Plugin\SourceTypeAttributeSave"/>
+<!--        <plugin name="SourceTypeExtensionAttributeSave" type="Magento\Inventory\Plugin\SourceTypeAttributeSave"/>-->
     </type>
 </config>

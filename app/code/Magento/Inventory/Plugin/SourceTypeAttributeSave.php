@@ -40,8 +40,6 @@ class SourceTypeAttributeSave
     ) {
         $proceed($source);
 
-        $typeCode = $source->getExtensionAttributes()->getTypeCode();
-
-        $this->sourceTypeLinkManagement->saveTypeLinksBySource($source, $typeCode);
+        $this->sourceTypeLinkManagement->saveTypeLinksBySource($source);
     }
 }

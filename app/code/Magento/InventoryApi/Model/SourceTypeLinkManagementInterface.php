@@ -20,15 +20,14 @@ interface SourceTypeLinkManagementInterface
     const SOURCE_CODE = 'source_code';
 
     /**
-     * Save carrier links by source
+     * Save Type link by source
      *
      * Get carrier links from source object and save its. If carrier links are equal to null do nothing
      *
      * @param SourceInterface $source
-     * @param string $type_code
      * @return void
      */
-    public function saveTypeLinksBySource(SourceInterface $source, $type_code): void;
+    public function saveTypeLinksBySource(SourceInterface $source): void;
 
     /**
      * Load carrier links by source and set its to source object

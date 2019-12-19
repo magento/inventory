@@ -18,8 +18,8 @@ class SourceTypeLink extends AbstractDb
     /**#@+
      * Constants related to specific db layer
      */
-    private const TABLE_NAME_SOURCE_TYPE_LINK = 'inventory_source_type_link';
-    private const ID_FIELD_NAME = 'link_id';
+    const TABLE_NAME_SOURCE_TYPE_LINK = 'inventory_source_type_link';
+    const ID_FIELD_NAME = 'link_id';
     /**#@-*/
 
     /**

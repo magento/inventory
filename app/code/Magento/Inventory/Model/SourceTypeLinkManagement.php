@@ -7,136 +7,82 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model;
 
-use Magento\Elasticsearch\SearchAdapter\Query\Builder\Sort;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Model\SourceTypeLinkManagementInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\Inventory\Model\ResourceModel\SourceTypeLink;
-use Magento\Inventory\Model\ResourceModel\SourceTypeLink\CollectionFactory;
-
-use Magento\Framework\Api\SortOrderBuilder;
-use Magento\InventoryApi\Api\GetSourceTypeLinksInterface;
-use Magento\InventoryApi\Api\SourceTypeLinksDeleteInterface;
+use Magento\InventoryApi\Api\GetSourceTypeLinkInterface;
+use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
+use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 
 /**
 * @inheritdoc
  */
 class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 {
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
-     * @var CollectionProcessorInterface
-     */
-    private $collectionProcessor;
-
-    /**
-     * @var CollectionFactory
-     */
-    private $typeLinkCollectionFactory;
 
     /**
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
 
-
-
-    private $sortOrderBuilder;
-
+    /**
+     * @var GetSourceTypeLinkInterface
+     */
     private $getSourceTypeLinks;
 
-    private $sourceTypeLinksDelete;
-
+    /**
+     * @var SourceTypeLinkDeleteInterface
+     */
+    private $commandDelete;
 
     /**
-     * @param ResourceConnection $resourceConnection
-     * @param CollectionProcessorInterface $collectionProcessor
-     * @param CollectionFactory $typeLinkCollectionFactory
+     * @var SourceTypeLinkSaveInterface
+     */
+    private $commandSave;
+
+    /**
+     * SourceTypeLinkManagement constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param SortOrderBuilder $sortOrderBuilder
-     * @param GetSourceTypeLinksInterface $getSourceTypeLinks
-     * @param SourceTypeLinksDeleteInterface $sourceTypeLinksDelete
+     * @param GetSourceTypeLinkInterface $getSourceTypeLinks
+     * @param SourceTypeLinkSaveInterface $commandSave
+     * @param SourceTypeLinkDeleteInterface $commandDelete
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
-        CollectionProcessorInterface $collectionProcessor,
-        CollectionFactory $typeLinkCollectionFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        SortOrderBuilder $sortOrderBuilder,
-        GetSourceTypeLinksInterface $getSourceTypeLinks,
-        SourceTypeLinksDeleteInterface $sourceTypeLinksDelete
+        GetSourceTypeLinkInterface $getSourceTypeLinks,
+        SourceTypeLinkSaveInterface $commandSave,
+        SourceTypeLinkDeleteInterface $commandDelete
     ) {
-        $this->resourceConnection = $resourceConnection;
-        $this->collectionProcessor = $collectionProcessor;
-        $this->typeLinkCollectionFactory = $typeLinkCollectionFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-
-        $this->sortOrderBuilder = $sortOrderBuilder;
         $this->getSourceTypeLinks = $getSourceTypeLinks;
-        $this->sourceTypeLinksDelete = $sourceTypeLinksDelete;
+        $this->commandSave = $commandSave;
+        $this->commandDelete = $commandDelete;
     }
 
     /**
      * @inheritdoc
      */
-    public function saveTypeLinksBySource(SourceInterface $source, $type_code): void
+    public function saveTypeLinksBySource(SourceInterface $source): void
     {
-        $this->deleteCurrentTypeLinks($source);
-//        $this->saveNewTypeLinks($source, $type_code);
+        $this->deleteCurrentTypeLink($source->getSourceCode());
+        $this->saveNewTypeLink($source);
+    }
+
+    /**
+     * @param string $sourceCode
+     */
+    private function deleteCurrentTypeLink(string $sourceCode)
+    {
+        $this->commandDelete->execute($sourceCode);
     }
 
     /**
      * @param SourceInterface $source
      * @return void
      */
-    private function deleteCurrentTypeLinks(SourceInterface $source)
+    private function saveNewTypeLink(SourceInterface $source)
     {
-//        $connection = $this->resourceConnection->getConnection();
-//        $connection->delete(
-//            $this->resourceConnection->getTableName(SourceTypeLink::TABLE_NAME_SOURCE_TYPE_LINK),
-//            $connection->quoteInto('source_code = ?', $source->getSourceCode())
-//        );
-
-
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(SourceTypeLinkManagementInterface::SOURCE_CODE, $source->getSourceCode())
-            ->create();
-
-        $sourceTypes = $this->getSourceTypeLinks->execute($searchCriteria);
-        $sourceTypesData = [];
-        foreach ($sourceTypes->getItems() as $sourceType) {
-            $sourceTypesData[] = [
-                'sourceCode' => $sourceType->getSourceCode(),
-                'typeCode' => $sourceType->getTypeCode()
-            ];
-        }
-
-        $this->sourceTypeLinksDelete->execute($sourceTypesData);
-    }
-
-    /**
-     * @param SourceInterface $source
-     * @param string $type_code
-     * @return void
-     */
-    private function saveNewTypeLinks(SourceInterface $source, $type_code)
-    {
-//        $TypeLinkData = [
-//            'source_code' => $source->getSourceCode(),
-//            'type_code' => $type_code
-//        ];
-//
-//
-//        $this->resourceConnection->getConnection()->insert(
-//            $this->resourceConnection->getTableName(SourceTypeLink::TABLE_NAME_SOURCE_TYPE_LINK),
-//            $TypeLinkData
-//        );
+        $this->commandSave->execute($source);
     }
 
     /**
@@ -148,13 +94,12 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
             ->addFilter(SourceTypeLinkManagementInterface::SOURCE_CODE, $source->getSourceCode())
             ->create();
 
-        $sourceTypes = $this->getSourceTypeLinks->execute($searchCriteria);
+        $sourceType = $this->getSourceTypeLinks->execute($searchCriteria);
 
-        $sourceTypeFirst = $sourceTypes->getItems()[0];
+        $sourceTypeFirst = current($sourceType->getItems());
 
         $extension = $source->getExtensionAttributes();
-        $extension->setTypeCode($sourceTypeFirst->getData()['type_code']);
-
+        $extension->setTypeCode($sourceTypeFirst->getTypeCode());
         $source->setExtensionAttributes($extension);
 
         return $source;

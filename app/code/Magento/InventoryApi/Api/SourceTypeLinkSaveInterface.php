@@ -7,22 +7,23 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api;
 
+use Magento\InventoryApi\Api\Data\SourceInterface;
+
 /**
- * Service method for stock source links delete multiple
+ * Service method for source type link save
  * Performance efficient API
  *
  * Used fully qualified namespaces in annotations for proper work of WebApi request parser
  *
  * @api
  */
-interface SourceTypeLinksDeleteInterface
+interface SourceTypeLinkSaveInterface
 {
     /**
-     * Remove StockSourceLink list list
+     * Save SourceTypeLink list data
      *
-     * @param \Magento\InventoryApi\Api\Data\SourceTypeLinkInterface[] $links
+     * @param SourceInterface $source
      * @return void
-     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function execute(array $links): void;
+    public function execute(SourceInterface $source): void;
 }

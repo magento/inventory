@@ -10,23 +10,19 @@ namespace Magento\Inventory\Model\SourceTypeLink\Command;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Inventory\Model\ResourceModel\SourceTypeLink\CollectionFactory;
-use Magento\Inventory\Model\ResourceModel\StockSourceLink\Collection as StockSourceLinkCollection;
 use Magento\Inventory\Model\ResourceModel\StockSourceLink\CollectionFactory as StockSourceLinkCollectionFactory;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink\CollectionFactory as SourceTypeLinkCollectionFactory;
-use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\Inventory\Model\ResourceModel\SourceTypeLink\Collection as SourceTypeLinkCollection;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
-use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
-use Magento\InventoryApi\Api\Data\StockSourceLinkSearchResultsInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkSearchResultsInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkSearchResultsInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkSearchResultsInterfaceFactory;
-use Magento\InventoryApi\Api\GetSourceTypeLinksInterface;
+use Magento\InventoryApi\Api\GetSourceTypeLinkInterface;
 
 /**
  * @inheritdoc
  */
-class GetSourceTypeLinks implements GetSourceTypeLinksInterface
+class GetSourceTypeLink implements GetSourceTypeLinkInterface
 {
     /**
      * @var CollectionProcessorInterface
@@ -48,10 +44,19 @@ class GetSourceTypeLinks implements GetSourceTypeLinksInterface
      */
     private $searchCriteriaBuilder;
 
+    /**
+     * @var SourceInterfaceFactory
+     */
     private $sourceFactory;
 
+    /**
+     * @var SourceTypeLinkCollectionFactory
+     */
     private $sourceTypeLinkCollectionFactory;
 
+    /**
+     * @var SourceTypeLinkSearchResultsInterfaceFactory
+     */
     private $sourceTypeLinkSearchResultsFactory;
 
     /**
@@ -59,6 +64,7 @@ class GetSourceTypeLinks implements GetSourceTypeLinksInterface
      * @param StockSourceLinkCollectionFactory $stockSourceLinkCollectionFactory
      * @param SourceTypeLinkCollectionFactory $sourceTypeLinkCollectionFactory
      * @param StockSourceLinkSearchResultsInterfaceFactory $stockSourceLinkSearchResultsFactory
+     * @param SourceTypeLinkSearchResultsInterfaceFactory $sourceTypeLinkSearchResultsFactory
      * @param SourceInterfaceFactory $sourceFactory
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
@@ -85,18 +91,17 @@ class GetSourceTypeLinks implements GetSourceTypeLinksInterface
      */
     public function execute(SearchCriteriaInterface $searchCriteria): SourceTypeLinkSearchResultsInterface
     {
-        /** @var Collection $collection */
+        /** @var SourceTypeLinkCollection $collection */
         $collection = $this->sourceTypeLinkCollectionFactory->create();
         $this->collectionProcessor->process($searchCriteria, $collection);
 
-        /** @var StockSourceLinkSearchResultsInterface $searchResult */
+        /** @var SourceTypeLinkSearchResultsInterface $searchResult */
         $searchResult = $this->sourceTypeLinkSearchResultsFactory->create();
-//
+
         $searchResult->setItems($collection->getItems());
         $searchResult->setTotalCount($collection->getSize());
         $searchResult->setSearchCriteria($searchCriteria);
 
-//        return $collection->getFirstItem();
         return $searchResult;
     }
 }

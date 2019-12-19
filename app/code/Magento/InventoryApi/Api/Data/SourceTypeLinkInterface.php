@@ -23,7 +23,6 @@ interface SourceTypeLinkInterface extends ExtensibleDataInterface
      */
     const TYPE_CODE = 'type_code';
     const SOURCE_CODE = 'source_code';
-    const POSITION = 'position';
 
     /**#@-*/
 
@@ -56,21 +55,4 @@ interface SourceTypeLinkInterface extends ExtensibleDataInterface
      * @return void
      */
     public function setTypeCode(?string $sourceCode): void;
-
-    /**
-     * Retrieve existing extension attributes object
-     *
-     * @return \Magento\InventoryApi\Api\Data\SourceCarrierLinkExtensionInterface|null
-     */
-    public function getExtensionAttributes(): ?\Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface;
-
-    /**
-     * Set an extension attributes object
-     *
-     * @param \Magento\InventoryApi\Api\Data\SourceCarrierLinkExtensionInterface $extensionAttributes
-     * @return void
-     */
-    public function setExtensionAttributes(
-        \Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface $extensionAttributes
-    ): void;
 }

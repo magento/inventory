@@ -32,13 +32,8 @@ class AfterSourceSave implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $params = $observer->getEvent()->getRequest()->getParams();
         $source = $observer->getEvent()->getSource();
-        $type_code = $params['general']['type_code'];
 
-//        $extensionAttributes = $source->getExtensionAttributes();
-//        $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
-
-        $this->sourceTypeLinkManagement->saveTypeLinksBySource($source, $type_code);
+        $this->sourceTypeLinkManagement->saveTypeLinksBySource($source);
     }
 }

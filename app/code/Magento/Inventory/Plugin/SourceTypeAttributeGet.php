@@ -37,8 +37,6 @@ class SourceTypeAttributeGet
         SourceRepositoryInterface $subject,
         SourceInterface $source
     ) {
-        $sourceResult = $this->sourceTypeLinkManagement->loadTypeLinksBySource($source);
-
-        return $sourceResult;
+        return $this->sourceTypeLinkManagement->loadTypeLinksBySource($source);
     }
 }
