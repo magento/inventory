@@ -19,16 +19,16 @@ use \Magento\Framework\Api\SearchResultsInterface;
 interface SourceTypeLinkSearchResultsInterface extends SearchResultsInterface
 {
     /**
-     * Get StockSourceLink list
+     * Get SourceTypeLink list
      *
-     * @return \Magento\InventoryApi\Api\Data\StockSourceLinkInterface[]
+     * @return SourceTypeLinkInterface[]
      */
     public function getItems();
 
     /**
-     * Set StockSourceLink list
+     * Set SourceTypeLink list
      *
-     * @param \Magento\InventoryApi\Api\Data\StockSourceLinkInterface[] $items
+     * @param SourceTypeLinkInterface[] $items
      * @return void
      */
     public function setItems(array $items);

@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model;
 
+use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\InventoryApi\Model\SourceTypeLinkManagementInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -96,8 +98,10 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 
         $sourceType = $this->getSourceTypeLinks->execute($searchCriteria);
 
+        /** @var SourceTypeLinkInterface $sourceTypeFirst */
         $sourceTypeFirst = current($sourceType->getItems());
 
+        /** @var SourceExtensionInterface $extension */
         $extension = $source->getExtensionAttributes();
         $extension->setTypeCode($sourceTypeFirst->getTypeCode());
         $source->setExtensionAttributes($extension);
