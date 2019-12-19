@@ -14,6 +14,6 @@
         <arguments>
             <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
         </arguments>
-        <dontSeeElement selector="{{PickInStoreModalSection.shipBtn(sourceName)}}" stepKey="verifySourceVisibility"/>
+        <dontSeeElement selector="{{StorefrontPickInStoreModalSection.shipBtn(sourceName)}}" stepKey="verifySourceVisibility"/>
     </actionGroup>
 </actionGroups>

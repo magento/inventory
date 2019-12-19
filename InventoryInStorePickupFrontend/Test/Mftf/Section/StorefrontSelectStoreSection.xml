@@ -7,7 +7,7 @@
 -->
 
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
-    <section name="SelectStoreSection">
+    <section name="StorefrontSelectStoreSection">
         <element name="nextBtn" type="button" selector="//form[contains(@class, 'form-continue')]/descendant::button[@type='submit']"/>
         <element name="pickInStoreBtn" type="button" selector="//button[contains(@class, 'action-select-store-pickup')]"/>
         <element name="selectStoreBtn" type="button" selector="//span[contains(text(), 'Select Store')]"/>
