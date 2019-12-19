@@ -20,7 +20,6 @@
                 <issueId value="https://github.com/magento/magento2/issues/23940"/>
             </skip>
         </annotations>
-
         <before>
             <!--Create Customer.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
@@ -50,28 +49,27 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
         </after>
-
         <!--Set 'Qty Use Decimals' on product edit page.-->
         <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AdminApplyUseDecimalsOnProductEditPageActionGroup" stepKey="setQtyUseDecimals">
             <argument name="useDecimals" value="Yes"/>
         </actionGroup>
-        <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         <!-- Login as customer -->
-        <comment userInput="Login to storefront as customer." stepKey="loginToStorefrontComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Try to buy product wit decimal quantity from storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="StorefrontAddCategoryProductToCartWithQuantityActionGroup" stepKey="addProductToCart">
-            <argument name="product" value="$$product$$"/>
-            <argument name="quantity" value="1.5"/>
-            <argument name="checkQuantity" value="1"/>
-        </actionGroup>
-
+        <amOnPage url="{{StorefrontProductPage.url($$product.sku$$)}}" stepKey="navigateToProductPDP"/>
+        <waitForElementVisible selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="waitForAddToCartButton"/>
+        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1.5" stepKey="fillQuantity"/>
+        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
+        <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
+
         <waitForPageLoad stepKey="waitFroPaymentSelectionPageLoad"/>
         <click selector=".continue" stepKey="clickOnNextPaymentPage"/>
         <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPayment"/>
@@ -86,7 +84,7 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
-        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1.5')}}" stepKey="waitForViewOrderedQuantity"/>
-        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1.5')}}" userInput="Ordered 1.5" stepKey="verifyOrderedQty"/>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 1.5" stepKey="verifyOrderedQty"/>
     </test>
 </tests>

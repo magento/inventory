@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\IsNumericValue;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -28,15 +29,23 @@ class StatusValidator implements SourceItemValidatorInterface
     private $allowedSourceItemStatuses;
 
     /**
+     * @var IsNumericValue
+     */
+    private $isNumericValue;
+
+    /**
      * @param ValidationResultFactory $validationResultFactory
+     * @param IsNumericValue $isNumericValue
      * @param array $allowedSourceItemStatuses
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
+        IsNumericValue $isNumericValue,
         array $allowedSourceItemStatuses = []
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->allowedSourceItemStatuses = $allowedSourceItemStatuses;
+        $this->isNumericValue = $isNumericValue;
     }
 
     /**
@@ -45,22 +54,17 @@ class StatusValidator implements SourceItemValidatorInterface
     public function validate(SourceItemInterface $source): ValidationResult
     {
         $value = $source->getStatus();
+        $errors = [
+            $this->isNumericValue->execute(SourceItemInterface::QUANTITY, $value)
+        ];
 
-        if (!is_numeric($value)) {
-            $errors[] = __(
-                '"%field" should be numeric.',
-                ['field' => SourceItemInterface::STATUS]
-            );
-            return $this->validationResultFactory->create(['errors' => $errors]);
-        }
-
-        $errors = [];
         if (!in_array((int)$value, array_values($this->allowedSourceItemStatuses), true)) {
             $errors[] = __(
                 '"%field" should a known status.',
                 ['field' => SourceItemInterface::STATUS]
             );
         }
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
