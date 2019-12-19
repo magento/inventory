@@ -9,6 +9,9 @@ namespace Magento\Inventory\Model\ResourceModel\Source;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
+/**
+ * Implementation of basic operations for type entity for specific db layer
+ */
 class Type extends AbstractDb
 {
     /**
