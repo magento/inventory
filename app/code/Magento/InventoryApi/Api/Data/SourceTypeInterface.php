@@ -9,25 +9,36 @@ namespace Magento\InventoryApi\Api\Data;
 
 interface SourceTypeInterface
 {
+    /**
+     * Constants for keys of data array. Identical to the name of the getter in snake case
+     */
     const TYPE_CODE = "type_code";
     const NAME = "name";
 
     /**
+     * Get type code
+     *
      * @return string|null
      */
     public function getTypeCode(): ?string;
 
     /**
+     * Set type code
+     *
      * @param string $typeCode
      */
     public function setTypeCode(?string $typeCode): void;
 
     /**
+     * Get name
+     *
      * @return string|null
      */
     public function getName(): ?string;
 
     /**
+     * Set name
+     *
      * @param string $name
      */
     public function setName(?string $name): void;

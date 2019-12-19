@@ -11,6 +11,9 @@ use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Inventory\Model\SourceTypeLinkManagement;
 
+/**
+ * Load type to source
+ */
 class SourceTypeAttributeGet
 {
     /**
@@ -20,6 +23,7 @@ class SourceTypeAttributeGet
 
     /**
      * SourceTypeAttribute constructor.
+     *
      * @param SourceTypeLinkManagement $sourceTypeLinkManagement
      */
     public function __construct(
@@ -29,6 +33,8 @@ class SourceTypeAttributeGet
     }
 
     /**
+     * Load type of source after get source
+     *
      * @param SourceRepositoryInterface $subject
      * @param SourceInterface $source
      * @return SourceInterface

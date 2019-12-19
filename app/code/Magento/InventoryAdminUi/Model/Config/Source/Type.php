@@ -13,7 +13,6 @@ use Magento\Inventory\Model\ResourceModel\Source\Type as SourceTypeResource;
 
 /**
  * Class Type
- * @package Magento\InventoryAdminUi\Model\Config\Source
  */
 class Type implements OptionSourceInterface
 {
@@ -41,7 +40,7 @@ class Type implements OptionSourceInterface
     {
         $allTypes = $this->resourceModel->getAllTypes();
 
-        $types = array();
+        $types = [];
         foreach ($allTypes as $key => $type) {
             $types[$key]['value'] = $type['type_code'];
             $types[$key]['label'] = $type['name'];

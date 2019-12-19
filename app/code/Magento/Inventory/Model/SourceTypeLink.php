@@ -13,7 +13,7 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 
 /**
- * {@inheritdoc}
+ * @inheritdoc
  *
  * @codeCoverageIgnore
  */
@@ -58,7 +58,7 @@ class SourceTypeLink extends AbstractExtensibleModel implements SourceTypeLinkIn
     {
         $extensionAttributes = $this->_getExtensionAttributes();
         if (null === $extensionAttributes) {
-            $extensionAttributes = $this->extensionAttributesFactory->create(SourceCarrierLinkInterface::class);
+            $extensionAttributes = $this->extensionAttributesFactory->create(SourceTypeLinkInterface::class);
             $this->setExtensionAttributes($extensionAttributes);
         }
         return $extensionAttributes;

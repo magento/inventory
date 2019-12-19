@@ -12,8 +12,8 @@ use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResour
 use Magento\Inventory\Model\SourceTypeLink as SourceTypeLinkModel;
 
 /**
- * Resource Collection of SourceCarrierLink entities
- * It is not an API because SourceCarrierLink must be loaded via Source entity only
+ * Resource Collection of SourceTypeLink entities
+ * It is not an API because SourceTypeLink must be loaded via Source entity only
  */
 class Collection extends AbstractCollection
 {
