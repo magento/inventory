@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\StockSourceLink\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Model\StockSourceLinkValidatorInterface;
 
@@ -23,11 +24,20 @@ class StockIdValidator implements StockSourceLinkValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var NotAnEmptyString
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $notAnEmptyString;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param NotAnEmptyString $notAnEmptyString
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        NotAnEmptyString $notAnEmptyString
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->notAnEmptyString = $notAnEmptyString;
     }
 
     /**
@@ -35,13 +45,11 @@ class StockIdValidator implements StockSourceLinkValidatorInterface
      */
     public function validate(StockSourceLinkInterface $link): ValidationResult
     {
-        $value = (int)$link->getStockId();
-
-        if (!$value) {
-            $errors[] = __('"%field" can not be empty.', ['field' => StockSourceLinkInterface::STOCK_ID]);
-        } else {
-            $errors = [];
-        }
+        $value = (string)$link->getStockId();
+        $errors = [
+            $this->notAnEmptyString->execute(StockSourceLinkInterface::STOCK_ID, $value)
+        ];
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);
     }

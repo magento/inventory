@@ -17,12 +17,10 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MSI-1509"/>
-            </skip>
         </annotations>
 
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
             <createData entity="_minimalSource" stepKey="createSource"/>
@@ -108,6 +106,7 @@
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
         </before>
         <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove example.com static.magento.com"/>
             <comment userInput="Delete all products after test" stepKey="deleteAllProductsViaGridAfterTestComment"/>
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="goToProductsGridForDeleteAllProductsComment"/>
             <waitForPageLoad stepKey="waitForGridLoadForDeleteAllProducts"/>
@@ -138,8 +137,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSimpleProductForSetNotifyQuantityStatus"/>
         <waitForPageLoad time="30" stepKey="waitForSimpleProductPageLoadForSetNotifyQuantity"/>
+        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSimpleProduct"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="fillNotifyQuantityForSimpleProduct"/>
-        <checkOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSimpleProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForVirtualProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySkuForSetNotifyQuantity">
