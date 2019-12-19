@@ -118,6 +118,10 @@ class MapperTest extends TestCase
             $this->templateFilter->filter($source->getExtensionAttributes()->getFrontendDescription()),
             $pickupLocation->getDescription()
         );
+        $this->assertContains(
+            '/pub/media/test/location.png" alt="/"',
+            $pickupLocation->getDescription()
+        );
         $this->assertNotEquals($source->getName(), $pickupLocation->getName());
         $this->assertEquals($source->getLatitude(), $pickupLocation->getLatitude());
         $this->assertEquals($source->getLongitude(), $pickupLocation->getLongitude());

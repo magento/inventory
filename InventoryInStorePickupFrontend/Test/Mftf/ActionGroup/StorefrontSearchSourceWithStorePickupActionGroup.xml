@@ -14,7 +14,7 @@
         <arguments>
             <argument name="searchString" type="string" defaultValue="{{US_Address_TX.city}}"/>
         </arguments>
-        <fillField selector="{{PickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
+        <fillField selector="{{StorefrontPickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
         <waitForPageLoad stepKey="waitForSearchResults"/>
     </actionGroup>
 </actionGroups>
