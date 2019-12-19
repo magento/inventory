@@ -32,7 +32,8 @@ class Type extends AbstractDb
     {
         $connection = $this->getConnection();
         $select = $connection->select()->from(
-            $this->getMainTable());
+            $this->getMainTable()
+        );
 
         return $connection->fetchAll($select);
     }

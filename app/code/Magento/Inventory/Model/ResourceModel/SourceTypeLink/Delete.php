@@ -23,7 +23,7 @@ class Delete
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
-      ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection
     ) {
         $this->resourceConnection = $resourceConnection;
     }

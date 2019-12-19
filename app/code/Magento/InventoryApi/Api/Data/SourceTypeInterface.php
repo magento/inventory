@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api\Data;
 
-
 interface SourceTypeInterface
 {
     const TYPE_CODE = "type_code";

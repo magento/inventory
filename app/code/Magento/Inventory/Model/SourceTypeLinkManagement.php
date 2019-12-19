@@ -15,7 +15,7 @@ use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 
 /**
-* @inheritdoc
+ * @inheritdoc
  */
 class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 {
