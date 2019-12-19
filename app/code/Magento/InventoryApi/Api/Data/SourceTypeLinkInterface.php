@@ -27,14 +27,14 @@ interface SourceTypeLinkInterface extends ExtensibleDataInterface
     /**#@-*/
 
     /**
-     * Get carrier code
+     * Get source code
      *
      * @return string|null
      */
     public function getSourceCode(): ?string;
 
     /**
-     * Set carrier code
+     * Set source code
      *
      * @param string|null $sourceCode
      * @return void
@@ -42,17 +42,34 @@ interface SourceTypeLinkInterface extends ExtensibleDataInterface
     public function setSourceCode(?string $sourceCode): void;
 
     /**
-     * Get carrier code
+     * Get type code
      *
      * @return string|null
      */
     public function getTypeCode(): ?string;
 
     /**
-     * Set carrier code
+     * Set type code
      *
      * @param string|null $sourceCode
      * @return void
      */
     public function setTypeCode(?string $sourceCode): void;
+
+    /**
+     * Retrieve existing extension attributes object
+     *
+     * @return \Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface|null
+     */
+    public function getExtensionAttributes(): ?\Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface;
+
+    /**
+     * Set an extension attributes object
+     *
+     * @param \Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface $extensionAttributes
+     * @return void
+     */
+    public function setExtensionAttributes(
+        \Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface $extensionAttributes
+    ): void;
 }
