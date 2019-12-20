@@ -66,8 +66,8 @@
         </actionGroup>
         <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="grabOrderId"/>
         <!--Create invoice-->
-        <actionGroup ref="StartCreateInvoiceFromOrderPage" stepKey="startCreateInvoice"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Create Credit Memo-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="startToCreateCreditMemo">
             <argument name="orderId" value="{$grabOrderId}"/>

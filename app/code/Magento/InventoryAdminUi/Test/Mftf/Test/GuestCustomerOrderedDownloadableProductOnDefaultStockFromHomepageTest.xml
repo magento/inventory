@@ -40,7 +40,7 @@
                 <argument name="sourceCode" value="_defaultSource.source_code"/>
                 <argument name="qty" value="{{defaultProductQty.value}}" />
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
@@ -52,7 +52,7 @@
         </after>
 
         <!--Add product to cart.-->
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$downloadableProduct$"/>
         </actionGroup>
         <!-- Place Order -->

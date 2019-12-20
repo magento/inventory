@@ -57,7 +57,7 @@
             <argument name="value" value="Special Stock"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitFilterApplied"/>
-        <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20StocksPerPage">
+        <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20StocksPerPage">
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>
