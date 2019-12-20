@@ -63,17 +63,17 @@
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
 
         <!-- Create order with simple product from admin area. -->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$createCustomer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
         <waitForPageLoad time="20" stepKey="waitForPageLoad"/>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addSimpleProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="productQty" value="5"/>
         </actionGroup>
         <waitForPageLoad time="20" stepKey="waitForPageLoadOrder"/>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRateShipping"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." stepKey="seeSuccessMessageOrderPlaced"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
@@ -90,12 +90,12 @@
         <see selector="{{AdminGridRow.rowOne}}" userInput="95" stepKey="seeUpdatedQuantity3"/>
 
         <!--Create Invoice-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
         <waitForPageLoad stepKey="waitPageToBeLoaded"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <waitForPageLoad stepKey="waitForInvoiceSubmitted"/>
         <!-- Create partial shipment -->
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>

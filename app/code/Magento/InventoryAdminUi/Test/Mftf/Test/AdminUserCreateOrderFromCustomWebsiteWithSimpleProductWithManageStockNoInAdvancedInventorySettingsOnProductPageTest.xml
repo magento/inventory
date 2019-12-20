@@ -77,11 +77,11 @@
 
         <!-- Assign product to custom website -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct1">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct1">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openFirstProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openFirstProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" >
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
@@ -99,15 +99,15 @@
             <argument name="website" value="{{NewWebSiteData.name}}"/>
         </actionGroup>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="Simple_US_Customer"/>
             <argument name="storeView" value="customStore"/>
         </actionGroup>
 
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addSimpleProductToTheOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToTheOrder">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="orderSelectFlatRateShippingMethod"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="orderSelectFlatRateShippingMethod"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
     </test>
 </tests>

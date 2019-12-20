@@ -52,7 +52,7 @@
         </actionGroup>
         <!-- Add virtual product to shopping cart -->
         <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
             <argument name="productCount" value="1"/>
         </actionGroup>
@@ -74,7 +74,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessageAfterReorder"/>
         <!--Verify reorder.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$reorderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>

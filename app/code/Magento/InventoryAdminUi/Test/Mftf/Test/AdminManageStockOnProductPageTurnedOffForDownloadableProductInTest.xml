@@ -72,7 +72,7 @@
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
         </actionGroup>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage1"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName1">
@@ -87,7 +87,7 @@
         <actionGroup ref="AdminChangeManageStockStatusOnProductEditPageActionGroup" stepKey="disableMangeStockOnProductEditPage">
             <argument name="manageStock" value="No"/>
         </actionGroup>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct2"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">
