@@ -13,8 +13,7 @@ use \Magento\Framework\Api\SearchResultsInterface;
  * Search results of Repository::getList method
  *
  * Used fully qualified namespaces in annotations for proper work of WebApi request parser
- *
- * @api
+ * 
  */
 interface SourceTypeLinkSearchResultsInterface extends SearchResultsInterface
 {

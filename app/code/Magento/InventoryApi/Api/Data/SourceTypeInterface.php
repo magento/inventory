@@ -7,6 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api\Data;
 
+/**
+ * Represent kind of source
+ *
+ */
 interface SourceTypeInterface
 {
     /**

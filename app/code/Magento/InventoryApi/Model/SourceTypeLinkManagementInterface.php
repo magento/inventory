@@ -10,10 +10,9 @@ namespace Magento\InventoryApi\Model;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 
 /**
- * It is extension point for carrier links storage replacing (Service Provider Interface - SPI)
- * Provide own implementation of this interface if you would like to replace storage
+ * It is extension point for source type link (Service Provider Interface - SPI)
+ * Provide own implementation of this interface if you would like to replace source type
  *
- * @api
  */
 interface SourceTypeLinkManagementInterface
 {
@@ -22,7 +21,7 @@ interface SourceTypeLinkManagementInterface
     /**
      * Save Type link by source
      *
-     * Get carrier links from source object and save its. If carrier links are equal to null do nothing
+     * Get type source link from source object and save its.
      *
      * @param SourceInterface $source
      * @return void
@@ -30,7 +29,7 @@ interface SourceTypeLinkManagementInterface
     public function saveTypeLinksBySource(SourceInterface $source): void;
 
     /**
-     * Load carrier links by source and set its to source object
+     * Load type source link by source and set its to source object
      *
      * @param SourceInterface $source
      * @return SourceInterface

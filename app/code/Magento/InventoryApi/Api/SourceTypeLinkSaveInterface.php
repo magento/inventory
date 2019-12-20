@@ -15,7 +15,6 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
  *
  * Used fully qualified namespaces in annotations for proper work of WebApi request parser
  *
- * @api
  */
 interface SourceTypeLinkSaveInterface
 {
