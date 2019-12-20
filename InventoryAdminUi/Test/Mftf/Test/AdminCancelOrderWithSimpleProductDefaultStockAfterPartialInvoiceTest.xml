@@ -34,7 +34,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -85,7 +85,7 @@
 
         <!--Admin Area Process and Verify Partial Invoice-->
         <comment userInput="Admin - Process Partial invoice" stepKey="PartialInvoice"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>

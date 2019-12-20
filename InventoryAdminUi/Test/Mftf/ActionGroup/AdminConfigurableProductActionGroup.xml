@@ -8,7 +8,7 @@
 
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-    <actionGroup name="createConfigurationsForTwoAttributeCustomSource" extends="generateConfigurationsByAttributeCode">
+    <actionGroup name="createConfigurationsForTwoAttributeCustomSource" extends="GenerateConfigurationsByAttributeCodeActionGroup">
         <arguments>
             <argument name="secondAttributeCode" type="string"/>
             <argument name="sourceName" type="string"/>

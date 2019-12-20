@@ -37,7 +37,7 @@
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword1">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword1">
             <argument name="keyword" value="BasicMsiStock2.name"/>
         </actionGroup>
 

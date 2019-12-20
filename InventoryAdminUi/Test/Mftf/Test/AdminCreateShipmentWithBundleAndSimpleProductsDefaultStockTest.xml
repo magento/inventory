@@ -51,7 +51,7 @@
         <!--Set default source quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openSimpleProductEditPage"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQtyBySourceCode(_defaultSource.source_code)}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Add simple product to bundle.-->
         <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
         <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
@@ -62,7 +62,7 @@
         <waitForElementVisible selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="waitForAddProductsToBundle"/>
         <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
         <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>
@@ -80,7 +80,7 @@
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addBundleProductToCart">
             <argument name="productName" value="$bundleProduct.name$"/>
         </actionGroup>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addSimpleProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addSimpleProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
         <!--Place order.-->
@@ -89,7 +89,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Create shipment.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>

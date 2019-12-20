@@ -53,7 +53,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Add virtual product to shopping cart -->
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
             <argument name="productCount" value="1"/>
         </actionGroup>
@@ -64,12 +64,12 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Create Invoice-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
         <waitForPageLoad stepKey="waitPageToBeLoaded"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Verify reorder button is not visible-->
         <amOnPage url="{{StorefrontCustomerDashboardPage.url}}" stepKey="goToCustomerDashboardPage"/>
         <waitForPageLoad stepKey="waitForCustomerDashboardPageLoad"/>

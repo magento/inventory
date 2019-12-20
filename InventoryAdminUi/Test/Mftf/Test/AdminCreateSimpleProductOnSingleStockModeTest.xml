@@ -34,7 +34,7 @@
 
         <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickAddProductDropDown"/>
         <click selector="{{AdminProductGridActionSection.addSimpleProduct}}" stepKey="clickAddSimpleProduct"/>
-        <actionGroup ref="fillMainProductForm" stepKey="fillSimpleProductMain">
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillSimpleProductMain">
             <argument name="product" value="SimpleMsiProduct"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>

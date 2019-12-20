@@ -36,11 +36,11 @@
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="visitAdminProductPageBundle"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateBundleProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateBundleProduct">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
-        <actionGroup ref="fillProductNameAndSkuInProductForm" stepKey="fillBundleProductNameAndSku">
+        <actionGroup ref="FillProductNameAndSkuInProductFormActionGroup" stepKey="fillBundleProductNameAndSku">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
 
@@ -53,7 +53,7 @@
         <waitForPageLoad stepKey="waitForPageLoad3"/>
         <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
         <waitForPageLoad stepKey="waitForPageLoad4"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
             <argument name="product" value="$$simpleProduct1$$"/>
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>
