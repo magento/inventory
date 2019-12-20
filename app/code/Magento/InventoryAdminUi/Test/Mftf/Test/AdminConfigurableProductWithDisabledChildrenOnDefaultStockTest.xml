@@ -30,7 +30,7 @@
             <createData entity="_defaultCategory" stepKey="category"/>
         </before>
         <after>
-            <actionGroup ref="deleteProductBySku" stepKey="deleteCreatedConfigurableProduct">
+            <actionGroup ref="DeleteProductBySkuActionGroup" stepKey="deleteCreatedConfigurableProduct">
                 <argument name="sku" value="{{ConfigurableMsiProduct.sku}}"/>
             </actionGroup>
             <!--Disable additional source.-->
@@ -64,7 +64,7 @@
         <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultSourceByNameForAssignment">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultSourceByNameForAssignment">
             <argument name="keyword" value="_defaultSource.name"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue(_defaultSource.name)}}" stepKey="selectDefaultSource"/>
@@ -83,13 +83,13 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="checkConfigurableOnProductViewPage">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="checkConfigurableOnProductViewPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <!--Disable configurable option.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterWhiteConfigurableVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterWhiteConfigurableVariation">
             <argument name="product" value="colorProductAttribute1"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editWhiteConfigurableVariation"/>

@@ -41,7 +41,7 @@
 
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStocksListPage"/>
         <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchStockByKeyword">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchStockByKeyword">
             <argument name="keyword" value="$$createCustomStock.stock[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createCustomStock.stock[name]$$)}}" stepKey="clickOnEditForCustomStock"/>

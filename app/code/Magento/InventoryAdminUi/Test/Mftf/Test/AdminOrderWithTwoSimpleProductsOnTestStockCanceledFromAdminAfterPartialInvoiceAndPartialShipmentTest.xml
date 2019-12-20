@@ -56,30 +56,30 @@
 
         <!-- assign first simple product to custom source -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="goToProductIndexPage"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct" after="goToProductIndexPage">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct" after="goToProductIndexPage">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct" stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup" after="filterProduct" stepKey="openSecondProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" after="openSecondProductForEdit">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct" after="setCustomSourceQuantity"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct" after="setCustomSourceQuantity"/>
 
         <!-- assign second simple product to custom source -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="goToProductIndexPage2"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct2" after="goToProductIndexPage2">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2" after="goToProductIndexPage2">
             <argument name="product" value="$$simpleProduct2$$"/>
         </actionGroup>
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct2" stepKey="openSecondProductForEdit2"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup" after="filterProduct2" stepKey="openSecondProductForEdit2"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct2" after="openSecondProductForEdit2">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity2"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct2" after="setCustomSourceQuantity2"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2" after="setCustomSourceQuantity2"/>
 
         <!-- Create order -->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="newOrder">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AddSimpleProductWithQtyToOrderActionGroup" stepKey="addFirstProductToOrder" >
@@ -90,18 +90,18 @@
             <argument name="product" value="$$simpleProduct2$$"/>
             <argument name="productQty" value="5"/>
         </actionGroup>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRate"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
         <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
 
         <!-- Invoice the order -->
-        <actionGroup ref="goToInvoiceIntoOrder" stepKey="goToInvoiceIntoOrderPage"/>
+        <actionGroup ref="GoToInvoiceIntoOrderActionGroup" stepKey="goToInvoiceIntoOrderPage"/>
         <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" after="goToInvoiceIntoOrderPage" userInput="2" stepKey="ChangeQtyToInvoice"/>
         <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('2')}}" after="ChangeQtyToInvoice" userInput="3" stepKey="ChangeQtyToInvoice2"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="updateQuantity" after="ChangeQtyToInvoice2"/>
         <waitForPageLoad time="20" stepKey="WaitForInvoiceQtyUpdate" after="updateQuantity"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
 
         <!-- Ship the order -->
         <actionGroup ref="goToShipmentIntoOrder" stepKey="goToShipment"  after="submitInvoice"/>
