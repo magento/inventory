@@ -57,7 +57,7 @@
             <argument name="value" value="special_source"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitFilterApplied"/>
-        <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20SourcesPerPage">
+        <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20SourcesPerPage">
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>

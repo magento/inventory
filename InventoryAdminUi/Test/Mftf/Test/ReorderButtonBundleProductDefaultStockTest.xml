@@ -85,7 +85,7 @@
             <argument name="qty" value="1" />
         </actionGroup>
 
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct2">
             <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
@@ -97,7 +97,7 @@
             <argument name="qty" value="1" />
         </actionGroup>
 
-        <actionGroup ref="saveProductForm" stepKey="saveProduct2"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
@@ -108,7 +108,7 @@
             <argument name="phrase" value="$createBundleProduct.name$"/>
         </actionGroup>
 
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="openAndCheckProduct">
+        <actionGroup ref="StorefrontOpenProductFromQuickSearchActionGroup" stepKey="openAndCheckProduct">
             <argument name="productName" value="$createBundleProduct.name$"/>
             <argument name="productUrlKey" value="$createBundleProduct.custom_attributes[url_key]$"/>
         </actionGroup>
@@ -125,7 +125,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
 
         <!--Create Shipment-->
-        <actionGroup ref="filterOrderGridById" stepKey="filterByOrderId">
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterByOrderId">
             <argument name="orderId" value="$orderNumber"/>
         </actionGroup>
         <click selector="{{AdminDataGridTableSection.firstRow}}" stepKey="clickOrderRow"/>

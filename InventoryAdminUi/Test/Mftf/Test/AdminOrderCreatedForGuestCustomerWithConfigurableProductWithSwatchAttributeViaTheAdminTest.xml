@@ -157,7 +157,7 @@
         <click selector="#order-search .action-add" stepKey="clickOnAddSelectedProductsToOrder1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad19"/>
 
-        <actionGroup ref="fillOrderCustomerInformation" stepKey="fillCustomerAddress">
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerAddress">
             <argument name="customer" value="MsiCustomer1"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
@@ -181,7 +181,7 @@
 
         <grabTextFrom selector=".page-title" stepKey="grabTheOrderId1"/>
 
-        <actionGroup ref="verifyBasicOrderInformation" stepKey="verifyOrderInformation">
+        <actionGroup ref="VerifyBasicOrderInformationActionGroup" stepKey="verifyOrderInformation">
             <argument name="customer" value="MsiCustomer1"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>

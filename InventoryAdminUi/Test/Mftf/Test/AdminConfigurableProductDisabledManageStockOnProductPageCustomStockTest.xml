@@ -79,7 +79,7 @@
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
 
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomSourceByNameForAssignment">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByNameForAssignment">
             <argument name="keyword" value="$$customSource.source[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$customSource.source[name]$$)}}" stepKey="selectCustomSource"/>
@@ -106,7 +106,7 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="checkConfigurableOnProductViewPage">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="checkConfigurableOnProductViewPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
 
@@ -119,8 +119,8 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGrid"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterWhiteConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGrid"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterWhiteConfigurableVariation">
             <argument name="product" value="colorProductAttribute1"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editWhiteConfigurableVariation"/>
@@ -130,7 +130,7 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToEditRedConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoadToFindRedConfigurableVariation"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterProductGridToFindConfigurableRedVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterProductGridToFindConfigurableRedVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariation"/>
@@ -153,8 +153,8 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToDisableManageStockForWhiteConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridIsLoaded"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridToGetConfigurableVariations"/>
-        <actionGroup ref="filterProductGridByName" stepKey="findWhiteConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridToGetConfigurableVariations"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="findWhiteConfigurableVariation">
             <argument name="product" value="colorProductAttribute1"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableWhiteVariationToDisableManageStock"/>
@@ -166,7 +166,7 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToDisableManageStockForRedConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoadToFilterRedConfigurableVariation"/>
-        <actionGroup ref="filterProductGridByName" stepKey="searchConfigurableRedVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="searchConfigurableRedVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariationToDisableManageStock"/>
@@ -181,7 +181,7 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="checkConfigurableBackToStockOnProductViewPage">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="checkConfigurableBackToStockOnProductViewPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
 
