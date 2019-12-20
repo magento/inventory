@@ -28,7 +28,7 @@ class AfterSourceSave implements ObserverInterface
     }
 
     /**
-     * @param Observer $observer
+     * @inheritDoc
      */
     public function execute(Observer $observer)
     {

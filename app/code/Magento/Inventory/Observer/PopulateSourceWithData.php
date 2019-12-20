@@ -29,8 +29,7 @@ class PopulateSourceWithData implements ObserverInterface
     }
 
     /**
-     * @param Observer $observer
-     * @return $this|void
+     * @inheritDoc
      */
     public function execute(Observer $observer)
     {
@@ -42,7 +41,5 @@ class PopulateSourceWithData implements ObserverInterface
         $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
         $extensionAttributes->setTypeCode($type_code);
         $source->setExtensionAttributes($extensionAttributes);
-
-        return $this;
     }
 }
