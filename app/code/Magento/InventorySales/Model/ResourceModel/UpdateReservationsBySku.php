@@ -32,6 +32,7 @@ class UpdateReservationsBySku
      *
      * @param string $origSku
      * @param string $sku
+     * @return void
      */
     public function execute(string $origSku, string $sku): void
     {

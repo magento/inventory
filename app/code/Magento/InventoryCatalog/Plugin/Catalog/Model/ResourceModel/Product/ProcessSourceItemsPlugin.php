@@ -51,7 +51,7 @@ class ProcessSourceItemsPlugin
     }
 
     /**
-     * Update reservations in case product sku has been changed.
+     * Delete source items in case product sku or type has been changed.
      *
      * @param Product $subject
      * @param Product $result
