@@ -39,7 +39,7 @@
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -91,7 +91,7 @@
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 
         <comment userInput="Go to order in admin panel for verify data." stepKey="searchAndVerifyOrderDataComment"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 1001" stepKey="seeOrderedQty"/>
