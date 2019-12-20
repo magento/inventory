@@ -12,6 +12,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 /**
  * Implementation of basic operations for SourceTypeLink entity for specific db layer
  * This class needed for internal purposes only, to make collection work properly
+ *
  */
 class SourceTypeLink extends AbstractDb
 {

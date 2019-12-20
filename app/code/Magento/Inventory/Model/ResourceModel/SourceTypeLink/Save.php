@@ -11,14 +11,21 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 use Magento\Framework\App\ResourceConnection;
 
+/**
+ * Class Save
+ *
+ */
 class Save
 {
-
     /**
      * @var ResourceConnection
      */
     private $resourceConnection;
 
+    /**
+     * Save constructor.
+     * @param ResourceConnection $resourceConnection
+     */
     public function __construct(
         ResourceConnection $resourceConnection
     ) {
@@ -26,7 +33,7 @@ class Save
     }
 
     /**
-     * @inheritDoc
+     * @param SourceInterface $source
      */
     public function execute(SourceInterface $source): void
     {

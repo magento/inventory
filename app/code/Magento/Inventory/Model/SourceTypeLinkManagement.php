@@ -21,7 +21,6 @@ use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
  */
 class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 {
-
     /**
      * @var SearchCriteriaBuilder
      */
@@ -44,6 +43,7 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 
     /**
      * SourceTypeLinkManagement constructor.
+     *
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param GetSourceTypeLinkInterface $getSourceTypeLinks
      * @param SourceTypeLinkSaveInterface $commandSave
@@ -71,6 +71,8 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
     }
 
     /**
+     * Delete current type link
+     *
      * @param string $sourceCode
      */
     private function deleteCurrentTypeLink(string $sourceCode)
@@ -79,6 +81,8 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
     }
 
     /**
+     * Save new type link
+     *
      * @param SourceInterface $source
      * @return void
      */

@@ -25,7 +25,7 @@ class Type extends AbstractDb
     }
 
     /**
-     * return all types of source to select field
+     * Return all types of source to select field
      *
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException

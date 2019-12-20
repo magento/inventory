@@ -11,6 +11,9 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Inventory\Model\SourceTypeLinkManagement;
 
+/**
+ * Plugin to save type of source after save source
+ */
 class AfterSourceSave implements ObserverInterface
 {
     /**
@@ -20,6 +23,7 @@ class AfterSourceSave implements ObserverInterface
 
     /**
      * AfterSourceSave constructor.
+     *
      * @param SourceTypeLinkManagement $sourceTypeLinkManagement
      */
     public function __construct(SourceTypeLinkManagement $sourceTypeLinkManagement)

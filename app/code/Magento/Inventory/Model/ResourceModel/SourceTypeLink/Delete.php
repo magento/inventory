@@ -8,9 +8,12 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel\SourceTypeLink;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 
+/**
+ * Class Delete
+ *
+ */
 class Delete
 {
 
@@ -21,6 +24,7 @@ class Delete
 
     /**
      * @param ResourceConnection $resourceConnection
+     *
      */
     public function __construct(
         ResourceConnection $resourceConnection
@@ -28,6 +32,9 @@ class Delete
         $this->resourceConnection = $resourceConnection;
     }
 
+    /**
+     * @param string $sourceCode
+     */
     public function execute(string $sourceCode)
     {
         $connection = $this->resourceConnection->getConnection();
