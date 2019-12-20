@@ -53,11 +53,11 @@
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid1"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct1">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct1">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openFirstProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openFirstProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
@@ -70,16 +70,16 @@
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid2"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct2">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2">
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
 
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid"  stepKey="openSecondProductForEdit"/>
-        <actionGroup ref="AdminAssignProductToGroup" stepKey="addFirstSimpleToGroup">
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup"  stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="AdminAssignProductToGroupActionGroup" stepKey="addFirstSimpleToGroup">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
@@ -89,7 +89,7 @@
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="navigateToNewOrderWithExistingCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
@@ -100,7 +100,7 @@
         </actionGroup>
 
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
-        <actionGroup ref="cancelPendingOrder" stepKey="cancelOrder"/>
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelOrder"/>
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid3"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySkuToCheckQtyAfterPlaceOrder">

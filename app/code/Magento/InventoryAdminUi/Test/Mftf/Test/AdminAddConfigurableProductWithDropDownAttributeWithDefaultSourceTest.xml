@@ -96,7 +96,7 @@
             <argument name="category" value="$$createPreReqCategory1$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="assertProductInStorefront2">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="assertProductInStorefront2">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
 

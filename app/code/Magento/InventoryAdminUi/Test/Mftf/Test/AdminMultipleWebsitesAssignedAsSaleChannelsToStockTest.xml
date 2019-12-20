@@ -72,7 +72,7 @@
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite4.name}}" stepKey="dontSeeBasicWebbSiteSelected4"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword1">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword1">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createStock1.stock[name]$$)}}" stepKey="clickOnEditForDefaultStock2"/>
@@ -89,7 +89,7 @@
         <seeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite4.name}}" stepKey="seeBasicWebbSiteSelected4"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword2">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
 

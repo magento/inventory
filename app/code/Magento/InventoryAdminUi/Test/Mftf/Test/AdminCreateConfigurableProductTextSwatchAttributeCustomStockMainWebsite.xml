@@ -124,7 +124,7 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="verifyConfigurableProductOnPDP">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="verifyConfigurableProductOnPDP">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
     </test>

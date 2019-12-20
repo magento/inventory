@@ -45,7 +45,7 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
             <argument name="product" value="SimpleMsiProduct"/>
         </actionGroup>
         <actionGroup ref="FillMainProductFormInMultiSourceMode" stepKey="fillMainProductFieldsInAdmin">
