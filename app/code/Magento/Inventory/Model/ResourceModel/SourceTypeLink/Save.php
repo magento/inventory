@@ -23,7 +23,6 @@ class Save
     private $resourceConnection;
 
     /**
-     * Save constructor.
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
@@ -33,6 +32,8 @@ class Save
     }
 
     /**
+     * Save source type link
+     *
      * @param SourceInterface $source
      */
     public function execute(SourceInterface $source): void

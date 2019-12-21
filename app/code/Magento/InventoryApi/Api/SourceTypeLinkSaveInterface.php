@@ -14,12 +14,11 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
  * Performance efficient API
  *
  * Used fully qualified namespaces in annotations for proper work of WebApi request parser
- *
  */
 interface SourceTypeLinkSaveInterface
 {
     /**
-     * Save SourceTypeLink list data
+     * Save SourceTypeLink data
      *
      * @param SourceInterface $source
      * @return void

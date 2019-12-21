@@ -16,6 +16,8 @@ namespace Magento\InventoryApi\Api;
 interface SourceTypeLinkDeleteInterface
 {
     /**
+     * Delete sourceTypeLink
+     *
      * @param string $sourceCode
      */
     public function execute(string $sourceCode): void;

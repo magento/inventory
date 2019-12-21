@@ -12,6 +12,7 @@ use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResour
 
 /**
  * Implementation of SourceTypeLink delete operation for specific db layer
+ *
  * Delete used here for performance efficient purposes over single delete operation
  */
 class Delete
@@ -23,7 +24,6 @@ class Delete
 
     /**
      * @param ResourceConnection $resourceConnection
-     *
      */
     public function __construct(
         ResourceConnection $resourceConnection
@@ -32,6 +32,8 @@ class Delete
     }
 
     /**
+     * Delete source type link
+     *
      * @param string $sourceCode
      */
     public function execute(string $sourceCode)
