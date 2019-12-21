@@ -12,7 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\Source\Type as SourceTypeResource;
 
 /**
- * Class Type
+ * Implement type for source's form
  */
 class Type implements OptionSourceInterface
 {

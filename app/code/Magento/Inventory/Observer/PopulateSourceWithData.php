@@ -10,7 +10,12 @@ namespace Magento\Inventory\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\InventoryApi\Api\Data\SourceExtensionFactory;
+use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 
+/**
+ * Save the type of source after submit form and save source
+ */
 class PopulateSourceWithData implements ObserverInterface
 {
     /**
@@ -35,8 +40,11 @@ class PopulateSourceWithData implements ObserverInterface
     {
         $params = $observer->getEvent()->getRequest()->getParams();
         $type_code = $params['general']['type_code'];
+
+        /** @var SourceInterface $source */
         $source = $observer->getEvent()->getSource();
 
+        /** @var SourceExtensionInterface $extensionAttributes */
         $extensionAttributes = $source->getExtensionAttributes();
         $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->extensionFactory->create();
         $extensionAttributes->setTypeCode($type_code);

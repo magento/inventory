@@ -12,7 +12,6 @@ namespace Magento\InventoryApi\Api;
  * Performance efficient API
  *
  * Used fully qualified namespaces in annotations for proper work of WebApi request parser
- *
  */
 interface SourceTypeLinkDeleteInterface
 {

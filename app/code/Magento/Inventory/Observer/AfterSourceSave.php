@@ -10,6 +10,7 @@ namespace Magento\Inventory\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Inventory\Model\SourceTypeLinkManagement;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 
 /**
  * Plugin to save type of source after save source
@@ -36,6 +37,7 @@ class AfterSourceSave implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        /** @var SourceInterface $source */
         $source = $observer->getEvent()->getSource();
 
         $this->sourceTypeLinkManagement->saveTypeLinksBySource($source);

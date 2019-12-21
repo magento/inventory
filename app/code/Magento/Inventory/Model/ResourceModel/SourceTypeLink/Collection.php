@@ -13,8 +13,8 @@ use Magento\Inventory\Model\SourceTypeLink as SourceTypeLinkModel;
 
 /**
  * Resource Collection of SourceTypeLink entities
- * It is not an API because SourceTypeLink must be loaded via Source entity only
  *
+ * It is not an API because SourceTypeLink must be loaded via Source entity only
  */
 class Collection extends AbstractCollection
 {

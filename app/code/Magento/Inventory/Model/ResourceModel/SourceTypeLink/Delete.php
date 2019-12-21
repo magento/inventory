@@ -11,12 +11,11 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 
 /**
- * Class Delete
- *
+ * Implementation of SourceTypeLink delete operation for specific db layer
+ * Delete used here for performance efficient purposes over single delete operation
  */
 class Delete
 {
-
     /**
      * @var ResourceConnection
      */
