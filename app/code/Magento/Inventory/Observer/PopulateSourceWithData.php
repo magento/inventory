@@ -21,7 +21,7 @@ class PopulateSourceWithData implements ObserverInterface
     /**
      * @var SourceExtensionFactory
      */
-    protected $extensionFactory;
+    private $extensionFactory;
 
     /**
      * PopulateSourceWithData constructor.

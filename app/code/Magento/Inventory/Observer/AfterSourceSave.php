@@ -20,7 +20,7 @@ class AfterSourceSave implements ObserverInterface
     /**
      * @var SourceTypeLinkManagement
      */
-    protected $sourceTypeLinkManagement;
+    private $sourceTypeLinkManagement;
 
     /**
      * AfterSourceSave constructor.
