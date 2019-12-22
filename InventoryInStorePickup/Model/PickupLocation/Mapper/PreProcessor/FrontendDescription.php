@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor;
 
-use Magento\Framework\Filter\Template;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickup\Model\PickupLocation\Mapper\PreProcessor\FrontendDescription\Filter;
 use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 
 /**
@@ -18,16 +18,16 @@ use Magento\InventoryInStorePickupApi\Model\Mapper\PreProcessorInterface;
 class FrontendDescription implements PreProcessorInterface
 {
     /**
-     * @var Template
+     * @var Filter
      */
-    private $templateFilter;
+    private $descriptionFilter;
 
     /**
-     * @param Template $templateFilter
+     * @param Filter $descriptionFilter
      */
-    public function __construct(Template $templateFilter)
+    public function __construct(Filter $descriptionFilter)
     {
-        $this->templateFilter = $templateFilter;
+        $this->descriptionFilter = $descriptionFilter;
     }
 
     /**
@@ -41,6 +41,6 @@ class FrontendDescription implements PreProcessorInterface
      */
     public function process(SourceInterface $source, $value): ?string
     {
-        return $value ? $this->templateFilter->filter($value) : null;
+        return $value ? $this->descriptionFilter->filter($value) : null;
     }
 }

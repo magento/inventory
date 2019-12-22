@@ -14,6 +14,6 @@
         <arguments>
             <argument name="email" type="string" defaultValue="{{Simple_US_Customer.email}}"/>
         </arguments>
-        <fillField selector="{{SelectStoreSection.customerEmailField}}" userInput="{{email}}" stepKey="fillCustomerEmail"/>
+        <fillField selector="{{StorefrontSelectStoreSection.customerEmailField}}" userInput="{{email}}" stepKey="fillCustomerEmail"/>
     </actionGroup>
 </actionGroups>

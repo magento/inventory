@@ -15,9 +15,9 @@
             <argument name="searchString" type="string" defaultValue="{{US_Address_TX.city}}"/>
             <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
         </arguments>
-        <fillField selector="{{PickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
-        <waitForElement selector="{{PickInStoreModalSection.shipBtn(sourceName)}}" stepKey="waitForResult"/>
-        <click selector="{{PickInStoreModalSection.shipBtn(sourceName)}}" stepKey="clickShipBtn"/>
+        <fillField selector="{{StorefrontPickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
+        <waitForElement selector="{{StorefrontPickInStoreModalSection.shipBtn(sourceName)}}" stepKey="waitForResult"/>
+        <click selector="{{StorefrontPickInStoreModalSection.shipBtn(sourceName)}}" stepKey="clickShipBtn"/>
         <waitForPageLoad stepKey="waitForSourceSelection"/>
     </actionGroup>
 </actionGroups>
