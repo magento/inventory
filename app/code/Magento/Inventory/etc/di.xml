@@ -102,6 +102,6 @@
     <preference for="Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkDelete"/>
     <preference for="Magento\InventoryApi\Model\SourceTypeLinkManagementInterface" type="Magento\Inventory\Model\SourceCarrierLinkManagement"/>
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
-        <plugin name="SourceTypeExtensionAttributeGet" type="Magento\Inventory\Plugin\SourceTypeAttributeGet"/>
+        <plugin name="SourceTypeExtensionAttributeGet" type="Magento\Inventory\Plugin\Inventory\Model\SourceTypeAttributeGet"/>
     </type>
 </config>

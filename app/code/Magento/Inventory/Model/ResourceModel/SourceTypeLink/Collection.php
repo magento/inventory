@@ -21,7 +21,7 @@ class Collection extends AbstractCollection
     /**
      * @inheritdoc
      */
-    protected function _construct()
+    public function _construct()
     {
         $this->_init(SourceTypeLinkModel::class, SourceTypeLinkResourceModel::class);
     }

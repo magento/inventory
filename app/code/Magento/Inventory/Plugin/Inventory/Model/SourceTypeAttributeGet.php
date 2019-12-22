@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\Inventory\Plugin;
+namespace Magento\Inventory\Plugin\Inventory\Model;
 
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
@@ -38,6 +38,7 @@ class SourceTypeAttributeGet
      * @param SourceRepositoryInterface $subject
      * @param SourceInterface $source
      * @return SourceInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGet(
         SourceRepositoryInterface $subject,

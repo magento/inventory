@@ -13,6 +13,7 @@ use Magento\Framework\App\ResourceConnection;
 
 /**
  * Implementation of SourceTypeLink save operation for specific db layer
+ *
  * Save used here for performance efficient purposes over single save operation
  */
 class Save

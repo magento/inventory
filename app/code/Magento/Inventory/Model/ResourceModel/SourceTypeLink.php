@@ -26,7 +26,7 @@ class SourceTypeLink extends AbstractDb
     /**
      * @inheritdoc
      */
-    protected function _construct()
+    public function _construct()
     {
         $this->_init(self::TABLE_NAME_SOURCE_TYPE_LINK, self::ID_FIELD_NAME);
     }
