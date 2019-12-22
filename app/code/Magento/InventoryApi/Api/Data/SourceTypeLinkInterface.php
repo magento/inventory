@@ -22,6 +22,7 @@ interface SourceTypeLinkInterface extends ExtensibleDataInterface
      */
     const TYPE_CODE = 'type_code';
     const SOURCE_CODE = 'source_code';
+    const DEFAULT_SOURCE_TYPE = "regular";
 
     /**#@-*/
 

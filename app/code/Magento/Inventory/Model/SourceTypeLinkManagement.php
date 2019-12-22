@@ -102,12 +102,16 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 
         $sourceType = $this->getSourceTypeLinks->execute($searchCriteria);
 
-        /** @var SourceTypeLinkInterface $sourceTypeFirst */
-        $sourceTypeFirst = current($sourceType->getItems());
+        $sourceTypeCode = SourceTypeLinkInterface::DEFAULT_SOURCE_TYPE;
+        if ($sourceType->getTotalCount()) {
+            /** @var SourceTypeLinkInterface $sourceTypeFirst */
+            $sourceTypeFirst = current($sourceType->getItems());
+            $sourceTypeCode = $sourceTypeFirst->getTypeCode();
+        }
 
         /** @var SourceExtensionInterface $extension */
         $extension = $source->getExtensionAttributes();
-        $extension->setTypeCode($sourceTypeFirst->getTypeCode());
+        $extension->setTypeCode($sourceTypeCode);
         $source->setExtensionAttributes($extension);
 
         return $source;

@@ -7,9 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\ResourceModel\SourceTypeLink;
 
+use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
+use Magento\InventoryApi\Api\Data\SourceTypeInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 
 /**
  * Implementation of SourceTypeLink save operation for specific db layer
@@ -39,9 +42,12 @@ class Save
      */
     public function execute(SourceInterface $source): void
     {
+        /** @var SourceExtensionInterface $extensionAttributes */
+        $extensionAttributes = $source->getExtensionAttributes();
+
         $TypeLinkData = [
             'source_code' => $source->getSourceCode(),
-            'type_code' => $source->getExtensionAttributes()->getTypeCode()
+            'type_code' => $extensionAttributes->getTypeCode() ?? SourceTypeLinkInterface::DEFAULT_SOURCE_TYPE
         ];
 
         $this->resourceConnection->getConnection()->insert(

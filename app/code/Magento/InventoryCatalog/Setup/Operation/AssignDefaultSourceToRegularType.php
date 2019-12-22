@@ -48,7 +48,7 @@ class AssignDefaultSourceToRegularType
         $connection = $this->resource->getConnection();
         $stockSourceLinkData = [
             SourceTypeLinkInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
-            SourceTypeLinkInterface::TYPE_CODE => "regular"
+            SourceTypeLinkInterface::TYPE_CODE => SourceTypeLinkInterface::DEFAULT_SOURCE_TYPE
         ];
         $connection->insert($this->resource->getTableName('inventory_source_type_link'), $stockSourceLinkData);
     }
