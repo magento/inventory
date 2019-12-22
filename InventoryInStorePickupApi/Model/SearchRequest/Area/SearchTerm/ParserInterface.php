@@ -11,6 +11,7 @@ use Magento\Framework\DataObject;
 
 /**
  * Search Term parser interface.
+ * @api
  */
 interface ParserInterface
 {

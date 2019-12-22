@@ -44,6 +44,7 @@ define([
             loginFormSelector:
                 '#store-selector form[data-role=email-with-possible-login]',
             defaultCountryId: window.checkoutConfig.defaultCountryId,
+            delimiter: window.checkoutConfig.storePickupApiSearchTermDelimiter,
             selectedLocation: pickupLocationsService.selectedLocation,
             quoteIsVirtual: quote.isVirtual,
             searchQuery: '',
@@ -70,7 +71,7 @@ define([
             updateNearbyLocations = _.debounce(function (searchQuery) {
                 var country = quote.shippingAddress() && quote.shippingAddress().countryId ?
                     quote.shippingAddress().countryId : this.defaultCountryId;
-                this.updateNearbyLocations(searchQuery + ":" + country);
+                this.updateNearbyLocations(searchQuery + this.delimiter + country);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
 
@@ -126,7 +127,9 @@ define([
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                this.updateNearbyLocations(shippingAddress.postcode + ':' + country);
+                this.updateNearbyLocations(
+                    shippingAddress.postcode + this.delimiter + country
+                );
             }
         },
 

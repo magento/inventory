@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
@@ -72,7 +71,6 @@ class GetDistanceToSources
      * @param AreaInterface $area
      *
      * @return float[]
-     * @throws NoSuchEntityException
      */
     public function execute(AreaInterface $area): array
     {
@@ -103,7 +101,6 @@ class GetDistanceToSources
      * @param AreaInterface $area
      *
      * @return float[]
-     * @throws NoSuchEntityException
      */
     private function getDistanceToSources(AreaInterface $area): array
     {
@@ -111,7 +108,7 @@ class GetDistanceToSources
         try {
             $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
         } catch (LocalizedException $exception) {
-            throw new NoSuchEntityException(__($exception->getMessage()), $exception);
+            return [];
         }
 
         return $this->getOrderedDistanceToSources->execute($latLng, $area->getRadius());
@@ -127,7 +124,9 @@ class GetDistanceToSources
     private function toSourceSelectionAddress(AreaInterface $area)
     {
         $data = [
+            'postcode' => '',
             'region' => '',
+            'city' => '',
             'street' => ''
         ];
 

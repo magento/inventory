@@ -13,6 +13,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\Parser
 
 /**
  * Extract address data from Search Term.
+ * @api
  */
 class Pipeline
 {
