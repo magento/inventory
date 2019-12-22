@@ -20,12 +20,12 @@
             <argument name="sourceCity" type="string" defaultValue="{{_defaultSource.city}}"/>
             <argument name="sourceRegion" type="string" defaultValue="{{_defaultSource.region}}"/>
         </arguments>
-        <see selector="{{PickInStoreModalSection.sourceName}}" userInput="{{sourceName}}" stepKey="verifySourceName"/>
-        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceCountry}}" stepKey="verifySourceCountry"/>
-        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourcePostcode}}" stepKey="verifySourcePostcode"/>
-        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourcePhone}}" stepKey="verifySourcePhone"/>
-        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceStreet}}" stepKey="verifySourceStreet"/>
-        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceCity}}" stepKey="verifySourceCity"/>
-        <see selector="{{PickInStoreModalSection.sourceAddress}}" userInput="{{sourceRegion}}" stepKey="verifySourceRegion"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceName}}" userInput="{{sourceName}}" stepKey="verifySourceName"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceAddress}}" userInput="{{sourceCountry}}" stepKey="verifySourceCountry"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceAddress}}" userInput="{{sourcePostcode}}" stepKey="verifySourcePostcode"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceAddress}}" userInput="{{sourcePhone}}" stepKey="verifySourcePhone"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceAddress}}" userInput="{{sourceStreet}}" stepKey="verifySourceStreet"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceAddress}}" userInput="{{sourceCity}}" stepKey="verifySourceCity"/>
+        <see selector="{{StorefrontPickInStoreModalSection.sourceAddress}}" userInput="{{sourceRegion}}" stepKey="verifySourceRegion"/>
     </actionGroup>
 </actionGroups>

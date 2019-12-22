@@ -106,6 +106,14 @@
         <data key="path">cataloginventory/source_selection_distance_based/provider</data>
         <data key="value">google</data>
     </entity>
+    <entity name="enableWYSYWYG">
+        <data key="path">cms/wysiwyg/enabled</data>
+        <data key="value">enabled</data>
+    </entity>
+    <entity name="disableWYSYWYG">
+        <data key="path">cms/wysiwyg/enabled</data>
+        <data key="value">disabled</data>
+    </entity>
     <entity name="ImportTables">
         <data key="path">inventory-geonames:import</data>
     </entity>
