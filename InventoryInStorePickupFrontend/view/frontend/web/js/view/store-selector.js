@@ -64,12 +64,12 @@ define([
          * @return {exports}
          */
         initialize: function () {
-            var updateNearbyLocations;
+            var updateNearbyLocations, country;
 
             this._super();
 
             updateNearbyLocations = _.debounce(function (searchQuery) {
-                var country = quote.shippingAddress() && quote.shippingAddress().countryId ?
+                country = quote.shippingAddress() && quote.shippingAddress().countryId ?
                     quote.shippingAddress().countryId : this.defaultCountryId;
                 this.updateNearbyLocations(searchQuery + this.delimiter + country);
             }, this.searchDebounceTimeout).bind(this);
@@ -120,8 +120,8 @@ define([
          * @returns void
          */
         openPopup: function () {
-            var shippingAddress = quote.shippingAddress();
-            var country = shippingAddress.countryId ? shippingAddress.countryId :
+            var shippingAddress = quote.shippingAddress(),
+                country = shippingAddress.countryId ? shippingAddress.countryId :
                 this.defaultCountryId;
 
             this.getPopup().openModal();

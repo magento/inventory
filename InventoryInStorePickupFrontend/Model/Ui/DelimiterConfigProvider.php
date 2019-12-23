@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupFrontend\Model;
+namespace Magento\InventoryInStorePickupFrontend\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\DelimiterConfig;
@@ -13,7 +13,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\Delimi
 /**
  * Provide delimiter in checkout config.
  */
-class CheckoutConfigProvider implements ConfigProviderInterface
+class DelimiterConfigProvider implements ConfigProviderInterface
 {
     /**
      * @var DelimiterConfig

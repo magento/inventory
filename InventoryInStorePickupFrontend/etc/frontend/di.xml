@@ -10,6 +10,7 @@
         <arguments>
             <argument name="configProviders" xsi:type="array">
                 <item name="website_code_config_provider" xsi:type="object">Magento\InventoryInStorePickupFrontend\Model\Ui\WebsiteCodeConfigProvider</item>
+                <item name="in_store_pickup_checkout_config_provider" xsi:type="object">Magento\InventoryInStorePickupFrontend\Model\Ui\DelimiterConfigProvider</item>
             </argument>
         </arguments>
     </type>
@@ -17,13 +18,6 @@
         <arguments>
             <argument name="layoutProcessors" xsi:type="array">
                 <item name="storePickup" xsi:type="object">Magento\InventoryInStorePickupFrontend\Block\Checkout\LayoutProcessor</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\Checkout\Model\CompositeConfigProvider">
-        <arguments>
-            <argument name="configProviders" xsi:type="array">
-                <item name="in_store_pickup_checkout_config_provider" xsi:type="object">Magento\InventoryInStorePickupFrontend\Model\CheckoutConfigProvider</item>
             </argument>
         </arguments>
     </type>
