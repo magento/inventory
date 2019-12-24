@@ -50,7 +50,7 @@
             </actionGroup>
             <fillField selector="{{AdminProductFormSection.productPrice}}" userInput="123.00" stepKey="fillProductPrice" after="assignAdditionalSourceToProduct"/>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity" after="fillProductPrice"/>
-            <actionGroup ref="saveProductForm" stepKey="saveBundleOptionProduct" after="setProductQuantity"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveBundleOptionProduct" after="setProductQuantity"/>
             <!--Assign bundle product to category.-->
             <amOnPage url="{{AdminProductEditPage.url($$createProduct.id$$)}}" stepKey="openProductEditPageToAssignCategory" after="saveBundleOptionProduct"/>
             <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToBundleProduct" after="openProductEditPageToAssignCategory">

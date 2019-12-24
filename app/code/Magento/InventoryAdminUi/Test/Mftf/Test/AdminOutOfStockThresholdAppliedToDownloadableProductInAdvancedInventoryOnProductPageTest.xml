@@ -72,7 +72,7 @@
             <argument name="qty" value="101"/>
         </actionGroup>
         <actionGroup ref="AdminSubmitAdvancedInventoryFormActionGroup" stepKey="clickDoneBtn"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">

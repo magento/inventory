@@ -62,7 +62,7 @@
         </actionGroup>
         <!--Uncheck notify quantity use default.-->
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Verify Notify Quantity has changed.-->
         <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyQuantityUseDefaultIsNotUsed"/>
         <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="{{RevertNotifyQuantityBelow.value}}" stepKey="verifyNotifyQuantityValue"/>
