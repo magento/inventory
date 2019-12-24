@@ -37,7 +37,7 @@
             </actionGroup>
             <amOnPage url="{{AdminProductEditPage.url($downloadableProduct.id$)}}" stepKey="editProduct"/>
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQty">
-                <argument name="sourceCode" value="_defaultSource.source_code"/>
+                <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
                 <argument name="qty" value="{{defaultProductQty.value}}" />
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>

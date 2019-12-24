@@ -35,7 +35,7 @@
             <!--Set default source product quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
@@ -67,9 +67,9 @@
         <!--Change product 'sku'.-->
         <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Create Shipment-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
@@ -86,11 +86,11 @@
             <argument name="stockQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
         </actionGroup>
         <!--Create invoice and credit memo.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToCreateCreditMemo">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateCreditMemo">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
-        <actionGroup ref="StartCreateInvoiceFromOrderPage" stepKey="startCreateInvoice"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <actionGroup ref="AdminCreateCreditMemoReturnToStockActionGroup" stepKey="createCreditMemo">
             <argument name="productQty" value="{{tenPiecesAddToCart.value}}"/>
         </actionGroup>

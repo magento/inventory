@@ -53,7 +53,7 @@
             <!--Set product quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
@@ -89,9 +89,9 @@
             <argument name="secondAttributeCode" value="$configurableAttribute2.attribute_code$"/>
             <argument name="sourceName" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
-        <actionGroup ref="saveProductForm" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
         <!--Create Shipment-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
