@@ -9,6 +9,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -23,11 +24,20 @@ class SkuValidator implements SourceItemValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @param ValidationResultFactory $validationResultFactory
+     * @var NotAnEmptyString
      */
-    public function __construct(ValidationResultFactory $validationResultFactory)
-    {
+    private $notAnEmptyString;
+
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param NotAnEmptyString $notAnEmptyString
+     */
+    public function __construct(
+        ValidationResultFactory $validationResultFactory,
+        NotAnEmptyString $notAnEmptyString
+    ) {
         $this->validationResultFactory = $validationResultFactory;
+        $this->notAnEmptyString = $notAnEmptyString;
     }
 
     /**
@@ -35,13 +45,11 @@ class SkuValidator implements SourceItemValidatorInterface
      */
     public function validate(SourceItemInterface $source): ValidationResult
     {
-        $errors = [];
-        if ('' === trim((string)$source->getSku())) {
-            $errors[] = __(
-                '"%field" can not be empty.',
-                ['field' => SourceItemInterface::SKU]
-            );
-        }
+        $value = $source->getSku();
+        $errors = [
+            $this->notAnEmptyString->execute(SourceItemInterface::SKU, $value)
+        ];
+        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
         return $this->validationResultFactory->create(['errors' => $errors]);
     }

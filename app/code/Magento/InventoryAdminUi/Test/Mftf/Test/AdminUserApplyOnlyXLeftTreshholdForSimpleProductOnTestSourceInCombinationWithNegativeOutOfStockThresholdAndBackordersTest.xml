@@ -69,15 +69,15 @@
         </actionGroup>
 
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
-        <actionGroup ref="AdminClickOnAdvancedInventoryLinkActionGroup" stepKey="clickOnAdvancedInventoryLink"/>
+        <actionGroup ref="AdminClickOnAdvancedInventoryButtonActionGroup" stepKey="clickOnAdvancedInventoryButton"/>
         <actionGroup ref="AdminFillAdvancedInventoryOutOfStockThresholdActionGroup" stepKey="fillAdvancedInventoryOutOfStockThreshold">
             <argument name="qty" value="-10"/>
         </actionGroup>
 
         <actionGroup ref="AdminSubmitAdvancedInventoryFormActionGroup" stepKey="clickDoneBtn"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="newOrder">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
@@ -90,7 +90,7 @@
         <click selector="{{AdminOrderFormItemsSection.updateItemsAndQuantities}}" stepKey="clickUpdateItemsAndQuantitiesButton"/>
         <waitForPageLoad  stepKey="waitForPageLoad3"/>
 
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRate"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
 
         <magentoCLI command="cache:flush" stepKey="flushCache2"/>

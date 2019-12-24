@@ -13,6 +13,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
  * Implementation of SourceItem save multiple operation for specific db layer
+ *
  * Save Multiple used here for performance efficient purposes over single save operation
  */
 class SaveMultiple
@@ -69,6 +70,8 @@ class SaveMultiple
     }
 
     /**
+     * Build column sql part
+     *
      * @param array $columns
      * @return string
      */
@@ -81,6 +84,8 @@ class SaveMultiple
     }
 
     /**
+     * Build sql query for values
+     *
      * @param SourceItemInterface[] $sourceItems
      * @return string
      */
@@ -91,6 +96,8 @@ class SaveMultiple
     }
 
     /**
+     * Get Sql bind data
+     *
      * @param SourceItemInterface[] $sourceItems
      * @return array
      */
@@ -98,17 +105,17 @@ class SaveMultiple
     {
         $bind = [];
         foreach ($sourceItems as $sourceItem) {
-            $bind = array_merge($bind, [
-                $sourceItem->getSourceCode(),
-                $sourceItem->getSku(),
-                $sourceItem->getQuantity(),
-                $sourceItem->getStatus(),
-            ]);
+            $bind[] = $sourceItem->getSourceCode();
+            $bind[] = $sourceItem->getSku();
+            $bind[] = $sourceItem->getQuantity();
+            $bind[] = $sourceItem->getStatus();
         }
         return $bind;
     }
 
     /**
+     * Build sql query for on duplicate event
+     *
      * @param array $fields
      * @return string
      */

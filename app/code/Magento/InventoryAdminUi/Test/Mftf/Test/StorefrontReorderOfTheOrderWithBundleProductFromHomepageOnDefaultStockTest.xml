@@ -83,7 +83,7 @@
             <argument name="qty" value="20" />
         </actionGroup>
 
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct2">
             <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
@@ -95,22 +95,17 @@
             <argument name="qty" value="20" />
         </actionGroup>
 
-        <actionGroup ref="saveProductForm" stepKey="saveProduct2"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
-        <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToFrontPage"/>
-        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="searchStorefront">
-            <argument name="phrase" value="$createBundleProduct.name$"/>
-        </actionGroup>
+        <!-- Perform reindex and flush cache -->
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
 
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="openAndCheckProduct">
-            <argument name="productName" value="$createBundleProduct.name$"/>
-            <argument name="productUrlKey" value="$createBundleProduct.custom_attributes[url_key]$"/>
-        </actionGroup>
-
+        <amOnPage url="{{StorefrontProductPage.url($createBundleProduct.custom_attributes[url_key]$)}}" stepKey="navigateToBundleProductPage"/>
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="productName" value="$$createBundleProduct.name$$"/>
         </actionGroup>
@@ -129,6 +124,7 @@
         </actionGroup>
 
         <click selector="//td[text()='{$orderNumber}']/following-sibling::td[@class='col actions']/a[contains(@class, 'order')]" stepKey="clickReorderBtn"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
         <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout"/>
         <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPaymentToReorder"/>
         <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext2"/>
