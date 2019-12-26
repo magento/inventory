@@ -5,10 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductIndexer\Indexer\Stock;
+namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
+use Magento\InventoryBundleProductIndexer\Indexer\Stock\IndexDataByStockIdProvider;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
@@ -114,6 +115,8 @@ class StockIndexer
     }
 
     /**
+     * Index given stocks.
+     *
      * @param array $stockIds
      * @return void
      * @throws StateException

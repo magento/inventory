@@ -113,19 +113,17 @@ class GetBundleOptionsByBundleSkus
             );
 
         $optionData = $connection->fetchAll($select);
-        $result = $this->formatToOptionsArray($optionData);
 
-        return $result;
+        return $this->formatToOptionsArray($optionData);
     }
 
     /**
      * Provide list of bundle skus as string for IN statement in sql query
      *
      * @param Collection $bundleProductsCollection
-     *
      * @return string
      */
-    public function getBundleProductSkusAsStringByCollection(Collection $bundleProductsCollection)
+    private function getBundleProductSkusAsStringByCollection(Collection $bundleProductsCollection)
     {
         $skus = [];
         /** @var ProductInterface $product */

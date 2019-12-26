@@ -7,21 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer\Stock;
 
-use ArrayIterator;
-use Exception;
-use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryBundleProductIndexer\Indexer\GetBundleProductStockStatus;
+use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
 
 /**
  * Returns all data for the index by stock id condition
  */
 class IndexDataByStockIdProvider
 {
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
     /**
      * @var GetAllBundleProductsService
      */
@@ -43,20 +35,17 @@ class IndexDataByStockIdProvider
     private $getBundleOptionsByBundleSkus;
 
     /**
-     * @param ResourceConnection $resourceConnection
      * @param GetAllBundleProductsService $getAllBundleProductsService
      * @param GetBundleProductStockStatus $getBundleProductStockStatus
      * @param GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus
      * @param GetBundleOptionsByBundleSkus $getBundleOptionsByBundleSkus
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
         GetAllBundleProductsService $getAllBundleProductsService,
         GetBundleProductStockStatus $getBundleProductStockStatus,
         GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus,
         GetBundleOptionsByBundleSkus $getBundleOptionsByBundleSkus
     ) {
-        $this->resourceConnection = $resourceConnection;
         $this->getAllBundleProductsService = $getAllBundleProductsService;
         $this->getBundleProductStockStatus = $getBundleProductStockStatus;
         $this->getSimpleProductStockByBundleSkus = $getSimpleProductStockByBundleSkus;
@@ -68,10 +57,10 @@ class IndexDataByStockIdProvider
      *
      * @param int $stockId
      *
-     * @return ArrayIterator
-     * @throws Exception
+     * @return \ArrayIterator
+     * @throws \Exception
      */
-    public function execute(int $stockId): ArrayIterator
+    public function execute(int $stockId): \ArrayIterator
     {
         $bundleProductCollection = $this->getAllBundleProductsService->execute();
         $inventory = [];
@@ -80,20 +69,21 @@ class IndexDataByStockIdProvider
         for ($i = 1; $i <= $pages; $i++) {
             $bundleProductCollection->setCurPage($i);
             $bundleProductCollection->load();
-
-            $stockData = $this->getSimpleProductStockByBundleSkus->execute($bundleProductCollection, $stockId);
-            $bundleOptionsData =$this->getBundleOptionsByBundleSkus->execute($bundleProductCollection);
+            $bundleOptionsData = $this->getBundleOptionsByBundleSkus->execute($bundleProductCollection);
             foreach ($bundleProductCollection as $bundleProduct) {
                 $inventory[] = [
                     'sku' => $bundleProduct->getSku(),
                     'quantity' => 0,
-                    'is_salable' => (int) $this->getBundleProductStockStatus
-                        ->execute($bundleOptionsData[$bundleProduct->getSku()], $stockData)
+                    'is_salable' => (int)$this->getBundleProductStockStatus->execute(
+                        $bundleProduct,
+                        $bundleOptionsData[$bundleProduct->getSku()],
+                        $stockId
+                    ),
                 ];
             }
             $bundleProductCollection->clear();
         }
 
-        return new ArrayIterator($inventory);
+        return new \ArrayIterator($inventory);
     }
 }

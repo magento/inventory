@@ -8,27 +8,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\InventoryIndexer\Indexer\Stock\StockIndexer">
-        <plugin name="bundle_product_index"
-                type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\StockIndexerPlugin"/>
+        <plugin name="bundle_product_index" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\StockIndexerPlugin"/>
     </type>
+<!--    <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer">
+        <plugin name="bundle_product_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\SourceItemIndexerPlugin" sortOrder="10"/>
+    </type>-->
     <type name="Magento\InventoryBundleProductIndexer\Indexer\Stock\StockIndexer">
         <arguments>
             <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
             <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
-        </arguments>
-    </type>
-    <type name="Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandlerPool">
-        <arguments>
-            <argument name="optionStockHandlers" xsi:type="array">
-                <item name="checkbox"
-                      xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandler\CheckboxOptionStockHandler</item>
-                <item name="select"
-                      xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandler\SelectOptionStockHandler</item>
-                <item name="multi"
-                      xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandler\MultiselectOptionStockHandler</item>
-                <item name="radio"
-                      xsi:type="object">Magento\InventoryBundleProductIndexer\Indexer\OptionStockHandler\RadioOptionStockHandler</item>
-            </argument>
         </arguments>
     </type>
 </config>

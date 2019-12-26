@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer;
 
 use Magento\Framework\Exception\StateException;
-use Magento\InventoryBundleProductIndexer\Indexer\Stock\StockIndexer as BundleProductsStockIndexer;
+use Magento\InventoryBundleProductIndexer\Indexer\StockIndexer as BundleProductsStockIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 
 /**

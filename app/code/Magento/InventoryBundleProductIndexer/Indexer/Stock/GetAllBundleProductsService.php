@@ -19,6 +19,7 @@ use Magento\Framework\App\ResourceConnection;
 class GetAllBundleProductsService
 {
     private const BULK_SIZE = 500;
+
     /**
      * @var ResourceConnection
      */

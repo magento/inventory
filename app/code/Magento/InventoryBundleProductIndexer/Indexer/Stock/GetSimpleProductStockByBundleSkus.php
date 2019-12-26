@@ -118,7 +118,7 @@ class GetSimpleProductStockByBundleSkus
      *
      * @return string
      */
-    public function getBundleProductSkusAsStringByCollection(Collection $bundleProductsCollection)
+    private function getBundleProductSkusAsStringByCollection(Collection $bundleProductsCollection)
     {
         $skus = [];
         /** @var ProductInterface $product */
