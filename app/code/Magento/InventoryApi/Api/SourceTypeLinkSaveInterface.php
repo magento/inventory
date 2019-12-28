@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 
 /**
@@ -22,6 +24,8 @@ interface SourceTypeLinkSaveInterface
      *
      * @param SourceInterface $source
      * @return void
+     * @throws InputException
+     * @throws CouldNotSaveException
      */
     public function execute(SourceInterface $source): void;
 }
