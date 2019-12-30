@@ -5,15 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGroupedProductAdminUi\Model;
+namespace Magento\InventoryCatalogAdminUi\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
- * Load source items data by skus.
+ * Load product source items data by skus.
  */
 class GetQuantityInformationPerSourceBySkus
 {
@@ -48,8 +49,11 @@ class GetQuantityInformationPerSourceBySkus
     }
 
     /**
+     * Get products source items for bundle option selection.
+     *
      * @param array $skus
      * @return array
+     * @throws NoSuchEntityException
      */
     public function execute(array $skus): array
     {

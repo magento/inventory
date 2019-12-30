@@ -63,8 +63,8 @@ class GetBundleProductStockStatus
         $isSalable = false;
         foreach ($bundleOptions as $option) {
             $hasSalable = false;
-            $selectionsCollection = $this->getProductSelection->execute($product, $option);
-            foreach ($selectionsCollection as $selection) {
+            $bundleSelections = $this->getProductSelection->execute($product, $option);
+            foreach ($bundleSelections as $selection) {
                 if ($this->isProductSalable->execute((string)$selection->getSku(), $stockId)) {
                     $hasSalable = true;
                     break;

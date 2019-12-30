@@ -5,11 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductIndexer\Indexer\Stock;
+namespace Magento\InventoryBundleProductIndexer\Indexer;
 
+use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
@@ -18,9 +19,9 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
 /**
- * Class GetSimpleProductStockByBundleSkus
+ * Get bundle product for given stock select builder.
  */
-class GetSimpleProductStockByBundleSkus
+class SelectBuilder
 {
     /**
      * @var ResourceConnection
@@ -61,14 +62,16 @@ class GetSimpleProductStockByBundleSkus
     }
 
     /**
-     * @param Collection $bundleProductsCollection
+     * Prepare select for getting bundle products on given stock.
+     *
      * @param int $stockId
-     * @return array
-     * @throws \Exception
+     * @return Select
+     * @throws Exception
      */
-    public function execute(Collection $bundleProductsCollection, int $stockId): array
+    public function execute(int $stockId): Select
     {
         $connection = $this->resourceConnection->getConnection();
+
         $indexName = $this->indexNameBuilder
             ->setIndexId(InventoryIndexer::INDEXER_ID)
             ->addDimension('stock_', (string)$stockId)
@@ -76,56 +79,33 @@ class GetSimpleProductStockByBundleSkus
             ->build();
 
         $indexTableName = $this->indexNameResolver->resolveName($indexName);
+
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
+
         $select = $connection->select()
             ->from(
-                ['bundle_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                ['stock' => $indexTableName],
                 [
-                    IndexStructure::SKU => 'simple_product.sku',
-                    IndexStructure::QUANTITY => 'MIN(inventory.quantity)',
-                    IndexStructure::IS_SALABLE => 'MAX(inventory.is_salable)',
+                    IndexStructure::SKU => 'parent_product_entity.sku',
+                    IndexStructure::QUANTITY => 'SUM(stock.quantity)',
+                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
                 ]
             )->joinInner(
-                ['bundle_selection' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
-                'bundle_product.' . $linkField . '=bundle_selection.parent_product_id',
+                ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'product_entity.sku = stock.sku',
                 []
             )->joinInner(
-                ['simple_product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'bundle_selection.product_id=simple_product.' . $linkField,
+                ['parent_link' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
+                'parent_link.product_id = product_entity.entity_id',
                 []
             )->joinInner(
-                ['inventory' => $indexTableName],
-                'inventory.sku=simple_product.sku',
+                ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'parent_product_entity.' . $linkField . ' = parent_link.parent_product_id',
                 []
-            )->where(
-                'bundle_product.sku IN (' . $this->getBundleProductSkusAsStringByCollection($bundleProductsCollection) . ')'
-            )->group(['simple_product.sku']);
+            )
+            ->group(['parent_product_entity.sku']);
 
-        $stockData = $connection->fetchAll($select);
-        $result = [];
-        array_walk($stockData, function (&$value, &$key) use (&$result) {
-            $result[$value['sku']] = $value;
-        });
-
-        return $result;
-    }
-
-    /**
-     * Provide list of bundle skus as string for IN statement in sql query
-     *
-     * @param Collection $bundleProductsCollection
-     *
-     * @return string
-     */
-    private function getBundleProductSkusAsStringByCollection(Collection $bundleProductsCollection)
-    {
-        $skus = [];
-        /** @var ProductInterface $product */
-        foreach ($bundleProductsCollection as $product) {
-            $skus[] = $product->getSku();
-        }
-
-        return '\'' . implode('\',\'', $skus) . '\'';
+        return $select;
     }
 }

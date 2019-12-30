@@ -12,7 +12,7 @@ use Magento\InventoryBundleProductIndexer\Indexer\StockIndexer as BundleProducts
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 
 /**
- * Class StockIndexerPlugin
+ * Index bundle products for given stocks plugin.
  */
 class StockIndexerPlugin
 {
@@ -31,6 +31,8 @@ class StockIndexerPlugin
     }
 
     /**
+     * Index bundle products for given stocks.
+     *
      * @param StockIndexer $subject
      * @param void $result
      * @param array $stockIds

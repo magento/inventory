@@ -20,6 +20,9 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterface;
 
+/**
+ * Index bundle products for given stocks.
+ */
 class StockIndexer
 {
     /**
@@ -63,7 +66,7 @@ class StockIndexer
     private $prepareIndexDataForClearingIndex;
 
     /**
-     * $indexStructure is reserved name for construct variable in index internal mechanism
+     * $indexStructure is reserved name for construct variable in index internal mechanism.
      *
      * @param GetAllStockIds $getAllStockIds
      * @param IndexStructureInterface $indexStructure
@@ -95,6 +98,8 @@ class StockIndexer
     }
 
     /**
+     * Index bundle products for all stocks.
+     *
      * @return void
      * @throws StateException
      */
@@ -105,6 +110,8 @@ class StockIndexer
     }
 
     /**
+     * Index bundle products for given stock.
+     *
      * @param int $stockId
      * @return void
      * @throws StateException
@@ -115,7 +122,7 @@ class StockIndexer
     }
 
     /**
-     * Index given stocks.
+     * Index bundle products for given stocks.
      *
      * @param array $stockIds
      * @return void

@@ -7,53 +7,36 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProductIndexer\Indexer\Stock;
 
-use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
+use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryBundleProductIndexer\Indexer\SelectBuilder;
 
 /**
- * Returns all data for the index by stock id condition
+ * Bundle products for given stock provider.
  */
 class IndexDataByStockIdProvider
 {
     /**
-     * @var GetAllBundleProductsService
+     * @var SelectBuilder
      */
-    private $getAllBundleProductsService;
+    private $selectBuilder;
 
     /**
-     * @var GetBundleProductStockStatus
+     * @var ResourceConnection
      */
-    private $getBundleProductStockStatus;
+    private $resourceConnection;
 
     /**
-     * @var GetSimpleProductStockByBundleSkus
+     * @param SelectBuilder $selectBuilder
+     * @param ResourceConnection $resourceConnection
      */
-    private $getSimpleProductStockByBundleSkus;
-
-    /**
-     * @var GetBundleOptionsByBundleSkus
-     */
-    private $getBundleOptionsByBundleSkus;
-
-    /**
-     * @param GetAllBundleProductsService $getAllBundleProductsService
-     * @param GetBundleProductStockStatus $getBundleProductStockStatus
-     * @param GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus
-     * @param GetBundleOptionsByBundleSkus $getBundleOptionsByBundleSkus
-     */
-    public function __construct(
-        GetAllBundleProductsService $getAllBundleProductsService,
-        GetBundleProductStockStatus $getBundleProductStockStatus,
-        GetSimpleProductStockByBundleSkus $getSimpleProductStockByBundleSkus,
-        GetBundleOptionsByBundleSkus $getBundleOptionsByBundleSkus
-    ) {
-        $this->getAllBundleProductsService = $getAllBundleProductsService;
-        $this->getBundleProductStockStatus = $getBundleProductStockStatus;
-        $this->getSimpleProductStockByBundleSkus = $getSimpleProductStockByBundleSkus;
-        $this->getBundleOptionsByBundleSkus = $getBundleOptionsByBundleSkus;
+    public function __construct(SelectBuilder $selectBuilder, ResourceConnection $resourceConnection)
+    {
+        $this->selectBuilder = $selectBuilder;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
-     * Index Stock provider
+     * Get bundle products for given stock id.
      *
      * @param int $stockId
      *
@@ -62,28 +45,9 @@ class IndexDataByStockIdProvider
      */
     public function execute(int $stockId): \ArrayIterator
     {
-        $bundleProductCollection = $this->getAllBundleProductsService->execute();
-        $inventory = [];
-        $pages = $bundleProductCollection->getLastPageNumber();
+        $select = $this->selectBuilder->execute($stockId);
+        $connection = $this->resourceConnection->getConnection();
 
-        for ($i = 1; $i <= $pages; $i++) {
-            $bundleProductCollection->setCurPage($i);
-            $bundleProductCollection->load();
-            $bundleOptionsData = $this->getBundleOptionsByBundleSkus->execute($bundleProductCollection);
-            foreach ($bundleProductCollection as $bundleProduct) {
-                $inventory[] = [
-                    'sku' => $bundleProduct->getSku(),
-                    'quantity' => 0,
-                    'is_salable' => (int)$this->getBundleProductStockStatus->execute(
-                        $bundleProduct,
-                        $bundleOptionsData[$bundleProduct->getSku()],
-                        $stockId
-                    ),
-                ];
-            }
-            $bundleProductCollection->clear();
-        }
-
-        return new \ArrayIterator($inventory);
+        return new \ArrayIterator($connection->fetchAll($select));
     }
 }

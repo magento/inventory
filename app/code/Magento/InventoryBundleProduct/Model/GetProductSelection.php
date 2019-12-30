@@ -55,6 +55,7 @@ class GetProductSelection
      * @param ProductInterface $product
      * @param Option $option
      * @return Collection
+     * @throws \Exception
      */
     public function execute(ProductInterface $product, Option $option): Collection
     {

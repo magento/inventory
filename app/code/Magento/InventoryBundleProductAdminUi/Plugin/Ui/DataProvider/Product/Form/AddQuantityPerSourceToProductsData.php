@@ -5,9 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGroupedProductAdminUi\Plugin\Ui\DataProvider\Product\Form;
+namespace Magento\InventoryBundleProductAdminUi\Plugin\Ui\DataProvider\Product\Form;
 
-use Magento\GroupedProduct\Ui\DataProvider\Product\GroupedProductDataProvider;
+use Magento\Bundle\Ui\DataProvider\Product\BundleDataProvider;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogAdminUi\Model\GetQuantityInformationPerSourceBySkus;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
@@ -43,11 +44,12 @@ class AddQuantityPerSourceToProductsData
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param GroupedProductDataProvider $subject
+     * @param BundleDataProvider $subject
      * @param array $result
      * @return array
+     * @throws NoSuchEntityException
      */
-    public function afterGetData(GroupedProductDataProvider $subject, array $result): array
+    public function afterGetData(BundleDataProvider $subject, array $result): array
     {
         if ($this->isSingleSourceMode->execute()) {
             return $result;
