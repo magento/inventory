@@ -6,6 +6,7 @@
         "magento/framework": "*",
         "magento/module-bundle": "*",
         "magento/module-catalog": "*",
+        "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-store": "*"
     },
