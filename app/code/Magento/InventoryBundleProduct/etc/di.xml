@@ -15,4 +15,7 @@
     <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
         <plugin name="adapt_add_quantity_filter" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection\AdaptAddQuantityFilterPlugin"/>
     </type>
+    <type name="Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface">
+        <plugin name="get_bundle_selection_sku_from_order" type="Magento\InventoryBundleProduct\Plugin\InventorySalesApi\Model\GetSkuFromOrderItem\AdaptGetSkuFromOrderItemPlugin"/>
+    </type>
 </config>
