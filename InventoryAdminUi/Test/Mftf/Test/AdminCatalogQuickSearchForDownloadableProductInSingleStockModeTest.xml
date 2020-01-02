@@ -32,7 +32,7 @@
         <comment userInput="Create downloadable product with category and link." stepKey="createDownloadableProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
             <argument name="product" value="DownloadableProduct"/>
         </actionGroup>
         <fillField selector="{{AdminProductFormSection.productName}}" userInput="{{DownloadableProduct.name}}" stepKey="fillProductSku"/>

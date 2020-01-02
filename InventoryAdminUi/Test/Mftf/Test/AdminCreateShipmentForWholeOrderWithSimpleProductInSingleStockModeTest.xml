@@ -29,7 +29,7 @@
             <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>
             <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickAddProductDropDown"/>
             <click selector="{{AdminProductGridActionSection.addSimpleProduct}}" stepKey="clickAddSimpleProduct"/>
-            <actionGroup ref="fillMainProductForm" stepKey="fillSimpleProductMain">
+            <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillSimpleProductMain">
                 <argument name="product" value="SimpleProduct"/>
             </actionGroup>
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
@@ -70,7 +70,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
 
         <!-- Source Selection -->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>

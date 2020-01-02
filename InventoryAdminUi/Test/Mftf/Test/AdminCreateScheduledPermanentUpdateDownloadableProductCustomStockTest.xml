@@ -42,7 +42,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProductForm"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="SaveProductFormActionGroup"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>

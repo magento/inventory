@@ -44,15 +44,15 @@
             <!--Add image to source description.-->
             <amOnPage url="{{AdminEditSourcePage.url($culverSource.source[source_code]$)}}" stepKey="navigateToCulverSourceEditPage"/>
             <actionGroup ref="AdminAddImageToSourceDescriptionActionGroup" stepKey="addImage"/>
-            <actionGroup ref="clickBrowseBtnOnUploadPopup" stepKey="clickBrowserBtn"/>
-            <actionGroup ref="CreateImageFolder" stepKey="CreateImageFolder">
+            <actionGroup ref="ClickBrowseBtnOnUploadPopupActionGroup" stepKey="clickBrowserBtn"/>
+            <actionGroup ref="CreateImageFolderActionGroup" stepKey="CreateImageFolder">
                 <argument name="ImageFolder" value="ImageFolder"/>
             </actionGroup>
-            <actionGroup ref="attachImage" stepKey="attachImage">
+            <actionGroup ref="AttachImageActionGroup" stepKey="attachImage">
                 <argument name="Image" value="ImageUpload3"/>
             </actionGroup>
-            <actionGroup ref="saveImage" stepKey="insertImage"/>
-            <actionGroup ref="fillOutUploadImagePopup" stepKey="fillOutUploadImagePopup" />
+            <actionGroup ref="SaveImageActionGroup" stepKey="insertImage"/>
+            <actionGroup ref="FillOutUploadImagePopupActionGroup" stepKey="fillOutUploadImagePopup" />
             <actionGroup ref="AdminSaveAndContinueSourceActionGroup" stepKey="saveSource" />
             <!--Assign product to source.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
@@ -62,7 +62,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
                 <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <!--Revert Distance Provider for Distance Based SSA to online.-->
@@ -84,7 +84,7 @@
         </after>
 
         <!--Add product to cart.-->
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
         <!--Verify source information.-->

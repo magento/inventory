@@ -57,7 +57,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
                 <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <!--Revert Distance Provider for Distance Based SSA to online.-->
@@ -98,7 +98,7 @@
         <waitForPageLoad stepKey="waitForSuccess"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Create invoice.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>

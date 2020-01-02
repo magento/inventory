@@ -35,10 +35,10 @@
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="goToProductIndexPage" before="newOrder"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterProduct" after="goToProductIndexPage">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct" after="goToProductIndexPage">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
-        <actionGroup ref="openProducForEditByClickingRowXColumnYInProductGrid" after="filterProduct" stepKey="openSecondProductForEdit"/>
+        <actionGroup ref="OpenProductForEditByClickingRowXColumnYInProductGridActionGroup" after="filterProduct" stepKey="openSecondProductForEdit"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" after="openSecondProductForEdit">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
@@ -46,7 +46,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" after="setDefaultSourceQuantity" stepKey="setCustomSourceQuantity"/>
 
         <!-- Save product -->
-        <actionGroup ref="saveProductForm" stepKey="saveProduct" after="setCustomSourceQuantity"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct" after="setCustomSourceQuantity"/>
 
         <!-- Ship the order and assert the status -->
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipTheOrder" before="cancelPendingOrder"/>

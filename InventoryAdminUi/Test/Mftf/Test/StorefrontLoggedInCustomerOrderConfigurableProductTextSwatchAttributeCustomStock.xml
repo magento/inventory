@@ -42,11 +42,11 @@
             <!--Start creating configurable product.-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
             <waitForPageLoad stepKey="waitForProductGridPageLoad"/>
-            <actionGroup ref="goToCreateProductPage" stepKey="createConfigurableProduct">
+            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="createConfigurableProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <!--Fill main product fields.-->
-            <actionGroup ref="fillMainProductFormNoWeight" stepKey="fillMainProductForm">
+            <actionGroup ref="FillMainProductFormNoWeightActionGroup" stepKey="fillMainProductForm">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <!--Generate variations.-->
@@ -54,7 +54,7 @@
                 <argument name="attributeCode" value="{{ProductColorAttribute.attribute_code}}"/>
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveConfigurableProduct" stepKey="saveConfigurable">
+            <actionGroup ref="SaveConfigurableProductActionGroup" stepKey="saveConfigurable">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToConfigurableProduct">
@@ -97,7 +97,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Verify Order.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>

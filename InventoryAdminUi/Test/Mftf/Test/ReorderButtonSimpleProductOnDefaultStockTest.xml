@@ -51,7 +51,7 @@
         </actionGroup>
         <!-- Add simple product to shopping cart -->
         <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
             <argument name="productCount" value="1"/>
         </actionGroup>
@@ -67,7 +67,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Create Shipment-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>

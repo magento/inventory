@@ -44,7 +44,7 @@
 
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="clickOnMainWebsite1"/>
         <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources1"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword2">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createSource1.source[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource2"/>
@@ -98,7 +98,7 @@
         <click selector="#order-search .action-add" stepKey="clickOnAddSelectedProductsToOrder1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad12"/>
 
-        <actionGroup ref="fillOrderCustomerInformation" stepKey="fillCustomerAddress">
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerAddress">
             <argument name="customer" value="$$createCustomer1$$"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
@@ -122,7 +122,7 @@
 
         <grabTextFrom selector=".page-title" stepKey="grabTheOrderId1"/>
 
-        <actionGroup ref="verifyBasicOrderInformation" stepKey="verifyOrderInformation">
+        <actionGroup ref="VerifyBasicOrderInformationActionGroup" stepKey="verifyOrderInformation">
             <argument name="customer" value="$$createCustomer1$$"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>

@@ -91,7 +91,7 @@
 
         <!--Admin Area Check ordered quantity-->
         <comment userInput="Admin - Check ordered quantity" stepKey="AdminCheckOrderedQuantity"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
@@ -109,7 +109,7 @@
 
         <!--Admin Area Process Full Invoice-->
         <comment userInput="Admin - Process invoice for full order" stepKey="InvoiceFullOrder"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToInvoice">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToInvoice">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
@@ -139,7 +139,7 @@
 
         <!--Admin Area Create Partial Credit Memo-->
         <comment userInput="Admin - Create credit memo for one item of invoiced order" stepKey="AdminCreateCreditMemoPartialOrder"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToMemo">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToMemo">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.creditMemo}}" stepKey="clickCreditMemo"/>

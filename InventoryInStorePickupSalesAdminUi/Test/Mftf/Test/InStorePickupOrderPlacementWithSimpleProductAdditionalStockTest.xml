@@ -79,11 +79,11 @@
         </after>
 
         <!--Create Order with "In Store Pickup' shipping method.-->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="navigateToNewOrderWithExistingCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add simple product to order and check product price in grid-->
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">
             <argument name="product" value="$$product$$"/>
             <argument name="quantity" value="1"/>
             <argument name="price" value="$$product.price$$"/>
@@ -94,7 +94,7 @@
         </actionGroup>
         <!--Submit order-->
         <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="submitOrder"/>
-        <actionGroup ref="verifyCreatedOrderInformation" stepKey="verifyCreatedOrderInformation"/>
+        <actionGroup ref="VerifyCreatedOrderInformationActionGroup" stepKey="verifyCreatedOrderInformation"/>
         <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
             <argument name="sourceName" value="$culverSource.source[name]$"/>
         </actionGroup>
