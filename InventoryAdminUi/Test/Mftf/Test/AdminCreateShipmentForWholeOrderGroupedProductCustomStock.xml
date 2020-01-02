@@ -76,13 +76,13 @@
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
         <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterGroupedProductOptionsBySimple">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterGroupedProductOptionsBySimple">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProductFilterResult"/>
         <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
         <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
         </actionGroup>
@@ -92,7 +92,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$groupedProduct$$"/>
         </actionGroup>
         <!--Place order.-->
@@ -101,7 +101,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Create Shipment-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminSourceSelectionAlgorithmByPriorityActionGroup" stepKey="createShipment">

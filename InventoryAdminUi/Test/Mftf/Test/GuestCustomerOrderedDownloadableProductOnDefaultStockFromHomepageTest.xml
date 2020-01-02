@@ -58,7 +58,7 @@
             <amOnPage url="{{AdminProductEditPage.url($$downloadableProduct.id$$)}}" stepKey="openProductEditPage" />
             <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="In Stock" stepKey="selectStockStatus" />
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillDefaultSourceQtyField"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveAndCloseProduct"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->

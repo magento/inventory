@@ -35,7 +35,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -62,7 +62,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
 
             <comment userInput="Clean up bundle product." stepKey="cleanUpBundleProductComment"/>
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteBundleProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteBundleProduct">
                 <argument name="product" value="BundleProduct"/>
             </actionGroup>
 
@@ -72,11 +72,11 @@
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="visitAdminProductPageBundle"/>
         <waitForPageLoad stepKey="waitForProductPageLoadBundle"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateBundleProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateBundleProduct">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="searchAndSelectCategory"/>
-        <actionGroup ref="fillProductNameAndSkuInProductForm" stepKey="fillBundleProductNameAndSku">
+        <actionGroup ref="FillProductNameAndSkuInProductFormActionGroup" stepKey="fillBundleProductNameAndSku">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
 
@@ -89,7 +89,7 @@
         <waitForElementVisible selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="waitForAddProductsToBundle"/>
         <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
         <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>

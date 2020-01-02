@@ -54,10 +54,10 @@
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="visitAdminProductPageBundle"/>
         <waitForPageLoad stepKey="waitForProductPageLoadBundle"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateBundleProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateBundleProduct">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
-        <actionGroup ref="fillProductNameAndSkuInProductForm" stepKey="fillBundleProductNameAndSku">
+        <actionGroup ref="FillProductNameAndSkuInProductFormActionGroup" stepKey="fillBundleProductNameAndSku">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
 
@@ -70,7 +70,7 @@
         <waitForElementVisible selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="waitForAddProductsToBundle"/>
         <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
         <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>
@@ -79,7 +79,7 @@
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedBundleProduct"/>
 
         <comment userInput="Create order with bundle product from admin area." stepKey="createOrderWithBundleProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
@@ -93,7 +93,7 @@
         <waitForPageLoad time="60" stepKey="waitForPageLoad21"/>
 
         <comment userInput="Select shipping method and check grand total and shipping cost." stepKey="selectShippingMethodComment"/>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRateShipping"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
         <see selector="{{AdminOrderFormTotalSection.total('Subtotal')}}" userInput="$615.00" stepKey="seeOrderSubTotal"/>
         <see selector="{{AdminOrderFormTotalSection.total('Shipping')}}" userInput="$5.00" stepKey="seeOrderShipping"/>
         <see selector="{{AdminOrderFormTotalSection.grandTotal}}" userInput="$620.00" stepKey="seeCorrectGrandTotal"/>

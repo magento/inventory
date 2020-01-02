@@ -55,7 +55,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
                 <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <!--Revert Distance Provider for Distance Based SSA to online.-->
@@ -79,7 +79,7 @@
             <argument name="Customer" value="Simple_US_Customer"/>
             <argument name="storeCode" value="_defaultStore.code"/>
         </actionGroup>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
         <!--Navigate to Review & Payment page.-->
