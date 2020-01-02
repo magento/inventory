@@ -89,7 +89,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct1">
                 <argument name="sourceCode" value="$source1.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveConfigurableVariation1"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableVariation1"/>
             <!--Assign source to configurable product2.-->
             <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct2.id$)}}" stepKey="openConfigurableChild2ProductPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
@@ -98,7 +98,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct2">
                 <argument name="sourceCode" value="$source2.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveConfigurableVariation2"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableVariation2"/>
         </before>
         <after>
             <remove keyForRemoval="deleteProduct"/>
@@ -154,7 +154,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Verify Order.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>

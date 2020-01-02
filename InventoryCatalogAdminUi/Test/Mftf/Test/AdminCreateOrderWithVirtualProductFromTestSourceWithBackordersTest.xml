@@ -33,7 +33,7 @@
             <!-- Assign Sales Channel to Stock -->
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByKeyword">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
                 <argument name="keyword" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickOnEditForCustomStock"/>
@@ -44,7 +44,7 @@
 
             <!--Go to product page-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
-            <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage">
+            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
                 <argument name="product" value="VirtualMsiProduct"/>
             </actionGroup>
             <fillField selector="{{AdminProductFormSection.productName}}" userInput="{{VirtualMsiProduct.name}}" stepKey="fillProductName"/>
@@ -75,7 +75,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteCreatedProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteCreatedProduct">
                 <argument name="product" value="VirtualMsiProduct"/>
             </actionGroup>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
@@ -83,7 +83,7 @@
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>

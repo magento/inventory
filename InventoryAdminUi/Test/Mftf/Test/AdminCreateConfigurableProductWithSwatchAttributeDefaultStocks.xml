@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <!--Create category.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
@@ -105,7 +105,7 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="verifyConfigurableProductOnPDP">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="verifyConfigurableProductOnPDP">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
     </test>
