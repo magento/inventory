@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminEditSourcePickupLocationSection">
+        <element name="tabName" type="text" selector="//strong[contains(@class, 'collapsible-title')]/descendant::span[contains(text(), 'Pickup Location')]"/>
+        <element name="InsertImageIcon" type="button" selector=".mce-i-image" />
+    </section>
+</sections>

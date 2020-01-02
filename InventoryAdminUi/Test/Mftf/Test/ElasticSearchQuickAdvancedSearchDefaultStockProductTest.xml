@@ -17,13 +17,13 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <!-- Assign Main Website to Default Stock -->
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByKeyword">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickOnEditForDefaultStock"/>
@@ -63,7 +63,7 @@
             <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <!--Revert ElasticSearch as search engine.-->
-            <actionGroup ref="ResetSearchEngineConfiguration" stepKey="resetCatalogSearchConfiguration"/>
+            <actionGroup ref="ResetSearchEngineConfigurationActionGroup" stepKey="resetCatalogSearchConfiguration"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
@@ -74,7 +74,7 @@
             <argument name="phrase" value="$$simpleProduct1.name$$"/>
         </actionGroup>
         <!--Verify searched product.-->
-        <actionGroup ref="StorefrontOpenProductFromQuickSearch" stepKey="verifyFoundProduct">
+        <actionGroup ref="StorefrontOpenProductFromQuickSearchActionGroup" stepKey="verifyFoundProduct">
             <argument name="productName" value="$$simpleProduct1.name$$"/>
             <argument name="productUrlKey" value="$$simpleProduct1.custom_attributes[url_key]$$"/>
         </actionGroup>

@@ -78,7 +78,7 @@
 
         <!--Admin Area Check ordered quantity-->
         <comment userInput="Admin - Check ordered quantity" stepKey="AdminCheckOrderedQuantity"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
@@ -96,7 +96,7 @@
 
         <!--Admin Area Process Shipping-->
         <comment userInput="Admin - Ship order" stepKey="AdminShipOrder"/>
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToShip">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToShip">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>

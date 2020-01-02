@@ -78,7 +78,7 @@
         <click selector="{{AdminGridDefaultViewControls.viewByName('Default View')}}" stepKey="clickOnDefaultViewMenuOption1"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
-        <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20StocksPerPage">
+        <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20StocksPerPage">
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>

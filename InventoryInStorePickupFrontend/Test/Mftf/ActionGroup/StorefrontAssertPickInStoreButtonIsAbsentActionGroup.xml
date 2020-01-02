@@ -11,6 +11,6 @@
         <annotations>
             <description>Verifies, pick in store button is not visible on checkout page. Starts on checkout page.</description>
         </annotations>
-        <dontSeeElement selector="{{SelectStoreSection.pickInStoreBtn}}" stepKey="verifyBtn"/>
+        <dontSeeElement selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="verifyBtn"/>
     </actionGroup>
 </actionGroups>

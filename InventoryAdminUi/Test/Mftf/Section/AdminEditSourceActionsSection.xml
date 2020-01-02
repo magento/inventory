@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminEditSourceActionsSection">
+        <element name="backButton" type="button" selector="#back" timeout="30"/>
+        <element name="resetButton" type="button" selector="#reset" timeout="30"/>
+        <element name="saveAndContinueButton" type="button" selector="//button[contains(@id, 'save-button')]" timeout="30"/>
+    </section>
+</sections>
