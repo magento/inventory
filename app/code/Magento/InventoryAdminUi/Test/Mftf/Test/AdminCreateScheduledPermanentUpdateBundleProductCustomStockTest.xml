@@ -17,9 +17,6 @@
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1936221"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/522"/>
-            </skip>
         </annotations>
         <before>
             <!--Create stock and source.-->
