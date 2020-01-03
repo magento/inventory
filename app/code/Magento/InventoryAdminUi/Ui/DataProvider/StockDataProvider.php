@@ -22,6 +22,8 @@ use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
+use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
 /**
  * @api
@@ -64,6 +66,11 @@ class StockDataProvider extends DataProvider
     private $getSourcesAssignedToStockOrderedByPriority;
 
     /**
+     * @var PoolInterface
+     */
+    private $pool;
+
+    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -77,9 +84,10 @@ class StockDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchCriteriaBuilder $apiSearchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
+     * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
+     * @param PoolInterface $pool
      * @param array $meta
      * @param array $data
-     * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -97,6 +105,7 @@ class StockDataProvider extends DataProvider
         SearchCriteriaBuilder $apiSearchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
+        PoolInterface $pool,
         array $meta = [],
         array $data = []
     ) {
@@ -118,6 +127,7 @@ class StockDataProvider extends DataProvider
         $this->apiSearchCriteriaBuilder = $apiSearchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
+        $this->pool = $pool;
     }
 
     /**
@@ -148,6 +158,11 @@ class StockDataProvider extends DataProvider
                     $data['items'][$index]['assigned_sources'] = $this->getAssignedSourcesById($stock['stock_id']);
                 }
             }
+        }
+
+        /** @var ModifierInterface $modifier */
+        foreach ($this->pool->getModifiersInstances() as $modifier) {
+            $data = $modifier->modifyData($data);
         }
 
         return $data;
