@@ -66,9 +66,9 @@ class SourceDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchResultFactory $searchResultFactory
      * @param Session $session
-     * @param PoolInterface $pool
      * @param array $meta
      * @param array $data
+     * @param PoolInterface $pool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(

@@ -26,6 +26,8 @@ use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
 /**
+ * Provider of data to stock
+ *
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -60,6 +62,7 @@ class StockDataProvider extends DataProvider
      * @var SortOrderBuilder
      */
     private $sortOrderBuilder;
+
     /**
      * @var GetSourcesAssignedToStockOrderedByPriorityInterface
      */
@@ -85,9 +88,9 @@ class StockDataProvider extends DataProvider
      * @param SearchCriteriaBuilder $apiSearchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
-     * @param PoolInterface $pool
      * @param array $meta
      * @param array $data
+     * @param PoolInterface $pool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -131,7 +134,7 @@ class StockDataProvider extends DataProvider
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getData()
     {
@@ -169,7 +172,7 @@ class StockDataProvider extends DataProvider
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getSearchResult()
     {
@@ -188,6 +191,7 @@ class StockDataProvider extends DataProvider
     /**
      * @param int $stockId
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getAssignedSourcesData(int $stockId): array
     {
