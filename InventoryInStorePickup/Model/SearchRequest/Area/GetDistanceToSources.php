@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
+use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
@@ -28,9 +28,9 @@ class GetDistanceToSources
     private $calculatedRequests = [];
 
     /**
-     * @var GetLatLngFromAddressInterface
+     * @var GetLatsLngsFromAddressInterface
      */
-    private $getLatLngFromAddress;
+    private $getLatsLngsFromAddress;
 
     /**
      * @var GetOrderedDistanceToSources
@@ -43,16 +43,16 @@ class GetDistanceToSources
     private $addressInterfaceFactory;
 
     /**
-     * @param GetLatLngFromAddressInterface $getLatLngFromAddress
+     * @param GetLatsLngsFromAddressInterface $getLatsLngsFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
      */
     public function __construct(
-        GetLatLngFromAddressInterface $getLatLngFromAddress,
+        GetLatsLngsFromAddressInterface $getLatsLngsFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
         AddressInterfaceFactory $addressInterfaceFactory
     ) {
-        $this->getLatLngFromAddress = $getLatLngFromAddress;
+        $this->getLatsLngsFromAddress = $getLatsLngsFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
     }
@@ -104,12 +104,12 @@ class GetDistanceToSources
     {
         $sourceSelectionAddress = $this->toSourceSelectionAddress($area);
         try {
-            $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
+            $latLngs = $this->getLatsLngsFromAddress->execute($sourceSelectionAddress);
         } catch (LocalizedException $exception) {
             throw new NoSuchEntityException(__($exception->getMessage()), $exception);
         }
 
-        return $this->getOrderedDistanceToSources->execute($latLng, $area->getRadius());
+        return $this->getOrderedDistanceToSources->execute($latLngs, $area->getRadius());
     }
 
     /**

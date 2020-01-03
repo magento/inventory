@@ -7,58 +7,37 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\GoogleMap;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\HTTP\ClientInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToComponentsString;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToQueryString;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToString;
-use Magento\InventoryDistanceBasedSourceSelection\Model\ResourceModel\GetGeoNamesDataByAddress;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterfaceFactory;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
 /**
- * @inheritdoc
+ * Get geocodes for given address service.
  */
-class GetLatLngFromAddress implements GetLatLngFromAddressInterface
+class GetGeocodesForAddress
 {
-    /**
-     * @var array
-     */
-    private $latLngCache = [];
+    private const GOOGLE_ENDPOINT = 'https://maps.google.com/maps/api/geocode/json';
 
     /**
-     * @deprecated
-     *
      * @var ClientInterface
      */
     private $client;
 
     /**
-     * @var LatLngInterface
-     */
-    private $latLngInterfaceFactory;
-
-    /**
-     * @deprecated
-     *
      * @var Json
      */
     private $json;
 
     /**
-     * @deprecated
-     *
      * @var GetApiKey
      */
     private $getApiKey;
 
     /**
-     * @deprecated
-     *
      * @var AddressToComponentsString
      */
     private $addressToComponentsString;
@@ -69,65 +48,60 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
     private $addressToString;
 
     /**
-     * @deprecated
-     *
      * @var AddressToQueryString
      */
     private $addressToQueryString;
 
     /**
-     * @var GetGeocodesForAddress
-     */
-    private $getGeocodesForAddress;
-
-    /**
      * @param ClientInterface $client
-     * @param LatLngInterfaceFactory $latLngInterfaceFactory
      * @param Json $json
      * @param GetApiKey $getApiKey
      * @param AddressToComponentsString $addressToComponentsString
      * @param AddressToQueryString $addressToQueryString
      * @param AddressToString $addressToString
-     * @param GetGeocodesForAddress $getGeocodesForAddress
      */
     public function __construct(
         ClientInterface $client,
-        LatLngInterfaceFactory $latLngInterfaceFactory,
         Json $json,
         GetApiKey $getApiKey,
         AddressToComponentsString $addressToComponentsString,
         AddressToQueryString $addressToQueryString,
-        AddressToString $addressToString,
-        GetGeocodesForAddress $getGeocodesForAddress = null
+        AddressToString $addressToString
     ) {
         $this->client = $client;
-        $this->latLngInterfaceFactory = $latLngInterfaceFactory;
         $this->json = $json;
         $this->getApiKey = $getApiKey;
         $this->addressToComponentsString = $addressToComponentsString;
         $this->addressToString = $addressToString;
         $this->addressToQueryString = $addressToQueryString;
-        $this->getGeocodesForAddress = $getGeocodesForAddress ?: ObjectManager::getInstance()
-            ->get(GetGeoNamesDataByAddress::class);
     }
 
     /**
-     * @inheritdoc
+     * Retrieve geocodes for given address.
+     *
+     * @param $address
+     * @return array
      * @throws LocalizedException
      */
-    public function execute(AddressInterface $address): LatLngInterface
+    public function execute(AddressInterface $address): array
     {
-        $cacheKey = $addressString = $this->addressToString->execute($address);
+        $queryString = http_build_query([
+            'key' => $this->getApiKey->execute(),
+            'components' => $this->addressToComponentsString->execute($address),
+            'address' => $this->addressToQueryString->execute($address),
+        ]);
 
-        if (!isset($this->latLngCache[$cacheKey])) {
-            $res = $this->getGeocodesForAddress->execute($address);
-            $location = $res['results'][0]['geometry']['location'];
-            $this->latLngCache[$cacheKey] = $this->latLngInterfaceFactory->create([
-                'lat' => (float)$location['lat'],
-                'lng' => (float)$location['lng'],
-            ]);
+        $this->client->get(self::GOOGLE_ENDPOINT . '?' . $queryString);
+        if ($this->client->getStatus() !== 200) {
+            throw new LocalizedException(__('Unable to connect google API for geocoding'));
         }
 
-        return $this->latLngCache[$cacheKey];
+        $res = $this->json->unserialize($this->client->getBody());
+
+        if ($res['status'] !== 'OK') {
+            throw new LocalizedException(__('Unable to geocode address %1', $this->addressToString->execute($address)));
+        }
+
+        return $res;
     }
 }

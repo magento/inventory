@@ -7,23 +7,21 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\GoogleMap;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\HTTP\ClientInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToComponentsString;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToQueryString;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToString;
-use Magento\InventoryDistanceBasedSourceSelection\Model\ResourceModel\GetGeoNamesDataByAddress;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterfaceFactory;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
+use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
 /**
  * @inheritdoc
  */
-class GetLatLngFromAddress implements GetLatLngFromAddressInterface
+class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
 {
     /**
      * @var array
@@ -31,37 +29,9 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
     private $latLngCache = [];
 
     /**
-     * @deprecated
-     *
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
      * @var LatLngInterface
      */
     private $latLngInterfaceFactory;
-
-    /**
-     * @deprecated
-     *
-     * @var Json
-     */
-    private $json;
-
-    /**
-     * @deprecated
-     *
-     * @var GetApiKey
-     */
-    private $getApiKey;
-
-    /**
-     * @deprecated
-     *
-     * @var AddressToComponentsString
-     */
-    private $addressToComponentsString;
 
     /**
      * @var AddressToString
@@ -69,18 +39,13 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
     private $addressToString;
 
     /**
-     * @deprecated
-     *
-     * @var AddressToQueryString
-     */
-    private $addressToQueryString;
-
-    /**
      * @var GetGeocodesForAddress
      */
     private $getGeocodesForAddress;
 
     /**
+     * GetLatLngFromAddress constructor.
+     *
      * @param ClientInterface $client
      * @param LatLngInterfaceFactory $latLngInterfaceFactory
      * @param Json $json
@@ -91,41 +56,32 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
      * @param GetGeocodesForAddress $getGeocodesForAddress
      */
     public function __construct(
-        ClientInterface $client,
-        LatLngInterfaceFactory $latLngInterfaceFactory,
-        Json $json,
-        GetApiKey $getApiKey,
-        AddressToComponentsString $addressToComponentsString,
-        AddressToQueryString $addressToQueryString,
         AddressToString $addressToString,
-        GetGeocodesForAddress $getGeocodesForAddress = null
+        GetGeocodesForAddress $getGeocodesForAddress
     ) {
-        $this->client = $client;
-        $this->latLngInterfaceFactory = $latLngInterfaceFactory;
-        $this->json = $json;
-        $this->getApiKey = $getApiKey;
-        $this->addressToComponentsString = $addressToComponentsString;
         $this->addressToString = $addressToString;
-        $this->addressToQueryString = $addressToQueryString;
-        $this->getGeocodesForAddress = $getGeocodesForAddress ?: ObjectManager::getInstance()
-            ->get(GetGeoNamesDataByAddress::class);
+        $this->getGeocodesForAddress = $getGeocodesForAddress;
     }
 
     /**
      * @inheritdoc
      * @throws LocalizedException
      */
-    public function execute(AddressInterface $address): LatLngInterface
+    public function execute(AddressInterface $address): array
     {
         $cacheKey = $addressString = $this->addressToString->execute($address);
 
         if (!isset($this->latLngCache[$cacheKey])) {
+            $this->getGeocodesForAddress->execute($address);
             $res = $this->getGeocodesForAddress->execute($address);
-            $location = $res['results'][0]['geometry']['location'];
-            $this->latLngCache[$cacheKey] = $this->latLngInterfaceFactory->create([
-                'lat' => (float)$location['lat'],
-                'lng' => (float)$location['lng'],
-            ]);
+            foreach ($res['results'] as $result) {
+                $location = $result['geometry']['location'];
+                $this->latLngCache[$cacheKey][] = $this->latLngInterfaceFactory->create([
+                    'lat' => (float)$location['lat'],
+                    'lng' => (float)$location['lng'],
+                ]);
+
+            }
         }
 
         return $this->latLngCache[$cacheKey];

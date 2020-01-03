@@ -22,6 +22,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 class GetOrderedDistanceToSources
 {
     private const EARTH_RADIUS_KM = 6372.797;
+    private const CHUNK = 30;
 
     /**
      * @var ResourceConnection
@@ -39,50 +40,68 @@ class GetOrderedDistanceToSources
     /**
      * Get associated list of source codes and distances to specific coordinates limited by specific radius.
      *
-     * @param LatLngInterface $latLng
+     * @param LatLngInterface[] $latsLngs
      * @param int $radius
      *
      * @return float[]
      */
-    public function execute(LatLngInterface $latLng, int $radius): array
+    public function execute(array $latsLngs, int $radius): array
     {
         $connection = $this->resourceConnection->getConnection();
         $sourceTable = $this->resourceConnection->getTableName('inventory_source');
-        $query = $connection->select()
-                            ->from($sourceTable)
-                            ->where(SourceInterface::ENABLED)
-                            ->reset(Select::COLUMNS)
-                            ->columns(
-                                [
-                                    'source_code',
-                                    $this->createDistanceColumn(
-                                        $latLng
-                                    ) . ' AS ' . AreaInterface::DISTANCE_FIELD
-                                ]
-                            )
-                            ->having(AreaInterface::DISTANCE_FIELD . ' <= ?', $radius)
-                            ->order(AreaInterface::DISTANCE_FIELD . ' ASC');
-
-        $distances = $connection->fetchPairs($query);
+        $latsLngsChunks = array_chunk($latsLngs, self::CHUNK);
+        $distances = [[]];
+        foreach ($latsLngsChunks as $latsLngsChunk) {
+            $query = $connection->select()
+                ->from($sourceTable)
+                ->where(SourceInterface::ENABLED)
+                ->reset(Select::COLUMNS)
+                ->columns($this->createDistanceColumns($latsLngsChunk));
+            $query = $this->processHavingClause($query, $radius, $latsLngsChunk);
+            $distances[] = $connection->fetchPairs($query);
+        }
+        $distances = array_merge(...$distances);
 
         return array_map('floatval', $distances);
     }
 
     /**
-     * Construct DB query to calculate Great Circle Distance
+     * Build having clause.
      *
-     * @param LatLngInterface $latLng
-     *
-     * @return string
+     * @param Select $query
+     * @param int $radius
+     * @param array $latLngs
+     * @return Select
      */
-    private function createDistanceColumn(LatLngInterface $latLng): string
+    private function processHavingClause(Select $query, int $radius, array $latLngs)
     {
-        return '(' . self::EARTH_RADIUS_KM . ' * ACOS('
-            . 'COS(RADIANS(' . $latLng->getLat() . ')) * '
-            . 'COS(RADIANS(latitude)) * '
-            . 'COS(RADIANS(longitude) - RADIANS(' . $latLng->getLng() . ')) + '
-            . 'SIN(RADIANS(' . $latLng->getLat() . ')) * '
-            . 'SIN(RADIANS(latitude))'
-            . '))';
+        foreach ($latLngs as $key => $latLng) {
+            $query->orHaving(AreaInterface::DISTANCE_FIELD . $key . ' <= ?', $radius);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Construct DB query to calculate Great Circle Distance.
+     *
+     * @param LatLngInterface[] $latLngs
+     *
+     * @return array
+     */
+    private function createDistanceColumns(array $latLngs): array
+    {
+        $result = ['source_code'];
+        foreach ($latLngs as $key => $latLng) {
+            $result[] = '(' . self::EARTH_RADIUS_KM . ' * ACOS('
+                . 'COS(RADIANS(' . $latLng->getLat() . ')) * '
+                . 'COS(RADIANS(latitude)) * '
+                . 'COS(RADIANS(longitude) - RADIANS(' . $latLng->getLng() . ')) + '
+                . 'SIN(RADIANS(' . $latLng->getLat() . ')) * '
+                . 'SIN(RADIANS(latitude))'
+                . '))' . ' AS ' . AreaInterface::DISTANCE_FIELD . $key;
+        }
+
+        return $result;
     }
 }
