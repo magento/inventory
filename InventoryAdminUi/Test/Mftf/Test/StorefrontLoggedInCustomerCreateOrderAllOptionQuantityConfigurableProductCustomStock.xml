@@ -77,7 +77,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct1">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct1"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct1"/>
             <amOnPage url="{{AdminProductEditPage.url($$configurableChildProduct2.id$$)}}" stepKey="openProduct2EditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
@@ -85,7 +85,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct2">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="saveProductForm" stepKey="saveProduct2"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
         </before>
         <after>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
