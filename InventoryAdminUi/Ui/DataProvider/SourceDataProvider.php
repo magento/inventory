@@ -16,6 +16,8 @@ use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
+use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
 /**
  * Data provider for admin source grid.
@@ -49,6 +51,11 @@ class SourceDataProvider extends DataProvider
     private $sourceCount;
 
     /**
+     * @var PoolInterface
+     */
+    private $pool;
+
+    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -59,6 +66,7 @@ class SourceDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchResultFactory $searchResultFactory
      * @param Session $session
+     * @param PoolInterface $pool
      * @param array $meta
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
@@ -74,6 +82,7 @@ class SourceDataProvider extends DataProvider
         SourceRepositoryInterface $sourceRepository,
         SearchResultFactory $searchResultFactory,
         Session $session,
+        PoolInterface $pool,
         array $meta = [],
         array $data = []
     ) {
@@ -91,6 +100,7 @@ class SourceDataProvider extends DataProvider
         $this->sourceRepository = $sourceRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->session = $session;
+        $this->pool = $pool;
     }
 
     /**
@@ -120,6 +130,12 @@ class SourceDataProvider extends DataProvider
             }
         }
         $data['totalRecords'] = $this->getSourcesCount();
+
+        /** @var ModifierInterface $modifier */
+        foreach ($this->pool->getModifiersInstances() as $modifier) {
+            $data = $modifier->modifyData($data);
+        }
+
         return $data;
     }
 
@@ -131,13 +147,12 @@ class SourceDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->sourceRepository->getList($searchCriteria);
 
-        $searchResult = $this->searchResultFactory->create(
+        return $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
             SourceInterface::SOURCE_CODE
         );
-        return $searchResult;
     }
 
     /**
