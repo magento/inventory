@@ -22,6 +22,7 @@ use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
+use Magento\Framework\App\ObjectManager;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
@@ -90,7 +91,7 @@ class StockDataProvider extends DataProvider
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @param array $meta
      * @param array $data
-     * @param PoolInterface $pool
+     * @param PoolInterface|null $pool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -108,9 +109,9 @@ class StockDataProvider extends DataProvider
         SearchCriteriaBuilder $apiSearchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
-        PoolInterface $pool,
         array $meta = [],
-        array $data = []
+        array $data = [],
+        PoolInterface $pool = null
     ) {
         parent::__construct(
             $name,
@@ -130,7 +131,7 @@ class StockDataProvider extends DataProvider
         $this->apiSearchCriteriaBuilder = $apiSearchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
-        $this->pool = $pool;
+        $this->pool = $pool ?: ObjectManager::getInstance()->get(PoolInterface::class);
     }
 
     /**
