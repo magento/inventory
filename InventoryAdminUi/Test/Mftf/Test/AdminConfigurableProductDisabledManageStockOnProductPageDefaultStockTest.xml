@@ -30,13 +30,13 @@
             <comment userInput="Assign source and sales channel to stock." stepKey="assignSourceToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockGridPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByName">
                 <argument name="keyword" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickEditCustomStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByName">
                 <argument name="keyword" value="$$customSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$customSource.source[name]$$)}}" stepKey="selectCustomSourceForCustomStock"/>
@@ -93,7 +93,7 @@
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
 
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultSourceByNameForAssignment">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultSourceByNameForAssignment">
             <argument name="keyword" value="_defaultSource.name"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue(_defaultSource.name)}}" stepKey="selectDefaultSource"/>
@@ -116,8 +116,8 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGrid"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterBlueConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGrid"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterBlueConfigurableVariation">
             <argument name="product" value="colorProductAttribute3"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editBlueConfigurableVariation"/>
@@ -127,7 +127,7 @@
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToEditRedConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoadToFindRedConfigurableVariation"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterProductGridToFindConfigurableRedVariation">
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterProductGridToFindConfigurableRedVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariation"/>
@@ -142,8 +142,8 @@
         <comment userInput="Set 'Manage Stock' to no for configurable children" stepKey="setManageStockToNoForConfigurableChildrenComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToSetManageStockToNoForChildren"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoadedToSetManageStockToNoForChildren"/>
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridToSetManageStockToNoForBlue"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterBlueConfigurableVariationToSetManageStockToNoForBlue">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridToSetManageStockToNoForBlue"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterBlueConfigurableVariationToSetManageStockToNoForBlue">
             <argument name="product" value="colorProductAttribute3"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editBlueConfigurableVariationToSetManageStockToNoForBlue"/>
@@ -153,8 +153,8 @@
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetManageStockToNoForBlue"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseToSetManageStockToNoForBlue"/>
 
-        <actionGroup ref="resetProductGridToDefaultView" stepKey="resetProductGridToSetManageStockToNoForRed"/>
-        <actionGroup ref="filterProductGridByName" stepKey="filterRedConfigurableVariation">
+        <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridToSetManageStockToNoForRed"/>
+        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterRedConfigurableVariation">
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariationToSetManageStockToNoForRed"/>
@@ -173,7 +173,7 @@
             <argument name="category" value="$$category$$"/>
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="checkConfigurableBackToStockOnProductViewPage">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="checkConfigurableBackToStockOnProductViewPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
 

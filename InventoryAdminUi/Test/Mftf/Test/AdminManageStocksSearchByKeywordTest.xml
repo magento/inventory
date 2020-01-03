@@ -33,7 +33,7 @@
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockListPage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword1">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword1">
             <argument name="keyword" value="$$createStock4.stock[name]$$"/>
         </actionGroup>
 

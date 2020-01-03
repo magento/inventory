@@ -38,7 +38,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -65,7 +65,7 @@
         <comment userInput="Create downloadable product with category and link." stepKey="createDownloadableProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
         <waitForPageLoad stepKey="waitForPageLoad1"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateProductPage">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
             <argument name="product" value="DownloadableProduct"/>
         </actionGroup>
         <fillField selector="{{AdminProductFormSection.productName}}" userInput="{{DownloadableProduct.name}}" stepKey="fillProductSku"/>
@@ -89,16 +89,16 @@
         <fillField userInput="{{downloadableData.link_title}}" selector="{{AdminProductDownloadableSection.linksTitleInput}}" stepKey="fillDownloadableLinkTitle"/>
         <checkOption selector="{{AdminProductDownloadableSection.isLinksPurchasedSeparately}}" stepKey="checkLinksPurchasedSeparately"/>
         <fillField userInput="{{downloadableData.sample_title}}" selector="{{AdminProductDownloadableSection.samplesTitleInput}}" stepKey="fillDownloadableSampleTitle"/>
-        <actionGroup ref="addDownloadableProductLinkWithMaxDownloads" stepKey="addDownloadableLinkWithMaxDownloads">
+        <actionGroup ref="AddDownloadableProductLinkWithMaxDownloadsActionGroup" stepKey="addDownloadableLinkWithMaxDownloads">
             <argument name="link" value="downloadableLinkWithMaxDownloads"/>
         </actionGroup>
-        <actionGroup ref="addDownloadableProductLink" stepKey="addDownloadableLink">
+        <actionGroup ref="AddDownloadableProductLinkActionGroup" stepKey="addDownloadableLink">
             <argument name="link" value="downloadableLink"/>
         </actionGroup>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedDownloadableProduct"/>
 
         <comment userInput="Create order with downloadable product from admin area." stepKey="createOrderWithDownloadableProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 

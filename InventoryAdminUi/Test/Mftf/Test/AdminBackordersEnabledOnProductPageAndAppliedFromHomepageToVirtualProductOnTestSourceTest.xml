@@ -61,7 +61,7 @@
             <argument name="sourceQty" value="3"/>
         </actionGroup>
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
-        <actionGroup ref="saveProductForm" stepKey="saveProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
@@ -76,7 +76,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
 
-        <actionGroup ref="filterOrderGridById" stepKey="filterByOrderId">
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterByOrderId">
             <argument name="orderId" value="$orderNumber"/>
         </actionGroup>
         <see selector="{{AdminOrdersGridSection.firstRow}}" userInput="$orderNumber" stepKey="seeOrderIdInGrid"/>

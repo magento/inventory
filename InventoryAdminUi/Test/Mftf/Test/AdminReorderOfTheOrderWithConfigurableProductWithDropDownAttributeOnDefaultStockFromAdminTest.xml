@@ -65,7 +65,7 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
             <!-- Delete configurable product -->
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFilter"/>
@@ -81,10 +81,10 @@
         <!-- Create a configurable product -->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
         <waitForPageLoad stepKey="waitForProductGrid"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateConfigurableProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="fillMainProductForm" stepKey="fillProductForm">
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
@@ -96,10 +96,10 @@
             <argument name="sourceName" value="{{_defaultSource.name}}"/>
         </actionGroup>
         <!-- Save configurable product -->
-        <actionGroup ref="saveProductForm" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
 
         <!-- Create order -->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="newOrder">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AdminFilterProductInCreateOrderActionGroup" stepKey="filterConfigProduct">
@@ -115,7 +115,7 @@
                       value="$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
             <argument name="quantity" value="5"/>
         </actionGroup>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRate"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
         <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
@@ -139,7 +139,7 @@
         <waitForPageLoad stepKey="waitForPageLoad6"/>
 
         <!-- Filter Order using orderId -->
-        <actionGroup ref="filterOrderGridById" stepKey="filterOrderGridById1">
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById1">
             <argument name="orderId" value="$getOrderId"/>
         </actionGroup>
         <click selector="{{AdminOrdersGridSection.rowViewAction('1')}}" stepKey="clickOnViewAction1"/>

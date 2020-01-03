@@ -69,10 +69,10 @@
             <fillField userInput="{{downloadableData.link_title}}" selector="{{AdminProductDownloadableSection.linksTitleInput}}" stepKey="fillDownloadableLinkTitle"/>
             <checkOption selector="{{AdminProductDownloadableSection.isLinksPurchasedSeparately}}" stepKey="checkLinksPurchasedSeparately"/>
             <fillField userInput="{{downloadableData.sample_title}}" selector="{{AdminProductDownloadableSection.samplesTitleInput}}" stepKey="fillDownloadableSampleTitle"/>
-            <actionGroup ref="addDownloadableProductLinkWithMaxDownloads" stepKey="addDownloadableLinkWithMaxDownloads">
+            <actionGroup ref="AddDownloadableProductLinkWithMaxDownloadsActionGroup" stepKey="addDownloadableLinkWithMaxDownloads">
                 <argument name="link" value="downloadableLinkWithMaxDownloads"/>
             </actionGroup>
-            <actionGroup ref="addDownloadableProductLink" stepKey="addDownloadableLink">
+            <actionGroup ref="AddDownloadableProductLinkActionGroup" stepKey="addDownloadableLink">
                 <argument name="link" value="downloadableLink"/>
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedDownloadableProduct"/>
@@ -80,14 +80,14 @@
             <comment userInput="Assign created source to stock" stepKey="assignSourceToStock"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignCreatedSourceToCreatedStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByName">
                 <argument name="keyword" value="$$createStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$createStock.stock[name]$$)}}" stepKey="clickEditCustomStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
             <!--Assign first source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForAssignCreatedSource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCreatedSourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCreatedSourceByName">
                 <argument name="keyword" value="$$createSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSource.source[name]$$)}}" stepKey="selectCreatedSourceForCreatedStock"/>
@@ -97,7 +97,7 @@
             <comment userInput="Assign main website to default stock" stepKey="assignMainWebsiteChannelToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
