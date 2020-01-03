@@ -35,7 +35,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -67,18 +67,18 @@
 
         <!--Create Order with Simple product from Admin-->
         <comment userInput="Create order with Simple product from admin area." stepKey="createOrderWithSimpleProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad"/>
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addSimpleProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
 
         <waitForPageLoad time="30" stepKey="waitForPageLoadOrder"/>
         <comment userInput="Select shipping method and check grand total and shipping cost." stepKey="selectShippingMethodComment"/>
-        <actionGroup ref="orderSelectFlatRateShipping" stepKey="selectFlatRateShipping"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
         <see selector="{{AdminOrderFormTotalSection.total('Subtotal')}}" userInput="$123.00" stepKey="seeOrderSubTotal"/>
         <see selector="{{AdminOrderFormTotalSection.total('Shipping')}}" userInput="5" stepKey="seeOrderShipping"/>
         <comment userInput="Submit order." stepKey="submitOrderComment"/>

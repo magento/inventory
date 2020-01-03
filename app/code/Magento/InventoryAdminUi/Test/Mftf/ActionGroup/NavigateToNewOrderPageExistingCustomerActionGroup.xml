@@ -9,7 +9,7 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <!--Navigate to create order page (New Order -> Select Customer)-->
-    <actionGroup name="navigateToNewOrderPageExistingCustomer">
+    <actionGroup name="NavigateToNewOrderPageExistingCustomerActionGroup">
         <arguments>
             <argument name="customer"/>
         </arguments>
