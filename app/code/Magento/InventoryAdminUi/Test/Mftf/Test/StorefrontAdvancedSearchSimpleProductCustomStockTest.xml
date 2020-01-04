@@ -16,6 +16,9 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="https://github.com/magento/inventory/issues/2581"/>
+            </skip>
         </annotations>
 
         <before>
@@ -64,7 +67,7 @@
             <argument name="name" value="$product.name$"/>
         </actionGroup>
         <!--Verify searched product by name.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedByName">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedByName">
             <argument name="productName" value="$product.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
@@ -74,7 +77,7 @@
             <argument name="sku" value="$product.sku$"/>
         </actionGroup>
         <!--Verify searched product by sku.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedBySku">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedBySku">
             <argument name="productName" value="$product.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>

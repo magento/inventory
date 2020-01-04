@@ -79,11 +79,15 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <!--Delete created website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite" >
+                <argument name="websiteName" value="{{NewWebSiteData.name}}"/>
+            </actionGroup>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <!-- Delete configurable product -->
-            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteProduct">
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
             <deleteData createDataKey="createFirstConfigProductAttribute" stepKey="deleteFirstConfigProductAttribute"/>
@@ -95,10 +99,10 @@
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
-        <actionGroup ref="goToCreateProductPage" stepKey="goToCreateConfigurableProduct">
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="fillMainProductForm" stepKey="fillProductForm">
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite" >

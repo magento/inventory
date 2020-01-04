@@ -20,6 +20,7 @@
         </annotations>
 
         <before>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com" before="category"/>
             <!--Create test data.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <createData entity="_defaultCategory" stepKey="category"/>
@@ -49,12 +50,13 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
         </after>
         <!-- Add product to shopping cart -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
             <argument name="Customer" value="$customer$" />
         </actionGroup>
-        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
         <!--Place order.-->
@@ -62,7 +64,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Verify reorder.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>

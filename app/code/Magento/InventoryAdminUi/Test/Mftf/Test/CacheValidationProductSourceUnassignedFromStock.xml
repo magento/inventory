@@ -40,6 +40,10 @@
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
+
+            <!-- Perform reindex and flush cache -->
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
 
         <after>
@@ -50,7 +54,7 @@
             <!-- Assign Sales Channel to Default Stock -->
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByKeyword">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickOnEditForDefaultStock"/>

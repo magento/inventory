@@ -50,7 +50,7 @@
             <waitForElementVisible selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="waitForAddProductsToBundle"/>
             <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
-            <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
                 <argument name="product" value="$$product$$"/>
             </actionGroup>
             <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>

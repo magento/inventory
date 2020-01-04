@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontMultishippingLoggedInCustomerOrderedSimpleProductAllQtyCustomStockTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Logged in customer ordered simple product with all available quantity from test source using multi-shipments to single address."/>
+            <description value="Verify, customer able to place order using multi shipping with all available product quantity."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419534/scenarios/3688106"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="Msi_US_Customer" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminPanel"/>
+            <!--Assign source to product.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+                <argument name="sourceQty" value="{{minimalProductQty.value}}"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Add simple product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$" />
+        </actionGroup>
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addSimpleProductToCart">
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!--Proceed to multi shipping and place order.-->
+        <actionGroup ref="StorefrontOpenCartFromMinicartActionGroup" stepKey="openCart"/>
+        <actionGroup ref="CheckingWithSingleAddressActionGroup" stepKey="checkoutWithSingleAddresses"/>
+        <actionGroup ref="StorefrontSelectShippingInfoActionGroup" stepKey="checkoutWithSingleShipping"/>
+        <actionGroup ref="SelectBillingInfoActionGroup" stepKey="checkoutWithPaymentMethod"/>
+        <actionGroup ref="ReviewOrderForSingleShipmentActionGroup" stepKey="reviewOrderForSingleShipment"/>
+        <actionGroup ref="PlaceOrderActionGroup" stepKey="placeOrder"/>
+    </test>
+</tests>

@@ -40,6 +40,8 @@
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
 
         <after>
@@ -48,7 +50,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="20" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -65,9 +67,7 @@
         </after>
 
         <!--Place order from homepage-->
-        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
-            <argument name="productUrl" value="$$simpleProduct.custom_attributes[url_key]$$"/>
-        </actionGroup>
+        <amOnPage url="{{StorefrontProductPage.url($$simpleProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <actionGroup ref="StorefrontAddProductToCartActionGroup" stepKey="cartAddSimpleProductToCart">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="productCount" value="1"/>
@@ -87,7 +87,7 @@
         <!-- Verify order in admin -->
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="goToOrders"/>
         <waitForPageLoad stepKey="waitForOrdersPageLoad"/>
-        <actionGroup ref="OpenOrderById" stepKey="filterOrderGridById">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="filterOrderGridById">
             <argument name="orderId" value="$grabOrderNumber"/>
         </actionGroup>
         <scrollTo selector="{{AdminOrderTotalSection.grandTotal}}" stepKey="scrollToOrderTotalSection"/>

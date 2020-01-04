@@ -6,8 +6,7 @@
   */
 -->
 
-<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="StorefrontCustomerReorderActionGroup">
         <annotations>
             <description>Navigate to customer dashboard -> orders. Press 'reorder' button for specified order id. Notice: customer should be logged in.</description>
@@ -20,5 +19,6 @@
         <click selector="{{StorefrontCustomerSidebarSection.sidebarTab('My Orders')}}" stepKey="navigateToOrders"/>
         <waitForPageLoad stepKey="waitForOrdersPageLoad"/>
         <click selector="{{StorefrontCustomerOrdersGridSection.reorderBtn(orderNumber)}}" stepKey="clickReorderBtn"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForCartPage"/>
     </actionGroup>
 </actionGroups>
