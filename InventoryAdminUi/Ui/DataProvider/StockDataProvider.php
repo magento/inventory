@@ -180,16 +180,17 @@ class StockDataProvider extends DataProvider
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->stockRepository->getList($searchCriteria);
 
-        $searchResult = $this->searchResultFactory->create(
+        return $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
             StockInterface::STOCK_ID
         );
-        return $searchResult;
     }
 
     /**
+     * Returns assigned sources Data
+     *
      * @param int $stockId
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -226,6 +227,8 @@ class StockDataProvider extends DataProvider
     }
 
     /**
+     * Return assigned sources by id
+     *
      * @param int $stockId
      * @return array
      * @throws \Magento\Framework\Exception\InputException
