@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontLoggedInCustomerCreateOrderAllOptionQuantityConfigurableProductCustomStock">
+        <annotations>
+            <stories value="Configurable Product Custom Stock."/>
+            <title value="Place order with all option quantity with configurable product on custom stock."/>
+            <description value="Verify, configurable product option not visible after order placement with all it's quantity on custom stock."/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="BaseConfigurableProduct" stepKey="configurableProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="productAttributeWithTwoOptions" stepKey="configurableProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="configurableProductAttributeOption1">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="configurableProductAttributeOption2">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <createData entity="AddToDefaultSet" stepKey="createConfigAddToAttributeSet">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <getData entity="ProductAttributeOptionGetter" index="1" stepKey="getConfigAttributeOption1">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </getData>
+            <getData entity="ProductAttributeOptionGetter" index="2" stepKey="getConfigAttributeOption2">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </getData>
+            <createData entity="ConfigurableProductTwoOptions" stepKey="configurableProductOption">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption1"/>
+                <requiredEntity createDataKey="getConfigAttributeOption2"/>
+            </createData>
+            <createData entity="ApiSimpleOne" stepKey="configurableChildProduct1">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption1"/>
+            </createData>
+            <createData entity="ApiSimpleOne" stepKey="configurableChildProduct2">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption2"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="configurableProductAddChild1">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableChildProduct1"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="createConfigProductAddChild2">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableChildProduct2"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <!--Assign additional source to configurable product.-->
+            <amOnPage url="{{AdminProductEditPage.url($$configurableChildProduct1.id$$)}}" stepKey="openProduct1EditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct1">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct1"/>
+            <amOnPage url="{{AdminProductEditPage.url($$configurableChildProduct2.id$$)}}" stepKey="openProduct2EditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct2">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
+        </before>
+        <after>
+            <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="configurableChildProduct1" stepKey="deleteConfigurableProductVariation1"/>
+            <deleteData createDataKey="configurableChildProduct2" stepKey="deleteConfigurableProductVariation2"/>
+            <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigurableProductAttribute"/>
+            <!--Assign Default Stock to Main Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Add configurable product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$customer$$" />
+        </actionGroup>
+        <actionGroup ref="StorefrontAddConfigurableProductToTheCartActionGroup" stepKey="addConfigurableProductToCart">
+            <argument name="urlKey" value="$$configurableProduct.custom_attributes[url_key]$$" />
+            <argument name="productAttribute" value="$$configurableProductAttribute.default_frontend_label$$"/>
+            <argument name="productOption" value="$$getConfigAttributeOption1.value$$"/>
+            <argument name="qty" value="{{defaultProductQty.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <!-- Assert out of stock option is absent on product page -->
+        <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
+        <waitForPageLoad stepKey="waitForConfigurablePDP"/>
+        <dontSee userInput="$$getConfigAttributeOption1.label$$" selector="{{StorefrontProductInfoMainSection.optionByAttributeId($$configurableProductAttribute.attribute_id$$)}}" stepKey="assertOptionNotAvailable" />
+        <see userInput="$$getConfigAttributeOption2.label$$" selector="{{StorefrontProductInfoMainSection.optionByAttributeId($$configurableProductAttribute.attribute_id$$)}}" stepKey="assertOptionAvailable" />
+    </test>
+</tests>
