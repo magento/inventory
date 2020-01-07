@@ -39,7 +39,7 @@
         <remove keyForRemoval="addProductToCartWithProperQty"/>
 
         <!-- Create order -->
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="goToCreateOrderPage">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="goToCreateOrderPage">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
@@ -57,7 +57,7 @@
         <fillField selector="{{AdminCustomerCreateNewOrderSection.productQty}}" userInput="5" after="seeLowQtyErrorMessageSecondTime" stepKey="addProduct" />
         <click selector="{{AdminOrderFormItemsSection.updateItemsAndQuantities}}" after="addProduct" stepKey="clickAddSelectedProducts"/>
         <waitForPageLoad after="clickAddSelectedProducts" stepKey="waitForPageLoad3"/>
-        <actionGroup ref="orderSelectFlatRateShipping" after="waitForPageLoad3" stepKey="selectShipping"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" after="waitForPageLoad3" stepKey="selectShipping"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" after="selectShipping" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" after="submitOrder" stepKey="getOrderId"/>
     </test>

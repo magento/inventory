@@ -24,6 +24,18 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{BasicMsiWebsite1.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite2">
+                <argument name="websiteName" value="{{BasicMsiWebsite2.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite3">
+                <argument name="websiteName" value="{{BasicMsiWebsite3.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite4">
+                <argument name="websiteName" value="{{BasicMsiWebsite4.name}}"/>
+            </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
@@ -72,7 +84,7 @@
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite4.name}}" stepKey="dontSeeBasicWebbSiteSelected4"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword1">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword1">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createStock1.stock[name]$$)}}" stepKey="clickOnEditForDefaultStock2"/>
@@ -89,7 +101,7 @@
         <seeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite4.name}}" stepKey="seeBasicWebbSiteSelected4"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword2">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
 

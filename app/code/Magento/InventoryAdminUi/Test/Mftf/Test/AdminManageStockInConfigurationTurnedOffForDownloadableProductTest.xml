@@ -45,7 +45,7 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setProductStatusToOutOfStock">
-                <argument name="sourceCode" value="$source.source[code]$"/>
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
                 <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>

@@ -25,6 +25,9 @@
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         </before>
         <after>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{BasicMsiWebsite1.name}}"/>
+            </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 

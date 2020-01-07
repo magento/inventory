@@ -34,7 +34,7 @@
 
         <!--Verify Test Source code is not editable in Source Grid.-->
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceListPage"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="findCreatedSource">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="findCreatedSource">
             <argument name="keyword" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.rowOne}}" stepKey="clickToEditSourceInGrid"/>

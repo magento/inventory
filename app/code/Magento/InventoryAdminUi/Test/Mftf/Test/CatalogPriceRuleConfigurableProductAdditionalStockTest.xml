@@ -43,7 +43,7 @@
             <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku" after="navigateToThirdStep"/>
             <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow" after="clickOnApplySingleQuantityToEachSku"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter" after="openSelectSourcesModalWindow"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomSourceByNameForAssignment" after="clearSourcesFilter">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByNameForAssignment" after="clearSourcesFilter">
                 <argument name="keyword" value="$$additionalSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$additionalSource.source[name]$$)}}" stepKey="selectCustomSource" after="searchCustomSourceByNameForAssignment"/>
