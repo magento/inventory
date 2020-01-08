@@ -19,7 +19,7 @@ use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
  */
 class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
 {
-    private $latLngCache = [];
+    private $latsLngsCache = [];
 
     /**
      * @var LatLngInterfaceFactory
@@ -58,16 +58,16 @@ class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
     public function execute(AddressInterface $address): array
     {
         $cacheKey = $this->addressToString->execute($address);
-        if (!isset($this->latLngCache[$cacheKey])) {
+        if (!isset($this->latsLngsCache[$cacheKey])) {
             $geoNamesData = $this->getGeoNamesDataByAddress->execute($address);
             foreach ($geoNamesData as $geoNameData) {
-                $this->latLngCache[$cacheKey][] = $this->latLngInterfaceFactory->create([
+                $this->latsLngsCache[$cacheKey][] = $this->latLngInterfaceFactory->create([
                     'lat' => (float)$geoNameData['latitude'],
                     'lng' => (float)$geoNameData['longitude'],
                 ]);
             }
         }
 
-        return $this->latLngCache[$cacheKey];
+        return $this->latsLngsCache[$cacheKey];
     }
 }

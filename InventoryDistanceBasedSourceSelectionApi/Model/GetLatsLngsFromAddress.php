@@ -13,9 +13,7 @@ use Magento\InventoryDistanceBasedSourceSelectionApi\Exception\NoSuchLatsLngsFro
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
 /**
- * Get latitude and longitude objects from address.
- *
- * @api
+ * @inheritDoc
  */
 class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
 {
@@ -30,11 +28,8 @@ class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
     private $getDistanceProviderCode;
 
     /**
-     * GetLatLngFromSource constructor.
-     *
      * @param GetDistanceProviderCodeInterface $getDistanceProviderCode
      * @param GetLatsLngsFromAddressInterface[] $providers
-     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
         GetDistanceProviderCodeInterface $getDistanceProviderCode,

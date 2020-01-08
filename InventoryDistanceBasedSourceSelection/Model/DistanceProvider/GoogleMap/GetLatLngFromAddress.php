@@ -76,9 +76,9 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
     private $addressToQueryString;
 
     /**
-     * @var GetGeocodesForAddress
+     * @var GetGeoCodesForAddress
      */
-    private $getGeocodesForAddress;
+    private $getGeoCodesForAddress;
 
     /**
      * @param ClientInterface $client
@@ -88,7 +88,7 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
      * @param AddressToComponentsString $addressToComponentsString
      * @param AddressToQueryString $addressToQueryString
      * @param AddressToString $addressToString
-     * @param GetGeocodesForAddress $getGeocodesForAddress
+     * @param GetGeoCodesForAddress $getGeoCodesForAddress
      */
     public function __construct(
         ClientInterface $client,
@@ -98,7 +98,7 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
         AddressToComponentsString $addressToComponentsString,
         AddressToQueryString $addressToQueryString,
         AddressToString $addressToString,
-        GetGeocodesForAddress $getGeocodesForAddress = null
+        GetGeoCodesForAddress $getGeoCodesForAddress = null
     ) {
         $this->client = $client;
         $this->latLngInterfaceFactory = $latLngInterfaceFactory;
@@ -107,7 +107,7 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
         $this->addressToComponentsString = $addressToComponentsString;
         $this->addressToString = $addressToString;
         $this->addressToQueryString = $addressToQueryString;
-        $this->getGeocodesForAddress = $getGeocodesForAddress ?: ObjectManager::getInstance()
+        $this->getGeoCodesForAddress = $getGeoCodesForAddress ?: ObjectManager::getInstance()
             ->get(GetGeoNamesDataByAddress::class);
     }
 
@@ -120,7 +120,7 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
         $cacheKey = $addressString = $this->addressToString->execute($address);
 
         if (!isset($this->latLngCache[$cacheKey])) {
-            $res = $this->getGeocodesForAddress->execute($address);
+            $res = $this->getGeoCodesForAddress->execute($address);
             $location = $res['results'][0]['geometry']['location'];
             $this->latLngCache[$cacheKey] = $this->latLngInterfaceFactory->create([
                 'lat' => (float)$location['lat'],

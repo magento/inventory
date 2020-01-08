@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
+use Magento\InventoryDistanceBasedSourceSelectionApi\Exception\NoSuchLatsLngsFromAddressProviderException;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
@@ -104,29 +104,28 @@ class GetDistanceToSources
     {
         $sourceSelectionAddress = $this->toSourceSelectionAddress($area);
         try {
-            $latLngs = $this->getLatsLngsFromAddress->execute($sourceSelectionAddress);
-        } catch (LocalizedException $exception) {
+            $latsLngs = $this->getLatsLngsFromAddress->execute($sourceSelectionAddress);
+        } catch (NoSuchLatsLngsFromAddressProviderException $exception) {
             throw new NoSuchEntityException(__($exception->getMessage()), $exception);
         }
 
-        return $this->getOrderedDistanceToSources->execute($latLngs, $area->getRadius());
+        return $this->getOrderedDistanceToSources->execute($latsLngs, $area->getRadius());
     }
 
     /**
      * Create Source Selection Address based on Distance Fitler from Search Request.
      *
      * @param AreaInterface $area
-     *
      * @return AddressInterface
      */
-    private function toSourceSelectionAddress(AreaInterface $area)
+    private function toSourceSelectionAddress(AreaInterface $area): AddressInterface
     {
         $data = [
             'country' => $area->getCountry(),
             'postcode' => $area->getPostcode() ?? '',
             'region' => $area->getRegion() ?? '',
             'city' => $area->getCity() ?? '',
-            'street' => ''
+            'street' => '',
         ];
 
         return $this->addressInterfaceFactory->create($data);

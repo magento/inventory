@@ -73,7 +73,7 @@ class GetOrderedDistanceToSources
      * @param array $latLngs
      * @return Select
      */
-    private function processHavingClause(Select $query, int $radius, array $latLngs)
+    private function processHavingClause(Select $query, int $radius, array $latLngs): Select
     {
         foreach ($latLngs as $key => $latLng) {
             $query->orHaving(AreaInterface::DISTANCE_FIELD . $key . ' <= ?', $radius);

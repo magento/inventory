@@ -18,7 +18,7 @@ use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 /**
  * Get geocodes for given address service.
  */
-class GetGeocodesForAddress
+class GetGeoCodesForAddress
 {
     private const GOOGLE_ENDPOINT = 'https://maps.google.com/maps/api/geocode/json';
 
@@ -79,7 +79,7 @@ class GetGeocodesForAddress
     /**
      * Retrieve geocodes for given address.
      *
-     * @param $address
+     * @param AddressInterface $address
      * @return array
      * @throws LocalizedException
      */

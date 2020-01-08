@@ -13,7 +13,7 @@ use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToString;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
 /**
- * Get geoname data by postcode
+ * Get available geonames data by address service.
  */
 class GetGeoNamesDataByAddress
 {
@@ -42,7 +42,7 @@ class GetGeoNamesDataByAddress
     }
 
     /**
-     * Return geonames information using a fallback mechanism
+     * Return all available geonames information for given address.
      *
      * @param AddressInterface $address
      * @return array
@@ -67,7 +67,7 @@ class GetGeoNamesDataByAddress
             $result = $connection->fetchAll($qry);
         }
 
-        if (!$result) {
+        if (!$result || !reset($result)) {
             $qry = $connection->select()->from($tableName)
                 ->where('country_code = ?', $address->getCountry())
                 ->where('region = ?', $address->getRegion());
@@ -75,7 +75,7 @@ class GetGeoNamesDataByAddress
             $result = $connection->fetchAll($qry);
         }
 
-        if (!$result) {
+        if (!$result || !reset($result)) {
             throw new NoSuchEntityException(
                 __('Unknown geoname for %1', $this->addressToString->execute($address))
             );
