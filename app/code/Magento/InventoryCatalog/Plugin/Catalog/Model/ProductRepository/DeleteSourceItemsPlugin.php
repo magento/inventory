@@ -9,8 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ProductRepository;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\InputException;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\InventoryCatalogApi\Model\DeleteSourceItemsBySkusInterface;
 use Psr\Log\LoggerInterface;
 
@@ -30,15 +29,23 @@ class DeleteSourceItemsPlugin
     private $logger;
 
     /**
+     * @var ManagerInterface
+     */
+    private $messageManager;
+
+    /**
      * @param DeleteSourceItemsBySkusInterface $deleteSourceItemsBySkus
      * @param LoggerInterface $logger
+     * @param ManagerInterface $messageManager
      */
     public function __construct(
         DeleteSourceItemsBySkusInterface $deleteSourceItemsBySkus,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ManagerInterface $messageManager
     ) {
         $this->deleteSourceItemsBySkus = $deleteSourceItemsBySkus;
         $this->logger = $logger;
+        $this->messageManager = $messageManager;
     }
 
     /**
@@ -52,15 +59,17 @@ class DeleteSourceItemsPlugin
      */
     public function afterDelete(ProductRepositoryInterface $subject, $result, ProductInterface $product): bool
     {
-        try {
-            $this->deleteSourceItemsBySkus->execute([(string)$product->getSku()]);
-        } catch (CouldNotSaveException|InputException $e) {
-            $this->logger->error(
-                __(
-                    'Not able to delete source items for product: %productSku. ' . $e->getMessage(),
-                    ['productSku' => $product->getSku()]
-                )
-            );
+        $deleteResult = $this->deleteSourceItemsBySkus->execute([(string)$product->getSku()]);
+        if (!$deleteResult->isSuccessful()) {
+            $failed = $deleteResult->getFailed();
+            $failedSkus = [];
+            foreach ($failed as $fail) {
+                $failedSkus[] = $fail['sku'];
+            }
+            $error = current($failed);
+            $message = $error['message'] . ' sku(s): ' . implode(', ', $failedSkus);
+            $this->logger->critical($message);
+            $this->messageManager->addErrorMessage($message);
         }
 
         return $result;

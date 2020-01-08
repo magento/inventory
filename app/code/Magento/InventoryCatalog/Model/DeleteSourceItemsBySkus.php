@@ -9,6 +9,8 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
+use Magento\InventoryCatalogApi\Api\Data\ResultInterface;
+use Magento\InventoryCatalogApi\Api\Data\ResultInterfaceFactory;
 use Magento\InventoryCatalogApi\Model\DeleteSourceItemsBySkusInterface;
 
 /**
@@ -27,27 +29,46 @@ class DeleteSourceItemsBySkus implements DeleteSourceItemsBySkusInterface
     private $sourceItemsDelete;
 
     /**
+     * @var ResultInterfaceFactory
+     */
+    private $resultInterfaceFactory;
+
+    /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param DeleteMultiple $sourceItemsDelete
+     * @param ResultInterfaceFactory $resultInterfaceFactory
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        DeleteMultiple $sourceItemsDelete
+        DeleteMultiple $sourceItemsDelete,
+        ResultInterfaceFactory $resultInterfaceFactory
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->sourceItemsDelete = $sourceItemsDelete;
+        $this->resultInterfaceFactory = $resultInterfaceFactory;
     }
 
     /**
      * @inheritDoc
      */
-    public function execute(array $skus): void
+    public function execute(array $skus): ResultInterface
     {
+        $failed = [];
         foreach ($skus as $sku) {
             $sourceItems = $this->getSourceItemsBySku->execute($sku);
             if ($sourceItems) {
-                $this->sourceItemsDelete->execute($sourceItems);
+                try {
+                    $this->sourceItemsDelete->execute($sourceItems);
+                } catch (\Exception $e) {
+                    $failed[] = [
+                        'sku' => $sku,
+                        'message' => __('Not able to delete source items.'),
+                    ];
+                    continue;
+                }
             }
         }
+
+        return $this->resultInterfaceFactory->create(['failed' => $failed]);
     }
 }

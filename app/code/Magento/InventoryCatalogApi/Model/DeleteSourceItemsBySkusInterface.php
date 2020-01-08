@@ -18,9 +18,7 @@ interface DeleteSourceItemsBySkusInterface
      * Delete source items by product skus.
      *
      * @param array $skus
-     * @return void
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
+     * @return \Magento\InventoryCatalogApi\Api\Data\ResultInterface
      */
-    public function execute(array $skus): void;
+    public function execute(array $skus): \Magento\InventoryCatalogApi\Api\Data\ResultInterface;
 }
