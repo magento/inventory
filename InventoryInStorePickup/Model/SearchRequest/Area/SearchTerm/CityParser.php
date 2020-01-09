@@ -7,6 +7,7 @@
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Framework\DataObject;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\DelimiterConfig;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\ParserInterface;
 
 /**
@@ -18,16 +19,17 @@ class CityParser implements ParserInterface
     private const POSTCODE = 'postcode';
 
     /**
-     * @var DelimiterParser
+     * @var DelimiterConfig
      */
-    private $parser;
+    private $delimiterConfig;
 
     /**
-     * @param DelimiterParser $parser
+     * @param DelimiterConfig $delimiterConfig
      */
-    public function __construct(DelimiterParser $parser)
-    {
-        $this->parser = $parser;
+    public function __construct(
+        DelimiterConfig $delimiterConfig
+    ) {
+        $this->delimiterConfig = $delimiterConfig;
     }
 
     /**
@@ -36,9 +38,26 @@ class CityParser implements ParserInterface
     public function execute(string $searchTerm, DataObject $dataObject): void
     {
         if (empty($dataObject->getData(self::POSTCODE))) {
-            $dataObject->setData(self::CITY, $this->parser->getSearchQuery($searchTerm));
+            $dataObject->setData(self::CITY, $this->getSearchQuery($searchTerm));
         } else {
             $dataObject->setData(self::CITY, '');
         }
+    }
+
+    /**
+     * Parse and return search query from search term.
+     *
+     * @param string $searchTerm
+     *
+     * @return string
+     */
+    public function getSearchQuery(string $searchTerm): string
+    {
+        if (strpos($searchTerm, $this->delimiterConfig->getDelimiter()) === false) {
+            return $searchTerm;
+        }
+        $searchTerm = explode($this->delimiterConfig->getDelimiter(), $searchTerm);
+
+        return trim(current($searchTerm));
     }
 }

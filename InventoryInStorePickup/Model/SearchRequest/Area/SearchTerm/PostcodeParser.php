@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Directory\Model\Country\Postcode\ValidatorInterface;
 use Magento\Framework\DataObject;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\DelimiterConfig;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\ParserInterface;
 
 /**
@@ -24,18 +25,18 @@ class PostcodeParser implements ParserInterface
      */
     private $validator;
     /**
-     * @var DelimiterParser
+     * @var DelimiterConfig
      */
-    private $parser;
+    private $delimiterConfig;
 
     /**
      * @param ValidatorInterface $validator
-     * @param DelimiterParser $parser
+     * @param DelimiterConfig $delimiterConfig
      */
-    public function __construct(ValidatorInterface $validator, DelimiterParser $parser)
+    public function __construct(ValidatorInterface $validator, DelimiterConfig $delimiterConfig)
     {
         $this->validator = $validator;
-        $this->parser = $parser;
+        $this->delimiterConfig = $delimiterConfig;
     }
 
     /**
@@ -43,11 +44,28 @@ class PostcodeParser implements ParserInterface
      */
     public function execute(string $searchTerm, DataObject $dataObject): void
     {
-        $searchQuery = $this->parser->getSearchQuery($searchTerm);
+        $searchQuery = $this->getSearchQuery($searchTerm);
         if ($this->validator->validate($searchQuery, $dataObject->getData(self::COUNTRY))) {
             $dataObject->setData(self::POSTCODE, $searchQuery);
         } else {
             $dataObject->setData(self::POSTCODE, '');
         }
+    }
+
+    /**
+     * Parse and return search query from search term.
+     *
+     * @param string $searchTerm
+     *
+     * @return string
+     */
+    public function getSearchQuery(string $searchTerm): string
+    {
+        if (strpos($searchTerm, $this->delimiterConfig->getDelimiter()) === false) {
+            return $searchTerm;
+        }
+        $searchTerm = explode($this->delimiterConfig->getDelimiter(), $searchTerm);
+
+        return trim(current($searchTerm));
     }
 }

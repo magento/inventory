@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm;
 
 use Magento\Directory\Helper\Data;
 use Magento\Framework\DataObject;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\DelimiterConfig;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\SearchTerm\ParserInterface;
 
 /**
@@ -22,19 +23,20 @@ class CountryParser implements ParserInterface
      * @var Data
      */
     private $data;
+
     /**
-     * @var DelimiterParser
+     * @var DelimiterConfig
      */
-    private $parser;
+    private $delimiterConfig;
 
     /**
      * @param Data $data
-     * @param DelimiterParser $parser
+     * @param DelimiterConfig $delimiterConfig
      */
-    public function __construct(Data $data, DelimiterParser $parser)
+    public function __construct(Data $data, DelimiterConfig $delimiterConfig)
     {
         $this->data = $data;
-        $this->parser = $parser;
+        $this->delimiterConfig = $delimiterConfig;
     }
 
     /**
@@ -42,6 +44,23 @@ class CountryParser implements ParserInterface
      */
     public function execute(string $searchTerm, DataObject $result): void
     {
-        $result->setData(self::COUNTRY, $this->parser->getCountry($searchTerm) ?? $this->data->getDefaultCountry());
+        $result->setData(self::COUNTRY, $this->getCountry($searchTerm) ?? $this->data->getDefaultCountry());
+    }
+
+    /**
+     * Get country from Search Term.
+     *
+     * @param string $searchTerm
+     *
+     * @return string|null
+     */
+    public function getCountry(string $searchTerm): ?string
+    {
+        if (strpos($searchTerm, $this->delimiterConfig->getDelimiter()) === false) {
+            return null;
+        }
+        $searchTerm = explode($this->delimiterConfig->getDelimiter(), $searchTerm);
+
+        return trim(end($searchTerm));
     }
 }
