@@ -44,7 +44,7 @@
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSource"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -58,7 +58,7 @@
         <!-- Assign Source and Sales Channel to Stock-->
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
         <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByName">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByName">
             <argument name="keyword" value="$$createStock.stock[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createStock.stock[name]$$)}}" stepKey="clickEditCustomStock"/>
@@ -66,7 +66,7 @@
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website"
                       stepKey="selectWebsiteAsSalesChannelForCustomStock"/>
         <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomSourceByName">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByName">
             <argument name="keyword" value="$$createSource.source[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource.source[name]$$)}}"
@@ -89,7 +89,7 @@
         <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
                           dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true"
                           stepKey="clearTheFiltersIfPresent"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword">
             <argument name="keyword" value="$$createSource.source[name]$$"/>
         </actionGroup>
         <waitForPageLoad time="5" stepKey="waitForDataGridPageLoad"/>

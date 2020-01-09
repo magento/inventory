@@ -50,7 +50,7 @@
         <click selector="{{AdminDataGridHeaderSection.columnsToggle}}" stepKey="openSourceGridColumnOptions"/>
         <checkOption selector="{{AdminDataGridHeaderSection.columnCheckbox('State/Province')}}" stepKey="addStateProvinceColumnToSourceGrid"/>
         <click selector="{{AdminDataGridHeaderSection.columnsToggle}}" stepKey="closeSourceGridColumnOptions"/>
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="findCreatedSource">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="findCreatedSource">
             <argument name="keyword" value="_minimalSource.name"/>
         </actionGroup>
         <see userInput="Ghegeria" selector="{{AdminGridRow.rowOne}}" stepKey="verifyStateProvinceDisplayedCorrectly"/>

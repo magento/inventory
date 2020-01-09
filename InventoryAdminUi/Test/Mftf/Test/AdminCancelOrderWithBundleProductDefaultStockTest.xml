@@ -22,7 +22,7 @@
         <!--Get order Id.-->
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderId" after="clickSubmitOrder" />
         <!--Cancel order.-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder" after="checkSimpleProductSalableQtyAfterPlaceOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder" after="checkSimpleProductSalableQtyAfterPlaceOrder">
             <argument name="orderId" value="{$orderId}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.cancel}}" stepKey="clickCancelOrder"/>

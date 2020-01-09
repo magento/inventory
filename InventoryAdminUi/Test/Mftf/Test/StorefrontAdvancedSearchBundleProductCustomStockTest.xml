@@ -51,7 +51,7 @@
             <waitForElementVisible selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="waitForAddProductsToBundle"/>
             <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
-            <actionGroup ref="filterProductGridBySku" stepKey="filterBundleProductOptions">
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
                 <argument name="product" value="$$product$$"/>
             </actionGroup>
             <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>
@@ -83,7 +83,7 @@
             <argument name="name" value="$bundleProduct.name$"/>
         </actionGroup>
         <!--Verify searched product by name.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedByName">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedByName">
             <argument name="productName" value="$bundleProduct.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
@@ -93,7 +93,7 @@
             <argument name="sku" value="$bundleProduct.sku$"/>
         </actionGroup>
         <!--Verify searched product by sku.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedBySku">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedBySku">
             <argument name="productName" value="$bundleProduct.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
