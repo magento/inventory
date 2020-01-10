@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api\Data;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
+
 /**
  * Represent kind of source
  *
  */
-interface SourceTypeInterface
+interface SourceTypeInterface extends ExtensibleDataInterface
 {
     /**
      * Constants for keys of data array. Identical to the name of the getter in snake case

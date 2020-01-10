@@ -7,9 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api;
 
-use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\Framework\Exception\InputException;
-use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Dotenv\Exception\ValidationException;
 
 /**
  * Service method for source type link save
@@ -22,10 +23,11 @@ interface SourceTypeLinkSaveInterface
     /**
      * Save SourceTypeLink data
      *
-     * @param SourceInterface $source
+     * @param SourceTypeLinkInterface $link
      * @return void
      * @throws InputException
      * @throws CouldNotSaveException
+     * @throws ValidationException
      */
-    public function execute(SourceInterface $source): void;
+    public function execute(SourceTypeLinkInterface $link): void;
 }

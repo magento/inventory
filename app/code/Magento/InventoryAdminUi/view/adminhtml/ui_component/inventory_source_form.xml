@@ -105,7 +105,7 @@
             <formElements>
                 <select>
                     <settings>
-                        <options class="Magento\InventoryAdminUi\Model\Config\Source\Type"/>
+                        <options class="Magento\InventoryAdminUi\Model\OptionSource\TypeSource"/>
                     </settings>
                 </select>
             </formElements>

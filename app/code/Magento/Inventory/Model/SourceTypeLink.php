@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model;
 
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\Framework\Model\AbstractExtensibleModel;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface;
-use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 
 /**
  * @inheritdoc
@@ -19,6 +19,12 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
  */
 class SourceTypeLink extends AbstractExtensibleModel implements SourceTypeLinkInterface
 {
+
+    public function _construct()
+    {
+        $this->_init(SourceTypeLinkResourceModel::class);
+    }
+
     /**
      * @inheritdoc
      */

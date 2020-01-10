@@ -9,12 +9,15 @@ namespace Magento\Inventory\Model;
 
 use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterfaceFactory;
 use Magento\InventoryApi\Model\SourceTypeLinkManagementInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\GetSourceTypeLinkInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
 
 /**
  * @inheritdoc
@@ -42,23 +45,31 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
     private $commandSave;
 
     /**
+     * @var SourceTypeLinkInterfaceFactory
+     */
+    private $sourceTypeLinkFactory;
+
+    /**
      * SourceTypeLinkManagement constructor.
      *
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param GetSourceTypeLinkInterface $getSourceTypeLinks
      * @param SourceTypeLinkSaveInterface $commandSave
      * @param SourceTypeLinkDeleteInterface $commandDelete
+     * @param SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
         GetSourceTypeLinkInterface $getSourceTypeLinks,
         SourceTypeLinkSaveInterface $commandSave,
-        SourceTypeLinkDeleteInterface $commandDelete
+        SourceTypeLinkDeleteInterface $commandDelete,
+        SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->getSourceTypeLinks = $getSourceTypeLinks;
         $this->commandSave = $commandSave;
         $this->commandDelete = $commandDelete;
+        $this->sourceTypeLinkFactory = $sourceTypeLinkFactory;
     }
 
     /**
@@ -66,8 +77,17 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
      */
     public function saveTypeLinksBySource(SourceInterface $source): void
     {
+        $linkData = [
+            'source_code' => $source->getSourceCode(),
+            'type_code' => $source->getExtensionAttributes()->getTypeCode()
+        ];
+
+        /** @var SourceTypeLinkInterface $link */
+        $link = $this->sourceTypeLinkFactory->create();
+        $link->addData($linkData);
+
         $this->deleteCurrentTypeLink($source->getSourceCode());
-        $this->saveNewTypeLink($source);
+        $this->saveNewTypeLink($link);
     }
 
     /**
@@ -83,12 +103,14 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
     /**
      * Save new type link
      *
-     * @param SourceInterface $source
+     * @param SourceTypeLinkInterface $link
      * @return void
+     * @throws CouldNotSaveException
+     * @throws InputException
      */
-    private function saveNewTypeLink(SourceInterface $source)
+    private function saveNewTypeLink(SourceTypeLinkInterface $link)
     {
-        $this->commandSave->execute($source);
+        $this->commandSave->execute($link);
     }
 
     /**
@@ -115,5 +137,10 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
         $source->setExtensionAttributes($extension);
 
         return $source;
+    }
+
+    public function sourceTypeBySourceCode()
+    {
+        
     }
 }

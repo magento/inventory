@@ -134,6 +134,18 @@
                 </editor>
             </settings>
         </column>
+        <column name="type_code" sortOrder="35">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Type</label>
+                <editor>
+                    <editorType>text</editorType>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                    </validation>
+                </editor>
+            </settings>
+        </column>
         <column name="contact_name" sortOrder="40">
             <settings>
                 <filter>text</filter>

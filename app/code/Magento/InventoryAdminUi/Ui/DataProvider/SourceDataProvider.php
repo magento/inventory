@@ -134,6 +134,12 @@ class SourceDataProvider extends DataProvider
                     '' => $sessionData,
                 ];
             }
+        } else {
+            foreach ($data['items'] as &$item) {
+                $source = $this->sourceRepository->get($item['source_code']);
+                $item['type_code'] = $source->getExtensionAttributes()->getTypeCode();
+            }
+            unset($item);
         }
         $data['totalRecords'] = $this->getSourcesCount();
 
