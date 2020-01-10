@@ -31,7 +31,7 @@
     </actionGroup>
 
     <!--Fill product min quantity in group products grid-->
-    <actionGroup name="fillDefaultQuantityForLinkedToGroupProductInGrid">
+    <actionGroup name="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup">
         <arguments>
             <argument name="productName" type="string"/>
             <argument name="qty" type="string"/>

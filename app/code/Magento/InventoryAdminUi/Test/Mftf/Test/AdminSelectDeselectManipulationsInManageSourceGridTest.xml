@@ -54,7 +54,7 @@
         <waitForPageLoad time="30" stepKey="waitForAdminManageSourcePageLoad"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
-        <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20SourcesPerPage">
+        <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20SourcesPerPage">
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>

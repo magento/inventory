@@ -48,13 +48,13 @@
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
         <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
-        <actionGroup ref="filterProductGridBySku" stepKey="filterGroupedProductOptionsBySimple">
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterGroupedProductOptionsBySimple">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProductFilterResult"/>
         <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
         <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
-        <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultQtyForVirtualProduct">
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
@@ -78,7 +78,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Admin Area Check ordered quantity-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrder">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
@@ -93,7 +93,7 @@
         <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="1000" stepKey="checkProductSourceQtyAfterPlaceOrder"/>
         <see selector="{{AdminProductGridSection.productSalableQty('1', _defaultStock.name)}}" userInput="998" stepKey="checkSalableQtyAfterPlaceOrder"/>
         <!--Admin Area Process Partial Invoice-->
-        <actionGroup ref="OpenOrderById" stepKey="openOrderToInvoice">
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToInvoice">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
@@ -101,7 +101,7 @@
         <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="1" stepKey="InvoiceQuantityPartial"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="clickUpdateQty"/>
         <waitForPageLoad stepKey="waitPageToBeLoaded"/>
-        <actionGroup ref="SubmitInvoice" stepKey="submitInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <waitForPageLoad time="60" stepKey="waitForPageLoadSubmitInvoice"/>
         <scrollToTopOfPage stepKey="scrollToTopMessage"/>
         <waitForPageLoad stepKey="waitForPageLoadSuccessMessage"/>

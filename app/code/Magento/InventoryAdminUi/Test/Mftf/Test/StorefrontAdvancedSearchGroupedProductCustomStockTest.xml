@@ -44,12 +44,12 @@
             <!--Add simple product to grouped.-->
             <amOnPage url="{{AdminProductEditPage.url($groupedProduct.id$)}}" stepKey="openGroupedProductEditPage"/>
             <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
-            <actionGroup ref="filterProductGridBySku" stepKey="filterGroupedOptions">
+            <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterGroupedOptions">
                 <argument name="product" value="$product$"/>
             </actionGroup>
             <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProduct"/>
             <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
-            <actionGroup ref="fillDefaultQuantityForLinkedToGroupProductInGrid" stepKey="fillDefaultProductQty">
+            <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultProductQty">
                 <argument name="productName" value="$product.name$"/>
                 <argument name="qty" value="2"/>
             </actionGroup>
@@ -79,7 +79,7 @@
             <argument name="name" value="$groupedProduct.name$"/>
         </actionGroup>
         <!--Verify searched product by name.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedByName">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedByName">
             <argument name="productName" value="$groupedProduct.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
@@ -89,7 +89,7 @@
             <argument name="sku" value="$groupedProduct.sku$$"/>
         </actionGroup>
         <!--Verify searched product by sku.-->
-        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGrid" stepKey="verifyProductSearchedBySku">
+        <actionGroup ref="StorefrontQuickSearchCheckProductNameInGridActionGroup" stepKey="verifyProductSearchedBySku">
             <argument name="productName" value="$groupedProduct.name$"/>
             <argument name="index" value="1"/>
         </actionGroup>
