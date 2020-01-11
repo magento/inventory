@@ -15,7 +15,7 @@ class SourceType extends AbstractDb
     /**
      * @inheritDoc
      */
-    protected function _construct()
+    public function _construct()
     {
         $this->_init('inventory_source_type', 'type_code');
     }
