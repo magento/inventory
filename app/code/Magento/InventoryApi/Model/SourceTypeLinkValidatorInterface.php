@@ -14,11 +14,12 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 /**
  * Responsible for Source Type link validation
  * Extension point for base validation
- *
  */
 interface SourceTypeLinkValidatorInterface
 {
     /**
+     * Validation method
+     *
      * @param SourceTypeLinkInterface $link
      * @return ValidationResult
      */

@@ -8,13 +8,21 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel\TypeSource;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Inventory\Model\SourceType;
+use Magento\Inventory\Model\ResourceModel\SourceType as SourceTypeResourceModel;
 
+/**
+ * Resource Collection of Source Type entity
+ */
 class Collection extends AbstractCollection
 {
 
+    /**
+     * @inheritDoc
+     */
     public function _construct()
     {
-        $this->_init('Magento\Inventory\Model\SourceType', 'Magento\Inventory\Model\ResourceModel\SourceType');
+        $this->_init(SourceType::class, SourceTypeResourceModel::class);
     }
 
     /**

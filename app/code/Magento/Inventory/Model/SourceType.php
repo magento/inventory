@@ -11,13 +11,17 @@ use Magento\InventoryApi\Api\Data\SourceTypeInterface;
 use Magento\Framework\Model\AbstractExtensibleModel;
 use Magento\Inventory\Model\ResourceModel\SourceType as SourceTypeResourceModel;
 use Magento\InventoryApi\Api\Data\SourceTypeExtensionInterface;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 
 /**
- * Class SourceType
+ * @inheritDoc
  */
 class SourceType extends AbstractExtensibleModel implements SourceTypeInterface
 {
 
+    /**
+     * @inheritDoc
+     */
     public function _construct()
     {
         $this->_init(SourceTypeResourceModel::class);

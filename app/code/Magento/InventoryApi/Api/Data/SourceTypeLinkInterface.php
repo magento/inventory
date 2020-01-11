@@ -11,9 +11,6 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 
 /**
  * Represents relation between some source and type of source
- *
- * Used fully qualified namespaces in annotations for proper work of WebApi request parser
- *
  */
 interface SourceTypeLinkInterface extends ExtensibleDataInterface
 {

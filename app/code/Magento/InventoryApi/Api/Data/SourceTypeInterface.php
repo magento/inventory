@@ -10,8 +10,7 @@ namespace Magento\InventoryApi\Api\Data;
 use Magento\Framework\Api\ExtensibleDataInterface;
 
 /**
- * Represent kind of source
- *
+ * Represent source's type
  */
 interface SourceTypeInterface extends ExtensibleDataInterface
 {

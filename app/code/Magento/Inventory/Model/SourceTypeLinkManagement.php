@@ -138,9 +138,4 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
 
         return $source;
     }
-
-    public function sourceTypeBySourceCode()
-    {
-        
-    }
 }

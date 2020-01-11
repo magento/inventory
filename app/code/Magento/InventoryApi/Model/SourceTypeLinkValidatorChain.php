@@ -27,6 +27,11 @@ class SourceTypeLinkValidatorChain implements SourceTypeLinkValidatorInterface
      */
     private $validators;
 
+    /**
+     * @param ValidationResultFactory $validationResultFactory
+     * @param array $validators
+     * @throws LocalizedException
+     */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
         array $validators = []

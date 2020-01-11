@@ -20,6 +20,9 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkExtensionInterface;
 class SourceTypeLink extends AbstractExtensibleModel implements SourceTypeLinkInterface
 {
 
+    /**
+     * @inheritDoc
+     */
     public function _construct()
     {
         $this->_init(SourceTypeLinkResourceModel::class);
