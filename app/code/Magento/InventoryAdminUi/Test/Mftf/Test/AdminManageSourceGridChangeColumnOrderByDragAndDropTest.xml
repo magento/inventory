@@ -63,7 +63,7 @@
         <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsAfterCodeColumnMoved" />
         <assertEquals stepKey="assertOrderAfterCodeColumnMoved">
             <actualResult type="variable">grabColumnsAfterCodeColumnMoved</actualResult>
-            <expectedResult type="array">["Name", "Is Enabled", "Type", "Code", "Action"]</expectedResult>
+            <expectedResult type="array">["Name", "Is Enabled", "Code", "Type", "Action"]</expectedResult>
         </assertEquals>
 
         <dragAndDrop selector1="{{AdminGridHeaders.headerByName('Name')}}"
