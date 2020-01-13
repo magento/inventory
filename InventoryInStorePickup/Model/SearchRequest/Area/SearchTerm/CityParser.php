@@ -51,7 +51,7 @@ class CityParser implements ParserInterface
      *
      * @return string
      */
-    public function getSearchQuery(string $searchTerm): string
+    private function getSearchQuery(string $searchTerm): string
     {
         if (strpos($searchTerm, $this->delimiterConfig->getDelimiter()) === false) {
             return $searchTerm;

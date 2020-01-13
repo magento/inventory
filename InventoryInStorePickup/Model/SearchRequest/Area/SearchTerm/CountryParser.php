@@ -54,7 +54,7 @@ class CountryParser implements ParserInterface
      *
      * @return string|null
      */
-    public function getCountry(string $searchTerm): ?string
+    private function getCountry(string $searchTerm): ?string
     {
         if (strpos($searchTerm, $this->delimiterConfig->getDelimiter()) === false) {
             return null;
