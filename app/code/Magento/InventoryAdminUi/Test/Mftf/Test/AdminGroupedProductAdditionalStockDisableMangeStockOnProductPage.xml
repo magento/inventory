@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MC-16333"/>
-            </skip>
         </annotations>
 
         <before>
@@ -80,10 +77,11 @@
         <!--Set grouped product stock status to "Out of Stock".-->
         <scrollToTopOfPage stepKey="scrollToTheProductEditPageTop"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="seeProductStockStatus"/>
-        <!--Disable "Manage Stock" for grouped product.-->
-        <actionGroup ref="AdminChangeManageStockStatusOnProductEditPageActionGroup" stepKey="disableMangeStockOnProductEditPage">
+        <comment userInput="Disable 'Manage Stock' for grouped product." stepKey="disableMangeStockOnProductEditPage"/>
+        <actionGroup ref="AdminCatalogInventoryManageStockActionGroup" stepKey="disableManageStockOnProductEditPage" after="disableMangeStockOnProductEditPage">
             <argument name="manageStock" value="No"/>
         </actionGroup>
+        <click stepKey="clickOnDoneButton" selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" after="disableManageStockOnProductEditPage"/>
         <!--Assign grouped product to category.-->
         <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
             <argument name="categoryName" value="$$category.name$$"/>

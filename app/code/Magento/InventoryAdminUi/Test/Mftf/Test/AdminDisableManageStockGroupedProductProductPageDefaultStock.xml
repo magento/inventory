@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MC-16333"/>
-            </skip>
         </annotations>
 
         <before>
@@ -37,9 +34,11 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity" after="openVirtualProductEditPage"/>
         <!--Set grouped product stock status.-->
         <scrollToTopOfPage stepKey="scrollToTheTopOfBundleProductPage" after="fillDefaultQtyForVirtualProduct"/>
-        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="selectOutOfStock" after="fillDefaultQtyForVirtualProduct"/>
-        <actionGroup ref="AdminChangeManageStockStatusOnProductEditPageActionGroup" stepKey="disableMangeStockOnProductEditPage" after="selectOutOfStock">
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="selectOutOfStock" after="scrollToTheTopOfBundleProductPage"/>
+        <comment userInput="Disable 'Manage Stock' for grouped product." stepKey="disableMangeStockOnProductEditPage" after="selectOutOfStock"/>
+        <actionGroup ref="AdminCatalogInventoryManageStockActionGroup" stepKey="disableManageStockOnProductEditPage" after="disableMangeStockOnProductEditPage">
             <argument name="manageStock" value="No"/>
         </actionGroup>
+        <click stepKey="clickOnDoneButton" selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" after="disableManageStockOnProductEditPage"/>
     </test>
 </tests>
