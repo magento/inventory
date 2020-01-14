@@ -27,14 +27,14 @@ $stockStatusCriteriaFactory = $objectManager->create(StockStatusCriteriaInterfac
 $searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
 $searchCriteria = $searchCriteriaBuilder->addFilter(
     ProductInterface::SKU,
-    ['SKU-1', 'SKU-2', 'SKU-3', 'SKU-4'],
+    ['SKU-1', 'SKU-2', 'SKU-3', 'SKU-4', 'SKU-5', 'SKU-6'],
     'in'
 )->create();
 $products = $productRepository->getList($searchCriteria)->getItems();
 
 /**
  * Tests which are wrapped with MySQL transaction clear all data by transaction rollback.
- * In that case there is "if" which checks that SKU1, SKU2 and SKU3 still exists in database.
+ * In that case there is "if" which checks that the products still exist in database.
  */
 if (!empty($products)) {
     $currentArea = $registry->registry('isSecureArea');
