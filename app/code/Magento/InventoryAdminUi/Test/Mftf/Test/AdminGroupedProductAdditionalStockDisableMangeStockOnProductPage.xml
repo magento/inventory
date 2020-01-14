@@ -77,11 +77,10 @@
         <!--Set grouped product stock status to "Out of Stock".-->
         <scrollToTopOfPage stepKey="scrollToTheProductEditPageTop"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="seeProductStockStatus"/>
-        <comment userInput="Disable 'Manage Stock' for grouped product." stepKey="disableMangeStockOnProductEditPage"/>
-        <actionGroup ref="AdminCatalogInventoryManageStockActionGroup" stepKey="disableManageStockOnProductEditPage" after="disableMangeStockOnProductEditPage">
+        <!--Disable "Manage Stock" for grouped product.-->
+        <actionGroup ref="AdminCatalogInventoryChangeManageStockActionGroup" stepKey="disableMangeStockOnProductEditPage">
             <argument name="manageStock" value="No"/>
         </actionGroup>
-        <click stepKey="clickOnDoneButton" selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" after="disableManageStockOnProductEditPage"/>
         <!--Assign grouped product to category.-->
         <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
             <argument name="categoryName" value="$$category.name$$"/>

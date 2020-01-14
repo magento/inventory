@@ -34,11 +34,9 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity" after="openVirtualProductEditPage"/>
         <!--Set grouped product stock status.-->
         <scrollToTopOfPage stepKey="scrollToTheTopOfBundleProductPage" after="fillDefaultQtyForVirtualProduct"/>
-        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="selectOutOfStock" after="scrollToTheTopOfBundleProductPage"/>
-        <comment userInput="Disable 'Manage Stock' for grouped product." stepKey="disableMangeStockOnProductEditPage" after="selectOutOfStock"/>
-        <actionGroup ref="AdminCatalogInventoryManageStockActionGroup" stepKey="disableManageStockOnProductEditPage" after="disableMangeStockOnProductEditPage">
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" after="scrollToTheTopOfBundleProductPage" stepKey="selectOutOfStock"/>
+        <actionGroup ref="AdminCatalogInventoryChangeManageStockActionGroup" after="selectOutOfStock" stepKey="disableMangeStockOnProductEditPage">
             <argument name="manageStock" value="No"/>
         </actionGroup>
-        <click stepKey="clickOnDoneButton" selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" after="disableManageStockOnProductEditPage"/>
     </test>
 </tests>
