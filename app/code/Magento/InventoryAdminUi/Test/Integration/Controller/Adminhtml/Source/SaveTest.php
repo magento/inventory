@@ -80,6 +80,7 @@ class SaveTest extends AbstractBackendController
                     'description' => '',
                     'country_id' => 'FR',
                     'region_id' => '182',
+                    'type_code' => 'regular'
                 ],
         ];
     }
