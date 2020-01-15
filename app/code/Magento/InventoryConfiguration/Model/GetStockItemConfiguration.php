@@ -45,6 +45,11 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
     private $isSourceItemManagementAllowedForSku;
 
     /**
+     * @var StockItemConfigurationInterface[]
+     */
+    private $processedStockData;
+
+    /**
      * @param GetLegacyStockItem $getLegacyStockItem
      * @param StockItemConfigurationFactory $stockItemConfigurationFactory
      * @param IsProductAssignedToStockInterface $isProductAssignedToStock
@@ -70,6 +75,10 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
      */
     public function execute(string $sku, int $stockId): StockItemConfigurationInterface
     {
+        if ($this->processedStockData !== null && isset($this->processedStockData[$stockId][$sku])) {
+            return $this->processedStockData[$stockId][$sku];
+        }
+
         if ($this->defaultStockProvider->getId() !== $stockId
             && true === $this->isSourceItemManagementAllowedForSku->execute($sku)
             && false === $this->isProductAssignedToStock->execute($sku, $stockId)) {
@@ -78,10 +87,12 @@ class GetStockItemConfiguration implements GetStockItemConfigurationInterface
             );
         }
 
-        return $this->stockItemConfigurationFactory->create(
+        $this->processedStockData[$stockId][$sku] = $this->stockItemConfigurationFactory->create(
             [
                 'stockItem' => $this->getLegacyStockItem->execute($sku)
             ]
         );
+
+        return $this->processedStockData[$stockId][$sku];
     }
 }

@@ -16,6 +16,9 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * Class retrieves product stock data from `cataloginventory_stock_item`
+ */
 class GetLegacyStockItem
 {
     /**
@@ -39,6 +42,13 @@ class GetLegacyStockItem
     private $getProductIdsBySkus;
 
     /**
+     * @var StockItemInterface[]
+     */
+    private $processedSkuData;
+
+    /**
+     * GetLegacyStockItem constructor.
+     *
      * @param StockItemInterfaceFactory $stockItemFactory
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
@@ -57,12 +67,17 @@ class GetLegacyStockItem
     }
 
     /**
+     * Retrieves product stock data
+     *
      * @param string $sku
      * @return StockItemInterface
-     * @throws LocalizedException
      */
     public function execute(string $sku): StockItemInterface
     {
+        if ($this->processedSkuData !== null && isset($this->processedSkuData[$sku])) {
+            return $this->processedSkuData[$sku];
+        }
+
         $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
 
         try {
@@ -71,7 +86,10 @@ class GetLegacyStockItem
             $stockItem = $this->stockItemFactory->create();
             // Make possible to Manage Stock for Products removed from Catalog
             $stockItem->setManageStock(true);
-            return $stockItem;
+
+            $this->processedSkuData[$sku] = $stockItem;
+
+            return $this->processedSkuData[$sku];
         }
 
         $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId);
@@ -82,11 +100,15 @@ class GetLegacyStockItem
 
         $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
         if ($stockItemCollection->getTotalCount() === 0) {
-            return $this->stockItemFactory->create();
+            $this->processedSkuData[$sku] = $this->stockItemFactory->create();
+            return $this->processedSkuData[$sku];
         }
 
         $stockItems = $stockItemCollection->getItems();
         $stockItem = reset($stockItems);
-        return $stockItem;
+
+        $this->processedSkuData[$sku] = $stockItem;
+
+        return $this->processedSkuData[$sku];
     }
 }
