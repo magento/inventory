@@ -18,4 +18,19 @@
     <type name="Magento\Sales\Block\Adminhtml\Order\Invoice\Create\Form">
         <plugin name="create_shipment_checkbox_processor" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\Invoice\Create\ProcessCreateShipment"/>
     </type>
+    <type name="Magento\Sales\Model\AdminOrder\Create">
+        <plugin name="adapt_set_shipping_address_to_quote" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Model\AdminOrder\Create\AdaptSetShippingAddressPlugin"/>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Create\Shipping\Address">
+        <plugin name="process_shipping_address_form_fro_store_pickup" type="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\Create\Shipping\Address\AdaptFormPlugin"/>
+    </type>
+    <type name="Magento\InventoryInStorePickupSalesAdminUi\Plugin\Sales\Block\Adminhtml\Order\Create\Shipping\Address\AdaptFormPlugin">
+        <arguments>
+            <argument name="allowedFormFields" xsi:type="array">
+                <item name="firstName" xsi:type="string">firstname</item>
+                <item name="lastname" xsi:type="string">lastname</item>
+                <item name="company" xsi:type="string">company</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
