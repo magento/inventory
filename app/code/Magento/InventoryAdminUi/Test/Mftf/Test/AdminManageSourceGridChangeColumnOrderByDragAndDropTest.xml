@@ -75,5 +75,15 @@
             <actualResult type="variable">grabColumnsAfterNameColumnMoved</actualResult>
             <expectedResult type="array">["Is Enabled", "Name", "Code", "Type", "Action"]</expectedResult>
         </assertEquals>
+
+        <dragAndDrop selector1="{{AdminGridHeaders.headerByName('Is Enabled')}}"
+                     selector2="{{AdminGridHeaders.headerByName('Type')}}"
+                     stepKey="dragAndDropIsEnabledColumn"/>
+        <waitForPageLoad time="30" stepKey="waitForMoveConfirmationAfterIsEnabledColumnMoved"/>
+        <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsAfterIsEnabledColumnMoved" />
+        <assertEquals stepKey="assertOrderAfterIsEnabledColumnMoved">
+            <actualResult type="variable">grabColumnsAfterIsEnabledColumnMoved</actualResult>
+            <expectedResult type="array">["Name", "Code", "Type", "Is Enabled", "Action"]</expectedResult>
+        </assertEquals>
     </test>
 </tests>
