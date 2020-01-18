@@ -18,8 +18,11 @@ class AddSourceCodeFilterToCollection
 {
 
     /**
+     * Add source code filter to product collection
+     *
      * @param Collection $collection
      * @param string|null $sourceCode
+     * @return void
      */
     public function execute($collection, string $sourceCode = 'default')
     {
