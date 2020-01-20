@@ -75,6 +75,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
      *
      * @magentoDbIsolation disabled
+     * @magentoAppIsolation enabled
      * @dataProvider dataProvider
      *
      * @param string $sourceId
