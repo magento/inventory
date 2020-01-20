@@ -53,7 +53,6 @@ class CreateShippingArguments
         $extension = $this->argumentExtensionFactory
             ->create()
             ->setSourceCode($order->getExtensionAttributes()->getPickupLocationCode());
-        $extension->setIsReadyForPickupNotified(true);
         $arguments->setExtensionAttributes($extension);
 
         return $arguments;

@@ -12,5 +12,15 @@
                 <field column="pickup_location_code">pickup_location_code</field>
             </join>
         </attribute>
+        <attribute code="notification_sent" type="int">
+            <join reference_table="inventory_order_notification" join_on_field="entity_id" reference_field="order_id">
+                <field column="notification_sent" >notification_sent</field>
+            </join>
+        </attribute>
+        <attribute code="send_notification" type="int">
+            <join reference_table="inventory_order_notification" join_on_field="entity_id" reference_field="order_id">
+                <field column="send_notification">send_notification</field>
+            </join>
+        </attribute>
     </extension_attributes>
 </config>

@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Plugin\Sales\Order\ShipmentRepository;
@@ -11,6 +10,7 @@ namespace Magento\InventoryInStorePickupSales\Plugin\Sales\Order\ShipmentReposit
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryInStorePickupSalesApi\Model\IsStorePickupOrderInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
 
 /**
@@ -24,12 +24,20 @@ class AdaptShipmentPlugin
     private $isOrderStorePickup;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * @param IsStorePickupOrderInterface $isOrderStorePickup
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
-        IsStorePickupOrderInterface $isOrderStorePickup
+        IsStorePickupOrderInterface $isOrderStorePickup,
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->isOrderStorePickup = $isOrderStorePickup;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -40,11 +48,13 @@ class AdaptShipmentPlugin
      * @param ShipmentRepositoryInterface $subject
      * @return void
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(ShipmentRepositoryInterface $subject, ShipmentInterface $shipment): void
     {
+        $order = $this->orderRepository->get($shipment->getOrderId());
         if ($this->isOrderStorePickup->execute((int)$shipment->getOrderId())
-            && !$shipment->getExtensionAttributes()->getIsReadyForPickupNotified()
+            && null === $order->getExtensionAttributes()->getSendNotification()
         ) {
             throw new LocalizedException(
                 __(
