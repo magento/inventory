@@ -56,14 +56,17 @@ class StockSourceLinkValidatorChain implements StockSourceLinkValidatorInterface
      */
     public function validate(StockSourceLinkInterface $link): ValidationResult
     {
-        $errors = [];
+        $errors = [[]];
         foreach ($this->validators as $validator) {
             $validationResult = $validator->validate($link);
 
             if (!$validationResult->isValid()) {
-                $errors = array_merge($errors, $validationResult->getErrors());
+                $errors[] = $validationResult->getErrors();
             }
         }
+
+        $errors = array_merge(...$errors);
+
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }

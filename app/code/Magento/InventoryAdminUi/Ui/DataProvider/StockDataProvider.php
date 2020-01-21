@@ -22,8 +22,13 @@ use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
+use Magento\Framework\App\ObjectManager;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
+use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
 /**
+ * Provider of data to stock
+ *
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -58,10 +63,16 @@ class StockDataProvider extends DataProvider
      * @var SortOrderBuilder
      */
     private $sortOrderBuilder;
+
     /**
      * @var GetSourcesAssignedToStockOrderedByPriorityInterface
      */
     private $getSourcesAssignedToStockOrderedByPriority;
+
+    /**
+     * @var PoolInterface
+     */
+    private $pool;
 
     /**
      * @param string $name
@@ -77,9 +88,10 @@ class StockDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchCriteriaBuilder $apiSearchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
+     * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @param array $meta
      * @param array $data
-     * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
+     * @param PoolInterface|null $pool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -98,7 +110,8 @@ class StockDataProvider extends DataProvider
         SortOrderBuilder $sortOrderBuilder,
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
         array $meta = [],
-        array $data = []
+        array $data = [],
+        PoolInterface $pool = null
     ) {
         parent::__construct(
             $name,
@@ -118,10 +131,11 @@ class StockDataProvider extends DataProvider
         $this->apiSearchCriteriaBuilder = $apiSearchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
+        $this->pool = $pool ?: ObjectManager::getInstance()->get(PoolInterface::class);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getData()
     {
@@ -150,29 +164,36 @@ class StockDataProvider extends DataProvider
             }
         }
 
+        /** @var ModifierInterface $modifier */
+        foreach ($this->pool->getModifiersInstances() as $modifier) {
+            $data = $modifier->modifyData($data);
+        }
+
         return $data;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getSearchResult()
     {
         $searchCriteria = $this->getSearchCriteria();
         $result = $this->stockRepository->getList($searchCriteria);
 
-        $searchResult = $this->searchResultFactory->create(
+        return $this->searchResultFactory->create(
             $result->getItems(),
             $result->getTotalCount(),
             $searchCriteria,
             StockInterface::STOCK_ID
         );
-        return $searchResult;
     }
 
     /**
+     * Returns assigned sources Data
+     *
      * @param int $stockId
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getAssignedSourcesData(int $stockId): array
     {
@@ -206,6 +227,8 @@ class StockDataProvider extends DataProvider
     }
 
     /**
+     * Return assigned sources by id
+     *
      * @param int $stockId
      * @return array
      * @throws \Magento\Framework\Exception\InputException

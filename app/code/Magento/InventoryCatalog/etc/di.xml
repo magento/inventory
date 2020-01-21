@@ -24,9 +24,6 @@
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer">
         <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\PriceIndexUpdater" sortOrder="20"/>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\StockIndexer">
-        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\Stock\PriceIndexUpdater"/>
-    </type>
     <type name="Magento\CatalogInventory\Model\Indexer\ProductPriceIndexFilter">
         <plugin name="change_select_for_price_modifier" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Indexer\ModifySelectInProductPriceIndexFilter"/>
     </type>
