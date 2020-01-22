@@ -6,5 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\QuoteGraphQl\Model\Cart\SetShippingAddressesOnCartInterface" type="Magento\InventoryInStorePickupQuoteGraphQl\Model\Cart\SetShippingAddressesOnCart"/>
+    <type name="Magento\QuoteGraphQl\Model\Cart\GetShippingAddress">
+        <plugin name="adapt_set_shipping_address_on_cart_for_store_pickup_plugin" type="Magento\InventoryInStorePickupQuoteGraphQl\Model\Cart\GetShippingAddress\AdaptGetShippingAddressPlugin"/>
+    </type>
 </config>
