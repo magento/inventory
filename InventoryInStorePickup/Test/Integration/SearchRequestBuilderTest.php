@@ -57,9 +57,6 @@ class SearchRequestBuilderTest extends TestCase
         $addressCountry = [self::VALUE => 'U', self::CONDITION_TYPE => 'fulltext'];
 
         $distanceFilterRadius = 999;
-        $distanceFilterCountry = 'UA';
-        $distanceFilterRegion = 'Region1';
-        $distanceFilterCity = 'Kyiv';
         $distanceFilterPostcode = '100011';
 
         $scopeCode = 'default_website';
@@ -92,10 +89,7 @@ class SearchRequestBuilderTest extends TestCase
             ->setRegionFilter($addressRegion[self::VALUE], $addressRegion[self::CONDITION_TYPE])
             ->setCountryFilter($addressCountry[self::VALUE], $addressCountry[self::CONDITION_TYPE])
             ->setAreaRadius($distanceFilterRadius)
-            ->setDistanceFilterCountry($distanceFilterCountry)
-            ->setDistanceFilterRegion($distanceFilterRegion)
-            ->setDistanceFilterCity($distanceFilterCity)
-            ->setDistanceFilterPostcode($distanceFilterPostcode)
+            ->setAreaSearchTerm($distanceFilterPostcode)
             ->setScopeCode($scopeCode)
             ->setScopeType($scopeType)
             ->setNameFilter($nameFilter[self::VALUE], $nameFilter[self::CONDITION_TYPE])
@@ -150,10 +144,7 @@ class SearchRequestBuilderTest extends TestCase
         $area = $searchRequest->getArea();
 
         $this->assertEquals($distanceFilterRadius, $area->getRadius());
-        $this->assertEquals($distanceFilterCity, $area->getCity());
-        $this->assertEquals($distanceFilterPostcode, $area->getPostcode());
-        $this->assertEquals($distanceFilterRegion, $area->getRegion());
-        $this->assertEquals($distanceFilterCountry, $area->getCountry());
+        $this->assertEquals($distanceFilterPostcode, $area->getSearchTerm());
 
         $this->assertEquals($scopeCode, $searchRequest->getScopeCode());
         $this->assertEquals($scopeType, $searchRequest->getScopeType());

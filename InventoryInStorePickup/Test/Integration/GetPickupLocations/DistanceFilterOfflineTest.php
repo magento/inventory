@@ -75,20 +75,19 @@ class DistanceFilterOfflineTest extends TestCase
         array $sortedPickupLocationCodes
     ) {
         $this->searchRequestBuilder->setAreaRadius($searchRequestData['radius'])
-                                   ->setDistanceFilterCountry($searchRequestData['country'])
                                    ->setScopeCode($salesChannelCode);
+        $searchTerm = '';
 
         if (isset($searchRequestData['postcode'])) {
-            $this->searchRequestBuilder->setDistanceFilterPostcode($searchRequestData['postcode']);
+            $searchTerm = $searchRequestData['postcode'];
         }
 
         if (isset($searchRequestData['city'])) {
-            $this->searchRequestBuilder->setDistanceFilterCity($searchRequestData['city']);
+            $searchTerm = $searchRequestData['city'];
         }
 
-        if (isset($searchRequestData['region'])) {
-            $this->searchRequestBuilder->setDistanceFilterRegion($searchRequestData['region']);
-        }
+        $searchTerm .= ':' . $searchRequestData['country'];
+        $this->searchRequestBuilder->setAreaSearchTerm($searchTerm);
 
         if ($sortOrder) {
             $sorts = [];
@@ -152,16 +151,6 @@ class DistanceFilterOfflineTest extends TestCase
             [ /* Data set #1 */
               [
                   'country' => 'FR',
-                  'region' => 'Bretagne',
-                  'radius' => 1000
-              ],
-              'eu_website',
-              null,
-              ['eu-1']
-            ],
-            [ /* Data set #2 */
-              [
-                  'country' => 'FR',
                   'city' => 'Saint-Saturnin-lès-Apt',
                   'radius' => 1000
               ],
@@ -174,7 +163,7 @@ class DistanceFilterOfflineTest extends TestCase
               ],
               ['eu-1', 'eu-3']
             ],
-            [ /* Data set #3 */
+            [ /* Data set #2 */
               [
                   'country' => 'IT',
                   'postcode' => '12022',
@@ -189,11 +178,10 @@ class DistanceFilterOfflineTest extends TestCase
               ],
               []
             ],
-            [ /* Data set #4 */
+            [ /* Data set #3 */
               [
                   'country' => 'IT',
                   'postcode' => '39030',
-                  'region' => 'Trentino-Alto Adige',
                   'city' => 'Rasun Di Sotto',
                   'radius' => 350
               ],
@@ -201,7 +189,7 @@ class DistanceFilterOfflineTest extends TestCase
               null,
               ['eu-3']
             ],
-            [ /* Data set #5 */
+            [ /* Data set #4 */
               [
                   'country' => 'DE',
                   'postcode' => '86559',
@@ -216,17 +204,7 @@ class DistanceFilterOfflineTest extends TestCase
               ],
               ['eu-3', 'eu-1']
             ],
-            [ /* Data set #6 */
-              [
-                  'country' => 'US',
-                  'region' => 'Kansas',
-                  'radius' => 1000
-              ],
-              'us_website',
-              null,
-              ['us-1']
-            ],
-            [ /* Data set #7. Test with descending distance sort. */
+            [ /* Data set #5. Test with descending distance sort. */
               [
                   'country' => 'DE',
                   'postcode' => '86559',
@@ -241,7 +219,7 @@ class DistanceFilterOfflineTest extends TestCase
               ],
               ['eu-1', 'eu-3']
             ],
-            [ /* Data set #8. Test without distance sort. */
+            [ /* Data set #6. Test without distance sort. */
               [
                   'country' => 'FR',
                   'city' => 'Saint-Saturnin-lès-Apt',
@@ -256,7 +234,7 @@ class DistanceFilterOfflineTest extends TestCase
               ],
               ['eu-3', 'eu-1']
             ],
-            [ /* Data set #9. Test with multiple sorts. Distance must be in priority. */
+            [ /* Data set #7. Test with multiple sorts. Distance must be in priority. */
               [
                   'country' => 'FR',
                   'city' => 'Saint-Saturnin-lès-Apt',

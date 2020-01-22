@@ -47,6 +47,7 @@ define([
             },
             nearbySearchLimit: 50,
             defaultCountry: window.checkoutConfig.defaultCountryId,
+            delimiter: window.checkoutConfig.storePickupApiSearchTermDelimiter,
             rates: shippingService.getShippingRates(),
             inStoreMethod: null
         },
@@ -235,10 +236,8 @@ define([
                     .getNearbyLocations({
                         area: {
                             radius: this.nearbySearchRadius,
-                            country: shippingAddress.countryId || this.defaultCountry,
-                            postcode: shippingAddress.postcode,
-                            city: shippingAddress.city,
-                            region: shippingAddress.region
+                            searchTerm: shippingAddress.postcode + this.delimiter +
+                                        shippingAddress.countryId || this.defaultCountry
                         },
                         pageSize: this.nearbySearchLimit
                     })

@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\Pipeline;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
@@ -43,18 +43,26 @@ class GetDistanceToSources
     private $addressInterfaceFactory;
 
     /**
+     * @var Pipeline
+     */
+    private $searchTermPipeline;
+
+    /**
      * @param GetLatLngFromAddressInterface $getLatLngFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
+     * @param Pipeline $searchTermPipeline
      */
     public function __construct(
         GetLatLngFromAddressInterface $getLatLngFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
-        AddressInterfaceFactory $addressInterfaceFactory
+        AddressInterfaceFactory $addressInterfaceFactory,
+        Pipeline $searchTermPipeline
     ) {
         $this->getLatLngFromAddress = $getLatLngFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
+        $this->searchTermPipeline = $searchTermPipeline;
     }
 
     /**
@@ -63,7 +71,6 @@ class GetDistanceToSources
      * @param AreaInterface $area
      *
      * @return float[]
-     * @throws NoSuchEntityException
      */
     public function execute(AreaInterface $area): array
     {
@@ -85,11 +92,7 @@ class GetDistanceToSources
      */
     private function getKey(AreaInterface $area): string
     {
-        return $area->getRadius() .
-            $area->getCountry() .
-            $area->getRegion() .
-            $area->getCity() .
-            $area->getPostcode();
+        return $area->getRadius() . $area->getSearchTerm();
     }
 
     /**
@@ -98,7 +101,6 @@ class GetDistanceToSources
      * @param AreaInterface $area
      *
      * @return float[]
-     * @throws NoSuchEntityException
      */
     private function getDistanceToSources(AreaInterface $area): array
     {
@@ -106,7 +108,7 @@ class GetDistanceToSources
         try {
             $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
         } catch (LocalizedException $exception) {
-            throw new NoSuchEntityException(__($exception->getMessage()), $exception);
+            return [];
         }
 
         return $this->getOrderedDistanceToSources->execute($latLng, $area->getRadius());
@@ -122,13 +124,13 @@ class GetDistanceToSources
     private function toSourceSelectionAddress(AreaInterface $area)
     {
         $data = [
-            'country' => $area->getCountry(),
-            'postcode' => $area->getPostcode() ?? '',
-            'region' => $area->getRegion() ?? '',
-            'city' => $area->getCity() ?? '',
+            'postcode' => '',
+            'region' => '',
+            'city' => '',
             'street' => ''
         ];
 
-        return $this->addressInterfaceFactory->create($data);
+        $searchTermData = $this->searchTermPipeline->execute($area->getSearchTerm());
+        return $this->addressInterfaceFactory->create(array_merge($data, $searchTermData->getData()));
     }
 }

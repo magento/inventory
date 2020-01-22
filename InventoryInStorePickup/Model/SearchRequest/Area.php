@@ -22,42 +22,18 @@ class Area implements AreaInterface
     /**
      * @var string
      */
-    private $country;
-
-    /**
-     * @var string|null
-     */
-    private $region;
-
-    /**
-     * @var string|null
-     */
-    private $city;
-
-    /**
-     * @var string|null
-     */
-    private $postcode;
+    private $searchTerm;
 
     /**
      * @param int $radius
-     * @param string $country
-     * @param string|null $region
-     * @param string|null $city
-     * @param string|null $postcode
+     * @param string $searchTerm
      */
     public function __construct(
         int $radius,
-        string $country,
-        ?string $region = null,
-        ?string $city = null,
-        ?string $postcode = null
+        string $searchTerm
     ) {
         $this->radius = $radius;
-        $this->country = $country;
-        $this->region = $region;
-        $this->city = $city;
-        $this->postcode = $postcode;
+        $this->searchTerm = $searchTerm;
     }
 
     /**
@@ -71,32 +47,8 @@ class Area implements AreaInterface
     /**
      * @inheritdoc
      */
-    public function getCountry(): string
+    public function getSearchTerm() : string
     {
-        return $this->country;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getRegion(): ?string
-    {
-        return $this->region;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPostcode(): ?string
-    {
-        return $this->postcode;
+        return $this->searchTerm;
     }
 }
