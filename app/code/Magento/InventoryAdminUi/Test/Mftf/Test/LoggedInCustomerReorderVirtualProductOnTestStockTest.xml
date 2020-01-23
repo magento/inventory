@@ -6,9 +6,8 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="LoggedInCustomerReorderVirtualProductOnTestStockTest" extends="LoggedInCustomerReorderVirtualProductOnDefaultStockTest">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="LoggedInCustomerReorderVirtualProductOnTestStockTest">
         <annotations>
             <stories value="Virtual Product Custom Stock."/>
             <title value="Re-order virtual product on custom stock from storefront."/>
@@ -21,32 +20,86 @@
 
         <before>
             <!--Create test data.-->
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" after="customer"/>
-            <createData entity="SourceStockLinked1" stepKey="linkSourceStock" after="additionalSource">
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
                 <requiredEntity createDataKey="additionalStock"/>
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
-            <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
+            <createData entity="VirtualProduct" stepKey="product"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!--Assign source to product.-->
+            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductForm"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
-            <!--Assign Default Stock to Main Website.-->
-            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" before="disableAdditionalSource">
+            <!--Delete test data.-->
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Disable source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Assign default stock to main website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <!--Clean up created data.-->
-            <deleteData createDataKey="additionalStock" stepKey="deleteStock" after="deleteProduct"/>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Assign source to product.-->
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" after="openProductEditPageToSetQuantity">
-            <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+        <!-- Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
-        <remove keyForRemoval="setDefaultStockQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setAdditionalSourceQuantity" after="assignSourceToProduct"/>
-        <remove keyForRemoval="checkProductSourceQtyAfterPlaceOrder"/>
-        <remove keyForRemoval="checkSalableQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',$$additionalSource.source[name]$$)}}" userInput="100" stepKey="checkProductSourceQtyAfterPlaceOrder" after="findProductBySkuToCheckQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',$$additionalStock.stock[name]$$)}}" userInput="98" stepKey="checkSalableQtyAfterPlaceOrder" after="checkProductSourceQtyAfterPlaceOrder"/>
+        <!-- Add virtual product to shopping cart -->
+        <amOnPage url="{{StorefrontProductPage.url($product.custom_attributes[url_key]$)}}" stepKey="navigateToPDP"/>
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$$product$$"/>
+            <argument name="productCount" value="{{minimalProductQty.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Reorder simple product.-->
+        <actionGroup ref="StorefrontCustomerReorderActionGroup" stepKey="reorderSimpleProduct">
+            <argument name="orderNumber" value="${orderNumber}"/>
+        </actionGroup>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
+        <actionGroup ref="GoToCheckoutFromCartActionGroup" stepKey="navigateToCheckoutToReorder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrderToReorder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber"/>
+        <!--Verify reorder.-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$reorderNumber}"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered {{minimalProductQty.value}}" stepKey="orderedQuantity"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterPlaceOrder">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product.sku$$"/>
+        </actionGroup>
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProductVariation">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$$additionalSource.source[name]$$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="$$additionalStock.stock[name]$"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWithTwoPieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>
