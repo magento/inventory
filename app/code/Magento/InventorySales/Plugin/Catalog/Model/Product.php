@@ -37,15 +37,12 @@ class Product
 
     /**
      * @param Subject $subject
+     * @param \Closure $proceed
      * @param bool $result
      * @return bool
      */
-    public function afterIsSalable(Subject $subject, bool $result): bool
+    public function aroundIsSalable(Subject $subject, \Closure $proceed): bool
     {
-        if (!$result) {
-            return $result;
-        }
-
         $websiteCode = $subject->getStore()->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
 
