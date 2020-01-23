@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Catalog\Model;
 
@@ -37,8 +38,9 @@ class Product
     /**
      * @param Subject $subject
      * @param bool $result
+     * @return bool
      */
-    public function afterIsSalable(Subject $subject, $result)
+    public function afterIsSalable(Subject $subject, bool $result): bool
     {
         if (!$result) {
             return $result;
