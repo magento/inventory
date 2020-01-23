@@ -143,7 +143,7 @@
         <plugin name="process_register_products_sale" type="Magento\InventorySales\Plugin\CatalogInventory\StockManagement\ProcessRegisterProductsSalePlugin"/>
     </type>
     <!-- Append Reservations when Order Is Placed  -->
-    <type name="Magento\Sales\Api\OrderManagementInterface">
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
         <plugin name="inventory_reservations_placement" type="Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin"/>
     </type>
     <!-- Return Processor -->
