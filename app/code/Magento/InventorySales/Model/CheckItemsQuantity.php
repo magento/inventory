@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
@@ -35,10 +36,11 @@ class CheckItemsQuantity
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
-        AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
+        AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
     ) {
         $this->isProductSalableForRequestedQty = $isProductSalableForRequestedQty;
-        $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty;
+        $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty ?: ObjectManager::getInstance()
+        ->get(AreProductsSalableForRequestedQtyInterface::class);
     }
 
     /**
@@ -52,7 +54,7 @@ class CheckItemsQuantity
     public function execute(array $items, int $stockId): void
     {
         $result = $this->areProductsSalableForRequestedQty->execute($items, $stockId);
-        foreach ($result as $isSalable) {
+        foreach ($result->getAreSalable() as $isSalable) {
             if (false === $isSalable->isSalable()) {
                 $errors = $isSalable->getErrors();
                 /** @var ProductSalabilityErrorInterface $errorMessage */
