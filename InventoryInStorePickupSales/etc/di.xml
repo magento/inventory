@@ -48,19 +48,4 @@
         </arguments>
     </virtualType>
     <preference for="Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface" type="Magento\InventoryInStorePickupSales\Model\Result"/>
-    <type name="Magento\InventoryInStorePickupSales\Model\EmailSenderHandler">
-        <arguments>
-            <argument name="identityContainer" xsi:type="object" shared="false">Magento\InventoryInStorePickupSales\Model\Order\Email\Container\ReadyForPickupIdentity</argument>
-        </arguments>
-    </type>
-    <virtualType name="NotifyOrderSendEmailsCron" type="Magento\Sales\Cron\SendEmails">
-        <arguments>
-            <argument name="emailSenderHandler" xsi:type="object" shared="false">Magento\InventoryInStorePickupSales\Model\EmailSenderHandler</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="NotifyOrderSendEmailsObserver" type="Magento\Sales\Observer\Virtual\SendEmails">
-        <arguments>
-            <argument name="emailSenderHandler" xsi:type="object" shared="false">Magento\InventoryInStorePickupSales\Model\EmailSenderHandler</argument>
-        </arguments>
-    </virtualType>
 </config>

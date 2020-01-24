@@ -10,8 +10,7 @@ namespace Magento\InventoryInStorePickupSales\Model\Order\Email;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
-use Magento\InventoryInStorePickupSales\Model\ResourceModel\OrderNotificationSent\SaveOrderNotificationSent;
-use Magento\InventoryInStorePickupSales\Model\ResourceModel\OrderSendNotification\SaveOrderSendNotification;
+use Magento\InventoryInStorePickupSales\Model\ResourceModel\OrderNotification\SaveOrderNotification;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Address\Renderer;
@@ -37,14 +36,9 @@ class ReadyForPickupSender extends Sender
     private $config;
 
     /**
-     * @var SaveOrderNotificationSent
+     * @var SaveOrderNotification
      */
-    private $saveOrderNotificationSent;
-
-    /**
-     * @var SaveOrderSendNotification
-     */
-    private $saveOrderSendNotification;
+    private $saveOrderNotification;
 
     /**
      * @param Template $templateContainer
@@ -54,8 +48,7 @@ class ReadyForPickupSender extends Sender
      * @param Renderer $addressRenderer
      * @param ManagerInterface $eventManager
      * @param ScopeConfigInterface $config
-     * @param SaveOrderNotificationSent $saveOrderNotificationSent
-     * @param SaveOrderSendNotification $saveOrderSendNotification
+     * @param SaveOrderNotification $saveOrderNotification
      */
     public function __construct(
         Template $templateContainer,
@@ -65,15 +58,13 @@ class ReadyForPickupSender extends Sender
         Renderer $addressRenderer,
         ManagerInterface $eventManager,
         ScopeConfigInterface $config,
-        SaveOrderNotificationSent $saveOrderNotificationSent,
-        SaveOrderSendNotification $saveOrderSendNotification
+        SaveOrderNotification $saveOrderNotification
     ) {
         parent::__construct($templateContainer, $identityContainer, $senderBuilderFactory, $logger, $addressRenderer);
 
         $this->eventManager = $eventManager;
         $this->config = $config;
-        $this->saveOrderNotificationSent = $saveOrderNotificationSent;
-        $this->saveOrderSendNotification = $saveOrderSendNotification;
+        $this->saveOrderNotification = $saveOrderNotification;
     }
 
     /**
@@ -88,16 +79,20 @@ class ReadyForPickupSender extends Sender
     public function send(OrderInterface $order, $forceSyncMode = false): bool
     {
         $result = false;
-        $isEnabled = (int)$this->identityContainer->isEnabled();
-        $order->getExtensionAttributes()->setSendNotification($isEnabled);
-        $this->saveOrderSendNotification->execute((int)$order->getEntityId(), $isEnabled);
+        $order->getExtensionAttributes()->setSendNotification((int)$this->identityContainer->isEnabled());
         $order->getExtensionAttributes()->setNotificationSent(0);
-        if (!$this->config->getValue('sales_email/general/async_sending' || $forceSyncMode)) {
+        $this->saveOrderNotification->execute(
+            (int)$order->getEntityId(),
+            $order->getExtensionAttributes()->getSendNotification(),
+            $order->getExtensionAttributes()->getNotificationSent()
+        );
+        if (!$this->config->getValue('sales_email/general/async_sending') || $forceSyncMode) {
             $result = $this->checkAndSend($order);
             $order->getExtensionAttributes()->setNotificationSent((int)$result);
         }
-        $this->saveOrderNotificationSent->execute(
+        $this->saveOrderNotification->execute(
             (int)$order->getEntityId(),
+            $order->getExtensionAttributes()->getSendNotification(),
             $order->getExtensionAttributes()->getNotificationSent()
         );
 

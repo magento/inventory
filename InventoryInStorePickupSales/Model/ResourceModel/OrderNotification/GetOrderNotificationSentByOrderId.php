@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupSales\Model\ResourceModel\OrderSendNotification;
+namespace Magento\InventoryInStorePickupSales\Model\ResourceModel\OrderNotification;
 
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Get order 'send notification' by order identifier resource.
+ * Get order 'notification sent' by order identifier resource.
  */
-class GetOrderSendNotificationByOrderId
+class GetOrderNotificationSentByOrderId
 {
     private const ORDER_ID = 'order_id';
 
@@ -31,22 +31,19 @@ class GetOrderSendNotificationByOrderId
     }
 
     /**
-     * Fetch 'send notification' identifier by order identifier.
+     * Fetch 'notification sent' identifier by order identifier.
      *
      * @param int $orderId
-     *
      * @return int|null
      */
     public function execute(int $orderId): ?int
     {
         $connection = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_order_notification');
-
         $select = $connection->select()
-            ->from($table, 'send_notification')
+            ->from($table, 'notification_sent')
             ->where(self::ORDER_ID . '= ?', $orderId)
             ->limit(1);
-
         $sendNotification = $connection->fetchOne($select);
 
         return $sendNotification !== false ? (int)$sendNotification : null;
