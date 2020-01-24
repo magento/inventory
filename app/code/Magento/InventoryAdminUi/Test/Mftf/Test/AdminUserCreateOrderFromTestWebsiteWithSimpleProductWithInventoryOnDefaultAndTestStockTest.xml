@@ -82,7 +82,7 @@
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </after>
-        <actionGroup ref="goToProductPageViaID" stepKey="goToProduct1">
+        <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createProduct1.id$"/>
         </actionGroup>
         <!-- Add this product to second website -->

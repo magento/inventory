@@ -70,7 +70,7 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton2"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage1"/>
 
-        <actionGroup ref="AssertProductInStorefrontProductPage" stepKey="assertProductInStorefront1">
+        <actionGroup ref="AssertProductInStorefrontProductPageActionGroup" stepKey="assertProductInStorefront1">
             <argument name="product" value="VirtualMsiProduct"/>
         </actionGroup>
 

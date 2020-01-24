@@ -31,7 +31,7 @@
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheSourcesListPage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
 
-        <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchByKeyword1">
+        <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword1">
             <argument name="keyword" value="$$createSource2.source[name]$$"/>
         </actionGroup>
 
