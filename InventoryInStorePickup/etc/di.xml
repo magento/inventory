@@ -60,4 +60,13 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\Pipeline">
+        <arguments>
+            <argument name="parsers" xsi:type="array">
+                <item name="country" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm\CountryParser</item>
+                <item name="postcode" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm\PostcodeParser</item>
+                <item name="city" xsi:type="object">Magento\InventoryInStorePickup\Model\SearchRequest\Area\SearchTerm\CityParser</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
