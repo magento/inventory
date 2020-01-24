@@ -44,6 +44,7 @@ define([
             loginFormSelector:
                 '#store-selector form[data-role=email-with-possible-login]',
             defaultCountryId: window.checkoutConfig.defaultCountryId,
+            delimiter: window.checkoutConfig.storePickupApiSearchTermDelimiter,
             selectedLocation: pickupLocationsService.selectedLocation,
             quoteIsVirtual: quote.isVirtual,
             searchQuery: '',
@@ -63,27 +64,14 @@ define([
          * @return {exports}
          */
         initialize: function () {
-            var updateNearbyLocations,
-                postcode,
-                city;
+            var updateNearbyLocations, country;
 
             this._super();
 
             updateNearbyLocations = _.debounce(function (searchQuery) {
-                postcode = null;
-                city = searchQuery.replace(/(\d+[\-]?\d+)/, function (match) {
-                    postcode = match;
-
-                    return '';
-                });
-
-                this.updateNearbyLocations(
-                    addressConverter.formAddressDataToQuoteAddress({
-                        city: city,
-                        postcode: postcode,
-                        'country_id': quote.shippingAddress().countryId
-                    })
-                );
+                country = quote.shippingAddress() && quote.shippingAddress().countryId ?
+                    quote.shippingAddress().countryId : this.defaultCountryId;
+                this.updateNearbyLocations(searchQuery + this.delimiter + country);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
 
@@ -132,12 +120,16 @@ define([
          * @returns void
          */
         openPopup: function () {
-            var shippingAddress = quote.shippingAddress();
+            var shippingAddress = quote.shippingAddress(),
+                country = shippingAddress.countryId ? shippingAddress.countryId :
+                this.defaultCountryId;
 
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                this.updateNearbyLocations(shippingAddress);
+                this.updateNearbyLocations(
+                    shippingAddress.postcode + this.delimiter + country
+                );
             }
         },
 
@@ -159,20 +151,17 @@ define([
         },
 
         /**
-         * @param {Object} address
+         * @param {String} searchQuery
          * @returns {*}
          */
-        updateNearbyLocations: function (address) {
+        updateNearbyLocations: function (searchQuery) {
             var self = this;
 
             return pickupLocationsService
                 .getNearbyLocations({
                     area: {
                         radius: this.nearbySearchRadius,
-                        country: this.defaultCountryId,
-                        city: address.city,
-                        postcode: address.postcode,
-                        region: address.region
+                        searchTerm: searchQuery
                     },
                     pageSize: this.nearbySearchLimit
                 })
