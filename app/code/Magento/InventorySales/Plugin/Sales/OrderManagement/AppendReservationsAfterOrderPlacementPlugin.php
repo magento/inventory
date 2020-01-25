@@ -7,21 +7,31 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
-use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\OrderManagementInterface;
-use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
+use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
-use Magento\InventorySales\Model\CheckItemsQuantity;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\InventorySales\Model\CheckItemsQuantity;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Store\Api\WebsiteRepositoryInterface;
 
+/**
+ * Append Reservations when Order Is Placed
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class AppendReservationsAfterOrderPlacementPlugin
 {
     /**
@@ -75,6 +85,8 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
+     * AppendReservationsAfterOrderPlacementPlugin constructor.
+     *
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -111,12 +123,19 @@ class AppendReservationsAfterOrderPlacementPlugin
     }
 
     /**
-     * @param OrderManagementInterface $subject
+     * Append product reservation after order placement
+     *
+     * @param OrderRepositoryInterface $subject
      * @param OrderInterface $order
      * @return OrderInterface
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterPlace(OrderManagementInterface $subject, OrderInterface $order): OrderInterface
+    public function afterSave(OrderRepositoryInterface $subject, OrderInterface $order): OrderInterface
     {
         $itemsById = $itemsBySku = $itemsToSell = [];
         foreach ($order->getItems() as $item) {
