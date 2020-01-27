@@ -112,8 +112,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     'area' => [
                         'radius' => 750,
-                        'postcode' => '86559',
-                        'country' => 'DE'
+                        'search_term' => '86559:DE'
                     ],
                     'filters' => [
                         'cityFilter' => [
@@ -138,8 +137,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     'area' => [
                         'radius' => 6371000,
-                        'postcode' => '86559',
-                        'country' => 'DE'
+                        'search_term' => '86559:DE',
                     ],
                     'filters' => [
                         'nameFilter' => [
@@ -172,8 +170,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     'area' => [
                         'radius' => 750,
-                        'postcode' => '86559',
-                        'country' => 'DE'
+                        'search_term' => '86559:DE',
                     ],
                     'scopeCode' => 'global_website',
                     'pageSize' => 1,
@@ -260,8 +257,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             [ /* Data set #0 */
                 [
                     'area' => [
-                        'country' => 'DE',
-                        'postcode' => '81671',
+                        'search_term' => '81671:DE',
                         'radius' => 500
                     ],
                     'scopeCode' => 'eu_website',
@@ -271,19 +267,7 @@ class GetPickupLocationsTest extends WebapiAbstract
             [ /* Data set #1 */
                 [
                     'area' => [
-                        'country' => 'FR',
-                        'region' => 'Bretagne',
-                        'radius' => 1000
-                    ],
-                    'scopeCode' => 'eu_website',
-                ],
-                ['eu-1']
-            ],
-            [ /* Data set #2 */
-                [
-                    'area' => [
-                        'country' => 'FR',
-                        'city' => 'Saint-Saturnin-lès-Apt',
+                        'search_term' => 'Saint-Saturnin-lès-Apt:FR',
                         'radius' => 1000],
                     'scopeCode' => 'global_website',
                     'sort' => [
@@ -295,11 +279,10 @@ class GetPickupLocationsTest extends WebapiAbstract
                 ],
                 ['eu-1', 'eu-3']
             ],
-            [ /* Data set #3 */
+            [ /* Data set #2 */
                 [
                     'area' => [
-                        'country' => 'IT',
-                        'postcode' => '12022',
+                        'search_term' => '12022:IT',
                         'radius' => 350],
                     'scopeCode' => 'eu_website',
                     'sort' => [
@@ -311,23 +294,19 @@ class GetPickupLocationsTest extends WebapiAbstract
                 ],
                 []
             ],
-            [ /* Data set #4 */
+            [ /* Data set #3 */
                 [
                     'area' => [
-                        'country' => 'IT',
-                        'postcode' => '39030',
-                        'region' => 'Trentino-Alto Adige',
-                        'city' => 'Rasun Di Sotto',
+                        'search_term' => '39030:IT',
                         'radius' => 350],
                     'scopeCode' => 'eu_website',
                 ],
                 ['eu-3']
             ],
-            [ /* Data set #5 */
+            [ /* Data set #4 */
                 [
                     'area' => [
-                        'country' => 'DE',
-                        'postcode' => '86559',
+                        'search_term' => '86559:DE',
                         'radius' => 750],
                     'scopeCode' => 'global_website',
                     'sort' => [
@@ -339,21 +318,10 @@ class GetPickupLocationsTest extends WebapiAbstract
                 ],
                 ['eu-3', 'eu-1']
             ],
-            [ /* Data set #6 */
+            [ /* Data set #5. Test with descending distance sort. */
                 [
                     'area' => [
-                        'country' => 'US',
-                        'region' => 'Kansas',
-                        'radius' => 1000],
-                    'scopeCode' => 'us_website',
-                ],
-                ['us-1']
-            ],
-            [ /* Data set #7. Test with descending distance sort. */
-                [
-                    'area' => [
-                        'country' => 'DE',
-                        'postcode' => '86559',
+                        'search_term' => '86559:DE',
                         'radius' => 750],
                     'scopeCode' => 'global_website',
                     'sort' => [
@@ -365,11 +333,10 @@ class GetPickupLocationsTest extends WebapiAbstract
                 ],
                 ['eu-1', 'eu-3']
             ],
-            [ /* Data set #8. Test without distance sort. */
+            [ /* Data set #6. Test without distance sort. */
                 [
                     'area' => [
-                        'country' => 'FR',
-                        'city' => 'Saint-Saturnin-lès-Apt',
+                        'search_term' => 'Saint-Saturnin-lès-Apt:FR',
                         'radius' => 1000
                     ],
                     'scopeCode' => 'global_website',
@@ -382,11 +349,10 @@ class GetPickupLocationsTest extends WebapiAbstract
                 ],
                 ['eu-3', 'eu-1']
             ],
-            [ /* Data set #9. Test with multiple sorts. Distance must be in priority. */
+            [ /* Data set #7. Test with multiple sorts. Distance must be in priority. */
                 [
                     'area' => [
-                        'country' => 'FR',
-                        'city' => 'Saint-Saturnin-lès-Apt',
+                        'search_term' => 'Saint-Saturnin-lès-Apt:FR',
                         'radius' => 1000],
                     'scopeCode' => 'global_website',
                     'sort' => [

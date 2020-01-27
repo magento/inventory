@@ -95,40 +95,13 @@ interface SearchRequestBuilderInterface
     public function setAreaRadius(int $radius): self;
 
     /**
-     * Set Postcode for Distance Filter.
+     * Set area search term.
      *
-     * @param string $postcode
-     *
-     * @return SearchRequestBuilderInterface
-     */
-    public function setDistanceFilterPostcode(string $postcode): self;
-
-    /**
-     * Set City for Distance filter.
-     *
-     * @param string $city
+     * @param string $searchTerm
      *
      * @return SearchRequestBuilderInterface
      */
-    public function setDistanceFilterCity(string $city): self;
-
-    /**
-     * Set Region for Distance filter.
-     *
-     * @param string $region
-     *
-     * @return SearchRequestBuilderInterface
-     */
-    public function setDistanceFilterRegion(string $region): self;
-
-    /**
-     * Set Country for Distance filter.
-     *
-     * @param string $country
-     *
-     * @return SearchRequestBuilderInterface
-     */
-    public function setDistanceFilterCountry(string $country): self;
+    public function setAreaSearchTerm(string $searchTerm): self;
 
     /**
      * Set Search Request Extension.

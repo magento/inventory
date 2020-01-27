@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Exception\NoSuchLatsLngsFromAddressProviderException;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\Pipeline;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterfaceFactory;
 
@@ -43,18 +43,26 @@ class GetDistanceToSources
     private $addressInterfaceFactory;
 
     /**
+     * @var Pipeline
+     */
+    private $searchTermPipeline;
+
+    /**
      * @param GetLatsLngsFromAddressInterface $getLatsLngsFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
+     * @param Pipeline $searchTermPipeline
      */
     public function __construct(
         GetLatsLngsFromAddressInterface $getLatsLngsFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
-        AddressInterfaceFactory $addressInterfaceFactory
+        AddressInterfaceFactory $addressInterfaceFactory,
+        Pipeline $searchTermPipeline
     ) {
         $this->getLatsLngsFromAddress = $getLatsLngsFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
+        $this->searchTermPipeline = $searchTermPipeline;
     }
 
     /**
@@ -63,7 +71,6 @@ class GetDistanceToSources
      * @param AreaInterface $area
      *
      * @return float[]
-     * @throws NoSuchEntityException
      */
     public function execute(AreaInterface $area): array
     {
@@ -85,11 +92,7 @@ class GetDistanceToSources
      */
     private function getKey(AreaInterface $area): string
     {
-        return $area->getRadius() .
-            $area->getCountry() .
-            $area->getRegion() .
-            $area->getCity() .
-            $area->getPostcode();
+        return $area->getRadius() . $area->getSearchTerm();
     }
 
     /**
@@ -98,15 +101,14 @@ class GetDistanceToSources
      * @param AreaInterface $area
      *
      * @return float[]
-     * @throws NoSuchEntityException
      */
     private function getDistanceToSources(AreaInterface $area): array
     {
         $sourceSelectionAddress = $this->toSourceSelectionAddress($area);
         try {
             $latsLngs = $this->getLatsLngsFromAddress->execute($sourceSelectionAddress);
-        } catch (NoSuchLatsLngsFromAddressProviderException $exception) {
-            throw new NoSuchEntityException(__($exception->getMessage()), $exception);
+        } catch (LocalizedException $exception) {
+            return [];
         }
 
         return $this->getOrderedDistanceToSources->execute($latsLngs, $area->getRadius());
@@ -116,18 +118,19 @@ class GetDistanceToSources
      * Create Source Selection Address based on Distance Fitler from Search Request.
      *
      * @param AreaInterface $area
+     *
      * @return AddressInterface
      */
     private function toSourceSelectionAddress(AreaInterface $area): AddressInterface
     {
         $data = [
-            'country' => $area->getCountry(),
-            'postcode' => $area->getPostcode() ?? '',
-            'region' => $area->getRegion() ?? '',
-            'city' => $area->getCity() ?? '',
-            'street' => '',
+            'postcode' => '',
+            'region' => '',
+            'city' => '',
+            'street' => ''
         ];
 
-        return $this->addressInterfaceFactory->create($data);
+        $searchTermData = $this->searchTermPipeline->execute($area->getSearchTerm());
+        return $this->addressInterfaceFactory->create(array_merge($data, $searchTermData->getData()));
     }
 }

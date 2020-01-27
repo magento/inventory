@@ -27,30 +27,9 @@ interface AreaInterface
     public function getRadius(): int;
 
     /**
-     * Requested country.
+     * Get search term string.
      *
      * @return string
      */
-    public function getCountry(): string;
-
-    /**
-     * Requested region.
-     *
-     * @return string|null
-     */
-    public function getRegion(): ?string;
-
-    /**
-     * Requested city.
-     *
-     * @return string|null
-     */
-    public function getCity(): ?string;
-
-    /**
-     * Requested postcode.
-     *
-     * @return string|null
-     */
-    public function getPostcode(): ?string;
+    public function getSearchTerm() : string;
 }
