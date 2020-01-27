@@ -14,7 +14,6 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToComponentsString;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToQueryString;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToString;
-use Magento\InventoryDistanceBasedSourceSelection\Model\ResourceModel\GetGeoNamesDataByAddress;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterfaceFactory;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
@@ -108,7 +107,7 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
         $this->addressToString = $addressToString;
         $this->addressToQueryString = $addressToQueryString;
         $this->getGeoCodesForAddress = $getGeoCodesForAddress ?: ObjectManager::getInstance()
-            ->get(GetGeoNamesDataByAddress::class);
+            ->get(GetGeoCodesForAddress::class);
     }
 
     /**

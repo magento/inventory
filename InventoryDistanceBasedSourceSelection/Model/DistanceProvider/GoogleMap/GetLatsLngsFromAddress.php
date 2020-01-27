@@ -9,7 +9,7 @@ namespace Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\G
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryDistanceBasedSourceSelection\Model\Convert\AddressToString;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface;
+use Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterfaceFactory;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
@@ -24,7 +24,7 @@ class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
     private $latsLngsCache = [];
 
     /**
-     * @var LatLngInterface
+     * @var LatLngInterfaceFactory
      */
     private $latLngInterfaceFactory;
 
@@ -41,13 +41,16 @@ class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
     /**
      * @param AddressToString $addressToString
      * @param GetGeoCodesForAddress $getGeoCodesForAddress
+     * @param LatLngInterfaceFactory $latLngInterfaceFactory
      */
     public function __construct(
         AddressToString $addressToString,
-        GetGeoCodesForAddress $getGeoCodesForAddress
+        GetGeoCodesForAddress $getGeoCodesForAddress,
+        LatLngInterfaceFactory $latLngInterfaceFactory
     ) {
         $this->addressToString = $addressToString;
         $this->getGeoCodesForAddress = $getGeoCodesForAddress;
+        $this->latLngInterfaceFactory = $latLngInterfaceFactory;
     }
 
     /**
