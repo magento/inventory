@@ -7,7 +7,15 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface">
-        <plugin name="disable_bundle_type"
-                type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
+        <plugin name="disable_bundle_type" type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
+    </type>
+    <type name="Magento\Bundle\Model\Product\Type">
+        <plugin name="adapt_is_product_salable" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\Product\Type\AdaptIsSalablePlugin"/>
+    </type>
+    <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
+        <plugin name="adapt_add_quantity_filter" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection\AdaptAddQuantityFilterPlugin"/>
+    </type>
+    <type name="Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface">
+        <plugin name="get_bundle_selection_sku_from_order" type="Magento\InventoryBundleProduct\Plugin\InventorySalesApi\Model\GetSkuFromOrderItem\AdaptGetSkuFromOrderItemPlugin"/>
     </type>
 </config>
