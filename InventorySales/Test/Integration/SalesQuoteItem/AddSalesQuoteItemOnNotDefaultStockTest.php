@@ -147,11 +147,14 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
      * @dataProvider notSalableProductsDataProvider
      *
      * @magentoDbIsolation disabled
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function testAddOutOffStockProductToQuote(
         string $sku,
         int $stockId,
-        float $qty
+        float $qty,
+        string $message,
+        float $backorderqty
     ) {
         $quote = $this->getQuote($stockId);
         $product = $this->getProductBySku($sku);
@@ -164,17 +167,98 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 2
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @param float $qty
+     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
+     *
+     * @dataProvider notSalableProductsDataProvider
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testAddOutOffStockProductToQuoteWithBackorderNotify(
+        string $sku,
+        int $stockId,
+        float $qty,
+        string $message,
+        float $backorderqty
+    ) {
+        $quote = $this->getQuote($stockId);
+        $product = $this->getProductBySku($sku);
+
+        self::expectException(LocalizedException::class);
+        $quote->addProduct($product, $qty);
+
+        $quoteItem = current($quote->getAllItems());
+
+        self::assertEquals($qty, $quoteItem->getQty());
+        self::assertEquals(
+            $message,
+            $quote->getItemsCollection()->getFirstItem()->getStockStateResult()->getMessage()
+        );
+        self::assertEquals(
+            $backorderqty,
+            $quote->getItemsCollection()->getFirstItem()->getStockStateResult()->getItemBackorders()
+        );
+    }
+
+    /**
      * @see ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @return array
      */
     public function notSalableProductsDataProvider(): array
     {
         return [
-            ['SKU-1', 20, 6],
-            ['SKU-1', 30, 9],
-            ['SKU-2', 10, 1.5],
-            ['SKU-2', 30, 5.5],
-            ['SKU-3', 20, 1.9]
+            [
+                'SKU-1',
+                20,
+                6,
+                "We don't have as many quantity as you requested, but we'll back order the remaining 3.",
+                3
+            ],
+            [
+                'SKU-1',
+                30,
+                9,
+                "We don't have as many quantity as you requested, but we'll back order the remaining 10.",
+                10
+            ],
+            [
+                'SKU-2',
+                10,
+                1.5,
+                "We don't have as many quantity as you requested, but we'll back order the remaining 1.5.",
+                1.5
+            ],
+            [
+                'SKU-2',
+                30,
+                5.5,
+                "We don't have as many quantity as you requested, but we'll back order the remaining 0.5.",
+                0.5
+            ],
+            [
+                'SKU-3',
+                20,
+                1.9,
+                "We don't have as many quantity as you requested, but we'll back order the remaining 1.9.",
+                1.9
+            ]
         ];
     }
 

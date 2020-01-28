@@ -9,4 +9,7 @@
     <extension_attributes for="Magento\InventoryApi\Api\Data\StockInterface">
         <attribute code="sales_channels" type="Magento\InventorySalesApi\Api\Data\SalesChannelInterface[]" />
     </extension_attributes>
+    <extension_attributes for="Magento\CatalogInventory\Api\Data\StockItemInterface">
+        <attribute code="website_id" type="int" />
+    </extension_attributes>
 </config>

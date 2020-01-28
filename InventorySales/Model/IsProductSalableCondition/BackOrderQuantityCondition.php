@@ -9,22 +9,21 @@ namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
+use Magento\InventorySales\Model\GetBackOrderQty;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
-use Magento\InventorySales\Model\GetBackOrderQty;
-use Magento\Framework\Exception\InputException;
+use Magento\InventorySalesApi\Api\Data\ProductSalableResultExtensionInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 
 /**
- * BackOrderNotifyCustomerCondition Class
+ * BackOrderQuantityCondition Class
  *
- * Set backorder message for new orders if necessary.
+ * Determine if back orders are required for new order
  */
-class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQtyInterface
+class BackOrderQuantityCondition implements IsProductSalableForRequestedQtyInterface
 {
     /**
      * @var GetStockItemConfigurationInterface
@@ -37,11 +36,6 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
     private $productSalableResultFactory;
 
     /**
-     * @var ProductSalabilityErrorInterfaceFactory
-     */
-    private $productSalabilityErrorFactory;
-
-    /**
      * @var GetBackOrderQty
      */
     private $getBackOrderQty;
@@ -49,27 +43,23 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
     /**
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
-     * @param ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory
      * @param GetBackOrderQty $getBackOrderQty
      */
     public function __construct(
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         ProductSalableResultInterfaceFactory $productSalableResultFactory,
-        ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
         GetBackOrderQty $getBackOrderQty
     ) {
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->productSalableResultFactory = $productSalableResultFactory;
-        $this->productSalabilityErrorFactory = $productSalabilityErrorFactory;
         $this->getBackOrderQty = $getBackOrderQty;
     }
 
     /**
-     * BackOrderNotifyCustomerCondition::execute
+     * BackOrderQuantityCondition::execute
      *
-     * Given a product SKU and a Stock ID, this function checks if an order for the requested quantity
-     * would result in a back order situation. If it does then an appropriate message is returned to
-     * be displayed to the user.
+     * Given a product SKU and a Stock ID, this provides the necessary functionality to
+     * determine how many items would need to be back ordered, given the requested quantity.
      *
      * @param string $sku
      * @param int $stockId
@@ -83,22 +73,19 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
     {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
 
-        if ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY) {
+        if ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY
+        || $stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY) {
             $backOrderQty = $this->getBackOrderQty->execute($sku, $stockId, $requestedQty);
             if ($backOrderQty > 0) {
-                $errors = [
-                    $this->productSalabilityErrorFactory->create(
-                        [
-                            'code' => 'back_order-not-enough',
-                            'message' => __(
-                                'We don\'t have as many quantity as you requested, '
-                                . 'but we\'ll back order the remaining %1.',
-                                $backOrderQty * 1
-                            )
-                        ]
-                    )
-                ];
-                return $this->productSalableResultFactory->create(['errors' => $errors]);
+                /**
+                 * @var $result ProductSalableResultInterface
+                 * @var $extensionAttributes ProductSalableResultExtensionInterface
+                 */
+                $result = $this->productSalableResultFactory->create(['errors' => []]);
+                $extensionAttributes = $result->getExtensionAttributes();
+                $extensionAttributes->setBackOrderQty($backOrderQty);
+                $result->setExtensionAttributes($extensionAttributes);
+                return $result;
             }
         }
 

@@ -164,8 +164,76 @@ class PlaceOrderOnDefaultStockTest extends TestCase
 
         self::assertNotNull($orderId);
 
+        //8.5 ordered, 8.5 in stock, 5.5 allocated to default source. Should result in 3.0 backordered
+        self::assertEquals(3.0, $this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
+
         //cleanup
         $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
+     * @magentoConfigFixture current_store cataloginventory/item_options/min_qty -10
+     */
+    public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOnAndMinQty()
+    {
+        $sku = 'SKU-1';
+        $quoteItemQty = 8.5;
+
+        $cart = $this->getCart();
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+
+        $orderId = $this->cartManagement->placeOrder($cart->getId());
+
+        self::assertNotNull($orderId);
+
+        //8.5 ordered, 8.5 in stock, 5.5 allocated to default source. Should result in 3.0 backordered
+        self::assertEquals(3.0, $this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
+
+        //cleanup
+        $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/quote_two_carts.php
+     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
+     */
+    public function testPlaceMultipleOrdersWithOutOffStockProductAndBackOrdersTurnedOn()
+    {
+        $sku = 'SKU-1';
+        $quoteItemQty = 4;
+
+        //Place first order for 4 items (5.5 allocated to default stock)
+        $cart = $this->getCart("test_order_1");
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+        $orderId1 = $this->cartManagement->placeOrder($cart->getId());
+
+        //Place second order for 4 items (5.5 allocated to default stock, 1.5 salable due to above order)
+        $cart = $this->getCart("test_order_2");
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+        $orderId2 = $this->cartManagement->placeOrder($cart->getId());
+        self::assertNotNull($orderId2);
+        self::assertEquals(2.5, $this->orderRepository->get($orderId2)->getItems()[0]->getQtyBackordered());
+
+        //cleanup
+        $this->deleteOrderById((int)$orderId1);
+        $this->deleteOrderById((int)$orderId2);
     }
 
     /**
@@ -197,10 +265,10 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @return CartInterface
      */
-    protected function getCart(): CartInterface
+    protected function getCart($reserverdOrderId = "test_order_1"): CartInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('reserved_order_id', 'test_order_1')
+            ->addFilter('reserved_order_id', $reserverdOrderId)
             ->create();
         /** @var CartInterface $cart */
         $cart = current($this->cartRepository->getList($searchCriteria)->getItems());

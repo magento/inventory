@@ -21,9 +21,15 @@
         <plugin name="prevent_deleting_assigned_to_sales_channels_stock"
                 type="Magento\InventorySales\Plugin\InventoryApi\StockRepository\PreventDeletingAssignedToSalesChannelsStockPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItem">
+        <plugin name="stock_item_plugin_website_id" type="Magento\InventorySales\Plugin\StockState\StockItemPlugin"/>
+    </type>
     <type name="Magento\CatalogInventory\Api\StockStateInterface">
         <plugin name="check_quote_item_qty" type="Magento\InventorySales\Plugin\StockState\CheckQuoteItemQtyPlugin"/>
         <plugin name="suggest_qty" type="Magento\InventorySales\Plugin\StockState\SuggestQtyPlugin"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\Spi\StockStateProviderInterface">
+        <plugin name="provider_check_quote_item_qty" type="Magento\InventorySales\Plugin\StockState\ProviderCheckQuoteItemQtyPlugin"/>
     </type>
     <type name="Magento\InventoryReservationsApi\Model\AppendReservationsInterface">
         <plugin name="prevent_append_reservation_on_not_manage_items_in_stock" type="Magento\InventorySales\Plugin\InventoryReservationsApi\PreventAppendReservationOnNotManageItemsInStockPlugin"/>

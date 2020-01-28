@@ -17,7 +17,9 @@ use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 
 /**
- * @inheritdoc
+ * IsSalableWithReservationsCondition Class
+ *
+ * Determine if the requested quantity of a product is available for sale taking into account reservations
  */
 class IsSalableWithReservationsCondition implements IsProductSalableForRequestedQtyInterface
 {
@@ -68,18 +70,29 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
     }
 
     /**
-     * @inheritdoc
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * IsSalableWithReservationsCondition::execute
+     *
+     * Given a product SKU and a Stock ID, this function determines if the requested number of items is
+     * available for sale taking into account reservations.
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @param float $requestedQty
+     * @return ProductSalableResultInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(string $sku, int $stockId, float $requestedQty): ProductSalableResultInterface
     {
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         if (null === $stockItemData) {
             $errors = [
-                $this->productSalabilityErrorFactory->create([
-                    'code' => 'is_salable_with_reservations-no_data',
-                    'message' => __('The requested sku is not assigned to given stock')
-                ])
+                $this->productSalabilityErrorFactory->create(
+                    [
+                        'code' => 'is_salable_with_reservations-no_data',
+                        'message' => __('The requested sku is not assigned to given stock')
+                    ]
+                )
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }
@@ -95,10 +108,12 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
 
         if (!$isEnoughQty) {
             $errors = [
-                $this->productSalabilityErrorFactory->create([
-                    'code' => 'is_salable_with_reservations-not_enough_qty',
-                    'message' => __('The requested qty is not available')
-                ])
+                $this->productSalabilityErrorFactory->create(
+                    [
+                        'code' => 'is_salable_with_reservations-not_enough_qty',
+                        'message' => __('The requested qty is not available')
+                    ]
+                )
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);
         }

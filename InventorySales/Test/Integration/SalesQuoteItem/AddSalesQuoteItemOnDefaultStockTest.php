@@ -71,6 +71,34 @@ class AddSalesQuoteItemOnDefaultStockTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 2
+     */
+    public function testAddOutOfStockProductToQuoteWithBackordersNotify()
+    {
+        $productSku = 'SKU-1';
+        $productQty = 6;
+
+        $product = $this->getProductBySku($productSku);
+        $quote = $this->getQuote();
+
+        $quote->addProduct($product, $productQty);
+        $quoteItem = current($quote->getAllItems());
+
+        self::assertEquals($productQty, $quoteItem->getQty());
+        self::assertEquals(
+            "We don't have as many quantity as you requested, but we'll back order the remaining 0.5.",
+            $quote->getItemsCollection()->getFirstItem()->getStockStateResult()->getMessage()
+        );
+        self::assertEquals(
+            0.5,
+            $quote->getItemsCollection()->getFirstItem()->getStockStateResult()->getItemBackorders()
+        );
+    }
+
+    /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php

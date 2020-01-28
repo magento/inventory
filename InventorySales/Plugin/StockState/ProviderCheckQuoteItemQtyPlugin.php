@@ -11,15 +11,16 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventorySales\Model\Stock\StockStateProvider;
-use Magento\CatalogInventory\Api\StockStateInterface;
+use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface as OriginalStockStateProvider;
+use Magento\CatalogInventory\Api\Data\StockItemInterface;
 
 /**
- * CheckQuoteItemQtyPlugin Class
+ * ProviderCheckQuoteItemQtyPlugin Class
  *
  * Replace legacy quote item check. Passes call onto class
  * Magento\InventorySales\Model\Stock\StockStateProvider
  */
-class CheckQuoteItemQtyPlugin
+class ProviderCheckQuoteItemQtyPlugin
 {
     /**
      * @var StockStateProvider
@@ -36,36 +37,34 @@ class CheckQuoteItemQtyPlugin
     }
 
     /**
-     * Plugin for \Magento\CatalogInventory\Api\StockStateInterface::checkQuoteItemQty()
+     * Plugin for \Magento\CatalogInventory\Model\Spi\StockStateProviderInterface::checkQuoteItemQty()
      *
-     * @param StockStateInterface $subject
+     * @param OriginalStockStateProvider $subject
      * @param \Closure $proceed
-     * @param int $productId
-     * @param float $itemQty
-     * @param float $qtyToCheck
+     * @param StockItemInterface $stockItem
+     * @param float $qty
+     * @param float $summaryQty
      * @param float $origQty
-     * @param int|null $scopeId
      * @return DataObject
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundCheckQuoteItemQty(
-        StockStateInterface $subject,
+        OriginalStockStateProvider $subject,
         \Closure $proceed,
-        $productId,
-        $itemQty,
-        $qtyToCheck,
-        $origQty,
-        $scopeId = null
+        StockItemInterface $stockItem,
+        $qty,
+        $summaryQty,
+        $origQty = 0.0
     ) {
         return (
             $this->stockStateProvider->checkQuoteItemQty(
-                $productId,
-                $itemQty,
-                $qtyToCheck,
+                $stockItem->getProductId(),
+                $qty,
+                $summaryQty,
                 $origQty,
-                $scopeId
+                $stockItem->getExtensionAttributes()->getWebsiteId()
             )
         );
     }

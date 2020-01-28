@@ -221,8 +221,94 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
 
         self::assertNotNull($orderId);
 
+        //6.5 ordered, only 5 of SKU-2 present in global stocks (30). Should result in 1.5 backordered
+        self::assertEquals(1.5, $this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
+
         //cleanup
         $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoConfigFixture store_for_global_website_store cataloginventory/item_options/backorders 1
+     * @magentoConfigFixture current_store cataloginventory/item_options/min_qty -10
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOnAndMinQty()
+    {
+        $sku = 'SKU-2';
+        $stockId = 30;
+        $quoteItemQty = 6.5;
+
+        $this->setStockItemConfigIsDecimal($sku, $stockId);
+        $cart = $this->getCartByStockId($stockId);
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+
+        $orderId = $this->cartManagement->placeOrder($cart->getId());
+
+        self::assertNotNull($orderId);
+
+        //6.5 ordered, only 5 of SKU-2 present in global stocks (30). Should result in 1.5 backordered
+        self::assertEquals(1.5, $this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
+
+        //cleanup
+        $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/quote_two_carts.php
+     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoConfigFixture store_for_global_website_store cataloginventory/item_options/backorders 1
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testPlaceMultipleOrdersWithOutOffStockProductAndBackOrdersTurnedOn()
+    {
+        $sku = 'SKU-2';
+        $stockId = 30;
+        $quoteItemQty = 4;
+
+        //Place first order for 4 items (5 in global stocks)
+        $this->setStockItemConfigIsDecimal($sku, $stockId);
+        $cart = $this->getCartByStockId($stockId, "test_order_1");
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+        $orderId1 = $this->cartManagement->placeOrder($cart->getId());
+
+        //Place second order for 4 items (5 in global stocks, 1 salable due to above order)
+        $cart = $this->getCartByStockId($stockId, "test_order_2");
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+        $orderId2 = $this->cartManagement->placeOrder($cart->getId());
+        self::assertNotNull($orderId2);
+        self::assertEquals(3.0, $this->orderRepository->get($orderId2)->getItems()[0]->getQtyBackordered());
+
+        //cleanup
+        $this->deleteOrderById((int)$orderId1);
+        $this->deleteOrderById((int)$orderId2);
     }
 
     /**
@@ -265,10 +351,10 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      * @param int $stockId
      * @return CartInterface
      */
-    private function getCartByStockId(int $stockId): CartInterface
+    private function getCartByStockId(int $stockId, $reserverdOrderId = "test_order_1"): CartInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('reserved_order_id', 'test_order_1')
+            ->addFilter('reserved_order_id', $reserverdOrderId)
             ->create();
         /** @var CartInterface $cart */
         $cart = current($this->cartRepository->getList($searchCriteria)->getItems());

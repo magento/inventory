@@ -14,9 +14,13 @@ use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\InputException;
 
 /**
- * @inheritdoc
+ * IsSalableWithReservationsCondition Class
+ *
+ * Boolean check, are there any items that are salable (true or flase) taking into account reservations.
  */
 class IsSalableWithReservationsCondition implements IsProductSalableInterface
 {
@@ -67,7 +71,16 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
     }
 
     /**
-     * @inheritdoc
+     * IsSalableWithReservationsCondition::execute
+     *
+     * Given a product SKU and a Stock ID, this function determines if there are any items available for sale
+     * and returns a boolean true/false taking into account reservations.
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @return bool
+     * @throws InputException
+     * @throws LocalizedException
      */
     public function execute(string $sku, int $stockId): bool
     {
