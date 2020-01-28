@@ -15,4 +15,6 @@
                 type="Magento\InventoryApi\Model\SourceItemValidatorChain"/>
     <preference for="Magento\InventoryApi\Model\SourceValidatorInterface"
                 type="Magento\InventoryApi\Model\SourceValidatorChain"/>
+    <preference for="Magento\InventoryApi\Model\SourceTypeLinkValidatorInterface"
+                type="Magento\InventoryApi\Model\SourceTypeLinkValidatorChain"/>
 </config>

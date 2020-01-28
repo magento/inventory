@@ -53,7 +53,7 @@
         <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsDefaultOrder" />
         <assertEquals stepKey="assertDefaultOrder">
             <actualResult type="variable">grabColumnsDefaultOrder</actualResult>
-            <expectedResult type="array">["Code", "Name", "Is Enabled", "Action"]</expectedResult>
+            <expectedResult type="array">["Code", "Name", "Is Enabled", "Type", "Action"]</expectedResult>
         </assertEquals>
 
         <dragAndDrop selector1="{{AdminGridHeaders.headerByName('Code')}}"
@@ -63,7 +63,7 @@
         <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsAfterCodeColumnMoved" />
         <assertEquals stepKey="assertOrderAfterCodeColumnMoved">
             <actualResult type="variable">grabColumnsAfterCodeColumnMoved</actualResult>
-            <expectedResult type="array">["Name", "Is Enabled", "Code", "Action"]</expectedResult>
+            <expectedResult type="array">["Name", "Is Enabled", "Code", "Type", "Action"]</expectedResult>
         </assertEquals>
 
         <dragAndDrop selector1="{{AdminGridHeaders.headerByName('Name')}}"
@@ -73,7 +73,17 @@
         <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsAfterNameColumnMoved" />
         <assertEquals stepKey="assertOrderAfterNameColumnMoved">
             <actualResult type="variable">grabColumnsAfterNameColumnMoved</actualResult>
-            <expectedResult type="array">["Is Enabled", "Name", "Code", "Action"]</expectedResult>
+            <expectedResult type="array">["Is Enabled", "Name", "Code", "Type", "Action"]</expectedResult>
+        </assertEquals>
+
+        <dragAndDrop selector1="{{AdminGridHeaders.headerByName('Is Enabled')}}"
+                     selector2="{{AdminGridHeaders.headerByName('Type')}}"
+                     stepKey="dragAndDropIsEnabledColumn"/>
+        <waitForPageLoad time="30" stepKey="waitForMoveConfirmationAfterIsEnabledColumnMoved"/>
+        <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsAfterIsEnabledColumnMoved" />
+        <assertEquals stepKey="assertOrderAfterIsEnabledColumnMoved">
+            <actualResult type="variable">grabColumnsAfterIsEnabledColumnMoved</actualResult>
+            <expectedResult type="array">["Name", "Code", "Type", "Is Enabled", "Action"]</expectedResult>
         </assertEquals>
     </test>
 </tests>

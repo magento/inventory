@@ -31,6 +31,27 @@
             <column name="source_code"/>
         </constraint>
     </table>
+    <table name="inventory_source_type" resource="default" engine="innodb">
+        <column xsi:type="varchar" name="type_code" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="type_code"/>
+        </constraint>
+    </table>
+    <table name="inventory_source_type_link" resource="default" engine="innodb">
+        <column xsi:type="int" name="link_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="varchar" name="source_code" nullable="false" length="255"/>
+        <column xsi:type="varchar" name="type_code" nullable="false" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="link_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="INV_SOURCE_TYPE_LNK_SOURCE_CODE_INV_SOURCE_SOURCE_CODE"
+                    table="inventory_source_type_link" column="source_code" referenceTable="inventory_source"
+                    referenceColumn="source_code" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="INV_SOURCE_TYPE_LNK_TYPE_CODE_INV_SOURCE_TYPE_CODE"
+                    table="inventory_source_type_link" column="type_code" referenceTable="inventory_source_type"
+                    referenceColumn="type_code" onDelete="CASCADE"/>
+    </table>
     <table name="inventory_source_carrier_link" resource="default" engine="innodb">
         <column xsi:type="int" name="link_id" padding="10" unsigned="true" nullable="false" identity="true"/>
         <column xsi:type="varchar" name="source_code" nullable="false" length="255"/>

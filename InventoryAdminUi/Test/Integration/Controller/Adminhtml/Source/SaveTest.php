@@ -9,6 +9,8 @@ namespace Magento\InventoryAdminUi\Test\Integration\Controller\Adminhtml\Source;
 
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\InventoryAdminUi\Controller\Adminhtml\Source\Save;
+use Magento\InventoryApi\Api\Data\SourceExtension;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
@@ -47,11 +49,15 @@ class SaveTest extends AbstractBackendController
         $this->getRequest()->setMethod(HttpRequest::METHOD_POST);
         $this->getRequest()->setPostValue($requestData);
         $this->dispatch('backend/inventory/source/save');
+        /** @var SourceInterface $source */
         $source = $this->_objectManager->get(SourceRepositoryInterface::class)
             ->get('test_source_with_region_id_and_region');
+        /** @var SourceExtension $extensionAttributes */
+        $extensionAttributes = $source->getExtensionAttributes();
         $this->assertEquals('test_source_with_region_id_and_region', $source->getSourceCode());
         $this->assertEquals('Ain', $source->getRegion());
         $this->assertEquals('182', $source->getRegionId());
+        $this->assertEquals('regular', $extensionAttributes->getTypeCode());
     }
 
     /**
@@ -80,6 +86,7 @@ class SaveTest extends AbstractBackendController
                     'description' => '',
                     'country_id' => 'FR',
                     'region_id' => '182',
+                    'type_code' => 'regular'
                 ],
         ];
     }

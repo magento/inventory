@@ -116,10 +116,15 @@ class SourceDataProvider extends DataProvider
             if ($data['totalRecords'] > 0) {
                 $sourceCode = $data['items'][0][SourceInterface::SOURCE_CODE];
                 $sourceGeneralData = $data['items'][0];
+
+                $source = $this->sourceRepository->get($sourceCode);
+                $sourceGeneralData['type_code'] = $source->getExtensionAttributes()->getTypeCode();
+
                 $sourceGeneralData['disable_source_code'] = !empty($sourceGeneralData['source_code']);
                 $dataForSingle[$sourceCode] = [
                     'general' => $sourceGeneralData,
                 ];
+
                 return $dataForSingle;
             }
             $sessionData = $this->session->getSourceFormData(true);
@@ -129,6 +134,12 @@ class SourceDataProvider extends DataProvider
                     '' => $sessionData,
                 ];
             }
+        } else {
+            foreach ($data['items'] as &$item) {
+                $source = $this->sourceRepository->get($item['source_code']);
+                $item['type_code'] = $source->getExtensionAttributes()->getTypeCode();
+            }
+            unset($item);
         }
         $data['totalRecords'] = $this->getSourcesCount();
 

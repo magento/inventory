@@ -93,4 +93,23 @@
     <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
         <plugin name="cache_product_stock_assignment_check" type="Magento\Inventory\Plugin\Inventory\Model\ResourceModel\IsProductAssignedToStockCache"/>
     </type>
+    <!-- SourceTypeLink -->
+    <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink"/>
+    <preference for="Magento\InventoryApi\Api\Data\SourceTypeInterface" type="Magento\Inventory\Model\SourceType"/>
+    <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkSearchResultsInterface" type="Magento\Inventory\Model\SourceTypeLinkSearchResults"/>
+    <preference for="Magento\InventoryApi\Api\GetSourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\GetSourceTypeLink"/>
+    <preference for="Magento\InventoryApi\Api\SourceTypeLinkSaveInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkSave"/>
+    <preference for="Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkDelete"/>
+    <preference for="Magento\InventoryApi\Model\SourceTypeLinkManagementInterface" type="Magento\Inventory\Model\SourceCarrierLinkManagement"/>
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="SourceTypeExtensionAttributeGet" type="Magento\Inventory\Plugin\Inventory\Model\SourceTypeAttributeGet"/>
+    </type>
+    <type name="Magento\InventoryApi\Model\SourceTypeLinkValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="source_code" xsi:type="object">Magento\Inventory\Model\SourceTypeLink\Validator\SourceCodeValidator</item>
+                <item name="type_code" xsi:type="object">Magento\Inventory\Model\SourceTypeLink\Validator\TypeCodeValidator</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
