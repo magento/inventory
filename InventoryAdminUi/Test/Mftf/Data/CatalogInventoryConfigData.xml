@@ -117,6 +117,10 @@
     <entity name="ImportTables">
         <data key="path">inventory-geonames:import</data>
     </entity>
+    <entity name="ImportTablesUrl">
+        <data key="name">--url=</data>
+        <data key="value">'http://download.geonames.org/export/zip/'</data> <!--todo: Need to provide custom url as https://github.com/magento/inventory/issues/2690 will be completed.-->
+    </entity>
     <entity name="USTable">
         <data key="value">us</data>
     </entity>

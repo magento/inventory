@@ -26,7 +26,7 @@
             <!--Enable "Manage Stock", set distance based algorithm to offline and download tables.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="config:set cataloginventory/source_selection_distance_based/provider offline" stepKey="setSelectionAlgorithm"/>
-            <magentoCLI command="inventory-geonames:import us ua" stepKey="downloadTables"/>
+            <magentoCLI command="{{ImportTables.path}} {{ImportTablesUrl.name}}{{ImportTablesUrl.value}} {{USTable.value}}" stepKey="downloadTables"/>
             <!--Create Category and Simple Product.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">

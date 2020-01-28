@@ -102,9 +102,7 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad0"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage1"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
-        <waitForLoadingMaskToDisappear stepKey="waitUntilMaskDisappear1" />
-        <waitForPageLoad stepKey="waitUntilPageIsReady1" />
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
 
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
             <argument name="category" value="$$simpleCategory1$$"/>
