@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCancelOrderBundleProductCustomStock" extends="AdminCreateOrderWithBundleProductDefaultStockTest">
+    <test name="AdminCancelOrderBundleProductCustomStock">
         <annotations>
             <stories value="Bundle Product Custom Stock."/>
             <title value="Cancel order with bundle product on Custom stock."/>
@@ -17,50 +17,106 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/522"/>
-            </skip>
         </annotations>
 
         <before>
-            <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
-            <remove keyForRemoval="customStock"/>
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="customStock"/>
+            <!--Create additional source and stock.-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
+            <createData entity="FullSource1" stepKey="additionalSource"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="additionalSource"/>
+            </createData>
+            <!--Create bundle and simple products.-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="SimpleProduct" stepKey="product1">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product2">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption">
+                <requiredEntity createDataKey="bundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink1">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product1"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink2">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product2"/>
+            </createData>
+            <!--Create customer.-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!--Assign simple products to additional source.-->
+            <amOnPage url="{{AdminProductEditPage.url($product1.id$)}}" stepKey="openSimple1ProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQtyForProduct1">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct1"/>
+            <amOnPage url="{{AdminProductEditPage.url($product2.id$)}}" stepKey="openSimple2ProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQtyForProduct2">
+                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct2"/>
         </before>
         <after>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product1" stepKey="deleteSimpleProduct1"/>
+            <deleteData createDataKey="product2" stepKey="deleteSimpleProduct2"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
             <!--Assign Default Stock to Default Website.-->
-            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" after="disableCreatedCustomSource">
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Assign additional source to simple product.-->
-        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource" before="assignSourceToProduct"/>
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" before="setProductQuantity">
-            <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+        <!--Login To storefront as Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1000" stepKey="setProductQuantity" before="saveSimpleProduct"/>
-        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveSimpleProduct" before="waitForProductSave"/>
-        <waitForPageLoad stepKey="waitForProductSave" before="visitAdminProductPageBundle"/>
-        <!--Get order Id.-->
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderId" after="clickSubmitOrder" />
-        <!--Cancel order.-->
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder" after="checkSimpleProductSalableQtyAfterPlaceOrder">
-            <argument name="orderId" value="{$orderId}"/>
+        <!--Add product to cart.-->
+        <amOnPage url="{{StorefrontProductPage.url($bundleProduct.custom_attributes[url_key]$)}}" stepKey="navigateToBundlePDP"/>
+        <actionGroup ref="StorefrontAddBundleProductToTheCartActionGroup" stepKey="addBundleProductToCart">
+            <argument name="productName" value="$product1.name$"/>
+            <argument name="quantity" value="{{tenPiecesAddToCart.value}}"/>
         </actionGroup>
-        <click selector="{{AdminOrderDetailsMainActionsSection.cancel}}" stepKey="clickCancelOrder"/>
-        <waitForElement selector="{{AdminConfirmationModalSection.message}}" stepKey="waitForCancelConfirmation"/>
-        <see selector="{{AdminConfirmationModalSection.message}}" userInput="Are you sure you want to cancel this order?" stepKey="seeConfirmationMessage"/>
-        <click selector="{{AdminConfirmationModalSection.ok}}" stepKey="confirmOrderCancel"/>
-        <see selector="{{AdminMessagesSection.success}}" userInput="You canceled the order." stepKey="seeCancelSuccessMessage"/>
-        <!--Verify product quantity after order cancellation.-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Cancel Order.-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelOrder"/>
+        <!--Admin Area Check quantities after Credit Memo-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterCreditMemo"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterCreditMemo">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$$simpleProduct.sku$$"/>
+            <argument name="value" value="$product1.sku$"/>
         </actionGroup>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', $$customSource.source[name]$$)}}" userInput="1000" stepKey="verifySourceQuantity"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1', $$customStock.stock[name]$$)}}" userInput="1000" stepKey="verifyStockQuantity"/>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$$additionalSource.source[name]$$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="$$additionalStock.stock[name]$$"/>
+            <argument name="stockQty" value="{{defaultProductQty.value}}"/>
+        </actionGroup>
     </test>
 </tests>
