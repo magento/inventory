@@ -92,7 +92,7 @@
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="createInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Process full shipment.-->
-        <actionGroup ref="goToShipmentIntoOrder" stepKey="goToShipment"/>
+        <actionGroup ref="goToShipmentIntoOrder" stepKey="clickShipAction"/>
         <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment"/>
         <!--Process credit memo total refund.-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="clickCreditMemo">
