@@ -53,7 +53,7 @@
         </actionGroup>
 
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource">
-            <argument name="sourceCode" value="_defaultSource.source_code"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
             <argument name="qty" value="1" />
         </actionGroup>
 
