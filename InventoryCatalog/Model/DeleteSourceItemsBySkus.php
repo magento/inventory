@@ -9,14 +9,12 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\InventoryCatalogApi\Api\Data\ResultInterface;
-use Magento\InventoryCatalogApi\Api\Data\ResultInterfaceFactory;
-use Magento\InventoryCatalogApi\Model\DeleteSourceItemsBySkusInterface;
+use Psr\Log\LoggerInterface;
 
 /**
- * @inheritDoc
+ * Delete source items for given products service.
  */
-class DeleteSourceItemsBySkus implements DeleteSourceItemsBySkusInterface
+class DeleteSourceItemsBySkus
 {
     /**
      * @var GetSourceItemsBySkuInterface
@@ -29,46 +27,43 @@ class DeleteSourceItemsBySkus implements DeleteSourceItemsBySkusInterface
     private $sourceItemsDelete;
 
     /**
-     * @var ResultInterfaceFactory
+     * @var LoggerInterface
      */
-    private $resultInterfaceFactory;
+    private $logger;
 
     /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param DeleteMultiple $sourceItemsDelete
-     * @param ResultInterfaceFactory $resultInterfaceFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
         DeleteMultiple $sourceItemsDelete,
-        ResultInterfaceFactory $resultInterfaceFactory
+        LoggerInterface $logger
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->sourceItemsDelete = $sourceItemsDelete;
-        $this->resultInterfaceFactory = $resultInterfaceFactory;
+        $this->logger = $logger;
     }
 
     /**
-     * @inheritDoc
+     * Delete source items for given products skus.
+     *
+     * @param array $skus
+     * @return void
      */
-    public function execute(array $skus): ResultInterface
+    public function execute(array $skus): void
     {
-        $failed = [];
         foreach ($skus as $sku) {
             $sourceItems = $this->getSourceItemsBySku->execute($sku);
             if ($sourceItems) {
                 try {
                     $this->sourceItemsDelete->execute($sourceItems);
                 } catch (\Exception $e) {
-                    $failed[] = [
-                        'sku' => $sku,
-                        'message' => __('Not able to delete source items.'),
-                    ];
+                    $this->logger->error($e->getMessage());
                     continue;
                 }
             }
         }
-
-        return $this->resultInterfaceFactory->create(['failed' => $failed]);
     }
 }
