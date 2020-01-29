@@ -9,8 +9,8 @@ namespace Magento\InventorySales\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\Data\AreProductsSalableResultInterface;
-use Magento\InventorySalesApi\Api\Data\AreProductsSalableResultInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface;
+use Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Psr\Log\LoggerInterface;
 
@@ -30,29 +30,29 @@ class AreProductsSalableForRequestedQty implements AreProductsSalableForRequeste
     private $logger;
 
     /**
-     * @var AreProductsSalableResultInterfaceFactory
+     * @var ProductsSalableResultInterfaceFactory
      */
-    private $areProductsSalableResultInterfaceFactory;
+    private $productsSalableResultFactory;
 
     /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface
-     * @param AreProductsSalableResultInterfaceFactory $areProductsSalableResultInterfaceFactory
+     * @param ProductsSalableResultInterfaceFactory $productsSalableResultFactory
      * @param LoggerInterface $logger
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface,
-        AreProductsSalableResultInterfaceFactory $areProductsSalableResultInterfaceFactory,
+        ProductsSalableResultInterfaceFactory $productsSalableResultFactory,
         LoggerInterface $logger
     ) {
         $this->isProductSalableForRequestedQtyInterface = $isProductSalableForRequestedQtyInterface;
         $this->logger = $logger;
-        $this->areProductsSalableResultInterfaceFactory = $areProductsSalableResultInterfaceFactory;
+        $this->productsSalableResultFactory = $productsSalableResultFactory;
     }
 
     /**
      * @inheritDoc
      */
-    public function execute(array $skuRequests, int $stockId): AreProductsSalableResultInterface
+    public function execute(array $skuRequests, int $stockId): ProductsSalableResultInterface
     {
         $results = [];
         foreach ($skuRequests as $sku => $quantity) {
@@ -67,6 +67,6 @@ class AreProductsSalableForRequestedQty implements AreProductsSalableForRequeste
             }
         }
 
-        return $this->areProductsSalableResultInterfaceFactory->create(['results' => $results]);
+        return $this->productsSalableResultFactory->create(['results' => $results]);
     }
 }

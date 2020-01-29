@@ -19,26 +19,18 @@ use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 class CheckItemsQuantity
 {
     /**
-     * @deprecated
-     * @see AreProductsSalableForRequestedQty
-     * @var IsProductSalableForRequestedQtyInterface
-     */
-    private $isProductSalableForRequestedQty;
-
-    /**
      * @var AreProductsSalableForRequestedQtyInterface
      */
     private $areProductsSalableForRequestedQty;
 
     /**
-     * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
+     * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty @deprecated
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
         AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
     ) {
-        $this->isProductSalableForRequestedQty = $isProductSalableForRequestedQty;
         $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty ?: ObjectManager::getInstance()
             ->get(AreProductsSalableForRequestedQtyInterface::class);
     }
@@ -54,7 +46,7 @@ class CheckItemsQuantity
     public function execute(array $items, int $stockId): void
     {
         $result = $this->areProductsSalableForRequestedQty->execute($items, $stockId);
-        foreach ($result->getAreSalable() as $isSalable) {
+        foreach ($result->getSalable() as $isSalable) {
             if (false === $isSalable->isSalable()) {
                 $errors = $isSalable->getErrors();
                 /** @var ProductSalabilityErrorInterface $errorMessage */

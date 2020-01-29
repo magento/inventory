@@ -14,13 +14,13 @@ use Magento\Framework\Model\AbstractExtensibleModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Magento\InventorySalesApi\Api\Data\AreProductsSalableResultExtensionInterface;
-use Magento\InventorySalesApi\Api\Data\AreProductsSalableResultInterface;
+use Magento\InventorySalesApi\Api\Data\ProductsSalableResultExtensionInterface;
+use Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface;
 
 /**
  * @inheritDoc
  */
-class AreProductSalableResult extends AbstractExtensibleModel implements AreProductsSalableResultInterface
+class ProductsSalableResult extends AbstractExtensibleModel implements ProductsSalableResultInterface
 {
     /**
      * @var array
@@ -62,7 +62,7 @@ class AreProductSalableResult extends AbstractExtensibleModel implements AreProd
     /**
      * @inheritDoc
      */
-    public function getAreSalable(): array
+    public function getSalable(): array
     {
         return $this->results;
     }
@@ -70,7 +70,7 @@ class AreProductSalableResult extends AbstractExtensibleModel implements AreProd
     /**
      * @inheritDoc
      */
-    public function getExtensionAttributes(): ?AreProductsSalableResultExtensionInterface
+    public function getExtensionAttributes(): ?ProductsSalableResultExtensionInterface
     {
         return $this->_getExtensionAttributes();
     }
@@ -78,7 +78,7 @@ class AreProductSalableResult extends AbstractExtensibleModel implements AreProd
     /**
      * @inheritDoc
      */
-    public function setExtensionAttributes(AreProductsSalableResultExtensionInterface $extensionAttributes): void
+    public function setExtensionAttributes(ProductsSalableResultExtensionInterface $extensionAttributes): void
     {
         $this->_setExtensionAttributes($extensionAttributes);
     }

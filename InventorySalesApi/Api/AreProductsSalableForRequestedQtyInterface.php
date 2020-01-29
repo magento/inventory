@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesApi\Api;
 
-use Magento\InventorySalesApi\Api\Data\AreProductsSalableResultInterface;
+use Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface;
 
 /**
  * Service which detects whether a given products quantities are salable for a given stock (stock data + reservations).
@@ -21,7 +21,7 @@ interface AreProductsSalableForRequestedQtyInterface
      *
      * @param array $skuRequests array('sku' => 'quantity', ..., ...)
      * @param int $stockId
-     * @return \Magento\InventorySalesApi\Api\Data\AreProductsSalableResultInterface
+     * @return \Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface
      */
-    public function execute(array $skuRequests, int $stockId): AreProductsSalableResultInterface;
+    public function execute(array $skuRequests, int $stockId): ProductsSalableResultInterface;
 }

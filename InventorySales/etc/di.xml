@@ -132,14 +132,9 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="AreProductsSalableForRequestedQtyConditionChainOnPlaceOrder" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty">
+    <type name="Magento\InventorySales\Model\AreProductsSalableForRequestedQty">
         <arguments>
             <argument name="isProductSalableForRequestedQty" xsi:type="object">IsProductSalableForRequestedQtyConditionChainOnPlaceOrder</argument>
-        </arguments>
-    </virtualType>
-    <type name="Magento\InventorySales\Model\CheckItemsQuantity">
-        <arguments>
-            <argument name="areProductsSalableForRequestedQty" xsi:type="object">AreProductsSalableForRequestedQtyConditionChainOnPlaceOrder</argument>
         </arguments>
     </type>
     <type name="Magento\CatalogInventory\Model\StockManagement">
@@ -185,5 +180,5 @@
                 type="Magento\InventoryCatalog\Plugin\InventoryConfigurationApi\GetStockItemConfiguration\LoadIsInStockPlugin"/>
     </type>
     <preference for="Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface" type="Magento\InventorySales\Model\GetSkuFromOrderItem"/>
-    <preference for="Magento\InventorySalesApi\Api\Data\AreProductsSalableResultInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\AreProductSalableResult"/>
+    <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableResult"/>
 </config>
