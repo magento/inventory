@@ -86,17 +86,18 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="grabOrderId"/>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
         <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 10" stepKey="verifyOrderedQuantity"/>
         <!--Process full invoice.-->
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="createInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Process full shipment.-->
-        <actionGroup ref="goToShipmentIntoOrder" stepKey="goToShipment"/>
+        <actionGroup ref="goToShipmentIntoOrder" stepKey="clickShipAction"/>
         <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment"/>
         <!--Process credit memo total refund.-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="clickCreditMemo">
-            <argument name="orderId" value="{$grabOrderNumber}"/>
+            <argument name="orderId" value="{$grabOrderId}"/>
         </actionGroup>
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="checkReturnToStock"/>
         <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
