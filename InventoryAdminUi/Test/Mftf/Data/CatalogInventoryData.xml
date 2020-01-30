@@ -56,6 +56,9 @@
     <entity name="tenPiecesAddToCart">
         <data key="value">10</data>
     </entity>
+    <entity name="twentyPiecesAddToCart">
+        <data key="value">20</data>
+    </entity>
     <entity name="zeroProductQuantity">
         <data key="value">0</data>
     </entity>
