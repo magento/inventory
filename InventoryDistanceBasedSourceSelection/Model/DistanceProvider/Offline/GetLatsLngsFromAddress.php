@@ -19,6 +19,11 @@ use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
  */
 class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
 {
+    /**
+     * Longitudes and latitudes local cache for address.
+     *
+     * @var array
+     */
     private $latsLngsCache = [];
 
     /**

@@ -30,37 +30,9 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
     private $latLngCache = [];
 
     /**
-     * @deprecated
-     *
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
      * @var LatLngInterface
      */
     private $latLngInterfaceFactory;
-
-    /**
-     * @deprecated
-     *
-     * @var Json
-     */
-    private $json;
-
-    /**
-     * @deprecated
-     *
-     * @var GetApiKey
-     */
-    private $getApiKey;
-
-    /**
-     * @deprecated
-     *
-     * @var AddressToComponentsString
-     */
-    private $addressToComponentsString;
 
     /**
      * @var AddressToString
@@ -68,24 +40,17 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
     private $addressToString;
 
     /**
-     * @deprecated
-     *
-     * @var AddressToQueryString
-     */
-    private $addressToQueryString;
-
-    /**
      * @var GetGeoCodesForAddress
      */
     private $getGeoCodesForAddress;
 
     /**
-     * @param ClientInterface $client
+     * @param ClientInterface $client @deprecated
      * @param LatLngInterfaceFactory $latLngInterfaceFactory
-     * @param Json $json
-     * @param GetApiKey $getApiKey
-     * @param AddressToComponentsString $addressToComponentsString
-     * @param AddressToQueryString $addressToQueryString
+     * @param Json $json @deprecated
+     * @param GetApiKey $getApiKey @deprecated
+     * @param AddressToComponentsString $addressToComponentsString @deprecated
+     * @param AddressToQueryString $addressToQueryString @deprecated
      * @param AddressToString $addressToString
      * @param GetGeoCodesForAddress $getGeoCodesForAddress
      */
@@ -99,13 +64,8 @@ class GetLatLngFromAddress implements GetLatLngFromAddressInterface
         AddressToString $addressToString,
         GetGeoCodesForAddress $getGeoCodesForAddress = null
     ) {
-        $this->client = $client;
         $this->latLngInterfaceFactory = $latLngInterfaceFactory;
-        $this->json = $json;
-        $this->getApiKey = $getApiKey;
-        $this->addressToComponentsString = $addressToComponentsString;
         $this->addressToString = $addressToString;
-        $this->addressToQueryString = $addressToQueryString;
         $this->getGeoCodesForAddress = $getGeoCodesForAddress ?: ObjectManager::getInstance()
             ->get(GetGeoCodesForAddress::class);
     }
