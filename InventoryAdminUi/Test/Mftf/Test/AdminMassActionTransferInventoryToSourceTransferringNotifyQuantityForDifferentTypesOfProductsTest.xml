@@ -40,15 +40,15 @@
             <conditionalClick selector="{{AdminGridConfirmActionSection.ok}}" dependentSelector="{{AdminGridConfirmActionSection.title}}" visible="true" stepKey="confirmProductsDelete"/>
 
             <comment userInput="Create products" stepKey="createProductsComment"/>
-            <createData entity="SimpleProduct" stepKey="createSimpleProduct">
+            <createData entity="SimpleMsiProduct" stepKey="createSimpleProduct">
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <createData entity="VirtualProduct" stepKey="createVirtualProduct">
+            <createData entity="VirtualMsiProduct" stepKey="createVirtualProduct">
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <createData entity="DownloadableProduct" stepKey="createDownloadableProduct">
+            <createData entity="DownloadableMsiProduct" stepKey="createDownloadableProduct">
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
@@ -62,7 +62,6 @@
             <click selector="{{AdminGridRow.editByValue($$createDownloadableProduct.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForCheckInStock"/>
             <comment userInput="Assign category to product." stepKey="assignCategoryComment"/>
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillSourceQuantityField"/>
             <comment userInput="Add downloadable links to product." stepKey="addDownloadableLinks"/>
             <click selector="{{AdminProductDownloadableSection.sectionHeader}}" stepKey="openDownloadableSection"/>
             <checkOption selector="{{AdminProductDownloadableSection.isDownloadableProduct}}" stepKey="checkIsDownloadable"/>
@@ -164,11 +163,11 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearAllFiltersForCheckDefaultSourcesAssignedToProducts"/>
 
         <comment userInput="Check if that the default source assigned to created products." stepKey="checkDefaultSourceAssignedToCreatedProductsComment"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="1000" stepKey="checkSourceQtyForFirstCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="100" stepKey="checkSourceQtyForFirstCreatedProduct"/>
         <dontSee selector="{{AdminProductGridSection.productQtyPerSource('1', $$createSource.source[name]$$)}}" stepKey="createdSourceIsNotAssignedToFirstProduct"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="1000" stepKey="checkSourceQtyForVirtualCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="100" stepKey="checkSourceQtyForVirtualCreatedProduct"/>
         <dontSee selector="{{AdminProductGridSection.productQtyPerSource('2', $$createSource.source[name]$$)}}" stepKey="createdSourceIsNotAssignedToVirtualProduct"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('3', _defaultSource.name)}}" userInput="1000" stepKey="checkSourceQtyForDownloadableCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('3', _defaultSource.name)}}" userInput="100" stepKey="checkSourceQtyForDownloadableCreatedProduct"/>
         <dontSee selector="{{AdminProductGridSection.productQtyPerSource('3', $$createSource.source[name]$$)}}" stepKey="createdSourceIsNotAssignedToDownloadableProduct"/>
 
         <comment userInput="Transfer inventory from default source to created source" stepKey="selectAllProductsForTransferInventoryComment"/>
@@ -186,11 +185,11 @@
 
         <comment userInput="Check that the default source inventory transfered to created source" stepKey="checkTheInventoryTransferedComment"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="0" stepKey="checkDefaultSourceQtyForFirstProduct"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', $$createSource.source[name]$$)}}" userInput="1000" stepKey="checkCreatedSourceQtyForFirstProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1', $$createSource.source[name]$$)}}" userInput="100" stepKey="checkCreatedSourceQtyForFirstProduct"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="0" stepKey="checkDefaultSourceQtyForVirtualProduct"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('2', $$createSource.source[name]$$)}}" userInput="1000" stepKey="checkCreatedSourceQtyForVirtualProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('2', $$createSource.source[name]$$)}}" userInput="100" stepKey="checkCreatedSourceQtyForVirtualProduct"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('3', _defaultSource.name)}}" userInput="0" stepKey="checkDefaultSourceQtyForDownloadableProduct"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('3', $$createSource.source[name]$$)}}" userInput="1000" stepKey="checkCreatedSourceQtyForDownloadableProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('3', $$createSource.source[name]$$)}}" userInput="100" stepKey="checkCreatedSourceQtyForDownloadableProduct"/>
 
         <comment userInput="Check notify quantity for all products on created source." stepKey="checkNotifyQuantityForAllProductsOnCreatedSourceComment"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSimpleProductBySku">
@@ -239,11 +238,11 @@
         <waitForPageLoad stepKey="waitForInventoryWillBeTransferToDefaultSource"/>
 
         <comment userInput="Check that the default source inventory transfered to created source" stepKey="checkTheInventoryTransferedFromCustomToDefaultSourceComment"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceQtyForFirstProductAfterTransferFromCustomSource"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="100" stepKey="checkDefaultSourceQtyForFirstProductAfterTransferFromCustomSource"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('1', $$createSource.source[name]$$)}}" userInput="0" stepKey="checkCreatedSourceQtyForFirstProductAfterTransferFromCustomSource"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceQtyForVirtualProductAfterTransferFromCustomSource"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="100" stepKey="checkDefaultSourceQtyForVirtualProductAfterTransferFromCustomSource"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('2', $$createSource.source[name]$$)}}" userInput="0" stepKey="checkCreatedSourceQtyForVirtualProductAfterTransferFromCustomSource"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('3', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceQtyForDownloadableProductAfterTransferFromCustomSource"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('3', _defaultSource.name)}}" userInput="100" stepKey="checkDefaultSourceQtyForDownloadableProductAfterTransferFromCustomSource"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('3', $$createSource.source[name]$$)}}" userInput="0" stepKey="checkCreatedSourceQtyForDownloadableProductAfterTransferFromCustomSource"/>
 
         <comment userInput="Check notify quantity for all products on default source." stepKey="checkNotifyQuantityForAllProductsOnDefaultSourceComment"/>

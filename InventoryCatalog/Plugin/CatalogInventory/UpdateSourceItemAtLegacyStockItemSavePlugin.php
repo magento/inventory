@@ -7,8 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
+use Magento\CatalogInventory\Api\Data\StockItemInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\CatalogInventory\Model\Stock\Item;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\GetDefaultSourceItemBySku;
@@ -52,6 +55,10 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @var GetDefaultSourceItemBySku
      */
     private $getDefaultSourceItemBySku;
+    /**
+     * @var StockConfigurationInterface|null
+     */
+    private $stockConfiguration;
 
     /**
      * @param UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem
@@ -67,7 +74,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         GetProductTypesBySkusInterface $getProductTypeBySku,
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        GetDefaultSourceItemBySku $getDefaultSourceItemBySku
+        GetDefaultSourceItemBySku $getDefaultSourceItemBySku,
+        ?StockConfigurationInterface $stockConfiguration = null
     ) {
         $this->updateSourceItemBasedOnLegacyStockItem = $updateSourceItemBasedOnLegacyStockItem;
         $this->resourceConnection = $resourceConnection;
@@ -75,6 +83,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $this->getProductTypeBySku = $getProductTypeBySku;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->getDefaultSourceItemBySku = $getDefaultSourceItemBySku;
+        $this->stockConfiguration = $stockConfiguration
+            ?? ObjectManager::getInstance()->get(StockConfigurationInterface::class);
     }
 
     /**
@@ -121,11 +131,32 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $productSku = $this->getSkusByProductIds
             ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];
 
-        $result = $legacyStockItem->getIsInStock() ||
+        $result = $this->verifyStock($legacyStockItem) ||
             ((float) $legacyStockItem->getQty() !== (float) 0) ||
             ($this->getDefaultSourceItemBySku->execute($productSku) !== null);
 
         return $result;
+    }
+
+    /**
+     * Verify if provided stock item is in stock
+     *
+     * Check if manage_stock and use_config_manage_stock are both NULL, then use the default config
+     * otherwise use the actual is_in_stock value
+     *
+     * @param Item $stockItem
+     * @return bool
+     */
+    private function verifyStock(Item $stockItem): bool
+    {
+        $useConfigManageStock = $stockItem->getData(StockItemInterface::USE_CONFIG_MANAGE_STOCK) === null
+            && $stockItem->getData(StockItemInterface::MANAGE_STOCK) === null;
+        if ($useConfigManageStock) {
+            return !$this->stockConfiguration->getManageStock($stockItem->getStockId())
+                ? true
+                : (bool) $stockItem->getData(StockItemInterface::IS_IN_STOCK);
+        }
+        return $stockItem->getIsInStock();
     }
 
     /**

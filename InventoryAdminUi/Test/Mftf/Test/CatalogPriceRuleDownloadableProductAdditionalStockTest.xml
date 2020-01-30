@@ -22,7 +22,7 @@
         <before>
             <!--Replace simple product with downloadable.-->
             <remove keyForRemoval="createProduct"/>
-            <createData entity="DownloadableProduct" stepKey="createProduct" after="createCategory"/>
+            <createData entity="DownloadableMsiProduct" stepKey="createProduct" after="createCategory"/>
             <!--Create additional source and stock.-->
             <createData entity="_minimalSource" stepKey="additionalSource" after="createProduct"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" after="additionalSource"/>
@@ -33,16 +33,16 @@
             </createData>
             <!--Assign created product to additional stock and set product qty.'.-->
             <amOnPage url="{{AdminProductEditPage.url($$createProduct.id$$)}}" stepKey="openProductEditPageToSetQty" after="loginAsAdmin"/>
-            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignAdditionalSourceToProduct" after="openProductEditPageToSetQty">
+            <waitForPageLoad stepKey="waitForProductEditPageLoad" after="openProductEditPageToSetQty"/>
+            <!--Assign product to category.-->
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToDownloadableProduct" after="waitForProductEditPageLoad">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignAdditionalSourceToProduct" after="assignCategoryToDownloadableProduct">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <fillField selector="{{AdminProductFormSection.productPrice}}" userInput="123.00" stepKey="fillProductPrice" after="assignAdditionalSourceToProduct"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity" after="fillProductPrice"/>
-            <scrollToTopOfPage stepKey="scrollToTheTopOfProductEditPage" after="setProductQuantity"/>
-            <!--Assign product to category.-->
-            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToDownloadableProduct" after="scrollToTheTopOfProductEditPage">
-                <argument name="categoryName" value="$$createCategory.name$$"/>
-            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct" after="fillProductPrice"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->

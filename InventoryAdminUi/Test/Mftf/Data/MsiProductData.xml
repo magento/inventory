@@ -20,6 +20,7 @@
         <data key="notifyQuantity">1</data>
         <data key="attribute_set_id">4</data>
         <data key="visibility">4</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
     </entity>
     <!--Notice: This product created for specific test. Has no unique suffix in sku.-->
     <entity name="SimpleMsiProductWithNumericSku" type="product">
@@ -35,6 +36,7 @@
         <data key="attribute_set_id">4</data>
         <data key="visibility">4</data>
         <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
     </entity>
     <entity name="ConfigurableMsiProduct" type="product">
         <data key="name" unique="suffix">Configurable MSI Product </data>
@@ -47,6 +49,7 @@
         <data key="urlKey" unique="suffix">configurable-msi-product-</data>
         <data key="attribute_set_id">4</data>
         <data key="visibility">4</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
     </entity>
     <entity name="VirtualMsiProduct" type="product">
         <data key="name" unique="suffix">Virtual MSI Product </data>
@@ -57,6 +60,7 @@
         <data key="urlKey" unique="suffix">Virtual-MSI-Product-</data>
         <data key="attribute_set_id">4</data>
         <data key="visibility">4</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
     </entity>
     <entity name="DownloadableMsiProduct" type="product">
         <data key="name" unique="suffix">Downloadable MSI Product </data>
@@ -67,6 +71,7 @@
         <data key="urlKey" unique="suffix">Downloadable-MSI-Product-</data>
         <data key="attribute_set_id">4</data>
         <data key="visibility">4</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
     </entity>
     <entity name="MsiDownloadableProduct" type="product">
         <data key="name" unique="suffix">Downloadable MSI Product </data>
@@ -78,5 +83,6 @@
         <data key="attribute_set_id">4</data>
         <data key="visibility">4</data>
         <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
     </entity>
 </entities>
