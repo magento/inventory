@@ -19,7 +19,7 @@ interface GetLatsLngsFromAddressInterface
      *
      * @param \Magento\InventorySourceSelectionApi\Api\Data\AddressInterface $address
      * @return \Magento\InventoryDistanceBasedSourceSelectionApi\Api\Data\LatLngInterface[]
-     * @throws \Magento\InventoryDistanceBasedSourceSelectionApi\Exception\NoSuchLatsLngsFromAddressProviderException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(\Magento\InventorySourceSelectionApi\Api\Data\AddressInterface $address): array;
 }

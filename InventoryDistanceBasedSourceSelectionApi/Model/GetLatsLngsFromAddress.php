@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelectionApi\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetDistanceProviderCodeInterface;
 use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Exception\NoSuchLatsLngsFromAddressProviderException;
 use Magento\InventorySourceSelectionApi\Api\Data\AddressInterface;
 
 /**
@@ -49,13 +49,12 @@ class GetLatsLngsFromAddress implements GetLatsLngsFromAddressInterface
 
     /**
      * @inheritdoc
-     * @throws NoSuchLatsLngsFromAddressProviderException
      */
     public function execute(AddressInterface $address): array
     {
         $code = $this->getDistanceProviderCode->execute();
         if (!isset($this->providers[$code])) {
-            throw new NoSuchLatsLngsFromAddressProviderException(
+            throw new NoSuchEntityException(
                 __('No such latitude and longitude from address provider: %1', $code)
             );
         }
