@@ -15,7 +15,7 @@ use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
-use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
+use Magento\InventorySales\Model\GetBackOrderQty;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,10 +33,9 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
      */
     private $stockItemConfiguration;
     /**
-     * @var array|null
+     * @var int
      */
-    private $stockItemData;
-
+    private $backOrderQty;
     /**
      * @inheritDoc
      */
@@ -79,45 +78,45 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                 return $this->stockItemConfiguration;
             }
         );
-        $getStockItemData = $this->getMockForAbstractClass(
-            GetStockItemDataInterface::class
+        $getBackOrderQty = $this->createMock(
+            getBackOrderQty::class
         );
-        $getStockItemData->method('execute')->willReturnCallback(
+        $getBackOrderQty->method('execute')->willReturnCallback(
             function () {
-                return $this->stockItemData;
+                return $this->backOrderQty;
             }
         );
         $this->model = $objectManager->getObject(
             BackOrderNotifyCustomerCondition::class,
             [
                 'getStockItemConfiguration' => $getStockItemConfiguration,
-                'getStockItemData' => $getStockItemData,
                 'productSalableResultFactory' => $productSalableResultFactory,
                 'productSalabilityErrorFactory' => $productSalabilityErrorFactory,
+                'getBackOrderQty' => $getBackOrderQty
             ]
         );
     }
 
     /**
-     * Test execute with different stock settings
+     * Test execute with different stock settings. Does not test calculation of actual backorder amounts. For
+     * full backorder calculations, see integration tests.
      *
      * @dataProvider executeDataProvider
-     * @param array|null $stockData
-     * @param int $reqQty
+     * @param int $backOrderQty
      * @param int $backOrders
      * @param bool $manageStock
      * @param array $errors
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function testExecute(?array $stockData, int $reqQty, int $backOrders, bool $manageStock, array $errors): void
+    public function testExecute(int $backOrderQty, int $backOrders, bool $manageStock, array $errors): void
     {
         $this->stockItemConfiguration->method('isManageStock')
             ->willReturn($manageStock);
         $this->stockItemConfiguration->method('getBackorders')
             ->willReturn($backOrders);
-        $this->stockItemData = $stockData;
+        $this->backOrderQty = $backOrderQty;
         $actualErrors = [];
-        foreach ($this->model->execute('simple', 1, $reqQty)->getErrors() as $error) {
+        foreach ($this->model->execute('simple', 1, 1)->getErrors() as $error) {
             $actualErrors[] = ['code' => $error->getCode(), 'message' => $error->getMessage()];
         }
         $this->assertEquals($errors, $actualErrors);
@@ -129,10 +128,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
     public function executeDataProvider(): array
     {
         return [
-            'StockQty=0, ReqQty=1, Backorders=YesNotify, ManageStock=Yes' => [
-                [
-                    GetStockItemDataInterface::QUANTITY => 0,
-                ],
+            'backOrderQty=1, Backorders=YesNotify, ManageStock=Yes' => [
                 1,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 true,
@@ -144,44 +140,25 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                     ]
                 ],
             ],
-            'StockQty=1, ReqQty=1, Backorders=YesNotify, ManageStock=Yes' => [
-                [
-                    GetStockItemDataInterface::QUANTITY => 1,
-                ],
-                1,
+            'backOrderQty=0, Backorders=YesNotify, ManageStock=Yes' => [
+                0,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 true,
                 [],
             ],
-            'StockQty=?, ReqQty=1, Backorders=YesNotify, ManageStock=Yes' => [
-                null,
-                1,
-                StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
-                true,
-                [],
-            ],
-            'StockQty=0, ReqQty=1, Backorders=No, ManageStock=Yes' => [
-                [
-                    GetStockItemDataInterface::QUANTITY => 0,
-                ],
+            'backOrderQty=1, Backorders=No, ManageStock=Yes' => [
                 1,
                 StockItemConfigurationInterface::BACKORDERS_NO,
                 true,
                 [],
             ],
-            'StockQty=0, ReqQty=1, Backorders=Yes, ManageStock=Yes' => [
-                [
-                    GetStockItemDataInterface::QUANTITY => 0,
-                ],
+            'backOrderQty=1, Backorders=Yes, ManageStock=Yes' => [
                 1,
                 StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY,
                 true,
                 [],
             ],
-            'StockQty=0, ReqQty=1, Backorders=YesNotify, ManageStock=No' => [
-                [
-                    GetStockItemDataInterface::QUANTITY => 0,
-                ],
+            'backOrderQty=1, Backorders=YesNotify, ManageStock=No' => [
                 1,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 false,
