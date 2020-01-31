@@ -68,8 +68,9 @@ class GetBackOrderQty
         $backOrderQty = 0;
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
 
-        if ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY
-        || $stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY) {
+        if ($stockItemConfiguration->isManageStock()
+        && ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY
+        || $stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY)) {
             $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
             $minqty = $stockItemConfiguration->getMinQty();
             $backOrderQty = $requestedQty - $salableQty - $minqty;

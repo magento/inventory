@@ -73,8 +73,9 @@ class BackOrderQuantityCondition implements IsProductSalableForRequestedQtyInter
     {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
 
-        if ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY
-        || $stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY) {
+        if ($stockItemConfiguration->isManageStock()
+        && ($stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY
+        || $stockItemConfiguration->getBackorders() === StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY)) {
             $backOrderQty = $this->getBackOrderQty->execute($sku, $stockId, $requestedQty);
             if ($backOrderQty > 0) {
                 /**
