@@ -80,6 +80,8 @@
     </type>
     <!-- IsProductSalableForRequestedQtyCondition -->
     <preference for="Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface" type="IsProductSalableForRequestedQtyConditionChainOnAddToCart"/>
+    <!-- AreProductsSalableForRequestedQtyCondition -->
+    <preference for="Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty"/>
     <!-- IsProductSalableForRequestedQtyConditionOnAddToCart -->
     <virtualType name="IsProductSalableForRequestedQtyConditionChainOnAddToCart" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\IsProductSalableForRequestedQtyConditionChain">
         <arguments>
@@ -130,7 +132,7 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="Magento\InventorySales\Model\CheckItemsQuantity">
+    <type name="Magento\InventorySales\Model\AreProductsSalableForRequestedQty">
         <arguments>
             <argument name="isProductSalableForRequestedQty" xsi:type="object">IsProductSalableForRequestedQtyConditionChainOnPlaceOrder</argument>
         </arguments>
@@ -181,4 +183,5 @@
     <type name="Magento\Catalog\Model\ResourceModel\Product">
         <plugin name="process_reservation_after_product_save" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\ProcessReservationPlugin"/>
     </type>
+    <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableResult"/>
 </config>
