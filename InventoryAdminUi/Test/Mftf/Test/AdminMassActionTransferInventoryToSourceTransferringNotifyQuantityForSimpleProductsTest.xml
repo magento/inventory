@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MSI-1509"/>
-            </skip>
         </annotations>
 
         <before>
@@ -110,8 +107,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFirstSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFirstProductForSetNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoadForSetNotifyQuantity"/>
+        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSecondProduct"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="fillNotifyQuantityForFirstProduct"/>
-        <checkOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSecondProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFirstProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSecondSimpleProductBySkuForSetNotifyQuantity">

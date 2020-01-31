@@ -19,7 +19,13 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Framework\Indexer\IndexerRegistry;
+use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 
+/**
+ * Tests legacy stock information synchronized with MSI's.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
 {
     /**
@@ -57,6 +63,14 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
      */
     private $defaultSourceProvider;
 
+    /**
+     * @var IndexerRegistry
+     */
+    private $indexerRegistry;
+
+    /**
+     * @inheritdoc
+     */
     protected function setUp()
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
@@ -71,14 +85,20 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
 
         $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);
+
+        $this->indexerRegistry = Bootstrap::getObjectManager()
+            ->get(IndexerRegistry::class);
     }
 
     /**
+     * Tests that legacy stock status data will updates with legacy source item data while the indexer is "On Update".
+     *
+     * @return void
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      */
-    public function testSetData()
+    public function testSetDataIndexedOnUpdate(): void
     {
         $productSku = 'SKU-1';
         $product = $this->productRepository->get($productSku);
@@ -114,5 +134,25 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
         $legacyStockStatus = current($legacyStockStatuses);
         self::assertEquals(Status::STATUS_OUT_OF_STOCK, $legacyStockStatus->getStockStatus());
         self::assertEquals(20, $legacyStockStatus->getQty());
+    }
+
+    /**
+     * Tests that legacy stock status data will updates with legacy source item data with scheduled indexer.
+     * Should work like with indexing "on update".
+     *
+     * @return void
+     * @magentoDbIsolation disabled
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     **/
+    public function testSetDataWithoutIndexing(): void
+    {
+        $indexer = $this->indexerRegistry->get(Processor::INDEXER_ID);
+        $indexer->setScheduled(true);
+
+        $this->testSetDataIndexedOnUpdate();
+
+        $indexer->setScheduled(false);
     }
 }
