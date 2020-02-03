@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickup\Model\SearchRequest\Area;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatLngFromAddressInterface;
+use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\Source\GetOrderedDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\AreaInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequest\Area\Pipeline;
@@ -28,9 +28,9 @@ class GetDistanceToSources
     private $calculatedRequests = [];
 
     /**
-     * @var GetLatLngFromAddressInterface
+     * @var GetLatsLngsFromAddressInterface
      */
-    private $getLatLngFromAddress;
+    private $getLatsLngsFromAddress;
 
     /**
      * @var GetOrderedDistanceToSources
@@ -48,18 +48,18 @@ class GetDistanceToSources
     private $searchTermPipeline;
 
     /**
-     * @param GetLatLngFromAddressInterface $getLatLngFromAddress
+     * @param GetLatsLngsFromAddressInterface $getLatsLngsFromAddress
      * @param GetOrderedDistanceToSources $getOrderedDistanceToSources
      * @param AddressInterfaceFactory $addressInterfaceFactory
      * @param Pipeline $searchTermPipeline
      */
     public function __construct(
-        GetLatLngFromAddressInterface $getLatLngFromAddress,
+        GetLatsLngsFromAddressInterface $getLatsLngsFromAddress,
         GetOrderedDistanceToSources $getOrderedDistanceToSources,
         AddressInterfaceFactory $addressInterfaceFactory,
         Pipeline $searchTermPipeline
     ) {
-        $this->getLatLngFromAddress = $getLatLngFromAddress;
+        $this->getLatsLngsFromAddress = $getLatsLngsFromAddress;
         $this->getOrderedDistanceToSources = $getOrderedDistanceToSources;
         $this->addressInterfaceFactory = $addressInterfaceFactory;
         $this->searchTermPipeline = $searchTermPipeline;
@@ -106,12 +106,12 @@ class GetDistanceToSources
     {
         $sourceSelectionAddress = $this->toSourceSelectionAddress($area);
         try {
-            $latLng = $this->getLatLngFromAddress->execute($sourceSelectionAddress);
+            $latsLngs = $this->getLatsLngsFromAddress->execute($sourceSelectionAddress);
         } catch (LocalizedException $exception) {
             return [];
         }
 
-        return $this->getOrderedDistanceToSources->execute($latLng, $area->getRadius());
+        return $this->getOrderedDistanceToSources->execute($latsLngs, $area->getRadius());
     }
 
     /**
@@ -121,7 +121,7 @@ class GetDistanceToSources
      *
      * @return AddressInterface
      */
-    private function toSourceSelectionAddress(AreaInterface $area)
+    private function toSourceSelectionAddress(AreaInterface $area): AddressInterface
     {
         $data = [
             'postcode' => '',

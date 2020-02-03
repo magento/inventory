@@ -26,4 +26,11 @@
             <resource ref="Magento_InventoryApi::source"/>
         </resources>
     </route>
+
+    <route url="/V1/inventory/get-latslngs-from-address" method="GET">
+        <service class="Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetLatsLngsFromAddressInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryApi::source"/>
+        </resources>
+    </route>
 </routes>

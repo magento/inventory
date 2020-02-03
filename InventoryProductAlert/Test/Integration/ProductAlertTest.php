@@ -106,6 +106,7 @@ class ProductAlertTest extends TestCase
      * @magentoConfigFixture default_store catalog/productalert/allow_stock 1
      * @magentoConfigFixture store_for_eu_website_store catalog/productalert/allow_stock 1
      *
+     * @magentoAppArea frontend
      * @magentoDbIsolation disabled
      */
     public function testAlertsOneSourceItemInStock()
@@ -148,6 +149,7 @@ class ProductAlertTest extends TestCase
      * @magentoConfigFixture default_store catalog/productalert/allow_stock 1
      * @magentoConfigFixture store_for_eu_website_store catalog/productalert/allow_stock 1
      *
+     * @magentoAppArea frontend
      * @magentoDbIsolation disabled
      */
     public function testAlertsBothSourceItemsInStock()
