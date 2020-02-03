@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product;
 
 use Magento\Catalog\Model\Product;
+use Magento\Inventory\Model\ResourceModel\SourceItem\UpdateMultiple;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
-use Magento\InventoryCatalog\Model\ResourceModel\UpdateSourceItemsSku;
 
 /**
  * Process source items after product save.
@@ -28,19 +28,19 @@ class ProcessSourceItemsPlugin
     private $getSourceItemsBySku;
 
     /**
-     * @var UpdateSourceItemsSku
+     * @var UpdateMultiple
      */
     private $updateSourceItemsSkus;
 
     /**
      * @param DeleteSourceItemsBySkus $deleteSourceItemsBySkus
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
-     * @param UpdateSourceItemsSku $updateSourceItemsSkus
+     * @param UpdateMultiple $updateSourceItemsSkus
      */
     public function __construct(
         DeleteSourceItemsBySkus $deleteSourceItemsBySkus,
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        UpdateSourceItemsSku $updateSourceItemsSkus
+        UpdateMultiple $updateSourceItemsSkus
     ) {
         $this->deleteSourceItemsBySkus = $deleteSourceItemsBySkus;
         $this->getSourceItemsBySku = $getSourceItemsBySku;

@@ -61,4 +61,7 @@
             <argument name="dimensionName" xsi:type="string">stock_</argument>
         </arguments>
     </type>
+    <type name="Magento\Inventory\Model\ResourceModel\SourceItem\UpdateMultiple">
+        <plugin name="reindex_source_items" type="Magento\InventoryIndexer\Plugin\Inventory\Model\ResourceModel\SourceItem\UpdateMultiple\ReindexAfterSourceItemsUpdatePlugin"/>
+    </type>
 </config>

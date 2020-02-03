@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Model\ResourceModel;
+namespace Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
- * Update source item sku resource.
+ * Update source items configuration sku resource.
  */
-class UpdateSourceItemsSku
+class UpdateMultiple
 {
     /**
      * @var ResourceConnection
@@ -29,7 +29,7 @@ class UpdateSourceItemsSku
     }
 
     /**
-     * Update source items for given sku.
+     * Update source item configuration for given skus.
      *
      * @param string $origSku
      * @param string $newSku
@@ -38,7 +38,7 @@ class UpdateSourceItemsSku
     public function execute(string $origSku, string $newSku): void
     {
         $adapter = $this->connection->getConnection();
-        $sourceItemsTableName = $this->connection->getTableName('inventory_source_item');
+        $sourceItemsTableName = $this->connection->getTableName('inventory_low_stock_notification_configuration');
         $adapter->update(
             $sourceItemsTableName,
             [SourceItemInterface::SKU => $newSku],
