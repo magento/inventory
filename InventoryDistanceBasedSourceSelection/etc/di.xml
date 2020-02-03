@@ -49,6 +49,14 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryDistanceBasedSourceSelectionApi\Model\GetLatsLngsFromAddress">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="google" xsi:type="object">Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\GoogleMap\GetLatsLngsFromAddress</item>
+                <item name="offline" xsi:type="object">Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\Offline\GetLatsLngsFromAddress</item>
+            </argument>
+        </arguments>
+    </type>
 
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
         <plugin sortOrder="10" name="updateSourceLatitudeAndLongitude"
