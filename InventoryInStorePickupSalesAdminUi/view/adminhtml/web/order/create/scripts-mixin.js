@@ -15,10 +15,12 @@ define(
             var STORE_PICKUP_METHOD = 'in_store_pickup',
                 SOURCES_FIELD_SELECTOR = '#shipping_form_pickup_location_source',
                 SAME_AS_BILLING_SELECTOR = '#order-shipping_same_as_billing',
+                CUSTOMER_SHIPPING_ADDRESS_ID_SELECTOR = '#order-shipping_address_customer_address_id',
+                CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR = '#order-shipping_address_save_in_address_book',
                 IN_STORE_PICKUP_CHECKBOX_SELECTOR = '#s_method_in_store_pickup';
 
             /**
-             * Disable billing address form;
+             * Disable shipping address form elements;
              * Display sources dropdown field;
              * And vice-versa
              *
@@ -26,17 +28,19 @@ define(
              */
             function setStorePickupMethod(isStorePickup) {
                 var sourcesInput = jQuery(SOURCES_FIELD_SELECTOR),
-                    theSameAsBilling = jQuery(SAME_AS_BILLING_SELECTOR + ' + label');
+                    theSameAsBillingCheckBox = jQuery(SAME_AS_BILLING_SELECTOR),
+                    customerShippingAddressId = jQuery(CUSTOMER_SHIPPING_ADDRESS_ID_SELECTOR),
+                    customerShippingAddressSaveInAddressBook = jQuery(CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR);
 
                 if (isStorePickup) {
-                    window.order.disableShippingAddress(true);
-                    theSameAsBilling.hide();
+                    theSameAsBillingCheckBox.prop('disabled', true);
+                    customerShippingAddressId.prop('disabled', true);
+                    customerShippingAddressSaveInAddressBook.prop('disabled', true);
                     sourcesInput.show();
 
                     return;
                 }
                 window.order.disableShippingAddress(jQuery(SAME_AS_BILLING_SELECTOR).prop('checked'));
-                theSameAsBilling.show();
                 sourcesInput.hide();
             }
 
@@ -46,19 +50,26 @@ define(
              * @param {String} method
              */
             window.AdminOrder.prototype.setShippingMethod = function (method) {
-                var data = {};
-
-                data['order[shipping_method]'] = method;
-
-                this.loadArea(
-                    [
+                var data = {},
+                    areas = [
                         'shipping_method',
                         'totals',
                         'billing_method'
-                    ],
-                    true,
-                    data
-                ).then(
+                    ];
+
+                data['order[shipping_method]'] = method;
+
+                if (method === STORE_PICKUP_METHOD) {
+                    data = this.serializeData(this.shippingAddressContainer).toObject();
+                    data['order[shipping_method]'] = method;
+                    data['shipping_as_billing'] = 0;
+                    data['save_in_address_book'] = 0;
+                    areas.push('shipping_address');
+                    this.shippingAsBilling = 0;
+                    this.saveInAddressBook = 0;
+                }
+
+                this.loadArea(areas, true, data).then(
                     function () {
                         setStorePickupMethod(method === STORE_PICKUP_METHOD);
                     }
