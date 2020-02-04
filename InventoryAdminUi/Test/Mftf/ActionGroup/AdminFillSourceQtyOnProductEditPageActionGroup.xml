@@ -16,7 +16,6 @@
             <argument name="sourceCode" type="string" defaultValue="{{_defaultSource.source_code}}"/>
             <argument name="qty" type="string" defaultValue="{{defaultProductQty.value}}"/>
         </arguments>
-        <scrollTo selector="{{AdminProductSourcesGrid.firstRow}}" stepKey="scrollToSourceGrid"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQtyBySourceCode(sourceCode)}}" userInput="{{qty}}" stepKey="fillSourceQtyField"/>
     </actionGroup>
 </actionGroups>
