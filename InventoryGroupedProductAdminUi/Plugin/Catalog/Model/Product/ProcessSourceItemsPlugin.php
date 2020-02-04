@@ -5,19 +5,18 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGroupedProductAdminUi\Plugin\Catalog\Model\Product\Link;
+namespace Magento\InventoryGroupedProductAdminUi\Plugin\Catalog\Model\Product;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product\Link;
+use Magento\Catalog\Model\Product;
 use Magento\GroupedProduct\Model\Product\Type\Grouped as GroupedProductType;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
 
 /**
- * After save source links process child source items for reindex grouped product inventory.
+ * After save grouped product process child source items for reindex grouped product inventory.
  */
-class ProcessSourceItemsAfterSaveAssociatedLinks
+class ProcessSourceItemsPlugin
 {
     /**
      * @var GetSourceItemsBySkuInterface
@@ -42,22 +41,22 @@ class ProcessSourceItemsAfterSaveAssociatedLinks
     }
 
     /**
-     * @param Link $subject
-     * @param Link $result
-     * @param ProductInterface $product
-     * @return Link
+     * Process source items after grouped product has been saved.
+     *
+     * @param Product $subject
+     * @param Product $result
+     * @return Product
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSaveProductRelations(
-        Link $subject,
-        Link $result,
-        ProductInterface $product
-    ): Link {
-        if ($product->getTypeId() !== GroupedProductType::TYPE_CODE) {
+    public function afterAfterSave(
+        Product $subject,
+        Product $result
+    ): Product {
+        if ($result->getTypeId() !== GroupedProductType::TYPE_CODE) {
             return $result;
         }
 
-        foreach ($product->getProductLinks() as $productLink) {
+        foreach ($result->getProductLinks() as $productLink) {
             if ($productLink->getLinkType() === 'associated') {
                 $this->processSourceItemsForSku($productLink->getLinkedProductSku());
             }
@@ -80,7 +79,7 @@ class ProcessSourceItemsAfterSaveAssociatedLinks
             $processData[] = [
                 SourceItemInterface::SOURCE_CODE => $sourceItem->getSourceCode(),
                 SourceItemInterface::QUANTITY => $sourceItem->getQuantity(),
-                SourceItemInterface::STATUS => $sourceItem->getStatus()
+                SourceItemInterface::STATUS => $sourceItem->getStatus(),
             ];
         }
 
