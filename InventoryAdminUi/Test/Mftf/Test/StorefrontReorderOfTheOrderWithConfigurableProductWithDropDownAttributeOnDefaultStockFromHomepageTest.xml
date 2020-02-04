@@ -38,7 +38,8 @@
         <actionGroup ref="StorefrontCustomerReorderActionGroup" stepKey="reorder" after="loginToStorefront">
             <argument name="orderNumber" value="${getOrderId}"/>
         </actionGroup>
-        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout" after="reorder"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad" after="reorder"/>
+        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout" after="waitForCartPageLoad"/>
         <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPaymentToReorder" after="goToCheckout"/>
         <click selector=".continue" stepKey="clickOnNextPaymentPageToReorder" after="waitForPageLoadCheckoutSelectPaymentToReorder"/>
         <waitForPageLoad stepKey="waitForPageLoadCheckout" after="clickOnNextPaymentPageToReorder"/>

@@ -16,10 +16,11 @@ use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
+use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\SourceItemsSaveSynchronizationInterface;
 
 /**
- * Set Qty and status for legacy CatalogInventory Stock Item table
+ * Set Qty and status for legacy CatalogInventory Stock Information tables.
  */
 class SetDataToLegacyCatalogInventory
 {
@@ -27,6 +28,11 @@ class SetDataToLegacyCatalogInventory
      * @var SetDataToLegacyStockItem
      */
     private $setDataToLegacyStockItem;
+
+    /**
+     * @var SetDataToLegacyStockStatus
+     */
+    private $setDataToLegacyStockStatus;
 
     /**
      * @var StockItemCriteriaInterfaceFactory
@@ -60,6 +66,7 @@ class SetDataToLegacyCatalogInventory
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param StockStateProviderInterface $stockStateProvider
      * @param Processor $indexerProcessor
+     * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      */
     public function __construct(
         SetDataToLegacyStockItem $setDataToLegacyStockItem,
@@ -67,9 +74,11 @@ class SetDataToLegacyCatalogInventory
         StockItemRepositoryInterface $legacyStockItemRepository,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         StockStateProviderInterface $stockStateProvider,
-        Processor $indexerProcessor
+        Processor $indexerProcessor,
+        SetDataToLegacyStockStatus $setDataToLegacyStockStatus
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
+        $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
         $this->legacyStockItemCriteriaFactory = $legacyStockItemCriteriaFactory;
         $this->legacyStockItemRepository = $legacyStockItemRepository;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
@@ -78,6 +87,8 @@ class SetDataToLegacyCatalogInventory
     }
 
     /**
+     * Updates Stock information in legacy inventory.
+     *
      * @param array $sourceItems
      * @return void
      */
@@ -115,6 +126,11 @@ class SetDataToLegacyCatalogInventory
                 (float)$sourceItem->getQuantity(),
                 $isInStock
             );
+            $this->setDataToLegacyStockStatus->execute(
+                (string)$sourceItem->getSku(),
+                (float)$sourceItem->getQuantity(),
+                $isInStock
+            );
             $productIds[] = $productId;
         }
 
@@ -124,6 +140,8 @@ class SetDataToLegacyCatalogInventory
     }
 
     /**
+     * Returns StockItem from legacy inventory.
+     *
      * @param int $productId
      * @return null|StockItemInterface
      */
