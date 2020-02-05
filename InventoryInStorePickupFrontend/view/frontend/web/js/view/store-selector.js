@@ -15,7 +15,8 @@ define([
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-    'Magento_Checkout/js/checkout-data'
+    'Magento_Checkout/js/checkout-data',
+    'Magento_InventoryInStorePickupFrontend/js/view/store-pickup'
 ], function (
     $,
     _,
@@ -74,6 +75,7 @@ define([
                 this.updateNearbyLocations(searchQuery + this.delimiter + country);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
+            this.searchQuery.notifySubscribers('');
 
             return this;
         },
