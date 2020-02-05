@@ -114,6 +114,8 @@
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
             <argument name="sourceName" value="$$customSource.source[name]$$"/>
         </actionGroup>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="{{SourceStatusInStock.value}}" stepKey="selectStockStatus"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <amOnPage url="{{customStore.code}}" stepKey="amOnsecondStoreFront"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName2">
