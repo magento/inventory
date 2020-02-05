@@ -58,14 +58,9 @@
             <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
             <argument name="filter_value" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-
-        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1">
-            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
-            <argument name="qty" value="100" />
-        </actionGroup>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1"/>
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource2">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
-            <argument name="qty" value="100" />
         </actionGroup>
         <actionGroup ref="AdminClickOnAdvancedInventoryButtonActionGroup" stepKey="clickOnAdvancedInventoryButton"/>
         <actionGroup ref="AdminFillAdvancedInventoryOutOfStockThresholdActionGroup" stepKey="fillAdvancedInventoryOutOfStockThreshold">
