@@ -13,8 +13,8 @@
             <description>Fills in the Product edit page, Sources qty.</description>
         </annotations>
         <arguments>
-            <argument name="sourceCode"/>
-            <argument name="qty" type="string"/>
+            <argument name="sourceCode" type="string" defaultValue="{{_defaultSource.source_code}}"/>
+            <argument name="qty" type="string" defaultValue="{{defaultProductQty.value}}"/>
         </arguments>
         <fillField selector="{{AdminProductSourcesGrid.rowQtyBySourceCode(sourceCode)}}" userInput="{{qty}}" stepKey="fillSourceQtyField"/>
     </actionGroup>

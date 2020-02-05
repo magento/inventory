@@ -79,8 +79,7 @@
         </actionGroup>
 
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource">
-            <argument name="sourceCode" value="_defaultSource.source_code"/>
-            <argument name="qty" value="20" />
+            <argument name="qty" value="{{twentyPiecesAddToCart.value}}" />
         </actionGroup>
 
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
@@ -91,8 +90,7 @@
         </actionGroup>
 
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource2">
-            <argument name="sourceCode" value="_defaultSource.source_code"/>
-            <argument name="qty" value="20" />
+            <argument name="qty" value="{{twentyPiecesAddToCart.value}}" />
         </actionGroup>
 
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
