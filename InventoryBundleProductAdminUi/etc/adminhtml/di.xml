@@ -20,9 +20,7 @@
         <plugin name="append_quantity_per_source" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Ui\DataProvider\Product\Form\AddQuantityPerSourceToProductsData" />
         <plugin name="append_column_quantity_per_source" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Ui\DataProvider\Product\Form\AddColumnQuantityPerSource" />
     </type>
-    <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
-        <plugin name="process_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterAddBundleSelectionPlugin"/>
-        <plugin name="process_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterSaveBundleSelectionPlugin"/>
-        <plugin name="process_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterRemoveBundleSelectionPlugin"/>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="process_source_items_plugin" type="Magento\InventoryBundleProductAdminUi\Plugin\Catalog\Model\Product\ProcessSourceItemsPlugin"/>
     </type>
 </config>

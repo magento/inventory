@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalogAdminUi\Observer;
+namespace Magento\InventoryCatalog\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Api\DataObjectHelper;
@@ -17,12 +17,12 @@ use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface;
 
 /**
- * At the time of processing Product save form this class used to save source items correctly
- * Perform replace strategy of sources for the product
+ * @inheritDoc
  */
-class SourceItemsProcessor
+class SourceItemsProcessor implements SourceItemsProcessorInterface
 {
     /**
      * @var SearchCriteriaBuilderFactory
@@ -79,12 +79,9 @@ class SourceItemsProcessor
     }
 
     /**
-     * @param string $sku
-     * @param array $sourceItemsData
-     * @return void
-     * @throws InputException
+     * @inheritDoc
      */
-    public function process($sku, array $sourceItemsData)
+    public function execute(string $sku, array $sourceItemsData): void
     {
         $sourceItemsForDelete = $this->getCurrentSourceItemsMap($sku);
         $sourceItemsForSave = [];

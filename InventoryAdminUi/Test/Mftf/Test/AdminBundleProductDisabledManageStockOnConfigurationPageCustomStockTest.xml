@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/1821"/>
-            </skip>
         </annotations>
 
         <before>
@@ -65,10 +62,9 @@
 
         <!--Assign simple product to source.-->
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
         <!--Add simple product to bundle.-->
         <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
@@ -97,7 +93,7 @@
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <dontSee userInput="$bundleProduct.name$" stepKey="assertProductIsNotPresent"/>
         <!--Disable "Manage Stock" in configuration.-->
-        <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
+        <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <magentoCLI command="cache:flush" stepKey="flushCache"/>
         <!--Verify product is visible storefront.-->
