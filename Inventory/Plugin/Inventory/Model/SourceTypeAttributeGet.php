@@ -9,27 +9,29 @@ namespace Magento\Inventory\Plugin\Inventory\Model;
 
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\Inventory\Model\SourceTypeLinkManagement;
+use Magento\InventoryApi\Model\GetSourceTypeBySourceCodeInterface;
+use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 
 /**
  * Load type to source
  */
 class SourceTypeAttributeGet
 {
+
     /**
-     * @var SourceTypeLinkManagement
+     * @var GetSourceTypeBySourceCodeInterface
      */
-    private $sourceTypeLinkManagement;
+    private $getSourceTypeBySourceCode;
 
     /**
      * SourceTypeAttribute constructor.
      *
-     * @param SourceTypeLinkManagement $sourceTypeLinkManagement
+     * @param GetSourceTypeBySourceCodeInterface $getSourceTypeBySourceCode
      */
     public function __construct(
-        SourceTypeLinkManagement $sourceTypeLinkManagement
+        GetSourceTypeBySourceCodeInterface $getSourceTypeBySourceCode
     ) {
-        $this->sourceTypeLinkManagement = $sourceTypeLinkManagement;
+        $this->getSourceTypeBySourceCode = $getSourceTypeBySourceCode;
     }
 
     /**
@@ -44,6 +46,13 @@ class SourceTypeAttributeGet
         SourceRepositoryInterface $subject,
         SourceInterface $source
     ) {
-        return $this->sourceTypeLinkManagement->loadTypeLinksBySource($source);
+        $sourceTypeCode = $this->getSourceTypeBySourceCode->execute($source->getSourceCode());
+
+        /** @var SourceExtensionInterface $extension */
+        $extension = $source->getExtensionAttributes();
+        $extension->setTypeCode($sourceTypeCode);
+        $source->setExtensionAttributes($extension);
+
+        return $source;
     }
 }
