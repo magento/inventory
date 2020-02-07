@@ -5,12 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Model\LinkManagement;
+namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement;
 
 use Magento\Bundle\Api\Data\LinkInterface;
 use Magento\Bundle\Api\ProductLinkManagementInterface;
 use Magento\Framework\Exception\InputException;
-use Magento\InventoryBundleProductAdminUi\Model\ProcessSourceItemsForSku;
+use Magento\InventoryBundleProduct\Model\ProcessSourceItemsForSku;
+use Psr\Log\LoggerInterface;
 
 /**
  * Process source items after bundle link has been saved plugin.
@@ -23,11 +24,18 @@ class ProcessSourceItemsAfterSaveBundleSelectionPlugin
     private $processSourceItemsForSku;
 
     /**
-     * @param ProcessSourceItemsForSku $processSourceItemsForSku
+     * @var LoggerInterface
      */
-    public function __construct(ProcessSourceItemsForSku $processSourceItemsForSku)
+    private $logger;
+
+    /**
+     * @param ProcessSourceItemsForSku $processSourceItemsForSku
+     * @param LoggerInterface $logger
+     */
+    public function __construct(ProcessSourceItemsForSku $processSourceItemsForSku, LoggerInterface $logger)
     {
         $this->processSourceItemsForSku = $processSourceItemsForSku;
+        $this->logger = $logger;
     }
 
     /**
@@ -39,7 +47,6 @@ class ProcessSourceItemsAfterSaveBundleSelectionPlugin
      * @param LinkInterface $linkedProduct
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @throws InputException
      */
     public function afterSaveChild(
         ProductLinkManagementInterface $subject,
@@ -47,7 +54,11 @@ class ProcessSourceItemsAfterSaveBundleSelectionPlugin
         $sku,
         LinkInterface $linkedProduct
     ): bool {
-        $this->processSourceItemsForSku->execute((string)$linkedProduct->getSku());
+        try {
+            $this->processSourceItemsForSku->execute((string)$linkedProduct->getSku());
+        } catch (InputException $e) {
+            $this->logger->error($e->getLogMessage());
+        }
 
         return $result;
     }

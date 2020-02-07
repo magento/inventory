@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductAdminUi\Model;
+namespace Magento\InventoryBundleProduct\Model;
 
 use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface;
 
 /**
  * Process source items for given bundle selection service.
@@ -24,7 +24,7 @@ class ProcessSourceItemsForSku
     private $getSourceItemsBySku;
 
     /**
-     * @var SourceItemsProcessor
+     * @var SourceItemsProcessorInterface
      */
     private $sourceItemsProcessor;
 
@@ -35,12 +35,12 @@ class ProcessSourceItemsForSku
 
     /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
-     * @param SourceItemsProcessor $sourceItemsProcessor
+     * @param SourceItemsProcessorInterface $sourceItemsProcessor
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        SourceItemsProcessor $sourceItemsProcessor,
+        SourceItemsProcessorInterface $sourceItemsProcessor,
         DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
@@ -59,9 +59,6 @@ class ProcessSourceItemsForSku
         $processData = [];
 
         foreach ($this->getSourceItemsBySku->execute($sku) as $sourceItem) {
-            if ($sourceItem->getSourceCode() === $this->defaultSourceProvider->getCode()) {
-                continue;
-            }
             $processData[] = [
                 SourceItemInterface::SOURCE_CODE => $sourceItem->getSourceCode(),
                 SourceItemInterface::QUANTITY => $sourceItem->getQuantity(),
@@ -70,7 +67,7 @@ class ProcessSourceItemsForSku
         }
 
         if (!empty($processData)) {
-            $this->sourceItemsProcessor->process($sku, $processData);
+            $this->sourceItemsProcessor->execute($sku, $processData);
         }
     }
 }

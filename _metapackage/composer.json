@@ -10,6 +10,7 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory-bundle-product": "*",
         "magento/module-inventory-bundle-product-admin-ui": "*",
+        "magento/module-inventory-bundle-product-indexer": "*",
         "magento/module-inventory-cache": "*",
         "magento/module-inventory-catalog": "*",
         "magento/module-inventory-catalog-admin-ui": "*",

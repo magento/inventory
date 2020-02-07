@@ -9,10 +9,12 @@ namespace Magento\InventoryGroupedProductAdminUi\Plugin\Catalog\Model\Product\Li
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Link;
+use Magento\Framework\Exception\InputException;
 use Magento\GroupedProduct\Model\Product\Type\Grouped as GroupedProductType;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
+use Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * After save source links process child source items for reindex grouped product inventory.
@@ -25,20 +27,28 @@ class ProcessSourceItemsAfterSaveAssociatedLinks
     private $getSourceItemsBySku;
 
     /**
-     * @var SourceItemsProcessor
+     * @var SourceItemsProcessorInterface
      */
     private $sourceItemsProcessor;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
-     * @param SourceItemsProcessor $sourceItemsProcessor
+     * @param SourceItemsProcessorInterface $sourceItemsProcessor
+     * @param LoggerInterface $logger
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        SourceItemsProcessor $sourceItemsProcessor
+        SourceItemsProcessorInterface $sourceItemsProcessor,
+        LoggerInterface $logger
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->sourceItemsProcessor = $sourceItemsProcessor;
+        $this->logger = $logger;
     }
 
     /**
@@ -85,7 +95,11 @@ class ProcessSourceItemsAfterSaveAssociatedLinks
         }
 
         if (!empty($processData)) {
-            $this->sourceItemsProcessor->process($sku, $processData);
+            try {
+                $this->sourceItemsProcessor->execute((string)$sku, $processData);
+            } catch (InputException $e) {
+                $this->logger->error($e->getLogMessage());
+            }
         }
     }
 }
