@@ -63,10 +63,7 @@
             <argument name="filter_value" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
 
-        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1">
-            <argument name="sourceCode" value="_defaultSource.source_code"/>
-            <argument name="qty" value="100" />
-        </actionGroup>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1"/>
 
         <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="changeStatusOutOfStock">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>

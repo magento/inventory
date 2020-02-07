@@ -84,12 +84,10 @@
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Admin Area Create Partial Credit Memo-->
-        <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="startToCreateCreditMemo">
-            <argument name="orderId" value="{$orderNumber}"/>
+        <actionGroup ref="AdminStartsCreatingCreditMemoOnOrderPageActionGroup" stepKey="startToCreateCreditMemo"/>
+        <actionGroup ref="AdminFillQuantityForPartialCreditMemoReturnToStockActionGroup" stepKey="fillCreditMemoQuantity">
+            <argument name="quantity" value="{{fivePiecesAddToCart.value}}"/>
         </actionGroup>
-        <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="partialRefund"/>
-        <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>
-        <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
         <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
         <!--Admin Area Check quantities after Credit Memo-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridToVerifyQuantity"/>
