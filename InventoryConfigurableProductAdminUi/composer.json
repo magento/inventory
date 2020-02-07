@@ -8,8 +8,7 @@
         "magento/module-configurable-product": "*",
         "magento/module-ui": "*",
         "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-catalog-admin-ui": "*"
+        "magento/module-inventory-catalog-api": "*"
     },
     "type": "magento2-module",
     "license": [
