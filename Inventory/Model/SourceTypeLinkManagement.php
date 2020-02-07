@@ -13,11 +13,12 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkInterfaceFactory;
 use Magento\InventoryApi\Model\SourceTypeLinkManagementInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\GetSourceTypeLinkInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
+
+use Magento\InventoryApi\Model\GetSourceTypeBySourceCodeInterface;
 
 /**
  * @inheritdoc
@@ -28,11 +29,6 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
-
-    /**
-     * @var GetSourceTypeLinkInterface
-     */
-    private $getSourceTypeLinks;
 
     /**
      * @var SourceTypeLinkDeleteInterface
@@ -50,26 +46,32 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
     private $sourceTypeLinkFactory;
 
     /**
+     * @var GetSourceTypeBySourceCodeInterface
+     */
+    private $getSourceTypeBySourceCode;
+
+    /**
      * SourceTypeLinkManagement constructor.
      *
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param GetSourceTypeLinkInterface $getSourceTypeLinks
      * @param SourceTypeLinkSaveInterface $commandSave
      * @param SourceTypeLinkDeleteInterface $commandDelete
      * @param SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory
+     * @param GetSourceTypeBySourceCodeInterface $getSourceTypeBySourceCode
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        GetSourceTypeLinkInterface $getSourceTypeLinks,
         SourceTypeLinkSaveInterface $commandSave,
         SourceTypeLinkDeleteInterface $commandDelete,
-        SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory
+        SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory,
+        GetSourceTypeBySourceCodeInterface $getSourceTypeBySourceCode
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->getSourceTypeLinks = $getSourceTypeLinks;
         $this->commandSave = $commandSave;
         $this->commandDelete = $commandDelete;
         $this->sourceTypeLinkFactory = $sourceTypeLinkFactory;
+
+        $this->getSourceTypeBySourceCode = $getSourceTypeBySourceCode;
     }
 
     /**
@@ -118,18 +120,7 @@ class SourceTypeLinkManagement implements SourceTypeLinkManagementInterface
      */
     public function loadTypeLinksBySource(SourceInterface $source): SourceInterface
     {
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter(SourceTypeLinkManagementInterface::SOURCE_CODE, $source->getSourceCode())
-            ->create();
-
-        $sourceType = $this->getSourceTypeLinks->execute($searchCriteria);
-
-        $sourceTypeCode = SourceTypeLinkInterface::DEFAULT_SOURCE_TYPE;
-        if ($sourceType->getTotalCount()) {
-            /** @var SourceTypeLinkInterface $sourceTypeFirst */
-            $sourceTypeFirst = current($sourceType->getItems());
-            $sourceTypeCode = $sourceTypeFirst->getTypeCode();
-        }
+        $sourceTypeCode = $this->getSourceTypeBySourceCode->execute($source->getSourceCode());
 
         /** @var SourceExtensionInterface $extension */
         $extension = $source->getExtensionAttributes();

@@ -97,10 +97,10 @@
     <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink"/>
     <preference for="Magento\InventoryApi\Api\Data\SourceTypeInterface" type="Magento\Inventory\Model\SourceType"/>
     <preference for="Magento\InventoryApi\Api\Data\SourceTypeLinkSearchResultsInterface" type="Magento\Inventory\Model\SourceTypeLinkSearchResults"/>
-    <preference for="Magento\InventoryApi\Api\GetSourceTypeLinkInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\GetSourceTypeLink"/>
     <preference for="Magento\InventoryApi\Api\SourceTypeLinkSaveInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkSave"/>
     <preference for="Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkDelete"/>
     <preference for="Magento\InventoryApi\Model\SourceTypeLinkManagementInterface" type="Magento\Inventory\Model\SourceCarrierLinkManagement"/>
+    <preference for="Magento\InventoryApi\Model\GetSourceTypeBySourceCodeInterface" type="Magento\Inventory\Model\GetSourceTypeBySourceCode"/>
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
         <plugin name="SourceTypeExtensionAttributeGet" type="Magento\Inventory\Plugin\Inventory\Model\SourceTypeAttributeGet"/>
     </type>
