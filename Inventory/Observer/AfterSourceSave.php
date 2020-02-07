@@ -76,7 +76,7 @@ class AfterSourceSave implements ObserverInterface
      * @throws CouldNotSaveException
      * @throws InputException
      */
-    public function saveTypeLinksBySource(SourceInterface $source): void
+    private function saveTypeLinksBySource(SourceInterface $source): void
     {
         $linkData = [
             'source_code' => $source->getSourceCode(),
