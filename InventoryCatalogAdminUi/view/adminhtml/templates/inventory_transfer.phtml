@@ -59,6 +59,9 @@ $destinationSources = $viewModel->getSources();
 
             <div class="admin__field field field-entity">
                 <div class="admin__field-control control">
+                    <div class=" admin__field">
+                        <?= /* @noEscape */ __('Select the origin and destination sources to transfer product inventory quantities and additional settings. This transfers all existing quantities, setting a 0 quantity on the origin source. You have an option to unassign the origin source from the products you selected.') ?>
+                    </div>
                     <div class="admin__field">
                         <?= /* @noEscape */ __('You selected <strong>%count</strong> products for this bulk operation.', [
                                 'count' => $viewModel->getProductsCount()
@@ -77,7 +80,7 @@ $destinationSources = $viewModel->getSources();
                 <div class="admin__field-control control">
                     <div class="admin__field">
                         <label class="label admin__field-label" for="origin-source">
-                            <?= /* @noEscape */ __('Transfer from source') ?>
+                            <?= /* @noEscape */ __('Transfer from the origin source') ?>
                         </label>&nbsp;
 
                         <select class="admin__control-select" name="origin_source" id="origin-source">
@@ -114,7 +117,7 @@ $destinationSources = $viewModel->getSources();
                                 type="checkbox"
                                 name="unassign_origin_source"
                                 value="1" />
-                        <label for="unassign-origin-source">&nbsp;<?= /* @noEscape */ __('Unassign from origin source after transfer.') ?></label><br />
+                        <label for="unassign-origin-source">&nbsp;<?= /* @noEscape */ __('Unassign the origin source from selected products after transfer.') ?></label><br />
                     </div>
                 </div>
             </div>
