@@ -36,7 +36,7 @@
                 <settings>
                     <confirm>
                         <title translate="true">Transfer Inventory To Source</title>
-                        <message translate="true">Are you sure you want to transfer the inventory of the selected items?</message>
+                        <message translate="true">Transfer all inventory quantities and additional settings from one source to another for products you selected. Do you want to continue?</message>
                     </confirm>
                     <url path="inventorycatalog/inventory/bulkTransfer"/>
                     <type>inventory-transfer</type>
