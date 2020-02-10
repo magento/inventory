@@ -40,6 +40,8 @@
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
 
         <after>
@@ -65,9 +67,7 @@
         </after>
 
         <!--Place order from homepage-->
-        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
-            <argument name="productUrl" value="$$simpleProduct.custom_attributes[url_key]$$"/>
-        </actionGroup>
+        <amOnPage url="{{StorefrontProductPage.url($$simpleProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <actionGroup ref="StorefrontAddProductToCartActionGroup" stepKey="cartAddSimpleProductToCart">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="productCount" value="1"/>

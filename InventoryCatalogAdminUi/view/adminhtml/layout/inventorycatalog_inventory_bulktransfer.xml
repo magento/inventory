@@ -14,7 +14,7 @@
                 <arguments>
                     <argument name="view_model"
                               xsi:type="object">Magento\InventoryCatalogAdminUi\ViewModel\SourcesSelection</argument>
-                    <argument name="button_title" xsi:type="string">Inventory Transfer</argument>
+                    <argument name="button_title" xsi:type="string">Transfer Inventory</argument>
                     <argument name="submit_url" xsi:type="string">inventorycatalog/inventory/bulkTransferPost</argument>
                 </arguments>
             </block>

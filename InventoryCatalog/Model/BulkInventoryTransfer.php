@@ -103,7 +103,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
         );
 
         if (!$validationResult->isValid()) {
-            throw new ValidationException(__('Validation Failed'), null, 0, $validationResult);
+            throw new ValidationException(__('Validation Error: Select different sources for origin and destination.'), null, 0, $validationResult);
         }
 
         $this->bulkInventoryTransfer->execute(
