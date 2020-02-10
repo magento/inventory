@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminFillPartialShipmentActionGroup">
+        <annotations>
+            <description>Fill custom quantity for partial shipment. Starts on shipment admin page.</description>
+        </annotations>
+        <arguments>
+            <argument name="quantity" type="string" defaultValue="{{minimalProductQty.value}}"/>
+        </arguments>
+        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="{{quantity}}" stepKey="filQuantityForShipment"/>
+    </actionGroup>
+</actionGroups>
