@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -74,6 +75,12 @@ class AdaptAssignStatusToProductPlugin
         $status = null
     ): array {
         if ($product->getTypeId() === Configurable::TYPE_CODE) {
+            $salable = (int)$product->getStatus() === Status::STATUS_ENABLED
+                && $product->getQuantityAndStockStatus()['is_in_stock'];
+            if (!$salable) {
+                return [$product, (int)$salable];
+            }
+
             $website = $this->storeManager->getWebsite();
             $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
             $options = $this->configurable->getConfigurableOptions($product);
