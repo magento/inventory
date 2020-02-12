@@ -6,8 +6,7 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminCreateOrderWithSimpleProductFromTestSourceWithBackordersTest">
         <annotations>
             <stories value="Sales-Backorder"/>
@@ -20,119 +19,69 @@
         </annotations>
 
         <before>
-            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="setManageStockOn"/>
-
-            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-            <createData entity="_minimalSource" stepKey="customSource"/>
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="customStock"/>
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
-                <requiredEntity createDataKey="customStock"/>
-                <requiredEntity createDataKey="customSource"/>
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
             </createData>
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
-            <waitForPageLoad stepKey="waitForDashboardLoad"/>
-
-            <!-- Assign Sales Channel to Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
-                <argument name="keyword" value="$$customStock.stock[name]$$"/>
+            <!--Assign source to product.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <!--Enable backorder and set 'Out of Stock Threshold'-->
+            <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
+            <actionGroup ref="AdminChangeOutOfStockThresholdOnProductEditPageActionGroup" stepKey="setOutOfStockThreshold">
+                <argument name="threshold" value="{{negativeProductQuantity.value}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickOnEditForCustomStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockSaved"/>
-
-            <!--Go to product page-->
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
-            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
-                <argument name="product" value="SimpleMsiProduct"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="FillMainProductFormInMultiSourceModeActionGroup" stepKey="fillMainProductFieldsInAdmin">
-                <argument name="product" value="SimpleMsiProduct"/>
-            </actionGroup>
-            <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
-            <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
-            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToProduct">
-                <argument name="sourceCode" value="$$customSource.source[name]$$"/>
-            </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyField"/>
-
-            <!--Set advanced inventory config for Out-of-Stock Threshold and backorders-->
-            <comment userInput="Config advanced inventory" stepKey="configAdvancedInventoryComment"/>
-            <click selector="{{AdminProductSourcesSection.advancedInventory}}" stepKey="goToAdvancedInventory"/>
-            <waitForPageLoad time="30" stepKey="waitAdvancedInventoryLoaded"/>
-            <uncheckOption selector="{{AdminAdvancedInventorySection.outOfStockThresholdUseDefault}}" stepKey="clickOnUseDefaultMinQty"/>
-            <fillField selector="{{AdminAdvancedInventorySection.outOfStockThreshold}}" userInput="-50" stepKey="setNegativeOutOfStockTreshold"/>
-            <uncheckOption selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="clickOnUseDefaultBackorders"/>
-            <selectOption selector="{{AdminAdvancedInventorySection.backorders}}" userInput="Allow Qty Below 0" stepKey="selectAllowQtyBellow0"/>
-            <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetOutOfStockThreshold"/>
-
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
-            <waitForPageLoad time="30" stepKey="waitProductWillSave"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
-            <comment userInput="Disable source, as it can brake single source mode tests." stepKey="disableCustomSourceComment"/>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
-                <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Disable custom source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Assign main website to default stock.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteCreatedProduct">
-                <argument name="product" value="SimpleMsiProduct"/>
-            </actionGroup>
-            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
-
-            <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
-                <argument name="keyword" value="_defaultStock.name"/>
-            </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForDefaultStockPageLoaded"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockWithoutSalesChannelsSaved"/>
-            <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
-            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="setManageStockOff"/>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!-- add Product to Cart-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategory"/>
-        <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
-        <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo(SimpleMsiProduct.name)}}" stepKey="openProductPage"/>
-        <waitForAjaxLoad stepKey="waitForImageLoader"/>
-        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="151" stepKey="fillWrongQuantity"/>
-        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="wrongAddToCart"/>
-        <waitForPageLoad stepKey="waitForPageLoad1"/>
-        <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="150" stepKey="fillCorrectQuantity"/>
-        <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="correctAddToCart"/>
-        <waitForElementVisible selector="{{StorefrontProductPageSection.successMsg}}" time="30" stepKey="waitForProductAdded"/>
-
-        <!-- Place Order -->
-        <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
-        <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
-        <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
-        <waitForPageLoad time="60" stepKey="waitForGuestCheckoutPageLoad"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.email}}" userInput="{{CustomerEntityOne.email}}" stepKey="enterEmail"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.firstName}}" userInput="{{CustomerEntityOne.firstname}}" stepKey="enterFirstName"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.lastName}}" userInput="{{CustomerEntityOne.lastname}}" stepKey="enterLastName"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.street}}" userInput="{{CustomerAddressSimple.street[0]}}" stepKey="enterStreet"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.city}}" userInput="{{CustomerAddressSimple.city}}" stepKey="enterCity"/>
-        <selectOption selector="{{CheckoutShippingGuestInfoSection.region}}" userInput="{{CustomerAddressSimple.state}}" stepKey="selectRegion"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.postcode}}" userInput="{{CustomerAddressSimple.postcode}}" stepKey="enterPostcode"/>
-        <fillField selector="{{CheckoutShippingGuestInfoSection.telephone}}" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMask"/>
-        <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
-        <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
-        <waitForElement selector="{{CheckoutShippingMethodsSection.next}}" time="30" stepKey="waitForNextButtonVisible"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"/>
-        <waitForPageLoad stepKey="waitFroPaymentSelectionPageLoad"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
-        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order # is:" stepKey="checkOrderPlaceSuccessMessage"/>
+        <!-- Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$customer$"/>
+        </actionGroup>
+        <!-- Add simple product to shopping cart -->
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
+            <argument name="quantity" value="{{101ProductQty.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterPlaceOrder">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$product.sku$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$source.source[name]$"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockQty" value="{{defaultProductWithNegativeThresholdBoughtWith101Piece.value}}"/>
+        </actionGroup>
     </test>
 </tests>
