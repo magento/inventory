@@ -31,6 +31,14 @@
     <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
         <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter" />
     </type>
+    <!-- Prevent stock indexer to execute twice as it is run by default -->
+    <type name="Magento\CatalogImportExport\Model\Import\Product\StockProcessor">
+        <arguments>
+            <argument name="indexers" xsi:type="array">
+                <item name="cataloginventory_stock" xsi:type="null"/>
+            </argument>
+        </arguments>
+    </type>
 
     <!-- Export -->
     <preference for="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface" type="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactory"/>
