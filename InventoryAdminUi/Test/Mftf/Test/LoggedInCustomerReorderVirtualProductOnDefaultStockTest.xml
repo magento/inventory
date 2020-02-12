@@ -67,6 +67,7 @@
         <actionGroup ref="StorefrontCustomerReorderActionGroup" stepKey="reorderSimpleProduct">
             <argument name="orderNumber" value="${orderNumber}"/>
         </actionGroup>
+        <waitForPageLoad stepKey="waitUntilPageIsFullyLoaded"/>
         <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout"/>
         <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="waitForPlaceOrderButtonVisibleToReorder"/>
         <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrderToReorder"/>
