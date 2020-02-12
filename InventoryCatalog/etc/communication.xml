@@ -15,4 +15,6 @@
     <topic name="async.V1.inventory.bulk-product-source-transfer.POST" is_synchronous="false" schema="Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface::execute" >
         <handler name="async" type="Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface" method="execute" />
     </topic>
+    <topic name="async.inventory.source.items.cleanup" is_synchronous="false" schema="Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus::execute"/>
+    <topic name="async.inventory.source.items.cleanup.db" is_synchronous="false" schema="Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus::execute"/>
 </config>

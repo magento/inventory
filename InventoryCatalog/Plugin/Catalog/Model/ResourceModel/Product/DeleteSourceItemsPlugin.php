@@ -5,20 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryImportExport\Observer;
+namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\Amqp\Config;
 use Magento\Framework\App\DeploymentConfig;
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\RuntimeException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 
 /**
- * Clean source items after products removed during import observer.
+ * Remove source items after given product has been deleted plugin.
  */
-class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
+class DeleteSourceItemsPlugin
 {
     /**
      * @var PublisherInterface
@@ -41,20 +41,16 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
     }
 
     /**
-     * Asynchronously delete source items after products have been removed during import.
+     * Asynchronously cleanup source items in case product has been deleted.
      *
-     * @param Observer $observer
-     * @return void
+     * @param Product $subject
+     * @param Product $result
+     * @param ProductInterface $product
+     * @return Product
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(Observer $observer): void
+    public function afterDelete(Product $subject, $result, $product): Product
     {
-        $skus = [];
-        $bunch = $observer->getEvent()->getData('bunch');
-        foreach ($bunch as $product) {
-            if (isset($product['sku'])) {
-                $skus[] = $product['sku'];
-            }
-        }
         try {
             $configData = $this->deploymentConfig->getConfigData(Config::QUEUE_CONFIG) ?: [];
         } catch (FileSystemException|RuntimeException $e) {
@@ -63,6 +59,8 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
         $topic = isset($configData[Config::AMQP_CONFIG][Config::HOST])
             ? 'async.inventory.source.items.cleanup'
             : 'async.inventory.source.items.cleanup.db';
-        $this->publisher->publish($topic, [$skus]);
+        $this->publisher->publish($topic, [[(string)$product->getSku()]]);
+
+        return $result;
     }
 }

@@ -47,7 +47,4 @@
     <type name="Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple">
         <plugin name="delete_source_items_configuration" type="Magento\InventoryLowQuantityNotification\Plugin\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple\DeleteSourceItemsConfigurationPlugin"/>
     </type>
-    <type name="Magento\Inventory\Model\ResourceModel\SourceItem\UpdateMultiple">
-        <plugin name="process_source_items_configuration_after_source_save" type="Magento\InventoryLowQuantityNotification\Plugin\InventoryCatalog\Model\ResourceModel\UpdateSourceItemsSku\UpdateSourceItemsConfigurationPlugin"/>
-    </type>
 </config>

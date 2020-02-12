@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
+    <exchange name="magento" type="topic" connection="amqp">
+        <binding id="InventorySourceItemsCleanUpBinding" topic="async.inventory.source.items.cleanup" destinationType="queue" destination="inventory.source.items.cleanup"/>
+    </exchange>
+    <exchange name="magento-db" type="topic" connection="db">
+        <binding id="InventorySourceItemsCleanUpBinding" topic="async.inventory.source.items.cleanup.db" destinationType="queue" destination="inventory.source.items.cleanup.db"/>
+    </exchange>
+</config>

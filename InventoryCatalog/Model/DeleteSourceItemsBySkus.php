@@ -49,7 +49,7 @@ class DeleteSourceItemsBySkus
     /**
      * Delete source items for given products skus.
      *
-     * @param array $skus
+     * @param string[] $skus
      * @return void
      */
     public function execute(array $skus): void

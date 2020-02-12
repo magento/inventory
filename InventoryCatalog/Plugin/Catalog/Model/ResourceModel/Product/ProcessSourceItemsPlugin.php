@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product;
+namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\Amqp\Config;
@@ -16,9 +16,9 @@ use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Model\AbstractModel;
 
 /**
- * Process reservations after product save plugin.
+ * Process source items after product save.
  */
-class ProcessReservationPlugin
+class ProcessSourceItemsPlugin
 {
     /**
      * @var PublisherInterface
@@ -41,7 +41,7 @@ class ProcessReservationPlugin
     }
 
     /**
-     * Asynchronously update reservations in case product sku has been changed.
+     * Asynchronously cleanup source items in case product has changed type or sku.
      *
      * @param Product $subject
      * @param Product $result
@@ -49,24 +49,35 @@ class ProcessReservationPlugin
      * @return Product
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(
-        Product $subject,
-        Product $result,
-        AbstractModel $product
-    ): Product {
-        $origSku = $product->getOrigData('sku');
-        if ($origSku !== null && $origSku !== $product->getSku()) {
+    public function afterSave(Product $subject, Product $result, AbstractModel $product): Product
+    {
+        if ($this->isCleanupNeeded($product)) {
             try {
                 $configData = $this->deploymentConfig->getConfigData(Config::QUEUE_CONFIG) ?: [];
             } catch (FileSystemException|RuntimeException $e) {
                 $configData = [];
             }
             $topic = isset($configData[Config::AMQP_CONFIG][Config::HOST])
-                ? 'async.inventory.reservations.update'
-                : 'async.inventory.reservations.update.db';
-            $this->publisher->publish($topic, [(string)$origSku, (string)$product->getSku()]);
+                ? 'async.inventory.source.items.cleanup'
+                : 'async.inventory.source.items.cleanup.db';
+            $this->publisher->publish($topic, [[(string)$product->getOrigData('sku')]]);
         }
 
         return $result;
+    }
+
+    /**
+     * Check if source items for given product should be deleted.
+     *
+     * @param AbstractModel $product
+     * @return bool
+     */
+    private function isCleanupNeeded(AbstractModel $product): bool
+    {
+        $origSku = $product->getOrigData('sku');
+        $origType = $product->getOrigData('type_id');
+
+        return $origType !== null && $origType !== $product->getTypeId()
+            || $origSku !== null && $origSku !== $product->getSku();
     }
 }
