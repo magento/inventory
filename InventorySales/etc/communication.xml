@@ -6,6 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
-    <topic name="async.inventory.reservations.update" is_synchronous="false" schema="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySku::execute"/>
-    <topic name="async.inventory.reservations.update.db" is_synchronous="false" schema="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySku::execute"/>
+    <topic name="inventory.reservations.update" is_synchronous="false" schema="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySku::execute">
+        <handler name="inventory.reservations.update.handler" type="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySku" method="execute" />
+    </topic>
 </config>

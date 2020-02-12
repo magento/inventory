@@ -9,10 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product;
-use Magento\Framework\Amqp\Config;
-use Magento\Framework\App\DeploymentConfig;
-use Magento\Framework\Exception\FileSystemException;
-use Magento\Framework\Exception\RuntimeException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 
 /**
@@ -26,18 +22,11 @@ class DeleteSourceItemsPlugin
     private $publisher;
 
     /**
-     * @var DeploymentConfig
-     */
-    private $deploymentConfig;
-
-    /**
      * @param PublisherInterface $publisher
-     * @param DeploymentConfig $deploymentConfig
      */
-    public function __construct(PublisherInterface $publisher, DeploymentConfig $deploymentConfig)
+    public function __construct(PublisherInterface $publisher)
     {
         $this->publisher = $publisher;
-        $this->deploymentConfig = $deploymentConfig;
     }
 
     /**
@@ -51,15 +40,14 @@ class DeleteSourceItemsPlugin
      */
     public function afterDelete(Product $subject, $result, $product): Product
     {
-        try {
-            $configData = $this->deploymentConfig->getConfigData(Config::QUEUE_CONFIG) ?: [];
-        } catch (FileSystemException|RuntimeException $e) {
-            $configData = [];
-        }
-        $topic = isset($configData[Config::AMQP_CONFIG][Config::HOST])
-            ? 'async.inventory.source.items.cleanup'
-            : 'async.inventory.source.items.cleanup.db';
-        $this->publisher->publish($topic, [[(string)$product->getSku()]]);
+        $this->publisher->publish(
+            'inventory.source.items.cleanup',
+            [
+                [
+                    (string)$product->getSku()
+                ]
+            ]
+        );
 
         return $result;
     }

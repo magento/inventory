@@ -7,12 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Observer;
 
-use Magento\Framework\Amqp\Config;
-use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\FileSystemException;
-use Magento\Framework\Exception\RuntimeException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 
 /**
@@ -26,18 +22,11 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
     private $publisher;
 
     /**
-     * @var DeploymentConfig
-     */
-    private $deploymentConfig;
-
-    /**
      * @param PublisherInterface $publisher
-     * @param DeploymentConfig $deploymentConfig
      */
-    public function __construct(PublisherInterface $publisher, DeploymentConfig $deploymentConfig)
+    public function __construct(PublisherInterface $publisher)
     {
         $this->publisher = $publisher;
-        $this->deploymentConfig = $deploymentConfig;
     }
 
     /**
@@ -55,14 +44,6 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
                 $skus[] = $product['sku'];
             }
         }
-        try {
-            $configData = $this->deploymentConfig->getConfigData(Config::QUEUE_CONFIG) ?: [];
-        } catch (FileSystemException|RuntimeException $e) {
-            $configData = [];
-        }
-        $topic = isset($configData[Config::AMQP_CONFIG][Config::HOST])
-            ? 'async.inventory.source.items.cleanup'
-            : 'async.inventory.source.items.cleanup.db';
-        $this->publisher->publish($topic, [$skus]);
+        $this->publisher->publish('async.inventory.source.items.cleanup', [$skus]);
     }
 }

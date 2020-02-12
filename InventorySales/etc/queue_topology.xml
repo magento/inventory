@@ -6,10 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
-    <exchange name="magento" type="topic" connection="amqp">
-        <binding id="InventoryReservationsUpdateBinding" topic="async.inventory.reservations.update" destinationType="queue" destination="inventory.reservations.update"/>
-    </exchange>
     <exchange name="magento-db" type="topic" connection="db">
-        <binding id="InventoryReservationsUpdateBindingDb" topic="async.inventory.reservations.update.db" destinationType="queue" destination="inventory.reservations.update.db"/>
+        <binding id="InventoryReservationsUpdateBindingDb" topic="inventory.reservations.update" destinationType="queue" destination="inventory.reservations.update"/>
     </exchange>
 </config>

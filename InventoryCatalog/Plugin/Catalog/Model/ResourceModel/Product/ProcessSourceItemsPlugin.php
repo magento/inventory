@@ -8,10 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product;
-use Magento\Framework\Amqp\Config;
-use Magento\Framework\App\DeploymentConfig;
-use Magento\Framework\Exception\FileSystemException;
-use Magento\Framework\Exception\RuntimeException;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Model\AbstractModel;
 
@@ -26,18 +22,11 @@ class ProcessSourceItemsPlugin
     private $publisher;
 
     /**
-     * @var DeploymentConfig
-     */
-    private $deploymentConfig;
-
-    /**
      * @param PublisherInterface $publisher
-     * @param DeploymentConfig $deploymentConfig
      */
-    public function __construct(PublisherInterface $publisher, DeploymentConfig $deploymentConfig)
+    public function __construct(PublisherInterface $publisher)
     {
         $this->publisher = $publisher;
-        $this->deploymentConfig = $deploymentConfig;
     }
 
     /**
@@ -52,15 +41,14 @@ class ProcessSourceItemsPlugin
     public function afterSave(Product $subject, Product $result, AbstractModel $product): Product
     {
         if ($this->isCleanupNeeded($product)) {
-            try {
-                $configData = $this->deploymentConfig->getConfigData(Config::QUEUE_CONFIG) ?: [];
-            } catch (FileSystemException|RuntimeException $e) {
-                $configData = [];
-            }
-            $topic = isset($configData[Config::AMQP_CONFIG][Config::HOST])
-                ? 'async.inventory.source.items.cleanup'
-                : 'async.inventory.source.items.cleanup.db';
-            $this->publisher->publish($topic, [[(string)$product->getOrigData('sku')]]);
+            $this->publisher->publish(
+                'async.inventory.source.items.cleanup',
+                [
+                    [
+                        (string)$product->getOrigData('sku')
+                    ]
+                ]
+            );
         }
 
         return $result;

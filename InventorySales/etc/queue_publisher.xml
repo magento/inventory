@@ -6,10 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="async.inventory.reservations.update">
-        <connection name="amqp" exchange="magento" disabled="false" />
-    </publisher>
-    <publisher topic="async.inventory.reservations.update.db">
+    <publisher topic="inventory.reservations.update">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
 </config>
