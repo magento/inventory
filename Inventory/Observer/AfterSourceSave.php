@@ -16,6 +16,7 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterfaceFactory;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
+use Magento\Framework\Api\DataObjectHelper;
 
 /**
  * Plugin to save type of source after save source
@@ -39,20 +40,28 @@ class AfterSourceSave implements ObserverInterface
     private $sourceTypeLinkFactory;
 
     /**
+     * @var DataObjectHelper
+     */
+    private $dataObjectHelper;
+
+    /**
      * AfterSourceSave constructor.
      *
      * @param SourceTypeLinkSaveInterface $commandSave
      * @param SourceTypeLinkDeleteInterface $commandDelete
      * @param SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory
+     * @param DataObjectHelper $dataObjectHelper
      */
     public function __construct(
         SourceTypeLinkSaveInterface $commandSave,
         SourceTypeLinkDeleteInterface $commandDelete,
-        SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory
+        SourceTypeLinkInterfaceFactory $sourceTypeLinkFactory,
+        DataObjectHelper $dataObjectHelper
     ) {
         $this->commandSave = $commandSave;
         $this->commandDelete = $commandDelete;
         $this->sourceTypeLinkFactory = $sourceTypeLinkFactory;
+        $this->dataObjectHelper = $dataObjectHelper;
     }
 
     /**
@@ -85,7 +94,7 @@ class AfterSourceSave implements ObserverInterface
 
         /** @var SourceTypeLinkInterface $link */
         $link = $this->sourceTypeLinkFactory->create();
-        $link->addData($linkData);
+        $this->dataObjectHelper->populateWithArray($link, $linkData, SourceTypeLinkInterface::class);
 
         $this->deleteCurrentTypeLink($source->getSourceCode());
         $this->saveNewTypeLink($link);
