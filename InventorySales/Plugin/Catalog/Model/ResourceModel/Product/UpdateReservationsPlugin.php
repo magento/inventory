@@ -11,6 +11,7 @@ use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Model\AbstractModel;
+use Magento\InventorySales\Plugin\Catalog\Model\SkuDataForReservationUpdateFactory;
 
 /**
  * Process reservations after product save plugin.
@@ -28,13 +29,23 @@ class UpdateReservationsPlugin
     private $config;
 
     /**
+     * @var SkuDataForReservationUpdateFactory
+     */
+    private $dataForReservationUpdateFactory;
+
+    /**
      * @param PublisherInterface $publisher
      * @param ScopeConfigInterface $config
+     * @param SkuDataForReservationUpdateFactory $dataForReservationUpdateFactory
      */
-    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
-    {
+    public function __construct(
+        PublisherInterface $publisher,
+        ScopeConfigInterface $config,
+        SkuDataForReservationUpdateFactory $dataForReservationUpdateFactory
+    ) {
         $this->publisher = $publisher;
         $this->config = $config;
+        $this->dataForReservationUpdateFactory = $dataForReservationUpdateFactory;
     }
 
     /**
@@ -52,13 +63,13 @@ class UpdateReservationsPlugin
         AbstractModel $product
     ): Product {
         if ($this->isUpdateNeeded($product)) {
-            $this->publisher->publish(
-                'inventory.reservations.update',
+            $skuData = $this->dataForReservationUpdateFactory->create(
                 [
-                    (string)$product->getOrigData('sku'),
-                    (string)$product->getSku(),
+                    'old' => (string)$product->getOrigData('sku'),
+                    'new' => (string)$product->getSku()
                 ]
             );
+            $this->publisher->publish('inventory.reservations.update', [$skuData]);
         }
 
         return $result;
@@ -70,7 +81,7 @@ class UpdateReservationsPlugin
      * @param AbstractModel $product
      * @return bool
      */
-    private function isUpdateNeeded(AbstractModel $product)
+    private function isUpdateNeeded(AbstractModel $product) : bool
     {
         $origSku = $product->getOrigData('sku');
         return $this->config->getValue('cataloginventory/options/synchronize_with_catalog')

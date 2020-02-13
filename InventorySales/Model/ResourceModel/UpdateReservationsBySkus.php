@@ -30,16 +30,18 @@ class UpdateReservationsBySkus
     /**
      * Replace reservations 'sku' value with new one.
      *
-     * @param string $origSku
-     * @param string $sku
+     * @param \Magento\InventorySales\Plugin\Catalog\Model\SkuDataForReservationUpdate[] $skus
      * @return void
      */
-    public function execute(string $origSku, string $sku): void
+    public function execute(array $skus): void
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_reservation');
-        $bind = ['sku' => $sku];
-        $where = ['sku = ?' => $origSku];
-        $connection->update($table, $bind, $where);
+        /** @var \Magento\InventorySales\Plugin\Catalog\Model\SkuDataForReservationUpdate $sku */
+        foreach ($skus as $sku) {
+            $connection = $this->connection->getConnection();
+            $table = $this->connection->getTableName('inventory_reservation');
+            $bind = ['sku' => $sku->getNew()];
+            $where = ['sku = ?' => $sku->getOld()];
+            $connection->update($table, $bind, $where);
+        }
     }
 }

@@ -32,6 +32,7 @@ class DeleteReservationsBySkus
      *
      * @param array $skus
      * @return void
+     * @throws \Exception
      */
     public function execute(array $skus): void
     {
