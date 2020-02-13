@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceTypeLink\Command;
 
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\InputException;
 use Magento\Inventory\Model\ResourceModel\SourceTypeLink\Delete;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 use Psr\Log\LoggerInterface;
-use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Exception\InputException;
 
 /**
  * @inheritdoc
