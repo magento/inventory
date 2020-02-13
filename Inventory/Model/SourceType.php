@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Model\AbstractExtensibleModel;
-use Magento\Inventory\Model\ResourceModel\SourceType as SourceTypeResourceModel;
+use Magento\Inventory\Model\ResourceModel\Source\Type as SourceTypeResourceModel;
 use Magento\InventoryApi\Api\Data\SourceTypeExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
