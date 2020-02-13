@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel\Source;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Implementation of basic operations for type entity for specific db layer
@@ -28,9 +29,9 @@ class Type extends AbstractDb
      * Return all types of source to select field
      *
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
-    public function getAllTypes()
+    public function getAllTypes(): array
     {
         $connection = $this->getConnection();
         $select = $connection->select()->from(

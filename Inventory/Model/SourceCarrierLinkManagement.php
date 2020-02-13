@@ -10,13 +10,13 @@ namespace Magento\Inventory\Model;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
-use Magento\Inventory\Model\ResourceModel\SourceCarrierLink as SourceCarrierLinkResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceCarrierLink;
+use Magento\Inventory\Model\ResourceModel\SourceCarrierLink as SourceCarrierLinkResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceCarrierLink\Collection;
 use Magento\Inventory\Model\ResourceModel\SourceCarrierLink\CollectionFactory;
 use Magento\InventoryApi\Api\Data\SourceCarrierLinkInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
 
 /**
  * @inheritdoc

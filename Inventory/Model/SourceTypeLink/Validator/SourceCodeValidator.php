@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceTypeLink\Validator;
 
-use Magento\InventoryApi\Model\SourceTypeLinkValidatorInterface;
-use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\Validators\NoSpecialCharsInString;
 use Magento\Inventory\Model\Validators\NotAnEmptyString;
 use Magento\Inventory\Model\Validators\NoWhitespaceInString;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
+use Magento\InventoryApi\Model\SourceTypeLinkValidatorInterface;
 
 /**
  * Check that code is valid

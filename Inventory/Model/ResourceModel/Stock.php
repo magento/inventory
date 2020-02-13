@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\Framework\Model\ResourceModel\PredefinedId;
+use Magento\InventoryApi\Api\Data\StockInterface;
 
 /**
  * Implementation of basic operations for Stock entity for specific db layer

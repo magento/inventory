@@ -15,8 +15,8 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\Source as SourceModel;
-use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
 use Psr\Log\LoggerInterface;
 
 /**

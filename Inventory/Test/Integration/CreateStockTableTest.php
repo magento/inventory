@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Test\Integration;
 
-use Magento\TestFramework\Helper\Bootstrap;
-use PHPUnit\Framework\TestCase;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
+use Magento\TestFramework\Helper\Bootstrap;
+use PHPUnit\Framework\TestCase;
 
 class CreateStockTableTest extends TestCase
 {

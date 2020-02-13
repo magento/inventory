@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\SourceTypeLink\Command;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
+use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
-use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 use Magento\InventoryApi\Model\SourceTypeLinkValidatorInterface;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Validation\ValidationException;
 use Psr\Log\LoggerInterface;
 
 /**

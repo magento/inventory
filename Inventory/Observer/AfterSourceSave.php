@@ -9,10 +9,10 @@ namespace Magento\Inventory\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterfaceFactory;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;

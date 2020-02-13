@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\ResourceModel\SourceTypeLink;
 
+use Magento\Framework\App\ResourceConnection;
+use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
 use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\Inventory\Model\ResourceModel\SourceTypeLink as SourceTypeLinkResourceModel;
-use Magento\InventoryApi\Api\Data\SourceTypeInterface;
-use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 
 /**

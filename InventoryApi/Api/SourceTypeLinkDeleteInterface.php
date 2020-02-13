@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Api;
 
+use Magento\Framework\Exception\CouldNotDeleteException;
+
 /**
  * Service method for source type link delete
  * Performance efficient API
@@ -19,6 +21,7 @@ interface SourceTypeLinkDeleteInterface
      * Delete sourceTypeLink
      *
      * @param string $sourceCode
+     * @throws CouldNotDeleteException
      */
     public function execute(string $sourceCode): void;
 }

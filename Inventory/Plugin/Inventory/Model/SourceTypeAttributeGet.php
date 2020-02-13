@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Plugin\Inventory\Model;
 
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryApi\Model\GetSourceTypeBySourceCodeInterface;
 use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\InventoryApi\Model\GetSourceTypeBySourceCodeInterface;
 
 /**
  * Load type to source

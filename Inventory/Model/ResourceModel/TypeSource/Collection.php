@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\ResourceModel\TypeSource;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Magento\Inventory\Model\SourceType;
 use Magento\Inventory\Model\ResourceModel\SourceType as SourceTypeResourceModel;
+use Magento\Inventory\Model\SourceType;
 
 /**
  * Resource Collection of Source Type entity
@@ -32,7 +32,6 @@ class Collection extends AbstractCollection
      */
     public function toOptionArray()
     {
-
         $options = [];
         foreach ($this as $item) {
             $option['label'] = $item->getName();

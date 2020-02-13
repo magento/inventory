@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Model\ResourceModel;
 
-use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
+use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
 
 class IsProductAssignedToStock implements IsProductAssignedToStockInterface
 {

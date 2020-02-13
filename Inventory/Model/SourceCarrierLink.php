@@ -49,7 +49,7 @@ class SourceCarrierLink extends AbstractExtensibleModel implements SourceCarrier
     public function getPosition(): ?int
     {
         return $this->getData(self::POSITION) === null ?
-            null:
+            null :
             (int)$this->getData(self::POSITION);
     }
 

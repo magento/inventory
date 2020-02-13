@@ -65,7 +65,7 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     public function getQuantity(): ?float
     {
         return $this->getData(self::QUANTITY) === null ?
-            null:
+            null :
             (float)$this->getData(self::QUANTITY);
     }
 
@@ -83,7 +83,7 @@ class SourceItem extends AbstractExtensibleModel implements SourceItemInterface
     public function getStatus(): ?int
     {
         return $this->getData(self::STATUS) === null ?
-            null:
+            null :
             (int)$this->getData(self::STATUS);
     }
 
