@@ -13,7 +13,7 @@ use Magento\InventoryCatalog\Setup\Operation\AssignDefaultSourceToRegularType;
 use Magento\InventoryCatalog\Setup\Patch\Schema\InitializeDefaultStock;
 
 /**
- * Patch schema with information about default stock
+ * Patch schema with information about source types
  */
 class InitializeSourceTypes implements SchemaPatchInterface
 {
