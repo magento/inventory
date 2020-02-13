@@ -8,13 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Model\AbstractModel;
 
 /**
- * Process reservations after product save plugin.
+ * Remove reservations after product delete plugin.
  */
-class ProcessReservationPlugin
+class DeleteReservationsPlugin
 {
     /**
      * @var PublisherInterface
@@ -22,15 +23,22 @@ class ProcessReservationPlugin
     private $publisher;
 
     /**
-     * @param PublisherInterface $publisher
+     * @var ScopeConfigInterface
      */
-    public function __construct(PublisherInterface $publisher)
+    private $config;
+
+    /**
+     * @param PublisherInterface $publisher
+     * @param ScopeConfigInterface $config
+     */
+    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
     {
         $this->publisher = $publisher;
+        $this->config = $config;
     }
 
     /**
-     * Asynchronously update reservations in case product sku has been changed.
+     * Asynchronously remove reservations in case product has been deleted.
      *
      * @param Product $subject
      * @param Product $result
@@ -38,16 +46,17 @@ class ProcessReservationPlugin
      * @return Product
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(
+    public function afterDelete(
         Product $subject,
         Product $result,
         AbstractModel $product
     ): Product {
-        $origSku = $product->getOrigData('sku');
-        if ($origSku !== null && $origSku !== $product->getSku()) {
+        if ($this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
             $this->publisher->publish(
-                'async.inventory.reservations.update',
-                [(string)$origSku, (string)$product->getSku()]
+                'inventory.reservations.cleanup',
+                [
+                    (string)$product->getSku()
+                ]
             );
         }
 

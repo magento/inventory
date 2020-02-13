@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
+namespace Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
+use Magento\Framework\Model\AbstractModel;
 
 /**
- * Remove source items after given product has been deleted plugin.
+ * Process reservations after product save plugin.
  */
-class DeleteSourceItemsPlugin
+class UpdateReservationsPlugin
 {
     /**
      * @var PublisherInterface
@@ -38,25 +38,42 @@ class DeleteSourceItemsPlugin
     }
 
     /**
-     * Asynchronously cleanup source items in case product has been deleted.
+     * Asynchronously update reservations in case product sku has been changed.
      *
      * @param Product $subject
      * @param Product $result
-     * @param ProductInterface $product
+     * @param AbstractModel $product
      * @return Product
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterDelete(Product $subject, $result, $product): Product
-    {
-        if ($this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
+    public function afterSave(
+        Product $subject,
+        Product $result,
+        AbstractModel $product
+    ): Product {
+        if ($this->isUpdateNeeded($product)) {
             $this->publisher->publish(
-                'inventory.source.items.cleanup',
+                'inventory.reservations.update',
                 [
+                    (string)$product->getOrigData('sku'),
                     (string)$product->getSku(),
                 ]
             );
         }
 
         return $result;
+    }
+
+    /**
+     * Check if reservations should be updated.
+     *
+     * @param AbstractModel $product
+     * @return bool
+     */
+    private function isUpdateNeeded(AbstractModel $product)
+    {
+        $origSku = $product->getOrigData('sku');
+        return $this->config->getValue('cataloginventory/options/synchronize_with_catalog')
+            && $origSku !== null && $origSku !== $product->getSku();
     }
 }

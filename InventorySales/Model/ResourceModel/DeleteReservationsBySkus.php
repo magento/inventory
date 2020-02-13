@@ -10,9 +10,9 @@ namespace Magento\InventorySales\Model\ResourceModel;
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Update reservation by product sku.
+ * Delete reservation by product skus.
  */
-class UpdateReservationsBySku
+class DeleteReservationsBySkus
 {
     /**
      * @var ResourceConnection
@@ -28,18 +28,15 @@ class UpdateReservationsBySku
     }
 
     /**
-     * Replace reservations 'sku' value with new one.
+     * Delete reservation for given product skus.
      *
-     * @param string $origSku
-     * @param string $sku
+     * @param array $skus
      * @return void
      */
-    public function execute(string $origSku, string $sku): void
+    public function execute(array $skus): void
     {
-        $connection = $this->connection->getConnection();
+        $adapter = $this->connection->getConnection();
         $table = $this->connection->getTableName('inventory_reservation');
-        $bind = ['sku' => (string)$sku];
-        $where = ['sku = ?' => (string)$origSku];
-        $connection->update($table, $bind, $where);
+        $adapter->delete($table, $adapter->quoteInto('sku IN (?)', $skus));
     }
 }

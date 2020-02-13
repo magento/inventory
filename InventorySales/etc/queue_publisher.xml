@@ -9,4 +9,7 @@
     <publisher topic="inventory.reservations.update">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
+    <publisher topic="inventory.reservations.cleanup">
+        <connection name="db" exchange="magento-db" disabled="false" />
+    </publisher>
 </config>

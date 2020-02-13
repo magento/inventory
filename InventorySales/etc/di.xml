@@ -181,7 +181,8 @@
     </type>
     <preference for="Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface" type="Magento\InventorySales\Model\GetSkuFromOrderItem"/>
     <type name="Magento\Catalog\Model\ResourceModel\Product">
-        <plugin name="process_reservation_after_product_save" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\ProcessReservationPlugin"/>
+        <plugin name="process_reservations_after_product_save" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\UpdateReservationsPlugin"/>
+        <plugin name="delete_reservations" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\DeleteReservationsPlugin"/>
     </type>
     <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableResult"/>
 </config>

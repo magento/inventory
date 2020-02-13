@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Model\AbstractModel;
 
@@ -22,11 +23,18 @@ class ProcessSourceItemsPlugin
     private $publisher;
 
     /**
-     * @param PublisherInterface $publisher
+     * @var ScopeConfigInterface
      */
-    public function __construct(PublisherInterface $publisher)
+    private $config;
+
+    /**
+     * @param PublisherInterface $publisher
+     * @param ScopeConfigInterface $config
+     */
+    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
     {
         $this->publisher = $publisher;
+        $this->config = $config;
     }
 
     /**
@@ -42,11 +50,9 @@ class ProcessSourceItemsPlugin
     {
         if ($this->isCleanupNeeded($product)) {
             $this->publisher->publish(
-                'async.inventory.source.items.cleanup',
+                'inventory.source.items.cleanup',
                 [
-                    [
-                        (string)$product->getOrigData('sku')
-                    ]
+                    (string)$product->getOrigData('sku'),
                 ]
             );
         }
@@ -62,10 +68,12 @@ class ProcessSourceItemsPlugin
      */
     private function isCleanupNeeded(AbstractModel $product): bool
     {
+        if (!$this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
+            return false;
+        }
         $origSku = $product->getOrigData('sku');
         $origType = $product->getOrigData('type_id');
 
-        return $origType !== null && $origType !== $product->getTypeId()
-            || $origSku !== null && $origSku !== $product->getSku();
+        return $origType && $origType !== $product->getTypeId() || $origSku && $origSku !== $product->getSku();
     }
 }

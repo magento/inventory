@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Observer;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
@@ -22,11 +23,18 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
     private $publisher;
 
     /**
-     * @param PublisherInterface $publisher
+     * @var ScopeConfigInterface
      */
-    public function __construct(PublisherInterface $publisher)
+    private $config;
+
+    /**
+     * @param PublisherInterface $publisher
+     * @param ScopeConfigInterface $config
+     */
+    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
     {
         $this->publisher = $publisher;
+        $this->config = $config;
     }
 
     /**
@@ -44,6 +52,8 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
                 $skus[] = $product['sku'];
             }
         }
-        $this->publisher->publish('async.inventory.source.items.cleanup', [$skus]);
+        if ($this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
+            $this->publisher->publish('inventory.source.items.cleanup', $skus);
+        }
     }
 }
