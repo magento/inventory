@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\App\Cron;
+use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -33,12 +35,18 @@ class UpdateProductSkuTest extends WebapiAbstract
     private $productRepository;
 
     /**
+     * @var ConsumerFactory
+     */
+    private $consumerFactory;
+
+    /**
      * @inheritDoc
      */
     protected function setUp()
     {
         $this->getSourceItemsBySku = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
     }
 
     /**
@@ -50,7 +58,7 @@ class UpdateProductSkuTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      *
-     * @return void
+     * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
      */
     public function testUpdateProductSku(): void
     {
@@ -70,7 +78,13 @@ class UpdateProductSkuTest extends WebapiAbstract
             $serviceInfo,
             ['product' => ['id' => $product->getId(), 'sku' => 'SKU-1_updated']]
         );
-
+        $cronObserver = Bootstrap::getObjectManager()->create(
+            Cron::class,
+            ['parameters' => ['group' => null, 'standaloneProcessStarted' => 0]]
+        );
+        $cronObserver->launch();
+        /*Wait till source items will be removed asynchronously.*/
+        sleep(10);
         $sourceItemsOldSku = $this->getSourceItemsBySku->execute('SKU-1');
         $sourceItemNewSku = $this->getSourceItemsBySku->execute('SKU-1_updated');
         self::assertEmpty($sourceItemsOldSku);

@@ -11,11 +11,12 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 
 /**
- * Clean source items after products removed during import observer.
+ * Process reservations after products removed during import observer.
  */
-class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
+class ProcessReservationsAfterProductImportObserver implements ObserverInterface
 {
     /**
      * @var PublisherInterface
@@ -28,17 +29,27 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
     private $config;
 
     /**
+     * @var GetSkusByProductIdsInterface
+     */
+    private $getSkusByProductIds;
+
+    /**
      * @param PublisherInterface $publisher
      * @param ScopeConfigInterface $config
+     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      */
-    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
-    {
+    public function __construct(
+        PublisherInterface $publisher,
+        ScopeConfigInterface $config,
+        GetSkusByProductIdsInterface $getSkusByProductIds
+    ) {
         $this->publisher = $publisher;
         $this->config = $config;
+        $this->getSkusByProductIds = $getSkusByProductIds;
     }
 
     /**
-     * Asynchronously delete source items after products have been removed during import.
+     * Asynchronously update/delete reservations after products have been removed during import.
      *
      * @param Observer $observer
      * @return void
@@ -56,6 +67,6 @@ class DeleteSourceItemsAfterProductDeleteObserver implements ObserverInterface
                 $skus[] = $product['sku'];
             }
         }
-        $this->publisher->publish('inventory.source.items.cleanup', $skus);
+        $this->publisher->publish('inventory.reservations.cleanup', $skus);
     }
 }

@@ -23,7 +23,6 @@ class SkuDataForReservationUpdate
     private $new;
 
     /**
-     * SkuDataForReservationUpdate constructor.
      * @param string $old
      * @param string $new
      */

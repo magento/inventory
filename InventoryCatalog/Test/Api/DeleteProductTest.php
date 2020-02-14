@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\App\Cron;
+use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -33,12 +35,18 @@ class DeleteProductTest extends WebapiAbstract
     private $productRepository;
 
     /**
+     * @var ConsumerFactory
+     */
+    private $consumerFactory;
+
+    /**
      * @inheritDoc
      */
     protected function setUp()
     {
         $this->getSourceItemsBySku = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
     }
 
     /**
@@ -50,7 +58,7 @@ class DeleteProductTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      *
-     * @return void
+     * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
      */
     public function testDeleteProduct(): void
     {
@@ -67,7 +75,13 @@ class DeleteProductTest extends WebapiAbstract
         ];
         TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP ?
             $this->_webApiCall($serviceInfo, ['sku' => 'SKU-1']) : $this->_webApiCall($serviceInfo);
-
+        $cronObserver = Bootstrap::getObjectManager()->create(
+            Cron::class,
+            ['parameters' => ['group' => null, 'standaloneProcessStarted' => 0]]
+        );
+        $cronObserver->launch();
+        /*Wait till source items will be removed asynchronously.*/
+        sleep(10);
         $sourceItems = $this->getSourceItemsBySku->execute('SKU-1');
         self::assertEmpty($sourceItems);
     }
