@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Indexer\SaveHandler\Batch;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
@@ -66,7 +67,7 @@ class IndexHandler implements IndexHandlerInterface
 
         $columns = [IndexStructure::SKU, IndexStructure::QUANTITY, IndexStructure::IS_SALABLE];
         foreach ($this->batch->getItems($documents, $this->batchSize) as $batchDocuments) {
-            $connection->insertArray($tableName, $columns, $batchDocuments);
+            $connection->insertArray($tableName, $columns, $batchDocuments, AdapterInterface::INSERT_IGNORE);
         }
     }
 
