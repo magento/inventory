@@ -9,7 +9,6 @@ namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
@@ -45,29 +44,21 @@ class SelectBuilder
     private $metadataPool;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $config;
-
-    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
-     * @param ScopeConfigInterface $config
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool,
-        ScopeConfigInterface $config
+        MetadataPool $metadataPool
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
-        $this->config = $config;
     }
 
     /**
@@ -91,19 +82,14 @@ class SelectBuilder
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
-        $manageStock = (int)$this->config->getValue('cataloginventory/item_options/manage_stock');
-        $isSalableExpr = $manageStock
-            ? 'IF(MAX(parent_stock.manage_stock = 0), MAX(stock.is_salable), IF(MAX(parent_stock.is_in_stock) = 1, '
-            . 'MAX(stock.is_salable), 0))'
-            : 'IF(MAX(parent_stock.use_config_manage_stock) = 0, IF(MAX(parent_stock.manage_stock) = 1 AND '
-            . 'MAX(parent_stock.is_in_stock = 0), 0, MAX(stock.is_salable)), MAX(stock.is_salable))';
+
         $select = $connection->select()
             ->from(
                 ['stock' => $indexTableName],
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => $isSalableExpr,
+                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
                 ]
             )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -116,10 +102,6 @@ class SelectBuilder
             )->joinInner(
                 ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'parent_product_entity.' . $linkField . ' = parent_link.parent_product_id',
-                []
-            )->joinInner(
-                ['parent_stock' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
-                'parent_product_entity.entity_id = parent_stock.product_id',
                 []
             )
             ->group(['parent_product_entity.sku']);

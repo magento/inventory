@@ -20,7 +20,4 @@
         <plugin name="append_quantity_per_source" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Ui\DataProvider\Product\Form\AddQuantityPerSourceToProductsData" />
         <plugin name="append_column_quantity_per_source" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Ui\DataProvider\Product\Form\AddColumnQuantityPerSource" />
     </type>
-    <type name="Magento\Catalog\Model\Product">
-        <plugin name="process_source_items_plugin" type="Magento\InventoryBundleProductAdminUi\Plugin\Catalog\Model\Product\ProcessSourceItemsPlugin"/>
-    </type>
 </config>

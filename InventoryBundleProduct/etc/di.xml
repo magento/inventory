@@ -18,4 +18,9 @@
     <type name="Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface">
         <plugin name="get_bundle_selection_sku_from_order" type="Magento\InventoryBundleProduct\Plugin\InventorySalesApi\Model\GetSkuFromOrderItem\AdaptGetSkuFromOrderItemPlugin"/>
     </type>
+    <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
+        <plugin name="process_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterAddBundleSelectionPlugin"/>
+        <plugin name="process_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterSaveBundleSelectionPlugin"/>
+        <plugin name="process_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterRemoveBundleSelectionPlugin"/>
+    </type>
 </config>
