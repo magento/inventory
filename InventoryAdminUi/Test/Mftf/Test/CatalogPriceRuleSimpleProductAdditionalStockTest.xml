@@ -35,6 +35,10 @@
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity" after="assignAdditionalSourceToProduct"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct" after="setProductQuantity"/>
+
+            <!-- Perform reindex and flush cache -->
+            <magentoCLI command="indexer:reindex" stepKey="reindexAfterProductCreation" after="saveProduct"/>
+            <magentoCLI command="cache:flush" stepKey="flushCacheAfterProductCreation" after="reindexAfterProductCreation"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
