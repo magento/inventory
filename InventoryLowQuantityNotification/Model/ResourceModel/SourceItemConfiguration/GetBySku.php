@@ -9,6 +9,7 @@ namespace Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceIte
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface;
+use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterfaceFactory;
 
 /**
  * Get source items configuration for product resource model.
@@ -21,18 +22,27 @@ class GetBySku
     private $connection;
 
     /**
-     * @param ResourceConnection $connection
+     * @var SourceItemConfigurationInterfaceFactory
      */
-    public function __construct(ResourceConnection $connection)
-    {
+    private $sourceItemConfigurationInterfaceFactory;
+
+    /**
+     * @param ResourceConnection $connection
+     * @param SourceItemConfigurationInterfaceFactory $sourceItemConfigurationInterfaceFactory
+     */
+    public function __construct(
+        ResourceConnection $connection,
+        SourceItemConfigurationInterfaceFactory $sourceItemConfigurationInterfaceFactory
+    ) {
         $this->connection = $connection;
+        $this->sourceItemConfigurationInterfaceFactory = $sourceItemConfigurationInterfaceFactory;
     }
 
     /**
      * Get source items configuration for given product sku.
      *
      * @param string $sku
-     * @return array
+     * @return SourceItemConfigurationInterface[]
      */
     public function execute(string $sku): array
     {
@@ -42,7 +52,15 @@ class GetBySku
         $select = $connection->select()
             ->from($sourceItemConfigurationTable)
             ->where(SourceItemConfigurationInterface::SKU . ' = ?', $sku);
+        $data = $connection->fetchAll($select) ?: [];
+        $sourceItemsConfigurations = [];
+        foreach ($data as $sourceItemConfigurationData) {
+            $sourceItemConfiguration = $this->sourceItemConfigurationInterfaceFactory->create(
+                ['data' => $sourceItemConfigurationData]
+            );
+            $sourceItemsConfigurations[] = $sourceItemConfiguration;
+        }
 
-        return $connection->fetchAll($select) ?: [];
+        return $sourceItemsConfigurations;
     }
 }

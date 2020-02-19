@@ -10,7 +10,7 @@ namespace Magento\InventoryLowQuantityNotification\Plugin\Catalog\Model\Resource
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Model\AbstractModel;
-use Magento\InventoryLowQuantityNotification\Model\GetBySku;
+use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\SaveMultiple;
 use Psr\Log\LoggerInterface;
 
