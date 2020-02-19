@@ -37,8 +37,7 @@
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct" after="setProductQuantity"/>
 
             <!-- Perform reindex and flush cache -->
-            <magentoCLI command="indexer:reindex" stepKey="reindexAfterProductCreation" after="saveProduct"/>
-            <magentoCLI command="cache:flush" stepKey="flushCacheAfterProductCreation" after="reindexAfterProductCreation"/>
+            <magentoCLI command="cron:run --group=default --group=index" stepKey="runCronIndex" after="saveProduct"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
