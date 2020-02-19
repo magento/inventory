@@ -7,7 +7,6 @@
         "magento/module-bundle": "*",
         "magento/module-catalog": "*",
         "magento/module-ui": "*",
-        "magento/module-inventory-api": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-catalog-admin-ui": "*"
     },
