@@ -125,7 +125,11 @@
         <!-- Assert out of stock option is absent on product page -->
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>
-        <dontSee userInput="$$getConfigAttributeOption1.label$$" selector="{{StorefrontProductInfoMainSection.optionByAttributeId($$configurableProductAttribute.attribute_id$$)}}" stepKey="assertOptionNotAvailable" />
-        <see userInput="$$getConfigAttributeOption2.label$$" selector="{{StorefrontProductInfoMainSection.optionByAttributeId($$configurableProductAttribute.attribute_id$$)}}" stepKey="assertOptionAvailable" />
+
+        <grabMultiple selector="{{StorefrontProductInfoMainSection.selectableProductOptions($$configurableProductAttribute.attribute_id$$)}}" stepKey="productOptions"  />
+        <assertEquals stepKey="assertProductOptions">
+            <actualResult type="variable">productOptions</actualResult>
+            <expectedResult type="array">['Choose an Option...', $$getConfigAttributeOption2.label$$]</expectedResult>
+        </assertEquals>
     </test>
 </tests>
