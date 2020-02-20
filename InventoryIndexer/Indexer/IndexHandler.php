@@ -67,7 +67,7 @@ class IndexHandler implements IndexHandlerInterface
 
         $columns = [IndexStructure::SKU, IndexStructure::QUANTITY, IndexStructure::IS_SALABLE];
         foreach ($this->batch->getItems($documents, $this->batchSize) as $batchDocuments) {
-            $connection->insertArray($tableName, $columns, $batchDocuments, AdapterInterface::INSERT_IGNORE);
+            $connection->insertOnDuplicate($tableName, $batchDocuments, $columns);
         }
     }
 
