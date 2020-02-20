@@ -126,7 +126,7 @@
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>
 
-        <grabMultiple selector="{{StorefrontProductInfoMainSection.selectableProductOptions($$configurableProductAttribute.attribute_id$$)}}" stepKey="productOptions"  />
+        <grabMultiple selector="{{StorefrontProductInfoMainSection.selectableProductOptions($$configurableProductAttribute.attribute_id$$)}}" stepKey="productOptions"/>
         <assertEquals stepKey="assertProductOptions">
             <actualResult type="variable">productOptions</actualResult>
             <expectedResult type="array">['Choose an Option...', $$getConfigAttributeOption2.label$$]</expectedResult>
