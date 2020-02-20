@@ -1,0 +1,2 @@
+# InventoryAdminGws module
+

@@ -15,6 +15,7 @@ use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\Store\Model\ResourceModel\Website\Collection;
 
 /**
  * Delete not available products from price index temporary table by website.
@@ -47,24 +48,32 @@ class ModifySelectInProductPriceIndexFilter
     private $defaultStockProvider;
 
     /**
+     * @var Collection
+     */
+    private $websiteCollection;
+
+    /**
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param StockConfigurationInterface $stockConfiguration
      * @param ResourceConnection $resourceConnection
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param Collection $websiteCollection
      */
     public function __construct(
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         StockConfigurationInterface $stockConfiguration,
         ResourceConnection $resourceConnection,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        Collection $websiteCollection
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->stockConfiguration = $stockConfiguration;
         $this->resourceConnection = $resourceConnection;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->websiteCollection = $websiteCollection;
     }
 
     /**
@@ -134,7 +143,10 @@ class ModifySelectInProductPriceIndexFilter
     private function getWebsiteIdsFromProducts(array $entityIds): array
     {
         $result = [];
-
+        $websiteIds = [];
+        foreach ($this->websiteCollection->getItems() as $website) {
+            $websiteIds[] = (int)$website->getId();
+        }
         $connection = $this->resourceConnection->getConnection('indexer');
         $select = $connection->select();
         $select->from(
@@ -142,7 +154,9 @@ class ModifySelectInProductPriceIndexFilter
             ['website_id']
         )->where('product_in_websites.product_id IN (?)', $entityIds)->distinct();
         foreach ($connection->fetchCol($select) as $websiteId) {
-            $result[] = (int)$websiteId;
+            if (in_array($websiteId, $websiteIds)) {
+                $result[] = (int)$websiteId;
+            }
         }
 
         return $result;

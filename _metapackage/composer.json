@@ -5,6 +5,7 @@
     "type": "metapackage",
     "require": {
         "magento/module-inventory": "*",
+        "magento/module-inventory-admin-gws": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-inventory-advanced-checkout": "*",
         "magento/module-inventory-api": "*",

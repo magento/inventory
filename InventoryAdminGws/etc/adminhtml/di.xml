@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+       <plugin name="restrict_sources_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\SourceRepository\RestrictGetSourceListPlugin"/>
+       <plugin name="restrict_source_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\SourceRepository\RestrictGetSourcePlugin"/>
+       <plugin name="restrict_save_source_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\SourceRepository\RestrictSaveSourcePlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
+       <plugin name="restrict_stocks_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\StockRepository\RestrictGetStockListPlugin"/>
+       <plugin name="restrict_stock_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\StockRepository\RestrictGetStockPlugin"/>
+       <plugin name="restrict_save_stock_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\StockRepository\RestrictSaveStockPlugin"/>
+       <plugin name="restrict_delete_stock_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\StockRepository\RestrictDeleteStockPlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\SourceItemRepositoryInterface">
+       <plugin name="restrict_source_items_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\SourceItemRepository\RestrictGetSourceItemListPlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
+       <plugin name="restrict_source_items_save_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\SourceItemsSave\RestrictSaveSourceItemsPlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\SourceItemsDeleteInterface">
+       <plugin name="restrict_source_items_delete_for_current_user" type="Magento\InventoryAdminGws\Plugin\InventoryApi\Api\SourceItemsDelete\RestrictDeleteSourceItemsPlugin"/>
+    </type>
+    <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
+       <plugin name="restrict_legacy_source_item_save_for_current_user" type="Magento\InventoryAdminGws\Plugin\CatalogInventory\Api\StockItemRepository\RestrictSaveSourceItemPlugin"/>
+    </type>
+</config>
