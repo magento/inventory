@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminFillQuantityForPartialInvoiceActionGroup">
+        <annotations>
+            <description>Fill and update quantity for partial invoice. Start on create invoice page.</description>
+        </annotations>
+        <arguments>
+            <argument name="itemRow" type="string" defaultValue="1"/>
+            <argument name="quantity" type="string" defaultValue="{{minimalProductQty.value}}"/>
+        </arguments>
+        <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('itemRow')}}" userInput="{{quantity}}" stepKey="fillQuantity"/>
+        <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="clickUpdateQty"/>
+        <waitForPageLoad stepKey="waitForInvoiceQtyUpdated"/>
+    </actionGroup>
+</actionGroups>
