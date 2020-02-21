@@ -1,6 +1,7 @@
 "Source with code ""%value"" does not exist.","Source with code ""%value"" does not exist."
 "Could not load Sources for Stock","Could not load Sources for Stock"
 "Validation Failed","Validation Failed"
+"Validation Error: Select different sources for origin and destination.","Validation Error: Select different sources for origin and destination."
 "Could not save Source","Could not save Source"
 """%field"" can not be empty.","""%field"" can not be empty."
 """%field"" can not contain whitespaces.","""%field"" can not contain whitespaces."

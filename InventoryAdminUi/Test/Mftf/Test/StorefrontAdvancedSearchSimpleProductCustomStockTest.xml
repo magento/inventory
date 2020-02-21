@@ -16,15 +16,12 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2836"/>
-            </skip>
         </annotations>
 
         <before>
             <!--Create test data.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
-            <createData entity="SimpleProduct" stepKey="product">
+            <createData entity="ABC_dfj_SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>

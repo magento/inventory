@@ -33,23 +33,21 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <!--Set product quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
-            <!--Disable additional source.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
-                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
-        <!--Set product quantity.-->
-        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultStockQuantity"/>
-        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
@@ -57,46 +55,38 @@
         <!-- Add simple product to shopping cart -->
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
-            <argument name="productCount" value="1"/>
+            <argument name="productCount" value="{{minimalProductQty.value}}"/>
         </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPage"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPayment"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible"/>
-        <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
-        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Reorder simple product.-->
         <actionGroup ref="StorefrontCustomerReorderActionGroup" stepKey="reorderSimpleProduct">
             <argument name="orderNumber" value="${orderNumber}"/>
         </actionGroup>
-        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPageToReorder"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPaymentToReorder"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPaymentToReorder"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisibleToReorder"/>
-        <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddressToReorder"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrderToReorder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlacedToReorder"/>
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutToReorder"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNextToReorder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="reorder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber"/>
-        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessageAfterReorder"/>
         <!--Verify reorder.-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$reorderNumber}"/>
         </actionGroup>
         <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
-        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 1" stepKey="orderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered {{minimalProductQty.value}}" stepKey="orderedQuantity"/>
         <!--Verify product quantity.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterPlaceOrder">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$$product.sku$$"/>
         </actionGroup>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',_defaultSource.name)}}" userInput="100" stepKey="checkProductSourceQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="98" stepKey="checkSalableQtyAfterPlaceOrder"/>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="{{_defaultSource.name}}"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="{{_defaultStock.name}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWithTwoPieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>
