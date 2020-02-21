@@ -24,10 +24,10 @@
         <before>
             <!--Create test data.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
-            <createData entity="SimpleProduct" stepKey="product">
+            <createData entity="ABC_dfj_SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="AdvancedSearchBundleProduct" stepKey="bundleProduct"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="FullSource1" stepKey="source"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink">

@@ -79,4 +79,41 @@
         <data key="visibility">4</data>
         <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
     </entity>
+    <entity name="MsiAdvancedSearchDownloadableProduct" type="product">
+        <data key="name" unique="suffix">abc_dfj_</data>
+        <data key="sku" unique="suffix">abc_dfj_</data>
+        <data key="type_id">downloadable</data>
+        <data key="price">100</data>
+        <data key="quantity">100</data>
+        <data key="urlKey" unique="suffix">abc_dfj_</data>
+        <data key="attribute_set_id">4</data>
+        <data key="visibility">4</data>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+    <entity name="AdvancedSearchConfigurableMsiProduct" type="product">
+        <data key="name" unique="suffix">abc_dfj_</data>
+        <data key="sku" unique="suffix">abc_dfj_</data>
+        <data key="type_id">configurable</data>
+        <data key="price">100</data>
+        <data key="quantity">100</data>
+        <data key="weight">1</data>
+        <data key="status">1</data>
+        <data key="urlKey" unique="suffix">abc_dfj_</data>
+        <data key="attribute_set_id">4</data>
+        <data key="visibility">4</data>
+    </entity>
+    <entity name="AdvancedSearchBundleProduct" type="product2">
+        <data key="name" unique="suffix">abc_dfj_</data>
+        <data key="sku" unique="suffix">abc_dfj_</data>
+        <data key="type_id">bundle</data>
+        <data key="attribute_set_id">4</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="urlKey" unique="suffix">abc_dfj_</data>
+        <requiredEntity type="product_extension_attribute">EavStockItem</requiredEntity>
+        <requiredEntity type="custom_attribute">ApiProductDescription</requiredEntity>
+        <requiredEntity type="custom_attribute">ApiProductShortDescription</requiredEntity>
+        <requiredEntity type="custom_attribute">CustomAttributeDynamicPrice</requiredEntity>
+        <requiredEntity type="custom_attribute">CustomAttributePriceView</requiredEntity>
+    </entity>
 </entities>
