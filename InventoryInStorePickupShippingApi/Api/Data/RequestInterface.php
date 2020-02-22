@@ -16,14 +16,6 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 interface RequestInterface extends ExtensibleDataInterface
 {
     /**
-     * Set products SKU.
-     *
-     * @param string[] $products
-     * @return void
-     */
-    public function setProductsSku(array $products): void;
-
-    /**
      * Get products SKU.
      *
      * @return string[]
