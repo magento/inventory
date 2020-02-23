@@ -13,7 +13,7 @@
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface" type="Magento\InventoryInStorePickupShipping\Model\IsInStorePickupDeliveryCart" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Api\Data\RequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Request" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Api\GetAvailableLocationsForPickupInterface" type="Magento\InventoryInStorePickupShipping\Model\GetAvailableLocationsForPickup" />
-
+    <preference for="Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoInterface" type="Magento\InventoryInStorePickupShipping\Model\ProductInfo" />
 
     <type name="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain">
         <arguments>

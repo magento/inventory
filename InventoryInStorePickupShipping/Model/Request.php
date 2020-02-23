@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupShipping\Model;
 
+use Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoInterface;
 use Magento\InventoryInStorePickupShippingApi\Api\Data\RequestExtensionInterface;
 use Magento\InventoryInStorePickupShippingApi\Api\Data\RequestInterface;
 
@@ -16,9 +17,9 @@ use Magento\InventoryInStorePickupShippingApi\Api\Data\RequestInterface;
 class Request implements RequestInterface
 {
     /**
-     * @var string[]
+     * @var ProductInfoInterface[]
      */
-    private $productsSku;
+    private $productsInfo;
 
     /**
      * @var RequestExtensionInterface|null
@@ -26,29 +27,45 @@ class Request implements RequestInterface
     private $requestExtension;
 
     /**
-     * @param array $productsSku
-     * @param RequestExtensionInterface|null $requestExtension
+     * @var string
+     */
+    private $scopeType;
+
+    /**
+     * @var string
+     */
+    private $scopeCode;
+
+    /**
+     * @param ProductInfoInterface[] $productsSku
+     * @param string $scopeType
+     * @param string $scopeCode
+     * @param RequestExtensionInterface|null $requestExtension |null
      */
     public function __construct(
-        array $productsSku,
-        ?RequestExtensionInterface $requestExtension
+        array $productsInfo,
+        string $scopeType,
+        string $scopeCode,
+        ?RequestExtensionInterface $requestExtension = null
     ) {
-        $this->productsSku = $productsSku;
+        $this->productsInfo = $productsInfo;
         $this->requestExtension = $requestExtension;
+        $this->scopeType = $scopeType;
+        $this->scopeCode = $scopeCode;
     }
 
     /**
      * @inheritdoc
      */
-    public function getProductsSku(): array
+    public function getProductsInfo(): array
     {
-        return $this->productsSku;
+        return $this->productsInfo;
     }
 
     /**
      * @inheritdoc
      */
-    public function getExtensionAttributes(): RequestExtensionInterface
+    public function getExtensionAttributes(): ?RequestExtensionInterface
     {
         return $this->requestExtension;
     }
@@ -59,5 +76,23 @@ class Request implements RequestInterface
     public function setExtensionAttributes(RequestExtensionInterface $requestExtension): void
     {
         $this->requestExtension = $requestExtension;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getScopeType(): string
+    {
+        return $this->scopeType;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     */
+    public function getScopeCode(): string
+    {
+        return $this->scopeCode;
     }
 }

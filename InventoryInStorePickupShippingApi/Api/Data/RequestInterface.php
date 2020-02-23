@@ -18,16 +18,30 @@ interface RequestInterface extends ExtensibleDataInterface
     /**
      * Get products SKU.
      *
-     * @return string[]
+     * @return \Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoInterface[]
      */
-    public function getProductsSku(): array;
+    public function getProductsInfo(): array;
+
+    /**
+     * Get Sales Channel Type.
+     *
+     * @return string
+     */
+    public function getScopeType(): string;
+
+    /**
+     * Get Sales Channel code.
+     *
+     * @return string
+     */
+    public function getScopeCode(): string;
 
     /**
      * Get extension attributes.
      *
-     * @return \Magento\InventoryInStorePickupShippingApi\Api\Data\RequestExtensionInterface
+     * @return \Magento\InventoryInStorePickupShippingApi\Api\Data\RequestExtensionInterface|null
      */
-    public function getExtensionAttributes(): RequestExtensionInterface;
+    public function getExtensionAttributes(): ?RequestExtensionInterface;
 
     /**
      * Set extension attributes.
