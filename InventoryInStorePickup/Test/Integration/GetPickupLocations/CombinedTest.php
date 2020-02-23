@@ -149,7 +149,7 @@ class CombinedTest extends TestCase
                                                         'in'
                                                     )->setCountryFilter('DE', 'neq')
                                                     ->setPageSize(2)
-                                                    ->setCurrentPage(2)
+                                                    ->setCurrentPage(1)
                                                     ->setSortOrders([$sort])
                                                     ->create();
 
