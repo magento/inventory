@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Indexer\IsInStockUpdater;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
@@ -84,7 +85,7 @@ class SourceItemIndexer
         IndexNameBuilder $indexNameBuilder,
         StockIndexer $stockIndexer,
         DefaultStockProviderInterface $defaultStockProvider,
-        IsInStockUpdater $isInStockUpdater
+        IsInStockUpdater $isInStockUpdater = null
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -93,7 +94,7 @@ class SourceItemIndexer
         $this->indexNameBuilder = $indexNameBuilder;
         $this->stockIndexer = $stockIndexer;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->isInStockUpdater = $isInStockUpdater;
+        $this->isInStockUpdater = $isInStockUpdater ?: ObjectManager::getInstance()->get(IsInStockUpdater::class);
     }
 
     /**

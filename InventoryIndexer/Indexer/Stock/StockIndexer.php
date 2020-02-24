@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Indexer\IsInStockUpdater;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
@@ -85,7 +86,7 @@ class StockIndexer
         IndexDataProviderByStockId $indexDataProviderByStockId,
         IndexTableSwitcherInterface $indexTableSwitcher,
         DefaultStockProviderInterface $defaultStockProvider,
-        IsInStockUpdater $isInStockUpdater
+        IsInStockUpdater $isInStockUpdater = null
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructureHandler;
@@ -94,7 +95,7 @@ class StockIndexer
         $this->indexDataProviderByStockId = $indexDataProviderByStockId;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->isInStockUpdater = $isInStockUpdater;
+        $this->isInStockUpdater = $isInStockUpdater ?: ObjectManager::getInstance()->get(IsInStockUpdater::class);
     }
 
     /**

@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Indexer\SaveHandler\Batch;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryCatalogAdminUi\Model\BulkOperationsConfig;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
@@ -18,6 +18,8 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
  */
 class IsInStockUpdater
 {
+    const XML_PATH_BATCH_SIZE = 'cataloginventory/bulk_operations/batch_size';
+
     /**
      * @var Batch
      */
@@ -29,32 +31,31 @@ class IsInStockUpdater
     private $resourceConnection;
 
     /**
-     * @var BulkOperationsConfig
-     */
-    private $bulkOperationsConfig;
-
-    /**
      * @var GetProductIdsBySkusInterface
      */
     private $getProductIdsBySkus;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * @param Batch $batch
      * @param ResourceConnection $resourceConnection
-     * @param BulkOperationsConfig $bulkOperationsConfig ,
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      */
     public function __construct(
         Batch $batch,
         ResourceConnection $resourceConnection,
-        BulkOperationsConfig $bulkOperationsConfig,
-        GetProductIdsBySkusInterface $getProductIdsBySkus
+        GetProductIdsBySkusInterface $getProductIdsBySkus,
+        ScopeConfigInterface $scopeConfig
     )
     {
         $this->batch = $batch;
         $this->resourceConnection = $resourceConnection;
-        $this->bulkOperationsConfig = $bulkOperationsConfig;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -67,9 +68,8 @@ class IsInStockUpdater
     public function execute(\Traversable $documents, string $connectionName): void
     {
         $connection = $this->resourceConnection->getConnection($connectionName);
-        $batchSize = $this->bulkOperationsConfig->getBatchSize();
 
-        foreach ($this->batch->getItems($documents, $batchSize) as $batchDocuments) {
+        foreach ($this->batch->getItems($documents, $this->getBatchSize()) as $batchDocuments) {
             $preparedData = $this->prepareValues($batchDocuments);
 
             if (array_key_exists(SourceItemInterface::STATUS_IN_STOCK, $preparedData)) {
@@ -108,5 +108,13 @@ class IsInStockUpdater
         }
 
         return $result;
+    }
+
+    /**
+     * @return int
+     */
+    private function getBatchSize(): int
+    {
+        return (int) max(1, (int) $this->scopeConfig->getValue(self::XML_PATH_BATCH_SIZE));
     }
 }
