@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryIndexer\Indexer\IsInStockUpdater;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -60,6 +61,11 @@ class StockIndexer
     private $defaultStockProvider;
 
     /**
+     * @var IsInStockUpdater
+     */
+    private $isInStockUpdater;
+
+    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -69,6 +75,7 @@ class StockIndexer
      * @param IndexDataProviderByStockId $indexDataProviderByStockId
      * @param IndexTableSwitcherInterface $indexTableSwitcher
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param IsInStockUpdater $isInStockUpdater
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
@@ -77,7 +84,8 @@ class StockIndexer
         IndexNameBuilder $indexNameBuilder,
         IndexDataProviderByStockId $indexDataProviderByStockId,
         IndexTableSwitcherInterface $indexTableSwitcher,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        IsInStockUpdater $isInStockUpdater
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructureHandler;
@@ -86,6 +94,7 @@ class StockIndexer
         $this->indexDataProviderByStockId = $indexDataProviderByStockId;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->isInStockUpdater = $isInStockUpdater;
     }
 
     /**
@@ -136,13 +145,15 @@ class StockIndexer
                 $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             }
 
+            $indexData = $this->indexDataProviderByStockId->execute((int)$stockId);
             $this->indexHandler->saveIndex(
                 $replicaIndexName,
-                $this->indexDataProviderByStockId->execute((int)$stockId),
+                $indexData,
                 ResourceConnection::DEFAULT_CONNECTION
             );
             $this->indexTableSwitcher->switch($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             $this->indexStructure->delete($replicaIndexName, ResourceConnection::DEFAULT_CONNECTION);
+            $this->isInStockUpdater->execute($indexData, ResourceConnection::DEFAULT_CONNECTION);
         }
     }
 }
