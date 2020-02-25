@@ -7,26 +7,14 @@
 /** @var Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Inventory $block */
 ?>
 <script type="text/x-magento-init">
-    require(['jquery'], function($){
-        $('[data-role=toggle-editability-all]').change(function(e) {
-            var toggler = $(this);
-            var field = toggler.parents('.field');
-            var someEditable = $('input[type!="checkbox"], select, textarea', field);
-            var someEditableCheckboxes = $('input[type="checkbox"]', field).not(toggler);
-            if(someEditableCheckboxes.length){
-                someEditable.prop('disabled', !toggler.prop('checked') || someEditableCheckboxes.prop('checked'));
-                someEditableCheckboxes.prop('disabled', !toggler.prop('checked'));
-            } else {
-                someEditable.prop('disabled', !toggler.prop('checked'));
-            }
-        });
-        $('[data-role=toggle-editability]').change(function(e) {
-            var useConfigSettings = $(this);
-            var field = useConfigSettings.parents('.field');
-            var someEditable = $('input[type!="checkbox"], select, textarea', field);
-            someEditable.prop('disabled', useConfigSettings.prop('checked'));
-        });
-    });
+    {
+        "[data-role=toggle-editability]": {
+            "Magento_InventoryCatalogAdminUi/js/product/attribute/edit/inventory/toggle/toggle-editability": {}
+        },
+        "[data-role=toggle-editability-all]": {
+            "Magento_InventoryCatalogAdminUi/js/product/attribute/edit/inventory/toggle/toggle-editability-all": {}
+        }
+    }
 </script>
 
 <?php
