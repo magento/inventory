@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Product\Indexer\Price\Configurable;
 
+use Magento\CatalogInventory\Model\Stock;
 use Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
@@ -83,7 +84,14 @@ class FilterSelectByInventoryPlugin
         }
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
 
-        $select->reset(Select::WHERE);
+        $whereParts = $select->getPart(Select::WHERE);
+        foreach($whereParts as $key => $cond){
+            if($cond === '(si.is_in_stock = ' . Stock::STOCK_IN_STOCK . ')'){
+                unset($whereParts[$key]);
+            }
+        }
+        $select->setPart(Select::WHERE, $whereParts);
+
         $select->joinInner(
             ['stock' => $stockTable],
             'stock.sku = le.sku',
