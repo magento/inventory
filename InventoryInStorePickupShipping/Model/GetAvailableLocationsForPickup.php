@@ -11,7 +11,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryInStorePickupShipping\Model\ResourceModel\GetPickupLocationIntersectionForSkues;
+use Magento\InventoryInStorePickupShipping\Model\ResourceModel\GetPickupLocationIntersectionForSkus;
 use Magento\InventoryInStorePickupShippingApi\Api\Data\RequestInterface;
 use Magento\InventoryInStorePickupShippingApi\Api\GetAvailableLocationsForPickupInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -22,7 +22,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
 class GetAvailableLocationsForPickup implements GetAvailableLocationsForPickupInterface
 {
     /**
-     * @var GetPickupLocationIntersectionForSkues
+     * @var GetPickupLocationIntersectionForSkus
      */
     private $getPickupLocationIntersectionForSkues;
 
@@ -47,14 +47,14 @@ class GetAvailableLocationsForPickup implements GetAvailableLocationsForPickupIn
     private $searchCriteriaBuilder;
 
     /**
-     * @param GetPickupLocationIntersectionForSkues $getPickupLocationIntersectionForSkues
+     * @param GetPickupLocationIntersectionForSkus $getPickupLocationIntersectionForSkues
      * @param StockResolverInterface $stockResolver
      * @param GetStockSourceLinksInterface $getStockSourceLinks
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
-        GetPickupLocationIntersectionForSkues $getPickupLocationIntersectionForSkues,
+        GetPickupLocationIntersectionForSkus $getPickupLocationIntersectionForSkues,
         StockResolverInterface $stockResolver,
         GetStockSourceLinksInterface $getStockSourceLinks,
         SourceRepositoryInterface $sourceRepository,
@@ -72,11 +72,11 @@ class GetAvailableLocationsForPickup implements GetAvailableLocationsForPickupIn
      */
     public function execute(RequestInterface $request): array
     {
-        $skues = [];
+        $skus = [];
         foreach ($request->getProductsInfo() as $item) {
-            $skues[] = $item->getSku();
+            $skus[] = $item->getSku();
         }
-        $sourceCodes = $this->getPickupLocationIntersectionForSkues->execute($skues);
+        $sourceCodes = $this->getPickupLocationIntersectionForSkues->execute($skus);
         $stock = $this->stockResolver->execute($request->getScopeType(), $request->getScopeCode());
         $sourceCodesAssignedToStock = $this->getSourceCodesAssignedToStock($stock->getStockId());
 

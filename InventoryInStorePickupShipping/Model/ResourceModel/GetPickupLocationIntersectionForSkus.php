@@ -19,16 +19,18 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 /**
  * Provides list of Source Codes which have all requested products assigned.
  */
-class GetPickupLocationIntersectionForSkues
+class GetPickupLocationIntersectionForSkus
 {
     /**
      * @var SourceItem
      */
     private $sourceItemResource;
+
     /**
      * @var Source
      */
     private $sourceResource;
+
     /**
      * @var ExpressionFactory
      */
@@ -52,12 +54,12 @@ class GetPickupLocationIntersectionForSkues
     /**
      * Provide intersection of products availability in sources.
      *
-     * @param string[] $skues
+     * @param string[] $skus
      *
      * @return array
      * @throws LocalizedException
      */
-    public function execute(array $skues)
+    public function execute(array $skus)
     {
         $select = $this->sourceItemResource->getConnection()->select();
         $expression = $this->expressionFactory->create(['expression' => 'COUNT(' . SourceItemInterface::SKU . ')']);
@@ -67,12 +69,12 @@ class GetPickupLocationIntersectionForSkues
                 $this->sourceItemResource->getMainTable() . '.' . SourceItemInterface::SOURCE_CODE . '=' .
                 $this->sourceResource->getMainTable() . '.' . SourceInterface::SOURCE_CODE
             )
-            ->where(SourceItemInterface::SKU . ' in (?) ', $skues)
+            ->where(SourceItemInterface::SKU . ' in (?) ', $skus)
             ->where(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE . '= 1')
             ->reset(Select::COLUMNS)
             ->columns([SourceItemInterface::SOURCE_CODE])
             ->group($this->sourceItemResource->getMainTable() . '.' . SourceItemInterface::SOURCE_CODE)
-            ->having($expression . ' = ' . count($skues));
+            ->having($expression . ' = ' . count($skus));
         $result = $this->sourceItemResource->getConnection()->fetchAssoc($select);
         $sourceCodes = [];
         foreach ($result as $row) {
