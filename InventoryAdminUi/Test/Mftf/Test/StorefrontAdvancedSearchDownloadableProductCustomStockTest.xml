@@ -16,17 +16,21 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2581"/>
-            </skip>
         </annotations>
 
         <before>
             <!--Replace simple product with downloadable.-->
             <remove keyForRemoval="product"/>
-            <createData entity="MsiDownloadableProduct" stepKey="product" before="stock">
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com" before="stock"/>
+            <createData entity="MsiAdvancedSearchDownloadableProduct" stepKey="product" after="addDownloadableDomain">
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <createData entity="downloadableLink1" stepKey="downloadableLink" after="product">
+                <requiredEntity createDataKey="product"/>
+            </createData>
         </before>
+        <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+        </after>
     </test>
 </tests>
