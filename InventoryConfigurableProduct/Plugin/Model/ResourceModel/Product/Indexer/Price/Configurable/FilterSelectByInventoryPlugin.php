@@ -9,7 +9,6 @@ namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Produc
 
 use Magento\CatalogInventory\Model\Stock;
 use Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -54,13 +53,12 @@ class FilterSelectByInventoryPlugin
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
-        $this->defaultStockProvider = $defaultStockProvider ?: ObjectManager::getInstance()
-            ->get(DefaultStockProviderInterface::class);
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -82,18 +80,17 @@ class FilterSelectByInventoryPlugin
         if ($stockId === $this->defaultStockProvider->getId()) {
             return $select;
         }
-        $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
 
         $whereParts = $select->getPart(Select::WHERE);
-        foreach($whereParts as $key => $cond){
-            if($cond === '(si.is_in_stock = ' . Stock::STOCK_IN_STOCK . ')'){
-                unset($whereParts[$key]);
-            }
+        $conditionKey = array_search('(si.is_in_stock = ' . Stock::STOCK_IN_STOCK . ')', $whereParts);
+        if ($conditionKey === false) {
+            return $select;
         }
+        unset($whereParts[$conditionKey]);
         $select->setPart(Select::WHERE, $whereParts);
 
         $select->joinInner(
-            ['stock' => $stockTable],
+            ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
             'stock.sku = le.sku',
             []
         )->where(
