@@ -65,6 +65,7 @@ class FilterSelectByInventoryPlugin
      * Add "is_salable" filter to select.
      *
      * @param Configurable $subject
+     * @param callable $proceed
      * @param Select $select
      * @return Select
      *
@@ -72,22 +73,14 @@ class FilterSelectByInventoryPlugin
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterFilterSelectByInventory(Configurable $subject, Select $select): Select
+    public function aroundFilterSelectByInventory(Configurable $subject, callable $proceed, Select $select): Select
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
-            return $select;
+            return $proceed($select);
         }
-
-        $whereParts = $select->getPart(Select::WHERE);
-        $conditionKey = array_search('(si.is_in_stock = ' . Stock::STOCK_IN_STOCK . ')', $whereParts);
-        if ($conditionKey === false) {
-            return $select;
-        }
-        unset($whereParts[$conditionKey]);
-        $select->setPart(Select::WHERE, $whereParts);
 
         $select->joinInner(
             ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
