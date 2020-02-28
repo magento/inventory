@@ -18,4 +18,7 @@
     <publisher topic="inventory.source.items.cleanup">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
+    <publisher topic="inventory.mass.update">
+        <connection name="db" exchange="magento-db" disabled="false" />
+    </publisher>
 </config>
