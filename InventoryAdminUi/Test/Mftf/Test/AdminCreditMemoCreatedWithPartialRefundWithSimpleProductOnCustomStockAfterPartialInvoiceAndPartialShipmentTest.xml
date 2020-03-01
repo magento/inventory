@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreditMemoCreatedWithPartialRefundWithSimpleProductOnCustomStockAfterPartialInvoiceAndPartialShipment">
+    <test name="AdminCreditMemoCreatedWithPartialRefundWithSimpleProductOnCustomStockAfterPartialInvoiceAndPartialShipmentTest">
         <annotations>
             <stories value="MSI Credit Memo"/>
             <title value="Credit Memo created with partial refund with Simple product on Custom stock after partial invoice and partial shipment"/>
