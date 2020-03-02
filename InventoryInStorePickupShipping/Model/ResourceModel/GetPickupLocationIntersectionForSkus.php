@@ -70,7 +70,8 @@ class GetPickupLocationIntersectionForSkus
                 $this->sourceResource->getMainTable() . '.' . SourceInterface::SOURCE_CODE
             )
             ->where(SourceItemInterface::SKU . ' in (?) ', $skus)
-            ->where(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE . '= 1')
+            ->where(SourceInterface::ENABLED . ' = 1')
+            ->where(PickupLocationInterface::IS_PICKUP_LOCATION_ACTIVE . ' = 1')
             ->reset(Select::COLUMNS)
             ->columns([SourceItemInterface::SOURCE_CODE])
             ->group($this->sourceItemResource->getMainTable() . '.' . SourceItemInterface::SOURCE_CODE)
