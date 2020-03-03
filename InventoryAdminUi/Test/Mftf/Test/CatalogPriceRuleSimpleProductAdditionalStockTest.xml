@@ -35,6 +35,9 @@
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity" after="assignAdditionalSourceToProduct"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct" after="setProductQuantity"/>
+
+            <!-- Perform reindex and flush cache -->
+            <magentoCLI command="cron:run --group=default --group=index" stepKey="runCronIndex" after="saveProduct"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
