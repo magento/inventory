@@ -14,6 +14,7 @@
             <title value="Admin user apply 'Only X left Threshold' for Simple product with disable manage stock"/>
             <description value="User will not see 'Only X left' message on frontend if manage stock is disabled on product level"/>
             <severity value="CRITICAL"/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/911767/scenarios/4324314"/>
         </annotations>
 
         <before>
