@@ -87,6 +87,9 @@
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
 
+            <!-- Set Magento back to default configuration -->
+            <magentoCLI command="config:set {{CatalogInventoryOptionsShowOutOfStockDisable.path}} {{CatalogInventoryOptionsShowOutOfStockDisable.value}}" stepKey="setConfigShowOutOfStockFalse"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
             <magentoCLI command="cron:run --group=default --group=index" stepKey="runCronIndex"/>
         </before>
         <after>
