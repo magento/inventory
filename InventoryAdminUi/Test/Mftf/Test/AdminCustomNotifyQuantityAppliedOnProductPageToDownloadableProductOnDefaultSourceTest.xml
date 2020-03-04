@@ -45,7 +45,6 @@
             <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="filter_value" value="$$downloadableProduct.product[sku]$$"/>
         </actionGroup>
-
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1"/>
         <actionGroup ref="AdminFillNotifyQtyActionGroup" stepKey="fillNotifyQty">
             <argument name="qty" value="10"/>

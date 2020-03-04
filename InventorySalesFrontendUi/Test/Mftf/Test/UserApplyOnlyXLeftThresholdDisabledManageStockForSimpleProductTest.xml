@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="UserApplyOnlyXLeftThresholdDisabledManageStockForSimpleProductTest">
+        <annotations>
+            <stories value="InventoryFrontendUi threshold option"/>
+            <title value="Admin user apply 'Only X left Threshold' for Simple product with disable manage stock"/>
+            <description value="User will not see 'Only X left' message on frontend if manage stock is disabled on product level"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/911767/scenarios/4324314"/>
+        </annotations>
+
+        <before>
+            <comment userInput="Fill config 'Only X left Threshold'." stepKey="fillConfigComment"/>
+            <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 2000" stepKey="fillLeftThresoldConfigValue"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="fillManageStockConfigValue"/>
+
+            <comment userInput="Perform reindex and cache flush after fill 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
+
+            <createData entity="SimpleSubCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProduct" stepKey="createSimpleProductForDisabledManageStock">
+                <field key="price">10.00</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="createSimpleProductForEnabledManageStock">
+                <field key="price">10.00</field>
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <waitForPageLoad stepKey="waitForDashboardLoad"/>
+        </before>
+        <after>
+            <comment userInput="Revert config 'Only X left Threshold' changes." stepKey="revertConfigChangesComment"/>
+            <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertConfigValue"/>
+
+            <comment userInput="Perform reindex and cache flush after revert 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
+
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createSimpleProductForDisabledManageStock" stepKey="deleteProductForDisabledManageStock"/>
+            <deleteData createDataKey="createSimpleProductForEnabledManageStock" stepKey="deleteProductForEnabledManageStock"/>
+        </after>
+
+        <!--Disable manage stock on product edit page.-->
+        <amOnPage url="{{AdminProductEditPage.url($$createSimpleProductForDisabledManageStock.id$$)}}" stepKey="openProductEditPageToDisableManageStock"/>
+        <actionGroup ref="AdminCatalogInventoryChangeManageStockActionGroup" stepKey="disableManageStockOnProductEditPage">
+            <argument name="manageStock" value="No"/>
+        </actionGroup>
+        <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProductAfterDisableManageStock"/>
+
+        <!--Frontend Start-->
+        <comment userInput="Verify that message 'Only 1000 left' do appeared on product page on frontend." stepKey="verifyMessageIsDisplayedComment"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryForVerifyMessage"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad10"/>
+        <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createSimpleProductForEnabledManageStock.name$$)}}" stepKey="openProductPageForVerifyMessage"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad11"/>
+        <see selector=".availability.only" userInput="Only 1000 left" stepKey="checkProductsLeftMessage"/>
+
+        <comment userInput="Verify that message 'Only 1000 left' do not appeared on product page on frontend." stepKey="verifyMessageIsNotDisplayedComment"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryForNotVerifyMessage"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad10ToNotVerifyMessage"/>
+        <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createSimpleProductForDisabledManageStock.name$$)}}" stepKey="openProductPageForNotVerifyMessage"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad11ToNotVerifyMessage"/>
+        <dontSee selector=".availability.only" userInput="Only 1000 left" stepKey="checkDoNotSeeProductsLeftMessage"/>
+        <!--Frontend Ends-->
+    </test>
+</tests>

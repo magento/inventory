@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/queue.xsd">
+    <broker topic="inventory.source.items.cleanup" exchange="magento-db" type="db">
+        <queue name="inventory.source.items.cleanup" consumer="inventory.source.items.cleanup" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus::execute"/>
+    </broker>
+    <broker topic="inventory.mass.update" exchange="magento-db" type="db">
+        <queue name="inventory.mass.update" consumer="inventory.mass.update" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventoryCatalog\Model\UpdateInventory::execute"/>
+    </broker>
+</config>

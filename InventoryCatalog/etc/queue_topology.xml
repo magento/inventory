@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
+    <exchange name="magento-db" type="topic" connection="db">
+        <binding id="InventorySourceItemsCleanUpBinding" topic="inventory.source.items.cleanup" destinationType="queue" destination="inventory.source.items.cleanup"/>
+        <binding id="InventoryMassUpdateBinding" topic="inventory.mass.update" destinationType="queue" destination="inventory.mass.update"/>
+    </exchange>
+</config>
