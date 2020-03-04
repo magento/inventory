@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateShipmentWithChangedSimpleProductIntoConfigurableDefaultStockTest">
+        <annotations>
+            <stories value="Simple Product Default Stock."/>
+            <title value="Create shipment with simple product converted to configurable on default stock."/>
+            <description value="Verify, admin able to create shipment with simple product converted to configurable."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/735286/scenarios/4048055"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
+            <createData entity="productAttributeWithTwoOptionsNotVisible" stepKey="configurableAttribute1"/>
+            <createData entity="productAttributeOption1" stepKey="option1">
+                <requiredEntity createDataKey="configurableAttribute1"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="option2">
+                <requiredEntity createDataKey="configurableAttribute1"/>
+            </createData>
+            <createData entity="productAttributeWithTwoOptions" stepKey="configurableAttribute2"/>
+            <createData entity="productAttributeOption3" stepKey="option3">
+                <requiredEntity createDataKey="configurableAttribute2"/>
+            </createData>
+            <createData entity="productAttributeOption4" stepKey="option4">
+                <requiredEntity createDataKey="configurableAttribute2"/>
+            </createData>
+            <createData entity="AddToDefaultSet" stepKey="addAttributesToDefaultSet">
+                <requiredEntity createDataKey="configurableAttribute1"/>
+                <requiredEntity createDataKey="configurableAttribute2"/>
+            </createData>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="_minimalSource" stepKey="source"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <!--Assign Default Stock to Main Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Set product quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        </before>
+        <after>
+            <!--Delete test data.-->
+            <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="configurableAttribute1" stepKey="deleteConfigurableAttribute1"/>
+            <deleteData createDataKey="configurableAttribute2" stepKey="deleteConfigurableAttribute2"/>
+            <!--Disable source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Add product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$" />
+        </actionGroup>
+        <amOnPage url="{{StorefrontProductPage.url($product.custom_attributes[url_key]$)}}" stepKey="navigateToPDP"/>
+        <actionGroup ref="StorefrontAddProductToCartWithQtyActionGroup" stepKey="addProductToCart">
+            <argument name="productQty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Convert to configurable.-->
+        <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+        <actionGroup ref="createConfigurationsForTwoAttributeCustomSource" stepKey="createConfigurationsWithCustomStock">
+            <argument name="attributeCode" value="$configurableAttribute1.attribute_code$"/>
+            <argument name="secondAttributeCode" value="$configurableAttribute2.attribute_code$"/>
+            <argument name="sourceName" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
+        <magentoCron stepKey="runConsumers"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
+    </test>
+</tests>
