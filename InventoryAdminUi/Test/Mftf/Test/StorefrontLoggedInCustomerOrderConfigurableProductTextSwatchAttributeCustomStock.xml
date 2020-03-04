@@ -20,6 +20,9 @@
         </annotations>
 
         <before>
+            <!--Enable 'Mange Stock' in configuration.-->
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
