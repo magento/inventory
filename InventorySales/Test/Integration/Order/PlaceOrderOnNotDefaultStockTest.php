@@ -229,15 +229,15 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/quote.php
-     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoConfigFixture store_for_global_website_store cataloginventory/item_options/backorders 1
      * @magentoConfigFixture current_store cataloginventory/item_options/min_qty -10
      *
@@ -268,15 +268,15 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/quote_two_carts.php
-     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote_two_carts.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoConfigFixture store_for_global_website_store cataloginventory/item_options/backorders 1
      *
      * @magentoDbIsolation disabled

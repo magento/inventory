@@ -167,14 +167,14 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento//InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 2
      *
      * @param string $sku
