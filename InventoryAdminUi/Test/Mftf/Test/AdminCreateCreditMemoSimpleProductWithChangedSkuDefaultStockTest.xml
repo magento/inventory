@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateCreditMemoSimpleProductWithChangedSkuDefaultStockTest">
+        <annotations>
+            <stories value="Simple Product Default Stock."/>
+            <title value="Create credit memo with simple product with changed sku on default stock."/>
+            <description value="Verify, admin able to create credit memo with simple product after one's sku has been changed."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/735125/scenarios/4006289"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="_minimalSource" stepKey="source"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <!--Assign Default Stock to Main Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Set default source product quantity.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        </before>
+        <after>
+            <!--Delete test data.-->
+            <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteProduct">
+                <argument name="productName" value="$product.name$"/>
+            </actionGroup>
+            <!--Disable source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Add product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$" />
+        </actionGroup>
+        <amOnPage url="{{StorefrontProductPage.url($product.custom_attributes[url_key]$)}}" stepKey="navigateToPDP"/>
+        <actionGroup ref="StorefrontAddProductToCartWithQtyActionGroup" stepKey="addProductToCart">
+            <argument name="productQty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Change product 'sku'.-->
+        <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+        <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        <magentoCron stepKey="runConsumers"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">
+            <argument name="selector" value="AdminProductGridFilterSection.nameFilter"/>
+            <argument name="value" value="$product.name$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="{{_defaultSource.name}}"/>
+            <argument name="sourceQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
+            <argument name="stockName" value="{{_defaultStock.name}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
+        </actionGroup>
+        <!--Create invoice and credit memo.-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateCreditMemo">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
+        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
+        <actionGroup ref="AdminCreateCreditMemoReturnToStockActionGroup" stepKey="createCreditMemo">
+            <argument name="productQty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridAfterCreditMemo"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductAfterCreditMemo">
+            <argument name="selector" value="AdminProductGridFilterSection.nameFilter"/>
+            <argument name="value" value="$product.name$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantityAfterCreditMemo">
+            <argument name="sourceName" value="{{_defaultSource.name}}"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="{{_defaultStock.name}}"/>
+            <argument name="stockQty" value="{{defaultProductQty.value}}"/>
+        </actionGroup>
+    </test>
+</tests>
