@@ -12,6 +12,7 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 /**
  * Data Transfer Object for request to get available pickup locations for pickup.
  * @see \Magento\InventoryInStorePickupShippingApi\Api\GetAvailableLocationsForPickupInterface
+ * @api
  */
 interface RequestInterface extends ExtensibleDataInterface
 {

@@ -11,6 +11,7 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 
 /**
  * Product Info Data Transfer Object.
+ * @api
  */
 interface ProductInfoInterface extends ExtensibleDataInterface
 {

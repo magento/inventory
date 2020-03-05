@@ -11,6 +11,7 @@ use Magento\InventoryInStorePickupShippingApi\Api\Data\RequestInterface;
 
 /**
  * Provide list of Pickup Location codes which are satisfy conditions of request.
+ * @api
  */
 interface GetAvailableLocationsForPickupInterface
 {
