@@ -44,4 +44,7 @@
             <argument name="dataObjectHelper" xsi:type="null"/>
         </arguments>
     </type>
+    <type name="Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple">
+        <plugin name="delete_source_items_configuration" type="Magento\InventoryLowQuantityNotification\Plugin\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple\DeleteSourceItemsConfigurationPlugin"/>
+    </type>
 </config>
