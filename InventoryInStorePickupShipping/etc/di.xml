@@ -11,15 +11,15 @@
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPrice" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceRequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPriceRequest" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface" type="Magento\InventoryInStorePickupShipping\Model\IsInStorePickupDeliveryCart" />
-    <preference for="Magento\InventoryInStorePickupShippingApi\Api\Data\RequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Request" />
-    <preference for="Magento\InventoryInStorePickupShippingApi\Api\GetAvailableLocationsForPickupInterface" type="Magento\InventoryInStorePickupShipping\Model\GetAvailableLocationsForPickup" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoInterface" type="Magento\InventoryInStorePickupShipping\Model\ProductInfo" />
-
     <type name="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="sales_channel" xsi:type="object">Magento\InventoryInStorePickupShipping\Model\Carrier\Validation\SalesChannelValidator</item>
             </argument>
         </arguments>
+    </type>
+    <type name="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface">
+        <plugin name="filter_locations_by_products_availability" type="Magento\InventoryInStorePickupShipping\Model\FilterSourcesByProductsAvailabilityPlugin" />
     </type>
 </config>

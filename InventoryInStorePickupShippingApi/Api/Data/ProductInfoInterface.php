@@ -33,6 +33,7 @@ interface ProductInfoInterface extends ExtensibleDataInterface
      * Set Product Info Extension.
      *
      * @param \Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoExtensionInterface $productInfoExtension
+     * @return void
      */
     public function setExtensionAttributes(ProductInfoExtensionInterface $productInfoExtension): void;
 }
