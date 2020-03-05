@@ -157,13 +157,24 @@ define([
          * @returns {*}
          */
         updateNearbyLocations: function (searchQuery) {
-            var self = this;
+            var self = this,
+                productsInfo = [],
+                items = quote.getItems();
+
+            _.each(items, function (item) {
+                if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
+                    productsInfo.push({sku: item.sku});
+                }
+            });
 
             return pickupLocationsService
                 .getNearbyLocations({
                     area: {
                         radius: this.nearbySearchRadius,
                         searchTerm: searchQuery
+                    },
+                    extension_attributes: {
+                        productsInfo: productsInfo
                     },
                     pageSize: this.nearbySearchLimit
                 })
