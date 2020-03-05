@@ -15,4 +15,10 @@
     <publisher topic="async.V1.inventory.bulk-product-source-transfer.POST">
         <connection name="amqp" exchange="magento" disabled="false" />
     </publisher>
+    <publisher topic="inventory.source.items.cleanup">
+        <connection name="db" exchange="magento-db" disabled="false" />
+    </publisher>
+    <publisher topic="inventory.mass.update">
+        <connection name="db" exchange="magento-db" disabled="false" />
+    </publisher>
 </config>
