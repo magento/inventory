@@ -24,7 +24,7 @@
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <createData entity="FullSource1" stepKey="source"/>
             <createData entity="_defaultCategory" stepKey="category"/>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="SimpleProduct" stepKey="product1">
                 <requiredEntity createDataKey="category"/>
             </createData>

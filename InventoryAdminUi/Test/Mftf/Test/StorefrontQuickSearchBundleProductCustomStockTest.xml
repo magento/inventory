@@ -24,7 +24,7 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="FullSource1" stepKey="source"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink">

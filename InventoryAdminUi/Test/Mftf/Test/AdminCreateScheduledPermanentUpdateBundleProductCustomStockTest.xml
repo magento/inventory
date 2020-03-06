@@ -27,7 +27,7 @@
                 <requiredEntity createDataKey="source"/>
             </createData>
             <!--Create bundle and virtual products.-->
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Assign virtual product to additional source.-->
             <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openVirtualProductEditPage"/>

@@ -23,7 +23,7 @@
             <!--Replace simple product with bundle.-->
             <remove keyForRemoval="createProduct"/>
             <createData entity="SimpleProduct2" stepKey="simpleProduct" after="createCategory"/>
-            <createData entity="ApiBundleProduct" stepKey="createProduct" after="simpleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createProduct" after="simpleProduct"/>
             <createData entity="DropDownBundleOption" stepKey="bundleOption" after="createProduct">
                 <requiredEntity createDataKey="createProduct"/>
             </createData>

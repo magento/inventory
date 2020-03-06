@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProduct\Model\SourceItem\Validator;
 
-use Magento\Backend\Model\UrlInterface;
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -110,7 +110,6 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
      *
      * @param SourceItemInterface $sourceItem
      * @return ValidationResult
-     * @throws NoSuchEntityException
      */
     public function validate(SourceItemInterface $sourceItem): ValidationResult
     {
@@ -118,9 +117,12 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
         if ($this->isSingleSourceMode->execute()) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }
-
-        $sourceItemSku = $sourceItem->getSku();
-        $id = $this->getProductIdsBySkus->execute([$sourceItemSku])[$sourceItemSku];
+        try {
+            $sourceItemSku = $sourceItem->getSku();
+            $id = $this->getProductIdsBySkus->execute([$sourceItemSku])[$sourceItemSku];
+        } catch (NoSuchEntityException $e) {
+            return $this->validationResultFactory->create(['errors' => $errors]);
+        }
         $bundleProductIds = $this->type->getParentIdsByChild($id);
         if (!$bundleProductIds) {
             return $this->validationResultFactory->create(['errors' => $errors]);

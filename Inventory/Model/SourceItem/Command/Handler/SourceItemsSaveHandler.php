@@ -69,7 +69,7 @@ class SourceItemsSaveHandler
         $validationResult = $this->sourceItemsValidator->validate($sourceItems);
         if (!$validationResult->isValid()) {
             $error = current($validationResult->getErrors());
-            throw new ValidationException(__('Validation Failed: ' . $error, null, 0, $validationResult));
+            throw new ValidationException(__('Validation Failed: ' . $error), null, 0, $validationResult);
         }
 
         try {

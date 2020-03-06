@@ -29,7 +29,7 @@
             </createData>
             <!--Create bundle and virtual product.-->
             <createData entity="_defaultCategory" stepKey="category"/>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Create customer.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
@@ -95,20 +95,6 @@
         <waitForPageLoad time="30" stepKey="waitForOrderPlacement"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
-        <!--Admin Area Check ordered quantity-->
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
-            <argument name="orderId" value="{$grabOrderNumber}"/>
-        </actionGroup>
-        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
-        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 2" stepKey="orderedQuantity"/>
-        <!--Admin Area Check source quantity and salable quantity-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterPlaceOrder">
-            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$$product.sku$$"/>
-        </actionGroup>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', $$additionalSource.source[name]$$)}}" userInput="100" stepKey="checkProductSourceQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1', $$additionalStock.stock[name]$$)}}" userInput="90" stepKey="checkSalableQtyAfterPlaceOrder"/>
         <!--Admin Area Process Full Invoice-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderForInvoice">
             <argument name="orderId" value="{$grabOrderNumber}"/>
