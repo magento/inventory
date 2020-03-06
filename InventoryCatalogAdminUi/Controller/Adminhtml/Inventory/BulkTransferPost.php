@@ -161,7 +161,7 @@ class BulkTransferPost extends Action
             }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->messageManager->addErrorMessage(__('Something went wrong during the operation.'));
+            $this->messageManager->addErrorMessage($e->getMessage());
         }
 
         $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
