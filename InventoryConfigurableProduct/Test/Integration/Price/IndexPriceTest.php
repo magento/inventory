@@ -91,12 +91,11 @@ class IndexPriceTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDbIsolation disabled
-     * @magentoConfigFixture store_for_us_website_store cataloginventory/options/show_out_of_stock 1
+     * @magentoConfigFixture default_store cataloginventory/options/show_out_of_stock 1
      * @return void
      */
     public function testIndexPriceWhenOutOfStockInDefaultStock(): void
     {
-        $this->storeManager->setCurrentStore('store_for_us_website');
         $configurableProduct = $this->productRepository->get(
             'configurable',
             false,
