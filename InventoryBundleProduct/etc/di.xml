@@ -20,8 +20,12 @@
     </type>
     <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
         <plugin name="validate_source_items_before_add_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ValidateSourceItemsBeforeAddBundleSelectionPlugin"/>
-        <plugin name="process_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterAddBundleSelectionPlugin"/>
-        <plugin name="process_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterSaveBundleSelectionPlugin"/>
-        <plugin name="process_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ProcessSourceItemsAfterRemoveBundleSelectionPlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Model\SourceItemValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="shipmentType" xsi:type="object">Magento\InventoryBundleProduct\Model\SourceItem\Validator\ShipmentTypeValidator</item>
+            </argument>
+        </arguments>
     </type>
 </config>

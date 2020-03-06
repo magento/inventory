@@ -106,11 +106,11 @@ class SourceItemsProcessor implements SourceItemsProcessorInterface
             $sourceItemsForSave[] = $sourceItem;
             unset($sourceItemsForDelete[$sourceCode]);
         }
-        if ($sourceItemsForSave) {
-            $this->sourceItemsSave->execute($sourceItemsForSave);
-        }
         if ($sourceItemsForDelete) {
             $this->sourceItemsDelete->execute($sourceItemsForDelete);
+        }
+        if ($sourceItemsForSave) {
+            $this->sourceItemsSave->execute($sourceItemsForSave);
         }
     }
 

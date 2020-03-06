@@ -13,6 +13,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
  * Verify ability to add product to bundle selection plugin.
@@ -25,11 +26,20 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
     private $getSourceCodesBySkus;
 
     /**
+     * @var IsSingleSourceModeInterface
+     */
+    private $isSingleSourceMode;
+
+    /**
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param GetSourceCodesBySkusInterface $getSourceCodesBySkus
      */
-    public function __construct(GetSourceCodesBySkusInterface $getSourceCodesBySkus)
-    {
+    public function __construct(
+        IsSingleSourceModeInterface $isSingleSourceMode,
+        GetSourceCodesBySkusInterface $getSourceCodesBySkus
+    ) {
         $this->getSourceCodesBySkus = $getSourceCodesBySkus;
+        $this->isSingleSourceMode = $isSingleSourceMode;
     }
 
     /**
@@ -49,7 +59,7 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
         $optionId,
         LinkInterface $link
     ): void {
-        if ($product->getShipmentType() === null
+        if ($this->isSingleSourceMode->execute()
             || (int)$product->getShipmentType() === AbstractType::SHIPMENT_SEPARATELY) {
             return;
         }
