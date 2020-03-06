@@ -86,6 +86,8 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
+
+            <magentoCLI command="cron:run --group=default --group=index" stepKey="runCronIndex"/>
         </before>
         <after>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
@@ -117,11 +119,17 @@
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+
+        <!-- So far `default` Cron Group contains inventory update -->
+        <magentoCLI command="cron:run --group=default --group=index" stepKey="runCronIndex"/>
         <!-- Assert out of stock option is absent on product page -->
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>
-        <dontSee userInput="$$getConfigAttributeOption1.label$$" selector="{{StorefrontProductInfoMainSection.optionByAttributeId($$configurableProductAttribute.attribute_id$$)}}" stepKey="assertOptionNotAvailable" />
-        <see userInput="$$getConfigAttributeOption2.label$$" selector="{{StorefrontProductInfoMainSection.optionByAttributeId($$configurableProductAttribute.attribute_id$$)}}" stepKey="assertOptionAvailable" />
+
+        <grabMultiple selector="{{StorefrontProductInfoMainSection.selectableProductOptions($$configurableProductAttribute.attribute_id$$)}}" stepKey="productOptions"/>
+        <assertEquals stepKey="assertProductOptions">
+            <actualResult type="variable">productOptions</actualResult>
+            <expectedResult type="array">['Choose an Option...', $$getConfigAttributeOption2.label$$]</expectedResult>
+        </assertEquals>
     </test>
 </tests>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminFillQuantityForPartialCreditMemoReturnToStockActionGroup">
+        <annotations>
+            <description>Fill and update quantity for partial credit memo. Check "return to stock" checkbox. Start on create credit memo page.</description>
+        </annotations>
+        <arguments>
+            <argument name="itemRow" type="string" defaultValue="1"/>
+            <argument name="quantity" type="string" defaultValue="{{minimalProductQty.value}}"/>
+        </arguments>
+        <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('itemRow')}}" userInput="{{quantity}}" stepKey="fillQuantity"/>
+        <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>
+        <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('itemRow')}}" stepKey="returnToStockCheckbox"/>
+    </actionGroup>
+</actionGroups>

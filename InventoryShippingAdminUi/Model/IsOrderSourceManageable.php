@@ -68,8 +68,8 @@ class IsOrderSourceManageable
         $stocks = $this->stockRepository->getList()->getItems();
         $orderItems = $order->getItems();
         foreach ($orderItems as $orderItem) {
-            $productType = $orderItem->getProduct()->getTypeId();
-            if (!$this->isSourceItemManagementAllowedForProductType->execute($productType)) {
+            $productType = $orderItem->getProduct() ? $orderItem->getProduct()->getTypeId() : '';
+            if (!$productType || !$this->isSourceItemManagementAllowedForProductType->execute($productType)) {
                 continue;
             }
 
