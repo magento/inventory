@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Product\Indexer\Price\Configurable;
 
-use Magento\CatalogInventory\Model\Stock;
 use Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -78,9 +77,6 @@ class FilterSelectByInventoryPlugin
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
-        if ($stockId === $this->defaultStockProvider->getId()) {
-            return $proceed($select);
-        }
 
         $select->joinInner(
             ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
