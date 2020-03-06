@@ -8,10 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Test\Integration\Price;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\ConfigurableProduct\Pricing\Price\ConfigurablePriceResolver;
-use Magento\ConfigurableProduct\Pricing\Price\FinalPriceResolver;
+use Magento\CatalogInventory\Model\Configuration;
+use Magento\Framework\App\Config\MutableScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\ScopeInterface;
 use Magento\Framework\DB\Select;
+use Magento\Catalog\Model\Indexer\Product\Price\Processor;
+use Magento\Store\Model\ScopeInterface as StoreScope;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -42,9 +45,14 @@ class IndexPriceTest extends TestCase
     private $storeCodeBefore;
 
     /**
-     * @var  ConfigurablePriceResolver
+     * @var Processor
      */
-    private $configurablePriceResolver;
+    private $indexerProcessor;
+
+    /**
+     * @var MutableScopeConfigInterface
+     */
+    private $scopeConfig;
 
     /**
      * @inheritdoc
@@ -57,12 +65,8 @@ class IndexPriceTest extends TestCase
         $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
         $this->storeCodeBefore = $this->storeManager->getStore()->getCode();
-        $finalPrice = $this->objectManager->get(FinalPriceResolver::class);
-
-        $this->configurablePriceResolver = $this->objectManager->create(
-            ConfigurablePriceResolver::class,
-            ['priceResolver' => $finalPrice]
-        );
+        $this->indexerProcessor = $this->objectManager->create(Processor::class);
+        $this->scopeConfig = $this->objectManager->get(MutableScopeConfigInterface::class);
     }
 
     /**
@@ -96,12 +100,8 @@ class IndexPriceTest extends TestCase
      */
     public function testIndexPriceWhenOutOfStockInDefaultStock(): void
     {
-        $configurableProduct = $this->productRepository->get(
-            'configurable',
-            false,
-            null,
-            true
-        );
+        $this->updateConfigShowOutOfStockFlag(1);
+        $this->indexerProcessor->reindexAll();
 
         /** @var ResourceConnection $resource */
         $resource = $this->objectManager->get(ResourceConnection::class);
@@ -111,11 +111,27 @@ class IndexPriceTest extends TestCase
             ['price_index' => $resource->getTableName('catalog_product_index_price')],
             ['entity_id', 'min_price', 'max_price']
         );
-        $select->where("price_index.entity_id IN (?)", $configurableProduct->getId());
+        $select->where("price_index.entity_id IN (?)", 1);
         $select->where('price_index.min_price = ?', 10);
         $select->where('price_index.max_price = ?', 20);
         $result = $select->query()->fetchAll();
 
         self::assertNotEquals(0, count($result));
+    }
+
+    /**
+     * Updates store config 'cataloginventory/options/show_out_of_stock' flag.
+     *
+     * @param int $showOutOfStock
+     * @return void
+     */
+    private function updateConfigShowOutOfStockFlag(int $showOutOfStock): void
+    {
+        $this->scopeConfig->setValue(
+            Configuration::XML_PATH_SHOW_OUT_OF_STOCK,
+            $showOutOfStock,
+            StoreScope::SCOPE_STORE,
+            ScopeInterface::SCOPE_DEFAULT
+        );
     }
 }
