@@ -57,7 +57,7 @@ class Filters implements FiltersInterface
     private $pickupLocationCode;
 
     /**
-     * @var FiltersExtensionInterface
+     * @var FiltersExtensionInterface|null
      */
     private $filtersExtension;
 
@@ -70,6 +70,7 @@ class Filters implements FiltersInterface
      * @param FilterInterface|null $regionId
      * @param FilterInterface|null $city
      * @param FilterInterface|null $street
+     * @param FiltersExtensionInterface|null $filtersExtension
      */
     public function __construct(
         ?FilterInterface $name = null,
@@ -79,7 +80,8 @@ class Filters implements FiltersInterface
         ?FilterInterface $region = null,
         ?FilterInterface $regionId = null,
         ?FilterInterface $city = null,
-        ?FilterInterface $street = null
+        ?FilterInterface $street = null,
+        ?FiltersExtensionInterface $filtersExtension = null
     ) {
         $this->country = $country;
         $this->postcode = $postcode;
@@ -89,6 +91,7 @@ class Filters implements FiltersInterface
         $this->street = $street;
         $this->name = $name;
         $this->pickupLocationCode = $pickupLocationCode;
+        $this->filtersExtension = $filtersExtension;
     }
 
     /**
