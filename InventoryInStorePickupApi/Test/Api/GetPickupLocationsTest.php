@@ -23,6 +23,7 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
  * Api functional tests coverage
  *
  * @see \Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GetPickupLocationsTest extends WebapiAbstract
 {

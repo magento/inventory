@@ -56,8 +56,8 @@ class ProductInfo implements ProductInfoInterface
     /**
      * @inheritdoc
      */
-    public function setExtensionAttributes(ProductInfoExtensionInterface $productInfoExtension): void
+    public function setExtensionAttributes(ProductInfoExtensionInterface $extension): void
     {
-        $this->productInfoExtension = $productInfoExtension;
+        $this->productInfoExtension = $extension;
     }
 }
