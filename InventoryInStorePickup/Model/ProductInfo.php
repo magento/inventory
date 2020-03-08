@@ -19,6 +19,7 @@ class ProductInfo implements ProductInfoInterface
      * @var string
      */
     private $sku;
+
     /**
      * @var ProductInfoExtensionInterface
      */

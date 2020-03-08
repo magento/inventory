@@ -6,11 +6,12 @@
 
 namespace Magento\InventoryInStorePickup\Model;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryInStorePickup\Model\SearchCriteria\ResolveFilters;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterfaceFactory;
-use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\GetPickupLocationIntersectionForSkus;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
@@ -42,77 +43,71 @@ class FilterSourcesByProductsAvailabilityPlugin
     private $searchCriteriaBuilder;
 
     /**
-     * @var SearchResultInterfaceFactory
+     * @var FilterBuilder
      */
-    private $searchResultFactory;
+    private $filterBuilder;
 
     /**
      * @param GetPickupLocationIntersectionForSkus $getPickupLocationIntersectionForSkues
      * @param StockResolverInterface $stockResolver
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param GetStockSourceLinksInterface $getStockSourceLinks
-     * @param SearchResultInterfaceFactory $searchResultFactory
+     * @param FilterBuilder $filterBuilder
      */
     public function __construct(
         GetPickupLocationIntersectionForSkus $getPickupLocationIntersectionForSkues,
         StockResolverInterface $stockResolver,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         GetStockSourceLinksInterface $getStockSourceLinks,
-        SearchResultInterfaceFactory $searchResultFactory
+        FilterBuilder $filterBuilder
     ) {
         $this->getPickupLocationIntersectionForSkues = $getPickupLocationIntersectionForSkues;
         $this->stockResolver = $stockResolver;
         $this->getStockSourceLinks = $getStockSourceLinks;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->searchResultFactory = $searchResultFactory;
+        $this->filterBuilder = $filterBuilder;
     }
 
     /**
-     * @param GetPickupLocationsInterface $subject
-     * @param SearchResultInterface $result
-     * @param SearchRequestInterface $request
-     * @return SearchResultInterface
+     * @param ResolveFilters $subject
+     * @param $result
+     * @param SearchRequestInterface $searchRequest
+     * @param SearchCriteriaBuilderDecorator $searchCriteriaBuilder
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return void
      */
-    public function afterExecute(
-        GetPickupLocationsInterface $subject,
-        SearchResultInterface $result,
-        SearchRequestInterface $request
-    ) : SearchResultInterface {
-        if (!$request->getFilters()
-            || !$request->getFilters()->getExtensionAttributes()
-            || !$request->getFilters()->getExtensionAttributes()->getProductsInfo()
+    public function afterResolve(
+        ResolveFilters $subject,
+        $result,
+        SearchRequestInterface $searchRequest,
+        SearchCriteriaBuilderDecorator $searchCriteriaBuilder
+    ) : void {
+        if (!$searchRequest->getFilters()
+            || !$searchRequest->getFilters()->getExtensionAttributes()
+            || !$searchRequest->getFilters()->getExtensionAttributes()->getProductsInfo()
         ) {
-            return $result;
+            return;
         }
 
-        $extensionAttributes = $request->getFilters()->getExtensionAttributes();
+        $extensionAttributes = $searchRequest->getFilters()->getExtensionAttributes();
         $skus = [];
         foreach ($extensionAttributes->getProductsInfo() as $item) {
             $skus[] = $item->getSku();
         }
 
-        $stock = $this->stockResolver->execute($request->getScopeType(), $request->getScopeCode());
+        $stock = $this->stockResolver->execute($searchRequest->getScopeType(), $searchRequest->getScopeCode());
         $availableSources = array_intersect(
             $this->getPickupLocationIntersectionForSkues->execute($skus),
             $this->getSourceCodesAssignedToStock($stock->getStockId())
         );
 
-        $availableLocations = [];
-        foreach ($result->getItems() as $pickupLocation) {
-            if (in_array($pickupLocation->getPickupLocationCode(), $availableSources)) {
-                $availableLocations[] = $pickupLocation;
-            }
-        }
-
-        return $this->searchResultFactory->create(
-            [
-                'items' => $availableLocations,
-                'totalCount' => count($availableLocations),
-                'searchRequest' => $request
-            ]
-        );
+        $filter = $this->filterBuilder
+            ->setField(SourceInterface::SOURCE_CODE)
+            ->setValue($availableSources)
+            ->setConditionType('in')
+            ->create();
+        $searchCriteriaBuilder->addFilters([$filter]);
     }
 
     /**

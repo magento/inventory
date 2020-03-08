@@ -76,14 +76,14 @@ interface FiltersInterface extends ExtensibleDataInterface
     public function getPickupLocationCode(): ?FilterInterface;
 
     /**
-     * Get Product Info Extension.
+     * Get Filters Extension.
      *
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface|null
      */
     public function getExtensionAttributes(): ?FiltersExtensionInterface;
 
     /**
-     * Set Product Info Extension.
+     * Set Filters Extension.
      *
      * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface $filtersExtension
      * @return void
