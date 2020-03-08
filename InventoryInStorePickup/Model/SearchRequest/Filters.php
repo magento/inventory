@@ -149,20 +149,4 @@ class Filters implements FiltersInterface
     {
         return $this->pickupLocationCode;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function getExtensionAttributes(): ?FiltersExtensionInterface
-    {
-        return $this->filtersExtension;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setExtensionAttributes(FiltersExtensionInterface $filtersExtension): void
-    {
-        $this->filtersExtension = $filtersExtension;
-    }
 }

@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
-use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface;
 
 /**
@@ -17,7 +16,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInt
  *
  * @api
  */
-interface FiltersInterface extends ExtensibleDataInterface
+interface FiltersInterface
 {
     /**
      * Get Filter by Country.

@@ -14,8 +14,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverI
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 
 /**
- * Find intersection of assignments of products between Pickup Locations and
- * add filter by codes which satisfy conditions of the search.
+ * Find intersection of assignments of products between Pickup Locations and filter by codes.
  */
 class ResolveIntersection implements BuilderPartsResolverInterface
 {
