@@ -236,7 +236,11 @@ define([
             } else if (shippingAddress.city && shippingAddress.postcode) {
                 _.each(items, function (item) {
                     if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
-                        productsInfo.push({sku: item.sku});
+                        productsInfo.push(
+                            {
+                                sku: item.sku
+                            }
+                        );
                     }
                 });
                 pickupLocationsService
@@ -246,8 +250,10 @@ define([
                             searchTerm: shippingAddress.postcode + this.delimiter +
                                         shippingAddress.countryId || this.defaultCountry
                         },
-                        extension_attributes: {
-                            productsInfo: productsInfo
+                        filters: {
+                            extension_attributes: {
+                                productsInfo: productsInfo
+                            }
                         },
                         pageSize: this.nearbySearchLimit
                     })

@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface;
 
 /**
  * @inheritdoc
@@ -54,6 +55,11 @@ class Filters implements FiltersInterface
      * @var FilterInterface|null
      */
     private $pickupLocationCode;
+
+    /**
+     * @var FiltersExtensionInterface
+     */
+    private $filtersExtension;
 
     /**
      * @param FilterInterface|null $name
@@ -147,5 +153,21 @@ class Filters implements FiltersInterface
     public function getPickupLocationCode(): ?FilterInterface
     {
         return $this->pickupLocationCode;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getExtensionAttributes(): ?FiltersExtensionInterface
+    {
+        return $this->filtersExtension;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setExtensionAttributes(FiltersExtensionInterface $filtersExtension): void
+    {
+        $this->filtersExtension = $filtersExtension;
     }
 }

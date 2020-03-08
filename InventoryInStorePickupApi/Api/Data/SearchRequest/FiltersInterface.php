@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface;
+
 /**
  * Filter to filter by Fields.
  * Each field may be filtered with different condition type.
@@ -14,7 +17,7 @@ namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
  *
  * @api
  */
-interface FiltersInterface
+interface FiltersInterface extends ExtensibleDataInterface
 {
     /**
      * Get Filter by Country.
@@ -71,4 +74,19 @@ interface FiltersInterface
      * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface|null
      */
     public function getPickupLocationCode(): ?FilterInterface;
+
+    /**
+     * Get Product Info Extension.
+     *
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface|null
+     */
+    public function getExtensionAttributes(): ?FiltersExtensionInterface;
+
+    /**
+     * Set Product Info Extension.
+     *
+     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface $filtersExtension
+     * @return void
+     */
+    public function setExtensionAttributes(FiltersExtensionInterface $filtersExtension): void;
 }

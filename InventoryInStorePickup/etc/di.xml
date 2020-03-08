@@ -69,4 +69,8 @@
             </argument>
         </arguments>
     </type>
+    <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoInterface" type="Magento\InventoryInStorePickup\Model\ProductInfo" />
+    <type name="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface">
+        <plugin name="filter_locations_by_products_availability" type="Magento\InventoryInStorePickup\Model\FilterSourcesByProductsAvailabilityPlugin" />
+    </type>
 </config>

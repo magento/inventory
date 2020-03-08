@@ -5,9 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupShippingApi\Api\Data;
+namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
 use Magento\Framework\Api\ExtensibleDataInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoExtensionInterface;
 
 /**
  * Product Info Data Transfer Object.
@@ -25,14 +26,14 @@ interface ProductInfoInterface extends ExtensibleDataInterface
     /**
      * Get Product Info Extension.
      *
-     * @return \Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoExtensionInterface|null
+     * @return \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoExtensionInterface|null
      */
     public function getExtensionAttributes(): ?ProductInfoExtensionInterface;
 
     /**
      * Set Product Info Extension.
      *
-     * @param \Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoExtensionInterface $productInfoExtension
+     * @param \Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoExtensionInterface $productInfoExtension
      * @return void
      */
     public function setExtensionAttributes(ProductInfoExtensionInterface $productInfoExtension): void;

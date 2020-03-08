@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupShipping\Model\ResourceModel;
+namespace Magento\InventoryInStorePickup\Model\ResourceModel;
 
 use Magento\Framework\DB\Select;
 use Magento\Framework\DB\Sql\ExpressionFactory;

@@ -4,13 +4,13 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\InventoryInStorePickupShipping\Model;
+namespace Magento\InventoryInStorePickup\Model;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
-use Magento\InventoryInStorePickupShipping\Model\ResourceModel\GetPickupLocationIntersectionForSkus;
+use Magento\InventoryInStorePickup\Model\ResourceModel\GetPickupLocationIntersectionForSkus;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
@@ -80,11 +80,14 @@ class FilterSourcesByProductsAvailabilityPlugin
         SearchResultInterface $result,
         SearchRequestInterface $request
     ) : SearchResultInterface {
-        $extensionAttributes = $request->getExtensionAttributes();
-        if (!$extensionAttributes || !$extensionAttributes->getProductsInfo()) {
+        if (!$request->getFilters()
+            || !$request->getFilters()->getExtensionAttributes()
+            || !$request->getFilters()->getExtensionAttributes()->getProductsInfo()
+        ) {
             return $result;
         }
 
+        $extensionAttributes = $request->getFilters()->getExtensionAttributes();
         $skus = [];
         foreach ($extensionAttributes->getProductsInfo() as $item) {
             $skus[] = $item->getSku();

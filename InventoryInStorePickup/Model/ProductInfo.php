@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupShipping\Model;
+namespace Magento\InventoryInStorePickup\Model;
 
-use Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoExtensionInterface;
-use Magento\InventoryInStorePickupShippingApi\Api\Data\ProductInfoInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoExtensionInterface;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoInterface;
 
 /**
  * @inheritdoc
