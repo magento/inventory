@@ -250,10 +250,8 @@ define([
                             searchTerm: shippingAddress.postcode + this.delimiter +
                                         shippingAddress.countryId || this.defaultCountry
                         },
-                        filters: {
-                            extension_attributes: {
-                                productsInfo: productsInfo
-                            }
+                        extension_attributes: {
+                            productsInfo: productsInfo
                         },
                         pageSize: this.nearbySearchLimit
                     })

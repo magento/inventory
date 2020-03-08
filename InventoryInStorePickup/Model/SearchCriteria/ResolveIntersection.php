@@ -45,14 +45,13 @@ class ResolveIntersection implements BuilderPartsResolverInterface
         SearchRequestInterface $searchRequest,
         SearchCriteriaBuilderDecorator $searchCriteriaBuilder
     ): void {
-        if (!$searchRequest->getFilters()
-            || !$searchRequest->getFilters()->getExtensionAttributes()
-            || !$searchRequest->getFilters()->getExtensionAttributes()->getProductsInfo()
+        if (!$searchRequest->getExtensionAttributes()
+            || !$searchRequest->getExtensionAttributes()->getProductsInfo()
         ) {
             return;
         }
 
-        $extensionAttributes = $searchRequest->getFilters()->getExtensionAttributes();
+        $extensionAttributes = $searchRequest->getExtensionAttributes();
         $skus = [];
         foreach ($extensionAttributes->getProductsInfo() as $item) {
             $skus[] = $item->getSku();
