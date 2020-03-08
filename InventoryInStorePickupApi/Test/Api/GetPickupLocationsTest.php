@@ -40,16 +40,16 @@ class GetPickupLocationsTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryInStorePickupApi/Test/_files/source_all_pickup_locations.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/source_items.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_all_pickup_locations.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      *
      * @dataProvider executeIntersectionSearchDataProvider
      * @magentoAppArea frontend
@@ -194,15 +194,15 @@ class GetPickupLocationsTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/source_items.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      *
      * @magentoAppArea frontend
      *
