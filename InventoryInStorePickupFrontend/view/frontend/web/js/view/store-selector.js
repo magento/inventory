@@ -177,10 +177,8 @@ define([
                         radius: this.nearbySearchRadius,
                         searchTerm: searchQuery
                     },
-                    filters: {
-                        extension_attributes: {
-                            productsInfo: productsInfo
-                        }
+                    extension_attributes: {
+                        productsInfo: productsInfo
                     },
                     pageSize: this.nearbySearchLimit
                 })

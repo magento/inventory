@@ -113,17 +113,15 @@ class GetPickupLocationsTest extends WebapiAbstract
             [
                 /** Data Set #0 */
                 [
-                    'filters' => [
-                        'extensionAttributes' => [
-                            'productsInfo' => [
-                                [
-                                    'sku' => 'SKU-1'
-                                ],
-                                [
-                                    'sku' => 'SKU-3'
-                                ]
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ],
+                            [
+                                'sku' => 'SKU-3'
                             ]
-                        ],
+                        ]
                     ],
                     'scopeType' => 'website',
                     'scopeCode' => 'eu_website'
@@ -134,17 +132,15 @@ class GetPickupLocationsTest extends WebapiAbstract
             [
                 /** Data Set #1 */
                 [
-                    'filters' => [
-                        'extensionAttributes' => [
-                            'productsInfo' => [
-                                [
-                                    'sku' => 'SKU-1'
-                                ],
-                                [
-                                    'sku' => 'SKU-2'
-                                ]
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ],
+                            [
+                                'sku' => 'SKU-2'
                             ]
-                        ],
+                        ]
                     ],
                     'scopeType' => 'website',
                     'scopeCode' => 'eu_website'
@@ -155,14 +151,12 @@ class GetPickupLocationsTest extends WebapiAbstract
             [
                 /** Data Set #2 */
                 [
-                    'filters' => [
-                        'extensionAttributes' => [
-                            'productsInfo' => [
-                                [
-                                    'sku' => 'SKU-1'
-                                ]
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
                             ]
-                        ],
+                        ]
                     ],
                     'scopeType' => 'website',
                     'scopeCode' => 'eu_website'
@@ -177,20 +171,18 @@ class GetPickupLocationsTest extends WebapiAbstract
             [
                 /** Data Set #3 */
                 [
-                    'filters' => [
-                        'extensionAttributes' => [
-                            'productsInfo' => [
-                                [
-                                    'sku' => 'SKU-1'
-                                ],
-                                [
-                                    'sku' => 'SKU-2'
-                                ],
-                                [
-                                    'sku' => 'SKU-3'
-                                ]
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ],
+                            [
+                                'sku' => 'SKU-2'
+                            ],
+                            [
+                                'sku' => 'SKU-3'
                             ]
-                        ],
+                        ]
                     ],
                     'scopeType' => 'website',
                     'scopeCode' => 'eu_website'
@@ -221,17 +213,15 @@ class GetPickupLocationsTest extends WebapiAbstract
     {
         $searchRequestData = [
             'searchRequest' => [
-                'filters' => [
-                    'extensionAttributes' => [
-                        'productsInfo' => [
-                            [
-                                'sku' => 'SKU-1'
-                            ],
-                            [
-                                'sku' => 'SKU-3'
-                            ]
+                'extensionAttributes' => [
+                    'productsInfo' => [
+                        [
+                            'sku' => 'SKU-1'
+                        ],
+                        [
+                            'sku' => 'SKU-3'
                         ]
-                    ],
+                    ]
                 ],
                 'scopeType' => 'website',
                 'scopeCode' => 'eu_website'
