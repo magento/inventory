@@ -11,6 +11,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryInStorePickup\Model\ProductInfo;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoInterfaceFactory;
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
@@ -87,11 +89,11 @@ class PickupLocationsAvailabilityValidator implements RequestValidatorInterface
     {
         $errors = [];
 
-        if ($this->isAnyPickupLocationAvailable($rateRequest)) {
-            $errors[] = __('No Pickup Locations available to satisfy Rate Request.');
+        if (!$this->isAnyPickupLocationAvailable($rateRequest)) {
+            $errors[] = __('No Pickup Locations available to satisfy the Rate Request.');
         }
 
-        return $this->validationResultFactory->create($errors);
+        return $this->validationResultFactory->create(['errors' => $errors]);
     }
 
     /**
