@@ -10,7 +10,6 @@ namespace Magento\InventoryInStorePickupShipping\Model\Carrier\Validation;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
-use Magento\InventoryInStorePickup\Model\ProductInfo;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoInterfaceFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionFactory;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestExtensionInterface;
@@ -83,6 +82,7 @@ class PickupLocationsAvailabilityValidator implements RequestValidatorInterface
 
     /**
      * @inheritdoc
+     *
      * @throws NoSuchEntityException
      */
     public function validate(RateRequest $rateRequest): ValidationResult
@@ -132,7 +132,7 @@ class PickupLocationsAvailabilityValidator implements RequestValidatorInterface
     {
         $productsInfo = [];
         foreach ($items as $item) {
-            $productsInfo[] = $this->productInfoFactory->create([ProductInfo::SKU => $item->getSku()]);
+            $productsInfo[] = $this->productInfoFactory->create(['sku' => $item->getSku()]);
         }
 
         $extensionAttributes = $this->searchRequestExtensionFactory->create();
