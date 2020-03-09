@@ -15,8 +15,6 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\ProductInfoInterfac
  */
 class ProductInfo implements ProductInfoInterface
 {
-    public const SKU = 'sku';
-
     /**
      * @var string
      */
