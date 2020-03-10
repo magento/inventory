@@ -20,13 +20,13 @@ define([
         });
 
         describe('"setDefaultValue" method', function () {
-            it('Return decimal value if qty uses decimal', function () {
+            it('Check decimal value if qty uses decimal', function () {
                 isDecimal = 1;
                 model.setDefaultValue(isDecimal);
                 expect(model.value()).toEqual('0.0');
             });
 
-            it('Return integer value if qty is not uses decimal', function () {
+            it('Check integer value if qty is not uses decimal', function () {
                 isDecimal = 0;
                 model.setDefaultValue(isDecimal);
                 expect(model.value()).toEqual('0');
