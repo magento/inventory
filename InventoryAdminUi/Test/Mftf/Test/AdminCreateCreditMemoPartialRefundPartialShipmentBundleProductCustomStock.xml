@@ -30,7 +30,7 @@
         <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton" after="clickNext"/>
         <!--Admin Area Process Partial Shipment.-->
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShipAction" after="checkSuccessMessage"/>
-        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="1" stepKey="shipOneItem" after="clickShipAction"/>
+        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="{{fivePiecesAddToCart.value}}" stepKey="shipOneItem" after="clickShipAction"/>
         <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment" after="shipOneItem"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="checkShipmentSuccessMessage" after="clickSubmitShipment"/>
         <!--Create Credit Memo with partial refund.-->

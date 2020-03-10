@@ -92,8 +92,6 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
-        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
-        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 2" stepKey="orderedQuantity"/>
         <!--Admin Area Process Full Invoice-->
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
         <click selector="{{AdminInvoiceMainActionsSection.submitInvoice}}" stepKey="clickSubmitInvoice"/>

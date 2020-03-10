@@ -21,7 +21,7 @@
 
         <!--Process Partial Invoice.-->
         <scrollTo selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="scrollToQty" after="clickInvoice"/>
-        <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="1" stepKey="InvoiceQuantityPartial" after="scrollToQty"/>
+        <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="{{tenPiecesAddToCart.value}}" stepKey="InvoiceQuantityPartial" after="scrollToQty"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="clickUpdateQty" after="InvoiceQuantityPartial"/>
         <waitForPageLoad time="20" stepKey="WaitForInvoiceQtyUpdate" after="clickUpdateQty"/>
         <!--Verify product quantity.-->

@@ -64,7 +64,7 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
             return;
         }
         $skus = [];
-        $bundleSelectionsData = $product->getBundleSelectionsData();
+        $bundleSelectionsData = $product->getBundleSelectionsData() ?: [];
         foreach ($bundleSelectionsData as $option) {
             foreach ($option as $selection) {
                 $skus[] = $selection['sku'];
