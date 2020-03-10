@@ -72,7 +72,7 @@
                     <item name="map" xsi:type="array">
                         <item name="source_code" xsi:type="string">source_code</item>
                         <item name="name" xsi:type="string">name</item>
-                        <item name="qty" xsi:type="string">qty</item>
+                        <item name="quantity" xsi:type="string">quantity</item>
                         <item name="source_status" xsi:type="string">enabled</item>
                     </item>
                     <item name="identificationDRProperty" xsi:type="string">source_code</item>
