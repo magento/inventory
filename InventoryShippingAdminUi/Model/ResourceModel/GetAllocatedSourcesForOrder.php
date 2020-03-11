@@ -37,29 +37,39 @@ class GetAllocatedSourcesForOrder
      */
     public function execute(int $orderId): array
     {
-        $connection = $this->resourceConnection->getConnection();
-        $inventorySourceTableName = $this->resourceConnection->getTableName('inventory_source');
-        $inventoryShipmentSourceTableName = $this->resourceConnection->getTableName('inventory_shipment_source');
-        $shipmentTableName = $this->resourceConnection->getTableName('sales_shipment');
+        $sources = [];
+        $salesConnection = $this->resourceConnection->getConnection('sales');
+        $shipmentTableName = $this->resourceConnection->getTableName('sales_shipment', 'sales');
 
-        $select = $connection->select()
+        $shipmentSelect = $salesConnection->select()
             ->from(
-                ['inventory_source' => $inventorySourceTableName],
-                ['source_name' => 'inventory_source.name']
-            )
-            ->joinInner(
-                ['shipment_source' => $inventoryShipmentSourceTableName],
-                'shipment_source.source_code = inventory_source.source_code',
-                []
-            )
-            ->joinInner(
                 ['sales_shipment' => $shipmentTableName],
-                'shipment_source.shipment_id = sales_shipment.entity_id',
-                []
+                ['shipment' => 'sales_shipment.entity_id']
             )
-            ->group('inventory_source.source_code')
             ->where('sales_shipment.order_id = ?', $orderId);
+        $shipmentsIds = $salesConnection->fetchCol($shipmentSelect);
 
-        return $connection->fetchCol($select);
+        if (!empty($shipmentsIds)) {
+            $connection = $this->resourceConnection->getConnection();
+            $inventorySourceTableName = $this->resourceConnection->getTableName('inventory_source');
+            $inventoryShipmentSourceTableName = $this->resourceConnection->getTableName('inventory_shipment_source');
+
+            $select = $connection->select()
+                ->from(
+                    ['inventory_source' => $inventorySourceTableName],
+                    ['source_name' => 'inventory_source.name']
+                )
+                ->joinInner(
+                    ['shipment_source' => $inventoryShipmentSourceTableName],
+                    'shipment_source.source_code = inventory_source.source_code',
+                    []
+                )
+                ->group('inventory_source.source_code')
+                ->where('shipment_source.shipment_id in (?)', $shipmentsIds);
+
+            $sources = $connection->fetchCol($select);
+        }
+
+        return $sources;
     }
 }
