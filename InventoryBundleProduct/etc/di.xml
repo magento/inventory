@@ -20,6 +20,7 @@
     </type>
     <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
         <plugin name="validate_source_items_before_add_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ValidateSourceItemsBeforeAddBundleSelectionPlugin"/>
+        <plugin name="validate_source_items_before_save_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ValidateSourceItemsBeforeSaveBundleSelectionPlugin"/>
     </type>
     <type name="Magento\InventoryApi\Model\SourceItemValidatorChain">
         <arguments>
