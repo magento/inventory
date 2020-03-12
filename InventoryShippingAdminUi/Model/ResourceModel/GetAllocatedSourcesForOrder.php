@@ -40,15 +40,16 @@ class GetAllocatedSourcesForOrder
         $sources = [];
         $salesConnection = $this->resourceConnection->getConnection('sales');
         $shipmentTableName = $this->resourceConnection->getTableName('sales_shipment', 'sales');
-
+        /** Get shipment ids for order */
         $shipmentSelect = $salesConnection->select()
             ->from(
                 ['sales_shipment' => $shipmentTableName],
-                ['shipment' => 'sales_shipment.entity_id']
+                ['shipment_id' => 'sales_shipment.entity_id']
             )
             ->where('sales_shipment.order_id = ?', $orderId);
         $shipmentsIds = $salesConnection->fetchCol($shipmentSelect);
 
+        /** Get sources for shipment ids */
         if (!empty($shipmentsIds)) {
             $connection = $this->resourceConnection->getConnection();
             $inventorySourceTableName = $this->resourceConnection->getTableName('inventory_source');
