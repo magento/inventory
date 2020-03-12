@@ -4,3 +4,4 @@
 Websites,Websites
 "Product Salable Quantity","Product Salable Quantity"
 "Salable Quantity","Salable Quantity"
+"Aggregated inventory available to purchase for a stock. The amount aggregates assigned source's Quantity subtracting the Out-of-Stock Threshold (or MinQty)", "Aggregated inventory available to purchase for a stock. The amount aggregates assigned source's Quantity subtracting the Out-of-Stock Threshold (or MinQty)"
