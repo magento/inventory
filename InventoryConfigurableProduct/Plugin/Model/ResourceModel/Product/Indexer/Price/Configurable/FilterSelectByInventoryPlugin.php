@@ -77,6 +77,9 @@ class FilterSelectByInventoryPlugin
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
+        if ($stockId === $this->defaultStockProvider->getId()) {
+            return $proceed($select);
+        }
 
         $select->joinInner(
             ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
