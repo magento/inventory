@@ -59,7 +59,7 @@ class GetPickupLocationIntersectionForSkus
      * @return array
      * @throws LocalizedException
      */
-    public function execute(array $skus)
+    public function execute(array $skus): array
     {
         $select = $this->sourceItemResource->getConnection()->select();
         $expression = $this->expressionFactory->create(['expression' => 'COUNT(' . SourceItemInterface::SKU . ')']);

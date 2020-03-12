@@ -9,7 +9,6 @@ namespace Magento\InventoryInStorePickup\Model\SearchRequest;
 
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FilterInterface;
-use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface;
 
 /**
  * @inheritdoc
