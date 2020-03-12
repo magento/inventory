@@ -121,7 +121,9 @@
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
-        <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
+        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
+			<actualResult type="const">$getOrderId</actualResult>
+        </assertNotEmpty>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
         <amOnPage url="{{AdminProductIndexPage.url}}"
