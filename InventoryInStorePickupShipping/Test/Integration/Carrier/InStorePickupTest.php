@@ -49,7 +49,7 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      *
@@ -78,7 +78,7 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture Magento/Sales/_files/quote.php
      *
@@ -113,6 +113,36 @@ class InStorePickupTest extends TestCase
         $this->cartRepository->save($cart);
 
         $cart = $this->cartRepository->get($cart->getId());
+
+        $this->assertEmpty($cart->getShippingAddress()->getShippingMethod());
+        $this->assertEquals(0, $cart->getShippingAddress()->getShippingAmount());
+    }
+
+    /**
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
+     *
+     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testShippingMethodWithoutProductsIntersection()
+    {
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('reserved_order_id', 'in_store_pickup_test_order')
+            ->create();
+        /** @var \Magento\Quote\Api\Data\CartInterface $cart */
+        $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
 
         $this->assertEmpty($cart->getShippingAddress()->getShippingMethod());
         $this->assertEquals(0, $cart->getShippingAddress()->getShippingAmount());

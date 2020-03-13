@@ -15,6 +15,7 @@
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="sales_channel" xsi:type="object">Magento\InventoryInStorePickupShipping\Model\Carrier\Validation\SalesChannelValidator</item>
+                <item name="pickup_locations_availability" xsi:type="object">Magento\InventoryInStorePickupShipping\Model\Carrier\Validation\PickupLocationsAvailabilityValidator</item>
             </argument>
         </arguments>
     </type>
