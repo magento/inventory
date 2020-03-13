@@ -17,6 +17,7 @@ use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterfa
 use Magento\Sales\Api\Data\CreditmemoItemInterface as CreditmemoItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order\Creditmemo;
 
 class DeductSourceItemQuantityOnRefundObserver implements ObserverInterface
 {
@@ -80,7 +81,7 @@ class DeductSourceItemQuantityOnRefundObserver implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /* @var $creditmemo \Magento\Sales\Model\Order\Creditmemo */
+        /* @var $creditmemo Creditmemo */
         $creditmemo = $observer->getEvent()->getCreditmemo();
         $order = $this->orderRepository->get($creditmemo->getOrderId());
         $itemsToRefund = $refundedOrderItemIds = [];
@@ -139,6 +140,6 @@ class DeductSourceItemQuantityOnRefundObserver implements ObserverInterface
 
         return $this->isSourceItemManagementAllowedForProductType->execute($productType)
                 && $item->getQty() > 0
-                && !$item->getBackToStock();
+                && $item->getBackToStock();
     }
 }

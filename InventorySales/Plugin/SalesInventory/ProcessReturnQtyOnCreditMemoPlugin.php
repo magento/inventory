@@ -10,6 +10,7 @@ namespace Magento\InventorySales\Plugin\SalesInventory;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterfaceFactory;
 use Magento\InventorySalesApi\Model\ReturnProcessor\ProcessRefundItemsInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
+use Magento\Sales\Api\Data\CreditmemoItemInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
@@ -87,8 +88,8 @@ class ProcessReturnQtyOnCreditMemoPlugin
             /** @var OrderItemInterface $orderItem */
             $orderItem = $item->getOrderItem();
             $itemSku = $this->getSkuFromOrderItem->execute($orderItem);
-
-            if ($this->isValidItem($itemSku, $orderItem->getProductType())) {
+            echo $itemSku;
+            if ($this->isValidItem($itemSku, $item)) {
                 $qty = (float)$item->getQty();
                 $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
                 $items[$itemSku] = [
@@ -111,21 +112,26 @@ class ProcessReturnQtyOnCreditMemoPlugin
 
     /**
      * @param string $sku
-     * @param string|null $typeId
+     * @param CreditmemoItemInterface $item
      * @return bool
      */
-    private function isValidItem(string $sku, ?string $typeId): bool
+    private function isValidItem(string $sku, CreditmemoItemInterface $item): bool
     {
         //TODO: https://github.com/magento-engcom/msi/issues/1761
         // If product type located in table sales_order_item is "grouped" replace it with "simple"
-        if ($typeId === 'grouped') {
-            $typeId = 'simple';
-        }
+        /** @var OrderItemInterface $orderItem */
+        $orderItem = $item->getOrderItem();
+        // Since simple products which are the part of a grouped product are saved in the database
+        // (table sales_order_item) with product type grouped, we manually change the type of
+        // product from grouped to simple which support source management.
+        $typeId = $orderItem->getProductType() === 'grouped' ? 'simple' : $orderItem->getProductType();
 
         $productType = $typeId ?: $this->getProductTypesBySkus->execute(
             [$sku]
         )[$sku];
 
-        return $this->isSourceItemManagementAllowedForProductType->execute($productType);
+        return $this->isSourceItemManagementAllowedForProductType->execute($productType)
+            && $item->getQty() > 0
+            && $item->getBackToStock();
     }
 }
