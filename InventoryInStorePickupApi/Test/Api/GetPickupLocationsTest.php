@@ -19,6 +19,12 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\TestFramework\Assert\AssertArrayContains;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
+/**
+ * Api functional tests coverage
+ *
+ * @see \Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class GetPickupLocationsTest extends WebapiAbstract
 {
     private const RESOURCE_PATH = '/V1/inventory/in-store-pickup/pickup-locations';
@@ -32,6 +38,206 @@ class GetPickupLocationsTest extends WebapiAbstract
     public function setUp()
     {
         $this->getPickupLocation = ObjectManager::getInstance()->get(GetPickupLocationInterface::class);
+    }
+
+    /**
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_all_pickup_locations.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     *
+     * @dataProvider executeIntersectionSearchDataProvider
+     * @magentoAppArea frontend
+     *
+     * @magentoDbIsolation disabled
+     *
+     * @param array $searchRequestData
+     * @param array $sortedPickupLocationCodes
+     * @param int $expectedTotalCount
+     *
+     * @throws NoSuchEntityException
+     */
+    public function testExecuteIntersectionSearch(
+        array $searchRequestData,
+        array $sortedPickupLocationCodes,
+        int $expectedTotalCount
+    ): void {
+        $payload = [
+            'searchRequest' => $searchRequestData
+        ];
+
+        $response = $this->sendRequest($payload);
+
+        $responseLocationCodes = $this->extractLocationCodesFromResponse($response);
+        AssertArrayContains::assert($sortedPickupLocationCodes, $responseLocationCodes);
+
+        $this->assertEquals($expectedTotalCount, $response['total_count']);
+        $this->assertCount(count($sortedPickupLocationCodes), $response['items']);
+        $this->comparePickupLocations(
+            $response['items'],
+            $sortedPickupLocationCodes,
+            $searchRequestData['scopeCode']
+        );
+    }
+
+    /**
+     * [
+     *      Filter Set[
+     *          Filter Extension[
+     *              Product Info[
+     *                  Product[
+     *                      Sku,
+     *                      Extension Attributes[]
+     *                  ]
+     *              ]
+     *          ]
+     *      ],
+     *      Sales Channel Type,
+     *      Sales Channel Code,
+     *      Expected Pickup Location Codes[],
+     *      Total Count of Pickup Locations
+     * ]
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function executeIntersectionSearchDataProvider(): array
+    {
+        return [
+            [
+                /** Data Set #0 */
+                [
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ],
+                            [
+                                'sku' => 'SKU-3'
+                            ]
+                        ]
+                    ],
+                    'scopeType' => 'website',
+                    'scopeCode' => 'eu_website'
+                ],
+                ['eu-2'],
+                1
+            ],
+            [
+                /** Data Set #1 */
+                [
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ],
+                            [
+                                'sku' => 'SKU-2'
+                            ]
+                        ]
+                    ],
+                    'scopeType' => 'website',
+                    'scopeCode' => 'eu_website'
+                ],
+                [],
+                0
+            ],
+            [
+                /** Data Set #2 */
+                [
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ]
+                        ]
+                    ],
+                    'scopeType' => 'website',
+                    'scopeCode' => 'eu_website'
+                ],
+                [
+                    'eu-1',
+                    'eu-2',
+                    'eu-3'
+                ],
+                3
+            ],
+            [
+                /** Data Set #3 */
+                [
+                    'extensionAttributes' => [
+                        'productsInfo' => [
+                            [
+                                'sku' => 'SKU-1'
+                            ],
+                            [
+                                'sku' => 'SKU-2'
+                            ],
+                            [
+                                'sku' => 'SKU-3'
+                            ]
+                        ]
+                    ],
+                    'scopeType' => 'website',
+                    'scopeCode' => 'eu_website'
+                ],
+                [],
+                0
+            ],
+        ];
+    }
+
+    /**
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     *
+     * @magentoAppArea frontend
+     *
+     * @magentoDbIsolation disabled
+     * @throws NoSuchEntityException
+     */
+    public function testExecuteDisabledPickupLocations(): void
+    {
+        $searchRequestData = [
+            'searchRequest' => [
+                'extensionAttributes' => [
+                    'productsInfo' => [
+                        [
+                            'sku' => 'SKU-1'
+                        ],
+                        [
+                            'sku' => 'SKU-3'
+                        ]
+                    ]
+                ],
+                'scopeType' => 'website',
+                'scopeCode' => 'eu_website'
+            ]
+        ];
+        $expected = [];
+        $response = $this->sendRequest($searchRequestData);
+        $responseLocationCodes = $this->extractLocationCodesFromResponse($response);
+        AssertArrayContains::assert($expected, $responseLocationCodes);
+
+        $this->comparePickupLocations(
+            $response['items'],
+            $expected,
+            $searchRequestData['searchRequest']['scopeCode']
+        );
     }
 
     /**
@@ -98,7 +304,8 @@ class GetPickupLocationsTest extends WebapiAbstract
      *              Direction,
      *              Field
      *      ],
-     *      Expected Pickup Location Codes[]
+     *      Expected Pickup Location Codes[],
+     *      Total Count of Pickup Locations
      * ]
      *
      * @return array
@@ -199,7 +406,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param array $searchRequestData
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executeareaOfflineDataProvider
+     * @dataProvider executeAreaOfflineDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
@@ -251,7 +458,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function executeareaOfflineDataProvider(): array
+    public function executeAreaOfflineDataProvider(): array
     {
         return [
             [ /* Data set #0 */
@@ -386,14 +593,14 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @param string $salesChannelCode
      * @param string[] $sortedPickupLocationCodes
      *
-     * @dataProvider executefiltersDataProvider
+     * @dataProvider executeFiltersDataProvider
      * @magentoAppArea frontend
      *
      * @magentoDbIsolation disabled
      *
      * @throws NoSuchEntityException
      */
-    public function testExecutefilters(
+    public function testExecuteFilters(
         array $searchRequestData,
         string $salesChannelCode,
         array $sortedPickupLocationCodes
