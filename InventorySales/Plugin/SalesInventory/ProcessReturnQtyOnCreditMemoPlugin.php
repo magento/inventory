@@ -88,7 +88,6 @@ class ProcessReturnQtyOnCreditMemoPlugin
             /** @var OrderItemInterface $orderItem */
             $orderItem = $item->getOrderItem();
             $itemSku = $this->getSkuFromOrderItem->execute($orderItem);
-            echo $itemSku;
             if ($this->isValidItem($itemSku, $item)) {
                 $qty = (float)$item->getQty();
                 $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
