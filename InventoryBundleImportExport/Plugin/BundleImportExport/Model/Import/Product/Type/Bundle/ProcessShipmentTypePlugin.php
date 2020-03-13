@@ -42,10 +42,9 @@ class ProcessShipmentTypePlugin
         array $rowData,
         $withDefaultValue = true
     ): array {
-        if ($this->isSingleSourceMode->execute()) {
-            return $rowData;
+        if (!$this->isSingleSourceMode->execute()) {
+            $rowData['shipment_type'] = 'separately';
         }
-        $rowData['shipment_type'] = 'separately';
 
         return [$rowData, $withDefaultValue];
     }

@@ -65,11 +65,8 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
             || (int)$product->getShipmentType() === AbstractType::SHIPMENT_SEPARATELY) {
             return;
         }
-        $skus = [$link->getSku()];
-        $children = $subject->getChildren($product->getSku());
-        foreach ($children as $child) {
-            $skus[] = $child->getSku();
-        }
+
+        $skus = $this->getBundleSelectionsSkus($subject, $product, $link);
         $sourceCodes = $this->getSourceCodesBySkus->execute($skus) ?: [];
         if (count($sourceCodes) > 1) {
             throw new InputException(
@@ -81,5 +78,38 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
                 )
             );
         }
+    }
+
+    /**
+     * Retrieve bundle selections skus.
+     *
+     * @param ProductLinkManagementInterface $subject
+     * @param ProductInterface $product
+     * @param LinkInterface $link
+     * @return array
+     * @throws InputException
+     * @throws NoSuchEntityException
+     */
+    private function getBundleSelectionsSkus(
+        ProductLinkManagementInterface $subject,
+        ProductInterface $product,
+        LinkInterface $link
+    ): array {
+        $skus = [];
+        $bundleSelectionsData = $product->getBundleSelectionsData() ?: [];
+        foreach ($bundleSelectionsData as $option) {
+            foreach ($option as $selection) {
+                $skus[] = $selection['sku'];
+            }
+        }
+        if (!$skus) {
+            $skus = [$link->getSku()];
+            $children = $subject->getChildren($product->getSku());
+            foreach ($children as $child) {
+                $skus[] = $child->getSku();
+            }
+        }
+
+        return $skus;
     }
 }
