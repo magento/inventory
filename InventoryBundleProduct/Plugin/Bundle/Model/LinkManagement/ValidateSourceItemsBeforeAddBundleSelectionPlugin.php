@@ -58,7 +58,7 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
     public function beforeAddChild(
         ProductLinkManagementInterface $subject,
         ProductInterface $product,
-        $optionId,
+        int $optionId,
         LinkInterface $link
     ): void {
         if ($this->isSingleSourceMode->execute()

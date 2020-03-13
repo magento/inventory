@@ -45,7 +45,7 @@ class StockIndexerPlugin
         StockIndexer $subject,
         $result,
         array $stockIds
-    ) {
+    ): void {
         $this->bundleProductsStockIndexer->executeList($stockIds);
     }
 }

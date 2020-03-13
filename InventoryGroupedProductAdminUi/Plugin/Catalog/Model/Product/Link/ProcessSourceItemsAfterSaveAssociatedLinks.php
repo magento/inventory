@@ -52,6 +52,8 @@ class ProcessSourceItemsAfterSaveAssociatedLinks
     }
 
     /**
+     * Process source items for 'associated' linked products.
+     *
      * @param Link $subject
      * @param Link $result
      * @param ProductInterface $product
@@ -90,7 +92,7 @@ class ProcessSourceItemsAfterSaveAssociatedLinks
             $processData[] = [
                 SourceItemInterface::SOURCE_CODE => $sourceItem->getSourceCode(),
                 SourceItemInterface::QUANTITY => $sourceItem->getQuantity(),
-                SourceItemInterface::STATUS => $sourceItem->getStatus()
+                SourceItemInterface::STATUS => $sourceItem->getStatus(),
             ];
         }
 

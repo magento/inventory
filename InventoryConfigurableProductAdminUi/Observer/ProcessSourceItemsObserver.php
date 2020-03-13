@@ -54,6 +54,8 @@ class ProcessSourceItemsObserver implements ObserverInterface
     }
 
     /**
+     * Process source items for configurable matrix products.
+     *
      * @param EventObserver $observer
      *
      * @return void

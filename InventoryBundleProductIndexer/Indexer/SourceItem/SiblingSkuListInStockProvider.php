@@ -10,6 +10,8 @@ namespace Magento\InventoryBundleProductIndexer\Indexer\SourceItem;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Inventory\Model\ResourceModel\SourceItem;
+use Magento\Inventory\Model\ResourceModel\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\SkuListInStock;
@@ -36,34 +38,18 @@ class SiblingSkuListInStockProvider
     private $metadataPool;
 
     /**
-     * @var string
-     */
-    private $tableNameSourceItem;
-
-    /**
-     * @var string
-     */
-    private $tableNameStockSourceLink;
-
-    /**
      * @param ResourceConnection $resourceConnection
      * @param SkuListInStockFactory $skuListInStockFactory
      * @param MetadataPool $metadataPool
-     * @param string $tableNameSourceItem
-     * @param string $tableNameStockSourceLink
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         SkuListInStockFactory $skuListInStockFactory,
-        MetadataPool $metadataPool,
-        $tableNameSourceItem,
-        $tableNameStockSourceLink
+        MetadataPool $metadataPool
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->skuListInStockFactory = $skuListInStockFactory;
         $this->metadataPool = $metadataPool;
-        $this->tableNameSourceItem = $tableNameSourceItem;
-        $this->tableNameStockSourceLink = $tableNameStockSourceLink;
     }
 
     /**
@@ -76,8 +62,8 @@ class SiblingSkuListInStockProvider
     public function execute(array $sourceItemIds): array
     {
         $connection = $this->resourceConnection->getConnection();
-        $sourceStockLinkTable = $this->resourceConnection->getTableName($this->tableNameStockSourceLink);
-        $sourceItemTable = $this->resourceConnection->getTableName($this->tableNameSourceItem);
+        $sourceStockLinkTable = $this->resourceConnection->getTableName(StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK);
+        $sourceItemTable = $this->resourceConnection->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM);
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getIdentifierField();

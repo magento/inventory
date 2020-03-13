@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement;
 
 use Magento\Bundle\Api\ProductLinkManagementInterface;
-use Magento\Framework\Exception\StateException;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
@@ -63,7 +62,7 @@ class ReindexSourceItemsAfterRemoveBundleSelectionPlugin
      * @param ProductLinkManagementInterface $subject
      * @param bool $result
      * @param string $sku
-     * @param string $optionId
+     * @param int $optionId
      * @param string $childSku
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -71,16 +70,16 @@ class ReindexSourceItemsAfterRemoveBundleSelectionPlugin
     public function afterRemoveChild(
         ProductLinkManagementInterface $subject,
         bool $result,
-        $sku,
-        $optionId,
-        $childSku
+        string $sku,
+        int $optionId,
+        string $childSku
     ): bool {
         $sourceItems = $this->getSourceItemsBySku->execute($childSku);
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         try {
             $this->sourceItemIndexer->executeList($sourceItemIds);
-        } catch (StateException|\Exception $e) {
-            $this->logger->error($e->getLogMessage());
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
 
         return $result;

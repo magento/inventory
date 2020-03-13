@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\Product\Type;
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\Catalog\Model\Product\Type as ProductType;
 use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
@@ -76,7 +75,7 @@ class AdaptIsSalablePlugin
      * @param Product $product
      * @return bool
      */
-    public function aroundIsSalable(Type $subject, \Closure $proceed, $product): bool
+    public function aroundIsSalable(Type $subject, \Closure $proceed, Product $product): bool
     {
         $salable = $product->getStatus() == Status::STATUS_ENABLED;
         if ($salable && $product->hasData('is_salable')) {

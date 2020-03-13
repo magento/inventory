@@ -9,17 +9,13 @@ namespace Magento\InventoryBundleProduct\Model\SourceItem\Validator;
 
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
-use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
+use Magento\InventoryBundleProduct\Model\SourceItem\Validator\ShipmentTypeValidator\GetBundleProductsByChildSku;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
@@ -38,34 +34,9 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @var GetProductIdsBySkusInterface
-     */
-    private $getProductIdsBySkus;
-
-    /**
-     * @var Type
-     */
-    private $type;
-
-    /**
-     * @var GetSkusByProductIdsInterface
-     */
-    private $getSkusByProductIds;
-
-    /**
      * @var GetSourceCodesBySkusInterface
      */
     private $getSourceCodesBySkus;
-
-    /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
 
     /**
      * @var UrlInterface
@@ -73,36 +44,29 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
     private $url;
 
     /**
+     * @var GetBundleProductsByChildSku
+     */
+    private $bundleProductsByChildSku;
+
+    /**
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param ValidationResultFactory $validationResultFactory
-     * @param GetProductIdsBySkusInterface $getProductIdsBySkus
-     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param GetSourceCodesBySkusInterface $getSourceCodesBySkus
-     * @param ProductRepositoryInterface $productRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param UrlInterface $url
-     * @param Type $type
+     * @param GetBundleProductsByChildSku $bundleProductsByChildSku
      */
     public function __construct(
         IsSingleSourceModeInterface $isSingleSourceMode,
         ValidationResultFactory $validationResultFactory,
-        GetProductIdsBySkusInterface $getProductIdsBySkus,
-        GetSkusByProductIdsInterface $getSkusByProductIds,
         GetSourceCodesBySkusInterface $getSourceCodesBySkus,
-        ProductRepositoryInterface $productRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         UrlInterface $url,
-        Type $type
+        GetBundleProductsByChildSku $bundleProductsByChildSku
     ) {
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->validationResultFactory = $validationResultFactory;
-        $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->getSkusByProductIds = $getSkusByProductIds;
         $this->getSourceCodesBySkus = $getSourceCodesBySkus;
-        $this->productRepository = $productRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->url = $url;
-        $this->type = $type;
+        $this->bundleProductsByChildSku = $bundleProductsByChildSku;
     }
 
     /**
@@ -117,19 +81,11 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
         if ($this->isSingleSourceMode->execute()) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }
-        try {
-            $sourceItemSku = $sourceItem->getSku();
-            $id = $this->getProductIdsBySkus->execute([$sourceItemSku])[$sourceItemSku];
-        } catch (NoSuchEntityException $e) {
+        $products = $this->bundleProductsByChildSku->execute($sourceItem->getSku());
+        if (!$products) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }
-        $bundleProductIds = $this->type->getParentIdsByChild($id);
-        if (!$bundleProductIds) {
-            return $this->validationResultFactory->create(['errors' => $errors]);
-        }
-        $criteria = $this->searchCriteriaBuilder->addFilter('entity_id', $bundleProductIds, 'in')->create();
-        $bundleProducts = $this->productRepository->getList($criteria);
-        foreach ($bundleProducts->getItems() as $bundleProduct) {
+        foreach ($products as $bundleProduct) {
             $sourceCodes = $this->getBundleProductSourceCodes($bundleProduct);
             if ($sourceCodes && !in_array($sourceItem->getSourceCode(), $sourceCodes)) {
                 $url = $this->url->getUrl('catalog/product/edit', ['id' => $bundleProduct->getId()]);
@@ -138,7 +94,7 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
                     . ' <a href="%3">"%4"</a> with shipment type "Ship Together" and has multiple sources '
                     . 'or different source as other bundle selections.',
                     $sourceItem->getSourceCode(),
-                    $sourceItemSku,
+                    $sourceItem->getSku(),
                     $url,
                     $bundleProduct->getSku()
                 );

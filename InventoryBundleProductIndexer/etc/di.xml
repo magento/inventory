@@ -24,14 +24,6 @@
             <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
         </arguments>
     </type>
-    <type name="Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SiblingSkuListInStockProvider">
-        <arguments>
-            <argument name="tableNameSourceItem"
-                      xsi:type="const">Magento\Inventory\Model\ResourceModel\SourceItem::TABLE_NAME_SOURCE_ITEM</argument>
-            <argument name="tableNameStockSourceLink"
-                      xsi:type="const">Magento\Inventory\Model\ResourceModel\StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK</argument>
-        </arguments>
-    </type>
     <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
         <plugin name="reindex_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterAddBundleSelectionPlugin"/>
         <plugin name="reindex_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>

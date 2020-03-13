@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManageme
 use Magento\Bundle\Api\Data\LinkInterface;
 use Magento\Bundle\Api\ProductLinkManagementInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Exception\StateException;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
@@ -74,15 +73,15 @@ class ReindexSourceItemsAfterAddBundleSelectionPlugin
         ProductLinkManagementInterface $subject,
         int $result,
         ProductInterface $product,
-        $optionId,
+        int $optionId,
         LinkInterface $linkedProduct
     ): int {
         $sourceItems = $this->getSourceItemsBySku->execute($linkedProduct->getSku());
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         try {
             $this->sourceItemIndexer->executeList($sourceItemIds);
-        } catch (StateException|\Exception $e) {
-            $this->logger->error($e->getLogMessage());
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
         }
 
         return $result;

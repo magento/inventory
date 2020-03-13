@@ -45,7 +45,7 @@ class SourceItemIndexerPlugin
         SourceItemIndexer $subject,
         $result,
         array $sourceItemIds
-    ) {
+    ): void {
         $this->bundleProductsSourceItemIndexer->executeList($sourceItemIds);
     }
 }

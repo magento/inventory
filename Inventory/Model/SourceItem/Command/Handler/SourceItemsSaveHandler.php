@@ -17,7 +17,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class SourceItemsSaveHandler
+ * Save multiple source items service.
  */
 class SourceItemsSaveHandler
 {

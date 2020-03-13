@@ -5,11 +5,9 @@
  */
 -->
 <div class="control-table-text" attr="'data-tooltip-trigger': ++ko.uid">
-    <!-- ko foreach: { data: $col.getSourceItemsData($row()), as: 'item' } -->
-    <div>
-        <span visible="false" text="item.source_code"></span>
-        <strong text="item.source_name"></strong>:
-        <span text="item.quantity"></span>
+    <div repeat="foreach: $col.getSourceItemsData($row()), item: '$item'">
+        <span visible="false" text="$item().source_code"></span>
+        <strong text="$item().source_name"></strong>:
+        <span text="$item().quantity"></span>
     </div>
-    <!-- /ko -->
 </div>

@@ -55,13 +55,8 @@ class AddQuantityPerSourceToProductsData
             return $result;
         }
 
-        $skus = [];
-        foreach ($result['items'] as $itemData) {
-            $skus[] = $itemData['sku'];
-        }
-
+        $skus = array_column($result['items'], 'sku');
         $sourceItemsData = $this->getQuantityInformationPerSourceBySkus->execute($skus);
-
         foreach ($result['items'] as &$productLinkData) {
             $productLinkData['quantity_per_source'] = $sourceItemsData[$productLinkData['sku']] ?? [];
         }

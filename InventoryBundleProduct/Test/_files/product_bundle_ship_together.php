@@ -57,4 +57,3 @@ $extension->setBundleProductOptions([$option]);
 $bundleProduct->setExtensionAttributes($extension);
 
 $productRepository->save($bundleProduct);
-

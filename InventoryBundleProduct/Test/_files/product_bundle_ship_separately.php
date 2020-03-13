@@ -37,7 +37,7 @@ $optionData = [
     'type' => 'select',
     'required' => 1,
     'delete' => '',
-    'sku' => $bundleProduct->getSku()
+    'sku' => $bundleProduct->getSku(),
 ];
 $linkData = [
     'product_id' => $product->getId(),
@@ -57,4 +57,3 @@ $extension->setBundleProductOptions([$option]);
 $bundleProduct->setExtensionAttributes($extension);
 
 $productRepository->save($bundleProduct);
-

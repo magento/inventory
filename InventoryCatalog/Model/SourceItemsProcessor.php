@@ -137,6 +137,8 @@ class SourceItemsProcessor implements SourceItemsProcessorInterface
     }
 
     /**
+     * Verify source item has source code.
+     *
      * @param array $sourceItemData
      * @return void
      * @throws InputException

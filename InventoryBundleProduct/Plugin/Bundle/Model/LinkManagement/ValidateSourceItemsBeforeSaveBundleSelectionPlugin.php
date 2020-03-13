@@ -63,7 +63,7 @@ class ValidateSourceItemsBeforeSaveBundleSelectionPlugin
      */
     public function beforeSaveChild(
         ProductLinkManagementInterface $subject,
-        $sku,
+        string $sku,
         LinkInterface $link
     ): void {
         $product = $this->productRepository->get($sku, true);
