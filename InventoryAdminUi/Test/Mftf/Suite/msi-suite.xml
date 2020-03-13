@@ -46,6 +46,7 @@
         <before>
             <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
             <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled disabled"/>
+            <magentoCLI command="config:set cms/pagebuilder/enabled 0" stepKey="disablePageBuilder"/>
             <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
         </before>
         <include>
@@ -57,6 +58,7 @@
         </exclude>
         <after>
             <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
+            <magentoCLI command="config:set cms/pagebuilder/enabled 1" stepKey="enablePageBuilder"/>
         </after>
     </suite>
     <suite name="MSI_EE_Multi_Mode">
