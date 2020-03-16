@@ -7,15 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Product\Indexer\Price\Configurable;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\Framework\DB\Select;
+use Magento\Inventory\Model\ResourceModel\StockSourceLink;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 
 /**
  * Plugin for FilterSelectByInventory to add "is_salable" filter.
@@ -23,41 +23,26 @@ use Magento\Framework\DB\Select;
 class FilterSelectByInventoryPlugin
 {
     /**
-     * @var StoreManagerInterface
+     * @var ResourceConnection
      */
-    private $storeManager;
+    private $resourceConnection;
 
     /**
-     * @var StockResolverInterface
+     * @var MetadataPool
      */
-    private $stockResolver;
+    private $metadataPool;
 
     /**
-     * @var StockIndexTableNameResolverInterface
-     */
-    private $stockIndexTableNameResolver;
-
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @param StoreManagerInterface $storeManager
-     * @param StockResolverInterface $stockResolver
-     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param ResourceConnection $resourceConnection
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
-        StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider
-    ) {
-        $this->storeManager = $storeManager;
-        $this->stockResolver = $stockResolver;
-        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
-        $this->defaultStockProvider = $defaultStockProvider;
+        ResourceConnection $resourceConnection,
+        MetadataPool $metadataPool
+    )
+    {
+        $this->resourceConnection = $resourceConnection;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -68,26 +53,39 @@ class FilterSelectByInventoryPlugin
      * @param Select $select
      * @return Select
      *
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundFilterSelectByInventory(Configurable $subject, callable $proceed, Select $select): Select
     {
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $stockId = (int)$stock->getStockId();
-        if ($stockId === $this->defaultStockProvider->getId()) {
-            return $proceed($select);
-        }
+        $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
+        $linkField = $metadata->getLinkField();
 
         $select->joinInner(
-            ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
-            'stock.sku = le.sku',
+            ['le2' => $this->resourceConnection->getTableName('catalog_product_entity')],
+            'le2.' . $linkField . ' = l.product_id',
             []
-        )->where(
-            'stock.is_salable = ?',
-            1
+        )->joinInner(
+            ['isi' => $this->resourceConnection->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
+            'isi.sku = le2.sku',
+            []
+        )->joinInner(
+            ['issl' =>
+                $this->resourceConnection->getTableName(StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK)],
+            'issl.' . SourceItemInterface::SOURCE_CODE .' = isi.' . SourceItemInterface::SOURCE_CODE,
+            []
+        )->joinInner(
+            ['issc' => $this->resourceConnection->getTableName('inventory_stock_sales_channel')],
+            'issc.stock_id = issl.' . StockSourceLinkInterface::STOCK_ID,
+            []
+        )->joinInner(
+            ['sw' => $this->resourceConnection->getTableName('store_website')],
+            'sw.code = issc.code AND sw.website_id = i.website_id',
+            []
+        )->group(
+            ['isi.sku']
+        )->having(
+            'MAX(isi.status) = 1'
         );
 
         return $select;
