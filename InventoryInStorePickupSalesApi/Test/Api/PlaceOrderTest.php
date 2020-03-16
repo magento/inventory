@@ -77,11 +77,12 @@ class PlaceOrderTest extends GraphQlAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      *
      * @return void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testPlaceOrderWithStorePickupDeliveryMethodGuestCustomer(): void
     {
@@ -120,12 +121,14 @@ QUERY;
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_customer.php
      * @magentoConfigFixture store_for_eu_website_store customer/account_share/scope 0
      *
      * @return void
+     * @throws \Magento\Framework\Exception\AuthenticationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testPlaceOrderWithStorePickupDeliveryMethodRegisteredCustomerExistedAddress(): void
     {
@@ -163,12 +166,14 @@ QUERY;
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_customer.php
      * @magentoConfigFixture store_for_eu_website_store customer/account_share/scope 0
      *
      * @return void
+     * @throws \Magento\Framework\Exception\AuthenticationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testPlaceOrderWithStorePickupDeliveryMethodRegisteredCustomerNewAddress(): void
     {
@@ -208,12 +213,14 @@ QUERY;
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/quote_with_save_shipping_address_to_address_book.php
      * @magentoConfigFixture store_for_eu_website_store customer/account_share/scope 0
      *
      * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testPlaceOrderWithStorePickupDeliveryMethodRegisteredCustomerAddressSaveInBook(): void
     {
@@ -257,12 +264,14 @@ QUERY;
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/quote_with_shipping_address_same_as_billing.php
      * @magentoConfigFixture store_for_eu_website_store customer/account_share/scope 0
      *
      * @return void
+     * @throws \Magento\Framework\Exception\AuthenticationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testPlaceOrderWithStorePickupDeliveryMethodRegisteredCustomerSameAsBillingAddress(): void
     {
@@ -304,6 +313,7 @@ QUERY;
      * @param string $password
      *
      * @return array
+     * @throws \Magento\Framework\Exception\AuthenticationException
      */
     private function getAuthHeader(string $username = 'customer@example.com', string $password = 'password'): array
     {
@@ -317,7 +327,9 @@ QUERY;
      * Verify created order.
      *
      * @param array $response
+     *
      * @return void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function verifyOrder(array $response): void
     {
