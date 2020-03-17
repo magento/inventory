@@ -46,6 +46,7 @@ class AdaptShipmentPlugin
      * @see \Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface
      *
      * @param ShipmentRepositoryInterface $subject
+     * @param ShipmentInterface $shipment
      * @return void
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
