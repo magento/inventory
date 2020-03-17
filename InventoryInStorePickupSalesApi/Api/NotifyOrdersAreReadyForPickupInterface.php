@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSalesApi\Api;
 
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
-
 /**
  * Send an email to the customer that order is ready to be picked up.
  *
@@ -20,8 +18,7 @@ interface NotifyOrdersAreReadyForPickupInterface
      * Notify customer that the orders is ready for pickup.
      *
      * @param int[] $orderIds
-     *
-     * @return ResultInterface
+     * @return \Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface
      */
-    public function execute(array $orderIds) : ResultInterface;
+    public function execute(array $orderIds): \Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
 }
