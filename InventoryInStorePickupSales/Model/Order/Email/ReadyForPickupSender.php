@@ -7,8 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Model\Order\Email;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\InventoryInStorePickupSales\Model\ResourceModel\OrderNotification\SaveOrderNotification;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Address\Renderer;
 use Magento\Sales\Model\Order\Email\Container\IdentityInterface;
@@ -19,8 +22,6 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @inheritdoc
- *
- * @see https://github.com/magento-engcom/msi/issues/2160
  */
 class ReadyForPickupSender extends Sender
 {
@@ -30,12 +31,24 @@ class ReadyForPickupSender extends Sender
     private $eventManager;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $config;
+
+    /**
+     * @var SaveOrderNotification
+     */
+    private $saveOrderNotification;
+
+    /**
      * @param Template $templateContainer
      * @param IdentityInterface $identityContainer
      * @param SenderBuilderFactory $senderBuilderFactory
      * @param LoggerInterface $logger
      * @param Renderer $addressRenderer
      * @param ManagerInterface $eventManager
+     * @param ScopeConfigInterface $config
+     * @param SaveOrderNotification $saveOrderNotification
      */
     public function __construct(
         Template $templateContainer,
@@ -43,27 +56,45 @@ class ReadyForPickupSender extends Sender
         SenderBuilderFactory $senderBuilderFactory,
         LoggerInterface $logger,
         Renderer $addressRenderer,
-        ManagerInterface $eventManager
+        ManagerInterface $eventManager,
+        ScopeConfigInterface $config,
+        SaveOrderNotification $saveOrderNotification
     ) {
         parent::__construct($templateContainer, $identityContainer, $senderBuilderFactory, $logger, $addressRenderer);
 
         $this->eventManager = $eventManager;
+        $this->config = $config;
+        $this->saveOrderNotification = $saveOrderNotification;
     }
 
     /**
      * Send order-specific email.
      *
-     * This method is not declared anywhere in parent/interface, but Magento calls it
+     * This method is not declared anywhere in parent/interface, but Magento calls it.
      *
-     * @param Order $order
+     * @param OrderInterface $order
+     * @param bool $forceSyncMode
      * @return bool
      */
-    public function send(Order $order): bool
+    public function send(OrderInterface $order, $forceSyncMode = false): bool
     {
-        $result = $this->checkAndSend($order);
-        if (!$result) {
-            $order->setEmailSent(0);
+        $result = false;
+        $order->getExtensionAttributes()->setSendNotification((int)$this->identityContainer->isEnabled());
+        $order->getExtensionAttributes()->setNotificationSent(0);
+        $this->saveOrderNotification->execute(
+            (int)$order->getEntityId(),
+            $order->getExtensionAttributes()->getSendNotification(),
+            $order->getExtensionAttributes()->getNotificationSent()
+        );
+        if (!$this->config->getValue('sales_email/general/async_sending') || $forceSyncMode) {
+            $result = $this->checkAndSend($order);
+            $order->getExtensionAttributes()->setNotificationSent((int)$result);
         }
+        $this->saveOrderNotification->execute(
+            (int)$order->getEntityId(),
+            $order->getExtensionAttributes()->getSendNotification(),
+            $order->getExtensionAttributes()->getNotificationSent()
+        );
 
         return $result;
     }

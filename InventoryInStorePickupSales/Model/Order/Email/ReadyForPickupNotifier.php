@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSales\Model\Order\Email;
 
+use Magento\Sales\Model\AbstractModel;
 use Magento\Sales\Model\AbstractNotifier;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\ResourceModel\Order\Status\History\CollectionFactory;
@@ -14,8 +15,6 @@ use Psr\Log\LoggerInterface as Logger;
 
 /**
  * @inheritdoc
- *
- * @see https://github.com/magento-engcom/msi/issues/2160
  */
 class ReadyForPickupNotifier extends AbstractNotifier
 {
@@ -47,5 +46,27 @@ class ReadyForPickupNotifier extends AbstractNotifier
         $this->historyCollectionFactory = $historyCollectionFactory;
         $this->logger = $logger;
         $this->sender = $sender;
+    }
+
+    /**
+     * Notify user, order has been notified for pickup.
+     *
+     * @param AbstractModel $model
+     * @return bool
+     * @throws \Exception
+     */
+    public function notify(AbstractModel $model)
+    {
+        $this->sender->send($model);
+        if (!$model->getExtensionAttributes()->getNotificationSent()) {
+            return false;
+        }
+        $historyItem = $this->historyCollectionFactory->create()->getUnnotifiedForInstance($model);
+        if ($historyItem) {
+            $historyItem->setIsCustomerNotified(1);
+            $historyItem->save();
+        }
+
+        return true;
     }
 }
