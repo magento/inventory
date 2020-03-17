@@ -154,8 +154,8 @@
                         <disabled>true</disabled>
                         <imports>
                             <link name="disabled">!${ $.provider }:data.product.stock_data.manage_stock</link>
-                            <link name="handleChanges">${$.provider}:data.product.stock_data.is_qty_decimal</link>
                             <link name="setDefaultValue">${$.provider}:data.product.stock_data.is_qty_decimal</link>
+                            <link name="handleChanges">${$.provider}:data.product.stock_data.is_qty_decimal</link>
                         </imports>
                     </settings>
                 </field>
