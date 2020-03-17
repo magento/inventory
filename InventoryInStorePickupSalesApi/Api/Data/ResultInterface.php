@@ -26,7 +26,7 @@ interface ResultInterface extends ExtensibleDataInterface
     /**
      * Get error information for failed operations.
      *
-     * @return array
+     * @return string[][]
      */
     public function getFailed() : array;
 
