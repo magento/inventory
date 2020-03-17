@@ -10,8 +10,6 @@ namespace Magento\InventoryBundleProductIndexer\Indexer\SourceItem;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
-use Magento\Inventory\Model\ResourceModel\SourceItem;
-use Magento\Inventory\Model\ResourceModel\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\SkuListInStock;
@@ -62,8 +60,8 @@ class SiblingSkuListInStockProvider
     public function execute(array $sourceItemIds): array
     {
         $connection = $this->resourceConnection->getConnection();
-        $sourceStockLinkTable = $this->resourceConnection->getTableName(StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK);
-        $sourceItemTable = $this->resourceConnection->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM);
+        $sourceStockLinkTable = $this->resourceConnection->getTableName('inventory_source_stock_link');
+        $sourceItemTable = $this->resourceConnection->getTableName('inventory_source_item');
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getIdentifierField();
