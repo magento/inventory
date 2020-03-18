@@ -50,7 +50,7 @@ class OrderExtensionTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items_eu_stock_only.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_items_eu_stock_only.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupSalesApi/Test/_files/place_order.php

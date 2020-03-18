@@ -7,4 +7,7 @@
     <event name="checkout_submit_all_after">
         <observer name="inventory_in_store_pickup_update_order_grid_after_order_placed" instance="Magento\InventoryInStorePickupSales\Observer\UpdateOrderGrid" />
     </event>
+    <event name="config_data_sales_email_general_async_sending_disabled">
+        <observer name="notify_order_send_emails" instance="Magento\InventoryInStorePickupSales\Observer\NotifyOrdersAreReadyForPickupSendEmailObserver" />
+    </event>
 </config>
