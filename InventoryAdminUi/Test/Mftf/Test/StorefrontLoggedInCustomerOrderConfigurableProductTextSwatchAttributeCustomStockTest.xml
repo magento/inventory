@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontLoggedInCustomerOrderConfigurableProductTextSwatchAttributeCustomStock">
+    <test name="StorefrontLoggedInCustomerOrderConfigurableProductTextSwatchAttributeCustomStockTest">
         <annotations>
             <stories value="Configurable Product Custom Stock."/>
             <title value="Order Configurable Product with Text Swatch on Additional Stock."/>
@@ -22,7 +22,7 @@
         <before>
             <!--Enable 'Mange Stock' in configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <magentoCLI command="cache:clean config" stepKey="cleanCache"/>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
