@@ -11,16 +11,19 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 use Magento\InventoryCatalog\Model\GetProductIdsBySkus;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Verify legacy stock item stock status.
+ */
 class IsSalableLegacyStockItemIsInStockTest extends TestCase
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var GetProductIdsBySkus
@@ -42,9 +45,12 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
      */
     private $stockItemRepository;
 
+    /**
+     * @inheritDoc
+     */
     protected function setUp()
     {
-        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->areProductsSalable = Bootstrap::getObjectManager()->get(AreProductsSalableInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkus::class);
         $this->stockRegistryProvider = Bootstrap::getObjectManager()->get(StockRegistryProviderInterface::class);
         $this->stockConfiguration = Bootstrap::getObjectManager()->get(StockConfigurationInterface::class);
@@ -52,6 +58,8 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
     }
 
     /**
+     * Verify 'out of stock' legacy stock item.
+     *
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
@@ -68,13 +76,17 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $stockId = 20;
         $this->setLegacyStockItemIsInStock($sku, 0);
 
+        $result = $this->areProductsSalable->execute($sku, $stockId)->getSalable();
+        $result = current($result);
         self::assertEquals(
             false,
-            $this->isProductSalable->execute($sku, $stockId)
+            $result->isSalable()
         );
     }
 
     /**
+     * Verify 'in stock' legacy stock item.
+     *
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
@@ -91,15 +103,20 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $stockId = 20;
         $this->setLegacyStockItemIsInStock($sku, 1);
 
+        $result = $this->areProductsSalable->execute($sku, $stockId)->getSalable();
+        $result = current($result);
         self::assertEquals(
             true,
-            $this->isProductSalable->execute($sku, $stockId)
+            $result->isSalable()
         );
     }
 
     /**
+     * Set stock status to legacy stock item.
+     *
      * @param string $sku
      * @param int $isInStock
+     * @return void
      */
     private function setLegacyStockItemIsInStock(string $sku, int $isInStock): void
     {

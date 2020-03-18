@@ -11,8 +11,8 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\RequisitionList\Api\Data\RequisitionListItemInterface;
 use Magento\RequisitionList\Model\RequisitionListItem\Validator\Stock;
@@ -38,9 +38,9 @@ class StockPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var IsProductSalableForRequestedQtyInterface
@@ -50,21 +50,21 @@ class StockPlugin
     /**
      * @param ProductRepositoryInterface $productRepository
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteId
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
     ) {
         $this->productRepository = $productRepository;
         $this->stockByWebsiteId = $stockByWebsiteId;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->isProductSalableForRequestedQty = $isProductSalableForRequestedQty;
     }
 
@@ -89,9 +89,10 @@ class StockPlugin
 
         $websiteId = (int)$product->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
-        $isSalable = $this->isProductSalable->execute($product->getSku(), $stockId);
+        $result = $this->areProductsSalable->execute($product->getSku(), $stockId)->getSalable();
+        $result = current($result);
 
-        if (!$isSalable) {
+        if (!$result->isSalable()) {
             $errors[$subject::ERROR_OUT_OF_STOCK] = __('The SKU is out of stock.');
             return $errors;
         }

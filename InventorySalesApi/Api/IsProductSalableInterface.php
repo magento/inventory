@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventorySalesApi\Api;
 
 /**
+ * @deprecated use \Magento\InventorySalesApi\Api\AreProductsSalableInterface instead.
+ *
  * Service which detects whether Product is salable for a given Stock (stock data + reservations)
  *
  * @api
