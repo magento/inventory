@@ -39,6 +39,8 @@ class AssignWebsiteToDefaultStock
     private $storeManager;
 
     /**
+     * Initialize dependencies
+     *
      * @param StockRepositoryInterface $stockRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param SalesChannelInterfaceFactory $salesChannelFactory
@@ -57,15 +59,15 @@ class AssignWebsiteToDefaultStock
     }
 
     /**
-     * @inheritdoc
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Validation\ValidationException
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * Assign default website to the default stock
+     *
+     * @param string|null $websiteCode
      */
-    public function execute()
+    public function execute(string $websiteCode = null)
     {
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        if ($websiteCode === null) {
+            $websiteCode = $this->storeManager->getWebsite()->getCode();
+        }
 
         $defaultStockId = $this->defaultStockProvider->getId();
         $defaultStock = $this->stockRepository->get($defaultStockId);
