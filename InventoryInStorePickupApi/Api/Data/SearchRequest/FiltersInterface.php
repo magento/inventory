@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupApi\Api\Data\SearchRequest;
 
+use Magento\InventoryInStorePickupApi\Api\Data\SearchRequest\FiltersExtensionInterface;
+
 /**
  * Filter to filter by Fields.
  * Each field may be filtered with different condition type.

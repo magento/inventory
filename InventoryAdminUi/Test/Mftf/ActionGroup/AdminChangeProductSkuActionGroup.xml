@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminChangeProductSkuActionGroup">
+        <annotations>
+            <description>Admin change product 'sku'. Starts on product edit page.</description>
+        </annotations>
+        <arguments>
+            <argument name="productSku" type="string" defaultValue="{{SimpleProduct.sku}}"/>
+        </arguments>
+        <fillField selector="{{AdminProductFormSection.productSku}}" userInput="{{productSku}}" stepKey="changeProductSku"/>
+    </actionGroup>
+</actionGroups>
+

@@ -56,7 +56,7 @@ class AddStorePickupAttributesToOrder
      * @return void
      * @throws \Exception
      */
-    public function execute(OrderInterface $order) : void
+    public function execute(OrderInterface $order): void
     {
         // Change order status to "Complete".
         if ($order->getEntityId()
@@ -70,8 +70,12 @@ class AddStorePickupAttributesToOrder
 
         // Add order history item with In-Store Pickup information.
         $time = $this->timezone->formatDateTime(new \DateTime(), \IntlDateFormatter::LONG, \IntlDateFormatter::MEDIUM);
-        $order->addCommentToStatusHistory(__('Order notified for pickup at: %1', $time), $order->getStatus(), true);
-        $order->setIsCustomerNotified($order->getEmailSent());
+        $history = $order->addCommentToStatusHistory(
+            __('Order notified for pickup at: %1', $time),
+            $order->getStatus(),
+            true
+        );
+        $history->setIsCustomerNotified((int)$order->getExtensionAttributes()->getNotificationSent());
         $this->orderRepository->save($order);
     }
 }

@@ -205,7 +205,9 @@ define([
                 shippingAddress,
                 customAttributes,
                 selectedSourceCode,
-                nearestLocation;
+                nearestLocation,
+                productsInfo = [],
+                items = quote.getItems();
 
             if (!this.isStorePickupSelected()) {
                 return;
@@ -232,12 +234,24 @@ define([
                         pickupLocationsService.selectForShipping(location);
                     });
             } else if (shippingAddress.city && shippingAddress.postcode) {
+                _.each(items, function (item) {
+                    if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
+                        productsInfo.push(
+                            {
+                                sku: item.sku
+                            }
+                        );
+                    }
+                });
                 pickupLocationsService
                     .getNearbyLocations({
                         area: {
                             radius: this.nearbySearchRadius,
                             searchTerm: shippingAddress.postcode + this.delimiter +
                                         shippingAddress.countryId || this.defaultCountry
+                        },
+                        extensionAttributes: {
+                            productsInfo: productsInfo
                         },
                         pageSize: this.nearbySearchLimit
                     })

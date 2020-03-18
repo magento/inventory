@@ -58,7 +58,6 @@
             <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
             <argument name="filter_value" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1"/>
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource2">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
