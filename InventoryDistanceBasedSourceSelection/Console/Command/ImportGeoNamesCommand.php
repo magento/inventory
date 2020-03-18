@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelection\Console\Command;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Escaper;
 use Magento\InventoryDistanceBasedSourceSelection\Model\ImportGeoNames;
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +24,7 @@ class ImportGeoNamesCommand extends Command
 {
     private const COUNTRIES = 'countries'; // Parameter name for countries list
 
-    private const URL = 'url'; //Parameter name for download countries url.
+    private const PARAM_DOWNLOAD_COUNTRIES_URL = 'url';
 
     /**
      * @var ImportGeoNames
@@ -42,16 +41,16 @@ class ImportGeoNamesCommand extends Command
      *
      * @param ImportGeoNames $importGeoNames
      * @param null|string $name
-     * @param Escaper|null $escaper
+     * @param Escaper $escaper
      */
     public function __construct(
         ImportGeoNames $importGeoNames,
-        ?string $name = null,
-        Escaper $escaper = null
+        Escaper $escaper,
+        ?string $name = null
     ) {
         parent::__construct($name);
         $this->importGeoNames = $importGeoNames;
-        $this->escaper = $escaper ?: ObjectManager::getInstance()->get(Escaper::class);
+        $this->escaper = $escaper;
     }
 
     /**
@@ -69,7 +68,7 @@ class ImportGeoNamesCommand extends Command
                         'List of country codes to import'
                     ),
                     new InputOption(
-                        self::URL,
+                        self::PARAM_DOWNLOAD_COUNTRIES_URL,
                         null,
                         InputOption::VALUE_OPTIONAL,
                         'Url from which download counties data.'
@@ -86,7 +85,7 @@ class ImportGeoNamesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $countries = $input->getArgument(self::COUNTRIES);
-        $url = $this->escaper->escapeUrl($input->getOption(self::URL));
+        $url = $this->escaper->escapeUrl($input->getOption(self::PARAM_DOWNLOAD_COUNTRIES_URL));
         foreach ($countries as $country) {
             $output->write('Importing ' . $country . ': ');
             try {

@@ -57,8 +57,7 @@
             <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetOutOfStockThreshold"/>
 
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
         </before>
         <after>
             <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
