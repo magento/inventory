@@ -49,6 +49,14 @@ class AreProductsSalableResult implements AreProductsSalableResultInterface
     /**
      * @inheritDoc
      */
+    public function setExtensionAttributes(AreProductsSalableResultExtensionInterface $extensionAttributes): void
+    {
+        $this->extensionAttributes = $extensionAttributes;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getExtensionAttributes(): ?AreProductsSalableResultExtensionInterface
     {
         return $this->extensionAttributes;

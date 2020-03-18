@@ -56,7 +56,10 @@ class AdaptAddStockStatusToProductsPlugin
         AbstractCollection $productCollection
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        $skus = $productCollection->getAllAttributeValues('sku');
+        $skus = [];
+        foreach ($productCollection->getItems() as $product) {
+            $skus[] = $product->getSku();
+        }
         $skusToVerify = implode(',', $skus);
         $result = $this->areProductsSalable->execute($skusToVerify, $stockId)->getSalable();
         foreach ($result as $item) {

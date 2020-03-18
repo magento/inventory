@@ -24,6 +24,16 @@ interface AreProductsSalableResultInterface extends ExtensibleDataInterface
     public function getSalable(): array;
 
     /**
+     * Set extension attributes to result.
+     *
+     * @param \Magento\InventorySalesApi\Api\Data\AreProductsSalableResultExtensionInterface $extensionAttributes
+     * @return void
+     */
+    public function setExtensionAttributes(
+        \Magento\InventorySalesApi\Api\Data\AreProductsSalableResultExtensionInterface $extensionAttributes
+    ): void;
+
+    /**
      * Retrieve existing extension attributes object.
      *
      * @return \Magento\InventorySalesApi\Api\Data\AreProductsSalableResultExtensionInterface|null

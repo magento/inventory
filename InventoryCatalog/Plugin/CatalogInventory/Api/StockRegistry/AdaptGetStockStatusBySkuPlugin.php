@@ -44,6 +44,7 @@ class AdaptGetStockStatusBySkuPlugin
     private $stockResolver;
 
     /**
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver

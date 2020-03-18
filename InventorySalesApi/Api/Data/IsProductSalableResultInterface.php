@@ -17,14 +17,28 @@ use Magento\Framework\Api\ExtensibleDataInterface;
 interface IsProductSalableResultInterface extends ExtensibleDataInterface
 {
     /**
+     * Retrieve product sku from result.
+     *
      * @return string
      */
     public function getSku(): string;
 
     /**
+     * Retrieve product salable status from result.
+     *
      * @return bool
      */
     public function isSalable(): bool;
+
+    /**
+     * Set extension attributes to result.
+     *
+     * @param \Magento\InventorySalesApi\Api\Data\IsProductSalableResultExtensionInterface $extensionAttributes
+     * @return void
+     */
+    public function setExtensionAttributes(
+        \Magento\InventorySalesApi\Api\Data\IsProductSalableResultExtensionInterface $extensionAttributes
+    ): void;
 
     /**
      * Retrieve existing extension attributes object.
