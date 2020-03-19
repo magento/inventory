@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateShipmentBundleProductCustomStock" extends="AdminCreateCreditMemoTotalRefundBundleProductCustomStock">
+    <test name="AdminCreateShipmentBundleProductCustomStockTest" extends="AdminCreateCreditMemoTotalRefundBundleProductCustomStockTest">
         <annotations>
             <stories value="Bundle Product Custom Stock."/>
             <title value="Create Shipment with Bundle product on Custom stock."/>

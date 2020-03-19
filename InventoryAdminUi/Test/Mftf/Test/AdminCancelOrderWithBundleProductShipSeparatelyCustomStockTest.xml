@@ -7,12 +7,12 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateCreditMemoPartialRefundFullInvoiceBundleProductCustomStock">
+    <test name="AdminCancelOrderWithBundleProductShipSeparatelyCustomStockTest">
         <annotations>
             <stories value="Bundle Product Custom Stock."/>
-            <title value="Create partial credit Memo with bundle product on custom stock."/>
-            <description value="Verify, admin able to create credit memo with partial refund after full invoice with bundle product on custom stock."/>
-            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/735178/scenarios/1631909"/>
+            <title value="Cancel order with bundle product on custom stock."/>
+            <description value="Verify salable quantity after order cancellation with bundle product on custom stock."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/735226/scenarios/1469123"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -80,27 +80,17 @@
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="productName" value="$bundleProduct.name$"/>
         </actionGroup>
-        <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCartOnceAgain">
-            <argument name="productName" value="$bundleProduct.name$"/>
-        </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
-        <!--Admin area process full invoice-->
+        <!--Cancel order.-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateInvoice">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
-        <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
-        <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
-        <!--Admin area create partial credit memo-->
-        <actionGroup ref="AdminStartsCreatingCreditMemoOnOrderPageActionGroup" stepKey="startToCreateCreditMemo"/>
-        <actionGroup ref="AdminFillQuantityForPartialCreditMemoReturnToStockActionGroup" stepKey="fillCreditMemoQuantity">
-            <argument name="quantity" value="{{minimalProductQty.value}}"/>
-        </actionGroup>
-        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
-        <!--Admin area check quantities after credit memo-->
+        <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelPendingOrder"/>
+        <!--Admin area check quantities after order placement.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridToVerifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductInGridToVerifyQuantity">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
@@ -110,7 +100,7 @@
             <argument name="sourceName" value="$source.source[name]$"/>
             <argument name="stockName" value="$stock.stock[name]$"/>
             <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
-            <argument name="stockQty" value="{{defaultProductQtyBoughtWithOnePiece.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQty.value}}"/>
         </actionGroup>
     </test>
 </tests>
