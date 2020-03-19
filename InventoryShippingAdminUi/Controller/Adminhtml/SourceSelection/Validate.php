@@ -18,7 +18,7 @@ class Validate extends Action
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::source';
+    const ADMIN_RESOURCE = 'Magento_Sales::ship';
 
     /**
      * @var JsonFactory
