@@ -9,11 +9,12 @@ namespace Magento\InventoryShippingAdminUi\Controller\Adminhtml\SourceSelection;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 
-class Validate extends Action
+class Validate extends Action implements HttpPostActionInterface
 {
     /**
      * @see _isAllowed()

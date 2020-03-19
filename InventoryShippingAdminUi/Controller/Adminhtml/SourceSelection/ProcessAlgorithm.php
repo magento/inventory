@@ -111,8 +111,10 @@ class ProcessAlgorithm extends Action implements HttpPostActionInterface
     }
 
     /**
-     * @inheritdoc
+     * Process request with source selection algorithm.
+     *
      * @throws NoSuchEntityException
+     * @return ResultInterface
      */
     public function execute(): ResultInterface
     {
