@@ -6,8 +6,8 @@
         "magento/framework": "*",
         "magento/module-catalog": "*",
         "magento/module-store": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-sales-api": "1.0.*"
     },
     "suggest": {
         "magento/module-advanced-checkout": "*"
@@ -24,5 +24,6 @@
         "psr-4": {
             "Magento\\InventoryAdvancedCheckout\\": ""
         }
-    }
+    },
+    "version": "1.0.1"
 }
