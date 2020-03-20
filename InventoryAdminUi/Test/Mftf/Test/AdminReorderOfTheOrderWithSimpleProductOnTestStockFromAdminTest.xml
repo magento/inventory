@@ -7,7 +7,7 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="ReorderOfTheOrderWithSimpleProductOnTestStockFromAdmin">
+    <test name="ReorderOfTheOrderWithSimpleProductOnTestStockFromAdminTest">
         <annotations>
             <stories value="Reorder of the Order with Simple product on Test stock from Admin"/>
             <title value="Reorder of the Order with Simple product on Test stock from Admin"/>
