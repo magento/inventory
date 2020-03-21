@@ -17,7 +17,9 @@ define([
          * @returns void
          */
         setDefaultValue: function (isDecimal) {
-            this.default = isDecimal ? '0.0' : '0';
+            if (!this.value()) {
+                isDecimal ? this.value('0.0') : this.value('0');
+            }
         }
     });
 });

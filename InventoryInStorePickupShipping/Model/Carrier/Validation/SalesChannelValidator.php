@@ -33,31 +33,15 @@ class SalesChannelValidator implements RequestValidatorInterface
     private $validationResultFactory;
 
     /**
-     * @var SearchRequestBuilderInterface
-     */
-    private $searchRequestBuilder;
-
-    /**
-     * @var GetPickupLocationsInterface
-     */
-    private $getPickupLocations;
-
-    /**
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param ValidationResultFactory $validationResultFactory
-     * @param SearchRequestBuilderInterface $searchRequestBuilder
-     * @param GetPickupLocationsInterface $getPickupLocations
      */
     public function __construct(
         WebsiteRepositoryInterface $websiteRepository,
-        ValidationResultFactory $validationResultFactory,
-        SearchRequestBuilderInterface $searchRequestBuilder,
-        GetPickupLocationsInterface $getPickupLocations
+        ValidationResultFactory $validationResultFactory
     ) {
         $this->websiteRepository = $websiteRepository;
         $this->validationResultFactory = $validationResultFactory;
-        $this->searchRequestBuilder = $searchRequestBuilder;
-        $this->getPickupLocations = $getPickupLocations;
     }
 
     /**
@@ -68,34 +52,11 @@ class SalesChannelValidator implements RequestValidatorInterface
         $errors = [];
 
         try {
-            $website = $this->websiteRepository->getById((int)$rateRequest->getWebsiteId());
-
-            if (!$this->isAnyPickupLocationAvailable($website->getCode())) {
-                $errors[] = __('No Pickup Locations available for Sales Channel %1.', $website->getCode());
-            }
+            $this->websiteRepository->getById((int)$rateRequest->getWebsiteId());
         } catch (NoSuchEntityException $exception) {
             $errors[] = __('Can not resolve Sales Channel for Website with id %1.', $rateRequest->getWebsiteId());
         }
 
         return $this->validationResultFactory->create(['errors' => $errors]);
-    }
-
-    /**
-     * Check if at least one Pickup Location is available for the website sales channel.
-     *
-     * @param string $websiteCode
-     *
-     * @return bool
-     */
-    private function isAnyPickupLocationAvailable(string $websiteCode): bool
-    {
-        $searchRequest = $this->searchRequestBuilder->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-            ->setScopeCode($websiteCode)
-            ->setPageSize(1)
-            ->create();
-
-        $pickupLocations = $this->getPickupLocations->execute($searchRequest);
-
-        return (bool) $pickupLocations->getTotalCount();
     }
 }

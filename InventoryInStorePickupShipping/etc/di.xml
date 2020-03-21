@@ -11,11 +11,11 @@
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPrice" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceRequestInterface" type="Magento\InventoryInStorePickupShipping\Model\Carrier\Command\GetShippingPriceRequest" />
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryCartInterface" type="Magento\InventoryInStorePickupShipping\Model\IsInStorePickupDeliveryCart" />
-
     <type name="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="sales_channel" xsi:type="object">Magento\InventoryInStorePickupShipping\Model\Carrier\Validation\SalesChannelValidator</item>
+                <item name="pickup_locations_availability" xsi:type="object">Magento\InventoryInStorePickupShipping\Model\Carrier\Validation\PickupLocationsAvailabilityValidator</item>
             </argument>
         </arguments>
     </type>
