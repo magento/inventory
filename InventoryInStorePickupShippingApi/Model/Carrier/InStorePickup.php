@@ -124,8 +124,6 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         $validationResult = $this->requestValidator->validate($request);
 
         if (!$validationResult->isValid()) {
-            $this->debug($validationResult->getErrors());
-
             return $this->createErrorResult();
         }
 
