@@ -121,7 +121,7 @@
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
 
         <!-- So far `default` Cron Group contains inventory update -->
-        <magentoCLI command="cron:run --group=default --group=index" stepKey="runCronIndex"/>
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <!-- Assert out of stock option is absent on product page -->
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>
