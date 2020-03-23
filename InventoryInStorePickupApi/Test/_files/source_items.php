@@ -61,10 +61,28 @@ $sourcesItemsData = [
         SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
     ],
     [
+        SourceItemInterface::SOURCE_CODE => 'eu-1',
+        SourceItemInterface::SKU => 'SKU-2',
+        SourceItemInterface::QUANTITY => 0,
+        SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
+    ],
+    [
         SourceItemInterface::SOURCE_CODE => 'eu-2',
         SourceItemInterface::SKU => 'SKU-2',
         SourceItemInterface::QUANTITY => 3,
         SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+    ],
+    [
+        SourceItemInterface::SOURCE_CODE => 'eu-3',
+        SourceItemInterface::SKU => 'SKU-2',
+        SourceItemInterface::QUANTITY => 0,
+        SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
+    ],
+    [
+        SourceItemInterface::SOURCE_CODE => 'eu-disabled',
+        SourceItemInterface::SKU => 'SKU-2',
+        SourceItemInterface::QUANTITY => 0,
+        SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
     ],
     [
         SourceItemInterface::SOURCE_CODE => 'eu-2',
