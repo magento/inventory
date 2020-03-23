@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontAssertProductOnCategoryPageAdditionalWebsiteActionGroup">
+        <annotations>
+            <description>Navigate to category page, custom website and verify product name presents.</description>
+        </annotations>
+        <arguments>
+            <argument name="categoryName" type="string" defaultValue="{{_defaultCategory.name}}"/>
+            <argument name="storeCode" type="string" defaultValue="{{customStore.code}}"/>
+            <argument name="productName" type="string" defaultValue="{{SimpleProduct.name}}"/>
+        </arguments>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{storeCode}}/{{categoryName}}.html" stepKey="navigateToCategoryPage"/>
+        <see userInput="{{productName}}" stepKey="assertProductName"/>
+    </actionGroup>
+</actionGroups>

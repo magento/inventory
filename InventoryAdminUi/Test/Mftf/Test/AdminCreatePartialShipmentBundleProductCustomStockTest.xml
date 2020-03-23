@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/522"/>
-            </skip>
         </annotations>
 
         <before>
@@ -36,8 +33,8 @@
         <remove keyForRemoval="clickSubmitInvoice"/>
         <remove keyForRemoval="checkSuccessMessage"/>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShipAction" after="openOrderForInvoice"/>
-        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="1" stepKey="shipOneItem" after="clickShipAction"/>
-        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment" after="shipOneItem"/>
+        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="{{fivePiecesAddToCart.value}}" stepKey="shipFiveItems" after="clickShipAction"/>
+        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment" after="shipFiveItems"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="checkSuccessMessage" after="waitForPageLoadSuccessMessage"/>
         <!--Remove Credit Memo Creation.-->
         <remove keyForRemoval="onOrdersPageToCreateCreditMemo"/>
