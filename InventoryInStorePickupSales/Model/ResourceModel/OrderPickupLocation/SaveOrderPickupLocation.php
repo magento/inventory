@@ -41,8 +41,8 @@ class SaveOrderPickupLocation
      */
     public function execute(int $orderId, string $pickupLocationCode): void
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_location_order');
+        $connection = $this->connection->getConnection('sales');
+        $table = $this->connection->getTableName('inventory_pickup_location_order', 'sales');
 
         $data = [
             self::ORDER_ID => $orderId,
