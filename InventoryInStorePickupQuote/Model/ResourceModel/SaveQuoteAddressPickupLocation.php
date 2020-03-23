@@ -11,7 +11,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Save Quote Address Pickup Location.
+ * Save Quote Address Pickup Location by Address Id.
  */
 class SaveQuoteAddressPickupLocation
 {

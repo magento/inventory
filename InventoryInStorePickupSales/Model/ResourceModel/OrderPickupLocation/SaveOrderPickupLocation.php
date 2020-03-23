@@ -11,7 +11,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Save Order Pickup Location
+ * Save Order Pickup Location by Order Id.
  */
 class SaveOrderPickupLocation
 {
