@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="inventoryBundlePanel" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\InventoryBundleProductAdminUi\Ui\DataProvider\Product\Form\Modifier\InventoryBundlePanel</item>
+                    <item name="sortOrder" xsi:type="number">310</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Bundle\Ui\DataProvider\Product\BundleDataProvider">
+        <plugin name="append_quantity_per_source" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Ui\DataProvider\Product\Form\AddQuantityPerSourceToProductsData" />
+        <plugin name="append_column_quantity_per_source" type="Magento\InventoryBundleProductAdminUi\Plugin\Bundle\Ui\DataProvider\Product\Form\AddColumnQuantityPerSource" />
+    </type>
+</config>

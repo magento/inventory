@@ -16,6 +16,13 @@ use Magento\Setup\Model\FixtureGenerator\EntityGeneratorFactory;
 class UpdateCustomTableMapPlugin
 {
     /**
+     * Processed source items for complex products.
+     *
+     * @var array
+     */
+    private $sourceItems = [];
+
+    /**
      * Inject inventory_source_item table data to FixtureGenerator\EntityGeneratorFactory arguments.
      *
      * @param EntityGeneratorFactory $subject
@@ -31,8 +38,14 @@ class UpdateCustomTableMapPlugin
             'entity_id_field' => EntityGenerator::SKIP_ENTITY_ID_BINDING,
             'handler' => function ($productId, $entityNumber, $fixture, $binds) {
                 foreach ($binds as &$bind) {
-                    $bind['sku'] = $fixture['sku']($productId, $entityNumber);
+                    $sku = $fixture['sku']($productId, $entityNumber);
+                    if (in_array($sku, $this->sourceItems)) {
+                        return [];
+                    }
+                    $bind['sku'] = $sku;
+                    $this->sourceItems[] = $sku;
                 }
+
                 return $binds;
             },
         ];

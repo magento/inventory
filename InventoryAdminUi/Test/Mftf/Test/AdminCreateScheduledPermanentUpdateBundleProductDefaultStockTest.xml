@@ -25,7 +25,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <!--Create bundle and virtual products.-->
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Add virtual product to bundle.-->
             <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>

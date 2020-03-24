@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryGroupedProductAdminUi\Plugin\Ui\DataProvider\Product\Form;
 
 use Magento\GroupedProduct\Ui\DataProvider\Product\GroupedProductDataProvider;
+use Magento\InventoryCatalogAdminUi\Model\GetQuantityInformationPerSourceBySkus;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
-use Magento\InventoryGroupedProductAdminUi\Model\GetQuantityInformationPerSourceBySkus;
 
 /**
  * On multi source mode add data "Quantity Per Source" to loaded items for modal window.
