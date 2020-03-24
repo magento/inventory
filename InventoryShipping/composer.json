@@ -4,11 +4,11 @@
     "require": {
         "php": "~7.1.3||~7.2.0||~7.3.0",
         "magento/framework": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-source-selection-api": "*",
-        "magento/module-inventory-source-deduction-api": "*",
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-sales-api": "1.0.*",
+        "magento/module-inventory-source-selection-api": "1.2.*",
+        "magento/module-inventory-source-deduction-api": "1.0.*",
         "magento/module-sales": "*",
         "magento/module-shipping": "*",
         "magento/module-store": "*"
@@ -25,5 +25,6 @@
         "psr-4": {
             "Magento\\InventoryShipping\\": ""
         }
-    }
+    },
+    "version": "1.0.8"
 }

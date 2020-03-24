@@ -8,8 +8,8 @@
         "magento/module-store": "*",
         "magento/module-backend": "*",
         "magento/module-product-alert": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-sales-api": "1.0.*"
     },
     "suggest": {
         "magento/module-product-alert": "*"
@@ -26,5 +26,6 @@
         "psr-4": {
             "Magento\\InventoryProductAlert\\": ""
         }
-    }
+    },
+    "version": "1.0.8"
 }

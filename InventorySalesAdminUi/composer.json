@@ -6,11 +6,11 @@
         "magento/framework": "*",
         "magento/module-backend": "*",
         "magento/module-catalog-inventory": "*",
-        "magento/module-inventory-admin-ui": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-admin-ui": "1.0.*",
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-sales-api": "1.0.*",
+        "magento/module-inventory-configuration-api": "1.0.*",
         "magento/module-catalog": "*",
         "magento/module-store": "*",
         "magento/module-ui": "*"
@@ -27,5 +27,6 @@
         "psr-4": {
             "Magento\\InventorySalesAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.0.8"
 }

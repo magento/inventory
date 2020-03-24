@@ -7,11 +7,11 @@
         "magento/module-catalog": "*",
         "magento/module-eav": "*",
         "magento/module-catalog-inventory": "*",
-        "magento/module-inventory": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-configuration-api": "*",
-        "magento/module-inventory-low-quantity-notification-api": "*",
+        "magento/module-inventory": "1.0.*",
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-configuration-api": "1.0.*",
+        "magento/module-inventory-low-quantity-notification-api": "1.0.*",
         "magento/module-store": "*"
     },
     "type": "magento2-module",
@@ -26,5 +26,6 @@
         "psr-4": {
             "Magento\\InventoryLowQuantityNotification\\": ""
         }
-    }
+    },
+    "version": "1.0.8"
 }

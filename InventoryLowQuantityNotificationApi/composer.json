@@ -17,5 +17,6 @@
         "psr-4": {
             "Magento\\InventoryLowQuantityNotificationApi\\": ""
         }
-    }
+    },
+    "version": "1.0.6"
 }

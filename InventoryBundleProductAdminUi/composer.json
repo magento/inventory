@@ -6,7 +6,7 @@
         "magento/framework": "*"
     },
     "suggest": {
-        "magento/module-inventory-configuration-api": "*"
+        "magento/module-inventory-configuration-api": "1.0.*"
     },
     "type": "magento2-module",
     "license": [
@@ -20,5 +20,6 @@
         "psr-4": {
             "Magento\\InventoryBundleProductAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.0.6"
 }
