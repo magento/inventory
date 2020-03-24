@@ -38,8 +38,7 @@
 
         <!-- Configurable Product with drop-down attribute created and its variables assigned to Test Stock in admin -->
         <actionGroup ref="createConfigurationsForTwoAttributeCustomSource"
-                     stepKey="createConfigurationsWithCustomStock"
-                     before="saveConfigurableProduct">
+                     stepKey="createConfigurationsWithCustomStock">
             <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
             <argument name="sourceName" value="$$createSource.source[name]$$"/>
@@ -70,14 +69,15 @@
         </actionGroup>
 
         <!--Place order.-->
-        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout" after="addConfigurableProductToCart"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPage" after="addConfigurableProductToCart"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckout1" after="clickOnNextPaymentPage"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible" after="waitForPageLoadCheckout1"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder" after="waitForPlaceOrderButtonVisible"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced" after="placeOrder"/>
-        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="getOrderId" after="waitUntilOrderPlaced"/>
-        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage" after="getOrderId"/>
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" after="addConfigurableProductToCart" stepKey="navigateToCheckout"/>
+        <actionGroup ref="CheckoutSelectFlatRateShippingMethodActionGroup" after="navigateToCheckout" stepKey="selectFlatRateShippingMethod"/>
+        <actionGroup ref="StorefrontCheckoutForwardFromShippingStepActionGroup" after="selectFlatRateShippingMethod" stepKey="checkoutForwardFromShippingStep"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" after="checkoutForwardFromShippingStep" stepKey="selectCheckMoneyPayment"/>
+        <actionGroup ref="CheckoutPlaceOrderActionGroup" after="selectCheckMoneyPayment" stepKey="placeOrder">
+            <argument name="orderNumberMessage" value="CONST.successCheckoutOrderNumberMessage" />
+            <argument name="emailYouMessage" value="CONST.successCheckoutEmailYouMessage" />
+        </actionGroup>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" after="placeOrder" stepKey="getOrderId"/>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Custom stock is created correctly -->
         <remove keyForRemoval="checkProductSourceQty"/>
@@ -102,13 +102,8 @@
         <actionGroup ref="StorefrontCustomerReorderActionGroup" stepKey="reorder" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">
             <argument name="orderNumber" value="${getOrderId}"/>
         </actionGroup>
-        <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout" after="reorder"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPaymentToReorder" after="goToCheckout"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPageToReorder" after="waitForPageLoadCheckoutSelectPaymentToReorder"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckout2" after="clickOnNextPaymentPageToReorder"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrderToReorder" after="waitForPageLoadCheckout2"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlacedToReorder" after="placeOrderToReorder"/>
-        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber" after="waitUntilOrderPlacedToReorder"/>
+        <actionGroup ref="PlaceOrderWithLoggedUserActionGroup" stepKey="placeOrderToReorder" after="reorder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber" after="placeOrderToReorder"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessageAfterReorder" after="reorderNumber"/>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Test stock is created correctly -->
@@ -118,6 +113,5 @@
              userInput="100" stepKey="checkProductSourceQtyAfterReorder" after="findProductBySkuToCheckQtyAfterReorder"/>
         <see selector="{{AdminProductGridSection.productSalableQty('1', $$additionalStock.stock[name]$$)}}"
              userInput="90" stepKey="checkSalableQtyAfterReorder" after="checkProductSourceQtyAfterReorder"/>
-
     </test>
 </tests>

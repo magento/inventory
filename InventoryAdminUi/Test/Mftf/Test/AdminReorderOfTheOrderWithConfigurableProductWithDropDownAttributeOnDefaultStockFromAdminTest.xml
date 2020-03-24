@@ -99,7 +99,9 @@
             <argument name="sourceName" value="{{_defaultSource.name}}"/>
         </actionGroup>
         <!-- Save configurable product -->
-        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryAndsaveConfigurableProduct">
+            <argument name="categoryName" value="$simpleCategory.name$"/>
+        </actionGroup>
 
         <!-- Create order -->
         <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
