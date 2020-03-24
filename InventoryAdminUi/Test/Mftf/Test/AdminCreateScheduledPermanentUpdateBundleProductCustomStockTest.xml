@@ -17,9 +17,6 @@
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1936221"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/522"/>
-            </skip>
         </annotations>
         <before>
             <!--Create stock and source.-->
@@ -30,7 +27,7 @@
                 <requiredEntity createDataKey="source"/>
             </createData>
             <!--Create bundle and virtual products.-->
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Assign virtual product to additional source.-->
             <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openVirtualProductEditPage"/>
