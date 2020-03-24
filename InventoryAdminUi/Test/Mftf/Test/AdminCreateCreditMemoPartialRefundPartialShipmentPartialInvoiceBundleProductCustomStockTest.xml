@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/522"/>
-            </skip>
         </annotations>
 
         <before>
@@ -33,17 +30,17 @@
         <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton" after="clickNext"/>
         <!--Admin Area Process Partial Invoice.-->
         <scrollTo selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="scrollToQty" after="clickInvoice"/>
-        <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="1" stepKey="invoiceQuantityPartial" after="scrollToQty"/>
+        <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="invoiceQuantityPartial" after="scrollToQty"/>
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="clickUpdateQty" after="invoiceQuantityPartial"/>
         <waitForPageLoad stepKey="waitForQuantityUpdate" after="clickUpdateQty"/>
         <!--Admin Area Process Partial Shipment.-->
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShipAction" after="checkSuccessMessage"/>
-        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="1" stepKey="shipOneItem" after="clickShipAction"/>
+        <fillField selector=".order-shipment-table tbody:nth-of-type(1) .col-qty input" userInput="{{fivePiecesAddToCart.value}}" stepKey="shipOneItem" after="clickShipAction"/>
         <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment" after="shipOneItem"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="checkShipmentSuccessMessage" after="clickSubmitShipment"/>
         <!--Create Credit Memo with partial refund.-->
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox" after="clickCreditMemo"/>
-        <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="5" stepKey="partialRefund" after="returnToStockCheckbox"/>
+        <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="partialRefund" after="returnToStockCheckbox"/>
         <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund" after="partialRefund"/>
         <waitForLoadingMaskToDisappear stepKey="updateQuantityLoadingMask" after="updateQuantityToRefund"/>
         <!--Verify product qty-->
