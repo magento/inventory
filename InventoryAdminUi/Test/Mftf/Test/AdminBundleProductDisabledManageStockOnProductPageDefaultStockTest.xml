@@ -27,7 +27,7 @@
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="FullSource1" stepKey="additionalSource"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <!--Assign Default Stock to Default Website.-->
