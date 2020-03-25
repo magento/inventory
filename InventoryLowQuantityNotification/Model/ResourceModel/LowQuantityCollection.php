@@ -181,13 +181,11 @@ class LowQuantityCollection extends AbstractCollection
             []
         );
 
-        $storeId = $this->filterStoreId ?: 0;
         $this->getSelect()->joinInner(
             ['product_entity_int' => $productEavIntTable],
             'product_entity_int.' . $linkField . ' = product_entity.' . $linkField . ' ' .
             'AND product_entity_int.attribute_id = ' . (int)$statusAttribute->getAttributeId()
-            . ' AND product_entity_int.store_id = ' . $storeId
-            . ' AND product_entity_int.value = ' . Status::STATUS_ENABLED,
+            . ' AND product_entity_int.store_id = ' . Store::DEFAULT_STORE_ID,
             []
         );
 
@@ -204,8 +202,22 @@ class LowQuantityCollection extends AbstractCollection
                     ),
                 ]
             );
+            $this->getSelect()->joinLeft(
+                ['product_entity_int_store' => $productEavIntTable],
+                'product_entity_int_store.' . $linkField . ' = product_entity.' . $linkField . ' ' .
+                'AND product_entity_int_store.attribute_id = ' . (int)$statusAttribute->getAttributeId()
+                . ' AND product_entity_int_store.store_id = ' . $this->filterStoreId,
+                []
+            )->where(
+                $this->getConnection()->getIfNullSql(
+                    'product_entity_int_store.value',
+                    'product_entity_int.value'
+                ) . '= ?',
+                Status::STATUS_ENABLED
+            );
         } else {
-            $this->getSelect()->columns(['product_name' => 'product_entity_varchar.value']);
+            $this->getSelect()->columns(['product_name' => 'product_entity_varchar.value'])
+                ->where('product_entity_int.value = ?', Status::STATUS_ENABLED);
         }
     }
 
