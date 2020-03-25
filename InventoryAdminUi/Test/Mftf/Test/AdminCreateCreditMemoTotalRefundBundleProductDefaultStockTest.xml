@@ -38,11 +38,6 @@
         <remove keyForRemoval="assignTestSourceToCreatedProduct"/>
         <remove keyForRemoval="setCustomSourceQuantity"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity" after="openVirtualProductEditPage"/>
-        <!--Verify product quantity after order has been placed.-->
-        <remove keyForRemoval="checkProductSourceQtyAfterPlaceOrder"/>
-        <remove keyForRemoval="checkSalableQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="100" stepKey="checkProductSourceQtyAfterPlaceOrder" after="findProductBySkuToCheckQtyAfterPlaceOrder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1', _defaultStock.name)}}" userInput="90" stepKey="checkSalableQtyAfterPlaceOrder" after="checkProductSourceQtyAfterPlaceOrder"/>
         <!--Verify product quantity after invoice gas been created.-->
         <remove keyForRemoval="checkProductSourceQtyAfterCreditMemo"/>
         <remove keyForRemoval="checkSalableQtyAfterCreditMemo"/>

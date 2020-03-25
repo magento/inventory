@@ -24,7 +24,7 @@
             <createData entity="FullSource1" stepKey="additionalSource"/>
             <!--Create grouped and virtual product.-->
             <createData entity="_defaultCategory" stepKey="category"/>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Create customer.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
@@ -92,8 +92,6 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
-        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
-        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered 2" stepKey="orderedQuantity"/>
         <!--Admin Area Process Full Invoice-->
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
         <click selector="{{AdminInvoiceMainActionsSection.submitInvoice}}" stepKey="clickSubmitInvoice"/>
