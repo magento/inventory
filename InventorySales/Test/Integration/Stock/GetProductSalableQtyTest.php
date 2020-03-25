@@ -7,8 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\Stock;
 
-use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
+use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
+use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
+use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -118,5 +122,83 @@ class GetProductSalableQtyTest extends TestCase
             // unreserved 3.5 units for cleanup
             $this->reservationBuilder->setStockId(10)->setSku('SKU-1')->setQuantity(3.5)->build(),
         ]);
+    }
+
+    /**
+     * Verify 'Out of stock' source items will show '0' salable qty in case global 'out of stock' threshold is negative.
+     *
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     *
+     * @magentoConfigFixture default_store cataloginventory/item_options/min_qty -10
+     * @magentoConfigFixture default_store cataloginventory/item_options/backorders 1
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testGetSalableQuantityWithGlobalBackordersAndOutOfStockSourceItems()
+    {
+        $sku = 'SKU-2';
+        self::assertEquals(15, $this->getProductSalableQty->execute($sku, 20));
+        $this->setSourceItemsToOutOfStock($sku);
+        self::assertEquals(0, $this->getProductSalableQty->execute($sku, 20));
+    }
+
+    /**
+     * Verify 'Out of stock' source items will show '0' salable qty if stock item 'out of stock' threshold is negative.
+     *
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     *
+     * @magentoDbIsolation disabled
+     */
+    public function testGetSalableQuantityWithBackordersAndOutOfStockSourceItems()
+    {
+        $sku = 'SKU-2';
+        $this->enableBackorders();
+        self::assertEquals(15, $this->getProductSalableQty->execute($sku, 20));
+        $this->setSourceItemsToOutOfStock($sku);
+        self::assertEquals(0, $this->getProductSalableQty->execute($sku, 20));
+    }
+
+    /**
+     * Enable backorders and negative 'out or stock' threshold for stock item.
+     *
+     * @return void
+     */
+    private function enableBackorders(): void
+    {
+        $getLegacyItem = Bootstrap::getObjectManager()->get(GetLegacyStockItem::class);
+        $stockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);
+        $legacyStockItem = $getLegacyItem->execute('SKU-2');
+        $legacyStockItem->setBackorders(1);
+        $legacyStockItem->setUseConfigBackorders(false);
+        $legacyStockItem->setMinQty(-10);
+        $legacyStockItem->setUseConfigMinQty(false);
+        $stockItemRepository->save($legacyStockItem);
+    }
+
+    /**
+     * Set source items for given product skus to 'out of stock' status.
+     *
+     * @param string $sku
+     * @return void
+     */
+    private function setSourceItemsToOutOfStock(string $sku): void
+    {
+        $sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
+        $getSourceItems = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuInterface::class);
+        $sourceItems = $getSourceItems->execute($sku);
+        foreach ($sourceItems as $sourceItem) {
+            $sourceItem->setStatus(0);
+        }
+        $sourceItemsSave->execute($sourceItems);
     }
 }
