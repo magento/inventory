@@ -9,14 +9,15 @@ namespace Magento\InventoryLowQuantityNotificationAdminUi\Observer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
-use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
-use Magento\InventoryLowQuantityNotificationAdminUi\Model\SourceItemsConfigurationProcessor;
+use Magento\InventoryLowQuantityNotification\Model\SourceItemsConfigurationProcessor;
 
 /**
  * Save source relations (configuration) during product persistence via controller
@@ -49,6 +50,8 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
     /**
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SourceItemsConfigurationProcessor $sourceItemsConfigurationProcessor
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
@@ -63,8 +66,11 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
     }
 
     /**
+     * Process source items configuration after product has been saved via admin ui.
+     *
      * @param EventObserver $observer
      * @return void
+     * @throws InputException
      */
     public function execute(EventObserver $observer)
     {
@@ -80,12 +86,12 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
         $assignedSources = [];
         if ($this->isSingleSourceMode->execute()) {
             $stockData = $controller->getRequest()->getParam('product', [])['stock_data'] ?? [];
+            $notifyStockQty = $stockData[StockItemConfigurationInterface::NOTIFY_STOCK_QTY] ?? 0;
+            $notifyStockQtyUseDefault = $stockData[StockItemConfigurationInterface::USE_CONFIG_NOTIFY_STOCK_QTY] ?? 1;
             $assignedSources[] = [
                 SourceItemInterface::SOURCE_CODE => $this->defaultSourceProvider->getCode(),
-                StockItemConfigurationInterface::NOTIFY_STOCK_QTY =>
-                    $stockData[StockItemConfigurationInterface::NOTIFY_STOCK_QTY] ?? 0,
-                'notify_stock_qty_use_default' =>
-                    $stockData[StockItemConfigurationInterface::USE_CONFIG_NOTIFY_STOCK_QTY] ?? 1,
+                StockItemConfigurationInterface::NOTIFY_STOCK_QTY => $notifyStockQty,
+                'notify_stock_qty_use_default' => $notifyStockQtyUseDefault,
             ];
         } else {
             $sources = $controller->getRequest()->getParam('sources', []);
