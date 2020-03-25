@@ -27,7 +27,7 @@
                 <field key="quantity">100</field>
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">

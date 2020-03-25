@@ -8,25 +8,45 @@ declare(strict_types=1);
 namespace Magento\InventoryShippingAdminUi\Controller\Adminhtml\SourceSelection;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Class Index
+ * Source selection algorithm main page controller.
  */
-class Index extends Action
+class Index extends Action implements HttpGetActionInterface
 {
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::source';
+    const ADMIN_RESOURCE = 'Magento_Sales::ship';
+
+    /**
+     * @var PageFactory
+     */
+    private $resultPageFactory;
+
+    /**
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     */
+    public function __construct(Context $context, PageFactory $resultPageFactory)
+    {
+        parent::__construct($context);
+        $this->resultPageFactory = $resultPageFactory;
+    }
 
     /**
      * @inheritdoc
      */
     public function execute()
     {
-        $this->_view->loadLayout();
+        $resultPage = $this->resultPageFactory->create();
+        $resultPage->initLayout();
         $this->_setActiveMenu('Magento_Sales::sales_order');
-        $this->_view->getPage()->getConfig()->getTitle()->prepend(__('Source Selection'));
-        $this->_view->renderLayout();
+        $resultPage->getConfig()->getTitle()->prepend(__('Source Selection'));
+
+        return $resultPage;
     }
 }

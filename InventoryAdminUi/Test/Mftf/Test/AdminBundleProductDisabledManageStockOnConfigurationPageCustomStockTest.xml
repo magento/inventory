@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
             <skip>
-                <issueId value="https://github.com/magento/inventory/issues/522"/>
+                <issueId value="https://github.com/magento/inventory/issues/1821"/>
             </skip>
         </annotations>
 
@@ -32,7 +32,7 @@
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="FullSource1" stepKey="additionalSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
             <!--Assign source to stock.-->
@@ -47,7 +47,6 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
-            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Enable "Manage Stock" in configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
@@ -57,6 +56,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
@@ -65,10 +65,9 @@
 
         <!--Assign simple product to source.-->
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
-        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
         <!--Add simple product to bundle.-->
         <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
@@ -95,15 +94,15 @@
         <!--Verify product is not visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
-        <dontSee userInput="{{BundleProduct.name}}" stepKey="assertProductIsNotPresent"/>
+        <dontSee userInput="$bundleProduct.name$" stepKey="assertProductIsNotPresent"/>
         <!--Disable "Manage Stock" in configuration.-->
-        <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
+        <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <magentoCLI command="cache:flush" stepKey="flushCache"/>
         <!--Verify product is visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageToVerifyBundleProduct"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyBundleProduct"/>
-        <see userInput="{{BundleProduct.name}}" stepKey="assertProductIsPresent"/>
+        <see userInput="$bundleProduct.name$" stepKey="assertProductIsPresent"/>
         <see userInput="$$simpleProduct.price$$" stepKey="assertProductPriceIsPresent"/>
     </test>
 </tests>
