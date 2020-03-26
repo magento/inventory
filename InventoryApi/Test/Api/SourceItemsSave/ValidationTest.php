@@ -66,7 +66,7 @@ class ValidationTest extends WebapiAbstract
             'without_' . SourceItemInterface::SKU => [
                 SourceItemInterface::SKU,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SKU . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -80,7 +80,7 @@ class ValidationTest extends WebapiAbstract
             'without_' . SourceItemInterface::SOURCE_CODE => [
                 SourceItemInterface::SOURCE_CODE,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SOURCE_CODE . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -94,7 +94,7 @@ class ValidationTest extends WebapiAbstract
             'without_' . SourceItemInterface::QUANTITY => [
                 SourceItemInterface::QUANTITY,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::QUANTITY . '" should be numeric.',
                     'errors' => [
                         [
                             'message' => '"%field" should be numeric.',
@@ -108,7 +108,7 @@ class ValidationTest extends WebapiAbstract
             'without_' . SourceItemInterface::STATUS => [
                 SourceItemInterface::STATUS,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::STATUS . '" should be numeric.',
                     'errors' => [
                         [
                             'message' => '"%field" should be numeric.',
@@ -168,7 +168,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SKU,
                 null,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SKU . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -183,7 +183,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SKU,
                 '',
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SKU . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -198,7 +198,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SKU,
                 ' ',
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SKU . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -213,7 +213,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::STATUS,
                 '999999',
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::STATUS . '" should a known status.',
                     'errors' => [
                         [
                             'message' => '"%field" should a known status.',
@@ -228,7 +228,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::QUANTITY,
                 null,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::QUANTITY . '" should be numeric.',
                     'errors' => [
                         [
                             'message' => '"%field" should be numeric.',
@@ -243,7 +243,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SOURCE_CODE,
                 null,
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SOURCE_CODE . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -258,7 +258,7 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SOURCE_CODE,
                 '',
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SOURCE_CODE . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
@@ -273,10 +273,16 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SOURCE_CODE,
                 ' ',
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "' . SourceItemInterface::SOURCE_CODE . '" can not be empty.',
                     'errors' => [
                         [
                             'message' => '"%field" can not be empty.',
+                            'parameters' => [
+                                'field' => SourceItemInterface::SOURCE_CODE,
+                            ],
+                        ],
+                        [
+                            'message' => '"%field" can not contain whitespaces.',
                             'parameters' => [
                                 'field' => SourceItemInterface::SOURCE_CODE,
                             ],
@@ -293,7 +299,9 @@ class ValidationTest extends WebapiAbstract
                 SourceItemInterface::SOURCE_CODE,
                 'source code',
                 [
-                    'message' => 'Validation Failed',
+                    'message' => 'Validation Failed: "'
+                        . SourceItemInterface::SOURCE_CODE
+                        . '" can not contain whitespaces.',
                     'errors' => [
                         [
                             'message' => '"%field" can not contain whitespaces.',

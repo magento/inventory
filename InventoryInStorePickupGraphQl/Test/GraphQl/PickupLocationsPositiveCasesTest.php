@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupGraphQl\Test\Api;
+namespace Magento\InventoryInStorePickupGraphQl\Test\GraphQl;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;

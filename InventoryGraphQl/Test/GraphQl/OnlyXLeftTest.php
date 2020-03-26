@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGraphQl\Test\Api;
+namespace Magento\InventoryGraphQl\Test\GraphQl;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Config\Model\PreparedValueFactory;

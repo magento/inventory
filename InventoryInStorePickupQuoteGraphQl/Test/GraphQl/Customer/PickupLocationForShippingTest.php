@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupQuoteGraphQl\Test\Api\Customer;
+namespace Magento\InventoryInStorePickupQuoteGraphQl\Test\GraphQl\Customer;
 
 use Magento\Framework\Exception\AuthenticationException;
 use Magento\Framework\Exception\LocalizedException;
@@ -204,7 +204,7 @@ mutation {
             street: ["test street 1", "test street 2"]
             city: "test city"
             region: "test region"
-            postcode: "887766"  
+            postcode: "887766"
             country_code: "US"
             telephone: "88776655"
             save_in_address_book: false
