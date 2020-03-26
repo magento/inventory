@@ -199,7 +199,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSimpleProduct"/>
         <waitForPageLoad time="30" stepKey="waitForSimpleProductPageLoad"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForSimpleProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForSimpleProduct"/>
         <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="1" stepKey="seeNotifyQuantityOnTestSourceForSimpleProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckNotifyQuantityOnVirtualProductOnCreatedSource"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForVirtualProduct"/>
@@ -253,7 +253,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSimpleProductForCheckNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForSimpleProductPageLoadForCheckInStock"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForSimpleProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForSimpleProduct"/>
         <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="seeNotifyQuantityOnDefaultSourceForSimpleProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckNotifyQuantityOnVirtualProductOnDefaultSource"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForVirtualProductForCheckNotifyQuantity"/>
