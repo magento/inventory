@@ -35,8 +35,8 @@ class IsOrderSourceManageableTest extends TestCase
     /**
      * Verify order with not assigned to all stocks items won't throw exception.
      *
-     * @magentoDataFixture ../../../../ext/magento/inventory/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture Magento/Sales/_files/order.php
      *
      * @magentoDbIsolation disabled
