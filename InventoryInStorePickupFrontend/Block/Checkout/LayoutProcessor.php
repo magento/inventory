@@ -12,13 +12,13 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Stdlib\ArrayManager;
 use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCart;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Add store pickup information on checkout page.
  */
 class LayoutProcessor implements LayoutProcessorInterface
 {
-    private const CARRIER_CODE = 'in_store';
     private const SEARCH_RADIUS = 'carriers/in_store/search_radius';
 
     /**
@@ -113,6 +113,6 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     private function getSearchRadius(): float
     {
-        return (float)$this->config->getValue(self::SEARCH_RADIUS);
+        return (float)$this->config->getValue(self::SEARCH_RADIUS, ScopeInterface::SCOPE_WEBSITE);
     }
 }

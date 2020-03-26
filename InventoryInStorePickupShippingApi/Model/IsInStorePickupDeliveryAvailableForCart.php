@@ -1,4 +1,8 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupShippingApi\Model;
@@ -11,6 +15,7 @@ use Magento\Quote\Api\Data\EstimateAddressInterface;
 use Magento\Quote\Api\Data\EstimateAddressInterfaceFactory;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Check if In-Store Pickup delivery method is applicable for a cart by cartId.
@@ -88,11 +93,11 @@ class IsInStorePickupDeliveryAvailableForCart
     /**
      * Return default country code
      *
-     * @return string
+     * @return string|null
      */
     private function getDefaultCountry(): ?string
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_DEFAULT_COUNTRY);
+        return $this->scopeConfig->getValue(self::XML_PATH_DEFAULT_COUNTRY, ScopeInterface::SCOPE_STORE);
     }
 
     /**
