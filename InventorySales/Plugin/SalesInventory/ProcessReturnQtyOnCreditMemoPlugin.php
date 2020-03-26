@@ -89,19 +89,18 @@ class ProcessReturnQtyOnCreditMemoPlugin
     ): void {
         $items = [];
         foreach ($creditmemo->getItems() as $item) {
-            if (!in_array($item->getOrderItemId(), $returnToStockItems)) {
-                continue;
-            }
-            $orderItem = $item->getOrderItem();
-            $itemSku = $this->getSkuFromOrderItem->execute($orderItem);
+            if ($isAutoReturn || in_array($item->getOrderItemId(), $returnToStockItems)) {
+                $orderItem = $item->getOrderItem();
+                $itemSku = $this->getSkuFromOrderItem->execute($orderItem);
 
-            if ($this->isValidItem($itemSku, $orderItem->getProductType())) {
-                $qty = (float)$item->getQty();
-                $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
-                $items[$itemSku] = [
-                    'qty' => ($items[$itemSku]['qty'] ?? 0) + $qty,
-                    'processedQty' => ($items[$itemSku]['processedQty'] ?? 0) + (float)$processedQty,
-                ];
+                if ($this->isValidItem($itemSku, $orderItem->getProductType())) {
+                    $qty = (float)$item->getQty();
+                    $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
+                    $items[$itemSku] = [
+                        'qty' => ($items[$itemSku]['qty'] ?? 0) + $qty,
+                        'processedQty' => ($items[$itemSku]['processedQty'] ?? 0) + (float)$processedQty,
+                    ];
+                }
             }
         }
 
