@@ -10,7 +10,7 @@ Multi-Source Inventory (MSI) project is designed to enable stock management in m
 
 - Complete user documentation located on the project [Magento DevDocs](https://devdocs.magento.com/guides/v2.3/inventory/) pages
 - Technical vision and designs described on the project [wiki](https://github.com/magento/inventory/wiki) 
-- Project [roadmap](https://github.com/magento/inventory/wiki/MSI-Roadmap) contains information about project phases and stories for each phase 
+- Project [roadmap](https://github.com/magento/inventory/wiki/MSI-Roadmap) contains information about project phases and stories for each phase rth
 - How to start local development described in the [installation guide](https://github.com/magento/inventory/wiki/Metapackage-Installation-Guide)
 
 ## Community Engineering Slack
