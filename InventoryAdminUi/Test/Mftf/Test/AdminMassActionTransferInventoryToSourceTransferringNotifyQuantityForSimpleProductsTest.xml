@@ -183,7 +183,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFirstSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFirstProduct"/>
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoad"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForFirstProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForFirstProduct"/>
         <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="1" stepKey="seeNotifyQuantityOnTestSourceForFirstProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckStockOnSecondProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProduct"/>
@@ -249,7 +249,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFirstSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFirstProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoadForCheckInStock"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForFirstProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForFirstProduct"/>
         <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="seeNotifyQuantityOnDefaultSourceForFirstProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckDefaultStockOnSecondProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProductForCheckInStock"/>

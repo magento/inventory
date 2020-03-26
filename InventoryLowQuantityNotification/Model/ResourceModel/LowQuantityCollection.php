@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryLowQuantityNotification\Model\ResourceModel;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Eav\Api\AttributeRepositoryInterface;
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
@@ -155,12 +156,13 @@ class LowQuantityCollection extends AbstractCollection
      *
      * @return void
      */
-    private function joinCatalogProduct()
+    private function joinCatalogProduct(): void
     {
         $productEntityTable = $this->getTable('catalog_product_entity');
         $productEavVarcharTable = $this->getTable('catalog_product_entity_varchar');
+        $productEavIntTable = $this->getTable('catalog_product_entity_int');
         $nameAttribute = $this->attributeRepository->get('catalog_product', 'name');
-
+        $statusAttribute = $this->attributeRepository->get('catalog_product', 'status');
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
@@ -178,6 +180,14 @@ class LowQuantityCollection extends AbstractCollection
             []
         );
 
+        $this->getSelect()->joinInner(
+            ['product_entity_int' => $productEavIntTable],
+            'product_entity_int.' . $linkField . ' = product_entity.' . $linkField . ' ' .
+            'AND product_entity_int.attribute_id = ' . (int)$statusAttribute->getAttributeId()
+            . ' AND product_entity_int.store_id = ' . Store::DEFAULT_STORE_ID,
+            []
+        );
+
         if (null !== $this->filterStoreId) {
             $this->getSelect()->joinLeft(
                 ['product_entity_varchar_store' => $productEavVarcharTable],
@@ -191,8 +201,22 @@ class LowQuantityCollection extends AbstractCollection
                     ),
                 ]
             );
+            $this->getSelect()->joinLeft(
+                ['product_entity_int_store' => $productEavIntTable],
+                'product_entity_int_store.' . $linkField . ' = product_entity.' . $linkField . ' ' .
+                'AND product_entity_int_store.attribute_id = ' . (int)$statusAttribute->getAttributeId()
+                . ' AND product_entity_int_store.store_id = ' . $this->filterStoreId,
+                []
+            )->where(
+                $this->getConnection()->getIfNullSql(
+                    'product_entity_int_store.value',
+                    'product_entity_int.value'
+                ) . '= ?',
+                Status::STATUS_ENABLED
+            );
         } else {
-            $this->getSelect()->columns(['product_name' => 'product_entity_varchar.value']);
+            $this->getSelect()->columns(['product_name' => 'product_entity_varchar.value'])
+                ->where('product_entity_int.value = ?', Status::STATUS_ENABLED);
         }
     }
 
