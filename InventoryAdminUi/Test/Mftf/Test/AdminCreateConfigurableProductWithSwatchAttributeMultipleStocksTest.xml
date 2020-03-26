@@ -164,15 +164,15 @@
         </actionGroup>
         <amOnPage url="$$configurableProduct.custom_attributes[url_key]$$.html" stepKey="navigateToProductPageMainWebsite"/>
         <waitForPageLoad stepKey="waitForMainWebsitePDPLoad"/>
-        <seeElement selector="//div[@option-label='{{visualSwatchColor1.name}}']" stepKey="verifyRedVariationIsPresentOnMainWebsite"/>
-        <dontSeeElement selector="//div[@option-label='{{visualSwatchColor2.name}}']" stepKey="verifyBlueVariationIsNotPresentOnMainWebsite"/>
+        <seeElement selector="//div[@data-option-label='{{visualSwatchColor1.name}}']" stepKey="verifyRedVariationIsPresentOnMainWebsite"/>
+        <dontSeeElement selector="//div[@data-option-label='{{visualSwatchColor2.name}}']" stepKey="verifyBlueVariationIsNotPresentOnMainWebsite"/>
         <!--Verify configurable product with blue variation on additional website.-->
         <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToAdditionalCategoryPage"/>
         <waitForPageLoad stepKey="waitForAdditionalWebsiteCategoryPageLoad"/>
         <see userInput="$$configurableProduct.name$$" stepKey="assertProductPresent"/>
         <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$configurableProduct.custom_attributes[url_key]$$.html" stepKey="navigateToPDP"/>
         <waitForPageLoad stepKey="waitForAdditionalWebsitePDPLoad"/>
-        <dontSeeElement selector="//div[@option-label='{{visualSwatchColor1.name}}']" stepKey="verifyRedVariationIsNotPresentOnAdditionalWebsite"/>
-        <seeElement selector="//div[@option-label='{{visualSwatchColor2.name}}']" stepKey="verifyBlueVariationIsPresentOnAdditionalWebsite"/>
+        <dontSeeElement selector="//div[@data-option-label='{{visualSwatchColor1.name}}']" stepKey="verifyRedVariationIsNotPresentOnAdditionalWebsite"/>
+        <seeElement selector="//div[@data-option-label='{{visualSwatchColor2.name}}']" stepKey="verifyBlueVariationIsPresentOnAdditionalWebsite"/>
     </test>
 </tests>
