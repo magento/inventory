@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem\SaveMultiple;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
@@ -35,26 +34,18 @@ class CreateSourceItemsPlugin
     private $defaultSourceProvider;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $config;
-
-    /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param SaveMultiple $saveMultiple
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param ScopeConfigInterface $config
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
         SaveMultiple $saveMultiple,
-        DefaultSourceProviderInterface $defaultSourceProvider,
-        ScopeConfigInterface $config
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->saveMultiple = $saveMultiple;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->config = $config;
     }
 
     /**
@@ -68,10 +59,6 @@ class CreateSourceItemsPlugin
      */
     public function afterSave(Product $subject, Product $result, AbstractModel $product): Product
     {
-        if (!$this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
-            return $result;
-        }
-
         $origSku = (string)$product->getOrigData('sku');
         if (!$origSku || $origSku === $product->getSku()) {
             return $result;

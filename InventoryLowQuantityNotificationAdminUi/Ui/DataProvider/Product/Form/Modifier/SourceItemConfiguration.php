@@ -11,12 +11,14 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\InventoryApi\Api\Data\SourceInterface;
-use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
-use Magento\InventoryLowQuantityNotificationApi\Api\GetSourceItemConfigurationInterface;
-use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Stdlib\ArrayManager;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
+use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetData as GetDataModel;
+use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface;
+use Magento\InventoryLowQuantityNotificationApi\Api\GetSourceItemConfigurationInterface;
 
 /**
  * Product form modifier. Add to form source item configuration data
@@ -34,11 +36,6 @@ class SourceItemConfiguration extends AbstractModifier
     private $locator;
 
     /**
-     * @var GetSourceItemConfigurationInterface
-     */
-    private $getSourceItemConfiguration;
-
-    /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
@@ -54,12 +51,20 @@ class SourceItemConfiguration extends AbstractModifier
     private $isSingleSourceMode;
 
     /**
+     * @var GetDataModel
+     */
+    private $getDataResourceModel;
+
+    /**
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param LocatorInterface $locator
-     * @param GetSourceItemConfigurationInterface $getSourceItemConfiguration
+     * @param GetSourceItemConfigurationInterface $getSourceItemConfiguration @deprecated as uses fallback mechanism
+     * which leads to incorrect 'Use Default' checkbox visualisation. Replaced with resource model to omit fallback.
      * @param ScopeConfigInterface $scopeConfig
      * @param ArrayManager $arrayManager
      * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param GetDataModel $getDataResourceModel
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
@@ -67,18 +72,19 @@ class SourceItemConfiguration extends AbstractModifier
         GetSourceItemConfigurationInterface $getSourceItemConfiguration,
         ScopeConfigInterface $scopeConfig,
         ArrayManager $arrayManager,
-        IsSingleSourceModeInterface $isSingleSourceMode
+        IsSingleSourceModeInterface $isSingleSourceMode,
+        GetDataModel $getDataResourceModel = null
     ) {
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->locator = $locator;
-        $this->getSourceItemConfiguration = $getSourceItemConfiguration;
         $this->scopeConfig = $scopeConfig;
         $this->arrayManager = $arrayManager;
         $this->isSingleSourceMode = $isSingleSourceMode;
+        $this->getDataResourceModel = $getDataResourceModel ?: ObjectManager::getInstance()->get(GetDataModel::class);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
@@ -100,6 +106,8 @@ class SourceItemConfiguration extends AbstractModifier
     }
 
     /**
+     * Get configuration data for source items.
+     *
      * @param array $assignedSources
      * @param ProductInterface $product
      * @return array
@@ -107,20 +115,20 @@ class SourceItemConfiguration extends AbstractModifier
     private function getSourceItemsConfigurationData(array $assignedSources, ProductInterface $product): array
     {
         foreach ($assignedSources as &$source) {
-            $sourceConfiguration = $this->getSourceItemConfiguration->execute(
+            $sourceItemConfigurationData = $this->getDataResourceModel->execute(
                 (string)$source[SourceInterface::SOURCE_CODE],
                 $product->getSku()
             );
+            $sourceItemConfigurationData = $sourceItemConfigurationData
+                ?: [SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY => null];
 
             $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] =
-                $sourceConfiguration[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY];
+                $sourceItemConfigurationData[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY];
 
-            $notifyQtyConfigValue = $this->getNotifyQtyConfigValue();
-            if ($source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === null) {
-                $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $notifyQtyConfigValue;
-            }
             $source['notify_stock_qty_use_default'] = '0';
-            if ((float)$source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === $notifyQtyConfigValue) {
+            if ($source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] === null) {
+                $notifyQtyConfigValue = $this->getNotifyQtyConfigValue();
+                $source[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY] = $notifyQtyConfigValue;
                 $source['notify_stock_qty_use_default'] = '1';
             }
         }
@@ -159,6 +167,8 @@ class SourceItemConfiguration extends AbstractModifier
     }
 
     /**
+     * Get config value for notify qty.
+     *
      * @return float
      */
     private function getNotifyQtyConfigValue(): float
