@@ -66,7 +66,7 @@ class OnlyXLeftTest extends GraphQlAbstract
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
@@ -100,7 +100,7 @@ QUERY;
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
@@ -135,7 +135,7 @@ QUERY;
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
@@ -172,7 +172,7 @@ QUERY;
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
