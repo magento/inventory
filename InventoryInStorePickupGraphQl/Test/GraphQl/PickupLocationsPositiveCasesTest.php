@@ -40,7 +40,7 @@ class PickupLocationsPositiveCasesTest extends GraphQlAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture default_store cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoDbIsolation disabled
      *

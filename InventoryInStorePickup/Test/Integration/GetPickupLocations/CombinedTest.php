@@ -56,7 +56,7 @@ class CombinedTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture default_store cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoAppArea frontend
      *
@@ -91,7 +91,7 @@ class CombinedTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture default_store cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoAppArea frontend
      *
@@ -127,7 +127,7 @@ class CombinedTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture default_store cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoAppArea frontend
      *
@@ -173,7 +173,7 @@ class CombinedTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture default_store cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoAppArea frontend
      *
