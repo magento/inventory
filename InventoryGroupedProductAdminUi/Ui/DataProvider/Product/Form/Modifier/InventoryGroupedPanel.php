@@ -11,8 +11,8 @@ use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\GroupedProduct\Model\Product\Type\Grouped as GroupedProductType;
 use Magento\GroupedProduct\Ui\DataProvider\Product\Form\Modifier\Grouped;
+use Magento\InventoryCatalogAdminUi\Model\GetQuantityInformationPerSourceBySkus;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
-use Magento\InventoryGroupedProductAdminUi\Model\GetQuantityInformationPerSourceBySkus;
 use Magento\Ui\Component\Form\Element\Input;
 
 /**
@@ -93,36 +93,39 @@ class InventoryGroupedPanel extends AbstractModifier
         if ($this->locator->getProduct()->getTypeId() === GroupedProductType::TYPE_CODE
             && !$this->isSingleSourceMode->execute()
         ) {
-            $meta = array_replace_recursive($meta, [
-                'grouped' => [
-                    'children' => [
-                        'associated' => [
-                            'children' => [
-                                'record' => [
-                                    'children' => [
-                                        'source_code' => [
-                                            'arguments' => [
-                                                'data' => [
-                                                    'config' => $this->getQuantityPerSourceConfig()
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
+            $meta = array_replace_recursive(
+                $meta,
+                [
+                    'grouped' => [
+                        'children' => [
+                            'associated' => [
+                                'children' => [
+                                    'record' => [
+                                        'children' => [
+                                            'source_code' => [
+                                                'arguments' => [
+                                                    'data' => [
+                                                        'config' => $this->getQuantityPerSourceConfig(),
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'arguments' => [
+                                    'data' => [
+                                        'config' => [
+                                            'map' => [
+                                                'quantity_per_source' => 'quantity_per_source',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
-                            'arguments' => [
-                                'data' => [
-                                    'config' => [
-                                        'map' => [
-                                            'quantity_per_source' => 'quantity_per_source'
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                        ],
+                    ],
                 ]
-            ]);
+            );
         }
 
         return $meta;
