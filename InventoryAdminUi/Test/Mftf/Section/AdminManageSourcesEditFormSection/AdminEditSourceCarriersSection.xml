@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminEditSourceCarriersSection">
+        <element name="opened" type="button" selector="div[data-index='carriers'] .fieldset-wrapper-title[data-state-collapsible='open']"/>
+        <element name="closed" type="button" selector="div[data-index='carriers'] .fieldset-wrapper-title[data-state-collapsible='closed']"/>
+
+        <element name="useGlobalShippingConfiguration" type="radio" selector="input[name='general[use_default_carrier_config]']"/>
+    </section>
+</sections>
