@@ -7,12 +7,12 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateCreditMemoPartialReturnToStockVirtualProductsCustomStockTest">
+    <test name="AdminCreateCreditMemoPartialReturnToStockAfterFullInvoiceFullShipmentSimpleProductsCustomStockTest">
         <annotations>
-            <stories value="Virtual Product Custom Stock."/>
-            <title value="Admin create credit memo return to stock."/>
-            <description value="Verify salable quantity is correct when credit memo created for two product with return to stock just for one of them."/>
-            <testCaseId value=""/>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Admin create credit memo partial return to stock after full invoice and full shipment."/>
+            <description value="Verify salable quantity is correct when credit memo created for two product with return to stock just for one of them after full invoice and full shipment."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/735125/scenarios/4456726"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -26,8 +26,13 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source"/>
             </createData>
-            <createData entity="VirtualProduct" stepKey="product1"/>
-            <createData entity="VirtualProduct" stepKey="product2"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product1">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product2">
+                <requiredEntity createDataKey="category"/>
+            </createData>
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <!--Assign products to custom source.-->
@@ -51,6 +56,7 @@
         <after>
             <!--Clean up test data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product1" stepKey="deleteProduct1"/>
             <deleteData createDataKey="product2" stepKey="deleteProduct2"/>
             <!--Disable additional source.-->
@@ -83,6 +89,7 @@
         </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Process full invoice.-->
@@ -91,6 +98,9 @@
         </actionGroup>
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="createInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
+        <!--Process full shipment.-->
+        <actionGroup ref="goToShipmentIntoOrder" stepKey="clickShipAction"/>
+        <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment"/>
         <!--Create credit memo with "return to stock" for product1.-->
         <actionGroup ref="AdminStartsCreatingCreditMemoOnOrderPageActionGroup" stepKey="startToCreateCreditMemo"/>
         <actionGroup ref="AdminFillQuantityForPartialCreditMemoReturnToStockActionGroup" stepKey="fillCreditMemoQuantity"/>
