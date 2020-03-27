@@ -17,7 +17,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class SourceItemsSaveHandler
+ * Save multiple source items service.
  */
 class SourceItemsSaveHandler
 {
@@ -68,7 +68,8 @@ class SourceItemsSaveHandler
 
         $validationResult = $this->sourceItemsValidator->validate($sourceItems);
         if (!$validationResult->isValid()) {
-            throw new ValidationException(__('Validation Failed'), null, 0, $validationResult);
+            $error = current($validationResult->getErrors());
+            throw new ValidationException(__('Validation Failed: ' . $error), null, 0, $validationResult);
         }
 
         try {

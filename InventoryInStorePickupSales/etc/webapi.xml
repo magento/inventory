@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/order/notify-orders-are-ready-for-pickup" method="POST">
+        <service class="Magento\InventoryInStorePickupSalesApi\Api\NotifyOrdersAreReadyForPickupInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventoryInStorePickupApi::notify_orders_are_ready_for_pickup" />
+        </resources>
+    </route>
+</routes>

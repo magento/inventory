@@ -23,7 +23,7 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <!--Create test data.-->
             <createData entity="_defaultCategory" stepKey="category"/>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <!--Add virtual product to bundle-->

@@ -12,9 +12,11 @@ use Magento\Catalog\Controller\Adminhtml\Product\Save;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\InputException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
+use Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Process source items for configurable children products during product saving via controller.
@@ -22,7 +24,7 @@ use Magento\InventoryCatalogAdminUi\Observer\SourceItemsProcessor;
 class ProcessSourceItemsObserver implements ObserverInterface
 {
     /**
-     * @var SourceItemsProcessor
+     * @var SourceItemsProcessorInterface
      */
     private $sourceItemsProcessor;
 
@@ -32,18 +34,28 @@ class ProcessSourceItemsObserver implements ObserverInterface
     private $getSkusByProductIdsInterface;
 
     /**
-     * @param SourceItemsProcessor $sourceItemsProcessor
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param SourceItemsProcessorInterface $sourceItemsProcessor
      * @param GetSkusByProductIdsInterface $getSkusByProductIdsInterface
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        SourceItemsProcessor $sourceItemsProcessor,
-        GetSkusByProductIdsInterface $getSkusByProductIdsInterface
+        SourceItemsProcessorInterface $sourceItemsProcessor,
+        GetSkusByProductIdsInterface $getSkusByProductIdsInterface,
+        LoggerInterface $logger
     ) {
         $this->sourceItemsProcessor = $sourceItemsProcessor;
         $this->getSkusByProductIdsInterface = $getSkusByProductIdsInterface;
+        $this->logger = $logger;
     }
 
     /**
+     * Process source items for configurable matrix products.
+     *
      * @param EventObserver $observer
      *
      * @return void
@@ -70,17 +82,24 @@ class ProcessSourceItemsObserver implements ObserverInterface
                     // get sku by child id, because child sku can be changed if product with such sku already exists.
                     $childProductId = $product->getExtensionAttributes()->getConfigurableProductLinks()[$key];
                     $childProductSku = $this->getSkusByProductIdsInterface->execute([$childProductId])[$childProductId];
-                    $this->processSourceItems($quantityPerSource, $childProductSku);
+                    try {
+                        $this->processSourceItems($quantityPerSource, $childProductSku);
+                    } catch (InputException $e) {
+                        $this->logger->error($e->getLogMessage());
+                        continue;
+                    }
                 }
             }
         }
     }
 
     /**
+     * Process source items for given product sku.
+     *
      * @param array $sourceItems
      * @param string $productSku
-     *
      * @return void
+     * @throws InputException
      */
     private function processSourceItems(array $sourceItems, string $productSku)
     {
@@ -93,6 +112,6 @@ class ProcessSourceItemsObserver implements ObserverInterface
             }
         }
 
-        $this->sourceItemsProcessor->process($productSku, $sourceItems);
+        $this->sourceItemsProcessor->execute($productSku, $sourceItems);
     }
 }
