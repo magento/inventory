@@ -90,8 +90,6 @@
         <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
-                                    parameterArray="[$$simpleCategory.name$$]" stepKey="fillCategory"/>
         <actionGroup ref="createConfigurationsForTwoAttributeCustomSource"
                      stepKey="createConfigurationsWithCustomStock">
             <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
@@ -99,7 +97,9 @@
             <argument name="sourceName" value="{{_defaultSource.name}}"/>
         </actionGroup>
         <!-- Save configurable product -->
-        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryAndsaveConfigurableProduct">
+            <argument name="categoryName" value="$simpleCategory.name$"/>
+        </actionGroup>
 
         <!-- Create order -->
         <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
@@ -121,7 +121,9 @@
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
-        <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
+        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
+			<actualResult type="const">$getOrderId</actualResult>
+        </assertNotEmpty>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
         <amOnPage url="{{AdminProductIndexPage.url}}"
