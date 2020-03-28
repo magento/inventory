@@ -107,7 +107,7 @@
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{VirtualMsiProduct.quantity}}" stepKey="fillSourceQty1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedProduct1"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveAndCloseCreatedProduct1"/>
 
         <comment userInput="Change config value for 'Notify for Quantity Below'." stepKey="setNotifyForQuantityBelowToFiveComment1"/>
         <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 5" stepKey="setNotifyForQuantityBelowToFive1"/>

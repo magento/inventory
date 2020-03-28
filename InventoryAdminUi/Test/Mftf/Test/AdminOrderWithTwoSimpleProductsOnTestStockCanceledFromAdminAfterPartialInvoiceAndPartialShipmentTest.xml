@@ -93,7 +93,9 @@
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
-        <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
+        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
+			<actualResult type="const">$getOrderId</actualResult>
+        </assertNotEmpty>
 
         <!-- Invoice the order -->
         <actionGroup ref="GoToInvoiceIntoOrderActionGroup" stepKey="goToInvoiceIntoOrderPage"/>
