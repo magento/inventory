@@ -75,10 +75,15 @@ class IsOrderSourceManageable
 
             /** @var StockInterface $stock */
             foreach ($stocks as $stock) {
-                $inventoryConfiguration = $this->getStockItemConfiguration->execute(
-                    $this->getSkuFromOrderItem->execute($orderItem),
-                    $stock->getStockId()
-                );
+                try {
+                    $inventoryConfiguration = $this->getStockItemConfiguration->execute(
+                        $this->getSkuFromOrderItem->execute($orderItem),
+                        $stock->getStockId()
+                    );
+                } catch (\Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException $exception) {
+                    // it's okay if a product is not assigned to a stock
+                    continue;
+                }
 
                 if ($inventoryConfiguration->isManageStock()) {
                     return true;
