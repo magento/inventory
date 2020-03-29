@@ -10,20 +10,23 @@ namespace Magento\InventoryInStorePickupShippingApi\Model;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryInStorePickupShippingApi\Api\IsInStorePickupDeliveryAvailableForCartInterface;
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\EstimateAddressInterface;
 use Magento\Quote\Api\Data\EstimateAddressInterfaceFactory;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
-use Magento\Quote\Api\ShippingMethodManagementInterface;
+use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateRequestFactory;
+use Magento\Quote\Model\Quote\Item;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * @inheritDoc
  */
 class IsInStorePickupDeliveryAvailableForCart implements IsInStorePickupDeliveryAvailableForCartInterface
 {
-    private const CARRIER_CODE = 'in_store';
     private const XML_PATH_DEFAULT_COUNTRY = 'general/country/default';
 
     /**
@@ -37,31 +40,47 @@ class IsInStorePickupDeliveryAvailableForCart implements IsInStorePickupDelivery
     private $scopeConfig;
 
     /**
-     * @var ShippingMethodManagementInterface
-     */
-    private $shippingMethodManagement;
-
-    /**
      * @var EstimateAddressInterfaceFactory
      */
     private $estimateAddressFactory;
 
     /**
+     * @var RateRequestFactory
+     */
+    private $rateRequestFactory;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var InStorePickup
+     */
+    private $inStorePickup;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      * @param CartRepositoryInterface $cartRepository
-     * @param ShippingMethodManagementInterface $shippingMethodManagement
      * @param EstimateAddressInterfaceFactory $estimateAddressFactory
+     * @param RateRequestFactory $rateRequestFactory
+     * @param StoreManagerInterface $storeManager
+     * @param InStorePickup $inStorePickup
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         CartRepositoryInterface $cartRepository,
-        ShippingMethodManagementInterface $shippingMethodManagement,
-        EstimateAddressInterfaceFactory $estimateAddressFactory
+        EstimateAddressInterfaceFactory $estimateAddressFactory,
+        RateRequestFactory $rateRequestFactory,
+        StoreManagerInterface $storeManager,
+        InStorePickup $inStorePickup
     ) {
         $this->cartRepository = $cartRepository;
         $this->scopeConfig = $scopeConfig;
-        $this->shippingMethodManagement = $shippingMethodManagement;
         $this->estimateAddressFactory = $estimateAddressFactory;
+        $this->rateRequestFactory = $rateRequestFactory;
+        $this->storeManager = $storeManager;
+        $this->inStorePickup = $inStorePickup;
     }
 
     /**
@@ -69,16 +88,12 @@ class IsInStorePickupDeliveryAvailableForCart implements IsInStorePickupDelivery
      */
     public function execute(int $cartId): bool
     {
-        $isAvailable = false;
         try {
             $cart = $this->cartRepository->get($cartId);
             $address = $this->getEstimateAddress($cart);
-            // TODO: replace deprecated method usage
-            foreach ($this->shippingMethodManagement->estimateByAddress($cartId, $address) as $method) {
-                if ($method->getCarrierCode() == self::CARRIER_CODE) {
-                    $isAvailable = true;
-                }
-            }
+            $rateRequest = $this->getRateRequest($address, $cart);
+            $isAvailable = $this->inStorePickup->collectRates($rateRequest) &&
+                $this->inStorePickup->processAdditionalValidation($rateRequest) === true;
         } catch (NoSuchEntityException $e) {
             $isAvailable = false;
         }
@@ -120,5 +135,53 @@ class IsInStorePickupDeliveryAvailableForCart implements IsInStorePickupDelivery
         }
 
         return $this->estimateAddressFactory->create(['data' => $data]);
+    }
+
+    /**
+     * Collect rates by address
+     *
+     * @param EstimateAddressInterface $address
+     * @param CartInterface $cart
+     *
+     * @return RateRequest
+     * @throws NoSuchEntityException
+     */
+    private function getRateRequest(EstimateAddressInterface $address, CartInterface $cart): RateRequest
+    {
+        /** @var $request RateRequest */
+        $request = $this->rateRequestFactory->create();
+        $request->setAllItems($cart->getAllItems());
+        $request->setDestCountryId($address->getCountryId());
+        $request->setDestRegionId($address->getRegionId());
+        $request->setDestPostcode($address->getPostcode());
+        $request->setPackageValue($cart->getBaseSubtotal());
+        $request->setPackageValueWithDiscount($cart->getBaseSubtotalWithDiscount());
+        $request->setPackageQty($this->getItemQty($cart));
+
+        $store = $this->storeManager->getStore();
+        $request->setStoreId($store->getId());
+        $request->setWebsiteId($store->getWebsiteId());
+        $request->setBaseCurrency($store->getBaseCurrency());
+        $request->setPackageCurrency($store->getCurrentCurrency());
+
+        return $request;
+    }
+
+    /**
+     * Retrieve item quantity by id
+     *
+     * @param CartInterface $cart
+     *
+     * @return float
+     */
+    private function getItemQty(CartInterface $cart): float
+    {
+        $qty = 0.0;
+        /** @var Item $item */
+        foreach ($cart->getAllItems() as $item) {
+            $qty += $item->getQty();
+        }
+
+        return $qty;
     }
 }
