@@ -11,7 +11,7 @@ use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Stdlib\ArrayManager;
-use Magento\InventoryInStorePickupShippingApi\Api\IsInStorePickupDeliveryAvailableForCartInterface;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCartInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
@@ -37,7 +37,7 @@ class LayoutProcessor implements LayoutProcessorInterface
     private $checkoutSession;
 
     /**
-     * @var IsInStorePickupDeliveryAvailableForCartInterface
+     * @var \Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCartInterface
      */
     private $inStorePickupDeliveryAvailableForCart;
 

@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupShippingApi\Model;
+namespace Magento\InventoryInStorePickupShipping\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryInStorePickupShippingApi\Api\IsInStorePickupDeliveryAvailableForCartInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCartInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\EstimateAddressInterface;

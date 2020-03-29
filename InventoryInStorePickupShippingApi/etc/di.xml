@@ -7,5 +7,4 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorInterface" type="Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorChain" />
-    <preference for="Magento\InventoryInStorePickupShippingApi\Api\IsInStorePickupDeliveryAvailableForCartInterface" type="Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCart"/>
 </config>
