@@ -38,8 +38,8 @@ class DeleteQuoteAddressPickupLocation
      */
     public function execute(int $addressId): void
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_location_quote_address');
+        $connection = $this->connection->getConnection('checkout');
+        $table = $this->connection->getTableName('inventory_pickup_location_quote_address', 'checkout');
 
         $connection->delete($table, [self::ADDRESS_ID . ' = ?' => $addressId]);
     }
