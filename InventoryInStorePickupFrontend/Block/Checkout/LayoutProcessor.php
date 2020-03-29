@@ -11,7 +11,7 @@ use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Stdlib\ArrayManager;
-use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCart;
+use Magento\InventoryInStorePickupShippingApi\Api\IsInStorePickupDeliveryAvailableForCartInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
@@ -37,7 +37,7 @@ class LayoutProcessor implements LayoutProcessorInterface
     private $checkoutSession;
 
     /**
-     * @var IsInStorePickupDeliveryAvailableForCart
+     * @var IsInStorePickupDeliveryAvailableForCartInterface
      */
     private $inStorePickupDeliveryAvailableForCart;
 
@@ -45,13 +45,13 @@ class LayoutProcessor implements LayoutProcessorInterface
      * @param ArrayManager $arrayManager
      * @param ScopeConfigInterface $config
      * @param Session $session
-     * @param IsInStorePickupDeliveryAvailableForCart $inStorePickupDeliveryAvailableForCart
+     * @param IsInStorePickupDeliveryAvailableForCartInterface $inStorePickupDeliveryAvailableForCart
      */
     public function __construct(
         ArrayManager $arrayManager,
         ScopeConfigInterface $config,
         Session $session,
-        IsInStorePickupDeliveryAvailableForCart $inStorePickupDeliveryAvailableForCart
+        IsInStorePickupDeliveryAvailableForCartInterface $inStorePickupDeliveryAvailableForCart
     ) {
         $this->arrayManager = $arrayManager;
         $this->config = $config;

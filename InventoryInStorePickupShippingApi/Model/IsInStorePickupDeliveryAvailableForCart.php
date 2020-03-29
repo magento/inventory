@@ -9,6 +9,7 @@ namespace Magento\InventoryInStorePickupShippingApi\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryInStorePickupShippingApi\Api\IsInStorePickupDeliveryAvailableForCartInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\EstimateAddressInterface;
@@ -18,11 +19,9 @@ use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
- * Check if In-Store Pickup delivery method is applicable for a cart by cartId.
- *
- * @api
+ * @inheritDoc
  */
-class IsInStorePickupDeliveryAvailableForCart
+class IsInStorePickupDeliveryAvailableForCart implements IsInStorePickupDeliveryAvailableForCartInterface
 {
     private const CARRIER_CODE = 'in_store';
     private const XML_PATH_DEFAULT_COUNTRY = 'general/country/default';
@@ -66,28 +65,25 @@ class IsInStorePickupDeliveryAvailableForCart
     }
 
     /**
-     * Check if In-Store Pickup delivery method is applicable for a cart by cartId.
-     *
-     * @param int $cartId
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function execute(int $cartId): bool
     {
+        $isAvailable = false;
         try {
             $cart = $this->cartRepository->get($cartId);
             $address = $this->getEstimateAddress($cart);
             // TODO: replace deprecated method usage
             foreach ($this->shippingMethodManagement->estimateByAddress($cartId, $address) as $method) {
                 if ($method->getCarrierCode() == self::CARRIER_CODE) {
-                    return true;
+                    $isAvailable = true;
                 }
             }
-
-            return false;
         } catch (NoSuchEntityException $e) {
-            return false;
+            $isAvailable = false;
         }
+
+        return $isAvailable;
     }
 
     /**
