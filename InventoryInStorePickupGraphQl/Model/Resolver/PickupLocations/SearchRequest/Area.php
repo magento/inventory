@@ -12,7 +12,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 /**
  * Resolve Distance Filter parameters.
  */
-class Distance implements ResolverInterface
+class Area implements ResolverInterface
 {
     private const RADIUS_FIELD = 'radius';
     private const SEARCH_TERM = 'search_term';

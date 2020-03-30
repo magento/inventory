@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupGraphQl\Test\GraphQl;
 
-use Magento\Framework\App\ObjectManager;
-use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
 /**
@@ -27,7 +25,7 @@ class PickupLocationsNegativeCasesTest extends GraphQlAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default_store cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoDbIsolation disabled
      *
@@ -95,17 +93,16 @@ QUERY;
         return [
            [/* Data set #0. Search by not existing address */
                'pickupLocations(
-    distance:{
+    area:{
       radius: 750
-      country_code: "ZZZ"
-      postcode: "86559"
+      search_term: "86559:ZZ"
     }
     pageSize: 1
     currentPage: 1
     sort: {distance: ASC}
   )',
                'store_for_global_website',
-               'Unknown geoname for  86559   ZZZ'
+               'Provided countryId does not exist.'
            ],
            [/* Data set #1. Wrong page size. */
             'pickupLocations(
@@ -125,10 +122,9 @@ QUERY;
            ],
            [/* Data set #3. Wrong max page. */
                'pickupLocations(
-    distance:{
+    area:{
       radius: 750
-      country_code: "DE"
-      postcode: "86559"
+      search_term: "86559:DE"
     }
     pageSize: 1
     currentPage: 4
@@ -137,19 +133,6 @@ QUERY;
                'store_for_global_website',
                'currentPage value 4 specified is greater than the 2 page(s) available.'
            ],
-           [/* Data set #4. Wrong distance filter input. */
-               'pickupLocations(
-    distance:{
-      radius: 750
-      country_code: "US"
-    }
-    pageSize: 1
-    currentPage: 1
-    sort: {distance: ASC}
-  )',
-               'store_for_global_website',
-               'Region or city or postcode must be specified for the filter by distance.'
-           ]
         ];
     }
 }
