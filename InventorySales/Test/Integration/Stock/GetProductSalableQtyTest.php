@@ -186,7 +186,7 @@ class GetProductSalableQtyTest extends TestCase
     }
 
     /**
-     * Set source items for given product skus to 'out of stock' status.
+     * Set source items for given product 'out of stock' status.
      *
      * @param string $sku
      * @return void
