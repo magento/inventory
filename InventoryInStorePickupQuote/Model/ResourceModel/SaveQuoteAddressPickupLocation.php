@@ -11,7 +11,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
- * Save Quote Address Pickup Location.
+ * Save Quote Address Pickup Location by Address Id.
  */
 class SaveQuoteAddressPickupLocation
 {
@@ -41,8 +41,8 @@ class SaveQuoteAddressPickupLocation
      */
     public function execute(int $addressId, string $pickupLocationCode): void
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_location_quote_address');
+        $connection = $this->connection->getConnection('checkout');
+        $table = $this->connection->getTableName('inventory_pickup_location_quote_address', 'checkout');
 
         $data = [
             self::ADDRESS_ID => $addressId,

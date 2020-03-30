@@ -50,6 +50,7 @@ class ProductTestAdditionalStockTest extends ProductImportExportBase
     /**
      * Verify grouped product import from export on additional stock.
      *
+     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
