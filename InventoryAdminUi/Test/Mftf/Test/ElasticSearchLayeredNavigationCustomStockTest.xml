@@ -74,7 +74,7 @@
 
             <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
             <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
-            <magentoCLI command="cache:clear" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
+            <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
         </before>
         <after>
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
