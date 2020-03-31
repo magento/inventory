@@ -81,7 +81,7 @@ class DeleteProductTest extends WebapiAbstract
         );
         $cronObserver->launch();
         /*Wait till source items will be removed asynchronously.*/
-        sleep(10);
+        sleep(20);
         $sourceItems = $this->getSourceItemsBySku->execute('SKU-1');
         self::assertEmpty($sourceItems);
     }

@@ -84,7 +84,7 @@ class UpdateProductSkuTest extends WebapiAbstract
         );
         $cronObserver->launch();
         /*Wait till source items will be removed asynchronously.*/
-        sleep(10);
+        sleep(20);
         $sourceItemsOldSku = $this->getSourceItemsBySku->execute('SKU-1');
         $sourceItemNewSku = $this->getSourceItemsBySku->execute('SKU-1_updated');
         self::assertEmpty($sourceItemsOldSku);
