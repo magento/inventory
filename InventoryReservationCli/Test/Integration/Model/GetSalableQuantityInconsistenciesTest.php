@@ -59,6 +59,17 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     }
 
     /**
+     * Verify GetSalableQuantityInconsistencies::execute() won't throw error in case product sku is numeric.
+     *
+     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/create_incomplete_order_without_reservation_numeric_sku.php
+     */
+    public function testIncompleteOrderWithoutReservationNumericSku(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        self::assertCount(1, $inconsistencies);
+    }
+
+    /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/order_with_reservation.php
      * @throws \Magento\Framework\Validation\ValidationException
      */
