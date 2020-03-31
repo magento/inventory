@@ -10,8 +10,8 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
  * Adapt addStockStatusToProducts for multi stocks.
@@ -19,28 +19,30 @@ use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 class AdaptAddStockStatusToProductsPlugin
 {
     /**
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
      * @var GetStockIdForCurrentWebsite
      */
     private $getStockIdForCurrentWebsite;
 
     /**
-     * @var IsProductSalableInterface
-     */
-    private $isProductSalable;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable
+        AreProductsSalableInterface $areProductsSalable
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
+     * Add stock statuses for products considering multi stock environment.
+     *
      * @param Stock $subject
      * @param callable $proceed
      * @param AbstractCollection $productCollection
@@ -54,11 +56,16 @@ class AdaptAddStockStatusToProductsPlugin
         AbstractCollection $productCollection
     ) {
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-
-        /** @var Product $product */
-        foreach ($productCollection as $product) {
-            $isSalable = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
-            $product->setIsSalable($isSalable);
+        $skus = [];
+        foreach ($productCollection->getItems() as $product) {
+            $skus[] = $product->getSku();
+        }
+        $skusToVerify = implode(',', $skus);
+        $result = $this->areProductsSalable->execute($skusToVerify, $stockId)->getSalable();
+        foreach ($result as $item) {
+            /** @var Product $product */
+            $product = $productCollection->getItemByColumnValue('sku', $item->getSku());
+            $product->setIsSalable((int)$item->isSalable());
         }
     }
 }
