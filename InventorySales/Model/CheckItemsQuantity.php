@@ -11,6 +11,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
+use Magento\InventorySalesApi\Api\Data\SkuQtyRequestInterfaceFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 
 /**
@@ -24,15 +25,25 @@ class CheckItemsQuantity
     private $areProductsSalableForRequestedQty;
 
     /**
+     * @var SkuQtyRequestInterfaceFactory
+     */
+    private $skuQtyRequestFactory;
+
+    /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty @deprecated
+     * @param SkuQtyRequestInterfaceFactory|null $skuQtyRequestFactory
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
+        SkuQtyRequestInterfaceFactory $skuQtyRequestFactory = null,
         AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
     ) {
         $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty ?: ObjectManager::getInstance()
             ->get(AreProductsSalableForRequestedQtyInterface::class);
+        $this->skuQtyRequestFactory = $skuQtyRequestFactory ?: ObjectManager::getInstance()
+            ->get(SkuQtyRequestInterfaceFactory::class);
     }
 
     /**
@@ -45,7 +56,11 @@ class CheckItemsQuantity
      */
     public function execute(array $items, int $stockId): void
     {
-        $result = $this->areProductsSalableForRequestedQty->execute($items, $stockId);
+        $skuRequests = [];
+        foreach ($items as $sku => $qty) {
+            $skuRequests[] = $this->skuQtyRequestFactory->create(['sku' => $sku, 'qty' => $qty]);
+        }
+        $result = $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
         foreach ($result->getSalable() as $isSalable) {
             if (false === $isSalable->isSalable()) {
                 $errors = $isSalable->getErrors();

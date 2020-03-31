@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\AreProductsSalableForRequestedQty;
+namespace Magento\InventorySales\Model;
 
 use Magento\InventorySalesApi\Api\Data\ProductsSalableResultExtensionInterface;
 use Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface;

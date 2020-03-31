@@ -184,5 +184,7 @@
         <plugin name="process_reservations_after_product_save" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\UpdateReservationsPlugin"/>
         <plugin name="delete_reservations" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\DeleteReservationsPlugin"/>
     </type>
-    <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableResult"/>
+    <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\ProductsSalableResult"/>
+    <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\ProductSalableResult"/>
+    <preference for="Magento\InventorySalesApi\Api\Data\SkuQtyRequestInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableRequest"/>
 </config>
