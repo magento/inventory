@@ -186,5 +186,5 @@
     </type>
     <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\ProductsSalableResult"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\ProductSalableResult"/>
-    <preference for="Magento\InventorySalesApi\Api\Data\SkuQtyRequestInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableRequest"/>
+    <preference for="Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableInfo"/>
 </config>

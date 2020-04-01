@@ -14,7 +14,7 @@ use Magento\Framework\Api\ExtensibleDataInterface;
  *
  * @api
  */
-interface SkuQtyRequestInterface extends ExtensibleDataInterface
+interface ProductSalableForRequestedQtyInfoInterface extends ExtensibleDataInterface
 {
     /**
      * Retrieve product sku.
@@ -33,17 +33,17 @@ interface SkuQtyRequestInterface extends ExtensibleDataInterface
     /**
      * Set extension attributes to result.
      *
-     * @param \Magento\InventorySalesApi\Api\Data\SkuQtyRequestExtensionInterface $extensionAttributes
+     * @param \Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoExtensionInterface $extAttributes
      * @return void
      */
     public function setExtensionAttributes(
-        SkuQtyRequestExtensionInterface $extensionAttributes
+        ProductSalableForRequestedQtyInfoExtensionInterface $extAttributes
     ): void;
 
     /**
      * Retrieve existing extension attributes object.
      *
-     * @return \Magento\InventorySalesApi\Api\Data\SkuQtyRequestExtensionInterface|null
+     * @return \Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoExtensionInterface|null
      */
-    public function getExtensionAttributes(): ?SkuQtyRequestExtensionInterface;
+    public function getExtensionAttributes(): ?ProductSalableForRequestedQtyInfoExtensionInterface;
 }

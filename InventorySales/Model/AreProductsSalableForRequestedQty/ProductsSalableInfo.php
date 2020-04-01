@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\AreProductsSalableForRequestedQty;
 
-use Magento\InventorySalesApi\Api\Data\SkuQtyRequestExtensionInterface;
-use Magento\InventorySalesApi\Api\Data\SkuQtyRequestInterface;
+use Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoExtensionInterface;
+use Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoInterface;
 
 /**
  * @inheritDoc
  */
-class ProductsSalableRequest implements SkuQtyRequestInterface
+class ProductsSalableInfo implements ProductSalableForRequestedQtyInfoInterface
 {
     /**
      * @var string
@@ -26,14 +26,14 @@ class ProductsSalableRequest implements SkuQtyRequestInterface
     private $qty;
 
     /**
-     * @var SkuQtyRequestExtensionInterface|null
+     * @var ProductSalableForRequestedQtyInfoExtensionInterface|null
      */
     private $extensionAttributes;
 
     /**
      * @param string $sku
      * @param float $qty
-     * @param SkuQtyRequestExtensionInterface|null $extensionAttributes
+     * @param ProductSalableForRequestedQtyInfoExtensionInterface|null $extensionAttributes
      */
     public function __construct(string $sku, float $qty, $extensionAttributes = null)
     {
@@ -62,15 +62,15 @@ class ProductsSalableRequest implements SkuQtyRequestInterface
      * @inheritDoc
      */
     public function setExtensionAttributes(
-        SkuQtyRequestExtensionInterface $extensionAttributes
+        ProductSalableForRequestedQtyInfoExtensionInterface $extAttributes
     ): void {
-        $this->extensionAttributes = $extensionAttributes;
+        $this->extensionAttributes = $extAttributes;
     }
 
     /**
      * @inheritDoc
      */
-    public function getExtensionAttributes(): ?SkuQtyRequestExtensionInterface
+    public function getExtensionAttributes(): ?ProductSalableForRequestedQtyInfoExtensionInterface
     {
         return $this->extensionAttributes;
     }

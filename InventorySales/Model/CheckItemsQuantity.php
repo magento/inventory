@@ -11,7 +11,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
-use Magento\InventorySalesApi\Api\Data\SkuQtyRequestInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoInterfaceFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 
 /**
@@ -25,25 +25,25 @@ class CheckItemsQuantity
     private $areProductsSalableForRequestedQty;
 
     /**
-     * @var SkuQtyRequestInterfaceFactory
+     * @var ProductSalableForRequestedQtyInfoInterfaceFactory
      */
-    private $skuQtyRequestFactory;
+    private $salableForRequestedQtyInfoFactory;
 
     /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty @deprecated
-     * @param SkuQtyRequestInterfaceFactory|null $skuQtyRequestFactory
+     * @param ProductSalableForRequestedQtyInfoInterfaceFactory|null $salableForRequestedQtyInfoFactory
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
-        SkuQtyRequestInterfaceFactory $skuQtyRequestFactory = null,
+        ProductSalableForRequestedQtyInfoInterfaceFactory $salableForRequestedQtyInfoFactory = null,
         AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
     ) {
         $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty ?: ObjectManager::getInstance()
             ->get(AreProductsSalableForRequestedQtyInterface::class);
-        $this->skuQtyRequestFactory = $skuQtyRequestFactory ?: ObjectManager::getInstance()
-            ->get(SkuQtyRequestInterfaceFactory::class);
+        $this->salableForRequestedQtyInfoFactory = $salableForRequestedQtyInfoFactory ?: ObjectManager::getInstance()
+            ->get(ProductSalableForRequestedQtyInfoInterfaceFactory::class);
     }
 
     /**
@@ -58,7 +58,7 @@ class CheckItemsQuantity
     {
         $skuRequests = [];
         foreach ($items as $sku => $qty) {
-            $skuRequests[] = $this->skuQtyRequestFactory->create(['sku' => $sku, 'qty' => $qty]);
+            $skuRequests[] = $this->salableForRequestedQtyInfoFactory->create(['sku' => $sku, 'qty' => $qty]);
         }
         $result = $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
         foreach ($result->getSalable() as $isSalable) {

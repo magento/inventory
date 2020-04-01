@@ -19,7 +19,7 @@ interface AreProductsSalableForRequestedQtyInterface
     /**
      * Get whether products are salable in requested Qty for given set of SKUs in specified stock.
      *
-     * @param \Magento\InventorySalesApi\Api\Data\SkuQtyRequestInterface[] $skuRequests
+     * @param \Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoInterface[] $skuRequests
      * @param int $stockId
      * @return \Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface
      */
