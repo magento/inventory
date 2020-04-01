@@ -6,20 +6,20 @@
         "magento/framework": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-catalog": "*",
-        "magento/module-inventory": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-configuration-api": "*",
-        "magento/module-inventory-reservations-api": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-source-deduction-api": "*",
-        "magento/module-inventory-source-selection-api": "*",
+        "magento/module-inventory": "1.0.*",
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-configuration-api": "1.0.*",
+        "magento/module-inventory-reservations-api": "1.0.*",
+        "magento/module-inventory-sales-api": "1.0.*",
+        "magento/module-inventory-source-deduction-api": "1.0.*",
+        "magento/module-inventory-source-selection-api": "1.2.*",
         "magento/module-sales-inventory": "*",
         "magento/module-store": "*",
         "magento/module-sales": "*"
     },
     "suggest": {
-        "magento/module-inventory-catalog": "*"
+        "magento/module-inventory-catalog": "1.0.*"
     },
     "require-dev": {
         "magento/module-inventory-indexer": "*"
@@ -36,5 +36,6 @@
         "psr-4": {
             "Magento\\InventorySales\\": ""
         }
-    }
+    },
+    "version": "1.0.8"
 }

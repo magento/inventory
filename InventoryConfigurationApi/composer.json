@@ -17,5 +17,6 @@
         "psr-4": {
             "Magento\\InventoryConfigurationApi\\": ""
         }
-    }
+    },
+    "version": "1.0.7"
 }

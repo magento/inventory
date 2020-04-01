@@ -6,9 +6,9 @@
         "magento/framework": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-catalog-search": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-indexer": "*",
-        "magento/module-inventory-sales-api": "*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-indexer": "1.0.*",
+        "magento/module-inventory-sales-api": "1.0.*",
         "magento/module-store": "*"
     },
     "type": "magento2-module",
@@ -23,5 +23,6 @@
         "psr-4": {
             "Magento\\InventoryElasticsearch\\": ""
         }
-    }
+    },
+    "version": "1.0.3"
 }
