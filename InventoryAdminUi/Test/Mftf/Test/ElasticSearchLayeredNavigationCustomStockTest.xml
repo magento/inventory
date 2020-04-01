@@ -16,6 +16,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="SearchEngineElasticsearch"/>
         </annotations>
 
         <before>
@@ -70,10 +71,10 @@
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct2"/>
-            <!--Enable ElasticSearch as search engine.-->
-            <magentoCLI command="config:set {{SearchEngineElasticsearchConfigData.path}} {{SearchEngineElasticsearchConfigData.value}}" stepKey="enableElasticSearchAsSearchEngine"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchEnable"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchEnable"/>
+
+            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
+            <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
+            <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
         </before>
         <after>
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
@@ -95,8 +96,6 @@
             <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
 
-            <!--Revert ElasticSearch as search engine.-->
-            <actionGroup ref="ResetSearchEngineConfigurationActionGroup" stepKey="resetCatalogSearchConfiguration"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
