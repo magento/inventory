@@ -80,8 +80,6 @@
     </type>
     <!-- IsProductSalableForRequestedQtyCondition -->
     <preference for="Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface" type="IsProductSalableForRequestedQtyConditionChainOnAddToCart"/>
-    <!-- AreProductsSalableForRequestedQtyCondition -->
-    <preference for="Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty"/>
     <!-- IsProductSalableForRequestedQtyConditionOnAddToCart -->
     <virtualType name="IsProductSalableForRequestedQtyConditionChainOnAddToCart" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\IsProductSalableForRequestedQtyConditionChain">
         <arguments>
@@ -132,7 +130,7 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="Magento\InventorySales\Model\AreProductsSalableForRequestedQty">
+    <type name="Magento\InventorySales\Model\CheckItemsQuantity">
         <arguments>
             <argument name="isProductSalableForRequestedQty" xsi:type="object">IsProductSalableForRequestedQtyConditionChainOnPlaceOrder</argument>
         </arguments>
@@ -184,7 +182,4 @@
         <plugin name="process_reservations_after_product_save" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\UpdateReservationsPlugin"/>
         <plugin name="delete_reservations" type="Magento\InventorySales\Plugin\Catalog\Model\ResourceModel\Product\DeleteReservationsPlugin"/>
     </type>
-    <preference for="Magento\InventorySalesApi\Api\Data\ProductsSalableResultInterface" type="Magento\InventorySales\Model\ProductsSalableResult"/>
-    <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\ProductSalableResult"/>
-    <preference for="Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoInterface" type="Magento\InventorySales\Model\AreProductsSalableForRequestedQty\ProductsSalableInfo"/>
 </config>
