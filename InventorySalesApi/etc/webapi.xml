@@ -25,6 +25,12 @@
             <resource ref="Magento_InventorySalesApi::stock"/>
         </resources>
     </route>
+    <route url="/V1/inventory/are-product-salable-for-requested-qty/" method="GET">
+        <service class="Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventorySalesApi::stock"/>
+        </resources>
+    </route>
     <route url="/V1/inventory/stock-resolver/:type/:code" method="GET">
         <service class="Magento\InventorySalesApi\Api\StockResolverInterface" method="execute"/>
         <resources>

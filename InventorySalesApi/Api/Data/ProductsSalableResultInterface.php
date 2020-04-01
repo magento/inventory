@@ -10,7 +10,7 @@ namespace Magento\InventorySalesApi\Api\Data;
 use Magento\Framework\Api\ExtensibleDataInterface;
 
 /**
- * Represents result of service \Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface::execute()
+ * Represents products salable results.
  *
  * @api
  */
@@ -19,7 +19,7 @@ interface ProductsSalableResultInterface extends ExtensibleDataInterface
     /**
      * Retrieve is salable results.
      *
-     * @return \Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface[]
+     * @return \Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface[]
      */
     public function getSalable(): array;
 
