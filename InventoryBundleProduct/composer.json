@@ -9,7 +9,6 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-sales": "*",
         "magento/module-store": "*"
     },
     "suggest": {
