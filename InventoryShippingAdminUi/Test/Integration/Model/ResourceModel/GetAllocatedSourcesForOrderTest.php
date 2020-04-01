@@ -53,6 +53,8 @@ class GetAllocatedSourcesForOrderTest extends \PHPUnit\Framework\TestCase
         /** @var SearchCriteria $searchCriteria */
         $searchCriteria = $this->objectManager->create(SearchCriteriaBuilder::class)
             ->addFilter(OrderInterface::INCREMENT_ID, '100000001')
+            ->setPageSize(1)
+            ->setCurrentPage(1)
             ->create();
 
         $orders = $this->orderRepository->getList($searchCriteria)->getItems();
