@@ -38,6 +38,6 @@
             <argument name="keyword" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.rowOne}}" stepKey="clickToEditSourceInGrid"/>
-        <helper class="\Magento\InventoryAdminUi\Test\Mftf\Helper\AssertSourceCodeIsNotEditable" method="assert" stepKey="verifySourceCodeIsNotEditable"/>
+        <helper class="\Magento\InventoryAdminUi\Test\Mftf\Helper\AssertSourceCodeIsNotEditable" method="assertSourceCode" stepKey="verifySourceCodeIsNotEditable"/>
     </test>
 </tests>

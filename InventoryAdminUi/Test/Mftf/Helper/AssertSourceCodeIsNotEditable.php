@@ -19,7 +19,7 @@ class AssertSourceCodeIsNotEditable extends Helper
      *
      * @return void
      */
-    public function assert()
+    public function assertSourceCode()
     {
         try {
             /** @var \Magento\FunctionalTestingFramework\Module\MagentoWebDriver $webDriver */
@@ -27,11 +27,9 @@ class AssertSourceCodeIsNotEditable extends Helper
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
-        $element = $webDriver->webDriver->findElement(
-            \Facebook\WebDriver\WebDriverBy::xpath(
-                "(//span[@class='data-grid-cell-content'][text()='Code'])/../../../..//div[@class='data-grid-cell-content']"
-            )
-        );
+        $selector = "(//span[@class='data-grid-cell-content'][text()='Code'])";
+        $selector .= "/../../../..//div[@class='data-grid-cell-content']";
+        $element = $webDriver->webDriver->findElement(\Facebook\WebDriver\WebDriverBy::xpath($selector));
         $ableToEditSourceCode = true;
         try {
             $element->sendKeys('test value');
