@@ -19,8 +19,20 @@
             <resource ref="Magento_InventorySalesApi::stock"/>
         </resources>
     </route>
+    <route url="/V1/inventory/are-products-salable" method="GET">
+        <service class="Magento\InventorySalesApi\Api\AreProductsSalableInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventorySalesApi::stock"/>
+        </resources>
+    </route>
     <route url="/V1/inventory/is-product-salable-for-requested-qty/:sku/:stockId/:requestedQty" method="GET">
         <service class="Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface" method="execute"/>
+        <resources>
+            <resource ref="Magento_InventorySalesApi::stock"/>
+        </resources>
+    </route>
+    <route url="/V1/inventory/are-product-salable-for-requested-qty/" method="GET">
+        <service class="Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface" method="execute"/>
         <resources>
             <resource ref="Magento_InventorySalesApi::stock"/>
         </resources>
