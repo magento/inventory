@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
-use Magento\InventorySalesApi\Api\Data\IsProductSalableResultExtensionInterface;
-use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultExtensionInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
 
 /**
  * @inheritDoc
  */
-class ProductSalableResult implements IsProductSalableResultInterface
+class IsProductSalableForRequestedQtyResult implements IsProductSalableForRequestedQtyResultInterface
 {
     /**
      * @var string
@@ -27,7 +27,7 @@ class ProductSalableResult implements IsProductSalableResultInterface
     private $isSalable;
 
     /**
-     * @var IsProductSalableResultExtensionInterface|null
+     * @var IsProductSalableForRequestedQtyResultExtensionInterface|null
      */
     private $extensionAttributes;
 
@@ -40,13 +40,13 @@ class ProductSalableResult implements IsProductSalableResultInterface
      * @param string $sku
      * @param bool $isSalable
      * @param ProductSalabilityErrorInterface[] $errors
-     * @param IsProductSalableResultExtensionInterface|null $extensionAttributes
+     * @param IsProductSalableForRequestedQtyResultExtensionInterface|null $extensionAttributes
      */
     public function __construct(
         string $sku,
         bool $isSalable,
         array $errors = [],
-        IsProductSalableResultExtensionInterface $extensionAttributes = null
+        IsProductSalableForRequestedQtyResultExtensionInterface $extensionAttributes = null
     ) {
         $this->sku = $sku;
         $this->isSalable = $isSalable;
@@ -81,15 +81,15 @@ class ProductSalableResult implements IsProductSalableResultInterface
     /**
      * @inheritDoc
      */
-    public function setExtensionAttributes(IsProductSalableResultExtensionInterface $extensionAttributes): void
+    public function setExtensionAttributes(IsProductSalableForRequestedQtyResultExtensionInterface $extAttributes): void
     {
-        $this->extensionAttributes = $extensionAttributes;
+        $this->extensionAttributes = $extAttributes;
     }
 
     /**
      * @inheritDoc
      */
-    public function getExtensionAttributes(): ?IsProductSalableResultExtensionInterface
+    public function getExtensionAttributes(): ?IsProductSalableForRequestedQtyResultExtensionInterface
     {
         return $this->extensionAttributes;
     }

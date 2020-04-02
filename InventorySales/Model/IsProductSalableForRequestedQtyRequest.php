@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\AreProductsSalableForRequestedQty;
+namespace Magento\InventorySales\Model;
 
-use Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoExtensionInterface;
-use Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestExtensionInterface;
 
 /**
  * @inheritDoc
  */
-class ProductsSalableInfo implements ProductSalableForRequestedQtyInfoInterface
+class IsProductSalableForRequestedQtyRequest implements IsProductSalableForRequestedQtyRequestInterface
 {
     /**
      * @var string
@@ -26,14 +26,14 @@ class ProductsSalableInfo implements ProductSalableForRequestedQtyInfoInterface
     private $qty;
 
     /**
-     * @var ProductSalableForRequestedQtyInfoExtensionInterface|null
+     * @var IsProductSalableForRequestedQtyRequestExtensionInterface|null
      */
     private $extensionAttributes;
 
     /**
      * @param string $sku
      * @param float $qty
-     * @param ProductSalableForRequestedQtyInfoExtensionInterface|null $extensionAttributes
+     * @param IsProductSalableForRequestedQtyRequestExtensionInterface|null $extensionAttributes
      */
     public function __construct(string $sku, float $qty, $extensionAttributes = null)
     {
@@ -61,16 +61,15 @@ class ProductsSalableInfo implements ProductSalableForRequestedQtyInfoInterface
     /**
      * @inheritDoc
      */
-    public function setExtensionAttributes(
-        ProductSalableForRequestedQtyInfoExtensionInterface $extAttributes
-    ): void {
-        $this->extensionAttributes = $extAttributes;
+    public function setExtensionAttributes(IsProductSalableForRequestedQtyRequestExtensionInterface $attributes): void
+    {
+        $this->extensionAttributes = $attributes;
     }
 
     /**
      * @inheritDoc
      */
-    public function getExtensionAttributes(): ?ProductSalableForRequestedQtyInfoExtensionInterface
+    public function getExtensionAttributes(): ?IsProductSalableForRequestedQtyRequestExtensionInterface
     {
         return $this->extensionAttributes;
     }

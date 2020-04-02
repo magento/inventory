@@ -10,11 +10,11 @@ namespace Magento\InventorySalesApi\Api\Data;
 use Magento\Framework\Api\ExtensibleDataInterface;
 
 /**
- * Represents 'are products salable for requested qty' request interface.
+ * Represents 'is product salable for requested qty' request interface.
  *
  * @api
  */
-interface ProductSalableForRequestedQtyInfoInterface extends ExtensibleDataInterface
+interface IsProductSalableForRequestedQtyRequestInterface extends ExtensibleDataInterface
 {
     /**
      * Retrieve product sku.
@@ -33,17 +33,15 @@ interface ProductSalableForRequestedQtyInfoInterface extends ExtensibleDataInter
     /**
      * Set extension attributes to result.
      *
-     * @param \Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoExtensionInterface $extAttributes
+     * @param \Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestExtensionInterface $attributes
      * @return void
      */
-    public function setExtensionAttributes(
-        ProductSalableForRequestedQtyInfoExtensionInterface $extAttributes
-    ): void;
+    public function setExtensionAttributes(IsProductSalableForRequestedQtyRequestExtensionInterface $attributes): void;
 
     /**
      * Retrieve existing extension attributes object.
      *
-     * @return \Magento\InventorySalesApi\Api\Data\ProductSalableForRequestedQtyInfoExtensionInterface|null
+     * @return \Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestExtensionInterface|null
      */
-    public function getExtensionAttributes(): ?ProductSalableForRequestedQtyInfoExtensionInterface;
+    public function getExtensionAttributes(): ?IsProductSalableForRequestedQtyRequestExtensionInterface;
 }

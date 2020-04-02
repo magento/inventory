@@ -31,13 +31,6 @@ interface IsProductSalableResultInterface extends ExtensibleDataInterface
     public function isSalable(): bool;
 
     /**
-     * Retrieve errors from result.
-     *
-     * @return \Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface[]
-     */
-    public function getErrors(): array;
-
-    /**
      * Set extension attributes to result.
      *
      * @param \Magento\InventorySalesApi\Api\Data\IsProductSalableResultExtensionInterface $extensionAttributes

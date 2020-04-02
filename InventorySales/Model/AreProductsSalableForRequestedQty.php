@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Model;
 
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 
 /**
@@ -22,20 +22,20 @@ class AreProductsSalableForRequestedQty implements AreProductsSalableForRequeste
     private $isProductSalableForRequestedQtyInterface;
 
     /**
-     * @var IsProductSalableResultInterfaceFactory
+     * @var IsProductSalableForRequestedQtyResultInterfaceFactory
      */
-    private $isProductSalableResultFactory;
+    private $isProductSalableForRequestedQtyResultFactory;
 
     /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface
-     * @param IsProductSalableResultInterfaceFactory $isProductSalableResultFactory
+     * @param IsProductSalableForRequestedQtyResultInterfaceFactory $isProductSalableForRequestedQtyResultFactory
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQtyInterface,
-        IsProductSalableResultInterfaceFactory $isProductSalableResultFactory
+        IsProductSalableForRequestedQtyResultInterfaceFactory $isProductSalableForRequestedQtyResultFactory
     ) {
         $this->isProductSalableForRequestedQtyInterface = $isProductSalableForRequestedQtyInterface;
-        $this->isProductSalableResultFactory = $isProductSalableResultFactory;
+        $this->isProductSalableForRequestedQtyResultFactory = $isProductSalableForRequestedQtyResultFactory;
     }
 
     /**
@@ -52,7 +52,7 @@ class AreProductsSalableForRequestedQty implements AreProductsSalableForRequeste
                 $stockId,
                 $request->getQty()
             );
-            $results[] = $this->isProductSalableResultFactory->create(
+            $results[] = $this->isProductSalableForRequestedQtyResultFactory->create(
                 [
                     'sku' => $request->getSku(),
                     'isSalable' => $result->isSalable(),
