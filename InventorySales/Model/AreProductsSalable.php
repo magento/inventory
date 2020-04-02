@@ -49,6 +49,7 @@ class AreProductsSalable implements AreProductsSalableInterface
             $results[] = $this->isProductSalableResultFactory->create(
                 [
                     'sku' => $sku,
+                    'stockId' => $stockId,
                     'isSalable' => $isSalable,
                 ]
             );

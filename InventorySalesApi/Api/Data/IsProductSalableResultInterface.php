@@ -24,6 +24,12 @@ interface IsProductSalableResultInterface extends ExtensibleDataInterface
     public function getSku(): string;
 
     /**
+     * Retrieve stock id from result.
+     *
+     * @return int
+     */
+    public function getStockId(): int;
+    /**
      * Retrieve is salable result.
      *
      * @return bool

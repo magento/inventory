@@ -34,13 +34,15 @@ class AreProductsSalableForRequestedQtyTest extends WebapiAbstract
      * @param int $stockId
      * @param float $requestedQty
      * @param bool $expectedResult
+     * @param array $errors
      * @return void
      */
     public function testProductSalableForRequestedQtyAndStock(
         string $sku,
         int $stockId,
         float $requestedQty,
-        bool $expectedResult
+        bool $expectedResult,
+        array $errors
     ): void {
         $request = [
             'skuRequests' => [
@@ -64,8 +66,10 @@ class AreProductsSalableForRequestedQtyTest extends WebapiAbstract
         ];
         $res = $this->_webApiCall($serviceInfo, $request);
         $res = current($res);
-        self::assertEquals($expectedResult, $res['salable']);
         self::assertEquals($sku, $res['sku']);
+        self::assertEquals($stockId, $res['stock_id']);
+        self::assertEquals($expectedResult, $res['salable']);
+        self::assertEquals($errors, $res['errors']);
     }
 
     /**
@@ -76,9 +80,20 @@ class AreProductsSalableForRequestedQtyTest extends WebapiAbstract
     public function executeDataProvider(): array
     {
         return [
-            ['SKU-1', 10, 1, true],
-            ['SKU-1', 20, 1, false],
-            ['SKU-1', 30, 1, true],
+            ['SKU-1', 10, 1, true, []],
+            [
+                'SKU-1',
+                20,
+                1,
+                false,
+                [
+                    [
+                        'code' => 'requested-sku-is-not-assigned-to-given-stock',
+                        'message' => 'The requested sku is not assigned to given stock.',
+                    ],
+                ],
+            ],
+            ['SKU-1', 30, 1, true, []],
         ];
     }
 }

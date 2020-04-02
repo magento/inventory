@@ -58,8 +58,9 @@ class AreProductsSalableTest extends WebapiAbstract
 
         $res = $this->_webApiCall($serviceInfo, $request);
         $res = current($res);
-        self::assertEquals($expectedResult, $res['salable']);
         self::assertEquals($sku, $res['sku']);
+        self::assertEquals($stockId, $res['stock_id']);
+        self::assertEquals($expectedResult, $res['salable']);
     }
 
     /**

@@ -55,6 +55,7 @@ class AreProductsSalableForRequestedQty implements AreProductsSalableForRequeste
             $results[] = $this->isProductSalableForRequestedQtyResultFactory->create(
                 [
                     'sku' => $request->getSku(),
+                    'stockId' => $stockId,
                     'isSalable' => $result->isSalable(),
                     'errors' => $result->getErrors(),
                 ]

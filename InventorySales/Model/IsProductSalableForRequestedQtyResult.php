@@ -22,14 +22,14 @@ class IsProductSalableForRequestedQtyResult implements IsProductSalableForReques
     private $sku;
 
     /**
+     * @var int
+     */
+    private $stockId;
+
+    /**
      * @var bool
      */
     private $isSalable;
-
-    /**
-     * @var IsProductSalableForRequestedQtyResultExtensionInterface|null
-     */
-    private $extensionAttributes;
 
     /**
      * @var array
@@ -37,13 +37,20 @@ class IsProductSalableForRequestedQtyResult implements IsProductSalableForReques
     private $errors;
 
     /**
+     * @var IsProductSalableForRequestedQtyResultExtensionInterface|null
+     */
+    private $extensionAttributes;
+
+    /**
      * @param string $sku
+     * @param int $stockId
      * @param bool $isSalable
      * @param ProductSalabilityErrorInterface[] $errors
      * @param IsProductSalableForRequestedQtyResultExtensionInterface|null $extensionAttributes
      */
     public function __construct(
         string $sku,
+        int $stockId,
         bool $isSalable,
         array $errors = [],
         IsProductSalableForRequestedQtyResultExtensionInterface $extensionAttributes = null
@@ -52,6 +59,7 @@ class IsProductSalableForRequestedQtyResult implements IsProductSalableForReques
         $this->isSalable = $isSalable;
         $this->extensionAttributes = $extensionAttributes;
         $this->errors = $errors;
+        $this->stockId = $stockId;
     }
 
     /**
@@ -60,6 +68,14 @@ class IsProductSalableForRequestedQtyResult implements IsProductSalableForReques
     public function getSku(): string
     {
         return $this->sku;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStockId(): int
+    {
+        return $this->stockId;
     }
 
     /**
