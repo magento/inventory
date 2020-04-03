@@ -25,7 +25,7 @@
             <createData entity="SourceForColumnsSortingOrderTestOnly" stepKey="createCustomSource3"/>
             <createData entity="SourceForColumnsSortingOrderTestOnly" stepKey="createCustomSource4"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!-- Disable source as it can broke single source mode tests. -->
@@ -67,8 +67,8 @@
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoadToDisableCustomSource4"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisableCustomSource4"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSourceToDisableCustomSource4"/>
-            
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheSourcesGridPage"/>

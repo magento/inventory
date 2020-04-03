@@ -34,7 +34,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source2"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdmin"/>
             <!--Assign source1 to product1 and set quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($createProduct.id$)}}" stepKey="openSimple1ProductPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
@@ -71,7 +71,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
                 <argument name="sourceCode" value="$source2.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Quick order second simple product.-->

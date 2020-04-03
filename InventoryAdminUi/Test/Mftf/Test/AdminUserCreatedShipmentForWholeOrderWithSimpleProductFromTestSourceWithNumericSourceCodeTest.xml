@@ -27,7 +27,7 @@
             <createData entity="FullSource2" stepKey="customSource2"/>
             <createData entity="SimpleMsiProduct" stepKey="createSimpleProduct"/>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
                 <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>

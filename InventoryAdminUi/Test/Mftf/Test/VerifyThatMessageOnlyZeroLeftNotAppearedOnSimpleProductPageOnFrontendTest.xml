@@ -30,7 +30,7 @@
             </createData>
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
                 <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>

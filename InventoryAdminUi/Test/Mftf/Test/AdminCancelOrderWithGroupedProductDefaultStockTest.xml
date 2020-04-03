@@ -25,7 +25,7 @@
             <createData entity="VirtualProduct" stepKey="product"/>
             <createData entity="GroupedProduct" stepKey="groupedProduct"/>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminPanel"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
         </before>
         <after>
             <!--Delete created test data.-->
@@ -37,7 +37,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Set product quantity.-->

@@ -100,7 +100,7 @@
             <waitForPageLoad time="30" stepKey="waitFroDefaultStockEditPageLoad"/>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Remove category, product, customer and additional stock.-->
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
@@ -108,7 +108,7 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
         </after>
         <!--Assign sources to products.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
             <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="filter_value" value="$$simpleProduct.product[sku]$$"/>

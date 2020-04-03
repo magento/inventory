@@ -22,7 +22,7 @@
         <before>
             <!--Create test source.-->
             <createData entity="FullSource1" stepKey="additionalSource"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         </before>
 
         <after>

@@ -23,7 +23,7 @@
             <createData entity="BasicMsiStock1" stepKey="createCustomStock"/>
             <createData entity="customWebsite" stepKey="createCustomWebsite"/>
             <!-- todo temporary solution as it is impossible to parse website_id from the post request and as a consequence can not create store group via post -->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <actionGroup ref="AdminCreateStoreGroupActionGroup" stepKey="createStoreGroup">
                 <argument name="Website" value="customWebsite"/>
             </actionGroup>
@@ -36,7 +36,7 @@
             <actionGroup ref="DeleteCustomWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="$$createCustomWebsite.website[name]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStocksListPage"/>
