@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupGraphQl\Test\GraphQl;
 
-use Magento\Framework\App\State;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
@@ -35,14 +34,14 @@ class PickupLocationsNegativeCasesTest extends GraphQlAbstract
      *
      * @param string $body
      * @param string $storeCode
-     * @param string $expectedExceptionMessage
+     * @param string|null $expectedExceptionMessage
      *
      * @throws \Exception
      */
     public function testPickupLocationsEndpoint(
         string $body,
         string $storeCode,
-        string $expectedExceptionMessage
+        string $expectedExceptionMessage = null
     ) {
         $responseTemplate = <<<QUERY
 {
@@ -74,7 +73,9 @@ QUERY;
         $request = '{' . PHP_EOL . $body . $responseTemplate . PHP_EOL . '}';
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage($expectedExceptionMessage);
+        if (null !== $expectedExceptionMessage) {
+            $this->expectExceptionMessage($expectedExceptionMessage);
+        }
 
         $this->graphQlQuery($request, [], '', ['Store' => $storeCode]);
     }
@@ -92,7 +93,6 @@ QUERY;
      */
     public function dataProvider(): array
     {
-        $appState = Bootstrap::getObjectManager()->get(State::class);
         /* Data set #0. Search by not existing address */
         return [
             [/* Data set #0. Search by not existing address */
@@ -106,9 +106,6 @@ QUERY;
     sort: {distance: ASC}
   )',
                 'store_for_global_website',
-                $appState->getMode() === State::MODE_DEVELOPER
-                    ? 'Provided countryId does not exist.'
-                    : 'Internal server error',
             ],
             [/* Data set #1. Wrong page size. */
                 'pickupLocations(
