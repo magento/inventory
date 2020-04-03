@@ -10,6 +10,7 @@ namespace Magento\InventorySales\Model;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 
@@ -24,15 +25,25 @@ class CheckItemsQuantity
     private $areProductsSalableForRequestedQty;
 
     /**
+     * @var IsProductSalableForRequestedQtyRequestInterfaceFactory
+     */
+    private $isProductSalableForRequestedQtyRequestFactory;
+
+    /**
      * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty @deprecated
+     * @param IsProductSalableForRequestedQtyRequestInterfaceFactory|null $isProductSalableForRequestedQtyRequestFactory
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
+        IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory = null,
         AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty = null
     ) {
         $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty ?: ObjectManager::getInstance()
             ->get(AreProductsSalableForRequestedQtyInterface::class);
+        $this->isProductSalableForRequestedQtyRequestFactory = $isProductSalableForRequestedQtyRequestFactory
+            ?: ObjectManager::getInstance()->get(IsProductSalableForRequestedQtyRequestInterfaceFactory::class);
     }
 
     /**
@@ -45,10 +56,19 @@ class CheckItemsQuantity
      */
     public function execute(array $items, int $stockId): void
     {
-        $result = $this->areProductsSalableForRequestedQty->execute($items, $stockId);
-        foreach ($result->getSalable() as $isSalable) {
-            if (false === $isSalable->isSalable()) {
-                $errors = $isSalable->getErrors();
+        $skuRequests = [];
+        foreach ($items as $sku => $qty) {
+            $skuRequests[] = $this->isProductSalableForRequestedQtyRequestFactory->create(
+                [
+                    'sku' => $sku,
+                    'qty' => $qty,
+                ]
+            );
+        }
+        $results = $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
+        foreach ($results as $result) {
+            if (false === $result->isSalable()) {
+                $errors = $result->getErrors();
                 /** @var ProductSalabilityErrorInterface $errorMessage */
                 $errorMessage = array_pop($errors);
                 throw new LocalizedException(__($errorMessage->getMessage()));
