@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupGraphQl\Test\GraphQl;
 
+use Magento\Framework\App\State;
+use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
 /**
@@ -90,9 +92,11 @@ QUERY;
      */
     public function dataProvider(): array
     {
+        $appState = Bootstrap::getObjectManager()->get(State::class);
+        /* Data set #0. Search by not existing address */
         return [
-           [/* Data set #0. Search by not existing address */
-               'pickupLocations(
+            [/* Data set #0. Search by not existing address */
+                'pickupLocations(
     area:{
       radius: 750
       search_term: "86559:ZZ"
@@ -101,27 +105,29 @@ QUERY;
     currentPage: 1
     sort: {distance: ASC}
   )',
-               'store_for_global_website',
-               'Provided countryId does not exist.'
-           ],
-           [/* Data set #1. Wrong page size. */
-            'pickupLocations(
+                'store_for_global_website',
+                $appState->getMode() === State::MODE_DEVELOPER
+                    ? 'Provided countryId does not exist.'
+                    : 'Internal server error',
+            ],
+            [/* Data set #1. Wrong page size. */
+                'pickupLocations(
     pageSize: -1
     currentPage: 1
   )',
-            'store_for_global_website',
-            'pageSize value must be greater than 0.'
-           ],
-           [/* Data set #2. Wrong current page. */
-               'pickupLocations(
+                'store_for_global_website',
+                'pageSize value must be greater than 0.',
+            ],
+            [/* Data set #2. Wrong current page. */
+                'pickupLocations(
     pageSize: 10
     currentPage: -1
   )',
-               'store_for_global_website',
-               'currentPage value must be greater than 0.'
-           ],
-           [/* Data set #3. Wrong max page. */
-               'pickupLocations(
+                'store_for_global_website',
+                'currentPage value must be greater than 0.',
+            ],
+            [/* Data set #3. Wrong max page. */
+                'pickupLocations(
     area:{
       radius: 750
       search_term: "86559:DE"
@@ -130,9 +136,9 @@ QUERY;
     currentPage: 4
     sort: {distance: ASC}
   )',
-               'store_for_global_website',
-               'currentPage value 4 specified is greater than the 2 page(s) available.'
-           ],
+                'store_for_global_website',
+                'currentPage value 4 specified is greater than the 2 page(s) available.',
+            ],
         ];
     }
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\App\Cron;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -49,6 +50,7 @@ class UpdateProductTypeTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
      *
      * @return void
      */
@@ -69,6 +71,13 @@ class UpdateProductTypeTest extends WebapiAbstract
             $serviceInfo,
             ['product' => ['sku' => 'SKU-1', 'type_id' => 'configurable']]
         );
+        $cronObserver = Bootstrap::getObjectManager()->create(
+            Cron::class,
+            ['parameters' => ['group' => null, 'standaloneProcessStarted' => 0]]
+        );
+        $cronObserver->launch();
+        /*Wait till source items will be removed asynchronously.*/
+        sleep(20);
 
         $sourceItems = $this->getSourceItemsBySku->execute('SKU-1');
         self::assertEmpty($sourceItems);

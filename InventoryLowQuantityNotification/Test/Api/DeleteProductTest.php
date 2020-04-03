@@ -82,7 +82,7 @@ class DeleteProductTest extends WebapiAbstract
         );
         $cronObserver->launch();
         /*Wait till source items configurations will be removed asynchronously.*/
-        sleep(10);
+        sleep(20);
         $sourceItemConfigurations = $this->getBySku->execute('SKU-1');
         self::assertEmpty($sourceItemConfigurations);
     }
