@@ -75,11 +75,11 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/source_items_for_bundle_children.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/products_bundle.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/order_bundle_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/source_items_for_bundle_children.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/products_bundle.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/order_bundle_products.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testSourceDeductionWhileShippingBundleWithShipmentSeparately()
     {
@@ -123,11 +123,11 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/source_items_for_bundle_children.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/products_bundle.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/order_bundle_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/source_items_for_bundle_children.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/products_bundle.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/order_bundle_products.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testSourceDeductionWhileShippingBundleWithShipmentTogether()
     {

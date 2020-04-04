@@ -46,7 +46,7 @@ class GetSkuFromOrderItemTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/order_item_with_configurable_and_options.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/order_item_with_configurable_and_options.php
      */
     public function testGetSkuFromConfigurableProductWithCustomOptionsOrderItem()
     {

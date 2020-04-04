@@ -62,7 +62,7 @@ class PlaceOrderOnCustomStockTest extends TestCase
      *
      * @return void
      * @magentoDataFixture Magento/GroupedProduct/_files/product_grouped_with_simple_out_of_stock.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/change_stock_for_base_website.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/change_stock_for_base_website.php
      * @magentoDbIsolation disabled
      */
     public function testAddGroupedProductWithoutItemsInDefaultSource(): void
