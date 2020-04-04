@@ -16,7 +16,7 @@ use Magento\Framework\HTTP\ClientInterface;
 use Magento\InventoryDistanceBasedSourceSelection\Model\ResourceModel\UpdateGeoNames;
 
 /**
- * Import geonames
+ * Import geonames for given country code.
  */
 class ImportGeoNames
 {

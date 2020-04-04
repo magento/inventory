@@ -37,11 +37,9 @@ class ImportGeoNamesCommand extends Command
     private $escaper;
 
     /**
-     * ImportGeoNamesCommand constructor.
-     *
      * @param ImportGeoNames $importGeoNames
-     * @param null|string $name
      * @param Escaper $escaper
+     * @param string|null $name
      */
     public function __construct(
         ImportGeoNames $importGeoNames,
@@ -93,9 +91,11 @@ class ImportGeoNamesCommand extends Command
                 $output->writeln('OK');
             } catch (\Exception $e) {
                 $output->writeln($e->getMessage());
+                return (int)$e->getCode();
             }
         }
-
         $output->writeln('Done.');
+
+        return null;
     }
 }
