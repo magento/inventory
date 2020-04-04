@@ -7,16 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalable;
 
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 class ManageStockConditionTest extends TestCase
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @inheritdoc
@@ -25,7 +25,7 @@ class ManageStockConditionTest extends TestCase
     {
         parent::setUp();
 
-        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->areProductsSalable = Bootstrap::getObjectManager()->get(AreProductsSalableInterface::class);
     }
 
     /**
@@ -48,8 +48,9 @@ class ManageStockConditionTest extends TestCase
      */
     public function testExecuteWithManageStockFalse(string $sku, int $stockId, bool $expectedResult)
     {
-        $isSalable = $this->isProductSalable->execute($sku, $stockId);
-        self::assertEquals($expectedResult, $isSalable);
+        $result = $this->areProductsSalable->execute([$sku], $stockId);
+        $result = current($result);
+        self::assertEquals($expectedResult, $result->isSalable());
     }
 
     /**

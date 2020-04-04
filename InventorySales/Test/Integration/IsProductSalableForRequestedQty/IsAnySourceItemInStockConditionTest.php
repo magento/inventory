@@ -11,16 +11,17 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 class IsAnySourceItemInStockConditionTest extends TestCase
 {
     /**
-     * @var IsProductSalableForRequestedQtyInterface
+     * @var AreProductsSalableForRequestedQtyInterface
      */
-    private $isProductSalable;
+    private $areProductsSalableForRequestedQty;
 
     /**
      * @var ProductRepositoryInterface
@@ -37,11 +38,22 @@ class IsAnySourceItemInStockConditionTest extends TestCase
      */
     private $stockItemRepository;
 
+    /**
+     * @var IsProductSalableForRequestedQtyRequestInterfaceFactory
+     */
+    private $isProductSalableForRequestedQtyRequestFactory;
+
+    /**
+     * @inheritDoc
+     */
     protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
-        $this->isProductSalable = $objectManager->get(
-            IsProductSalableForRequestedQtyInterface::class
+        $this->areProductsSalableForRequestedQty = $objectManager->get(
+            AreProductsSalableForRequestedQtyInterface::class
+        );
+        $this->isProductSalableForRequestedQtyRequestFactory = $objectManager->get(
+            IsProductSalableForRequestedQtyRequestInterfaceFactory::class
         );
         $this->productRepository = $objectManager->get(ProductRepositoryInterface::class);
         $this->stockItemCriteriaFactory = $objectManager->get(StockItemCriteriaInterfaceFactory::class);
@@ -79,7 +91,15 @@ class IsAnySourceItemInStockConditionTest extends TestCase
         $legacyStockItem->setBackorders(1);
         $legacyStockItem->setUseConfigBackorders(0);
         $this->stockItemRepository->save($legacyStockItem);
-        $this->assertEquals($expected, $this->isProductSalable->execute($sku, $stockId, 1)->isSalable());
+        $request = $this->isProductSalableForRequestedQtyRequestFactory->create(
+            [
+                'sku' => $sku,
+                'qty' => 1,
+            ]
+        );
+        $result = $this->areProductsSalableForRequestedQty->execute([$request], $stockId);
+        $result = current($result);
+        $this->assertEquals($expected, $result->isSalable());
     }
 
     /**

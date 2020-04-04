@@ -13,6 +13,7 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
@@ -21,25 +22,28 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 class StockStatusProvider implements ResolverInterface
 {
     /**
-     * @var IsProductSalableInterface
-     */
-    private $isProductSalable;
-
-    /**
      * @var GetStockIdForCurrentWebsite
      */
     private $getStockIdForCurrentWebsite;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @var AreProductsSalableInterface|null
+     */
+    private $areProductsSalable;
+
+    /**
+     * @param IsProductSalableInterface $isProductSalable @deprecated
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
+     * @param AreProductsSalableInterface|null $areProductsSalable
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IsProductSalableInterface $isProductSalable,
-        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
+        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
+        AreProductsSalableInterface $areProductsSalable = null
     ) {
-        $this->isProductSalable = $isProductSalable;
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
@@ -55,8 +59,9 @@ class StockStatusProvider implements ResolverInterface
         $product = $value['model'];
 
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        $isProductSalable = $this->isProductSalable->execute($product->getSku(), $stockId);
+        $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
+        $result = current($result);
 
-        return $isProductSalable ? 'IN_STOCK' : 'OUT_OF_STOCK';
+        return $result->isSalable() ? 'IN_STOCK' : 'OUT_OF_STOCK';
     }
 }

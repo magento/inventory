@@ -8,10 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventoryExportStock\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
@@ -41,22 +43,24 @@ class PreciseExportStockProcessor
     private $getQtyForNotManageStock;
 
     /**
-     * @var IsProductSalableInterface
-     */
-    private $isProductSalable;
-
-    /**
      * @var IsProductAssignedToStockInterface
      */
     private $isProductAssignedToStock;
 
     /**
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetQtyForNotManageStock $getQtyForNotManageStock
-     * @param IsProductSalableInterface $isProductSalable
+     * @param IsProductSalableInterface $isProductSalable @deprecated
      * @param GetStockItemConfiguration $getStockItemConfiguration
      * @param IsProductAssignedToStockInterface $isProductAssignedToStock
+     * @param AreProductsSalableInterface|null $areProductsSalable
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
@@ -64,14 +68,16 @@ class PreciseExportStockProcessor
         GetQtyForNotManageStock $getQtyForNotManageStock,
         IsProductSalableInterface $isProductSalable,
         GetStockItemConfiguration $getStockItemConfiguration,
-        IsProductAssignedToStockInterface $isProductAssignedToStock
+        IsProductAssignedToStockInterface $isProductAssignedToStock,
+        AreProductsSalableInterface $areProductsSalable = null
     ) {
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getQtyForNotManageStock = $getQtyForNotManageStock;
-        $this->isProductSalable = $isProductSalable;
         $this->isProductAssignedToStock = $isProductAssignedToStock;
+        $this->areProductsSalable = $areProductsSalable ?: ObjectManager::getInstance()
+            ->get(AreProductsSalableInterface::class);
     }
 
     /**
@@ -127,27 +133,32 @@ class PreciseExportStockProcessor
     private function getItem(string $sku, int $stockId): array
     {
         if (!$this->isSourceItemManagementAllowedForSku->execute($sku)) {
+            $result = $this->areProductsSalable->execute([$sku], $stockId);
+            $result = current($result);
             return [
                 'sku' => $sku,
                 'qty' => 0.0000,
-                'is_salable' => $this->isProductSalable->execute($sku, $stockId)
+                'is_salable' => $result->isSalable(),
             ];
         }
         if (!$this->getStockItemConfiguration->execute($sku)->isManageStock()) {
             return [
                 'sku' => $sku,
                 'qty' => (float)$this->getQtyForNotManageStock->execute(),
-                'is_salable' => true
+                'is_salable' => true,
             ];
         }
         if (!$this->isProductAssignedToStock->execute($sku, $stockId)) {
             throw new SkuIsNotAssignedToStockException(__('The requested sku is not assigned to given stock.'));
         }
 
+        $result = $this->areProductsSalable->execute([$sku], $stockId);
+        $result = current($result);
+
         return [
             'sku' => $sku,
             'qty' => $this->getProductSalableQty->execute($sku, $stockId),
-            'is_salable' => $this->isProductSalable->execute($sku, $stockId)
+            'is_salable' => $result->isSalable(),
         ];
     }
 }

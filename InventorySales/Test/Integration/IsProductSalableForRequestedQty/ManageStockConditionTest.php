@@ -7,16 +7,22 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\IsProductSalableForRequestedQty;
 
-use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 class ManageStockConditionTest extends TestCase
 {
     /**
-     * @var IsProductSalableForRequestedQtyInterface
+     * @var AreProductsSalableForRequestedQtyInterface
      */
-    private $isProductSalableForRequestedQty;
+    private $areProductsSalableForRequestedQty;
+
+    /**
+     * @var IsProductSalableForRequestedQtyRequestInterfaceFactory
+     */
+    private $isProductSalableForRequestedQtyRequestFactory;
 
     /**
      * @inheritdoc
@@ -25,8 +31,11 @@ class ManageStockConditionTest extends TestCase
     {
         parent::setUp();
 
-        $this->isProductSalableForRequestedQty
-            = Bootstrap::getObjectManager()->get(IsProductSalableForRequestedQtyInterface::class);
+        $this->areProductsSalableForRequestedQty
+            = Bootstrap::getObjectManager()->get(AreProductsSalableForRequestedQtyInterface::class);
+        $this->isProductSalableForRequestedQtyRequestFactory = Bootstrap::getObjectManager()->get(
+            IsProductSalableForRequestedQtyRequestInterfaceFactory::class
+        );
     }
 
     /**
@@ -40,6 +49,7 @@ class ManageStockConditionTest extends TestCase
      *
      * @param string $sku
      * @param int $stockId
+     * @param float $qty
      * @param bool $expectedResult
      * @return void
      *
@@ -47,10 +57,17 @@ class ManageStockConditionTest extends TestCase
      *
      * @magentoDbIsolation disabled
      */
-    public function testExecuteWithManageStockFalse(string $sku, int $stockId, float $qty, bool $expectedResult)
+    public function testExecuteWithManageStockFalse(string $sku, int $stockId, float $qty, bool $expectedResult): void
     {
-        $isSalable = $this->isProductSalableForRequestedQty->execute($sku, $stockId, $qty)->isSalable();
-        self::assertEquals($expectedResult, $isSalable);
+        $request = $this->isProductSalableForRequestedQtyRequestFactory->create(
+            [
+                'sku' => $sku,
+                'qty' => $qty,
+            ]
+        );
+        $result = $this->areProductsSalableForRequestedQty->execute([$request], $stockId);
+        $result = current($result);
+        self::assertEquals($expectedResult, $result->isSalable());
     }
 
     /**
