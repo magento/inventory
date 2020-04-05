@@ -166,14 +166,15 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
      *
      * @param OrderInterface $order
      * @param int $type
-     * @return OrderItem
+     * @return null|OrderItem
      */
-    private function getBundleOrderItemByShipmentType(OrderInterface $order, int $type): OrderItem
+    private function getBundleOrderItemByShipmentType(OrderInterface $order, int $type): ?OrderItem
     {
         foreach ($order->getAllVisibleItems() as $item) {
             if ($item->getProduct()->getShipmentType() == $type) {
                 return $item;
             }
         }
+        return null;
     }
 }

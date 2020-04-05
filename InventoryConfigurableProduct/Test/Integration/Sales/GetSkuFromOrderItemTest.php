@@ -14,7 +14,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class GetSkuFromOrderItemTest
+ * Class Test for GetSkuFromOrderItem service
  */
 class GetSkuFromOrderItemTest extends TestCase
 {

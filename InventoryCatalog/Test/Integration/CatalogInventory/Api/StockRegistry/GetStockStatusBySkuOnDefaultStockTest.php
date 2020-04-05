@@ -26,6 +26,11 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     private $defaultStockProvider;
 
     /**
+     * @var GetProductIdsBySkusInterface
+     */
+    private $getProductIdsBySkus;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void

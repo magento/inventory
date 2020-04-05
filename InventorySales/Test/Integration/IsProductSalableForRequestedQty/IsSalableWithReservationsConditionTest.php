@@ -258,9 +258,11 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $stockItemConfiguration->setBackorders(StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY);
         $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
 
-        $this->appendReservations->execute([
-            $this->reservationBuilder->setStockId($stockId)->setSku($sku )->setQuantity(-9.33)->build(),
-        ]);
+        $this->appendReservations->execute(
+            [
+                $this->reservationBuilder->setStockId($stockId)->setSku($sku )->setQuantity(-9.33)->build()
+            ]
+        );
 
         self::assertEquals(
             true,

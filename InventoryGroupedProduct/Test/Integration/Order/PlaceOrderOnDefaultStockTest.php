@@ -65,7 +65,6 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
 
         $this->cartRepository->save($cart);
 
-
         self::expectException(LocalizedException::class);
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
