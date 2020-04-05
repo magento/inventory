@@ -5,18 +5,19 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog\Model;
+namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Type\Simple;
 
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type\Simple;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Apply the inventory is-salable result to the according method of the product model
+ * Apply the inventory is-salable result to the according method of the product type model
  */
-class IsProductSalablePlugin
+class IsSalablePlugin
 {
     /**
      * @var GetAssignedStockIdForWebsiteInterface
@@ -49,19 +50,20 @@ class IsProductSalablePlugin
     }
 
     /**
-     * @param Product $subject
+     * Fetches is salable status from multi-stock
+     *
+     * @param Simple $subject
      * @param callable $proceed
+     * @param Product $product
      * @return bool
      * @throws LocalizedException
      */
-    public function aroundIsSalable(Product $subject, callable $proceed)
+    public function aroundIsSalable(Simple $subject, callable $proceed, Product $product)
     {
-        $sku = $subject->getSku();
+        $sku = $subject->getSku($product);
         $currentWebsite = $this->storeManager->getWebsite();
-        $results = $this->areProductsSalable->execute(
-            [$sku],
-            $this->getAssignedStockIdForWebsite->execute($currentWebsite->getCode())
-        );
+        $stockId = $this->getAssignedStockIdForWebsite->execute($currentWebsite->getCode());
+        $results = $this->areProductsSalable->execute([$sku], $stockId);
 
         foreach ($results as $result) {
             if ($result->getSku() === $sku) {
