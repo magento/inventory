@@ -15,6 +15,7 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Indexer\Source\GetAssignedStockIds;
 
 /**
  * Source Item indexer
@@ -59,6 +60,11 @@ class SourceItemIndexer
     private $defaultStockProvider;
 
     /**
+     * @var GetAssignedStockIds
+     */
+    private $getAssignedStockIds;
+
+    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
      * @param GetSkuListInStock $getSkuListInStockToUpdate
@@ -68,6 +74,7 @@ class SourceItemIndexer
      * @param IndexNameBuilder $indexNameBuilder
      * @param StockIndexer $stockIndexer
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param GetAssignedStockIds $getAssignedStockIds
      */
     public function __construct(
         GetSkuListInStock $getSkuListInStockToUpdate,
@@ -76,7 +83,8 @@ class SourceItemIndexer
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         IndexNameBuilder $indexNameBuilder,
         StockIndexer $stockIndexer,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        GetAssignedStockIds $getAssignedStockIds
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -85,6 +93,7 @@ class SourceItemIndexer
         $this->indexNameBuilder = $indexNameBuilder;
         $this->stockIndexer = $stockIndexer;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->getAssignedStockIds = $getAssignedStockIds;
     }
 
     /**
@@ -143,5 +152,47 @@ class SourceItemIndexer
                 ResourceConnection::DEFAULT_CONNECTION
             );
         }
+    }
+
+    /**
+     * Individually clear out source items from the index that no longer link to a source.
+     * More performant than reindexing the entire stock list.
+     * 
+     * @param array $sourceCodeSkuMap [source_code => [sku, sku, sku], ....]
+     * @return void
+     */
+    public function executeOrphanList(array $sourceCodeSkuMap)
+    {
+        if (empty($sourceCodeSkuMap)) {
+            return;
+        }
+        foreach ($sourceCodeSkuMap as $sourceCode => $skuList) {
+            $stockId = $this->getAssignedStockIds->execute([$sourceCode]);
+            if (empty($stockId)) {
+                return;
+            }
+
+            if ($this->defaultStockProvider->getId() === $stockId[0]) {
+                continue;
+            }
+
+            $mainIndexName = $this->indexNameBuilder
+                ->setIndexId(InventoryIndexer::INDEXER_ID)
+                ->addDimension('stock_', (string)$stockId[0])
+                ->setAlias(Alias::ALIAS_MAIN)
+                ->build();
+
+            if (!$this->indexStructure->isExist($mainIndexName, ResourceConnection::DEFAULT_CONNECTION)) {
+                $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
+            }
+
+            $this->indexHandler->cleanIndex(
+                $mainIndexName,
+                new \ArrayIterator($skuList),
+                ResourceConnection::DEFAULT_CONNECTION
+            );
+
+        }
+
     }
 }
