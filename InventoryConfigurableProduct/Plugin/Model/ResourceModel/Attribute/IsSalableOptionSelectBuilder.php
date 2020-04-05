@@ -39,27 +39,18 @@ class IsSalableOptionSelectBuilder
     private $stockIndexTableNameResolver;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
-        $this->defaultStockProvider = $defaultStockProvider ?: ObjectManager::getInstance()
-            ->get(DefaultStockProviderInterface::class);
     }
 
     /**
@@ -80,9 +71,6 @@ class IsSalableOptionSelectBuilder
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
-        if ($stockId === $this->defaultStockProvider->getId()) {
-            return $select;
-        }
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
 
         $select->joinInner(

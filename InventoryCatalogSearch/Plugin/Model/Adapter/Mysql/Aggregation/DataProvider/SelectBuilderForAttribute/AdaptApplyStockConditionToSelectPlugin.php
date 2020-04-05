@@ -11,7 +11,6 @@ use Magento\CatalogSearch\Model\Adapter\Mysql\Aggregation\DataProvider\SelectBui
 ApplyStockConditionToSelect;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolver;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -44,29 +43,21 @@ class AdaptApplyStockConditionToSelectPlugin
     private $stockResolver;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param StockIndexTableNameResolver $stockIndexTableNameResolver
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         StockIndexTableNameResolver $stockIndexTableNameResolver,
         ResourceConnection $resource,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver,
-        DefaultStockProviderInterface $defaultStockProvider
+        StockResolverInterface $stockResolver
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -85,11 +76,6 @@ class AdaptApplyStockConditionToSelectPlugin
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
-
-        if ($stockId === $this->defaultStockProvider->getId()) {
-            return $proceed($select);
-        }
-
         $tableName = $this->stockIndexTableNameResolver->execute($stockId);
         $select->joinInner(
             ['product' => $this->resource->getTableName('catalog_product_entity')],

@@ -8,11 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogSearch\Plugin\Search\FilterMapper;
 
 use Magento\CatalogSearch\Model\Search\FilterMapper\StockStatusFilter;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Search\Adapter\Mysql\ConditionManager;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -51,33 +49,24 @@ class AdaptStockStatusFilterPlugin
     private $resourceConnection;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param ConditionManager $conditionManager
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param ResourceConnection $resourceConnection
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ConditionManager $conditionManager,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        ResourceConnection $resourceConnection,
-        DefaultStockProviderInterface $defaultStockProvider = null
+        ResourceConnection $resourceConnection
     ) {
         $this->conditionManager = $conditionManager;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->resourceConnection = $resourceConnection;
-        $this->defaultStockProvider = $defaultStockProvider ?: ObjectManager::getInstance()
-            ->get(DefaultStockProviderInterface::class);
     }
 
     /**
@@ -100,10 +89,6 @@ class AdaptStockStatusFilterPlugin
         $showOutOfStockFlag
     ) {
         try {
-            if ($this->getStockId() === $this->defaultStockProvider->getId()) {
-                return $proceed($select, $stockValues, $type, $showOutOfStockFlag);
-            }
-
             if ($type !== StockStatusFilter::FILTER_JUST_ENTITY
                 && $type !== StockStatusFilter::FILTER_ENTITY_AND_SUB_PRODUCTS
             ) {

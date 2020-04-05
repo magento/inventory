@@ -12,7 +12,6 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -46,11 +45,6 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
     private $stockResolver;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @var ResourceConnection
      */
     private $resourceConnection;
@@ -66,7 +60,6 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param ResourceConnection $resourceConnection
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param StockStatusResource $stockStatusResource
      */
     public function __construct(
@@ -75,7 +68,6 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         ResourceConnection $resourceConnection,
-        DefaultStockProviderInterface $defaultStockProvider,
         StockStatusResource $stockStatusResource
     ) {
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
@@ -83,7 +75,6 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->resourceConnection = $resourceConnection;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->stockStatusResource = $stockStatusResource;
     }
 
@@ -104,31 +95,15 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
             ->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
-        if ($stockId === $this->defaultStockProvider->getId()) {
-            $stockTable = 'cataloginventory_stock_status';
-            $stockTable = $this->resourceConnection->getTableName($stockTable);
-            $isSalableColumnName = 'stock_status';
+        $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
+        $isSalableColumnName = IndexStructure::IS_SALABLE;
 
-            /** @var Select $select */
-            $select->join(
-                ['stock' => $stockTable],
-                sprintf(
-                    'stock.product_id = %s.entity_id',
-                    BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS
-                ),
-                []
-            );
-        } else {
-            $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-            $isSalableColumnName = IndexStructure::IS_SALABLE;
-
-            /** @var Select $select */
-            $select->join(
-                ['stock' => $stockTable],
-                sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
-                []
-            );
-        }
+        /** @var Select $select */
+        $select->join(
+            ['stock' => $stockTable],
+            sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
+            []
+        );
 
         $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
 

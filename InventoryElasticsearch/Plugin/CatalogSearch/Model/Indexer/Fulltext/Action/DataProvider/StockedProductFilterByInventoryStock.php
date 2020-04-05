@@ -54,11 +54,6 @@ class StockedProductFilterByInventoryStock
     private $stockStatusRepository;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @var StoreRepositoryInterface
      */
     private $storeRepository;
@@ -70,7 +65,6 @@ class StockedProductFilterByInventoryStock
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param StockStatusCriteriaInterfaceFactory $stockStatusCriteriaFactory
      * @param StockStatusRepositoryInterface $stockStatusRepository
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param StoreRepositoryInterface $storeRepository
      */
     public function __construct(
@@ -80,7 +74,6 @@ class StockedProductFilterByInventoryStock
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         StockStatusCriteriaInterfaceFactory $stockStatusCriteriaFactory,
         StockStatusRepositoryInterface $stockStatusRepository,
-        DefaultStockProviderInterface $defaultStockProvider,
         StoreRepositoryInterface $storeRepository
     ) {
         $this->stockConfiguration = $stockConfiguration;
@@ -89,7 +82,6 @@ class StockedProductFilterByInventoryStock
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->stockStatusCriteriaFactory = $stockStatusCriteriaFactory;
         $this->stockStatusRepository = $stockStatusRepository;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->storeRepository = $storeRepository;
     }
 
@@ -114,12 +106,7 @@ class StockedProductFilterByInventoryStock
             $store = $this->storeRepository->getById($storeId);
             $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
             $stockId = $stock->getStockId();
-
-            if ($this->defaultStockProvider->getId() === $stockId) {
-                $stockStatuses = $this->getStockStatusesFromDefaultStock($productIds);
-            } else {
-                $stockStatuses = $this->getStockStatusesFromCustomStock($productIds, $stockId);
-            }
+            $stockStatuses = $this->getStockStatusesFromCustomStock($productIds, $stockId);
 
             $indexData = array_intersect_key($indexData, $stockStatuses);
         }
@@ -129,27 +116,6 @@ class StockedProductFilterByInventoryStock
             $productData,
             $storeId,
         ];
-    }
-
-    /**
-     * Get product stock statuses on default stock.
-     *
-     * @param array $productIds
-     * @return array
-     */
-    private function getStockStatusesFromDefaultStock(array $productIds): array
-    {
-        $stockStatusCriteria = $this->stockStatusCriteriaFactory->create();
-        $stockStatusCriteria->setProductsFilter($productIds);
-        $stockStatusCollection = $this->stockStatusRepository->getList($stockStatusCriteria);
-        $stockStatuses = $stockStatusCollection->getItems();
-
-        return array_filter(
-            $stockStatuses,
-            function (StockStatusInterface $stockStatus) {
-                return StockStatusInterface::STATUS_IN_STOCK === (int)$stockStatus->getStockStatus();
-            }
-        );
     }
 
     /**

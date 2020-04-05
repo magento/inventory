@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection;
 
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -34,26 +33,18 @@ class AdaptAddQuantityFilterPlugin
     private $stockByWebsiteIdResolver;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param IsProductSalableInterface $isProductSalable
      * @param StoreManagerInterface $storeManager
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         IsProductSalableInterface $isProductSalable,
         StoreManagerInterface $storeManager,
-        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        DefaultStockProviderInterface $defaultStockProvider
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
     ) {
         $this->isProductSalable = $isProductSalable;
         $this->storeManager = $storeManager;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -62,6 +53,7 @@ class AdaptAddQuantityFilterPlugin
      * @param Collection $subject
      * @param \Closure $proceed
      * @return Collection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddQuantityFilter(
         Collection $subject,
@@ -69,9 +61,6 @@ class AdaptAddQuantityFilterPlugin
     ): Collection {
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockByWebsiteIdResolver->execute((int)$website->getId());
-        if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
-            return $proceed();
-        }
         $skusToExclude = [];
         foreach ($subject->getData() as $item) {
             if (!$this->isProductSalable->execute((string)$item['sku'], $stock->getStockId())) {
