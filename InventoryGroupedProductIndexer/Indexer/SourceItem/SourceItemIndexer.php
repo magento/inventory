@@ -60,8 +60,7 @@ class SourceItemIndexer
         IndexHandlerInterface $indexHandler,
         IndexStructureInterface $indexStructure,
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
-        SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
-        DefaultStockProviderInterface $defaultStockProvider
+        SiblingSkuListInStockProvider $siblingSkuListInStockProvider
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -69,7 +68,6 @@ class SourceItemIndexer
         $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexStructure = $indexStructure;
         $this->siblingSkuListInStockProvider = $siblingSkuListInStockProvider;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
