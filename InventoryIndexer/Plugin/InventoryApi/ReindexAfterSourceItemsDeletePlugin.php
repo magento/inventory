@@ -38,14 +38,23 @@ class ReindexAfterSourceItemsDeletePlugin
      * @param SourceItemIndexer $sourceItemIndexer
      * @param GetSourcesItemById $getSourceItemsWithId
      */
-    public function __construct(GetSourceItemIds $getSourceItemIds, SourceItemIndexer $sourceItemIndexer, GetSourceItemsWithId $getSourceItemsWithId)
-    {
+    public function __construct(
+        GetSourceItemIds $getSourceItemIds,
+        SourceItemIndexer $sourceItemIndexer,
+        GetSourceItemsWithId $getSourceItemsWithId
+    ) {
         $this->getSourceItemIds = $getSourceItemIds;
         $this->sourceItemIndexer = $sourceItemIndexer;
         $this->getSourceItemsWithId = $getSourceItemsWithId;
     }
 
     /**
+     * Clean up indexes around the deletion of source items.
+     * 
+     * Uses a two-step method;
+     *  1 - index the items that have source links.
+     *  2 - remove index entries for those items that are no longer connected to a source
+     *
      * @param SourceItemsDeleteInterface $subject
      * @param callable $proceed
      * @param SourceItemInterface[] $sourceItems
@@ -58,7 +67,8 @@ class ReindexAfterSourceItemsDeletePlugin
         array $sourceItems
     ) {
 
-        // We need to double-pump the source item list, as we will end up with skus that still have some sources, and some that have none
+        // We need to double-pump the source item list, as we will end up with skus 
+        // that still have some sources, and some that have none
         $sourceItemsBefore = $this->getSourceItemsWithId->execute($sourceItems);
 
         $proceed($sourceItems);

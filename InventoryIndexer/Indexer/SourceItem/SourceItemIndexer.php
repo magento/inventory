@@ -97,6 +97,8 @@ class SourceItemIndexer
     }
 
     /**
+     * Run a full reindex
+     *
      * @return void
      */
     public function executeFull()
@@ -105,6 +107,8 @@ class SourceItemIndexer
     }
 
     /**
+     * Execute the indexer for a single source item id
+     *
      * @param int $sourceItemId
      * @return void
      */
@@ -114,6 +118,8 @@ class SourceItemIndexer
     }
 
     /**
+     * Exec the indexer for the provided source item ids
+     *
      * @param array $sourceItemIds
      * @return void
      */
@@ -157,7 +163,7 @@ class SourceItemIndexer
     /**
      * Individually clear out source items from the index that no longer link to a source.
      * More performant than reindexing the entire stock list.
-     * 
+     *
      * @param array $sourceCodeSkuMap [source_code => [sku, sku, sku], ....]
      * @return void
      */
