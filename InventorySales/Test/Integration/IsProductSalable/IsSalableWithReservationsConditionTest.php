@@ -94,12 +94,12 @@ class IsSalableWithReservationsConditionTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @param string $sku
      * @param int $stockId
@@ -133,12 +133,12 @@ class IsSalableWithReservationsConditionTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @magentoDbIsolation disabled
      */
