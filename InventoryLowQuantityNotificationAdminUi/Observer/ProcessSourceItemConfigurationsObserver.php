@@ -95,11 +95,49 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
             ];
         } else {
             $sources = $controller->getRequest()->getParam('sources', []);
-            if (isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])) {
-                $assignedSources = $sources['assigned_sources'];
-            }
+            $stockData = $controller->getRequest()->getParam('product', [])['stock_data'] ?? [];
+            $assignedSources =
+                isset($sources['assigned_sources'])
+                && is_array($sources['assigned_sources'])
+                    ? $this->updateAssignedSources($sources['assigned_sources'], $stockData)
+                    : [];
         }
 
         $this->sourceItemsConfigurationProcessor->process($product->getSku(), $assignedSources);
+    }
+
+    /**
+     * Update assign source item quantity, status notify_stock_qty and notify_stock_qty_use_default
+     *
+     * @param array $assignedSources
+     * @param array $stockData
+     * @return array
+     */
+    private function updateAssignedSources(array $assignedSources, array $stockData): array
+    {
+        foreach ($assignedSources as $key => $source) {
+            $isSourceUpdated = false;
+            if (!key_exists('quantity', $source) && isset($source['qty'])) {
+                $source['quantity'] = (int) $source['qty'];
+                $isSourceUpdated = true;
+            }
+            if (!key_exists('status', $source) && isset($source['source_status'])) {
+                $source['status'] = (int) $source['source_status'];
+                $isSourceUpdated = true;
+            }
+            if ($source['notify_stock_qty'] == null) {
+                $source['notify_stock_qty'] = $stockData[StockItemConfigurationInterface::NOTIFY_STOCK_QTY] ?? 0;
+                $isSourceUpdated = true;
+            }
+            if ($source['notify_stock_qty_use_default'] == null) {
+                $source['notify_stock_qty_use_default'] =
+                    $stockData[StockItemConfigurationInterface::USE_CONFIG_NOTIFY_STOCK_QTY] ?? 1;
+                $isSourceUpdated = true;
+            }
+            if ($isSourceUpdated) {
+                $assignedSources[$key] = $source;
+            }
+        }
+        return $assignedSources;
     }
 }
