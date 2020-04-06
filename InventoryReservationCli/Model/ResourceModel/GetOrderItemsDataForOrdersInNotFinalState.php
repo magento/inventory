@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface;
 use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
 
 /**
@@ -26,15 +28,24 @@ class GetOrderItemsDataForOrdersInNotFinalState
     private $getCompleteOrderStateList;
 
     /**
+     * @var GetAllowedProductTypesForSourceItemManagementInterface|null
+     */
+    private $allowedProductTypesForSourceItemManagement;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
+     * @param GetAllowedProductTypesForSourceItemManagementInterface|null $allowedProductTypesForSourceItemManagement
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        GetCompleteOrderStateList $getCompleteOrderStateList
+        GetCompleteOrderStateList $getCompleteOrderStateList,
+        GetAllowedProductTypesForSourceItemManagementInterface $allowedProductTypesForSourceItemManagement = null
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getCompleteOrderStateList = $getCompleteOrderStateList;
+        $this->allowedProductTypesForSourceItemManagement = $allowedProductTypesForSourceItemManagement
+            ?: ObjectManager::getInstance()->get(GetAllowedProductTypesForSourceItemManagementInterface::class);
     }
 
     /**
@@ -68,7 +79,7 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 [
                     'main_table.entity_id',
                     'main_table.increment_id',
-                    'main_table.status'
+                    'main_table.status',
                 ]
             )
             ->join(
@@ -82,7 +93,7 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 ['item.sku', 'item.qty_ordered']
             )
             ->where('main_table.entity_id IN (?)', $entityIds)
-            ->where('item.product_type IN (?)', ['simple']);
+            ->where('item.product_type IN (?)', $this->allowedProductTypesForSourceItemManagement->execute());
         return $connection->fetchAll($query);
     }
 }
