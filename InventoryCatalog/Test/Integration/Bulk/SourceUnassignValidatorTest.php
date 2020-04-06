@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright :copyright: Magento, Inc. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
@@ -25,7 +25,7 @@ class SourceUnassignValidatorTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testSourceValidator()
     {

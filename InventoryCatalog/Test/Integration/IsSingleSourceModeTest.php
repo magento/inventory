@@ -39,7 +39,7 @@ class IsSingleSourceModeTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source.php
      */
     public function testExecuteWithTwoSourcesOneDisabled()
     {
@@ -51,7 +51,7 @@ class IsSingleSourceModeTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testExecuteWithEnabledSources()
     {
