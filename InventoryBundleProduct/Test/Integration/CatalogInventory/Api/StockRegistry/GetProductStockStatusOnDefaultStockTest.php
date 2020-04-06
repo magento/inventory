@@ -41,7 +41,7 @@ class GetProductStockStatusOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/default_stock_bundle_products.php
+     * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/default_stock_bundle_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku
@@ -57,7 +57,7 @@ class GetProductStockStatusOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/default_stock_bundle_products.php
+     * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/default_stock_bundle_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku

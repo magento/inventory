@@ -39,7 +39,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/create_incomplete_order_with_reservation.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_order_with_reservation.php
      * @throws \Magento\Framework\Validation\ValidationException
      */
     public function testIncompleteOrderWithExistingReservation(): void
@@ -49,7 +49,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/create_incomplete_order_without_reservation.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_order_without_reservation.php
      * @throws \Magento\Framework\Validation\ValidationException
      */
     public function testIncompleteOrderWithoutReservation(): void
@@ -61,7 +61,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     /**
      * Verify GetSalableQuantityInconsistencies::execute() won't throw error in case product sku is numeric.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/create_incomplete_order_without_reservation_numeric_sku.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_order_without_reservation_numeric_sku.php
      */
     public function testIncompleteOrderWithoutReservationNumericSku(): void
     {
@@ -70,7 +70,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/order_with_reservation.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/order_with_reservation.php
      * @throws \Magento\Framework\Validation\ValidationException
      */
     public function testCompletedOrderWithReservations(): void
@@ -81,7 +81,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
 
     /**
      * @magentoDataFixture Magento/Sales/_files/order_with_shipping_and_invoice.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/broken_reservation.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/broken_reservation.php
      * @throws \Magento\Framework\Validation\ValidationException
      */
     public function testCompletedOrderWithMissingReservations(): void
@@ -93,17 +93,17 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     /**
      * Verify inventory:reservations:list-inconsistencies will return correct qty for configurable product.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/source_items_configurable.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/create_quote_on_us_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/order_configurable_product.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/delete_reservations.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/create_quote_on_us_website.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/order_configurable_product.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php
      * @magentoDbIsolation disabled
      *
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/909285/scenarios/3528989

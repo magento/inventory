@@ -41,7 +41,7 @@ class GetStockStatusOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku
@@ -58,7 +58,7 @@ class GetStockStatusOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku
