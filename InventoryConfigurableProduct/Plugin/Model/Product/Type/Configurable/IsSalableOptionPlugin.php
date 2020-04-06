@@ -78,7 +78,10 @@ class IsSalableOptionPlugin
         foreach ($products as $key => $product) {
             foreach ($results as $result) {
                 if ($result->getSku() === $product->getSku() && !$result->isSalable()) {
-                    unset($products[$key]);
+                    $product->setIsSalable(0);
+                    if (!$this->stockConfiguration->isShowOutOfStock()) {
+                        unset($products[$key]);
+                    }
                 }
             }
         }

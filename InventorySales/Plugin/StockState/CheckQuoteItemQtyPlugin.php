@@ -142,12 +142,12 @@ class CheckQuoteItemQtyPlugin
                 'qty' => $qty,
             ]
         );
-        $result = $this->areProductsSalableForRequestedQty->execute([$request], (int)$stockId);
-        $result = current($result);
+        $productsSalableResult = $this->areProductsSalableForRequestedQty->execute([$request], (int)$stockId);
+        $productsSalableResult = current($productsSalableResult);
 
-        if ($result->isSalable() === false) {
+        if ($productsSalableResult->isSalable() === false) {
             /** @var ProductSalabilityError $error */
-            foreach ($result->getErrors() as $error) {
+            foreach ($productsSalableResult->getErrors() as $error) {
                 $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
                     ->setQuoteMessageIndex('qty');
             }

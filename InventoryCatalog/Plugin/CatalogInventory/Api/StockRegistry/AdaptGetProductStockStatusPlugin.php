@@ -86,6 +86,6 @@ class AdaptGetProductStockStatusPlugin
         $result = $this->areProductsSalable->execute([$sku], $stockId);
         $result = current($result);
 
-        return (int)$result;
+        return (int)$result->isSalable();
     }
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryGraphQl\Model\Resolver;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
@@ -43,7 +44,8 @@ class StockStatusProvider implements ResolverInterface
         AreProductsSalableInterface $areProductsSalable = null
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
-        $this->areProductsSalable = $areProductsSalable;
+        $this->areProductsSalable = $areProductsSalable ?: ObjectManager::getInstance()
+            ->get(AreProductsSalableInterface::class);
     }
 
     /**
