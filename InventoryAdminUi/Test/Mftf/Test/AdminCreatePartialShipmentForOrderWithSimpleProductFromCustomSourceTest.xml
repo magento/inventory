@@ -69,7 +69,7 @@
             <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone"/>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
             <!-- Perform reindex and flush cache -->
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>

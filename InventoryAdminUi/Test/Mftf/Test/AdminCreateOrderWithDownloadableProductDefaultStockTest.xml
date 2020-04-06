@@ -95,7 +95,7 @@
         <actionGroup ref="AddDownloadableProductLinkActionGroup" stepKey="addDownloadableLink">
             <argument name="link" value="downloadableLink"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedDownloadableProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedDownloadableProduct"/>
 
         <comment userInput="Create order with downloadable product from admin area." stepKey="createOrderWithDownloadableProductComment"/>
         <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">

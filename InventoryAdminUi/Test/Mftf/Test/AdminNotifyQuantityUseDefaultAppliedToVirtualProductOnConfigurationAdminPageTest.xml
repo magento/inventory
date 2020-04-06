@@ -58,7 +58,7 @@
             <click selector="{{AdminGridRow.editByValue($$createSource1.source[source_code]$$)}}" stepKey="editCustomSource1"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableCustomSource1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveDisabledCustomSource1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveDisabledCustomSource1"/>
 
             <comment userInput=" Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment1"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockGridPage1"/>

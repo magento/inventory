@@ -39,7 +39,7 @@
                 <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
                 <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
             <!--Add simple product to bundle and set bundle product to 'Out of Stock'.-->
             <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
             <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>

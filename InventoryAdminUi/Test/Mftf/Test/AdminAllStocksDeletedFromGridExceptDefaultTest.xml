@@ -51,7 +51,7 @@
         <waitForElementVisible selector="{{AdminGridConfirmActionSection.title}}" stepKey="waitForConfirmModal"/>
         <click selector="{{AdminGridConfirmActionSection.ok}}" stepKey="confirmStocksDelete"/>
 
-        <see selector="{{AdminMessagesSection.successMessage}}" userInput="You deleted 3 Stock(s)." stepKey="seeSuccessDeleteMessage"/>
-        <see selector="{{AdminMessagesSection.errorMessage}}" userInput="[ID: 1] Default Stock could not be deleted." stepKey="seeErrorDeleteMessage"/>
+        <see selector="{{AdminMessagesSection.success}}" userInput="You deleted 3 Stock(s)." stepKey="seeSuccessDeleteMessage"/>
+        <see selector="{{AdminMessagesSection.error}}" userInput="[ID: 1] Default Stock could not be deleted." stepKey="seeErrorDeleteMessage"/>
     </test>
 </tests>

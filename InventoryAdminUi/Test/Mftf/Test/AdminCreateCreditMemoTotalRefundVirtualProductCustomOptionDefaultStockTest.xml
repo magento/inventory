@@ -53,7 +53,7 @@
             <argument name="firstOption" value="ProductOptionValueDropdown1"/>
             <argument name="secondOption" value="ProductOptionValueDropdown2"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         <!--Login To storefront as Customer-->
         <comment userInput="Login to storefront as customer." stepKey="loginToStorefrontComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">

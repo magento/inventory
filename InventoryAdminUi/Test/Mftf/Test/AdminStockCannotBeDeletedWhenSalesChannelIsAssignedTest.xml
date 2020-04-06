@@ -73,7 +73,7 @@
 
         <unselectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite1.name}}" stepKey="unSelectNewWebsite1"/>
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite1.name}}" stepKey="dontSeeBasicWebbSiteSelected1"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <dontSee userInput="{{BasicMsiWebsite1.name}}" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="dontSeeWebsiteInTheGrid1"/>
 
@@ -86,7 +86,7 @@
 
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite1.name}}" stepKey="unSelectNewWebsite2"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad4"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose2"/>
 
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>

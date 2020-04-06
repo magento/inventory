@@ -87,7 +87,7 @@
 
         <fillField selector="input[name='sources[assigned_sources][0][quantity]']" userInput="100" stepKey="fillSourceQtyField1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProduct"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

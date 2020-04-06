@@ -53,7 +53,7 @@
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct">
             <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProduct"/>
         <!--Quick search product by name.-->
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToStorefront"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="searchProductByName">

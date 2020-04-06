@@ -74,7 +74,7 @@
         <fillField userInput="{{downloadableLink.file}}" selector="{{AdminProductDownloadableSection.addLinkFileUrlInput('0')}}" stepKey="fillDownloadableLinkFileUrl2"/>
         <attachFile userInput="{{downloadableLink.sample}}" selector="{{AdminProductDownloadableSection.addLinkSampleUploadFile('0')}}" stepKey="attachDownloadableLinkUploadSample2"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProduct"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>

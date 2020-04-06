@@ -42,7 +42,7 @@
             <actionGroup ref="AdminChangeOutOfStockThresholdOnProductEditPageActionGroup" stepKey="setOutOfStockThreshold">
                 <argument name="threshold" value="100"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveEditedSimpleProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveEditedSimpleProduct"/>
         </before>
 
         <after>

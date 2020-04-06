@@ -62,7 +62,7 @@
         <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="100" stepKey="fillProductQty1"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToHomePage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>

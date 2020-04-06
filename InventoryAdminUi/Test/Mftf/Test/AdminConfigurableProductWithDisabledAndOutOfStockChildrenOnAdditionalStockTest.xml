@@ -104,7 +104,7 @@
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editWhiteConfigurableVariation"/>
         <click selector="{{AdminProductFormSection.enableProductLabel}}" stepKey="disableProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProductForm"/>
         <!--Set 'Out of Stock' red configurable option.-->
         <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterRedConfigurableVariation">
             <argument name="product" value="colorProductAttribute2"/>

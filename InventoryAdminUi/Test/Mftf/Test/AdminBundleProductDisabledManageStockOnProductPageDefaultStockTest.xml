@@ -80,7 +80,7 @@
         <uncheckOption selector="{{AdminProductFormAdvancedInventorySection.useConfigSettings}}" stepKey="uncheckConfigSetting"/>
         <selectOption selector="{{AdminProductFormAdvancedInventorySection.manageStock}}"  userInput="No" stepKey="clickOnManageStock"/>
         <click selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" stepKey="clickOnDoneButton"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseBundleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseBundleProduct"/>
         <!--Verify product is visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageToVerifyBundleProduct"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyBundleProduct"/>

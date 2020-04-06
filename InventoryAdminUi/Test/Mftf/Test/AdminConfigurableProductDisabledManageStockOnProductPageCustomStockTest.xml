@@ -162,7 +162,7 @@
         <uncheckOption selector="{{AdminAdvancedInventorySection.manageStockUseDefault}}" stepKey="uncheckManageStockSystemValueForWhiteConfigurableVariation"/>
         <selectOption selector="{{AdminAdvancedInventorySection.manageStock}}" userInput="No" stepKey="disableManageStockForWhiteConfigurableVariation"/>
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="doneWithDisableManageStockForWhiteConfigurableVariation"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseDisableMangeStockForWhiteConfigurableVariation"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseDisableMangeStockForWhiteConfigurableVariation"/>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGridToDisableManageStockForRedConfigurableVariation"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoadToFilterRedConfigurableVariation"/>
@@ -174,7 +174,7 @@
         <uncheckOption selector="{{AdminAdvancedInventorySection.manageStockUseDefault}}" stepKey="uncheckManageStockSystemValueForRedConfigurableVariation"/>
         <selectOption selector="{{AdminAdvancedInventorySection.manageStock}}" userInput="No" stepKey="disableManageStockForRedConfigurableVariation"/>
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="doneWithDisableManageStockForRedConfigurableVariation"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseDisableMangeStockForRedConfigurableVariation"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseDisableMangeStockForRedConfigurableVariation"/>
 
         <comment userInput="Check, configurable product back to category page and has 'In Stock' status on product view page." stepKey="checkConfigurableProductBackOnStorefront"/>
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsBackToCategoryPage">

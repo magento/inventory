@@ -58,7 +58,7 @@
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct">
             <argument name="sourceCode" value="$source.source[source_code]$"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct"/>
         <!--Create order.-->
         <actionGroup ref="CreateOrderActionGroup" stepKey="createOrder">
             <argument name="product" value="$product$"/>

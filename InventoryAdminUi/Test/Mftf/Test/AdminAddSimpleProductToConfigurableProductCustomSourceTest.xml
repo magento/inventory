@@ -83,7 +83,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
         <!--Set 'Color' attribute value.-->
         <selectOption selector="//select[@name='product[color]']" userInput="{{colorProductAttribute1.name}}" stepKey="selectColorAttributeForSimpleProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
         <!--Add simple product to configurable product.-->
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="editConfigurableProduct"/>
         <click selector="{{AdminProductFormConfigurationsSection.actionsBtn('1')}}" stepKey="clickToExpandActions"/>
@@ -96,7 +96,7 @@
         <checkOption selector="{{AdminDataGridTableSection.rowCheckbox('1')}}" stepKey="selectProduct"/>
         <click selector="(//button[@class='action-primary'])[7]" stepKey="doneSelectingProducts"/>
         <waitForPageLoad stepKey="waitForSimpleProductAssignment"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseConfigurableProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseConfigurableProduct"/>
         <!--Verify configurable product on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableProductIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>

@@ -76,7 +76,7 @@
             <actionGroup ref="AddDownloadableProductLinkActionGroup" stepKey="addDownloadableLink">
                 <argument name="link" value="downloadableLink"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedDownloadableProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedDownloadableProduct"/>
 
             <comment userInput="Assign created source to stock" stepKey="assignSourceToStock"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignCreatedSourceToCreatedStock"/>

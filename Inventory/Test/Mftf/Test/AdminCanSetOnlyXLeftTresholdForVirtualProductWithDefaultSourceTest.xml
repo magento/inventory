@@ -77,7 +77,7 @@
                                     parameterArray="[$$createCategory1.name$$]" requiredAction="true"
                                     stepKey="searchAndSelectCategory"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 5" stepKey="setMinQtyToDefaultValue1"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex1"/>

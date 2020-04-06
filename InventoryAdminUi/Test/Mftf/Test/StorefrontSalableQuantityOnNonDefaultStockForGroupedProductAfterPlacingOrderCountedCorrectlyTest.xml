@@ -69,7 +69,7 @@
             <argument name="qty" value="10" />
         </actionGroup>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveVirtualProduct"/>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid1"/>
         <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterProduct2">

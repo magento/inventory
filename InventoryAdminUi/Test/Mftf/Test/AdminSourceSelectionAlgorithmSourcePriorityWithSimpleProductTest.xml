@@ -110,7 +110,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource4QtyField"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource5QtyField"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleMsiProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleMsiProduct"/>
         <waitForPageLoad stepKey="waitForSimpleMsiProductGidPageLoad"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsForSimpleMsiProduct">
@@ -177,7 +177,7 @@
 
         <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeOrderStatus"/>
 
-        <actionGroup ref="seeProductInShipmentItems" stepKey="checkProductInShipment">
+        <actionGroup ref="SeeProductInShipmentItemsActionGroup" stepKey="checkProductInShipment">
             <argument name="product" value="SimpleMsiProduct"/>
         </actionGroup>
 

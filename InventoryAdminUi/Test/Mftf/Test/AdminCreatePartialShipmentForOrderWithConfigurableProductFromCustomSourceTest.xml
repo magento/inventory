@@ -127,7 +127,7 @@
             <see selector="{{AdminConfigurableProductFormSection.currentVariationsQuantityCells}}" userInput="100"
                  stepKey="checkQtyIsCorrectForCustomSource"/>
 
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
         </before>
         <after>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">

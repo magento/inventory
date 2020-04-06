@@ -45,7 +45,7 @@
             <click selector="{{AdminGridRow.editByValue($$createCustomSource.source[source_code]$$)}}" stepKey="clickOnEditCustomSource"/>
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisable"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSource"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSource"/>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
