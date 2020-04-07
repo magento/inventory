@@ -60,7 +60,6 @@ class GetAllocatedSourcesForOrderTest extends \PHPUnit\Framework\TestCase
         $orders = $this->orderRepository->getList($searchCriteria)->getItems();
         /** @var OrderInterface|null $order */
         $order = reset($orders);
-
         if ($order->getId()) {
             $expected = ['Default Source'];
             $result = $this->model->execute((int)$order->getId());
