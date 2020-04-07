@@ -6,7 +6,8 @@
         "magento/framework": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-configuration-api": "*"
+        "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-catalog-frontend-ui": "*"
     },
     "type": "magento2-module",
     "license": [
