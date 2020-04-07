@@ -35,6 +35,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <!--Assign additional source to simple product.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <waitForPageLoad time="30" stepKey="waitForProductEditPageLoad"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
@@ -50,8 +51,9 @@
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteProduct">
-                <argument name="productName" value="$product.name$"/>
+            <actionGroup ref="DeleteProductByNameActionGroup" stepKey="deleteProduct">
+                <argument name="name" value="$product.name$"/>
+                <argument name="sku" value="{{SimpleProduct.sku}}"/>
             </actionGroup>
             <!--Assign Default Stock to Main Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">

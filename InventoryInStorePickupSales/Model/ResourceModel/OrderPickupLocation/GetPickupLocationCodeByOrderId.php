@@ -40,8 +40,8 @@ class GetPickupLocationCodeByOrderId
      */
     public function execute(int $orderId): ?string
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_location_order');
+        $connection = $this->connection->getConnection('sales');
+        $table = $this->connection->getTableName('inventory_pickup_location_order', 'sales');
 
         $columns = [PickupLocationInterface::PICKUP_LOCATION_CODE => PickupLocationInterface::PICKUP_LOCATION_CODE];
         $select = $connection->select()

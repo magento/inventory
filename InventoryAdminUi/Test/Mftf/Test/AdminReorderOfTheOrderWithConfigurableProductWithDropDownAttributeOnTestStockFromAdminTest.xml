@@ -37,8 +37,7 @@
         <remove keyForRemoval="createConfigurationsWithCustomStock"/>
         <!-- Configurable Product with drop-down attribute created and its variables assigned to Test Stock in admin -->
         <actionGroup ref="createConfigurationsForTwoAttributeCustomSource"
-                     stepKey="createConfigurationsWithCustomStock"
-                     before="saveConfigurableProduct">
+                     stepKey="createConfigurationsWithCustomStock">
             <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
             <argument name="sourceName" value="$$createSource.source[name]$$"/>

@@ -108,11 +108,11 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         $this->requestValidator = $requestValidator;
         $this->getFreePackages = $getFreePackages;
         $this->getShippingPriceRequest = $getShippingPriceRequest;
+        $this->getCarrierTitle = $getCarrierTitle;
 
         $this->_code = self::CARRIER_CODE;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
-        $this->getCarrierTitle = $getCarrierTitle;
     }
 
     /**
@@ -124,8 +124,6 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         $validationResult = $this->requestValidator->validate($request);
 
         if (!$validationResult->isValid()) {
-            $this->debug($validationResult->getErrors());
-
             return $this->createErrorResult();
         }
 
