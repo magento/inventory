@@ -55,7 +55,7 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToProduct">
                 <argument name="sourceCode" value="$$customSource.source[name]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillSourceQtyField"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillSourceQtyField"/>
 
             <!--Set advanced inventory config for Out-of-Stock Threshold and backorders-->
             <comment userInput="Config advanced inventory" stepKey="configAdvancedInventoryComment"/>

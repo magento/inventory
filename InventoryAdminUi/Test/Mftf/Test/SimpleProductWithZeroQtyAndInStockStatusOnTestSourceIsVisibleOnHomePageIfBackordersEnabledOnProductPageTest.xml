@@ -40,7 +40,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" after="openProductEditPage1">
             <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="0" stepKey="setProductQuantity" after="assignTestSourceToCreatedProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="0" stepKey="setProductQuantity" after="assignTestSourceToCreatedProduct"/>
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders1" after="setProductQuantity"/>
         <click selector="{{AdminProductFormSection.save}}" stepKey="clickSaveButton1" after="enableBackorders1"/>
         <waitForPageLoad stepKey="waitForSimpleProductSaved1" after="clickSaveButton1"/>

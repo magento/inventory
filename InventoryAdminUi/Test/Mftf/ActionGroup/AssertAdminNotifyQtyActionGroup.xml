@@ -14,7 +14,7 @@
             <argument name="qty" type="string" defaultValue="1"/>
             <argument name="rowIndex" type="string" defaultValue="0"/>
         </arguments>
-        <grabValueFrom selector="{{AdminProductSourcesGrid.rowNotifyQuantity(rowIndex)}}" stepKey="savedQty"/>
+        <grabValueFrom selector="{{AdminProductSourcesGridSection.rowNotifyQuantity(rowIndex)}}" stepKey="savedQty"/>
         <assertEquals stepKey="assertQtySame">
             <expectedResult type="string">{{qty}}</expectedResult>
             <actualResult type="variable">$savedQty</actualResult>

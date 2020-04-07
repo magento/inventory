@@ -46,7 +46,7 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock"/>
+            <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
         </before>
 
@@ -79,8 +79,8 @@
 
         <!--Set Product to In Stock.-->
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="In Stock" stepKey="setProductToInStockStock"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="In Stock" stepKey="setProductToInStockStock"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
 
         <!--Verify product is visible on storefront page.-->

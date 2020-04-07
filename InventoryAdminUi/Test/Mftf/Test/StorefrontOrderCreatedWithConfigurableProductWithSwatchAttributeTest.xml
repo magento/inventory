@@ -95,7 +95,7 @@
 
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters1"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults1">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource1"/>
@@ -173,9 +173,9 @@
         <see selector="{{AdminGridRow.rowOne}}" userInput="{{MsiCustomer1.lastname}}" stepKey="seeLastName1"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="Pending" stepKey="seeFirstName3"/>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInput1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="visualSwatchColor1.name"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="goToProductGridFilterResultsByInput1">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="visualSwatchColor1.name"/>
         </actionGroup>
 
         <see selector="{{AdminGridRow.rowOne}}" userInput="$$createStock1.stock[sku]$$" stepKey="seeUpdatedQuantity1"/>

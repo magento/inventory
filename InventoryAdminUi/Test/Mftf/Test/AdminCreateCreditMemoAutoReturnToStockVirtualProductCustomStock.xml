@@ -43,7 +43,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" after="openProductEditPage">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity" after="assignTestSourceToCreatedProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity" after="assignTestSourceToCreatedProduct"/>
         <!--Remove check 'Return To Stock' on credit memo page.-->
         <remove keyForRemoval="returnToStockCheckbox"/>
         <!--Verify product quantity.-->

@@ -43,7 +43,7 @@
 
         <!--Set product qty..-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{minimalProductQty.value}}" stepKey="setDefaultSourceQty"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{minimalProductQty.value}}" stepKey="setDefaultSourceQty"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
@@ -65,7 +65,7 @@
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
         <!--Verify product default stock status.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="navigateToProductEditPage"/>
-        <see selector="{{AdminProductSourcesGrid.rowStatusBySourceCode(_defaultSource.source_code)}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyStockStatus"/>
+        <see selector="{{AdminProductSourcesGridSection.rowStatusBySourceCode(_defaultSource.source_code)}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyStockStatus"/>
         <!--Verify product is not visible on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
         <see selector="{{StorefrontCategoryMainSection.emptyProductMessage}}" userInput="We can't find products matching the selection." stepKey="seeEmptyProductMessage"/>

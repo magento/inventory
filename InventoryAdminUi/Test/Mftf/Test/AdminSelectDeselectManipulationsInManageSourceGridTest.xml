@@ -58,83 +58,83 @@
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>
-        <click selector="{{AdminManageSourcesGridControls.multicheckDropdown}}" stepKey="openDropdownToSelectAll"/>
-        <click selector="{{AdminManageSourcesGridControls.multicheckOption('Select All')}}" stepKey="selectAll"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('0')}}" stepKey="checkSourceSelectedOnFirstPage1"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('1')}}" stepKey="checkSourceSelectedOnFirstPage2"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('5')}}" stepKey="checkSourceSelectedOnFirstPage3"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('3')}}" stepKey="checkSourceSelectedOnFirstPage4"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('4')}}" stepKey="checkSourceSelectedOnFirstPage5"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('5')}}" stepKey="checkSourceSelectedOnFirstPage6"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('6')}}" stepKey="checkSourceSelectedOnFirstPage7"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('7')}}" stepKey="checkSourceSelectedOnFirstPage8"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('8')}}" stepKey="checkSourceSelectedOnFirstPage9"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('9')}}" stepKey="checkSourceSelectedOnFirstPage10"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('10')}}" stepKey="checkSourceSelectedOnFirstPage11"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('11')}}" stepKey="checkSourceSelectedOnFirstPage12"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('12')}}" stepKey="checkSourceSelectedOnFirstPage13"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('13')}}" stepKey="checkSourceSelectedOnFirstPage14"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('17')}}" stepKey="checkSourceSelectedOnFirstPage15"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('15')}}" stepKey="checkSourceSelectedOnFirstPage16"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('16')}}" stepKey="checkSourceSelectedOnFirstPage17"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('17')}}" stepKey="checkSourceSelectedOnFirstPage18"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('18')}}" stepKey="checkSourceSelectedOnFirstPage19"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('19')}}" stepKey="checkSourceSelectedOnFirstPage20"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.multicheckDropdown}}" stepKey="openDropdownToSelectAll"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.multicheckOption('Select All')}}" stepKey="selectAll"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('0')}}" stepKey="checkSourceSelectedOnFirstPage1"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('1')}}" stepKey="checkSourceSelectedOnFirstPage2"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('5')}}" stepKey="checkSourceSelectedOnFirstPage3"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('3')}}" stepKey="checkSourceSelectedOnFirstPage4"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('4')}}" stepKey="checkSourceSelectedOnFirstPage5"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('5')}}" stepKey="checkSourceSelectedOnFirstPage6"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('6')}}" stepKey="checkSourceSelectedOnFirstPage7"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('7')}}" stepKey="checkSourceSelectedOnFirstPage8"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('8')}}" stepKey="checkSourceSelectedOnFirstPage9"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('9')}}" stepKey="checkSourceSelectedOnFirstPage10"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('10')}}" stepKey="checkSourceSelectedOnFirstPage11"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('11')}}" stepKey="checkSourceSelectedOnFirstPage12"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('12')}}" stepKey="checkSourceSelectedOnFirstPage13"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('13')}}" stepKey="checkSourceSelectedOnFirstPage14"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('17')}}" stepKey="checkSourceSelectedOnFirstPage15"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('15')}}" stepKey="checkSourceSelectedOnFirstPage16"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('16')}}" stepKey="checkSourceSelectedOnFirstPage17"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('17')}}" stepKey="checkSourceSelectedOnFirstPage18"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('18')}}" stepKey="checkSourceSelectedOnFirstPage19"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('19')}}" stepKey="checkSourceSelectedOnFirstPage20"/>
         <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="goToNextPage"/>
         <waitForPageLoad time="30" stepKey="waitNextGridPageOpened"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('0')}}" stepKey="checkSourceSelectedOnSecondPage1"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('1')}}" stepKey="checkSourceSelectedOnSecondPage2"/>
-        <click selector="{{AdminManageSourcesGridControls.multicheckDropdown}}" stepKey="openDropdownToDeselectAll"/>
-        <click selector="{{AdminManageSourcesGridControls.multicheckOption('Deselect All')}}" stepKey="deselectAll"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('0')}}" stepKey="checkSourceNotSelectedOnSecondPage1"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('1')}}" stepKey="checkSourceNotSelectedOnSecondPage2"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('0')}}" stepKey="checkSourceSelectedOnSecondPage1"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('1')}}" stepKey="checkSourceSelectedOnSecondPage2"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.multicheckDropdown}}" stepKey="openDropdownToDeselectAll"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.multicheckOption('Deselect All')}}" stepKey="deselectAll"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('0')}}" stepKey="checkSourceNotSelectedOnSecondPage1"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('1')}}" stepKey="checkSourceNotSelectedOnSecondPage2"/>
         <click selector="{{AdminDataGridPaginationSection.previousPage}}" stepKey="goToPreviousPage"/>
         <waitForPageLoad time="30" stepKey="waitPrevGridPageOpened"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('0')}}" stepKey="checkSourceSNotelectedOnFirstPage1"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('1')}}" stepKey="checkSourceSNotelectedOnFirstPage2"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('2')}}" stepKey="checkSourceSNotelectedOnFirstPage3"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('3')}}" stepKey="checkSourceSNotelectedOnFirstPage4"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('4')}}" stepKey="checkSourceSNotelectedOnFirstPage5"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('5')}}" stepKey="checkSourceSNotelectedOnFirstPage6"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('6')}}" stepKey="checkSourceSNotelectedOnFirstPage7"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('7')}}" stepKey="checkSourceSNotelectedOnFirstPage8"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('8')}}" stepKey="checkSourceSNotelectedOnFirstPage9"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('9')}}" stepKey="checkSourceNotSelectedOnFirstPage10"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('10')}}" stepKey="checkSourceNotSelectedOnFirstPage11"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('11')}}" stepKey="checkSourceNotSelectedOnFirstPage12"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('12')}}" stepKey="checkSourceNotSelectedOnFirstPage13"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('13')}}" stepKey="checkSourceNotSelectedOnFirstPage14"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('14')}}" stepKey="checkSourceNotSelectedOnFirstPage15"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('15')}}" stepKey="checkSourceNotSelectedOnFirstPage16"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('16')}}" stepKey="checkSourceNotSelectedOnFirstPage17"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('17')}}" stepKey="checkSourceNotSelectedOnFirstPage18"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('18')}}" stepKey="checkSourceNotSelectedOnFirstPage19"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('19')}}" stepKey="checkSourceNotSelectedOnFirstPage20"/>
-        <click selector="{{AdminManageSourcesGridControls.multicheckDropdown}}" stepKey="openDropdownToSelectAllOnPage"/>
-        <click selector="{{AdminManageSourcesGridControls.multicheckOption('Select All on This Page')}}" stepKey="selectAllOnPage"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('0')}}" stepKey="checkSourceSelectedOnFirstPage21"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('1')}}" stepKey="checkSourceSelectedOnFirstPage22"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('2')}}" stepKey="checkSourceSelectedOnFirstPage23"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('3')}}" stepKey="checkSourceSelectedOnFirstPage24"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('4')}}" stepKey="checkSourceSelectedOnFirstPage25"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('5')}}" stepKey="checkSourceSelectedOnFirstPage26"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('6')}}" stepKey="checkSourceSelectedOnFirstPage27"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('7')}}" stepKey="checkSourceSelectedOnFirstPage28"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('8')}}" stepKey="checkSourceSelectedOnFirstPage29"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('9')}}" stepKey="checkSourceSelectedOnFirstPage30"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('10')}}" stepKey="checkSourceSelectedOnFirstPage31"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('11')}}" stepKey="checkSourceSelectedOnFirstPage32"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('12')}}" stepKey="checkSourceSelectedOnFirstPage33"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('13')}}" stepKey="checkSourceSelectedOnFirstPage34"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('14')}}" stepKey="checkSourceSelectedOnFirstPage35"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('15')}}" stepKey="checkSourceSelectedOnFirstPage36"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('16')}}" stepKey="checkSourceSelectedOnFirstPage37"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('17')}}" stepKey="checkSourceSelectedOnFirstPage38"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('18')}}" stepKey="checkSourceSelectedOnFirstPage39"/>
-        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('19')}}" stepKey="checkSourceSelectedOnFirstPage40"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('0')}}" stepKey="checkSourceSNotelectedOnFirstPage1"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('1')}}" stepKey="checkSourceSNotelectedOnFirstPage2"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('2')}}" stepKey="checkSourceSNotelectedOnFirstPage3"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('3')}}" stepKey="checkSourceSNotelectedOnFirstPage4"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('4')}}" stepKey="checkSourceSNotelectedOnFirstPage5"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('5')}}" stepKey="checkSourceSNotelectedOnFirstPage6"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('6')}}" stepKey="checkSourceSNotelectedOnFirstPage7"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('7')}}" stepKey="checkSourceSNotelectedOnFirstPage8"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('8')}}" stepKey="checkSourceSNotelectedOnFirstPage9"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('9')}}" stepKey="checkSourceNotSelectedOnFirstPage10"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('10')}}" stepKey="checkSourceNotSelectedOnFirstPage11"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('11')}}" stepKey="checkSourceNotSelectedOnFirstPage12"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('12')}}" stepKey="checkSourceNotSelectedOnFirstPage13"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('13')}}" stepKey="checkSourceNotSelectedOnFirstPage14"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('14')}}" stepKey="checkSourceNotSelectedOnFirstPage15"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('15')}}" stepKey="checkSourceNotSelectedOnFirstPage16"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('16')}}" stepKey="checkSourceNotSelectedOnFirstPage17"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('17')}}" stepKey="checkSourceNotSelectedOnFirstPage18"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('18')}}" stepKey="checkSourceNotSelectedOnFirstPage19"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('19')}}" stepKey="checkSourceNotSelectedOnFirstPage20"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.multicheckDropdown}}" stepKey="openDropdownToSelectAllOnPage"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.multicheckOption('Select All on This Page')}}" stepKey="selectAllOnPage"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('0')}}" stepKey="checkSourceSelectedOnFirstPage21"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('1')}}" stepKey="checkSourceSelectedOnFirstPage22"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('2')}}" stepKey="checkSourceSelectedOnFirstPage23"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('3')}}" stepKey="checkSourceSelectedOnFirstPage24"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('4')}}" stepKey="checkSourceSelectedOnFirstPage25"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('5')}}" stepKey="checkSourceSelectedOnFirstPage26"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('6')}}" stepKey="checkSourceSelectedOnFirstPage27"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('7')}}" stepKey="checkSourceSelectedOnFirstPage28"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('8')}}" stepKey="checkSourceSelectedOnFirstPage29"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('9')}}" stepKey="checkSourceSelectedOnFirstPage30"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('10')}}" stepKey="checkSourceSelectedOnFirstPage31"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('11')}}" stepKey="checkSourceSelectedOnFirstPage32"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('12')}}" stepKey="checkSourceSelectedOnFirstPage33"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('13')}}" stepKey="checkSourceSelectedOnFirstPage34"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('14')}}" stepKey="checkSourceSelectedOnFirstPage35"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('15')}}" stepKey="checkSourceSelectedOnFirstPage36"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('16')}}" stepKey="checkSourceSelectedOnFirstPage37"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('17')}}" stepKey="checkSourceSelectedOnFirstPage38"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('18')}}" stepKey="checkSourceSelectedOnFirstPage39"/>
+        <seeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('19')}}" stepKey="checkSourceSelectedOnFirstPage40"/>
         <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="openNextPage"/>
         <waitForPageLoad time="30" stepKey="waitNextPageOpened"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('0')}}" stepKey="checkSourceNotSelectedOnSecondPage3"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBody.idSelectedCheckbox('1')}}" stepKey="checkSourceNotSelectedOnSecondPage4"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('0')}}" stepKey="checkSourceNotSelectedOnSecondPage3"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminManageSourceGridBodySection.idSelectedCheckbox('1')}}" stepKey="checkSourceNotSelectedOnSecondPage4"/>
     </test>
 </tests>

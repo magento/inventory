@@ -82,7 +82,7 @@
 
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters1"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults1">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource1"/>

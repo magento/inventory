@@ -43,7 +43,7 @@
                 <argument name="keyword" value="$$createSource1.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="selectCustomSourceAsAssignment1"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneAssignCustomSourceToCustomStock1"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneAssignCustomSourceToCustomStock1"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock1"/>
         </before>
 
@@ -52,7 +52,7 @@
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceGridPage1"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourceFilters1"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSourcesByCustomSourceName1">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="{{_minimalSource.source_code}}"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$createSource1.source[source_code]$$)}}" stepKey="editCustomSource1"/>
@@ -97,15 +97,15 @@
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSources1"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSourcesByCustomSourceCode1">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$createSource1.source[source_code]$$)}}" stepKey="assignCustomSourceToProduct1"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="doneWithCustomSourceAssignment1"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[name]$$" stepKey="checkCustomSourceName1"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="$$createSource1.source[name]$$" stepKey="checkCustomSourceName1"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{VirtualMsiProduct.quantity}}" stepKey="fillSourceQty1"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{VirtualMsiProduct.quantity}}" stepKey="fillSourceQty1"/>
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedProduct1"/>
 
@@ -119,12 +119,12 @@
             <argument name="value" value="{{VirtualMsiProduct.sku}}"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editCreatedVirtualProduct1"/>
-        <checkOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="setNotifyForQuantityBelowForCustomSourceToUseSystemValue1"/>
+        <checkOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="setNotifyForQuantityBelowForCustomSourceToUseSystemValue1"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveModifiedProduct1"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductModifiedSuccessfullyMessage1"/>
 
         <comment userInput="Check product 'Notify for Quantity Below' use system config value." stepKey="verifyNotifyForQtyBelowComment1"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyForQtyBelowUseSystemValueChecked1"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="5" stepKey="verifyNotifyFroQtyBelowUseSystemValueOfFive1"/>
+        <seeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyForQtyBelowUseSystemValueChecked1"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="5" stepKey="verifyNotifyFroQtyBelowUseSystemValueOfFive1"/>
     </test>
 </tests>

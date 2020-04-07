@@ -32,8 +32,8 @@
             </actionGroup>
             <!--Set product quantity and set to out of stock.-->
             <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductPage"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
-            <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="setProductToOutOfStock"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
+            <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="setProductToOutOfStock"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
         </before>
         <after>

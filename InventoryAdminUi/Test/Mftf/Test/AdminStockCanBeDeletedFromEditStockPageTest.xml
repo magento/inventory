@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <createData entity="BasicMsiStock1" stepKey="createStock1"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
@@ -27,8 +27,8 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
-        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">
-            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup" stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
             <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
 

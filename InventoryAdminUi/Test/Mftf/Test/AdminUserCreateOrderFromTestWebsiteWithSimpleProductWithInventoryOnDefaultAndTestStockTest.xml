@@ -54,9 +54,9 @@
                 <argument name="storeView" value="{{customStore.name}}"/>
             </actionGroup>
             <!--Assign source to stock-->
-            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
             </actionGroup>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{NewWebSiteData.name}}"
@@ -91,10 +91,10 @@
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct"
                      stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="10" stepKey="fillSourceQuantityField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="10" stepKey="fillSourceQuantityField"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFourthProductForm"/>
 
         <comment userInput="Create order with simple product from admin area."

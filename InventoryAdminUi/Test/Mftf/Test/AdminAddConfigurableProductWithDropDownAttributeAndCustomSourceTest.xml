@@ -41,7 +41,7 @@
                 <argument name="keyword" value="$$customSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$customSource.source[name]$$)}}" stepKey="selectCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneCustomSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
         </before>
         <after>

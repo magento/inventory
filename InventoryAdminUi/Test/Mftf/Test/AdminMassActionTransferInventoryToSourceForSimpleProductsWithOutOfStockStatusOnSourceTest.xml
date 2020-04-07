@@ -70,7 +70,7 @@
                 <argument name="keyword" value="$$createSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSource.source[name]$$)}}" stepKey="selectCreatedSourceForCreatedStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneCreatedSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneCreatedSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCreatedStock"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignMainWebsiteChannelToStockComment"/>
@@ -109,7 +109,7 @@
 
         <click selector="{{AdminGridRow.editByValue($$createFirstSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFirstProductForSetOutOfStockStatus"/>
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoadForSetOutOfStockStatus"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToFirstSimpleProductOutOfStockStatus"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToFirstSimpleProductOutOfStockStatus"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFirstProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProductForSetOutOfStockStatus"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSecondSimpleProductBySkuForSetOutOfStockStatus">
@@ -118,7 +118,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSecondSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSecondProductForSetOutOfStockStatus"/>
         <waitForPageLoad time="30" stepKey="waitForSecondProductPageLoadForSetOutOfStockStatus"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToSecondSimpleProductOutOfStockStatus"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToSecondSimpleProductOutOfStockStatus"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSecondProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForThirdProductForSetOutOfStockStatus"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findThirdSimpleProductBySkuForSetOutOfStockStatus">
@@ -127,7 +127,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createThirdSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditThirdProductForSetOutOfStockStatus"/>
         <waitForPageLoad time="30" stepKey="waitForThirdProductPageLoadForSetOutOfStockStatus"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToThirdSimpleProductOutOfStockStatus"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToThirdSimpleProductOutOfStockStatus"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseThirdProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForFourthProductForSetOutOfStockStatus"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findFourthSimpleProductBySkuForSetOutOfStockStatus">
@@ -136,7 +136,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFourthSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFourthProductForSetOutOfStockStatus"/>
         <waitForPageLoad time="30" stepKey="waitForFourthProductPageLoadForSetOutOfStockStatus"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToFourthSimpleProductOutOfStockStatus"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setToFourthSimpleProductOutOfStockStatus"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFourthProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForCheckDefaultProductsAssignedToProducts"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearAllFiltersForCheckDefaultSourcesAssignedToProducts"/>
@@ -187,7 +187,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFirstSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFirstProduct"/>
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoad"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForFirstProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForFirstProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckStockOnSecondProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProduct"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSecondSimpleProductBySku">
@@ -196,7 +196,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSecondSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSecondProduct"/>
         <waitForPageLoad time="30" stepKey="waitForSecondProductPageLoad"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForSecondProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForSecondProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckStockOnThirdProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForThirdProduct"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findThirdSimpleProductBySku">
@@ -205,7 +205,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createThirdSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditThirdProduct"/>
         <waitForPageLoad time="30" stepKey="waitForThirdProductPageLoad"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForThirdProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForThirdProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckStockOnFourthProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForFourthProduct"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findFourthSimpleProductBySku">
@@ -214,7 +214,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFourthSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFourthProduct"/>
         <waitForPageLoad time="30" stepKey="waitForFourthProductPageLoad"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForFourthProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCreatedSourceIsInStockForFourthProduct"/>
 
         <comment userInput="Transfer inventory from created source to default source" stepKey="transferInventoryFromCreatedSourceToCustomSourceComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForTransferInventoryFromCreatedSourceToDefault"/>
@@ -255,7 +255,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFirstSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFirstProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoadForCheckInStock"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeCreatedDefaultIsInStockForFirstProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeCreatedDefaultIsInStockForFirstProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckDefaultStockOnSecondProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProductForCheckInStock"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSecondSimpleProductBySkuForCheckInStock">
@@ -264,7 +264,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSecondSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSecondProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForSecondProductPageLoadForCheckInStock"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeDefaultSourceIsInStockForSecondProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeDefaultSourceIsInStockForSecondProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckDefaultStockOnThirdProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForThirdProductForCheckInStock"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findThirdSimpleProductBySkuForCheckInStock">
@@ -273,7 +273,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createThirdSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditThirdProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForThirdProductPageLoadForCheckInStock"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeDefaultSourceIsInStockForThirdProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeDefaultSourceIsInStockForThirdProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckDefaultStockOnFourthProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForFourthProductForCheckInStock"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findFourthSimpleProductBySkuForCheckInStock">
@@ -282,6 +282,6 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createFourthSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditFourthProductForCheckInStock"/>
         <waitForPageLoad time="30" stepKey="waitForFourthProductPageLoadForCheckInStock"/>
-        <seeOptionIsSelected selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeDefaultSourceIsInStockForFourthProduct"/>
+        <seeOptionIsSelected selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="seeDefaultSourceIsInStockForFourthProduct"/>
     </test>
 </tests>

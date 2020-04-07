@@ -39,11 +39,11 @@
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
 
-        <conditionalClick selector="{{AdminGridFilterControls.clearAll}}" dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true" stepKey="clearTheFiltersIfPresent1"/>
+        <conditionalClick selector="{{AdminGridFilterControls.clearAll}}" dependentSelector="{{AdminManageSourcesGridFilterControlsSection.dropDown}}" visible="true" stepKey="clearTheFiltersIfPresent1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults1">
-            <argument name="selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="selector" value="AdminManageStockGridFilterControlsSection.name"/>
             <argument name="value" value="default"/>
         </actionGroup>
 

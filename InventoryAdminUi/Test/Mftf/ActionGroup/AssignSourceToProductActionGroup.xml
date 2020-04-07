@@ -15,7 +15,7 @@
         <comment userInput="Assign Source to Product" stepKey="AssignSourceToProductComment"/>
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSource1"/>
         <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
-                          dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true"
+                          dependentSelector="{{AdminManageSourcesGridFilterControlsSection.dropDown}}" visible="true"
                           stepKey="clearTheFiltersIfPresent"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
                           dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"

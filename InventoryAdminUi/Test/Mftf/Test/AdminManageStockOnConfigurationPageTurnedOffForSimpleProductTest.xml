@@ -39,7 +39,7 @@
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterCustomSourceBySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customSource.source[source_code]$$)}}" stepKey="clickEditCustomSource"/>
@@ -83,15 +83,15 @@
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSourceToProduct"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="searchCreatedCustomSource">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$customSource.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$customSource.source[source_code]$$)}}" stepKey="selectCreatedCustomSource"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="doneSelectSource"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$customSource.source[name]$$" stepKey="checkSelectedSourceNameInProductAssignedSourcesList"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="$$customSource.source[name]$$" stepKey="checkSelectedSourceNameInProductAssignedSourcesList"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyField"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedSimpleProduct"/>
 
         <comment userInput="Check, created product is present on category page." stepKey="checkProductIsPresentOnCategoryPageComment"/>
@@ -109,7 +109,7 @@
         <click selector="{{AdminGridColumnsControls.columns}}" stepKey="selectColumns"/>
         <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns"/>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkMessageAfterProductSave"/>
 

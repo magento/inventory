@@ -51,8 +51,8 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterLogin"/>
 
-            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup" stepKey="goToStockGridFilterResultsByInputEditStock1">
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
             </actionGroup>
 
@@ -76,39 +76,38 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
         </after>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleMsiProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$simpleMsiProduct1.id$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource2.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct3">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource3.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct4">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource4.source[source_code]$$"/>
         </actionGroup>
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory1"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource1QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource2QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource3QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource4QtyField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource5QtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource1QtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource2QtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource3QtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource4QtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('4')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource5QtyField"/>
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleMsiProduct"/>
         <waitForPageLoad stepKey="waitForSimpleMsiProductGidPageLoad"/>
@@ -159,16 +158,16 @@
         <click selector="{{AdminSourceSelectionFormSection.selectSourcePriority}}" stepKey="selectSourcePriorityAlgorithm"/>
         <waitForPageLoad stepKey="waitForPageLoad9"/>
         <wait time="30" stepKey="waiting" />
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowProductSku('0')}}" userInput="{{SimpleMsiProduct.sku}}" stepKey="checkProductSku"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowQtyToShip('0')}}" userInput="5" stepKey="checkQtyToShip"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','0')}}" userInput="$$createSource4.source[name]$$" stepKey="checkCustomSource4Name"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="5" stepKey="checkCustomSource4Qty"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','1')}}" userInput="$$createSource1.source[name]$$" stepKey="checkCustomSource1Name"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="0" stepKey="checkCustomSource1Qty"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','2')}}" userInput="$$createSource2.source[name]$$" stepKey="checkCustomSource2Name"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','2')}}" userInput="0" stepKey="checkCustomSource2Qty"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','3')}}" userInput="$$createSource3.source[name]$$" stepKey="checkCustomSource3Name"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','3')}}" userInput="0" stepKey="checkCustomSource3Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowProductSku('0')}}" userInput="{{SimpleMsiProduct.sku}}" stepKey="checkProductSku"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowQtyToShip('0')}}" userInput="5" stepKey="checkQtyToShip"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','0')}}" userInput="$$createSource4.source[name]$$" stepKey="checkCustomSource4Name"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="5" stepKey="checkCustomSource4Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','1')}}" userInput="$$createSource1.source[name]$$" stepKey="checkCustomSource1Name"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="0" stepKey="checkCustomSource1Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','2')}}" userInput="$$createSource2.source[name]$$" stepKey="checkCustomSource2Name"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','2')}}" userInput="0" stepKey="checkCustomSource2Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','3')}}" userInput="$$createSource3.source[name]$$" stepKey="checkCustomSource3Name"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','3')}}" userInput="0" stepKey="checkCustomSource3Qty"/>
 
         <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="$$createSource4.source[name]$$" stepKey="selectSourceToCreateShipment"/>
         <waitForPageLoad stepKey="waitForPageLoad10"/>

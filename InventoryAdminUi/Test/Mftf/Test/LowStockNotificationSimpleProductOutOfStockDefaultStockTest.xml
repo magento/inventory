@@ -19,7 +19,7 @@
             <group value="multi_mode"/>
         </annotations>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock" after="setProductQty"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock" after="setProductQty"/>
         <remove keyForRemoval="verifyProductReport"/>
         <see userInput="We couldn't find any records." stepKey="verifyRowsStillEmpty" after="verifyLowStockReportContainsProduct"/>
     </test>

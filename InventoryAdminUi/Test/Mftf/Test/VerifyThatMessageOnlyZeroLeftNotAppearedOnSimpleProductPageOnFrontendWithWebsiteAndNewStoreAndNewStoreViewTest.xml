@@ -61,15 +61,15 @@
         <click selector="{{ProductInWebsitesSection.website(NewWebSiteData.name)}}" stepKey="selectSecondWebsite"
                after="openProductInWebsitesSection1"/>
         <remove keyForRemoval="setSimpleProductOutOfStockStatus"/>
-        <click selector="{{AdminProductSourcesGrid.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"
+        <click selector="{{AdminProductSourcesGridSection.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"
                after="goToProduct1"/>
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct"
                      stepKey="AdminOnProductEditPageAssignSourceToProduct1"
                      after="deleteDefaultSourceFromCreatedProduct">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource.source[source_code]$$"/>
         </actionGroup>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock"
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock"
                       stepKey="setSimpleProductOutOfStockStatusToCustomStock"
                       after="AdminOnProductEditPageAssignSourceToProduct1"/>
         <remove keyForRemoval="openProductStorefront"/>

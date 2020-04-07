@@ -54,14 +54,14 @@
 
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesOnProductPage"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsForSourcesOnProductPage">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$createCustomSource.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$createCustomSource.source[source_code]$$)}}" stepKey="clickOnCheckboxOnProductPage"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDoneOnProductPage"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createCustomSource.source[name]$$" stepKey="seeSourceNameInGridOnProductPage"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="$$createCustomSource.source[name]$$" stepKey="seeSourceNameInGridOnProductPage"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyFieldOnProductPage"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyFieldOnProductPage"/>
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createSimpleSubCategory.name$$]" stepKey="searchAndSelectCategory"/>

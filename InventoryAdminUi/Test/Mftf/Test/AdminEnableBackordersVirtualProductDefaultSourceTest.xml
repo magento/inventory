@@ -47,7 +47,7 @@
         </after>
         <!--Enable backorders for virtual product.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQty"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="10" stepKey="setProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="10" stepKey="setProductQuantity"/>
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
         <scrollToTopOfPage stepKey="scrollToTheTopOfProductEditPage"/>
         <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategory">

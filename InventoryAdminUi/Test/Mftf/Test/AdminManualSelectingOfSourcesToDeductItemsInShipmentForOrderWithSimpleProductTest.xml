@@ -87,13 +87,13 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct4">
                 <argument name="sourceCode" value="$$createSource4.source[name]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField1"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}"
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField2"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}"
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField3"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}"
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField4"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
         </before>

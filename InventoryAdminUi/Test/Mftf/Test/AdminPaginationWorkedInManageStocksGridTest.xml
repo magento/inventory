@@ -53,7 +53,7 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
-            <argument name="selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="selector" value="AdminManageStockGridFilterControlsSection.name"/>
             <argument name="value" value="Special Stock"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitFilterApplied"/>
@@ -62,12 +62,12 @@
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>
         <see selector="{{AdminDataGridPaginationSection.totalPages}}" userInput="2" stepKey="seeTotalPages"/>
-        <seeNumberOfElements selector="{{AdminManageStockGridBody.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPage"/>
+        <seeNumberOfElements selector="{{AdminManageStockGridBodySection.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPage"/>
         <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="goToNextPage"/>
         <waitForPageLoad time="30" stepKey="waitNextGridPageOpened"/>
-        <seeNumberOfElements selector="{{AdminManageStockGridBody.dataRows}}" userInput="2" stepKey="checkNumberOfRowsOnSecondPage"/>
+        <seeNumberOfElements selector="{{AdminManageStockGridBodySection.dataRows}}" userInput="2" stepKey="checkNumberOfRowsOnSecondPage"/>
         <click selector="{{AdminDataGridPaginationSection.previousPage}}" stepKey="goToPreviousPage"/>
         <waitForPageLoad time="30" stepKey="waitPrevGridPageOpened"/>
-        <seeNumberOfElements selector="{{AdminManageStockGridBody.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPageAgain"/>
+        <seeNumberOfElements selector="{{AdminManageStockGridBodySection.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPageAgain"/>
     </test>
 </tests>

@@ -33,7 +33,7 @@
             <createData entity="FullSource1" stepKey="source"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductPage"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">

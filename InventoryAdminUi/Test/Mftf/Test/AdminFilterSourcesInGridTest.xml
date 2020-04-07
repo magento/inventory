@@ -34,11 +34,11 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults1">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$createSource3.source[source_code]$$"/>
         </actionGroup>
 
-        <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControls.dropDown}}" stepKey="seeFilterName1"/>
+        <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControlsSection.dropDown}}" stepKey="seeFilterName1"/>
         <see userInput="$$createSource3.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow1"/>
         <see userInput="$$createSource3.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow1"/>
@@ -48,11 +48,11 @@
         <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnColumns2"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults2">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$createSource4.source[source_code]$$"/>
         </actionGroup>
 
-        <see userInput="$$createSource4.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControls.dropDown}}" stepKey="seeFilterName2"/>
+        <see userInput="$$createSource4.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControlsSection.dropDown}}" stepKey="seeFilterName2"/>
         <see userInput="$$createSource4.source[source_code]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeCodeInRow2"/>
         <see userInput="$$createSource4.source[name]$$" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow2"/>
         <see userInput="Enabled" selector="{{AdminGridRow.rowOne}}" stepKey="seeIsEnabledInRow2"/>

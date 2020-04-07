@@ -45,7 +45,7 @@
 
         <!--Set product default source quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
         <!--Create custom option.-->
         <click selector="{{AdminProductCustomizableOptionsSection.customizableOptions}}" stepKey="openCustomizableOptions"/>
         <actionGroup ref="AdminCreateCustomDropDownOptionsActionGroup" stepKey="createOption">

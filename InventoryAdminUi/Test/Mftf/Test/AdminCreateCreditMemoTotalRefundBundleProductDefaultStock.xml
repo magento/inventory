@@ -37,7 +37,7 @@
         <!--Set 'Default' Source quantity.-->
         <remove keyForRemoval="assignTestSourceToCreatedProduct"/>
         <remove keyForRemoval="setCustomSourceQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity" after="openVirtualProductEditPage"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity" after="openVirtualProductEditPage"/>
         <!--Verify product quantity after order has been placed.-->
         <remove keyForRemoval="checkProductSourceQtyAfterPlaceOrder"/>
         <remove keyForRemoval="checkSalableQtyAfterPlaceOrder"/>

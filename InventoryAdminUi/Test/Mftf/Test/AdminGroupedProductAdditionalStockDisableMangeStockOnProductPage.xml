@@ -58,7 +58,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct"/>
         <!--Assign simple to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>

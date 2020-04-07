@@ -52,11 +52,11 @@
             </actionGroup>
             <!--Set default source product1 quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($$product1.id$$)}}" stepKey="openSimple1ProductPage"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceProduct1Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceProduct1Quantity"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct1"/>
             <!--Set default source product2 quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($$product2.id$$)}}" stepKey="openSimple2ProductPage"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceProduct2Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceProduct2Quantity"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct2"/>
         </before>
         <after>

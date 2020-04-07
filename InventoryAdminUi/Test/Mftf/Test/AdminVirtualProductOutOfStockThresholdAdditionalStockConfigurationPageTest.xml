@@ -62,7 +62,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUSSource1ToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProductQuantity"/>
         <!--Assign product to category and save.-->
         <scrollToTopOfPage stepKey="scrollOnTopOfPage"/>
         <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">

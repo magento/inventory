@@ -93,7 +93,7 @@
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
-        <actionGroup ref="addGroupedProductOptionToOrderMsi" stepKey="addGroupedProductSimpleOptionToOrder">
+        <actionGroup ref="addGroupedProductOptionToOrderMsiActionGroup" stepKey="addGroupedProductSimpleOptionToOrder">
             <argument name="product" value="$$groupedProduct$$"/>
             <argument name="option" value="$$product$$"/>
             <argument name="quantity" value="1"/>

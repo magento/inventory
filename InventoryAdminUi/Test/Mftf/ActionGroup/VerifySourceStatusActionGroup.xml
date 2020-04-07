@@ -18,9 +18,9 @@
         <conditionalClick selector="{{AdminGridFilterControls.clearAll}}" dependentSelector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__data-grid-filters-current._show" visible="true" stepKey="clearTheFiltersIfPresent"/>
         <waitForPageLoad stepKey="waitForPageLoad" time="5"/>
         <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters"/>
-        <fillField userInput="{{sourceName}}" selector="{{AdminManageSourcesGridFilterControls.name}}" stepKey="fillNameField"/>
+        <fillField userInput="{{sourceName}}" selector="{{AdminManageSourcesGridFilterControlsSection.name}}" stepKey="fillNameField"/>
         <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters"/>
         <waitForLoadingMaskToDisappear stepKey="waitFiltersApplied"/>
-        <see selector="{{AdminManageSourceGridBody.sourceStatus(sourceName)}}" userInput="{{sourceStatus}}" stepKey="verifySourceStatus"/>
+        <see selector="{{AdminManageSourceGridBodySection.sourceStatus(sourceName)}}" userInput="{{sourceStatus}}" stepKey="verifySourceStatus"/>
     </actionGroup>
 </actionGroups>

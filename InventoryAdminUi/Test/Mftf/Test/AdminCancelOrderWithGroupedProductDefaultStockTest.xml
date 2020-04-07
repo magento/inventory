@@ -42,7 +42,7 @@
 
         <!--Set product quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openproductEditPage"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQtyBySourceCode(_defaultSource.source_code)}}" userInput="{{defaultProductQty.value}}" stepKey="setProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQtyBySourceCode(_defaultSource.source_code)}}" userInput="{{defaultProductQty.value}}" stepKey="setProductQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
         <!--Assign virtual product to grouped.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
@@ -62,7 +62,7 @@
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
-        <actionGroup ref="addGroupedProductOptionToOrderMsi" stepKey="addGroupedProductVirtualOptionToOrder">
+        <actionGroup ref="addGroupedProductOptionToOrderMsiActionGroup" stepKey="addGroupedProductVirtualOptionToOrder">
             <argument name="product" value="GroupedProduct"/>
             <argument name="option" value="$$product$$"/>
             <argument name="quantity" value="2"/>

@@ -64,13 +64,12 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$virtualProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$virtualProduct1.id$"/>
         </actionGroup>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="In Stock" stepKey="selectStockStatus" />
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="10" stepKey="fillSourceQuantityField1"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="In Stock" stepKey="selectStockStatus" />
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="10" stepKey="fillSourceQuantityField1"/>
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"

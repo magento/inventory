@@ -30,14 +30,14 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProductVariationOne" after="openProductVariationOneEditPageToSetQty">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductVariationOneQuantity" after="assignSourceToProductVariationOne"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setProductVariationOneQuantity" after="assignSourceToProductVariationOne"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProductVariationOne" after="setProductVariationOneQuantity"/>
             <!--Assign product variation two to additional stock and set qty.-->
             <amOnPage url="{{AdminProductEditPage.url($$createConfigChildProductTwo.id$$)}}" stepKey="openProductVariationTwoEditPageToSetQty" after="saveProductVariationOne"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProductVariationTwo" after="openProductVariationTwoEditPageToSetQty">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductVariationTwoQuantity" after="assignSourceToProductVariationTwo"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setProductVariationTwoQuantity" after="assignSourceToProductVariationTwo"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProductVariationTwo" after="setProductVariationTwoQuantity"/>
         </before>
         <after>

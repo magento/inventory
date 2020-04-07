@@ -53,7 +53,7 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters1"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="special_source"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitFilterApplied"/>
@@ -62,12 +62,12 @@
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>
         <see selector="{{AdminDataGridPaginationSection.totalPages}}" userInput="2" stepKey="seeTotalPages"/>
-        <seeNumberOfElements selector="{{AdminManageSourcesGridBody.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPage"/>
+        <seeNumberOfElements selector="{{AdminManageSourcesGridBodySection.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPage"/>
         <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="goToNextPage1"/>
         <waitForPageLoad time="30" stepKey="waitNextGridPageOpened"/>
-        <seeNumberOfElements selector="{{AdminManageSourcesGridBody.dataRows}}" userInput="2" stepKey="checkNumberOfRowsOnSecondPage"/>
+        <seeNumberOfElements selector="{{AdminManageSourcesGridBodySection.dataRows}}" userInput="2" stepKey="checkNumberOfRowsOnSecondPage"/>
         <click selector="{{AdminDataGridPaginationSection.previousPage}}" stepKey="goTopreviousPage1"/>
         <waitForPageLoad time="30" stepKey="waitPrevGridPageOpened"/>
-        <seeNumberOfElements selector="{{AdminManageSourcesGridBody.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPageAgain"/>
+        <seeNumberOfElements selector="{{AdminManageSourcesGridBodySection.dataRows}}" userInput="20" stepKey="checkNumberOfRowsOnFirstPageAgain"/>
     </test>
 </tests>

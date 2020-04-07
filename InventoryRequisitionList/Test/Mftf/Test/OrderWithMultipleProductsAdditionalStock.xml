@@ -55,8 +55,8 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource2ToCreatedProduct1" after="assignSource1ToCreatedProduct1">
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProduct1Source1Quantity" after="assignSource2ToCreatedProduct1"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProduct1Source2Quantity" after="setProduct1Source1Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProduct1Source1Quantity" after="assignSource2ToCreatedProduct1"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setProduct1Source2Quantity" after="setProduct1Source1Quantity"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct1" after="setProduct1Source2Quantity"/>
             <!--Assign created product2 to additional stock and set qty.-->
             <amOnPage url="{{AdminProductEditPage.url($$product2.id$$)}}" stepKey="openProduct2EditPageToAssignSources" after="saveProduct1"/>
@@ -69,8 +69,8 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource2ToCreatedProduct2" after="assignSource1ToCreatedProduct2">
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProduct2Source1Quantity" after="assignSource2ToCreatedProduct2"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProduct2Source2Quantity" after="setProduct2Source1Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProduct2Source1Quantity" after="assignSource2ToCreatedProduct2"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setProduct2Source2Quantity" after="setProduct2Source1Quantity"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct2" after="setProduct2Source2Quantity"/>
         </before>
         <after>

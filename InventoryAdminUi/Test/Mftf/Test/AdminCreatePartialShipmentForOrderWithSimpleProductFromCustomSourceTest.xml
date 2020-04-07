@@ -42,7 +42,7 @@
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSource.source[name]$$)}}"
                    stepKey="selectCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneCustomSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
 
             <!-- Create Product -->
@@ -58,7 +58,7 @@
                                         stepKey="searchAndSelectCategory"/>
             <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="assignSourcesToProduct"/>
             <conditionalClick selector="{{AdminGridFilterControls.clearAll}}"
-                              dependentSelector="{{AdminManageSourcesGridFilterControls.dropDown}}" visible="true"
+                              dependentSelector="{{AdminManageSourcesGridFilterControlsSection.dropDown}}" visible="true"
                               stepKey="clearTheFiltersIfPresent"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchSourceByKeyword">
                 <argument name="keyword" value="$$createSource.source[name]$$"/>
@@ -67,7 +67,7 @@
             <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$createSource.source[source_code]$$)}}"
                    stepKey="clickOnCheckbox"/>
             <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
 

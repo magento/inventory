@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <!--Add store code to url.-->
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
@@ -140,7 +140,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignMainWebsiteSourceToRedVariation">
             <argument name="sourceCode" value="$$additionalSourceMainWebsite.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillRedVariationQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillRedVariationQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveRedVariation"/>
         <!--Assign additional website source to blue variation.-->
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findBlueVariation">
@@ -151,7 +151,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignAdditionalWebsiteSourceToBlueVariation">
             <argument name="sourceCode" value="$$additionalSourceAdditionalWebsite.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillBlueVariationQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillBlueVariationQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveBlueVariation"/>
         <!--Set configurable product stock status.-->
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openProductEditPage"/>

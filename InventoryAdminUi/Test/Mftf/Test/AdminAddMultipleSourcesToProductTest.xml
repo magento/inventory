@@ -50,8 +50,8 @@
         <!--Verify additional sources assigned-->
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct1.id$$)}}" stepKey="openProductEditPageToVerifySources"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="{{_defaultSource.name}}" stepKey="seeSourceIdInGrid1"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSourceIdInGrid2"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceIdInGrid3"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="{{_defaultSource.name}}" stepKey="seeSourceIdInGrid1"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('1')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSourceIdInGrid2"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('2')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceIdInGrid3"/>
     </test>
 </tests>

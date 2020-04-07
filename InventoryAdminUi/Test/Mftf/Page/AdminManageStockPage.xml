@@ -13,7 +13,7 @@
         <section name="AdminEditStockGeneralSection"/>
         <section name="AdminEditStockSalesChannelsSection"/>
         <section name="AdminEditStockSourcesSection"/>
-        <section name="AdminManageStockGridControls"/>
-        <section name="AdminManageStockGridFilterControls"/>
+        <section name="AdminManageStockGridControlsSection"/>
+        <section name="AdminManageStockGridFilterControlsSection"/>
     </page>
 </pages>

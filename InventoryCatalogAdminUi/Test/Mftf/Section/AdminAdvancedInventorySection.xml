@@ -6,11 +6,7 @@
   */
 -->
 
-<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
-    <section name="AdminAdvancedInventoryControlsSection">
-        <element name="done" type="button" selector=".page-main-actions button.action-primary" timeout="10"/>
-    </section>
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminAdvancedInventorySection">
         <element name="manageStock" type="select" selector="select[name='product[stock_data][manage_stock]']"/>
         <element name="manageStockUseDefault" type="checkbox" selector="input[name='product[stock_data][use_config_manage_stock]']"/>

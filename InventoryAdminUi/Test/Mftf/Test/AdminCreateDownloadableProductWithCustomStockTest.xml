@@ -90,7 +90,7 @@
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="input[name='sources[assigned_sources][1][quantity]']" userInput="100" stepKey="fillSourceQtyField"/>

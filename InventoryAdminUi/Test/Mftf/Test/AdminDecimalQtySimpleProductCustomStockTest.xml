@@ -36,12 +36,12 @@
 
         <!--Verify quantity field on edit product page.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{decimalProductQty.value}}" stepKey="setProductDecimalQuantity"/>
-        <see selector="{{AdminProductSourcesGrid.quantityFieldError('0')}}" userInput="Please enter a valid integer in this field." stepKey="verifyError"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{decimalProductQty.value}}" stepKey="setProductDecimalQuantity"/>
+        <see selector="{{AdminProductSourcesGridSection.quantityFieldError('0')}}" userInput="Please enter a valid integer in this field." stepKey="verifyError"/>
         <actionGroup ref="AdminApplyUseDecimalsOnProductEditPageActionGroup" stepKey="enableDecimalQuantity">
             <argument name="useDecimals" value="Yes"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{decimalProductQty.value}}" stepKey="setProductDecimalQuantityAgain"/>
-        <dontSeeElement selector="{{AdminProductSourcesGrid.quantityFieldError('0')}}" stepKey="verifyErrorIsAbsent"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{decimalProductQty.value}}" stepKey="setProductDecimalQuantityAgain"/>
+        <dontSeeElement selector="{{AdminProductSourcesGridSection.quantityFieldError('0')}}" stepKey="verifyErrorIsAbsent"/>
     </test>
 </tests>

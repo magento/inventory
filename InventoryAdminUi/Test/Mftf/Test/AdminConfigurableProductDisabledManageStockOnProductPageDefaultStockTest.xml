@@ -40,7 +40,7 @@
                 <argument name="keyword" value="$$customSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$customSource.source[name]$$)}}" stepKey="selectCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneCustomSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
         </before>
         <after>
@@ -50,7 +50,7 @@
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilterForDisable"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterCustomSourceBySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customSource.source[source_code]$$)}}" stepKey="clickEditCustomSource"/>
@@ -121,7 +121,7 @@
             <argument name="product" value="colorProductAttribute3"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editBlueConfigurableVariation"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setBlueConfigurableVariationToOutOfStock"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setBlueConfigurableVariationToOutOfStock"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveBlueConfigurableVariation"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkBlueConfigurableVariationSaveMessage"/>
 
@@ -131,7 +131,7 @@
             <argument name="product" value="colorProductAttribute2"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="editConfigurableRedVariation"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setConfigurableRedVariationToOutOfStock"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setConfigurableRedVariationToOutOfStock"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableRedVariation"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkRedConfigurableVariationSaveMessage"/>
 

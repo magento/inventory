@@ -62,7 +62,7 @@
             <click selector="{{AdminGridRow.editByValue($$createDownloadableProduct.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForCheckInStock"/>
             <comment userInput="Assign category to product." stepKey="assignCategoryComment"/>
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillSourceQuantityField"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="1000" stepKey="fillSourceQuantityField"/>
             <comment userInput="Add downloadable links to product." stepKey="addDownloadableLinks"/>
             <click selector="{{AdminProductDownloadableSection.sectionHeader}}" stepKey="openDownloadableSection"/>
             <checkOption selector="{{AdminProductDownloadableSection.isDownloadableProduct}}" stepKey="checkIsDownloadable"/>
@@ -91,7 +91,7 @@
                 <argument name="keyword" value="$$createSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSource.source[name]$$)}}" stepKey="selectCreatedSourceForCreatedStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneCreatedSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneCreatedSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCreatedStock"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignMainWebsiteChannelToStockComment"/>
@@ -137,8 +137,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSimpleProductForSetNotifyQuantityStatus"/>
         <waitForPageLoad time="30" stepKey="waitForSimpleProductPageLoadForSetNotifyQuantity"/>
-        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSimpleProduct"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="fillNotifyQuantityForSimpleProduct"/>
+        <uncheckOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSimpleProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="1" stepKey="fillNotifyQuantityForSimpleProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForVirtualProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySkuForSetNotifyQuantity">
@@ -147,8 +147,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createVirtualProduct.product[sku]$$)}}" stepKey="clickOnEditVirtualProductForSetNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForVirtualProductPageLoadForSetNotifyQuantity"/>
-        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForVirtualProduct"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="10" stepKey="fillNotifyQuantityForVirtualProduct"/>
+        <uncheckOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForVirtualProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="10" stepKey="fillNotifyQuantityForVirtualProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseVirtualProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForDownloadableProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findDownloadableProductBySkuForSetNotifyQuantity">
@@ -157,8 +157,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createDownloadableProduct.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForSetNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForDownloadableProductPageLoadForSetNotifyQuantity"/>
-        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForDownloadableProduct"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="15" stepKey="fillNotifyQuantityForDownloadableProduct"/>
+        <uncheckOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForDownloadableProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="15" stepKey="fillNotifyQuantityForDownloadableProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseDownloadableProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadAfterSaveDownloadable"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearAllFiltersForCheckDefaultSourcesAssignedToProducts"/>
@@ -199,8 +199,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSimpleProduct"/>
         <waitForPageLoad time="30" stepKey="waitForSimpleProductPageLoad"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForSimpleProduct"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="1" stepKey="seeNotifyQuantityOnTestSourceForSimpleProduct"/>
+        <seeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForSimpleProduct"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('1')}}" userInput="1" stepKey="seeNotifyQuantityOnTestSourceForSimpleProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckNotifyQuantityOnVirtualProductOnCreatedSource"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForVirtualProduct"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySku">
@@ -209,8 +209,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createVirtualProduct.product[sku]$$)}}" stepKey="clickOnEditVirtualProduct"/>
         <waitForPageLoad time="30" stepKey="waitForVirtualProductPageLoad"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForVirtualProduct"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="10" stepKey="seeNotifyQuantityOnTestSourceForVirtualProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForVirtualProduct"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('1')}}" userInput="10" stepKey="seeNotifyQuantityOnTestSourceForVirtualProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckStockOnDownloadableProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForDownloadableProduct"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findDownloadableProductBySku">
@@ -219,8 +219,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createDownloadableProduct.product[sku]$$)}}" stepKey="clickOnEditDownloadableProduct"/>
         <waitForPageLoad time="30" stepKey="waitForDownloadableProductPageLoad"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForDownloadableProduct"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="15" stepKey="seeNotifyQuantityOnTestSourceForDownloadableProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('1')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnTestSourceForDownloadableProduct"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('1')}}" userInput="15" stepKey="seeNotifyQuantityOnTestSourceForDownloadableProduct"/>
 
         <comment userInput="Transfer inventory from created source to default source" stepKey="transferInventoryFromCreatedSourceToCustomSourceComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForTransferInventoryFromCreatedSourceToDefault"/>
@@ -253,8 +253,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createSimpleProduct.product[sku]$$)}}" stepKey="clickOnEditSimpleProductForCheckNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForSimpleProductPageLoadForCheckInStock"/>
-        <seeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForSimpleProduct"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="seeNotifyQuantityOnDefaultSourceForSimpleProduct"/>
+        <seeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForSimpleProduct"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="1" stepKey="seeNotifyQuantityOnDefaultSourceForSimpleProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckNotifyQuantityOnVirtualProductOnDefaultSource"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForVirtualProductForCheckNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySkuForCheckNotifyQuantity">
@@ -263,8 +263,8 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createVirtualProduct.product[sku]$$)}}" stepKey="clickOnEditVirtualProductForCheckNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForVirtualProductPageLoadForCheckNotifyQuantity"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForVirtualProduct"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="10" stepKey="seeNotifyQuantityOnDefaultSourceForVirtualProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForVirtualProduct"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="10" stepKey="seeNotifyQuantityOnDefaultSourceForVirtualProduct"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckNotifyQuantityOnDownloadableProduct"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForDownloadableProductForCheckNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findDownloadableSimpleProductBySkuForCheckNotifyQuantity">
@@ -273,7 +273,7 @@
         </actionGroup>
         <click selector="{{AdminGridRow.editByValue($$createDownloadableProduct.product[sku]$$)}}" stepKey="clickOnEditDownloadableProductForCheckNotifyQuantity"/>
         <waitForPageLoad time="30" stepKey="waitForDownloadableProductPageLoadForCheckNotifyQuantity"/>
-        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForDownloadableProduct"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="15" stepKey="seeNotifyQuantityOnDefaultSourceForDownloadableProduct"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultUncheckedOnDefaultSourceForDownloadableProduct"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="15" stepKey="seeNotifyQuantityOnDefaultSourceForDownloadableProduct"/>
     </test>
 </tests>

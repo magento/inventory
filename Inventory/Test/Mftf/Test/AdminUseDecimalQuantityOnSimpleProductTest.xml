@@ -47,21 +47,20 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$simpleProduct1.id$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
 
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
                                     parameterArray="[$$simpleCategory1.name$$]" stepKey="searchAndSelectCategory"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
 
         <click selector="{{AdminProductFormSection.advancedInventoryButton}}" stepKey="clickOnAdvancedInventory1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad1"/>

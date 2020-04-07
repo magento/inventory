@@ -108,7 +108,7 @@
         <waitForPageLoad stepKey="waitForPageLoad13" time="10"/>
         <conditionalClick selector="[class*='assign_sources_configurable_modal'] div.admin__data-grid-header [data-action='grid-filter-reset']" dependentSelector="[class*='assign_sources_configurable_modal'] div.admin__data-grid-header [data-action='grid-filter-reset']" visible="true" stepKey="clickClearFilters4"/>
         <waitForPageLoad stepKey="waitForPageLoad15" time="10"/>
-        <fillField userInput="$$createSource1.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControls.code}}" stepKey="fillCodeField2"/>
+        <fillField userInput="$$createSource1.source[source_code]$$" selector="{{AdminManageSourcesGridFilterControlsSection.code}}" stepKey="fillCodeField2"/>
 
         <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
         <waitForPageLoad stepKey="waitForPageLoad14" time="10"/>

@@ -56,7 +56,7 @@
         <waitForPageLoad stepKey="waitForPageLoad" time="30"/>
         <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters"/>
         <waitForPageLoad time="30" stepKey="waitFiltersLoad"/>
-        <fillField userInput="$$createStock.stock[name]$$" selector="{{AdminManageStockGridFilterControls.name}}" stepKey="fillStockCodeField"/>
+        <fillField userInput="$$createStock.stock[name]$$" selector="{{AdminManageStockGridFilterControlsSection.name}}" stepKey="fillStockCodeField"/>
         <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters"/>
         <waitForPageLoad time="30" stepKey="waitForFiltersApplied"/>
         <click selector="{{AdminGridRow.editByValue($$createStock.stock[name]$$)}}" stepKey="clickOnEditForStock"/>

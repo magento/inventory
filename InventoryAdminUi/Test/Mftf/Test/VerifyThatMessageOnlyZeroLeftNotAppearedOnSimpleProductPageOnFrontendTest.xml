@@ -31,13 +31,13 @@
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$createStock.stock[name]$$"/>
             </actionGroup>
             <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$createSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
@@ -59,9 +59,9 @@
         <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createSimpleProduct.id$"/>
         </actionGroup>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock"
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock"
                       stepKey="setSimpleProductOutOfStockStatus"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{zeroProductQuantity.value}}" stepKey="fillSourceQtyField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{zeroProductQuantity.value}}" stepKey="fillSourceQtyField"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFourthProductForm"/>
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductStorefront">
             <argument name="productUrl" value="$$createSimpleProduct.custom_attributes[url_key]$$"/>

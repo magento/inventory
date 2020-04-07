@@ -51,19 +51,17 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
         </after>
 
-        <!-- As Admin, find the Product to edit -->
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="SimpleProduct.sku"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$simpleProduct.id$"/>
         </actionGroup>
 
         <!-- As Admin, assign a source to the product -->
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource.source[source_code]$$"/>
         </actionGroup>
         <!--Set qty to 100-->
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillSourceQuantityField"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="fillSourceQuantityField"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton1"/>
 
         <!-- Login as customer -->

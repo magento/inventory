@@ -40,7 +40,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" after="openProductEditPageToAssignSource">
             <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="0" stepKey="setProductQuantity" after="assignTestSourceToCreatedProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="0" stepKey="setProductQuantity" after="assignTestSourceToCreatedProduct"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose" after="setProductQuantity"/>
 
     </test>

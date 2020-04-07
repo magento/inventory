@@ -36,6 +36,6 @@
         <!--Assign simple product to additional website and set qty.-->
         <remove keyForRemoval="assignTestSourceToCreatedProduct"/>
         <remove keyForRemoval="setProductQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductDefaultSourceQuantity" before="assignProductToAdditionalWebsite"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProductDefaultSourceQuantity" before="assignProductToAdditionalWebsite"/>
     </test>
 </tests>

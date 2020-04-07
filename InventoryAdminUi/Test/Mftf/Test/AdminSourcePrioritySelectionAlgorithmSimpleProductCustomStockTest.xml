@@ -48,14 +48,14 @@
                 <argument name="keyword" value="$$highPrioritySource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$highPrioritySource.source[name]$$)}}" stepKey="selectHighPrioritySourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickDoneOnHighPrioritySourcesAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickDoneOnHighPrioritySourcesAssignment"/>
 
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesToAssignLowPrioritySource"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchLowPrioritySourceByName">
                 <argument name="keyword" value="$$lowPrioritySource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$lowPrioritySource.source[name]$$)}}" stepKey="selectLowPrioritySourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickDoneOnLowPrioritySourcesAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickDoneOnLowPrioritySourcesAssignment"/>
 
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
 
@@ -69,7 +69,7 @@
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterLowPrioritySourceBySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$lowPrioritySource.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$lowPrioritySource.source[source_code]$$)}}" stepKey="clickEditLowPrioritySource"/>
@@ -78,7 +78,7 @@
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseLowPrioritySource"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterHighPrioritySourceBySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$highPrioritySource.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$highPrioritySource.source[source_code]$$)}}" stepKey="clickEditHighPrioritySource"/>
@@ -114,12 +114,12 @@
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage"/>
 
         <comment userInput="Remove default source from simple product." stepKey="removeDefaultSourceFromSimpleProductComment"/>
-        <click selector="{{AdminProductSourcesGrid.rowUnAssign('0')}}" stepKey="removeDefaultSource"/>
+        <click selector="{{AdminProductSourcesGridSection.rowUnAssign('0')}}" stepKey="removeDefaultSource"/>
 
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSourceToAssignLowPrioritySource"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="searchLowPrioritySource">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$lowPrioritySource.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$lowPrioritySource.source[source_code]$$)}}" stepKey="selectLowPrioritySource"/>
@@ -128,17 +128,17 @@
         <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSourceToAssignHighPrioritySource"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="searchHighPrioritySource">
-            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="value" value="$$highPrioritySource.source[source_code]$$"/>
         </actionGroup>
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$highPrioritySource.source[source_code]$$)}}" stepKey="selectHighPrioritySource"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="doneSelectHighPrioritySource"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$lowPrioritySource.source[name]$$" stepKey="checkLowPrioritySourceName"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$highPrioritySource.source[name]$$" stepKey="checkHighPrioritySourceName"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="$$lowPrioritySource.source[name]$$" stepKey="checkLowPrioritySourceName"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('1')}}" userInput="$$highPrioritySource.source[name]$$" stepKey="checkHighPrioritySourceName"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForLowPrioritySource"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForHighPrioritySource"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForLowPrioritySource"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForHighPrioritySource"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedSimpleProduct"/>
 
         <comment userInput="Login and buy fifty pieces of simple product on storefront." stepKey="buySimpleProductComment"/>
@@ -194,12 +194,12 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
 
         <comment userInput="Check, 'Source Selection Algorithm' by source priority applied correctly." stepKey="checkAlgorithmAppliedComment"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowProductSku('0')}}" userInput="$$product.sku$$" stepKey="checkProductSku"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowQtyToShip('0')}}" userInput="50" stepKey="checkQtyToShip"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','0')}}" userInput="$$highPrioritySource.source[name]$$" stepKey="CheckHighPrioritySourceName"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="50" stepKey="CheckHighPrioritySourceQty"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','1')}}" userInput="$$lowPrioritySource.source[name]$$" stepKey="CheckLowPrioritySourceName"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="0" stepKey="CheckLowPrioritySourceQty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowProductSku('0')}}" userInput="$$product.sku$$" stepKey="checkProductSku"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowQtyToShip('0')}}" userInput="50" stepKey="checkQtyToShip"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','0')}}" userInput="$$highPrioritySource.source[name]$$" stepKey="CheckHighPrioritySourceName"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="50" stepKey="CheckHighPrioritySourceQty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','1')}}" userInput="$$lowPrioritySource.source[name]$$" stepKey="CheckLowPrioritySourceName"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="0" stepKey="CheckLowPrioritySourceQty"/>
 
         <comment userInput="Select source and proceed to shipment" stepKey="selectSourceAndProceedToShipmentComment"/>
         <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="$$highPrioritySource.source[name]$$" stepKey="selectSourceToCreateShipment"/>

@@ -60,44 +60,43 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
         </after>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$simpleProduct1.id$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource2.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct3">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource3.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct4">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource4.source[source_code]$$"/>
         </actionGroup>
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory1"/>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="In Stock" stepKey="selectStockStatusSource1" />
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource1QtyField"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="In Stock" stepKey="selectStockStatusSource2" />
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource2QtyField"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('2')}}" userInput="In Stock" stepKey="selectStockStatusSource3" />
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource3QtyField"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('3')}}" userInput="In Stock" stepKey="selectStockStatusSource4" />
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource4QtyField"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('4')}}" userInput="In Stock" stepKey="selectStockStatusSource5" />
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource5QtyField"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="In Stock" stepKey="selectStockStatusSource1" />
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource1QtyField"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="In Stock" stepKey="selectStockStatusSource2" />
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource2QtyField"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('2')}}" userInput="In Stock" stepKey="selectStockStatusSource3" />
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('2')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource3QtyField"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('3')}}" userInput="In Stock" stepKey="selectStockStatusSource4" />
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource4QtyField"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('4')}}" userInput="In Stock" stepKey="selectStockStatusSource5" />
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('4')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillCustomSource5QtyField"/>
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
         <waitForPageLoad stepKey="waitForSimpleProductGridPageLoad"/>
@@ -120,24 +119,24 @@
         <click selector="{{AdminGridRow.editByValue(SimpleMsiProduct.sku)}}" stepKey="clickOnEditSimpleMsiProduct"/>
         <waitForPageLoad stepKey="waitForSimpleProductPageLoad"/>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="fillOutOfStockForCustomSource1Item"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="Out of Stock" stepKey="fillOutOfStockForCustomSource1Item"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinueToCheckCustomSource1ItemIsOutOfStock"/>
         <waitForPageLoad stepKey="waitForSimpleProductPageLoadToSeeCustomSource1ItemIsOutOfStock"/>
-        <see selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCustomSource1ItemIsOutOfStock"/>
+        <see selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="Out of Stock" stepKey="seeCustomSource1ItemIsOutOfStock"/>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="In Stock" stepKey="fillInStockForCustomSource1Item"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="In Stock" stepKey="fillInStockForCustomSource1Item"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinueToCheckCustomSource1ItemIsInStock"/>
         <waitForPageLoad stepKey="waitForSimpleProductPageLoadToSeeCustomSource1ItemIsInStock"/>
-        <see selector="{{AdminProductSourcesGrid.rowStatus('1')}}" userInput="In Stock" stepKey="seeCustomSource1ItemIsInStock"/>
+        <see selector="{{AdminProductSourcesGridSection.rowStatus('1')}}" userInput="In Stock" stepKey="seeCustomSource1ItemIsInStock"/>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('2')}}" userInput="Out of Stock" stepKey="fillOutOfStockForCustomSource2Item"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('2')}}" userInput="Out of Stock" stepKey="fillOutOfStockForCustomSource2Item"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinueToCheckCustomSource2ItemIsOutOfStock"/>
         <waitForPageLoad stepKey="waitForSimpleProductPageLoadToSeeCustomSource2ItemIsOutOfStock"/>
-        <see selector="{{AdminProductSourcesGrid.rowStatus('2')}}" userInput="Out of Stock" stepKey="seeCustomSource2ItemIsOutOfStock"/>
+        <see selector="{{AdminProductSourcesGridSection.rowStatus('2')}}" userInput="Out of Stock" stepKey="seeCustomSource2ItemIsOutOfStock"/>
 
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('2')}}" userInput="In Stock" stepKey="fillInStockForCustomSource2Item"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('2')}}" userInput="In Stock" stepKey="fillInStockForCustomSource2Item"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinueToCheckCustomSource2ItemIsInStock"/>
         <waitForPageLoad stepKey="waitForSimpleProductPageLoadToSeeCustomSource2ItemIsInStock"/>
-        <see selector="{{AdminProductSourcesGrid.rowStatus('2')}}" userInput="In Stock" stepKey="seeCustomSource2ItemIsInStock"/>
+        <see selector="{{AdminProductSourcesGridSection.rowStatus('2')}}" userInput="In Stock" stepKey="seeCustomSource2ItemIsInStock"/>
     </test>
 </tests>

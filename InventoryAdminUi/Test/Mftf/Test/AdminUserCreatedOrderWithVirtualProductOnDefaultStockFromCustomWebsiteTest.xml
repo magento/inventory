@@ -48,7 +48,7 @@
         <remove keyForRemoval="assignTestSourceToCreatedProduct"/>
         <remove keyForRemoval="setProductQuantity"/>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="10" stepKey="setProductQuantity" after="openProductEditPage"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="10" stepKey="setProductQuantity" after="openProductEditPage"/>
 
         <!--- Place order via Admin -->
         <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">

@@ -51,7 +51,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1000" stepKey="setAdditionalSourceVirtualProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="1000" stepKey="setAdditionalSourceVirtualProductQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
         <!--Assign virtual product to grouped.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
@@ -71,7 +71,7 @@
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent1"/>
-        <actionGroup ref="addGroupedProductOptionToOrderMsi" stepKey="addGroupedProductVirtualOptionToOrder">
+        <actionGroup ref="addGroupedProductOptionToOrderMsiActionGroup" stepKey="addGroupedProductVirtualOptionToOrder">
             <argument name="product" value="GroupedProduct"/>
             <argument name="option" value="$$virtualProduct$$"/>
             <argument name="quantity" value="2"/>

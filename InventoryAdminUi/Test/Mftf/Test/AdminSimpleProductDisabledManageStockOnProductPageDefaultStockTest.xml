@@ -52,7 +52,7 @@
 
         <!--Set Product to 'Out of Stock'.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock" stepKey="setProductToOutOfStock"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="saveProduct"/>
         <!--Verify product is not visible on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>

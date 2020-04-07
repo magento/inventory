@@ -55,7 +55,7 @@
                after="goToProduct1"/>
         <click selector="{{ProductInWebsitesSection.website(NewWebSiteData.name)}}" stepKey="selectSecondWebsite"
                after="openProductInWebsitesSection1"/>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock"
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatus('0')}}" userInput="Out of Stock"
                       stepKey="setSimpleProductOutOfStockStatusToDefaultStock"
                       after="goToProduct1"/>
         <remove keyForRemoval="openProductStorefront"/>

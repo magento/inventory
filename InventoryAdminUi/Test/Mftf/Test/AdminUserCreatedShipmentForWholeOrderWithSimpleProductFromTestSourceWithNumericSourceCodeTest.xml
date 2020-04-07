@@ -28,19 +28,19 @@
             <createData entity="SimpleMsiProduct" stepKey="createSimpleProduct"/>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
-            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+            <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website"
                           stepKey="selectWebsiteAsSalesChannelForCustomStock"/>
             <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$customSource.source[name]$$"/>
             </actionGroup>
             <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock2">
-                <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+                <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
                 <argument name="filter_value" value="$$customSource2.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
@@ -63,19 +63,19 @@
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
                                     parameterArray="[$$category.name$$]" requiredAction="true"
                                     stepKey="searchAndSelectCategoryForSimpleProduct"/>
-        <click selector="{{AdminProductSourcesGrid.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
+        <click selector="{{AdminProductSourcesGridSection.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct"
                      stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$customSource.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="2" stepKey="fillSourceQtyField0"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="2" stepKey="fillSourceQtyField0"/>
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct"
                      stepKey="AdminOnProductEditPageAssignSourceToProduct2">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$customSource2.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="2" stepKey="fillSourceQtyField1"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="2" stepKey="fillSourceQtyField1"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
         <!--Login as a Customer-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefrontAccount">

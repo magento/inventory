@@ -37,7 +37,7 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <fillField selector="{{AdminProductFormSection.productPrice}}" userInput="123.00" stepKey="fillProductPrice" after="assignAdditionalSourceToProduct"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity" after="fillProductPrice"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setProductQuantity" after="fillProductPrice"/>
             <scrollToTopOfPage stepKey="scrollToTheTopOfProductEditPage" after="setProductQuantity"/>
             <!--Assign product to category.-->
             <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToDownloadableProduct" after="scrollToTheTopOfProductEditPage">

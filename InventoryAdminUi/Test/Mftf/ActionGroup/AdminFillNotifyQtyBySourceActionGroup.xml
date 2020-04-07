@@ -14,8 +14,8 @@
             <argument name="qty" type="string" defaultValue="1"/>
             <argument name="rowIndex" type="string" defaultValue="0"/>
         </arguments>
-        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault(rowIndex)}}" stepKey="uncheckNotifyQuantityUseDefaultForSecondProduct"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity(rowIndex)}}" userInput="{{qty}}" stepKey="fillNotifyQuantityForSimpleProduct"/>
+        <uncheckOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault(rowIndex)}}" stepKey="uncheckNotifyQuantityUseDefaultForSecondProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity(rowIndex)}}" userInput="{{qty}}" stepKey="fillNotifyQuantityForSimpleProduct"/>
     </actionGroup>
 </actionGroups>
 

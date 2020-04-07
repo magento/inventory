@@ -37,8 +37,8 @@
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
         </after>
 
-        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">
-            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup" stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
             <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
 
@@ -48,23 +48,22 @@
             <argument name="keyword" value="$$createSource1.source[name]$$"/>
         </actionGroup>
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource2"/>
-        <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDone1"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDone1"/>
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
         <seeElement selector=".success" stepKey="seeSuccessMessage"/>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$simpleProduct1.id$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
 
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
 

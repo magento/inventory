@@ -57,15 +57,15 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUSSource1ToCreatedProduct">
                 <argument name="sourceCode" value="$$USSource1.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setUSSource1Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setUSSource1Quantity"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUSSource2ToCreatedProduct">
                 <argument name="sourceCode" value="$$USSource2.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="setUSSource2Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('2')}}" userInput="100" stepKey="setUSSource2Quantity"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUASource1ToCreatedProduct">
                 <argument name="sourceCode" value="$$UASource1.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="100" stepKey="setUASource1Quantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('3')}}" userInput="100" stepKey="setUASource1Quantity"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
         </before>
         <after>
@@ -73,7 +73,7 @@
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUSSource1BySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$USSource1.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$USSource1.source[source_code]$$)}}" stepKey="clickEditUSSource1"/>
@@ -82,7 +82,7 @@
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseUSSource1"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUSSource2BySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$USSource2.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$USSource2.source[source_code]$$)}}" stepKey="clickEditUSSource2"/>
@@ -91,7 +91,7 @@
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseUSSource2"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUASource1BySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="value" value="$$UASource1.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$UASource1.source[source_code]$$)}}" stepKey="clickEditUASource1"/>
@@ -153,14 +153,14 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
 
         <!--Verify Distance Based Algorithm applied correctly.-->
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowProductSku('0')}}" userInput="$$simpleProduct.sku$$" stepKey="checkProductSku"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowQtyToShip('0')}}" userInput="50" stepKey="checkQtyToShip"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','0')}}" userInput="$$USSource2.source[name]$$" stepKey="checkUSSource2Name"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="50" stepKey="checkUSSource2Qty"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','1')}}" userInput="$$USSource1.source[name]$$" stepKey="checkUSSource1Name"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="0" stepKey="checkUSSource1Qty"/>
-        <see selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesName('0','2')}}" userInput="$$UASource1.source[name]$$" stepKey="checkSourceName"/>
-        <seeInField selector="{{AdminSourceSelectionOrderedItemsGrid.rowAvailableSourcesQtyToDeduct('0','2')}}" userInput="0" stepKey="checkUASource1Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowProductSku('0')}}" userInput="$$simpleProduct.sku$$" stepKey="checkProductSku"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowQtyToShip('0')}}" userInput="50" stepKey="checkQtyToShip"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','0')}}" userInput="$$USSource2.source[name]$$" stepKey="checkUSSource2Name"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','0')}}" userInput="50" stepKey="checkUSSource2Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','1')}}" userInput="$$USSource1.source[name]$$" stepKey="checkUSSource1Name"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','1')}}" userInput="0" stepKey="checkUSSource1Qty"/>
+        <see selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesName('0','2')}}" userInput="$$UASource1.source[name]$$" stepKey="checkSourceName"/>
+        <seeInField selector="{{AdminSourceSelectionOrderedItemsGridSection.rowAvailableSourcesQtyToDeduct('0','2')}}" userInput="0" stepKey="checkUASource1Qty"/>
         <!--Select source and proceed to shipment.-->
         <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="$$USSource2.source[name]$$" stepKey="selectSourceToCreateShipment"/>
         <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>

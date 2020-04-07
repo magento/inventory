@@ -83,14 +83,14 @@
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoadStore"/>
         <comment userInput="Add Simple Grouped product to order." stepKey="addSimpleGroupedProductToOrderComment"/>
-        <actionGroup ref="addGroupedProductOptionToOrderMsi" stepKey="addGroupedProductSimpleOptionToOrder">
+        <actionGroup ref="addGroupedProductOptionToOrderMsiActionGroup" stepKey="addGroupedProductSimpleOptionToOrder">
             <argument name="product" value="GroupedProduct"/>
             <argument name="option" value="$$simpleProduct$$"/>
             <argument name="quantity" value="2"/>
         </actionGroup>
         <scrollToTopOfPage stepKey="scrollToTopOfPageToSelectProduct"/>
         <comment userInput="Add Virtual Grouped product to order." stepKey="addVirtualGroupedProductToOrderComment"/>
-        <actionGroup ref="addGroupedProductOptionToOrderMsi" stepKey="addGroupedProductVirtualOptionToOrder">
+        <actionGroup ref="addGroupedProductOptionToOrderMsiActionGroup" stepKey="addGroupedProductVirtualOptionToOrder">
             <argument name="product" value="$$groupedProduct$$"/>
             <argument name="option" value="$$virtualProduct$$"/>
             <argument name="quantity" value="2"/>

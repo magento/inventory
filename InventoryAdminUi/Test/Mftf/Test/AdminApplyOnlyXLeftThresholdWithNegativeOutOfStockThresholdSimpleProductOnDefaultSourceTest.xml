@@ -58,7 +58,7 @@
         </after>
         <!--Enable backorders for simple product.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQty"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="10" stepKey="setProductQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="10" stepKey="setProductQuantity"/>
         <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
         <!--Set 'Out of Stock Threshold' for simple product.-->
         <actionGroup ref="AdminChangeOutOfStockThresholdOnProductEditPageActionGroup" stepKey="setOutOfStockThreshold">

@@ -48,7 +48,7 @@
 
         <!--Set default source product quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openSimpleProductPage"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
         <!--Assign simple product to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>

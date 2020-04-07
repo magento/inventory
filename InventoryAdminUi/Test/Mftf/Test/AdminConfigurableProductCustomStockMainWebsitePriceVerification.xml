@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <!--Create category.-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
@@ -130,7 +130,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource1ToTextSwatch1Variation">
             <argument name="sourceCode" value="$$source1.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillTextSwatch1VariationQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillTextSwatch1VariationQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveRedVariation"/>
         <!--Assign source2 to text swatch2 variation.-->
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findTextSwatch2Variation">
@@ -141,7 +141,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource2ToTextSwatch2Variation">
             <argument name="sourceCode" value="$$source2.source[source_code]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillBlueVariationQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillBlueVariationQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveTextSwatch2Variation"/>
         <!--Verify configurable product price on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>

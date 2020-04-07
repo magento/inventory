@@ -28,7 +28,7 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <!--Set virtual product quantity-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openVirtualProductEditPage"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{minimalProductQty.value}}" stepKey="setQty"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{minimalProductQty.value}}" stepKey="setQty"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
             <!--Add virtual product to bundle-->
             <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>

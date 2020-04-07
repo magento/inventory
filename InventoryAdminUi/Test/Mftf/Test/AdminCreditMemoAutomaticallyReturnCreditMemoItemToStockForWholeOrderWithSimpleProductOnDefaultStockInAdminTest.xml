@@ -41,7 +41,7 @@
 
         <remove keyForRemoval="assignTestSourceToCreatedProduct"/>
         <remove keyForRemoval="fillQuantityField"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}"
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}"
                    after="openProductEditPageToAssignSource"
                    userInput="100"
                    stepKey="fillQuantityField"/>

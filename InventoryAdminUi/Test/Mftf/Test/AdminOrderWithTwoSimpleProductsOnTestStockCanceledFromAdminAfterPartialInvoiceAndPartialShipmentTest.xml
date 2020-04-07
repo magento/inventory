@@ -63,7 +63,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct" after="openSecondProductForEdit">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct" after="setCustomSourceQuantity"/>
 
         <!-- assign second simple product to custom source -->
@@ -75,7 +75,7 @@
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToProduct2" after="openSecondProductForEdit2">
             <argument name="sourceCode" value="$$createSource.source[name]$$"/>
         </actionGroup>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity2"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="setCustomSourceQuantity2"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2" after="setCustomSourceQuantity2"/>
 
         <!-- Create order -->
@@ -93,7 +93,9 @@
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
-        <assertNotEmpty actual="$getOrderId" stepKey="assertOrderIdIsNotEmpty"/>
+        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
+            <actualResult type="const">$getOrderId</actualResult>
+        </assertNotEmpty>
 
         <!-- Invoice the order -->
         <actionGroup ref="GoToInvoiceIntoOrderActionGroup" stepKey="goToInvoiceIntoOrderPage"/>

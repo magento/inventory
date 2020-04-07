@@ -61,10 +61,10 @@
             <argument name="sourceCode" value="$$source.source[source_code]$$"/>
         </actionGroup>
         <!--Uncheck notify quantity use default.-->
-        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
+        <uncheckOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Verify Notify Quantity has changed.-->
-        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyQuantityUseDefaultIsNotUsed"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="{{RevertNotifyQuantityBelow.value}}" stepKey="verifyNotifyQuantityValue"/>
+        <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyQuantityUseDefaultIsNotUsed"/>
+        <seeInField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="{{RevertNotifyQuantityBelow.value}}" stepKey="verifyNotifyQuantityValue"/>
     </test>
 </tests>

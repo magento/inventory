@@ -27,8 +27,8 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
-        <actionGroup ref="AdminGoToStockGridFilterResultsByInputSelectStock" stepKey="goToStockGridFilterResultsByInputSelectStock1">
-            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputSelectStockActionGroup" stepKey="goToStockGridFilterResultsByInputSelectStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
             <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
 
@@ -37,6 +37,6 @@
         <click selector="{{AdminProductGridConfirmActionSection.ok}}" stepKey="clickOnOk2"/>
 
         <see userInput="You deleted 1 Stock(s)." selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeDeleteMessage1"/>
-        <see userInput="We couldn't find any records." selector="{{AdminManageStockGridFilterControls.noRecords}}" stepKey="seeCodeInRow1"/>
+        <see userInput="We couldn't find any records." selector="{{AdminManageStockGridFilterControlsSection.noRecords}}" stepKey="seeCodeInRow1"/>
     </test>
 </tests>

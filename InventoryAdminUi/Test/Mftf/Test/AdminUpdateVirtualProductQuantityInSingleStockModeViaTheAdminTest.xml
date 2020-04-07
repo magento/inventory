@@ -33,9 +33,9 @@
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
         </after>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct1">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$simpleProduct1.sku$"/>
         </actionGroup>
 
         <see selector="{{AdminGridRow.rowOne}}" userInput="$$simpleProduct1.product[name]$$" stepKey="seeProductNameInGrid1"/>
@@ -51,9 +51,9 @@
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
         <click selector="{{AdminGridMainControls.save}}" stepKey="clickOnSaveWebSite1"/>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct2">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct2">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$simpleProduct1.sku$"/>
         </actionGroup>
 
         <see selector="{{AdminGridRow.rowOne}}" userInput="$$simpleProduct1.product[name]$$" stepKey="seeProductNameInGrid2"/>

@@ -66,7 +66,7 @@
 
         <!--Set product qty..-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQty"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQty"/>
         <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite">
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>

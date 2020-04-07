@@ -46,7 +46,7 @@
 
         <!--Set product qty..-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1" stepKey="setDefaultSourceQty"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="1" stepKey="setDefaultSourceQty"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">

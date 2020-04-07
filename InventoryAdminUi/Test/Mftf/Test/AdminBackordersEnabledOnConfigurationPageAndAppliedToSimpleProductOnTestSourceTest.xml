@@ -47,7 +47,7 @@
                 <argument name="keyword" value="$$createSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSource.source[name]$$)}}" stepKey="selectCreatedSourceForCreatedStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneCreatedSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneCreatedSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCreatedStock"/>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
@@ -67,11 +67,11 @@
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$createProduct.product[sku]$$)}}" stepKey="clickOnEditCreatedProduct"/>
             <waitForPageLoad time="30" stepKey="waitForCreatedProductPageLoad"/>
-            <click selector="{{AdminProductSourcesGrid.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
+            <click selector="{{AdminProductSourcesGridSection.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillTestSourceQtyField"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="1000" stepKey="fillTestSourceQtyField"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
             <waitForPageLoad time="30" stepKey="waitForProductFormSaved"/>
         </before>

@@ -68,10 +68,10 @@
 
             <comment userInput="Assign default source to product and set quantity to 1000." stepKey="assignDefaultSourceToProductComment"/>
             <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-                <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+                <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
                 <argument name="filter_value" value="_defaultSource.source_code"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillSourceQuantityField"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="1000" stepKey="fillSourceQuantityField"/>
 
             <comment userInput="Add downloadable links to product." stepKey="addDownloadableLinks"/>
             <click selector="{{AdminProductDownloadableSection.sectionHeader}}" stepKey="openDownloadableSection"/>
@@ -101,28 +101,28 @@
                 <argument name="keyword" value="$$createFirstCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createFirstCustomSource.source[name]$$)}}" stepKey="selectFirstCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneFirstCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneFirstCustomSourceAssignment"/>
             <!--Assign second source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForSecondSource"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchSecondCustomSourceByName">
                 <argument name="keyword" value="$$createSecondCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createSecondCustomSource.source[name]$$)}}" stepKey="selectSecondCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneSecondCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneSecondCustomSourceAssignment"/>
             <!--Assign third source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForThirdSource"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchThirdCustomSourceByName">
                 <argument name="keyword" value="$$createThirdCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createThirdCustomSource.source[name]$$)}}" stepKey="selectThirdCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneThirdCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneThirdCustomSourceAssignment"/>
             <!--Assign fourth source-->
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesForFourthSource"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchFourthCustomSourceByName">
                 <argument name="keyword" value="$$createFourthCustomSource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$createFourthCustomSource.source[name]$$)}}" stepKey="selectFourthCustomSourceForCustomStock"/>
-            <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDoneFourthCustomSourceAssignment"/>
+            <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDoneFourthCustomSourceAssignment"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignMainWebsiteChannelToStockComment"/>

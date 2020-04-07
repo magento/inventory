@@ -66,8 +66,8 @@
         <see selector="{{AdminStoresGridSection.firstRow}}" userInput="{{BasicMsiStoreView.name}}" stepKey="seeTheNewStoreView3"/>
         <!-- END OF COPY -->
 
-        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">
-            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStockActionGroup" stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControlsSection.name"/>
             <argument name="filter_value" value="$$createStock1.stock[name]$$"/>
         </actionGroup>
 

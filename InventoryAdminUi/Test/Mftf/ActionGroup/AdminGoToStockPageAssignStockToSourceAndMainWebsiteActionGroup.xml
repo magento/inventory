@@ -33,7 +33,7 @@
         <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch2"/>
 
         <click selector="{{AdminGridRow.checkboxByValue(source_name)}}" stepKey="clickOnTheCheckboxForSource2"/>
-        <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDone1"/>
+        <click selector="{{AdminManageSourcesGridControlsSection.done}}" stepKey="clickOnDone1"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue1"/>
     </actionGroup>
 </actionGroups>

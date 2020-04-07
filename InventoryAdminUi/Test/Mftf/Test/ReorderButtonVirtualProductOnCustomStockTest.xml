@@ -43,6 +43,6 @@
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <remove keyForRemoval="setDefaultStockQuantity"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1" stepKey="setAdditionalSourceQuantity" after="assignSourceToProduct"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="1" stepKey="setAdditionalSourceQuantity" after="assignSourceToProduct"/>
     </test>
 </tests>

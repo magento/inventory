@@ -39,11 +39,11 @@
 
             <comment userInput="On created product enable backorders." stepKey="inCreatedProductEnableBackordersComment"/>
             <amOnPage url="{{AdminProductEditPage.url($$createProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
-            <click selector="{{AdminProductSourcesGrid.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
+            <click selector="{{AdminProductSourcesGridSection.rowDelete('0')}}" stepKey="deleteDefaultSourceFromCreatedProduct"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillTestSourceQtyField"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="1000" stepKey="fillTestSourceQtyField"/>
             <!--Enable backorders.-->
             <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
             <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>

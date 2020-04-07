@@ -46,9 +46,9 @@
 
         <!--Set Low Stock Notification quantity and source quantity for created product.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQty"/>
-        <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="95" stepKey="setLowStockNotification"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQty"/>
+        <uncheckOption selector="{{AdminProductSourcesGridSection.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowNotifyQuantity('0')}}" userInput="95" stepKey="setLowStockNotification"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProductQty"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
         <!--Verify report is empty.-->
         <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageBeforeApplyCustomNotifyQtyForProduct"/>
@@ -59,7 +59,7 @@
         <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmpty"/>
         <!--Set product qty lower than notify quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToChangeQty"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="94" stepKey="setProductQtyLowerThanNotifyQuantity"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="94" stepKey="setProductQtyLowerThanNotifyQuantity"/>
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProductWithChangedQuantity"/>
         <!--Verify report contains product.-->
         <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageAfterApplyCustomNotifyQtyForProduct"/>

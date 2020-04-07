@@ -27,8 +27,8 @@
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 
-        <actionGroup ref="AdminGoToSourceGridFilterResultsByInputEditSource" stepKey="goToSourceGridFilterResultsByInputEditSource1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+        <actionGroup ref="AdminGoToSourceGridFilterResultsByInputEditSourceActionGroup" stepKey="goToSourceGridFilterResultsByInputEditSource1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createFullSource1.source[source_code]$$"/>
         </actionGroup>
 
@@ -76,8 +76,8 @@
         <seeInField selector="{{AdminEditSourceAddressDataSection.street}}" userInput="{{FullSource2.street}}" stepKey="seeStreetInField1"/>
         <seeInField selector="{{AdminEditSourceAddressDataSection.postcode}}" userInput="{{FullSource2.postcode}}" stepKey="seePostcodeInField1"/>
 
-        <actionGroup ref="AdminGoToSourceGridFilterResultsByInput" stepKey="goToSourceGridFilterResultsByInput1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+        <actionGroup ref="AdminGoToSourceGridFilterResultsByInputActionGroup" stepKey="goToSourceGridFilterResultsByInput1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createFullSource1.source[source_code]$$"/>
         </actionGroup>
 

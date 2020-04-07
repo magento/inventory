@@ -33,7 +33,7 @@
 
         <conditionalClick selector="{{AdminGridColumnsControls.columns}}" dependentSelector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__data-grid-action-columns-menu" visible="false" stepKey="clickOnColumnsIfNotOpen1"/>
         <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns1"/>
-        <see selector="{{AdminManageSourcesGridColumnControls.dropDown}}" userInput="5 out of 5 visible" stepKey="seeAllColumnsAreActive1"/>
+        <see selector="{{AdminManageSourcesGridColumnControlsSection.dropDown}}" userInput="5 out of 5 visible" stepKey="seeAllColumnsAreActive1"/>
 
         <see selector="{{AdminGridHeaders.headerByName('ID')}}" userInput="ID" stepKey="seeTheHeaderId1"/>
         <see selector="{{AdminGridHeaders.headerByName('Name')}}" userInput="Name" stepKey="seeTheHeaderName1"/>

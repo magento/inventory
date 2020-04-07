@@ -58,7 +58,7 @@
             </actionGroup>
             <!--Assign additional source to configurable product.-->
             <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct.id$)}}" stepKey="openProductEditPage"/>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceQuantity"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setDefaultSourceQuantity"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>

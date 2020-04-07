@@ -36,45 +36,44 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
         </after>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$simpleProduct1.product[sku]$$"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openAdminProductEditPage">
+            <argument name="productId" value="$simpleProduct1.id$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
 
         <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct2">
-            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControlsSection.code"/>
             <argument name="filter_value" value="$$createSource2.source[source_code]$$"/>
         </actionGroup>
 
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
-        <fillField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="fillDefaultQuantityField3"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
+        <fillField selector="{{AdminProductSourcesGridSection.rowQty('2')}}" userInput="100" stepKey="fillDefaultQuantityField3"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="default" stepKey="seeSourceIdInGrid1"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="Default Source" stepKey="seeSourceNameInGrid1"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="default" stepKey="seeSourceIdInGrid1"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="Default Source" stepKey="seeSourceNameInGrid1"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSourceNameInGrid2"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('1')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSourceNameInGrid2"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceNameInGrid3"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('2')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceNameInGrid3"/>
 
         <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="clickOnSaveAndContinue1"/>
 
-        <click selector="{{AdminProductSourcesGrid.rowDelete('1')}}" stepKey="clickOnDelete1"/>
-        <dontSee selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource1.source[name]$$" stepKey="dontSeeSourceNameInGrid1"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceNameInGrid5"/>
+        <click selector="{{AdminProductSourcesGridSection.rowDelete('1')}}" stepKey="clickOnDelete1"/>
+        <dontSee selector="{{AdminProductSourcesGridSection.rowByIndex('1')}}" userInput="$$createSource1.source[name]$$" stepKey="dontSeeSourceNameInGrid1"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('1')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceNameInGrid5"/>
 
-        <click selector="{{AdminProductSourcesGrid.rowDelete('1')}}" stepKey="clickOnDelete2"/>
-        <dontSee selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource2.source[name]$$" stepKey="dontSeeSourceNameInGrid2"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="Default Source" stepKey="seeSourceNameInGrid6"/>
+        <click selector="{{AdminProductSourcesGridSection.rowDelete('1')}}" stepKey="clickOnDelete2"/>
+        <dontSee selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="$$createSource2.source[name]$$" stepKey="dontSeeSourceNameInGrid2"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="Default Source" stepKey="seeSourceNameInGrid6"/>
 
         <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="clickOnSaveAndContinue2"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="Default Source" stepKey="seeSourceNameInGrid7"/>
+        <see selector="{{AdminProductSourcesGridSection.rowByIndex('0')}}" userInput="Default Source" stepKey="seeSourceNameInGrid7"/>
         <seeNumberOfElements selector=".data-row" userInput="1" stepKey="seeOneSourceRow1"/>
     </test>
 </tests>

@@ -35,7 +35,7 @@
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToCreatedProduct" after="selectWeight">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQuantity" after="assignSourceToCreatedProduct"/>
+            <fillField selector="{{AdminProductSourcesGridSection.rowQty('0')}}" userInput="100" stepKey="setProductQuantity" after="assignSourceToCreatedProduct"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->

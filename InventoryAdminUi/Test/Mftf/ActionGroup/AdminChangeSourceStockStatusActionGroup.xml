@@ -16,7 +16,7 @@
             <argument name="sourceCode" type="string" defaultValue="{{_defaultSource.code}}"/>
             <argument name="sourceStatus" type="string" defaultValue="{{SourceStatusInStock.value}}"/>
         </arguments>
-        <selectOption selector="{{AdminProductSourcesGrid.rowStatusBySourceCode(sourceCode)}}" userInput="{{sourceStatus}}" stepKey="changeSourceStatus"/>
+        <selectOption selector="{{AdminProductSourcesGridSection.rowStatusBySourceCode(sourceCode)}}" userInput="{{sourceStatus}}" stepKey="changeSourceStatus"/>
     </actionGroup>
 </actionGroups>
 
