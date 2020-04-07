@@ -10,7 +10,7 @@ namespace Magento\InventoryCatalogFrontendUi\Model;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 
 /**
- * Qty left checker.
+ * Check if it is necessary to show qty left.
  */
 class QtyLeftChecker
 {
