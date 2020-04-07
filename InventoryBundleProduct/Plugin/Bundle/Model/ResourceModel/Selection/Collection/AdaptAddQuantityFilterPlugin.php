@@ -72,8 +72,11 @@ class AdaptAddQuantityFilterPlugin
         if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
             return $proceed();
         }
+        $skus = [];
         $skusToExclude = [];
-        $skus = $subject->getAllAttributeValues('sku');
+        foreach ($subject->getData() as $item) {
+            $skus[] = (string)$item['sku'];
+        }
         $results = $this->areProductsSalable->execute($skus, $stock->getStockId());
         foreach ($results as $result) {
             if (!$result->isSalable()) {
