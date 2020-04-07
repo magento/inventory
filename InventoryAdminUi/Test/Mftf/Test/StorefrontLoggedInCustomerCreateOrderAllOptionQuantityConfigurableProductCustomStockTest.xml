@@ -15,6 +15,9 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="MC-33143"/>
+            </skip>
         </annotations>
 
         <before>
