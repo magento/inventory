@@ -641,7 +641,7 @@ class GetPickupLocationsTest extends WebapiAbstract
                 'filters' => $searchRequestData,
                 'scopeCode' => $salesChannelCode,
                 'scopeType' => 'website',
-                'CurrentPage' => 1,
+                'currentPage' => 1,
             ],
         ];
 

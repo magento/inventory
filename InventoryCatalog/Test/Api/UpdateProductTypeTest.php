@@ -8,7 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\App\Cron;
+use Magento\Framework\MessageQueue\ConsumerFactory;
+use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -40,6 +41,7 @@ class UpdateProductTypeTest extends WebapiAbstract
     {
         $this->getSourceItemsBySku = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->rejectMessages();
     }
 
     /**
@@ -71,15 +73,36 @@ class UpdateProductTypeTest extends WebapiAbstract
             $serviceInfo,
             ['product' => ['sku' => 'SKU-1', 'type_id' => 'configurable']]
         );
-        $cronObserver = Bootstrap::getObjectManager()->create(
-            Cron::class,
-            ['parameters' => ['group' => null, 'standaloneProcessStarted' => 0]]
-        );
-        $cronObserver->launch();
-        /*Wait till source items will be removed asynchronously.*/
-        sleep(20);
-
+        $this->runConsumers();
         $sourceItems = $this->getSourceItemsBySku->execute('SKU-1');
         self::assertEmpty($sourceItems);
+    }
+
+    /**
+     * Run consumers to remove redundant inventory source items.
+     *
+     * @return void
+     */
+    private function runConsumers(): void
+    {
+        $this->consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
+        $consumer = $this->consumerFactory->get('inventory.source.items.cleanup');
+        $consumer->process(1);
+        /*Wait till source items will be removed asynchronously.*/
+        sleep(20);
+    }
+
+    /**
+     * Reject all previously created messages.
+     *
+     * @return void
+     */
+    private function rejectMessages()
+    {
+        $queueFactory = Bootstrap::getObjectManager()->get(QueueFactoryInterface::class);
+        $queue = $queueFactory->create('inventory.source.items.cleanup', 'db');
+        while ($envelope = $queue->dequeue()) {
+            $queue->reject($envelope, false);
+        }
     }
 }
