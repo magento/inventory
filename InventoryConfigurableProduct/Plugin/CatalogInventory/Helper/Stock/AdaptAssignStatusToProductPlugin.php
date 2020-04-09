@@ -82,7 +82,7 @@ class AdaptAssignStatusToProductPlugin
                 foreach ($attribute as $option) {
                     if ($this->isProductSalable->execute($option['sku'], $stock->getStockId())) {
                         $status = 1;
-                        break;
+                        break 2;
                     }
                 }
             }
