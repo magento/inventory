@@ -63,7 +63,7 @@ class GetQty extends Action implements HttpGetActionInterface
     {
         $sku = $this->getRequest()->getParam('sku');
         $salesChannel = $this->getRequest()->getParam('channel');
-        $salesChannelCode = $this->getRequest()->getParam('code');
+        $salesChannelCode = $this->getRequest()->getParam('salesChannelCode');
 
         if (!$sku || !$salesChannel) {
             return $this->getResultForward();

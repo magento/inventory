@@ -37,7 +37,7 @@
             <!-- Reindex invalidated indices after product attribute has been created -->
             <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <!--Open configurable product edit page-->
             <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="openConfigurableProductEditPage">
@@ -79,7 +79,7 @@
             <!-- Reindex invalidated indices after product attribute has been deleted -->
             <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
         </after>
         <!--Check configurable product options on storefront-->
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openConfigurableProductViewPage">
@@ -100,9 +100,10 @@
             <argument name="productName" value="$createConfigurableProduct.name$"/>
         </actionGroup>
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <actionGroup ref="GuestCheckoutFillNewBillingAddressActionGroup" stepKey="fillGuestBillingAddressOnCheckout">
+        <actionGroup ref="GuestCheckoutSelectPaymentAndFillNewBillingAddressActionGroup" stepKey="fillGuestBillingAddressOnCheckout">
             <argument name="customerVar" value="Simple_US_Customer"/>
             <argument name="customerAddressVar" value="CustomerAddressSimple"/>
+            <argument name="paymentMethod" value="Check / Money order"/>
         </actionGroup>
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="clickUpdateButton"/>
         <waitForLoadingMaskToDisappear stepKey="waitForBillingAddressUpdate"/>

@@ -51,7 +51,7 @@ class AddAdditionalInfo
         $jsonConfig = $this->jsonSerializer->unserialize($result);
 
         $jsonConfig['channel'] = SalesChannelInterface::TYPE_WEBSITE;
-        $jsonConfig['code'] = $this->storeManager->getWebsite()->getCode();
+        $jsonConfig['salesChannelCode'] = $this->storeManager->getWebsite()->getCode();
         $jsonConfig['sku'] = $this->getProductVariationsSku($configurable);
 
         return $this->jsonSerializer->serialize($jsonConfig);

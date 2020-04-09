@@ -13,7 +13,7 @@ define([
 ], function ($, _, urlBuilder) {
     'use strict';
 
-    return function (productSku, salesChannel, code) {
+    return function (productSku, salesChannel, salesChannelCode) {
         var selectorInfoStockSkuQty = '.availability.only',
             selectorInfoStockSkuQtyValue = '.availability.only > strong',
             productQtyInfoBlock = $(selectorInfoStockSkuQty),
@@ -26,7 +26,7 @@ define([
                 data: {
                     'sku': productSku,
                     'channel': salesChannel,
-                    'code': code
+                    'salesChannelCode': salesChannelCode
                 }
             }).done(function (response) {
                 if (response.qty !== null) {

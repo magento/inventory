@@ -9,15 +9,8 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithTextSwatchAttributeTest" extends="StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithDropDownAttributeTest">
         <annotations>
-            <features value="ConfigurableProduct"/>
-            <stories value="Configurable Product Option Quantity"/>
             <title value="Display 'Only X left' message when a Text Swatch option is selected on Configurable product page on the Storefront"/>
             <description value="Display 'Only X left' message when a Text Swatch option is selected on Configurable product page on the Storefront"/>
-            <testCaseId value="MC-28741"/>
-            <useCaseId value="MC-17694"/>
-            <severity value="MAJOR"/>
-            <group value="catalog"/>
-            <group value="configurableProduct"/>
             <group value="swatches"/>
         </annotations>
         <before>
