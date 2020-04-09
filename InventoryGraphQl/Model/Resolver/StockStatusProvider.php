@@ -8,14 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventoryGraphQl\Model\Resolver;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
  * @inheritdoc
@@ -33,19 +31,15 @@ class StockStatusProvider implements ResolverInterface
     private $areProductsSalable;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable @deprecated
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
-     * @param AreProductsSalableInterface|null $areProductsSalable
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        AreProductsSalableInterface $areProductsSalable = null
+        AreProductsSalableInterface $areProductsSalable
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
-        $this->areProductsSalable = $areProductsSalable ?: ObjectManager::getInstance()
-            ->get(AreProductsSalableInterface::class);
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**

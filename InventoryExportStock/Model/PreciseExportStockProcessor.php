@@ -8,14 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventoryExportStock\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Model\IsProductAssignedToStockInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
  * Class Provides stock data with reservation taken into in account
@@ -56,28 +54,24 @@ class PreciseExportStockProcessor
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetQtyForNotManageStock $getQtyForNotManageStock
-     * @param IsProductSalableInterface $isProductSalable @deprecated
      * @param GetStockItemConfiguration $getStockItemConfiguration
      * @param IsProductAssignedToStockInterface $isProductAssignedToStock
-     * @param AreProductsSalableInterface|null $areProductsSalable
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
         IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
         GetProductSalableQtyInterface $getProductSalableQty,
         GetQtyForNotManageStock $getQtyForNotManageStock,
-        IsProductSalableInterface $isProductSalable,
         GetStockItemConfiguration $getStockItemConfiguration,
         IsProductAssignedToStockInterface $isProductAssignedToStock,
-        AreProductsSalableInterface $areProductsSalable = null
+        AreProductsSalableInterface $areProductsSalable
     ) {
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getQtyForNotManageStock = $getQtyForNotManageStock;
         $this->isProductAssignedToStock = $isProductAssignedToStock;
-        $this->areProductsSalable = $areProductsSalable ?: ObjectManager::getInstance()
-            ->get(AreProductsSalableInterface::class);
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
