@@ -21,6 +21,8 @@ use Magento\TestFramework\TestCase\GraphQlAbstract;
 
 /**
  * Verify order placement with 'in store pickup' delivery method.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PlaceOrderTest extends GraphQlAbstract
 {

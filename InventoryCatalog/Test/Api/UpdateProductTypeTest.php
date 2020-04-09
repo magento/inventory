@@ -85,8 +85,8 @@ class UpdateProductTypeTest extends WebapiAbstract
      */
     private function runConsumers(): void
     {
-        $this->consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
-        $consumer = $this->consumerFactory->get('inventory.source.items.cleanup');
+        $consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
+        $consumer = $consumerFactory->get('inventory.source.items.cleanup');
         $consumer->process(1);
         /*Wait till source items will be removed asynchronously.*/
         sleep(20);
