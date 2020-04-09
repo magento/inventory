@@ -10,8 +10,8 @@ namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\Product\Type;
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -20,11 +20,6 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class AdaptIsSalablePlugin
 {
-    /**
-     * @var IsProductSalableInterface
-     */
-    private $isProductSalable;
-
     /**
      * @var StoreManagerInterface
      */
@@ -41,18 +36,15 @@ class AdaptIsSalablePlugin
     private $getBundleProductStockStatus;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
      * @param StoreManagerInterface $storeManager
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetBundleProductStockStatus $getBundleProductStockStatus
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
         StoreManagerInterface $storeManager,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         GetBundleProductStockStatus $getBundleProductStockStatus
     ) {
-        $this->isProductSalable = $isProductSalable;
         $this->storeManager = $storeManager;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getBundleProductStockStatus = $getBundleProductStockStatus;
@@ -85,7 +77,15 @@ class AdaptIsSalablePlugin
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockByWebsiteIdResolver->execute((int)$website->getId());
         $options = $subject->getOptionsCollection($product);
-        $isSalable = $this->getBundleProductStockStatus->execute($product, $options->getItems(), $stock->getStockId());
+        try {
+            $isSalable = $this->getBundleProductStockStatus->execute(
+                $product,
+                $options->getItems(),
+                $stock->getStockId()
+            );
+        } catch (LocalizedException $e) {
+            $isSalable = false;
+        }
         $product->setData('all_items_salable', $isSalable);
 
         return $isSalable;
