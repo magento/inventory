@@ -28,6 +28,11 @@ class Get implements GetInterface
     private $stockFactory;
 
     /**
+     * @var StockInterface[]
+     */
+    private $stocks;
+
+    /**
      * @param StockResourceModel $stockResource
      * @param StockInterfaceFactory $stockFactory
      */
@@ -44,6 +49,9 @@ class Get implements GetInterface
      */
     public function execute(int $stockId): StockInterface
     {
+        if (isset($this->stocks[$stockId])) {
+            return $this->stocks[$stockId];
+        }
         /** @var StockInterface $stock */
         $stock = $this->stockFactory->create();
         $this->stockResource->load($stock, $stockId, StockInterface::STOCK_ID);
@@ -51,6 +59,8 @@ class Get implements GetInterface
         if (null === $stock->getStockId()) {
             throw new NoSuchEntityException(__('Stock with id "%value" does not exist.', ['value' => $stockId]));
         }
+        $this->stocks[$stockId] = $stock;
+
         return $stock;
     }
 }

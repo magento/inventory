@@ -41,6 +41,11 @@ class AdaptAssignStatusToProductPlugin
     private $getProductIdsBySkus;
 
     /**
+     * @var array
+     */
+    private $productStatus;
+
+    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param IsProductSalableInterface $isProductSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
@@ -59,6 +64,8 @@ class AdaptAssignStatusToProductPlugin
     }
 
     /**
+     * Process product stock status.
+     *
      * @param Stock $subject
      * @param callable $proceed
      * @param Product $product
@@ -77,12 +84,19 @@ class AdaptAssignStatusToProductPlugin
             return;
         }
 
+        $stockId = $this->getStockIdForCurrentWebsite->execute();
+        if (isset($this->productStatus[$stockId][$product->getSku()])) {
+            $proceed($product, $this->productStatus[$stockId][$product->getSku()]);
+            return;
+        }
+
         try {
-            $this->getProductIdsBySkus->execute([$product->getSku()]);
+            $productIds = $this->getProductIdsBySkus->execute([$product->getSku()]);
+            $productId = current($productIds);
 
             if (null === $status) {
-                $stockId = $this->getStockIdForCurrentWebsite->execute();
                 $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+                $this->productStatus[$stockId][$productId] = $status;
             }
 
             $proceed($product, $status);
