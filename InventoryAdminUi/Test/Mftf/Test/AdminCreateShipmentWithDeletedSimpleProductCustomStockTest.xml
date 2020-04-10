@@ -76,7 +76,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Delete product.-->
         <deleteData createDataKey="product" stepKey="deleteProduct"/>
-        <magentoCron stepKey="runConsumers"/>
+        <magentoCron groups="consumers" stepKey="runConsumers"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
