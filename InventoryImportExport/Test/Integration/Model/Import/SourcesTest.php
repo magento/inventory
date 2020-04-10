@@ -80,7 +80,7 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testValidateRowExpectsInvalidRow()
     {
@@ -90,8 +90,8 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testValidateRowExpectsValidRow()
     {
@@ -110,11 +110,11 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      *
      * @magentoDbIsolation disabled
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1408728
@@ -143,11 +143,11 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1408729
      *
      * @magentoDbIsolation disabled
@@ -173,11 +173,11 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465149
      *
      * @magentoDbIsolation disabled
@@ -203,11 +203,11 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      *
      * @magentoDbIsolation disabled
      * @magentoAppIsolation enabled
@@ -240,9 +240,9 @@ class SourcesTest extends TestCase
     /**
      * Verify sample file import with Add/Update behaviour.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/products_sample_file.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/sources_sample_file.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/source_items_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/products_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @param array $expectedData
      * @dataProvider getSampleFileExpectedData()
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1418539
@@ -269,9 +269,9 @@ class SourcesTest extends TestCase
     /**
      * Verify sample file import with Replace behaviour.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/products_sample_file.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/sources_sample_file.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/source_items_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/products_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @param array $expectedData
      * @dataProvider getSampleFileExpectedData()
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
@@ -373,9 +373,9 @@ class SourcesTest extends TestCase
     /**
      * Verify sample file import with Delete behaviour.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/products_sample_file.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/sources_sample_file.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryImportExport/Test/_files/source_items_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/products_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @param array $expectedData
      * @dataProvider getSampleFileExpectedDataDeleteBehavior()
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136

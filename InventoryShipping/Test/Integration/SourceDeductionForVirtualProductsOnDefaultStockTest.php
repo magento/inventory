@@ -84,11 +84,11 @@ class SourceDeductionForVirtualProductsOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/products_virtual.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/source_items_for_virtual_on_default_source.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/create_quote_on_default_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/order_virtual_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/products_virtual.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/source_items_for_virtual_on_default_source.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/create_quote_on_default_website.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/order_virtual_products.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testSourceDeductionWhileInvoicingWholeOrderedQty()
     {
@@ -120,11 +120,11 @@ class SourceDeductionForVirtualProductsOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/products_virtual.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/source_items_for_virtual_on_default_source.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/create_quote_on_default_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/order_virtual_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/products_virtual.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/source_items_for_virtual_on_default_source.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/create_quote_on_default_website.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/order_virtual_products.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testSourceDeductionWhileInvoicingPartialOrderedQty()
     {

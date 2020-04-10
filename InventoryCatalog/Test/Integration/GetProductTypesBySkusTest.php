@@ -32,7 +32,7 @@ class GetProductTypesBySkusTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/products_all_types.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_all_types.php
      */
     public function testExecute()
     {
@@ -49,7 +49,7 @@ class GetProductTypesBySkusTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/products_all_types.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_all_types.php
      */
     public function testExecuteWithNotExistedSkus()
     {
