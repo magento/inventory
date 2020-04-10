@@ -64,6 +64,8 @@ class AdaptAssignStatusToProductPlugin
     }
 
     /**
+     * Process product stock status.
+     *
      * @param Stock $subject
      * @param callable $proceed
      * @param Product $product
