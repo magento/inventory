@@ -40,7 +40,7 @@ class IsOrderSourceManageableTest extends TestCase
     /**
      * Verify order with not assigned to all stocks items won't throw exception.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento/Sales/_files/order.php
      */
     public function testOrderWithProductsNotAssignedToStocks(): void

@@ -40,8 +40,8 @@ class SkuValidatorTest extends TestCase
 
     /**
      * Tests that with a SKU that deosn't exist in the catalog still passes as valid
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testNonExistentSkuDoesPassValidation()
     {
@@ -58,8 +58,8 @@ class SkuValidatorTest extends TestCase
 
     /**
      * Tests that with a valid SKU the validation passes correctly as expected
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testValidSkuDoesPassValidation()
     {

@@ -28,12 +28,11 @@ use PHPUnit\Framework\TestCase;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
- * @magentoDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/default_stock_bundle_products.php
- * @magentoDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/source_items_for_bundle_options_on_default_source.php
- * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
- * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
- *
- * @magentoDbIsolation disabled
+ * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/default_stock_bundle_products.php
+ * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/source_items_for_bundle_options_on_default_source.php
+ * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+ * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+ * @magentoDbIsolation enabled
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
 {

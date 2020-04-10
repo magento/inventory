@@ -16,9 +16,9 @@ use Magento\InventorySales\Test\Integration\Order\PlaceOrderOnDefaultStockTest a
 class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
 {
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/419537/scenarios/1620162
      */
     public function testPlaceOrderWithInStockProduct()
@@ -47,9 +47,9 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testPlaceOrderWithOutOffStockProduct()
     {
@@ -68,7 +68,6 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
 
         $this->cartRepository->save($cart);
 
-
         self::expectException(LocalizedException::class);
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
@@ -76,9 +75,9 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
      */
     public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn()
@@ -107,10 +106,10 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
      */
     public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
