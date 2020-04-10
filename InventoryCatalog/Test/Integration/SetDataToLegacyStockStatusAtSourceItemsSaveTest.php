@@ -25,6 +25,8 @@ use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 /**
  * Tests legacy stock information synchronized with MSI's.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ * @magentoDbIsolation disabled
  */
 class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
 {

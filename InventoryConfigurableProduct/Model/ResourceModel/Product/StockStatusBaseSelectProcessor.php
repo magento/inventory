@@ -91,8 +91,8 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
                 sprintf('stock.sku = %s.sku', BaseSelectProcessorInterface::PRODUCT_TABLE_ALIAS),
                 []
             );
+            $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
         }
-        $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
 
         return $select;
     }

@@ -10,6 +10,9 @@ namespace Magento\InventoryGroupedProduct\Test\Integration\Order;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySales\Test\Integration\Order\PlaceOrderOnDefaultStockTest as PlaceOrderTest;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
 {
     /**

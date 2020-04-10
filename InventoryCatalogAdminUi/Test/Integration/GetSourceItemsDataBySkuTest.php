@@ -12,6 +12,9 @@ use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class GetSourceItemsDataBySkuTest extends TestCase
 {
     /**
@@ -29,6 +32,8 @@ class GetSourceItemsDataBySkuTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     *
+     * @magentoDbIsolation disabled
      */
     public function testExecute()
     {

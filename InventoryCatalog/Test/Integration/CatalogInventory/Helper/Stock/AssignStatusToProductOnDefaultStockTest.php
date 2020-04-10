@@ -13,6 +13,9 @@ use Magento\CatalogInventory\Helper\Stock;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class AssignStatusToProductOnDefaultStockTest extends TestCase
 {
     /**

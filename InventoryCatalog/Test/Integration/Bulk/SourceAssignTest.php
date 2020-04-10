@@ -31,6 +31,9 @@ class SourceAssignTest extends TestCase
      */
     private $sourceItemRepository;
 
+    /**
+     * @inheritDoc
+     */
     public function setUp()
     {
         parent::setUp();
@@ -62,7 +65,7 @@ class SourceAssignTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @magentoDbIsolation enabled
+     * @magentoDbIsolation disabled
      */
     public function testBulkSourceAssignment()
     {

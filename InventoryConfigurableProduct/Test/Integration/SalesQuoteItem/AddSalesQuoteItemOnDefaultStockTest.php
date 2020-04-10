@@ -22,6 +22,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ * @magentoDbIsolation disabled
  */
 class AddSalesQuoteItemOnDefaultStockTest extends TestCase
 {
