@@ -84,18 +84,19 @@ class AdaptAssignStatusToProductPlugin
             return;
         }
 
-        if (isset($this->productStatus[$product->getSku()])) {
-            $proceed($product, $this->productStatus[$product->getSku()]);
+        $stockId = $this->getStockIdForCurrentWebsite->execute();
+        if (isset($this->productStatus[$stockId][$product->getSku()])) {
+            $proceed($product, $this->productStatus[$stockId][$product->getSku()]);
             return;
         }
 
         try {
-            $this->getProductIdsBySkus->execute([$product->getSku()]);
+            $productIds = $this->getProductIdsBySkus->execute([$product->getSku()]);
+            $productId = current($productIds);
 
             if (null === $status) {
-                $stockId = $this->getStockIdForCurrentWebsite->execute();
                 $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
-                $this->productStatus[$product->getSku()] = $status;
+                $this->productStatus[$stockId][$productId] = $status;
             }
 
             $proceed($product, $status);
