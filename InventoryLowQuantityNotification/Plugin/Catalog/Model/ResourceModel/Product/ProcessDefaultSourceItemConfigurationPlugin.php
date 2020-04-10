@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotification\Plugin\Catalog\Model\ResourceModel\Product;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Model\AbstractModel;
@@ -80,7 +81,8 @@ class ProcessDefaultSourceItemConfigurationPlugin
      */
     public function afterSave(Product $subject, Product $result, AbstractModel $product): Product
     {
-        if ($this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId()) === false
+        $productTypeId = $product->getTypeId() ?: Type::DEFAULT_TYPE;
+        if ($this->isSourceItemManagementAllowedForProductType->execute($productTypeId) === false
             || !$product->getExtensionAttributes()->getStockItem()) {
             return $result;
         }
