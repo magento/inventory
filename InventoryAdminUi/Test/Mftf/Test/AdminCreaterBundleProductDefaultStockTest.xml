@@ -69,8 +69,8 @@
         </actionGroup>
         <!--Verify bundle product on store front.-->
         <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="AssertProductOnCategoryPageActionGroup" stepKey="verifyBundleProduct">
-            <argument name="product" value="$bundleProduct$"/>
+        <actionGroup ref="AssertStorefrontProductIsPresentOnCategoryPageActionGroup" stepKey="verifyBundleProduct">
+            <argument name="productName" value="$bundleProduct.name$"/>
         </actionGroup>
     </test>
 </tests>

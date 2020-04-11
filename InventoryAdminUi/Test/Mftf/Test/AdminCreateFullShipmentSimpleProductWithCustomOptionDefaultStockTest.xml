@@ -60,9 +60,9 @@
         </actionGroup>
         <!--Add product to cart.-->
         <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
-        <actionGroup ref="StorefrontSelectOptionDropDownActionGroup" stepKey="selectOption">
-            <argument name="optionTitle" value="ProductOptionDropDown"/>
-            <argument name="option" value="ProductOptionValueDropdown1.title"/>
+        <actionGroup ref="StorefrontProductPageSelectDropDownOptionValueActionGroup" stepKey="selectOption">
+            <argument name="attributeLabel" value="{{ProductOptionDropDown.title}}"/>
+            <argument name="optionLabel" value="{{ProductOptionValueDropdown1.title}}"/>
         </actionGroup>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="fillProductQty"/>
         <actionGroup ref="StorefrontAddToTheCartActionGroup" stepKey="addProductToCart"/>

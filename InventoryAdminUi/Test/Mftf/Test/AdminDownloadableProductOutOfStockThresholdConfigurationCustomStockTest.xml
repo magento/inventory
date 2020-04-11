@@ -77,9 +77,9 @@
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
         <!--Verify product is absent on category page.-->
-        <actionGroup ref="StorefrontAssertProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductIsAbsentOnCategoryPage">
-            <argument name="category" value="$$category$$"/>
-            <argument name="product" value="$$product$$"/>
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductIsAbsentOnCategoryPage">
+            <argument name="categoryUrlKey" value="$$category.url_key$$"/>
+            <argument name="productName" value="$$product.name$$"/>
         </actionGroup>
     </test>
 </tests>
