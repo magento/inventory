@@ -40,7 +40,7 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Add image to source description.-->
             <amOnPage url="{{AdminEditSourcePage.url($culverSource.source[source_code]$)}}" stepKey="navigateToCulverSourceEditPage"/>
             <actionGroup ref="AdminAddImageToSourceDescriptionActionGroup" stepKey="addImage"/>
@@ -80,7 +80,7 @@
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Add product to cart.-->

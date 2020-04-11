@@ -21,10 +21,10 @@
 
         <before>
             <createData entity="BasicMsiStock1" stepKey="createStock1"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputSelectStock" stepKey="goToStockGridFilterResultsByInputSelectStock1">

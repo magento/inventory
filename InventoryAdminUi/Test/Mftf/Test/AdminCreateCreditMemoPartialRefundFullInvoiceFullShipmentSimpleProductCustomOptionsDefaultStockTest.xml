@@ -27,7 +27,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <createData entity="MsiCustomer1" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -49,7 +49,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Login To storefront as Customer-->
@@ -73,8 +73,8 @@
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Process full shipment.-->
-        <actionGroup ref="goToShipmentIntoOrder" stepKey="clickShipAction"/>
-        <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment"/>
+        <actionGroup ref="GoToShipmentIntoOrderActionGroup" stepKey="clickShipAction"/>
+        <actionGroup ref="SubmitShipmentIntoOrderActionGroup" stepKey="submitShipment"/>
         <!--Admin Area Create Full Credit Memo-->
         <actionGroup ref="AdminStartsCreatingCreditMemoOnOrderPageActionGroup" stepKey="startToCreateCreditMemo"/>
         <actionGroup ref="AdminFillQuantityForPartialCreditMemoReturnToStockActionGroup" stepKey="fillCreditMemoQuantity">

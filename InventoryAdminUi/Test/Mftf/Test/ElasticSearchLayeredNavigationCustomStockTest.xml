@@ -29,7 +29,7 @@
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
@@ -72,7 +72,7 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct2"/>
 
-            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
             <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
             <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
         </before>
@@ -98,7 +98,7 @@
 
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <!--Verify products are visible on storefront page.-->

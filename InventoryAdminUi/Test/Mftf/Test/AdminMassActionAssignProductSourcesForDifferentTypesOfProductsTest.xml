@@ -30,7 +30,7 @@
             <createData entity="_minimalSource" stepKey="createThirdCustomSource"/>
             <createData entity="_minimalSource" stepKey="createFourthCustomSource"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Delete all products" stepKey="deleteAllProductsViaGridComment"/>
@@ -85,7 +85,7 @@
             <actionGroup ref="AddDownloadableProductLinkActionGroup" stepKey="addDownloadableLink">
                 <argument name="link" value="downloadableLink"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedDownloadableProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedDownloadableProduct"/>
 
             <comment userInput="Assign all created source to stock" stepKey="assignSourcesToStock"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignCustomSourcesToCustomStock"/>
@@ -162,7 +162,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableFourthCreatedSource">
                 <argument name="sourceCode" value="$$createFourthCustomSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
         </after>

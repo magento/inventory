@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <createData entity="_defaultCategory" stepKey="createPreReqCategory1"/>
             <createData entity="FullSource1" stepKey="createSource1"/>
@@ -29,10 +29,10 @@
                 <requiredEntity createDataKey="createSource1"/>
             </createData>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="createPreReqCategory1" stepKey="deletePreReqCategory1"/>
         </after>
 

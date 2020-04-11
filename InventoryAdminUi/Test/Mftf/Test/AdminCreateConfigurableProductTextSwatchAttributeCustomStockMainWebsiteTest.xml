@@ -50,14 +50,14 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalWebsiteSource">
                 <argument name="sourceCode" value="$$additionalSourceMainWebsite.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category and stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStockMainWebsite" stepKey="deleteMainWebsiteStock"/>
         </after>
 
         <!--Start creating configurable product.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridToCreateConfigurableProduct"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>
         <click selector="{{AdminProductGridActionSection.addProductToggle}}" stepKey="clickOnTheAddProductToggle"/>

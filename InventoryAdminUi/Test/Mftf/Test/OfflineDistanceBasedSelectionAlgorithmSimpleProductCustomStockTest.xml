@@ -52,7 +52,7 @@
             <!--Create Customer.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <!--Assign sources to product.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUSSource1ToCreatedProduct">
                 <argument name="sourceCode" value="$$USSource1.source[source_code]$$"/>
@@ -79,7 +79,7 @@
             <click selector="{{AdminGridRow.editByValue($$USSource1.source[source_code]$$)}}" stepKey="clickEditUSSource1"/>
             <waitForPageLoad time="30" stepKey="waitForUSSource1EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableUSSource1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseUSSource1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseUSSource1"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUSSource2BySourceCode">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -88,7 +88,7 @@
             <click selector="{{AdminGridRow.editByValue($$USSource2.source[source_code]$$)}}" stepKey="clickEditUSSource2"/>
             <waitForPageLoad time="30" stepKey="waitForUSSource2EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableUSSource2"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseUSSource2"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseUSSource2"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUASource1BySourceCode">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -97,7 +97,7 @@
             <click selector="{{AdminGridRow.editByValue($$UASource1.source[source_code]$$)}}" stepKey="clickEditUASource1"/>
             <waitForPageLoad time="30" stepKey="waitForUASource1EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableUASource1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseUASource1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseUASource1"/>
             <!--Assign Main Website to Default Stock.-->
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
@@ -108,7 +108,7 @@
             <waitForPageLoad time="30" stepKey="waitFroDefaultStockEditPageLoad"/>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Remove category, product, customer and additional stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
@@ -166,12 +166,12 @@
         <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad9"/>
         <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeShipmentOrderStatus"/>
-        <actionGroup ref="verifyBasicShipmentInformation" stepKey="checkBasicShipmentOrderInfo">
+        <actionGroup ref="VerifyBasicShipmentInformationActionGroup" stepKey="checkBasicShipmentOrderInfo">
             <argument name="customer" value="$$customer$$"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>
         </actionGroup>
-        <actionGroup ref="seeProductInShipmentItems" stepKey="checkProductInShipment">
+        <actionGroup ref="SeeProductInShipmentItemsActionGroup" stepKey="checkProductInShipment">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
         <see selector="{{AdminShipmentInventorySection.sourceList}}" userInput="$$USSource2.source[name]$$" stepKey="checkSourceNameOnShipmentPage"/>
