@@ -34,7 +34,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <magentoCLI command="config:set {{SetOnlyXLeftThresholdFive.path}} {{SetOnlyXLeftThresholdFive.value}}" stepKey="SetOnlyXleftFive"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -46,7 +46,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
             <magentoCLI command="config:set {{TurnOffOutOfStockConfig.path}} {{TurnOnOutOfStockConfig.value}}" stepKey="displayOutOfStockNo"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>

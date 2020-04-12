@@ -7,7 +7,7 @@
 -->
 
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
-    <actionGroup name="AdminCreateCustomerWithWebsiteGroupAndAddressActionGroup" extends="AdminCreateCustomerWithWebSiteAndGroup">
+    <actionGroup name="AdminCreateCustomerWithWebsiteGroupAndAddressActionGroup" extends="AdminCreateCustomerWithWebSiteAndGroupActionGroup">
         <annotations>
             <description>Create new customer with group, specified website and address</description>
         </annotations>

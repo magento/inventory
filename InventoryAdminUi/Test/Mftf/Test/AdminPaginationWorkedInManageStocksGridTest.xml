@@ -42,10 +42,10 @@
             <createData entity="SpecialStockForAdminPaginationWorkedInManageStocksGridTest" stepKey="createStock20"/>
             <createData entity="SpecialStockForAdminPaginationWorkedInManageStocksGridTest" stepKey="createStock21"/>
             <createData entity="SpecialStockForAdminPaginationWorkedInManageStocksGridTest" stepKey="createStock22"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheManageStockPage"/>
