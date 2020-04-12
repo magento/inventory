@@ -61,4 +61,8 @@
             <argument name="dimensionName" xsi:type="string">stock_</argument>
         </arguments>
     </type>
+    <!-- remove old cataloginventory index -->
+    <type name="Magento\Framework\Indexer\ConfigInterface">
+        <plugin name="remove_old_cataloginventory_index" type="Magento\InventoryIndexer\Plugin\Indexer\RemoveOldCatalogInventoryIndexPlugin"/>
+    </type>
 </config>
