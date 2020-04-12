@@ -118,7 +118,7 @@ class SourceDataProvider extends DataProvider
                 $sourceGeneralData = $data['items'][0];
 
                 $source = $this->sourceRepository->get($sourceCode);
-                $sourceGeneralData['type_code'] = $source->getExtensionAttributes()->getTypeCode();
+                $sourceGeneralData['extension_attributes']['type_code'] = $source->getExtensionAttributes()->getTypeCode();
 
                 $sourceGeneralData['disable_source_code'] = !empty($sourceGeneralData['source_code']);
                 $dataForSingle[$sourceCode] = [

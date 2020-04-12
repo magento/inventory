@@ -96,7 +96,8 @@
         </field>
         <field name="type_code" formElement="select" sortOrder="30">
             <settings>
-                <dataType>text</dataType>
+                <dataScope>extension_attributes.type_code</dataScope>
+                <dataType>string</dataType>
                 <label translate="true">Type</label>
                 <validation>
                     <rule name="required-entry" xsi:type="boolean">true</rule>
