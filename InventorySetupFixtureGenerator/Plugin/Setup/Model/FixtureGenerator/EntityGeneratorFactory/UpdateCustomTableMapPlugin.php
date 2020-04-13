@@ -23,6 +23,13 @@ class UpdateCustomTableMapPlugin
     private $sourceItems = [];
 
     /**
+     * Processed stock statuses.
+     *
+     * @var array
+     */
+    private $stockStatuses = [];
+
+    /**
      * Inject inventory_source_item table data to FixtureGenerator\EntityGeneratorFactory arguments.
      *
      * @param EntityGeneratorFactory $subject
@@ -44,6 +51,21 @@ class UpdateCustomTableMapPlugin
                     }
                     $bind['sku'] = $sku;
                     $this->sourceItems[] = $sku;
+                }
+
+                return $binds;
+            },
+        ];
+        $data['customTableMap']['inventory_stock_1'] = [
+            'entity_id_field' => EntityGenerator::SKIP_ENTITY_ID_BINDING,
+            'handler' => function ($productId, $entityNumber, $fixture, $binds) {
+                foreach ($binds as &$bind) {
+                    $sku = $fixture['sku']($productId, $entityNumber);
+                    if (in_array($sku, $this->stockStatuses)) {
+                        return [];
+                    }
+                    $bind['sku'] = $sku;
+                    $this->stockStatuses[] = $sku;
                 }
 
                 return $binds;
