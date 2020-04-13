@@ -35,7 +35,7 @@
             <createData entity="ApiConfigurableProduct" stepKey="configurableProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -46,7 +46,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
@@ -83,7 +83,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
         <!--Set 'Color' attribute value.-->
         <selectOption selector="//select[@name='product[color]']" userInput="{{colorProductAttribute1.name}}" stepKey="selectColorAttributeForSimpleProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
         <!--Add simple product to configurable product.-->
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="editConfigurableProduct"/>
         <click selector="{{AdminProductFormConfigurationsSection.actionsBtn('1')}}" stepKey="clickToExpandActions"/>
@@ -96,7 +96,7 @@
         <checkOption selector="{{AdminDataGridTableSection.rowCheckbox('1')}}" stepKey="selectProduct"/>
         <click selector="(//button[@class='action-primary'])[7]" stepKey="doneSelectingProducts"/>
         <waitForPageLoad stepKey="waitForSimpleProductAssignment"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseConfigurableProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseConfigurableProduct"/>
         <!--Verify configurable product on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableProductIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>

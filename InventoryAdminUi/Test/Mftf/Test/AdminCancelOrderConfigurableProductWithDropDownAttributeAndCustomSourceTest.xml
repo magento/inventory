@@ -55,7 +55,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Assign additional source to configurable product.-->
             <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
@@ -80,7 +80,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
             <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>

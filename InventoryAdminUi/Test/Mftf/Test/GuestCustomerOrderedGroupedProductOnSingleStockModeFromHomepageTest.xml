@@ -30,11 +30,11 @@
             <createData entity="GroupedProduct" stepKey="groupedProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteVirtualProduct"/>
@@ -51,7 +51,7 @@
         <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumnsVirtualProduct"/>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openVirtualProductEditPage"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" requiredAction="true" stepKey="searchAndSelectCategoryForGroupedProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <comment userInput="Assign category to created grouped product." stepKey="assignCategoryToGroupedProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForEditGroupedProduct"/>
@@ -81,7 +81,7 @@
             <argument name="productName" value="$$virtualProduct.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedGroupedProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedGroupedProduct"/>
 
         <comment userInput="Go to category, add grouped product to cart and go to checkout" stepKey="addGroupedProductToCartAndGoToCheckout"/>
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>

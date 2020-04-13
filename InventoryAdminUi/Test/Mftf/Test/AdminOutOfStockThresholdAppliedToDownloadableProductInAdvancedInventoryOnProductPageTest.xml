@@ -32,7 +32,7 @@
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -44,7 +44,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>

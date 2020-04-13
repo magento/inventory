@@ -22,7 +22,7 @@
         <before>
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="FullSource1" stepKey="customSource"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="CustomStockMainWebsite"/>
             <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
                 <requiredEntity createDataKey="CustomStockMainWebsite"/>
@@ -63,7 +63,7 @@
             <deleteData createDataKey="CustomStockMainWebsite" stepKey="deleteStock"/>
             <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <!--Place order from homepage-->

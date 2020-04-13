@@ -31,7 +31,7 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Assign Default Stock to Default Website.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
@@ -42,7 +42,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Revert "Only X Left".-->
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertOnlyXLeftConfig"/>
             <!--Perform reindex and flush cache.-->

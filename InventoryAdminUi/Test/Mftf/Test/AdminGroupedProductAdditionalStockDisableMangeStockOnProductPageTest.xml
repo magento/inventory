@@ -44,7 +44,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category, simple, grouped product and stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
@@ -53,13 +53,13 @@
         </after>
 
         <!--Assign simple product to source and website.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSimpleProduct"/>
         <!--Assign simple to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
