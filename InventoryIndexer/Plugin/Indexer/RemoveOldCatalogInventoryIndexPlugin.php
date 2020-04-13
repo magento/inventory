@@ -20,8 +20,9 @@ class RemoveOldCatalogInventoryIndexPlugin
      * Remove old cataloginventory_stock index
      *
      * @param Config $subject
-     * @param $result
+     * @param array $result
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetIndexers(
         Config $subject,
