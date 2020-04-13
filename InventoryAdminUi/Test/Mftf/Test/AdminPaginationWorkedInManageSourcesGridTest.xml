@@ -42,10 +42,10 @@
             <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource20"/>
             <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource21"/>
             <createData entity="SpecialSourceForAdminPaginationWorkedInManageSourcesGridTest" stepKey="createSource22"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheManageSourcePage"/>

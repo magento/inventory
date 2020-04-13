@@ -35,7 +35,7 @@
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
         </before>
         <after>
@@ -46,7 +46,7 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProductForDisabledManageStock" stepKey="deleteProductForDisabledManageStock"/>
             <deleteData createDataKey="createSimpleProductForEnabledManageStock" stepKey="deleteProductForEnabledManageStock"/>
