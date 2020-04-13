@@ -31,4 +31,7 @@
             <argument name="tableNameStockSourceLink" xsi:type="const">Magento\Inventory\Model\ResourceModel\StockSourceLink::TABLE_NAME_STOCK_SOURCE_LINK</argument>
         </arguments>
     </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="reindex_configurable_source_items_after_save" type="Magento\InventoryConfigurableProductIndexer\Plugin\Catalog\Model\ResourceModel\Product\ReindexSourceItemsPlugin"/>
+    </type>
 </config>
