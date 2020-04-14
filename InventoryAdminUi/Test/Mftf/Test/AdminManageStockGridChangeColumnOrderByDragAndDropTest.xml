@@ -21,7 +21,7 @@
 
         <before>
             <createData entity="BasicMsiStock1" stepKey="createCustomStock"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterLogin"/>
 
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStocksGridPage"/>
@@ -40,7 +40,7 @@
                          stepKey="dragAndDropIdColumnBackToDefault"/>
             <waitForPageLoad time="30" stepKey="waitForMoveConfirmationAfterMoveSalesChannelsColumnToDefaultPosition"/>
 
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsDefaultOrder" />

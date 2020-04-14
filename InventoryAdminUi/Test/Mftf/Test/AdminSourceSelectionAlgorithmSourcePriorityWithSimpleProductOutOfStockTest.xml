@@ -62,7 +62,7 @@
             <click selector="{{AdminGridRow.editByValue($$additionalSource1.source[source_code]$$)}}" stepKey="clickEditSource1"/>
             <waitForPageLoad time="30" stepKey="waitForSource1EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableSource1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSource1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSource1"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSource2BySourceCode">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -71,7 +71,7 @@
             <click selector="{{AdminGridRow.editByValue($$additionalSource2.source[source_code]$$)}}" stepKey="clickEditSource2"/>
             <waitForPageLoad time="30" stepKey="waitForSource2EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableSource2"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSource2"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSource2"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSource3BySourceCode">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -80,7 +80,7 @@
             <click selector="{{AdminGridRow.editByValue($$additionalSource3.source[source_code]$$)}}" stepKey="clickEditSource3"/>
             <waitForPageLoad time="30" stepKey="waitForSource3EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableSource3"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSource3"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSource3"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSource4BySourceCode">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -89,7 +89,7 @@
             <click selector="{{AdminGridRow.editByValue($$additionalSource4.source[source_code]$$)}}" stepKey="clickEditSource4"/>
             <waitForPageLoad time="30" stepKey="waitForSource4EditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableSource4"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSource4"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSource4"/>
             <!--Assign Main Website to Default Stock.-->
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
@@ -100,7 +100,7 @@
             <waitForPageLoad time="30" stepKey="waitFroDefaultStockEditPageLoad"/>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Remove category, product, customer and additional stock.-->
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
@@ -108,7 +108,7 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
         </after>
         <!--Assign sources to products.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
             <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="filter_value" value="$$simpleProduct.product[sku]$$"/>
@@ -131,7 +131,7 @@
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="100" stepKey="fillCustomSource4QtyField"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('4')}}" userInput="100" stepKey="fillCustomSource5QtyField"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct"/>
         <waitForPageLoad stepKey="waitForSimpleProductGidPageLoad"/>
         <!--Customer login.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="customerLogin">
@@ -174,7 +174,7 @@
         <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
         <waitForPageLoad stepKey="waitForOrderPageLoad" time="30"/>
         <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeOrderStatus"/>
-        <actionGroup ref="seeProductInShipmentItems" stepKey="checkProductInShipment">
+        <actionGroup ref="SeeProductInShipmentItemsActionGroup" stepKey="checkProductInShipment">
             <argument name="product" value="$$simpleProduct$$"/>
         </actionGroup>
         <see selector="{{AdminShipmentInventorySection.sourceList}}" userInput="$$additionalSource3.source[name]$$" stepKey="checkSourceNameOnShipmentPage"/>

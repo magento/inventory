@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="single_mode"/>
         </annotations>
-        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         <comment userInput="Create Configurable product with qty 0" stepKey="CreateConfigurableProductComment"/>
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGrid"/>
         <waitForPageLoad time="30" stepKey="waitForProductGridLoad"/>
