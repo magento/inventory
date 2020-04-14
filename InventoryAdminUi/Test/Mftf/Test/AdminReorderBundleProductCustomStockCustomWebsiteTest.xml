@@ -38,7 +38,7 @@
             <createData entity="DropDownBundleOption" stepKey="bundleOption">
                 <requiredEntity createDataKey="bundleProduct"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Add simple products to bundle product.-->
             <createData entity="ApiBundleLink" stepKey="bundleLink1">
                 <requiredEntity createDataKey="bundleProduct"/>
@@ -105,7 +105,7 @@
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Get bundle product option.-->

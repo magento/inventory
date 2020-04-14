@@ -28,10 +28,10 @@
             </createData>
             <createData entity="FullSource1" stepKey="createSource1"/>
             <createData entity="FullSource2" stepKey="createSource2"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
         </after>
@@ -66,7 +66,7 @@
         <see selector="{{AdminProductSourcesGrid.rowByIndex('2')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceNameInGrid6"/>
         <seeInField selector="{{AdminProductSourcesGrid.rowQty('2')}}" userInput="100" stepKey="seeSourceNameInGrid7"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults4">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

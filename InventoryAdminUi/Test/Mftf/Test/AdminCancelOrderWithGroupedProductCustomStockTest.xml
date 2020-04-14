@@ -37,7 +37,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Delete created test data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
@@ -46,13 +46,13 @@
         </after>
 
         <!--Assign virtual product ot additional source.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminPanel"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
         <amOnPage url="{{AdminProductEditPage.url($$virtualProduct.id$$)}}" stepKey="openVirtualProductEditPage"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1000" stepKey="setAdditionalSourceVirtualProductQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveVirtualProduct"/>
         <!--Assign virtual product to grouped.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
@@ -65,7 +65,7 @@
             <argument name="productName" value="$$virtualProduct.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedGroupedProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedGroupedProduct"/>
         <!--Create order with grouped product.-->
         <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>

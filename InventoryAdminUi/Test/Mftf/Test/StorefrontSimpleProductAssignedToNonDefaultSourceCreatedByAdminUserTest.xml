@@ -25,7 +25,7 @@
             <createData entity="SimpleSubCategory" stepKey="createSimpleSubCategory"/>
             <createData entity="_minimalSource" stepKey="createCustomSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createCustomStock"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterLogin"/>
 
             <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
@@ -42,7 +42,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateProductPage">
@@ -66,7 +66,7 @@
         <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createSimpleSubCategory.name$$]" stepKey="searchAndSelectCategory"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsOnProductGrid">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

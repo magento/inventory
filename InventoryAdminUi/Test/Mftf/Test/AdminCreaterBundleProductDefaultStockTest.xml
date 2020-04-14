@@ -28,7 +28,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -44,7 +44,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Add simple product to bundle.-->
@@ -69,8 +69,8 @@
         </actionGroup>
         <!--Verify bundle product on store front.-->
         <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="AssertProductOnCategoryPageActionGroup" stepKey="verifyBundleProduct">
-            <argument name="product" value="$bundleProduct$"/>
+        <actionGroup ref="AssertStorefrontProductIsPresentOnCategoryPageActionGroup" stepKey="verifyBundleProduct">
+            <argument name="productName" value="$bundleProduct.name$"/>
         </actionGroup>
     </test>
 </tests>

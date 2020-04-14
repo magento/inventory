@@ -24,7 +24,7 @@
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
             <createData entity="_minimalSource" stepKey="createSource"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Delete all products" stepKey="deleteAllProductsViaGridComment"/>
@@ -89,7 +89,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableFirstCreatedSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCreatedCategory"/>
             <deleteData createDataKey="createStock" stepKey="deleteCreatedStock"/>
             <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
@@ -109,7 +109,7 @@
         <waitForPageLoad time="30" stepKey="waitForFirstProductPageLoadForSetNotifyQuantity"/>
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQuantityUseDefaultForSecondProduct"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="1" stepKey="fillNotifyQuantityForFirstProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFirstProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseFirstProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForSecondProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSecondSimpleProductBySkuForSetNotifyQuantity">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
@@ -119,7 +119,7 @@
         <waitForPageLoad time="30" stepKey="waitForSecondProductPageLoadForSetNotifyQuantity"/>
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForSecondProduct"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="5" stepKey="fillNotifyQuantityForSecondProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSecondProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSecondProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForThirdProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findThirdSimpleProductBySkuForSetNotifyQuantity">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
@@ -129,7 +129,7 @@
         <waitForPageLoad time="30" stepKey="waitForThirdProductPageLoadForSetNotifyQuantity"/>
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForThirdProduct"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="10" stepKey="fillNotifyQuantityForThirdProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseThirdProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseThirdProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForFourthProductForSetNotifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findFourthSimpleProductBySkuForSetNotifyQuantity">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
@@ -139,7 +139,7 @@
         <waitForPageLoad time="30" stepKey="waitForFourthProductPageLoadForSetNotifyQuantity"/>
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQuantityUseDefaultForFourthProduct"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="15" stepKey="fillNotifyQuantityForFourthProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFourthProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseFourthProductForm"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoadForCheckDefaultProductsAssignedToProducts"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearAllFiltersForCheckDefaultSourcesAssignedToProducts"/>
 

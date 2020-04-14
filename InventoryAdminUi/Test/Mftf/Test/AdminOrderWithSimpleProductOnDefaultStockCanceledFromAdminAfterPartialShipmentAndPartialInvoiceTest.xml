@@ -28,9 +28,9 @@
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice" after="WaitForInvoiceQtyUpdate"/>
 
         <!-- Ship the order and assert the status -->
-        <actionGroup ref="goToShipmentIntoOrder" stepKey="goToShipment"  after="submitInvoice"/>
+        <actionGroup ref="GoToShipmentIntoOrderActionGroup" stepKey="goToShipment"  after="submitInvoice"/>
         <fillField selector="{{AdminShipmentItemsSection.itemQtyToShip('1')}}" userInput="2" stepKey="ship2Items" after="goToShipment"/>
-        <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment" after="ship2Items"/>
+        <actionGroup ref="SubmitShipmentIntoOrderActionGroup" stepKey="submitShipment" after="ship2Items"/>
 
         <remove keyForRemoval="cancelPendingOrder"/>
         <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelPendingOrder" after="assertOrderIdIsNotEmpty">

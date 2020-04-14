@@ -25,7 +25,7 @@
             <createData entity="FullSource1" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
@@ -41,7 +41,7 @@
                    stepKey="clickEditCustomSource"/>
             <waitForPageLoad time="30" stepKey="waitForCustomSourceEditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableCustomSource"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSource"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSource"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
@@ -52,7 +52,7 @@
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website"
                           stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!-- Assign Source and Sales Channel to Stock-->
@@ -98,7 +98,7 @@
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDoneSlideOutSection"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
                    stepKey="fillSourceQtyField"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
         <!-- Check Product is visible on Storefront-->
         <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryPage"/>

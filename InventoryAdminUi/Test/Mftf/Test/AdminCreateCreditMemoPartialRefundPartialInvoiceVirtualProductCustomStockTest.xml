@@ -28,13 +28,13 @@
             </createData>
             <createData entity="VirtualProduct" stepKey="product"/>
             <createData entity="MsiCustomer1" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign virtual product to additional source.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -45,7 +45,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Login To storefront as Customer-->

@@ -18,17 +18,17 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <!--Create additional sources.-->
             <createData entity="FullSource1" stepKey="additionalSource1"/>
             <createData entity="FullSource2" stepKey="additionalSource2"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Disable created sources.-->

@@ -28,7 +28,7 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -39,7 +39,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
@@ -49,7 +49,7 @@
         <!--Set default source product quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openSimpleProductPage"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultSourceQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct"/>
         <!--Assign simple product to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
@@ -64,7 +64,7 @@
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="10"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseGroupedProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
         <!--Login to storefront.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
@@ -93,8 +93,8 @@
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="createInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Process full shipment.-->
-        <actionGroup ref="goToShipmentIntoOrder" stepKey="clickShipAction"/>
-        <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment"/>
+        <actionGroup ref="GoToShipmentIntoOrderActionGroup" stepKey="clickShipAction"/>
+        <actionGroup ref="SubmitShipmentIntoOrderActionGroup" stepKey="submitShipment"/>
         <!--Process credit memo total refund.-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="clickCreditMemo">
             <argument name="orderId" value="{$grabOrderId}"/>

@@ -21,7 +21,7 @@
 
         <before>
             <createData entity="BasicMsiStock1" stepKey="createStock1"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
@@ -36,7 +36,7 @@
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite4">
                 <argument name="websiteName" value="{{BasicMsiWebsite4.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <amOnPage url="{{AdminSystemStorePage.url}}" stepKey="shouldBeOnTheSourceGridPage1"/>
@@ -82,7 +82,7 @@
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite2.name}}" stepKey="dontSeeBasicWebbSiteSelected2"/>
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite3.name}}" stepKey="dontSeeBasicWebbSiteSelected3"/>
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite4.name}}" stepKey="dontSeeBasicWebbSiteSelected4"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword1">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>
@@ -99,7 +99,7 @@
         <seeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite2.name}}" stepKey="seeBasicWebbSiteSelected2"/>
         <seeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite3.name}}" stepKey="seeBasicWebbSiteSelected3"/>
         <seeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite4.name}}" stepKey="seeBasicWebbSiteSelected4"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose2"/>
 
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>
