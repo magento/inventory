@@ -15,4 +15,10 @@
     <topic name="async.V1.inventory.bulk-product-source-transfer.POST" is_synchronous="false" schema="Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface::execute" >
         <handler name="async" type="Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface" method="execute" />
     </topic>
+    <topic name="inventory.source.items.cleanup" is_synchronous="false" request="string[]">
+        <handler name="inventory.source.items.handler" type="Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus" method="execute" />
+    </topic>
+    <topic name="inventory.mass.update" is_synchronous="false" request="Magento\InventoryCatalog\Model\UpdateInventory\InventoryData">
+        <handler name="inventory.mass.update" type="Magento\InventoryCatalog\Model\UpdateInventory" method="execute" />
+    </topic>
 </config>

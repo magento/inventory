@@ -53,11 +53,14 @@ class FilterManagedStockProducts
         foreach ($inconsistencies as $inconsistency) {
             $filteredItems = [];
             foreach ($inconsistency->getItems() as $sku => $qty) {
-                if (false === $this->isProductAssignedToStock->execute($sku, $inconsistency->getStockId())) {
+                if (false === $this->isProductAssignedToStock->execute((string)$sku, $inconsistency->getStockId())) {
                     continue;
                 }
 
-                $stockConfiguration = $this->getStockItemConfiguration->execute($sku, $inconsistency->getStockId());
+                $stockConfiguration = $this->getStockItemConfiguration->execute(
+                    (string)$sku,
+                    $inconsistency->getStockId()
+                );
                 if ($stockConfiguration->isManageStock()) {
                     $filteredItems[$sku] = $qty;
                 }

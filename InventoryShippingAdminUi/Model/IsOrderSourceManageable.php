@@ -68,17 +68,22 @@ class IsOrderSourceManageable
         $stocks = $this->stockRepository->getList()->getItems();
         $orderItems = $order->getItems();
         foreach ($orderItems as $orderItem) {
-            $productType = $orderItem->getProduct()->getTypeId();
-            if (!$this->isSourceItemManagementAllowedForProductType->execute($productType)) {
+            $productType = $orderItem->getProduct() ? $orderItem->getProduct()->getTypeId() : '';
+            if (!$productType || !$this->isSourceItemManagementAllowedForProductType->execute($productType)) {
                 continue;
             }
 
             /** @var StockInterface $stock */
             foreach ($stocks as $stock) {
-                $inventoryConfiguration = $this->getStockItemConfiguration->execute(
-                    $this->getSkuFromOrderItem->execute($orderItem),
-                    $stock->getStockId()
-                );
+                try {
+                    $inventoryConfiguration = $this->getStockItemConfiguration->execute(
+                        $this->getSkuFromOrderItem->execute($orderItem),
+                        $stock->getStockId()
+                    );
+                } catch (\Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException $exception) {
+                    // it's okay if a product is not assigned to a stock
+                    continue;
+                }
 
                 if ($inventoryConfiguration->isManageStock()) {
                     return true;

@@ -98,4 +98,12 @@
         <data key="path">cataloginventory/item_options/notify_stock_qty</data>
         <data key="value">0</data>
     </entity>
+    <entity name="EnableInventorySynchronization">
+        <data key="path">cataloginventory/options/synchronize_with_catalog</data>
+        <data key="value">1</data>
+    </entity>
+    <entity name="DisableInventorySynchronization">
+        <data key="path">cataloginventory/options/synchronize_with_catalog</data>
+        <data key="value">0</data>
+    </entity>
 </entities>

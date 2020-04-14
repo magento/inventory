@@ -51,14 +51,6 @@
         </annotations>
     </test>
 
-    <!-- MAGETWO-87653 -->
-    <test name="EndToEndB2CLoggedInUserTest">
-        <annotations>
-            <skip>
-                <issueId value="MSI-1631"/>
-            </skip>
-        </annotations>
-    </test>
     <!-- MC-138 -->
     <test name="AdvanceCatalogSearchConfigurableByNameTest">
         <annotations>

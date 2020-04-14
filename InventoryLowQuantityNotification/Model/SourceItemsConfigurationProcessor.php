@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryLowQuantityNotificationAdminUi\Model;
+namespace Magento\InventoryLowQuantityNotification\Model;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Exception\InputException;
