@@ -94,7 +94,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         $result = $this->notifyOrderIsReadyForPickup->execute([$orderId]);
 
         $this->assertFalse($result->isSuccessful());
-        $this->assertEquals(current($result->getFailed())['message'], $errorMessage);
+        $this->assertEquals(current($result->getErrors())['message'], $errorMessage);
     }
 
     /**
