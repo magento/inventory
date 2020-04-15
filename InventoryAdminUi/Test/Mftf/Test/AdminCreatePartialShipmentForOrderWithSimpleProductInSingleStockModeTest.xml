@@ -22,7 +22,7 @@
         <before>
             <createData entity="Simple_US_Customer" stepKey="createCustomer"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <!-- Create Product -->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
@@ -35,10 +35,10 @@
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
                                         parameterArray="[$$createCategory.name$$]" requiredAction="true"
                                         stepKey="searchAndSelectCategory"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
         </after>

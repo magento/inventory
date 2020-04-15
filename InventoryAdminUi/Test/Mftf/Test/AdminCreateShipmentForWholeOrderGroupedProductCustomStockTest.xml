@@ -37,7 +37,7 @@
                 <requiredEntity createDataKey="additionalSource2"/>
             </createData>
             <createData entity="GroupedProduct" stepKey="groupedProduct"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -57,7 +57,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Assign simple product to additional sources.-->
@@ -71,7 +71,7 @@
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSource2ToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSimpleProduct"/>
         <!--Assign simple product to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
@@ -86,7 +86,7 @@
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseGroupedProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
         <!--Login to storefront.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
