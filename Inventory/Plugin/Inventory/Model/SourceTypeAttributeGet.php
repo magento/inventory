@@ -10,7 +10,7 @@ namespace Magento\Inventory\Plugin\Inventory\Model;
 use Magento\InventoryApi\Api\Data\SourceExtensionInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
-use Magento\InventoryApi\Model\GetSourceTypeBySourceCodeInterface;
+use Magento\Inventory\Model\ResourceModel\GetSourceTypeBySourceCode;
 
 /**
  * Load type to source
@@ -19,17 +19,17 @@ class SourceTypeAttributeGet
 {
 
     /**
-     * @var GetSourceTypeBySourceCodeInterface
+     * @var GetSourceTypeBySourceCode
      */
     private $getSourceTypeBySourceCode;
 
     /**
      * SourceTypeAttribute constructor.
      *
-     * @param GetSourceTypeBySourceCodeInterface $getSourceTypeBySourceCode
+     * @param GetSourceTypeBySourceCode $getSourceTypeBySourceCode
      */
     public function __construct(
-        GetSourceTypeBySourceCodeInterface $getSourceTypeBySourceCode
+        GetSourceTypeBySourceCode $getSourceTypeBySourceCode
     ) {
         $this->getSourceTypeBySourceCode = $getSourceTypeBySourceCode;
     }
