@@ -23,7 +23,6 @@ use Magento\Framework\Api\DataObjectHelper;
  */
 class AfterSourceSave implements ObserverInterface
 {
-
     /**
      * @var SourceTypeLinkSaveInterface
      */
