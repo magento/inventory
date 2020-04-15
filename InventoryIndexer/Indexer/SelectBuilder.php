@@ -7,8 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer;
 
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkResourceModel;
@@ -18,7 +23,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
 
 /**
- * Select builder
+ * Inventory indexer select builder.
  */
 class SelectBuilder
 {
@@ -38,23 +43,42 @@ class SelectBuilder
     private $productTableName;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
+     * @var ProductAttributeRepositoryInterface
+     */
+    private $productAttributeRepository;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
      * @param string $productTableName
+     * @param MetadataPool $metadataPool
+     * @param ProductAttributeRepositoryInterface $productAttributeRepository
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
-        string $productTableName
+        string $productTableName,
+        MetadataPool $metadataPool,
+        ProductAttributeRepositoryInterface $productAttributeRepository
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
         $this->productTableName = $productTableName;
+        $this->metadataPool = $metadataPool;
+        $this->productAttributeRepository = $productAttributeRepository;
     }
 
     /**
+     * Build select to reindex products for given stock id.
+     *
      * @param int $stockId
      * @return Select
+     * @throws NoSuchEntityException
      */
     public function execute(int $stockId): Select
     {
@@ -69,6 +93,7 @@ class SelectBuilder
         $sourceCodes = $this->getSourceCodes($stockId);
 
         $select = $connection->select();
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $select->joinLeft(
             ['product' => $this->resourceConnection->getTableName($this->productTableName)],
             'product.sku = source_item.' . SourceItemInterface::SKU,
@@ -76,6 +101,12 @@ class SelectBuilder
         )->joinLeft(
             ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
             'product.entity_id = legacy_stock_item.product_id',
+            []
+        )->joinInner(
+            ['status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
+            'product.' . $linkField . ' = status.' . $linkField
+            . ' AND status.attribute_id = ' . $this->getStatusId()
+            . ' AND status.value = ' . Status::STATUS_ENABLED,
             []
         );
 
@@ -119,5 +150,16 @@ class SelectBuilder
 
         $sourceCodes = $connection->fetchCol($select);
         return $sourceCodes;
+    }
+
+    /**
+     * Retrieve 'status' attribute id.
+     *
+     * @return int
+     * @throws NoSuchEntityException
+     */
+    private function getStatusId(): int
+    {
+        return (int)$this->productAttributeRepository->get(ProductInterface::STATUS)->getAttributeId();
     }
 }

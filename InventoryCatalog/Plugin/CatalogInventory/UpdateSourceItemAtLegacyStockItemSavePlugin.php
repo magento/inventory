@@ -10,16 +10,16 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryCatalog\Model\GetDefaultSourceItemBySku;
+use Magento\InventoryCatalog\Model\UpdateSourceItemBasedOnLegacyStockItem;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryCatalog\Model\UpdateSourceItemBasedOnLegacyStockItem;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 
 /**
- * Class provides around Plugin on \Magento\CatalogInventory\Model\ResourceModel\Stock\Item::save
- * to update data in Inventory source item based on legacy Stock Item data
+ * Update data in Inventory source item based on legacy Stock Item data.
  */
 class UpdateSourceItemAtLegacyStockItemSavePlugin
 {
@@ -78,6 +78,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     }
 
     /**
+     * Process default source items.
+     *
      * @param ItemResourceModel $subject
      * @param callable $proceed
      * @param AbstractModel $legacyStockItem
@@ -96,9 +98,7 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
 
             $typeId = $this->getTypeId($legacyStockItem);
             if ($this->isSourceItemManagementAllowedForProductType->execute($typeId)) {
-                if ($this->shouldAlignDefaultSourceWithLegacy($legacyStockItem)) {
-                    $this->updateSourceItemBasedOnLegacyStockItem->execute($legacyStockItem);
-                }
+                $this->updateSourceItemBasedOnLegacyStockItem->execute($legacyStockItem);
             }
 
             $connection->commit();
@@ -111,27 +111,11 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     }
 
     /**
-     * Return true if legacy stock item should update default source (if existing)
-     * @param Item $legacyStockItem
-     * @return bool
-     * @throws \Magento\Framework\Exception\InputException
-     */
-    private function shouldAlignDefaultSourceWithLegacy(Item $legacyStockItem): bool
-    {
-        $productSku = $this->getSkusByProductIds
-            ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];
-
-        $result = $legacyStockItem->getIsInStock() ||
-            ((float) $legacyStockItem->getQty() !== (float) 0) ||
-            ($this->getDefaultSourceItemBySku->execute($productSku) !== null);
-
-        return $result;
-    }
-
-    /**
+     * Get product type for legacy stock item.
+     *
      * @param Item $legacyStockItem
      * @return string
-     * @throws \Magento\Framework\Exception\InputException
+     * @throws NoSuchEntityException
      */
     private function getTypeId(Item $legacyStockItem): string
     {

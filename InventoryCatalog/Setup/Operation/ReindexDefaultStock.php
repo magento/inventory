@@ -77,6 +77,6 @@ class ReindexDefaultStock
         if (!$this->indexStructure->isExist($mainIndexName, ResourceConnection::DEFAULT_CONNECTION)) {
             $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
         }
-        $this->stockIndexer->executeRow($this->defaultStockProvider->getId());
+        //$this->stockIndexer->executeRow($this->defaultStockProvider->getId());
     }
 }

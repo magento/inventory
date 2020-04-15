@@ -90,7 +90,7 @@ class AdaptApplyStockConditionToSelectPlugin
 
         $select->joinInner(
             [$stockAlias => $tableName],
-            sprintf('product.sku = %s.sku', $stockAlias),
+            sprintf('product.sku = %s.sku and %s.is_salable = 1', $stockAlias, $stockAlias),
             []
         );
     }
