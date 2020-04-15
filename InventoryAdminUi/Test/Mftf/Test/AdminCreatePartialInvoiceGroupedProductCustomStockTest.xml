@@ -43,7 +43,7 @@
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1000" stepKey="setCustomSourceQuantity" before="saveVirtualProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct" before="openGroupedProductEditPage"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveVirtualProduct" before="openGroupedProductEditPage"/>
         <!--Verify product quantity after order placement.-->
         <remove keyForRemoval="checkProductSourceQtyAfterPlaceOrder"/>
         <remove keyForRemoval="checkSalableQtyAfterPlaceOrder"/>

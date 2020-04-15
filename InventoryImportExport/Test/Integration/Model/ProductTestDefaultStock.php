@@ -19,9 +19,9 @@ class ProductTestDefaultStock extends ProductImportExportBase
     /**
      * Verify simple and virtual product import from export on default stock.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento/Catalog/_files/product_virtual.php
      *
      * @magentoDbIsolation disabled
@@ -45,8 +45,8 @@ class ProductTestDefaultStock extends ProductImportExportBase
     /**
      * Verify grouped product import from export on default stock.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      *
      * @magentoDbIsolation disabled
      *
@@ -69,8 +69,8 @@ class ProductTestDefaultStock extends ProductImportExportBase
     /**
      * Verify configurable product import from export on default stock.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      *
      * @magentoDbIsolation disabled
      *

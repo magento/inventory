@@ -50,7 +50,7 @@ class MapperTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/pickup_location.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Wrong mapping provided for Magento\InventoryApi\Api\Data\SourceInterface. Field
      *     'source_fail_field' is not found.
@@ -66,7 +66,7 @@ class MapperTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/pickup_location.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Wrong mapping provided for
      *     Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface. Field 'extension_attributes.fail_field'
@@ -83,7 +83,7 @@ class MapperTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/pickup_location.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Wrong mapping provided for
      *     Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface. Field 'fail_field' is not found.
@@ -99,7 +99,7 @@ class MapperTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/pickup_location.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
      * @throws \Exception
      */
     public function testMapPickupLocation()

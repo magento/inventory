@@ -56,17 +56,17 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
         </after>
 
         <!--Assign source to product.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
             <argument name="sourceCode" value="$$source.source[source_code]$$"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         <!--Verify product is visible on storefront.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
             <argument name="category" value="$$category$$"/>
@@ -77,9 +77,9 @@
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
         <!--Verify product is absent on category page.-->
-        <actionGroup ref="StorefrontAssertProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductIsAbsentOnCategoryPage">
-            <argument name="category" value="$$category$$"/>
-            <argument name="product" value="$$product$$"/>
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductIsAbsentOnCategoryPage">
+            <argument name="categoryUrlKey" value="$$category.url_key$$"/>
+            <argument name="productName" value="$$product.name$$"/>
         </actionGroup>
     </test>
 </tests>

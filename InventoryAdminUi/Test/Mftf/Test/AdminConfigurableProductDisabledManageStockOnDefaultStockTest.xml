@@ -21,7 +21,7 @@
 
         <before>
             <createData entity="_defaultCategory" stepKey="category"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         </before>
         <after>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
@@ -32,7 +32,7 @@
             <comment userInput="Perform reindex and cache flush after save stock related config." stepKey="reindexCacheFlushComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <comment userInput="Create Configurable product with two options 'In Stock' on 'Default' stock" stepKey="CreateConfigurableProductComment"/>

@@ -42,12 +42,12 @@
             <createData entity="_minimalSource" stepKey="createSource20"/>
             <createData entity="_minimalSource" stepKey="createSource21"/>
             <createData entity="_minimalSource" stepKey="createSource22"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
 
         <after>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheManageSourcePage"/>
