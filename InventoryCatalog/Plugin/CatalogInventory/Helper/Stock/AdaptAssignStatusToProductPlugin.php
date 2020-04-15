@@ -10,21 +10,18 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Adapt assignStatusToProduct for multi stocks.
  */
 class AdaptAssignStatusToProductPlugin
 {
-    /**
-     * @var GetStockIdForCurrentWebsite
-     */
-    private $getStockIdForCurrentWebsite;
-
     /**
      * @var IsProductSalableInterface
      */
@@ -41,21 +38,34 @@ class AdaptAssignStatusToProductPlugin
     private $getProductIdsBySkus;
 
     /**
-     * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param IsProductSalableInterface $isProductSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
+     * @param StoreManagerInterface $storeManager
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
         IsProductSalableInterface $isProductSalable,
         DefaultStockProviderInterface $defaultStockProvider,
-        GetProductIdsBySkusInterface $getProductIdsBySkus
+        GetProductIdsBySkusInterface $getProductIdsBySkus,
+        StoreManagerInterface $storeManager,
+        StockResolverInterface $stockResolver
     ) {
-        $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->isProductSalable = $isProductSalable;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
+        $this->storeManager = $storeManager;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
@@ -81,8 +91,9 @@ class AdaptAssignStatusToProductPlugin
             $this->getProductIdsBySkus->execute([$product->getSku()]);
 
             if (null === $status) {
-                $stockId = $this->getStockIdForCurrentWebsite->execute();
-                $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+                $website = $product->getStore()->getWebsite() ?: $this->storeManager->getWebsite();
+                $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
+                $status = (int)$this->isProductSalable->execute($product->getSku(), $stock->getStockId());
             }
 
             $proceed($product, $status);

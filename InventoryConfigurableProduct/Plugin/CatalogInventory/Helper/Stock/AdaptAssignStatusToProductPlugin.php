@@ -74,7 +74,7 @@ class AdaptAssignStatusToProductPlugin
         $status = null
     ): array {
         if ($product->getTypeId() === Configurable::TYPE_CODE) {
-            $website = $this->storeManager->getWebsite();
+            $website = $product->getStore()->getWebsite() ?: $this->storeManager->getWebsite();
             $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
             $options = $this->configurable->getConfigurableOptions($product);
             $status = 0;
