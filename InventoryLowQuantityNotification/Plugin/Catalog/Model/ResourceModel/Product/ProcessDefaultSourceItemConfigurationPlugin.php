@@ -80,7 +80,8 @@ class ProcessDefaultSourceItemConfigurationPlugin
      */
     public function afterSave(Product $subject, Product $result, AbstractModel $product): Product
     {
-        if ($this->isSourceItemManagementAllowedForProductType->execute($product->getTypeId()) === false
+        $productTypeId = $product->getTypeId() ?? \Magento\Catalog\Model\Product\Type::DEFAULT_TYPE;
+        if ($this->isSourceItemManagementAllowedForProductType->execute($productTypeId) === false
             || !$product->getExtensionAttributes()->getStockItem()) {
             return $result;
         }
