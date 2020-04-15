@@ -14,7 +14,7 @@ use Magento\Framework\DataObject;
 use Magento\Inventory\Model\ResourceModel\GetSourceTypeBySourceCode;
 
 /**
- * Set store-pickup related source extension attributes
+ * Set source type related source extension attributes
  */
 class InitTypeCodeExtensionAttributes
 {
@@ -41,7 +41,7 @@ class InitTypeCodeExtensionAttributes
     }
 
     /**
-     * Set store-pickup related source extension attributes.
+     * Set source type related source extension attributes.
      *
      * @param SourceInterface $source
      */

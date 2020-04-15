@@ -134,16 +134,16 @@
                 </editor>
             </settings>
         </column>
-        <column name="type_code" sortOrder="35">
+        <column name="type_code"
+                component="Magento_Ui/js/grid/columns/select"
+                class="Magento\InventoryAdminUi\Ui\Component\Listing\Column\SourceType"
+                sortOrder="55">
             <settings>
-                <filter>text</filter>
+                <dataScope>extension_attributes.type_code</dataScope>
+                <dataType>select</dataType>
+                <filter>select</filter>
                 <label translate="true">Type</label>
-                <editor>
-                    <editorType>text</editorType>
-                    <validation>
-                        <rule name="required-entry" xsi:type="boolean">true</rule>
-                    </validation>
-                </editor>
+                <options class="Magento\InventoryAdminUi\Model\OptionSource\TypeSource"/>
             </settings>
         </column>
         <column name="contact_name" sortOrder="40">

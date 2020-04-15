@@ -34,10 +34,10 @@ class Collection extends AbstractCollection
     {
         $options = [];
         foreach ($this as $item) {
-            $option['label'] = $item->getName();
-            $option['value'] = $item->getTypeCode();
-
-            $options[] = $option;
+            $options[] = [
+                'label' => $item->getName(),
+                'value' => $item->getTypeCode()
+            ];
         }
 
         return $options;
