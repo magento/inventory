@@ -29,7 +29,7 @@
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
         </before>
         <after>
@@ -39,7 +39,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
         <comment userInput="Create Configurable product with two options 'In Stock' on 'Default' stock"
                  stepKey="CreateConfigurableProductComment"/>

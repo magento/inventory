@@ -18,10 +18,10 @@
             <group value="multi_mode"/>
             <group value="SearchEngineElasticsearch"/>
         </annotations>
-        
+
         <before>
             <!-- Assign Main Website to Default Stock -->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
@@ -49,7 +49,7 @@
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
 
-            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
             <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
             <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
         </before>
@@ -66,7 +66,7 @@
 
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
         <!--Quick search created product.-->
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToStorefront"/>

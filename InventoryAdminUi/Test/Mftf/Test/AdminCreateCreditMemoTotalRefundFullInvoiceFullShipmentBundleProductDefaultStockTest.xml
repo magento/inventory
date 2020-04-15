@@ -35,7 +35,7 @@
                 <requiredEntity createDataKey="bundleOption"/>
                 <requiredEntity createDataKey="product"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -57,7 +57,7 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Login To storefront as Customer-->
@@ -81,8 +81,8 @@
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Process full shipment.-->
-        <actionGroup ref="goToShipmentIntoOrder" stepKey="clickShipAction"/>
-        <actionGroup ref="submitShipmentIntoOrder" stepKey="submitShipment"/>
+        <actionGroup ref="GoToShipmentIntoOrderActionGroup" stepKey="clickShipAction"/>
+        <actionGroup ref="SubmitShipmentIntoOrderActionGroup" stepKey="submitShipment"/>
         <!--Admin area create full credit memo-->
         <actionGroup ref="AdminStartsCreatingCreditMemoOnOrderPageActionGroup" stepKey="startToCreateCreditMemo"/>
         <actionGroup ref="AdminFillQuantityForPartialCreditMemoReturnToStockActionGroup" stepKey="fillCreditMemoQuantity">

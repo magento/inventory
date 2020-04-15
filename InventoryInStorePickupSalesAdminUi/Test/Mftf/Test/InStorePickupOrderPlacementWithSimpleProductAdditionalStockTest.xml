@@ -45,7 +45,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <!--Assign sources to product.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
@@ -75,7 +75,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Create Order with "In Store Pickup' shipping method.-->

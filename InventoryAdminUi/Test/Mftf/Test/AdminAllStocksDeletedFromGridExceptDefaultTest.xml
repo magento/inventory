@@ -20,7 +20,7 @@
         </annotations>
 
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <!-- need to delete all stocks previously created -->
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockGridPageToDeleteAllNeedlesslyStocks"/>
@@ -41,7 +41,7 @@
             <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <click selector="{{AdminGridSelectRows.multicheckDropdown}}" stepKey="openMulticheckDropdown"/>
@@ -51,7 +51,7 @@
         <waitForElementVisible selector="{{AdminGridConfirmActionSection.title}}" stepKey="waitForConfirmModal"/>
         <click selector="{{AdminGridConfirmActionSection.ok}}" stepKey="confirmStocksDelete"/>
 
-        <see selector="{{AdminMessagesSection.successMessage}}" userInput="You deleted 3 Stock(s)." stepKey="seeSuccessDeleteMessage"/>
-        <see selector="{{AdminMessagesSection.errorMessage}}" userInput="[ID: 1] Default Stock could not be deleted." stepKey="seeErrorDeleteMessage"/>
+        <see selector="{{AdminMessagesSection.success}}" userInput="You deleted 3 Stock(s)." stepKey="seeSuccessDeleteMessage"/>
+        <see selector="{{AdminMessagesSection.error}}" userInput="[ID: 1] Default Stock could not be deleted." stepKey="seeErrorDeleteMessage"/>
     </test>
 </tests>

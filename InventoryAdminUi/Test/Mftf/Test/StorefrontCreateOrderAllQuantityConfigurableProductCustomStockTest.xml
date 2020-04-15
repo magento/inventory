@@ -53,7 +53,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Assign additional source to configurable product.-->
             <amOnPage url="{{AdminProductEditPage.url($configurableChildProduct.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
@@ -76,7 +76,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Add configurable product to cart.-->

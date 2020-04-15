@@ -18,16 +18,16 @@
             <group value="msi"/>
             <group value="single_mode"/>
         </annotations>
-        
+
         <before>
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="VirtualMsiProduct" stepKey="product"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
 
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -47,7 +47,7 @@
 
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToHomePage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>

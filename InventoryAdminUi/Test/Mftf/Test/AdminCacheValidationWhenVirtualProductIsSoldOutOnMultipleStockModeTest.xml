@@ -33,7 +33,7 @@
                 <requiredEntity createDataKey="createSource1"/>
             </createData>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -41,7 +41,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
@@ -62,7 +62,7 @@
                    stepKey="fillSourceQtyField1"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100"
                    stepKey="fillSourceQtyField2"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
         <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>

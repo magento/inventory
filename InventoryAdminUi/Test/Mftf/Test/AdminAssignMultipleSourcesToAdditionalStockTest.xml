@@ -18,7 +18,7 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
             <!--Create additional stock with source.-->
             <createData entity="BasicMsiStock1" stepKey="additionalStock"/>
@@ -29,7 +29,7 @@
             </createData>
             <!--Create another one sources for assignment.-->
             <createData entity="FullSource2" stepKey="additionalSource2"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!--Disable created sources.-->
@@ -40,7 +40,7 @@
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>
             <!--Delete created additional stock.-->
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
         </after>
 
