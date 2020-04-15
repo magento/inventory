@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model\Source;
 
 use Magento\Framework\Api\ExtensionAttributesFactory;
-use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Framework\DataObject;
 use Magento\Inventory\Model\ResourceModel\GetSourceTypeBySourceCode;
+use Magento\InventoryApi\Api\Data\SourceInterface;
 
 /**
  * Set source type related source extension attributes

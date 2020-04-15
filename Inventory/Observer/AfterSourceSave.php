@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Observer;
 
+use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -16,7 +17,6 @@ use Magento\InventoryApi\Api\Data\SourceTypeLinkInterface;
 use Magento\InventoryApi\Api\Data\SourceTypeLinkInterfaceFactory;
 use Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface;
 use Magento\InventoryApi\Api\SourceTypeLinkSaveInterface;
-use Magento\Framework\Api\DataObjectHelper;
 
 /**
  * Plugin to save type of source after save source

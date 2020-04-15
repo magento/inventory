@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\Inventory\Plugin\Inventory\Model\SourceRepository;
 
 use Magento\Inventory\Model\Source\InitTypeCodeExtensionAttributes;
-use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryApi\Api\Data\SourceSearchResultsInterface;
+use Magento\InventoryApi\Api\SourceRepositoryInterface;
 
 /**
  * Populate source type extension attribute when loading single order.
