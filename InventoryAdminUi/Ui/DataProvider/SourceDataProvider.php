@@ -16,7 +16,6 @@ use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\Ui\DataProvider\SearchResultFactory;
-use Magento\Framework\App\ObjectManager;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
 
@@ -67,9 +66,9 @@ class SourceDataProvider extends DataProvider
      * @param SourceRepositoryInterface $sourceRepository
      * @param SearchResultFactory $searchResultFactory
      * @param Session $session
+     * @param PoolInterface $pool
      * @param array $meta
      * @param array $data
-     * @param PoolInterface|null $pool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -83,9 +82,9 @@ class SourceDataProvider extends DataProvider
         SourceRepositoryInterface $sourceRepository,
         SearchResultFactory $searchResultFactory,
         Session $session,
+        PoolInterface $pool,
         array $meta = [],
-        array $data = [],
-        PoolInterface $pool = null
+        array $data = []
     ) {
         parent::__construct(
             $name,
@@ -101,7 +100,7 @@ class SourceDataProvider extends DataProvider
         $this->sourceRepository = $sourceRepository;
         $this->searchResultFactory = $searchResultFactory;
         $this->session = $session;
-        $this->pool = $pool ?: ObjectManager::getInstance()->get(PoolInterface::class);
+        $this->pool = $pool;
     }
 
     /**
@@ -116,15 +115,10 @@ class SourceDataProvider extends DataProvider
             if ($data['totalRecords'] > 0) {
                 $sourceCode = $data['items'][0][SourceInterface::SOURCE_CODE];
                 $sourceGeneralData = $data['items'][0];
-
-                $source = $this->sourceRepository->get($sourceCode);
-                $sourceGeneralData['extension_attributes']['type_code'] = $source->getExtensionAttributes()->getTypeCode();
-
                 $sourceGeneralData['disable_source_code'] = !empty($sourceGeneralData['source_code']);
                 $dataForSingle[$sourceCode] = [
                     'general' => $sourceGeneralData,
                 ];
-
                 return $dataForSingle;
             }
             $sessionData = $this->session->getSourceFormData(true);
@@ -134,12 +128,6 @@ class SourceDataProvider extends DataProvider
                     '' => $sessionData,
                 ];
             }
-        } else {
-            foreach ($data['items'] as &$item) {
-                $source = $this->sourceRepository->get($item['source_code']);
-                $item['type_code'] = $source->getExtensionAttributes()->getTypeCode();
-            }
-            unset($item);
         }
         $data['totalRecords'] = $this->getSourcesCount();
 

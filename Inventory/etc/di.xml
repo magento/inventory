@@ -100,7 +100,8 @@
     <preference for="Magento\InventoryApi\Api\SourceTypeLinkSaveInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkSave"/>
     <preference for="Magento\InventoryApi\Api\SourceTypeLinkDeleteInterface" type="Magento\Inventory\Model\SourceTypeLink\Command\SourceTypeLinkDelete"/>
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
-        <plugin name="SourceTypeExtensionAttributeGet" type="Magento\Inventory\Plugin\Inventory\Model\SourceTypeAttributeGet"/>
+        <plugin name="load_source_type_on_get" type="Magento\Inventory\Plugin\Inventory\Model\SourceRepository\LoadSourceTypeOnGetPlugin"/>
+        <plugin name="load_source_type_on_get_list" type="Magento\Inventory\Plugin\Inventory\Model\SourceRepository\LoadSourceTypeOnGetListPlugin"/>
     </type>
     <type name="Magento\InventoryApi\Model\SourceTypeLinkValidatorChain">
         <arguments>
