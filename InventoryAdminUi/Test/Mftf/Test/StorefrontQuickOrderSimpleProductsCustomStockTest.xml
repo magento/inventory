@@ -34,7 +34,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source2"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdmin"/>
             <!--Assign source1 to product1 and set quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($createProduct.id$)}}" stepKey="openSimple1ProductPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
@@ -43,7 +43,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct1">
                 <argument name="sourceCode" value="$source1.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct1"/>
             <!--Assign source2 to product2 and set quantity.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openSimple2ProductPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
@@ -52,7 +52,7 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct2">
                 <argument name="sourceCode" value="$source2.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseSimpleProduct2"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseSimpleProduct2"/>
         </before>
         <after>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -71,7 +71,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
                 <argument name="sourceCode" value="$source2.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Quick order second simple product.-->

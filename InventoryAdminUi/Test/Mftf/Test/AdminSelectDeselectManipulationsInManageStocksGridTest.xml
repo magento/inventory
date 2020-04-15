@@ -20,7 +20,7 @@
         </annotations>
 
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <createData entity="SpecialStockForAdminSelectDeselectManipulationsInManageStocksGridTest" stepKey="createStock1"/>
             <createData entity="SpecialStockForAdminSelectDeselectManipulationsInManageStocksGridTest" stepKey="createStock2"/>
@@ -46,7 +46,7 @@
             <createData entity="SpecialStockForAdminSelectDeselectManipulationsInManageStocksGridTest" stepKey="createStock22"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
 
             <deleteData createDataKey="createStock1" stepKey="deleteStock1"/>
             <deleteData createDataKey="createStock2" stepKey="deleteStock2"/>

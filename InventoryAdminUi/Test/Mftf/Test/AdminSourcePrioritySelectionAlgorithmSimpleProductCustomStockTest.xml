@@ -30,7 +30,7 @@
             <createData entity="BasicMsiStock1" stepKey="customStock"/>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign sources and sales channel to stock." stepKey="assignSourcesToStockComment"/>
@@ -75,7 +75,7 @@
             <click selector="{{AdminGridRow.editByValue($$lowPrioritySource.source[source_code]$$)}}" stepKey="clickEditLowPrioritySource"/>
             <waitForPageLoad time="30" stepKey="waitForLowPrioritySourceEditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableLowPrioritySource"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseLowPrioritySource"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseLowPrioritySource"/>
 
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterHighPrioritySourceBySourceCode">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -84,7 +84,7 @@
             <click selector="{{AdminGridRow.editByValue($$highPrioritySource.source[source_code]$$)}}" stepKey="clickEditHighPrioritySource"/>
             <waitForPageLoad time="30" stepKey="waitForHighPrioritySourceEditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableHighPrioritySource"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseHighPrioritySource"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseHighPrioritySource"/>
 
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
@@ -96,7 +96,7 @@
             <waitForPageLoad time="30" stepKey="waitFroDefaultStockEditPageLoad"/>
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
 
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -139,7 +139,7 @@
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForLowPrioritySource"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForHighPrioritySource"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedSimpleProduct"/>
 
         <comment userInput="Login and buy fifty pieces of simple product on storefront." stepKey="buySimpleProductComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
@@ -207,13 +207,13 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad9"/>
 
         <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeShipmentOrderStatus"/>
-        <actionGroup ref="verifyBasicShipmentInformation" stepKey="checkBasicShipmentOrderInfo">
+        <actionGroup ref="VerifyBasicShipmentInformationActionGroup" stepKey="checkBasicShipmentOrderInfo">
             <argument name="customer" value="$$customer$$"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>
         </actionGroup>
 
-        <actionGroup ref="seeProductInShipmentItems" stepKey="checkProductInShipment">
+        <actionGroup ref="SeeProductInShipmentItemsActionGroup" stepKey="checkProductInShipment">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
