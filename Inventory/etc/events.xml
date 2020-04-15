@@ -7,9 +7,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="controller_action_inventory_populate_source_with_data">
-        <observer name="source_type_populate" instance="Magento\Inventory\Observer\PopulateSourceWithData"/>
-    </event>
     <event name="controller_action_inventory_source_save_after">
         <observer name="source_type_save" instance="Magento\Inventory\Observer\AfterSourceSave"/>
     </event>
