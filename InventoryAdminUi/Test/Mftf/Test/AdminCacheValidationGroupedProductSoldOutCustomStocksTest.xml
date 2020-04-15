@@ -33,7 +33,7 @@
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Create customer.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->
@@ -45,7 +45,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
@@ -58,7 +58,7 @@
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="2" stepKey="setCustomSourceQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveVirtualProduct"/>
         <!--Assign virtual to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
         <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>

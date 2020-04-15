@@ -29,7 +29,7 @@
                 <requiredEntity createDataKey="customSource"/>
             </createData>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
         </before>
         <after>
@@ -45,7 +45,7 @@
             <click selector="{{AdminGridRow.editByValue($$customSource.source[source_code]$$)}}" stepKey="clickEditCustomSource"/>
             <waitForPageLoad time="30" stepKey="waitForCustomSourceEditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableCustomSource"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSource"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSource"/>
 
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
@@ -64,7 +64,7 @@
             <comment userInput="Perform reindex and cache flush after save stock related config." stepKey="reindexCacheFlushComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <comment userInput="Create simple product with custom source." stepKey="createSimpleProductComment"/>
@@ -92,7 +92,7 @@
         <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$customSource.source[name]$$" stepKey="checkSelectedSourceNameInProductAssignedSourcesList"/>
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyField"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedSimpleProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedSimpleProduct"/>
 
         <comment userInput="Check, created product is present on category page." stepKey="checkProductIsPresentOnCategoryPageComment"/>
         <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToSimpleProductCategoryPage"/>

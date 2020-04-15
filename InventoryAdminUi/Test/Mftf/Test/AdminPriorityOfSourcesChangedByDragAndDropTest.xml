@@ -25,10 +25,10 @@
             <createData entity="_minimalSource" stepKey="createSource3"/>
             <createData entity="_minimalSource" stepKey="createSource4"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!-- Assign Sources to Stock -->

@@ -29,7 +29,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Create text swatch attribute with 3 options:  Black, White and Blue-->
             <actionGroup ref="AddTextSwatchToProductActionGroup" stepKey="addTextSwatchAttribute">
                 <argument name="attributeName" value="{{ProductColorAttribute.frontend_label}}"/>
@@ -79,7 +79,7 @@
             </actionGroup>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Add configurable product to cart.-->

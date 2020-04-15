@@ -30,14 +30,14 @@
 
             <createData entity="Msi_US_Customer" stepKey="customer"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
@@ -74,7 +74,7 @@
         <fillField userInput="{{downloadableLink.file}}" selector="{{AdminProductDownloadableSection.addLinkFileUrlInput('0')}}" stepKey="fillDownloadableLinkFileUrl2"/>
         <attachFile userInput="{{downloadableLink.sample}}" selector="{{AdminProductDownloadableSection.addLinkSampleUploadFile('0')}}" stepKey="attachDownloadableLinkUploadSample2"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProduct"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>

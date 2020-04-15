@@ -32,7 +32,7 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Assign additional source to simple product.-->
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
@@ -58,7 +58,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Add product to cart.-->
@@ -76,7 +76,7 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Delete product.-->
         <deleteData createDataKey="product" stepKey="deleteProduct"/>
-        <magentoCron stepKey="runConsumers"/>
+        <magentoCron groups="consumers" stepKey="runConsumers"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
