@@ -5,12 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Plugin\Model\Product\Type\Configurable;
+namespace Magento\InventoryConfigurableProduct\Plugin\Pricing\Price;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\ConfigurableProduct\Pricing\Price\ConfigurableOptionsProviderInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -19,11 +20,6 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class IsSalableOptionPlugin
 {
-    /**
-     * @var IsProductSalableInterface
-     */
-    private $isProductSalable;
-
     /**
      * @var StoreManagerInterface
      */
@@ -40,41 +36,62 @@ class IsSalableOptionPlugin
     private $stockConfiguration;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockConfigurationInterface $stockConfiguration
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
-        StockConfigurationInterface $stockConfiguration
+        StockConfigurationInterface $stockConfiguration,
+        AreProductsSalableInterface $areProductsSalable
     ) {
-        $this->isProductSalable = $isProductSalable;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockConfiguration = $stockConfiguration;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
      * Remove not salable configurable options from options array.
      *
-     * @param Configurable $subject
+     * @param ConfigurableOptionsProviderInterface $subject
      * @param array $products
+     * @param ProductInterface $product
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetUsedProducts(Configurable $subject, array $products): array
-    {
+    public function afterGetProducts(
+        ConfigurableOptionsProviderInterface $subject,
+        array $products,
+        ProductInterface $product
+    ) : array {
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
 
+        $skus = [];
+        foreach ($products as $product) {
+            $skus[] = $product->getSku();
+        }
+        $salableResults = $this->areProductsSalable->execute($skus, $stock->getStockId());
+
         foreach ($products as $key => $product) {
-            if (!$this->isProductSalable->execute($product->getSku(), $stock->getStockId())) {
-                $product->setIsSalable(0);
-                if (!$this->stockConfiguration->isShowOutOfStock()) {
-                    unset($products[$key]);
+            foreach ($salableResults as $result) {
+                if ($result->getSku() === $product->getSku() && !$result->isSalable()) {
+                    $product->setIsSalable(0);
+                    if (!$this->stockConfiguration->isShowOutOfStock()) {
+                        unset($products[$key]);
+                        break;
+                    }
                 }
             }
         }
