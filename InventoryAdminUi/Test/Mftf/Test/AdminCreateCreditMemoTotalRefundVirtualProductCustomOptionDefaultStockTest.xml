@@ -26,7 +26,7 @@
             <createData entity="VirtualProduct" stepKey="product"/>
             <!--Create customer.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -38,7 +38,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
         </after>
@@ -53,7 +53,7 @@
             <argument name="firstOption" value="ProductOptionValueDropdown1"/>
             <argument name="secondOption" value="ProductOptionValueDropdown2"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         <!--Login To storefront as Customer-->
         <comment userInput="Login to storefront as customer." stepKey="loginToStorefrontComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">

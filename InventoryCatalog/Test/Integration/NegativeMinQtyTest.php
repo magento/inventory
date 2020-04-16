@@ -10,16 +10,17 @@ namespace Magento\InventoryCatalog\Test\Integration;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 class NegativeMinQtyTest extends TestCase
 {
     /**
-     * @var IsProductSalableForRequestedQtyInterface
+     * @var AreProductsSalableForRequestedQtyInterface
      */
-    private $isProductSalableForRequestedQty;
+    private $areProductsSalableForRequestedQty;
 
     /**
      * @var GetStockItemConfigurationInterface
@@ -32,13 +33,20 @@ class NegativeMinQtyTest extends TestCase
     private $saveStockItemConfiguration;
 
     /**
+     * @var IsProductSalableForRequestedQtyRequestInterfaceFactory
+     */
+    private $isProductSalableForRequestedQtyRequestFactory;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->isProductSalableForRequestedQty = Bootstrap::getObjectManager()->get(
-            IsProductSalableForRequestedQtyInterface::class
+        $this->isProductSalableForRequestedQtyRequestFactory = Bootstrap::getObjectManager()
+            ->get(IsProductSalableForRequestedQtyRequestInterfaceFactory::class);
+        $this->areProductsSalableForRequestedQty = Bootstrap::getObjectManager()->get(
+            AreProductsSalableForRequestedQtyInterface::class
         );
         $this->getStockItemConfiguration = Bootstrap::getObjectManager()->get(
             GetStockItemConfigurationInterface::class
@@ -57,14 +65,20 @@ class NegativeMinQtyTest extends TestCase
      * @dataProvider isProductSalableForRequestedQtyWithBackordersEnabledAtProductLevelDataProvider
      *
      * @magentoDbIsolation disabled
+     * @param string $sku
+     * @param int $stockId
+     * @param float $minQty
+     * @param float $requestedQty
+     * @param bool $expectedSaleability
+     * @return void
      */
     public function testIsProductSalableForRequestedQtyWithBackordersEnabledAtProductLevel(
-        $sku,
-        $stockId,
-        $minQty,
-        $requestedQty,
-        $expectedSalability
-    ) {
+        string $sku,
+        int $stockId,
+        float $minQty,
+        float $requestedQty,
+        bool $expectedSaleability
+    ): void {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         $stockItemConfiguration->setUseConfigBackorders(false);
         $stockItemConfiguration->setBackorders(StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY);
@@ -72,13 +86,27 @@ class NegativeMinQtyTest extends TestCase
         $stockItemConfiguration->setMinQty($minQty);
         $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
 
+        $request = $this->isProductSalableForRequestedQtyRequestFactory->create(
+            [
+                'sku' => $sku,
+                'qty' => $requestedQty,
+            ]
+        );
+        $result = $this->areProductsSalableForRequestedQty->execute([$request], $stockId);
+        $result = current($result);
+
         $this->assertEquals(
-            $expectedSalability,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty)->isSalable()
+            $expectedSaleability,
+            $result->isSalable()
         );
     }
 
-    public function isProductSalableForRequestedQtyWithBackordersEnabledAtProductLevelDataProvider()
+    /**
+     * Get test data.
+     *
+     * @return array
+     */
+    public function isProductSalableForRequestedQtyWithBackordersEnabledAtProductLevelDataProvider(): array
     {
         return [
             'salable_qty' => ['SKU-1', 10, -4.5, 13, true],
@@ -97,25 +125,44 @@ class NegativeMinQtyTest extends TestCase
      * @dataProvider isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider
      *
      * @magentoDbIsolation disabled
+     * @param string $sku
+     * @param int $stockId
+     * @param float $requestedQty
+     * @param bool $expectedSaleability
+     * @return void
      */
     public function testIsProductSalableForRequestedQtyWithBackordersEnabledGlobally(
-        $sku,
-        $stockId,
-        $requestedQty,
-        $expectedSalability
-    ) {
+        string $sku,
+        int $stockId,
+        float $requestedQty,
+        bool $expectedSaleability
+    ): void {
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
         $stockItemConfiguration->setUseConfigBackorders(true);
         $stockItemConfiguration->setUseConfigMinQty(true);
         $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
 
+        $request = $this->isProductSalableForRequestedQtyRequestFactory->create(
+            [
+                'sku' => $sku,
+                'qty' => $requestedQty,
+            ]
+        );
+        $result = $this->areProductsSalableForRequestedQty->execute([$request], $stockId);
+        $result = current($result);
+
         $this->assertEquals(
-            $expectedSalability,
-            $this->isProductSalableForRequestedQty->execute($sku, $stockId, $requestedQty)->isSalable()
+            $expectedSaleability,
+            $result->isSalable()
         );
     }
 
-    public function isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider()
+    /**
+     * Get test data.
+     *
+     * @return array
+     */
+    public function isProductSalableForRequestedQtyWithBackordersEnabledGloballyDataProvider(): array
     {
         return [
             'salable_qty' => ['SKU-1', 10, 13, true],

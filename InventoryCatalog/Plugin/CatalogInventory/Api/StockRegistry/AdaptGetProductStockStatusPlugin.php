@@ -13,8 +13,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetProductStatusBySku;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -24,9 +24,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class AdaptGetProductStockStatusPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var GetSkusByProductIdsInterface
@@ -49,20 +49,20 @@ class AdaptGetProductStockStatusPlugin
     private $getProductStatusBySku;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param GetProductStatusBySku $getProductStatusBySku
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         GetProductStatusBySku $getProductStatusBySku
     ) {
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
@@ -93,7 +93,12 @@ class AdaptGetProductStockStatusPlugin
         $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)->getStockId();
         $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
         $status = $this->getProductStatusBySku->execute($sku);
+        if ($status === Status::STATUS_DISABLED) {
+            return 0;
+        }
+        $result = $this->areProductsSalable->execute([$sku], $stockId);
+        $result = current($result);
 
-        return $status === Status::STATUS_ENABLED ? (int)$this->isProductSalable->execute($sku, $stockId) : 0;
+        return (int)$result->isSalable();
     }
 }

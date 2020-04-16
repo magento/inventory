@@ -44,7 +44,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableMainWebsiteSource">
                 <argument name="sourceCode" value="$$additionalSourceMainWebsite.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category, product and stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurable"/>
@@ -52,7 +52,7 @@
         </after>
 
         <!--Assign category and create configurable variations.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminPanel"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openConfigurableProductEditPage"/>
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton"/>
         <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresents"/>

@@ -27,10 +27,10 @@
             <createData entity="VirtualMsiProduct" stepKey="createProduct1"/>
             <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
 
             <deleteData createDataKey="createProduct1" stepKey="deleteProduct1"/>
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory1"/>

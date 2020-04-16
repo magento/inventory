@@ -27,7 +27,7 @@
             <createData entity="FullSource2" stepKey="customSource2"/>
             <createData entity="SimpleMsiProduct" stepKey="createSimpleProduct"/>
             <createData entity="Msi_US_Customer" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
                 <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
@@ -57,7 +57,7 @@
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
         </after>
-        <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="goToProduct1">
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createSimpleProduct.id$"/>
         </actionGroup>
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}"
@@ -76,7 +76,7 @@
             <argument name="filter_value" value="$$customSource2.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="2" stepKey="fillSourceQtyField1"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProductForm"/>
         <!--Login as a Customer-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefrontAccount">
             <argument name="Customer" value="$$customer$$"/>

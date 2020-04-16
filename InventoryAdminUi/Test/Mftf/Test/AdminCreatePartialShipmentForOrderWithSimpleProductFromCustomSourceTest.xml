@@ -24,7 +24,7 @@
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="FullSource1" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <!-- Assign Source and Sales Channel to Stock-->
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
@@ -69,14 +69,14 @@
             <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone"/>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
             <!-- Perform reindex and flush cache -->
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
         </after>

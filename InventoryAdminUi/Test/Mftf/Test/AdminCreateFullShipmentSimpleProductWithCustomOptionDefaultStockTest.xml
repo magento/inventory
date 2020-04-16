@@ -27,7 +27,7 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <createData entity="MsiCustomer1" stepKey="customer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -41,7 +41,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Add custom option to product.-->
@@ -53,16 +53,16 @@
             <argument name="firstOption" value="ProductOptionValueDropdown1"/>
             <argument name="secondOption" value="ProductOptionValueDropdown2"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         <!--Login To storefront as Customer-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
         <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
-        <actionGroup ref="StorefrontSelectOptionDropDownActionGroup" stepKey="selectOption">
-            <argument name="optionTitle" value="ProductOptionDropDown"/>
-            <argument name="option" value="ProductOptionValueDropdown1.title"/>
+        <actionGroup ref="StorefrontProductPageSelectDropDownOptionValueActionGroup" stepKey="selectOption">
+            <argument name="attributeLabel" value="{{ProductOptionDropDown.title}}"/>
+            <argument name="optionLabel" value="{{ProductOptionValueDropdown1.title}}"/>
         </actionGroup>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="{{fivePiecesAddToCart.value}}" stepKey="fillProductQty"/>
         <actionGroup ref="StorefrontAddToTheCartActionGroup" stepKey="addProductToCart"/>

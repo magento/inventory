@@ -36,7 +36,7 @@
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
             <createData entity="Msi_US_Customer" stepKey="createCustomer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign created source to stock." stepKey="assignSourceToStock"/>
@@ -71,7 +71,7 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillTestSourceQtyField"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProductForm"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProductForm"/>
         </before>
         <after>
             <comment userInput="Revert config 'Only X left Threshold' changes." stepKey="revertConfigChangesComment"/>
@@ -97,7 +97,7 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>

@@ -32,7 +32,7 @@
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
@@ -67,14 +67,14 @@
             <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
         </before>
         <after>
             <comment userInput="Disable source, as it can brake single source mode tests." stepKey="disableCustomSourceComment"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
