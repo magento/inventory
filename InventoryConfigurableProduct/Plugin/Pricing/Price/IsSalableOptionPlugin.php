@@ -90,8 +90,8 @@ class IsSalableOptionPlugin
                     $product->setIsSalable(0);
                     if (!$this->stockConfiguration->isShowOutOfStock()) {
                         unset($products[$key]);
-                        break;
                     }
+                    break;
                 }
             }
         }
