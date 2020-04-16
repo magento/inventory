@@ -74,7 +74,7 @@ class ReindexSourceItemsPlugin
         if ($product->getTypeId() !== Configurable::TYPE_CODE) {
             return $result;
         }
-        $childrenIds = $product->getExtensionAttributes()->getConfigurableProductLinks();
+        $childrenIds = $product->getExtensionAttributes()->getConfigurableProductLinks() ?: [];
         $skus = $this->getSkusByProductIds->execute($childrenIds);
         $sourceItems = [[]];
         foreach ($skus as $sku) {

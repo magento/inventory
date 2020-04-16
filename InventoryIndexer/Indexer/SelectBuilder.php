@@ -7,12 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
-use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
@@ -20,6 +16,7 @@ use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkReso
 use Magento\Inventory\Model\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryCatalogApi\Model\ProductStatusSelectProcessorInterface;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
 
 /**
@@ -43,34 +40,26 @@ class SelectBuilder
     private $productTableName;
 
     /**
-     * @var MetadataPool
+     * @var ProductStatusSelectProcessorInterface
      */
-    private $metadataPool;
-
-    /**
-     * @var ProductAttributeRepositoryInterface
-     */
-    private $productAttributeRepository;
+    private $productStatusSelectProcessor;
 
     /**
      * @param ResourceConnection $resourceConnection
      * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
      * @param string $productTableName
-     * @param MetadataPool $metadataPool
-     * @param ProductAttributeRepositoryInterface $productAttributeRepository
+     * @param ProductStatusSelectProcessorInterface $productStatusSelectProcessor
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
         string $productTableName,
-        MetadataPool $metadataPool,
-        ProductAttributeRepositoryInterface $productAttributeRepository
+        ProductStatusSelectProcessorInterface $productStatusSelectProcessor
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
         $this->productTableName = $productTableName;
-        $this->metadataPool = $metadataPool;
-        $this->productAttributeRepository = $productAttributeRepository;
+        $this->productStatusSelectProcessor = $productStatusSelectProcessor;
     }
 
     /**
@@ -93,7 +82,6 @@ class SelectBuilder
         $sourceCodes = $this->getSourceCodes($stockId);
 
         $select = $connection->select();
-        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $select->joinLeft(
             ['product' => $this->resourceConnection->getTableName($this->productTableName)],
             'product.sku = source_item.' . SourceItemInterface::SKU,
@@ -102,13 +90,8 @@ class SelectBuilder
             ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
             'product.entity_id = legacy_stock_item.product_id',
             []
-        )->joinInner(
-            ['status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
-            'product.' . $linkField . ' = status.' . $linkField
-            . ' AND status.attribute_id = ' . $this->getStatusId()
-            . ' AND status.value = ' . Status::STATUS_ENABLED,
-            []
         );
+        $select = $this->productStatusSelectProcessor->execute($select, $stockId);
 
         $select->from(
             ['source_item' => $sourceItemTable],
@@ -150,16 +133,5 @@ class SelectBuilder
 
         $sourceCodes = $connection->fetchCol($select);
         return $sourceCodes;
-    }
-
-    /**
-     * Retrieve 'status' attribute id.
-     *
-     * @return int
-     * @throws NoSuchEntityException
-     */
-    private function getStatusId(): int
-    {
-        return (int)$this->productAttributeRepository->get(ProductInterface::STATUS)->getAttributeId();
     }
 }

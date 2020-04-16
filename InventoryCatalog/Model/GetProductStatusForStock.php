@@ -7,23 +7,17 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
-use Magento\InventoryCatalog\Model\ResourceModel\GetProductStatus;
+use Magento\InventoryCatalog\Model\ResourceModel\GetProductStatusByProductIdAndStockId;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
- * Get product status service.
+ * Get product status for given stock service.
  */
-class GetProductStatusBySku
+class GetProductStatusForStock
 {
     /**
-     * @var ProductAttributeRepositoryInterface
-     */
-    private $attributeRepository;
-
-    /**
-     * @var GetProductStatus
+     * @var GetProductStatusByProductIdAndStockId
      */
     private $getProductStatus;
 
@@ -34,15 +28,13 @@ class GetProductStatusBySku
 
     /**
      * @param ProductAttributeRepositoryInterface $attributeRepository
-     * @param GetProductStatus $getProductStatus
+     * @param GetProductStatusByProductIdAndStockId $getProductStatus
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      */
     public function __construct(
-        ProductAttributeRepositoryInterface $attributeRepository,
-        GetProductStatus $getProductStatus,
+        GetProductStatusByProductIdAndStockId $getProductStatus,
         GetProductIdsBySkusInterface $getProductIdsBySkus
     ) {
-        $this->attributeRepository = $attributeRepository;
         $this->getProductStatus = $getProductStatus;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
     }
@@ -51,15 +43,14 @@ class GetProductStatusBySku
      * Retrieve product status by sku.
      *
      * @param string $sku
+     * @param int $stockId
      * @return int
      */
-    public function execute(string $sku): int
+    public function execute(string $sku, int $stockId): int
     {
         try {
-            $statusAttribute = $this->attributeRepository->get(ProductInterface::STATUS);
             $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
-
-            return $this->getProductStatus->execute((int)$statusAttribute->getAttributeId(), (int)$productId);
+            return $this->getProductStatus->execute((int)$productId, $stockId);
         } catch (\Exception $e) {
             return 0;
         }

@@ -98,7 +98,9 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
 
             $typeId = $this->getTypeId($legacyStockItem);
             if ($this->isSourceItemManagementAllowedForProductType->execute($typeId)) {
-                $this->updateSourceItemBasedOnLegacyStockItem->execute($legacyStockItem);
+                if ($this->shouldAlignDefaultSourceWithLegacy($legacyStockItem)) {
+                    $this->updateSourceItemBasedOnLegacyStockItem->execute($legacyStockItem);
+                }
             }
 
             $connection->commit();
@@ -108,6 +110,25 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
             $connection->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Return true if legacy stock item should update default source (if existing).
+     *
+     * @param Item $legacyStockItem
+     * @return bool
+     * @throws NoSuchEntityException
+     */
+    private function shouldAlignDefaultSourceWithLegacy(Item $legacyStockItem): bool
+    {
+        $productSku = $this->getSkusByProductIds
+            ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];
+
+        $result = $legacyStockItem->getIsInStock() ||
+            ((float)$legacyStockItem->getQty() !== (float)0) ||
+            ($this->getDefaultSourceItemBySku->execute($productSku) !== null);
+
+        return $result;
     }
 
     /**
