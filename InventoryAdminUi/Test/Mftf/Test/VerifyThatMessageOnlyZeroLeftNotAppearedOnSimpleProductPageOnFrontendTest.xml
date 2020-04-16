@@ -30,7 +30,7 @@
             </createData>
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
                          stepKey="goToStockGridFilterResultsByInputEditStock1">
                 <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
@@ -56,13 +56,13 @@
                         stepKey="displayOutOfStockNo"/>
         </after>
 
-        <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="goToProduct1">
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createSimpleProduct.id$"/>
         </actionGroup>
         <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock"
                       stepKey="setSimpleProductOutOfStockStatus"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{zeroProductQuantity.value}}" stepKey="fillSourceQtyField"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFourthProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseFourthProductForm"/>
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductStorefront">
             <argument name="productUrl" value="$$createSimpleProduct.custom_attributes[url_key]$$"/>
         </actionGroup>

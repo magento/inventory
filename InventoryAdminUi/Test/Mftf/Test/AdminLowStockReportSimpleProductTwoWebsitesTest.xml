@@ -32,7 +32,7 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Create new website,store and store view-->
             <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite" >
                 <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
@@ -85,7 +85,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <!--Disable additional source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Verify report for main website.-->

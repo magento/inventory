@@ -11,8 +11,8 @@ use Magento\AdvancedCheckout\Model\IsProductInStockInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
@@ -27,9 +27,9 @@ class ProductInStockPlugin
     private $productRepository;
 
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var StockResolverInterface
@@ -48,20 +48,20 @@ class ProductInStockPlugin
 
     /**
      * @param ProductRepositoryInterface $productRepository
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->productRepository = $productRepository;
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
         $this->defaultStockProvider = $defaultStockProvider;
@@ -87,8 +87,13 @@ class ProductInStockPlugin
         $product = $this->productRepository->getById($productId);
         $website = $this->websiteRepository->getById($websiteId);
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-        return $this->defaultStockProvider->getId() === $stock->getStockId()
-            ? $proceed($productId, $websiteId)
-            : $this->isProductSalable->execute($product->getSku(), $stock->getStockId());
+        if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
+            return $proceed($productId, $websiteId);
+        }
+
+        $result = $this->areProductsSalable->execute([$product->getSku()], $stock->getStockId());
+        $result = current($result);
+
+        return $result->isSalable();
     }
 }

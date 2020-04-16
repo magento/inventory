@@ -10,7 +10,7 @@ namespace Magento\InventoryBundleProduct\Model;
 use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Bundle\Model\OptionRepository;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
  * Get bundle product stock status service.
@@ -28,25 +28,23 @@ class GetBundleProductStockStatus
     private $getProductSelection;
 
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
-     * GetBundleProductStockStatus constructor
-     *
      * @param OptionRepository $optionRepository
      * @param GetProductSelection $getProductSelection
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
         OptionRepository $optionRepository,
         GetProductSelection $getProductSelection,
-        IsProductSalableInterface $isProductSalable
+        AreProductsSalableInterface $areProductsSalable
     ) {
         $this->optionRepository = $optionRepository;
         $this->getProductSelection = $getProductSelection;
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
@@ -64,8 +62,13 @@ class GetBundleProductStockStatus
         foreach ($bundleOptions as $option) {
             $hasSalable = false;
             $bundleSelections = $this->getProductSelection->execute($product, $option);
+            $skus = [];
             foreach ($bundleSelections as $selection) {
-                if ($this->isProductSalable->execute((string)$selection->getSku(), $stockId)) {
+                $skus[] = $selection->getSku();
+            }
+            $results = $this->areProductsSalable->execute($skus, $stockId);
+            foreach ($results as $result) {
+                if ($result->isSalable()) {
                     $hasSalable = true;
                     break;
                 }

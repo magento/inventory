@@ -33,7 +33,7 @@
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
             <!--Assign created source to product.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
@@ -57,7 +57,7 @@
             <deleteData stepKey="deleteProduct" createDataKey="simpleProduct"/>
             <deleteData stepKey="deleteCategory" createDataKey="simpleCategory"/>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Verify product is visible on storefront page.-->

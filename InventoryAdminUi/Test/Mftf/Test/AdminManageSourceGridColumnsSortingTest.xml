@@ -25,7 +25,7 @@
             <createData entity="SourceForColumnsSortingOrderTestOnly" stepKey="createCustomSource3"/>
             <createData entity="SourceForColumnsSortingOrderTestOnly" stepKey="createCustomSource4"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!-- Disable source as it can broke single source mode tests. -->
@@ -37,7 +37,7 @@
             <click selector="{{AdminGridRow.editByValue($$createCustomSource1.source[source_code]$$)}}" stepKey="clickOnEditCustomSourceToDisableCustomSource1"/>
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoadToDisableCustomSource1"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisableCustomSource1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSourceToDisableCustomSource1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSourceToDisableCustomSource1"/>
 
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFiltersForSourceToDisableCustomSource2"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsForSourcesToDisableCustomSource2">
@@ -47,7 +47,7 @@
             <click selector="{{AdminGridRow.editByValue($$createCustomSource2.source[source_code]$$)}}" stepKey="clickOnEditCustomSourceToDisableCustomSource2"/>
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoadToDisableCustomSource2"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisableCustomSource2"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSourceToDisableCustomSource2"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSourceToDisableCustomSource2"/>
 
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFiltersForSourceToDisableCustomSource3"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsForSourcesToDisableCustomSource3">
@@ -57,7 +57,7 @@
             <click selector="{{AdminGridRow.editByValue($$createCustomSource3.source[source_code]$$)}}" stepKey="clickOnEditCustomSourceToDisableCustomSource3"/>
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoadToDisableCustomSource3"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisableCustomSource3"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSourceToDisableCustomSource3"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSourceToDisableCustomSource3"/>
 
             <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFiltersForSourceToDisableCustomSource4"/>            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsForSourcesToDisableCustomSource4">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
@@ -66,9 +66,9 @@
             <click selector="{{AdminGridRow.editByValue($$createCustomSource4.source[source_code]$$)}}" stepKey="clickOnEditCustomSourceToDisableCustomSource4"/>
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoadToDisableCustomSource4"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisableCustomSource4"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSourceToDisableCustomSource4"/>
-            
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSourceToDisableCustomSource4"/>
+
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheSourcesGridPage"/>

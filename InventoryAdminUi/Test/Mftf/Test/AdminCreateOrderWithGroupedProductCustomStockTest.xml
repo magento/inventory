@@ -37,7 +37,7 @@
             <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="1000" stepKey="setCustomSourceSimpleProductQuantity" before="saveSimpleProduct"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveSimpleProduct" before="navigateToProductIndexPageForEditVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSimpleProduct" before="navigateToProductIndexPageForEditVirtualProduct"/>
         <!--Assign virtual product to additional source.-->
         <scrollToTopOfPage stepKey="scrollToTheTopOfProductPage" before="setCustomSourceQuantity"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTestSourceToCreatedProduct" before="setCustomSourceQuantity">

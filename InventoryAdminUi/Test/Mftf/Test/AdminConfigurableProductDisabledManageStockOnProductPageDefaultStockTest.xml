@@ -24,7 +24,7 @@
             <createData entity="_minimalSource" stepKey="customSource"/>
             <createData entity="BasicMsiStock1" stepKey="customStock"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign source and sales channel to stock." stepKey="assignSourceToStockComment"/>
@@ -56,9 +56,9 @@
             <click selector="{{AdminGridRow.editByValue($$customSource.source[source_code]$$)}}" stepKey="clickEditCustomSource"/>
             <waitForPageLoad time="30" stepKey="waitForCustomSourceEditPageLoad"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableCustomSource"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCustomSource"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSource"/>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <comment userInput="Create Configurable product with two options 'In Stock' on 'Custom' stock" stepKey="CreateConfigurableProductComment"/>
@@ -151,7 +151,7 @@
         <click selector="{{AdminAdvancedInventorySection.manageStockUseDefault}}" stepKey="clickOnManageStockToSetItToNoForBlue"/>
         <selectOption selector="{{AdminAdvancedInventorySection.manageStock}}" userInput="No" stepKey="fillManageStockToNoForBlue"/>
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetManageStockToNoForBlue"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseToSetManageStockToNoForBlue"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseToSetManageStockToNoForBlue"/>
 
         <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridToSetManageStockToNoForRed"/>
         <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterRedConfigurableVariation">
@@ -163,7 +163,7 @@
         <selectOption selector="{{AdminAdvancedInventorySection.manageStock}}" userInput="No" stepKey="fillManageStockToNoForRed"/>
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}"
                stepKey="clickOnDoneToSetManageStockToNoForRed"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseToSetManageStockToNoForRed"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseToSetManageStockToNoForRed"/>
 
         <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock1"/>
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock1"/>

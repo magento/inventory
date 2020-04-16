@@ -140,7 +140,7 @@ class SalesChannelManagementTest extends WebapiAbstract
             ],
         ];
     }
-    
+
     /**
      * @param array $salesChannels
      * @param array $expectedErrorData
