@@ -9,7 +9,7 @@ namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selec
 
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -19,9 +19,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class AdaptAddQuantityFilterPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var StoreManagerInterface
@@ -39,18 +39,18 @@ class AdaptAddQuantityFilterPlugin
     private $defaultStockProvider;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param StoreManagerInterface $storeManager
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         StoreManagerInterface $storeManager,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->storeManager = $storeManager;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->defaultStockProvider = $defaultStockProvider;
@@ -72,10 +72,15 @@ class AdaptAddQuantityFilterPlugin
         if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
             return $proceed();
         }
+        $skus = [];
         $skusToExclude = [];
         foreach ($subject->getData() as $item) {
-            if (!$this->isProductSalable->execute((string)$item['sku'], $stock->getStockId())) {
-                $skusToExclude[] = (string)$item['sku'];
+            $skus[] = (string)$item['sku'];
+        }
+        $results = $this->areProductsSalable->execute($skus, $stock->getStockId());
+        foreach ($results as $result) {
+            if (!$result->isSalable()) {
+                $skusToExclude[] = $result->getSku();
             }
         }
         if ($skusToExclude) {
