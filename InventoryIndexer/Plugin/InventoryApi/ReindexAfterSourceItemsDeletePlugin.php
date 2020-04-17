@@ -10,6 +10,7 @@ namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
+use Magento\InventoryIndexer\Indexer\IndexScheduler;
 
 /**
  * Reindex after source items delete plugin
@@ -17,16 +18,18 @@ use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 class ReindexAfterSourceItemsDeletePlugin
 {
     /**
-     * @var SourceIndexer
+     * @var IndexScheduler
      */
-    private $sourceIndexer;
+    private $indexScheduler;
 
     /**
-     * @param SourceIndexer $sourceIndexer
+     * @param IndexScheduler $indexScheduler
      */
-    public function __construct(SourceIndexer $sourceIndexer)
+    public function __construct(
+        IndexScheduler $indexScheduler
+    )
     {
-        $this->sourceIndexer = $sourceIndexer;
+        $this->indexScheduler = $indexScheduler;
     }
 
     /**
@@ -45,11 +48,10 @@ class ReindexAfterSourceItemsDeletePlugin
         foreach ($sourceItems as $sourceItem) {
             $sourceCodes[] = $sourceItem->getSourceCode();
         }
-
         $proceed($sourceItems);
 
         if (count($sourceCodes)) {
-            $this->sourceIndexer->executeList($sourceCodes);
+            $this->indexScheduler->scheduleSources($sourceCodes);
         }
     }
 }

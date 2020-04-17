@@ -10,7 +10,7 @@ namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\IndexScheduler;
 
 /**
  * Reindex after source items save plugin
@@ -23,18 +23,18 @@ class ReindexAfterSourceItemsSavePlugin
     private $getSourceItemIds;
 
     /**
-     * @var SourceItemIndexer
+     * @var IndexScheduler
      */
-    private $sourceItemIndexer;
+    private $indexScheduler;
 
     /**
      * @param GetSourceItemIds $getSourceItemIds
-     * @param SourceItemIndexer $sourceItemIndexer
+     * @param IndexScheduler $indexScheduler
      */
-    public function __construct(GetSourceItemIds $getSourceItemIds, SourceItemIndexer $sourceItemIndexer)
+    public function __construct(GetSourceItemIds $getSourceItemIds, IndexScheduler $indexScheduler)
     {
         $this->getSourceItemIds = $getSourceItemIds;
-        $this->sourceItemIndexer = $sourceItemIndexer;
+        $this->indexScheduler = $indexScheduler;
     }
 
     /**
@@ -51,7 +51,7 @@ class ReindexAfterSourceItemsSavePlugin
     ) {
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         if (count($sourceItemIds)) {
-            $this->sourceItemIndexer->executeList($sourceItemIds);
+            $this->indexScheduler->scheduleSourceItems($sourceItemIds);
         }
     }
 }

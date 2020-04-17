@@ -12,7 +12,7 @@ use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\BulkSourceUnassignValidatorInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\BulkSourceUnassign as BulkSourceUnassignResource;
-use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
+use Magento\InventoryIndexer\Indexer\IndexScheduler;
 use Magento\CatalogInventory\Model\Indexer\Stock as LegacyIndexer;
 
 /**
@@ -31,9 +31,9 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
     private $bulkSourceUnassign;
 
     /**
-     * @var SourceIndexer
+     * @var IndexScheduler
      */
-    private $sourceIndexer;
+    private $indexScheduler;
 
     /**
      * @var LegacyIndexer
@@ -56,7 +56,7 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
      * @param BulkSourceUnassignResource $bulkSourceUnassign
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetProductIdsBySkus $getProductIdsBySkus
-     * @param SourceIndexer $sourceIndexer
+     * @param IndexScheduler $indexScheduler
      * @param LegacyIndexer $legacyIndexer
      * @SuppressWarnings(PHPMD.LongVariable)
      */
@@ -65,12 +65,12 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
         BulkSourceUnassignResource $bulkSourceUnassign,
         DefaultSourceProviderInterface $defaultSourceProvider,
         GetProductIdsBySkus $getProductIdsBySkus,
-        SourceIndexer $sourceIndexer,
+        IndexScheduler $indexScheduler,
         LegacyIndexer $legacyIndexer
     ) {
         $this->unassignValidator = $unassignValidator;
         $this->bulkSourceUnassign = $bulkSourceUnassign;
-        $this->sourceIndexer = $sourceIndexer;
+        $this->indexScheduler = $indexScheduler;
         $this->legacyIndexer = $legacyIndexer;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
@@ -100,7 +100,7 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
 
         $res = $this->bulkSourceUnassign->execute($skus, $sourceCodes);
 
-        $this->sourceIndexer->executeList($sourceCodes);
+        $this->indexScheduler->scheduleSources($sourceCodes);
         if (in_array($this->defaultSourceProvider->getCode(), $sourceCodes, true)) {
             $this->reindexLegacy($skus);
         }

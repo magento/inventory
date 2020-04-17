@@ -14,7 +14,7 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\BulkInventoryTransferValidatorInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock as LegacyIndexer;
-use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
+use Magento\InventoryIndexer\Indexer\IndexScheduler;
 
 /**
  * @inheritdoc
@@ -47,15 +47,15 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
     private $defaultSourceProvider;
 
     /**
-     * @var SourceIndexer
+     * @var IndexScheduler
      */
-    private $sourceIndexer;
+    private $indexScheduler;
 
     /**
      * MassProductSourceAssign constructor.
      * @param BulkInventoryTransferValidatorInterface $inventoryTransferValidator
      * @param BulkInventoryTransferResource $bulkInventoryTransfer
-     * @param SourceIndexer $sourceIndexer
+     * @param IndexScheduler $indexScheduler
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param LegacyIndexer $legacyIndexer
@@ -64,7 +64,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
     public function __construct(
         BulkInventoryTransferValidatorInterface $inventoryTransferValidator,
         BulkInventoryTransferResource $bulkInventoryTransfer,
-        SourceIndexer $sourceIndexer,
+        IndexScheduler $indexScheduler,
         DefaultSourceProviderInterface $defaultSourceProvider,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         LegacyIndexer $legacyIndexer
@@ -74,7 +74,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->legacyIndexer = $legacyIndexer;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->sourceIndexer = $sourceIndexer;
+        $this->indexScheduler = $indexScheduler;
     }
 
     /**
@@ -113,7 +113,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
             $unassignFromOrigin
         );
 
-        $this->sourceIndexer->executeList([$originSource, $destinationSource]);
+        $this->indexScheduler->scheduleSources([$originSource, $destinationSource]);
 
         if (($this->defaultSourceProvider->getCode() === $originSource) ||
             ($this->defaultSourceProvider->getCode() === $destinationSource)) {

@@ -15,7 +15,7 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\Data\PartialInventoryTransferItemInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorInterface;
-use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
+use Magento\InventoryIndexer\Indexer\IndexScheduler;
 
 class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterface
 {
@@ -31,8 +31,8 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     /** @var DefaultSourceProviderInterface  */
     private $defaultSourceProvider;
 
-    /** @var SourceIndexer  */
-    private $sourceIndexer;
+    /** @var IndexScheduler  */
+    private $indexScheduler;
 
     /** @var LegacyIndexer  */
     private $legacyIndexer;
@@ -42,7 +42,7 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
      * @param TransferInventoryPartially $transferInventoryPartiallyCommand
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param SourceIndexer $sourceIndexer
+     * @param IndexScheduler $indexScheduler
      * @param LegacyIndexer $legacyIndexer
      */
     public function __construct(
@@ -50,14 +50,14 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
         TransferInventoryPartially $transferInventoryPartiallyCommand,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        SourceIndexer $sourceIndexer,
+        IndexScheduler $indexScheduler,
         LegacyIndexer $legacyIndexer
     ) {
         $this->transferValidator = $partialInventoryTransferValidator;
         $this->transferCommand = $transferInventoryPartiallyCommand;
         $this->productIdsBySkus = $getProductIdsBySkus;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->sourceIndexer = $sourceIndexer;
+        $this->indexScheduler = $indexScheduler;
         $this->legacyIndexer = $legacyIndexer;
     }
 
@@ -103,7 +103,7 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     private function updateIndexes(array $sources, array $skus)
     {
         $sources = array_unique($sources);
-        $this->sourceIndexer->executeList($sources);
+        $this->indexScheduler->scheduleSources($sources);
 
         if (in_array($this->defaultSourceProvider->getCode(), $sources)) {
             $this->updateLegacyIndex($skus);

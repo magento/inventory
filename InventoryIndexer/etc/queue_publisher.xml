@@ -6,7 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="inventory.stockItem.indexer">
+    <publisher topic="inventory.indexer.sourceItem">
+        <connection name="db" exchange="magento-db" disabled="false" />
+    </publisher>
+    <publisher topic="inventory.indexer.source">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
 </config>
