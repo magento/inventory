@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
@@ -83,10 +84,13 @@ class AdaptAssignStatusToProductPlugin
             $this->getProductIdsBySkus->execute([$product->getSku()]);
 
             if (null === $status) {
-                $stockId = $this->getStockIdForCurrentWebsite->execute();
-                $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
-                $result = current($result);
-                $status = (int)$result->isSalable();
+                $status = 0;
+                if ((int)$product->getStatus() === Status::STATUS_ENABLED) {
+                    $stockId = $this->getStockIdForCurrentWebsite->execute();
+                    $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
+                    $result = current($result);
+                    $status = (int)$result->isSalable();
+                }
             }
 
             $proceed($product, $status);

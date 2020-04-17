@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\Framework\App\ResourceConnection;
@@ -140,13 +141,11 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      */
     private function getTypeId(Item $legacyStockItem): string
     {
-        $typeId = $legacyStockItem->getTypeId();
-        if ($typeId === null) {
-            $sku = $legacyStockItem->getSku();
-            if ($sku === null) {
-                $productId = $legacyStockItem->getProductId();
-                $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
-            }
+        $typeId = Type::DEFAULT_TYPE;
+        $sku = $legacyStockItem->getSku();
+        if ($sku === null) {
+            $productId = $legacyStockItem->getProductId();
+            $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
             $typeId = $this->getProductTypeBySku->execute([$sku])[$sku];
         }
 

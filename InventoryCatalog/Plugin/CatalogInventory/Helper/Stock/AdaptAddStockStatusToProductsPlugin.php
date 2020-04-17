@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
@@ -63,7 +64,8 @@ class AdaptAddStockStatusToProductsPlugin
         $results = $this->areProductsSalable->execute($skus, $stockId);
         foreach ($results as $result) {
             $product = $productCollection->getItemByColumnValue('sku', $result->getSku());
-            $product->setIsSalable($result->isSalable());
+            $salable = (int)$product->getStatus() === Status::STATUS_ENABLED ? $result->isSalable() : 0;
+            $product->setIsSalable($salable);
         }
     }
 }
