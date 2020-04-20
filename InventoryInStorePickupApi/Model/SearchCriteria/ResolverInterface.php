@@ -10,11 +10,11 @@ namespace Magento\InventoryInStorePickupApi\Model\SearchCriteria;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 
 /**
- * Resolve Search Request into Search Criteria Builder parts.
+ * Resolve Search Request into framework Search Criteria Builder parameters.
  *
  * @api
  */
-interface BuilderPartsResolverInterface
+interface ResolverInterface
 {
     /**
      * Resolve Search Request and place it into Search Criteria Builder parts.

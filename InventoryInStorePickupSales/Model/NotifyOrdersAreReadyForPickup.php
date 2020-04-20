@@ -104,7 +104,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
      */
     public function execute(array $orderIds): ResultInterface
     {
-        $failed = [];
+        $errors = [];
         foreach ($orderIds as $orderId) {
             try {
                 $order = $this->orderRepository->get($orderId);
@@ -117,14 +117,14 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
                 }
                 $this->addStorePickupAttributesToOrder->execute($order);
             } catch (LocalizedException $exception) {
-                $failed[] = [
+                $errors[] = [
                     'id' => $orderId,
                     'message' => $exception->getMessage(),
                 ];
                 $this->logger->critical($exception);
                 continue;
             } catch (\Exception $exception) {
-                $failed[] = [
+                $errors[] = [
                     'id' => $orderId,
                     'message' => 'We can\'t notify the customer right now.',
                 ];
@@ -133,6 +133,6 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
             }
         }
 
-        return $this->resultFactory->create(['failed' => $failed]);
+        return $this->resultFactory->create(['errors' => $errors]);
     }
 }

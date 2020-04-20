@@ -28,7 +28,7 @@ interface ResultInterface extends ExtensibleDataInterface
      *
      * @return string[][]
      */
-    public function getFailed() : array;
+    public function getErrors() : array;
 
     /**
      * Set Extension Attributes for Operation result.
