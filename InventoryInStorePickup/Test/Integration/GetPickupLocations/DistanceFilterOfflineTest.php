@@ -56,7 +56,7 @@ class DistanceFilterOfflineTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
      * @param array $searchRequestData
      * @param string $salesChannelCode
