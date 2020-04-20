@@ -22,14 +22,14 @@ class Result implements ResultInterface
     /**
      * @var array
      */
-    private $failed;
+    private $errors;
 
     /**
-     * @param array $failed
+     * @param array $errors
      */
-    public function __construct(array $failed = [])
+    public function __construct(array $errors = [])
     {
-        $this->failed = $failed;
+        $this->errors = $errors;
     }
 
     /**
@@ -37,15 +37,15 @@ class Result implements ResultInterface
      */
     public function isSuccessful() : bool
     {
-        return empty($this->failed);
+        return empty($this->errors);
     }
 
     /**
      * @inheritdoc
      */
-    public function getFailed() : array
+    public function getErrors() : array
     {
-        return $this->failed;
+        return $this->errors;
     }
 
     /**
