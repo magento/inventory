@@ -5,12 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGraphQl\Test\Api;
+namespace Magento\InventoryGraphQl\Test\GraphQl;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
+use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
@@ -35,16 +37,19 @@ class ProductStockStatusTest extends GraphQlAbstract
     /**
      * Verify product status on additional stock.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture Magento/Catalog/_files/products_new.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/source_items_for_simple_on_multi_source.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
      */
     public function testProductStockStatusInStockWithSources():void
     {
         $this->assignWebsiteToStock(10, 'base');
-        $productSku = 'SKU-1';
+        $this->assignProductToAdditionalWebsite('simple', 'base');
+        $productSku = 'simple';
         $query = <<<QUERY
         {
             products(filter: {sku: {eq: "{$productSku}"}})
@@ -83,5 +88,22 @@ QUERY;
         $salesChannels[] = $salesChannel;
         $extensionAttributes->setSalesChannels($salesChannels);
         $stockRepository->save($stock);
+    }
+
+    /**
+     * Assign test products to additional website.
+     *
+     * @param string $sku
+     * @param string $websiteCode
+     * @return void
+     */
+    private function assignProductToAdditionalWebsite(string $sku, string $websiteCode): void
+    {
+        $websiteRepository = $this->objectManager->get(WebsiteRepositoryInterface::class);
+        $websiteId = $websiteRepository->get($websiteCode)->getId();
+        $productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
+        $product = $productRepository->get($sku);
+        $product->setWebsiteIds([$websiteId]);
+        $productRepository->save($product);
     }
 }

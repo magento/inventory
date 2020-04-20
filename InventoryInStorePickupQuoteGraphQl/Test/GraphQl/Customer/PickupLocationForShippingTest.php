@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupQuoteGraphQl\Test\Api\Customer;
+namespace Magento\InventoryInStorePickupQuoteGraphQl\Test\GraphQl\Customer;
 
 use Magento\Framework\Exception\AuthenticationException;
 use Magento\Framework\Exception\LocalizedException;
