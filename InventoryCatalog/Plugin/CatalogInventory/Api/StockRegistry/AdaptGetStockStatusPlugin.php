@@ -9,13 +9,15 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
 
 use Magento\CatalogInventory\Api\Data\StockStatusInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Exception\InputException;
 
 /**
  * Adapt getStockStatus for multi stocks
@@ -23,9 +25,9 @@ use Magento\Framework\Exception\InputException;
 class AdaptGetStockStatusPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var GetProductSalableQtyInterface
@@ -48,20 +50,20 @@ class AdaptGetStockStatusPlugin
     private $stockResolver;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         GetProductSalableQtyInterface $getProductSalableQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver
     ) {
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->storeManager = $storeManager;
@@ -69,11 +71,15 @@ class AdaptGetStockStatusPlugin
     }
 
     /**
+     * Set stock status to product considering multi stock.
+     *
      * @param StockRegistryInterface $subject
      * @param StockStatusInterface $stockStatus
      * @param int $productId
      * @param int $scopeId
      * @return StockStatusInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGetStockStatus(
@@ -88,14 +94,16 @@ class AdaptGetStockStatusPlugin
         $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)->getStockId();
         $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
 
-        $status = (int)$this->isProductSalable->execute($sku, $stockId);
+        $result = $this->areProductsSalable->execute([$sku], $stockId);
+        $result = current($result);
+
         try {
             $qty = $this->getProductSalableQty->execute($sku, $stockId);
         } catch (InputException $e) {
             $qty = 0;
         }
 
-        $stockStatus->setStockStatus($status);
+        $stockStatus->setStockStatus((int)$result->isSalable());
         $stockStatus->setQty($qty);
         return $stockStatus;
     }

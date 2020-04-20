@@ -11,16 +11,16 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 use Magento\InventoryCatalog\Model\GetProductIdsBySkus;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 class IsSalableLegacyStockItemIsInStockTest extends TestCase
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var GetProductIdsBySkus
@@ -42,9 +42,12 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
      */
     private $stockItemRepository;
 
+    /**
+     * @inheritDoc
+     */
     protected function setUp()
     {
-        $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
+        $this->areProductsSalable = Bootstrap::getObjectManager()->get(AreProductsSalableInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkus::class);
         $this->stockRegistryProvider = Bootstrap::getObjectManager()->get(StockRegistryProviderInterface::class);
         $this->stockConfiguration = Bootstrap::getObjectManager()->get(StockConfigurationInterface::class);
@@ -68,10 +71,9 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $stockId = 20;
         $this->setLegacyStockItemIsInStock($sku, 0);
 
-        self::assertEquals(
-            false,
-            $this->isProductSalable->execute($sku, $stockId)
-        );
+        $result = $this->areProductsSalable->execute([$sku], $stockId);
+        $result = current($result);
+        self::assertFalse($result->isSalable());
     }
 
     /**
@@ -91,15 +93,17 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $stockId = 20;
         $this->setLegacyStockItemIsInStock($sku, 1);
 
-        self::assertEquals(
-            true,
-            $this->isProductSalable->execute($sku, $stockId)
-        );
+        $result = $this->areProductsSalable->execute([$sku], $stockId);
+        $result = current($result);
+        self::assertTrue($result->isSalable());
     }
 
     /**
+     * Set stock status for stock item for given product.
+     *
      * @param string $sku
      * @param int $isInStock
+     * @return void
      */
     private function setLegacyStockItemIsInStock(string $sku, int $isInStock): void
     {
