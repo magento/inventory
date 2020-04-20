@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupSalesApi\Test\Api;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Framework\Webapi\Rest\Request;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\CustomerRegistry;
+use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventorySales\Test\Api\OrderPlacementBase as OrderPlacementBaseSales;
+use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
  * Base class for order placement.
@@ -29,7 +31,7 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
             'rest' => [
                 'resourcePath' => '/V1/guest-carts/' . $this->cartId . '/estimate-shipping-methods',
                 'httpMethod' => Request::HTTP_METHOD_POST,
-                'token' => $this->customerToken
+                'token' => $this->customerToken,
             ],
         ];
 
@@ -38,13 +40,13 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
                 'rest' => [
                     'resourcePath' => '/V1/carts/mine/estimate-shipping-methods',
                     'httpMethod' => Request::HTTP_METHOD_POST,
-                    'token' => $this->customerToken
+                    'token' => $this->customerToken,
                 ],
             ];
         }
 
         $body = [
-            'address' => $this->getBaseAddressData()
+            'address' => $this->getBaseAddressData(),
         ];
 
         $this->_webApiCall($serviceInfo, $body, null, $this->storeViewCode);
@@ -53,9 +55,9 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
     /**
      * Estimate shipping costs for given customer cart by addressId.
      *
+     * @return void
      * @var string $addressId
      *
-     * @return void
      */
     public function estimateShippingCostsByAddressId(string $addressId): void
     {
@@ -67,12 +69,12 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
             'rest' => [
                 'resourcePath' => '/V1/carts/mine/estimate-shipping-methods-by-address-id',
                 'httpMethod' => Request::HTTP_METHOD_POST,
-                'token' => $this->customerToken
+                'token' => $this->customerToken,
             ],
         ];
 
         $body = [
-            'addressId' => $addressId
+            'addressId' => $addressId,
         ];
 
         $this->_webApiCall($serviceInfo, $body, null, $this->storeViewCode);
@@ -99,7 +101,7 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
                 'rest' => [
                     'resourcePath' => '/V1/carts/mine/shipping-information',
                     'httpMethod' => Request::HTTP_METHOD_POST,
-                    'token' => $this->customerToken
+                    'token' => $this->customerToken,
                 ],
             ];
         }
@@ -121,7 +123,7 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
                 ),
                 'billing_address' => $addressData,
                 'shipping_carrier_code' => 'flatrate',
-                'shipping_method_code' => 'flatrate'
+                'shipping_method_code' => 'flatrate',
             ],
         ];
         $this->_webApiCall($serviceInfo, $body, null, $this->storeViewCode);
@@ -147,14 +149,14 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
                 'rest' => [
                     'resourcePath' => '/V1/carts/mine/payment-information',
                     'httpMethod' => Request::HTTP_METHOD_POST,
-                    'token' => $this->customerToken
+                    'token' => $this->customerToken,
                 ],
             ];
         }
 
         $body = [
             'email' => 'customer@example.com',
-            'paymentMethod' => ['method' => 'checkmo']
+            'paymentMethod' => ['method' => 'checkmo'],
         ];
 
         if (!$billingSameAsShipping) {
@@ -166,8 +168,8 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
 
     /**
      * @param int $customerId
-     * @throws \Magento\Framework\Exception\LocalizedException
      * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function assignAddressToTheCustomer(int $customerId): void
     {
@@ -223,36 +225,36 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
 
     /**
      * @param string $customerEmail
+     * @param string|null $websiteCode
      * @return CustomerInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getCustomerByEmail(string $customerEmail): CustomerInterface
+    protected function getCustomerByEmail(string $customerEmail, $websiteCode = null): CustomerInterface
     {
+        $websiteId = $websiteCode
+            ? $this->objectManager->get(WebsiteRepositoryInterface::class)->get($websiteCode)->getId()
+            : null;
         /** @var CustomerRepositoryInterface $customerRepository */
         $customerRepository = $this->objectManager->get(CustomerRepositoryInterface::class);
-        /** @var CustomerInterface $customer */
-        $customer = $customerRepository->get($customerEmail);
+        /** @var CustomerRegistry $customerRegistry */
+        $customerRegistry = $this->objectManager->get(CustomerRegistry::class);
+        $customerRegistry->removeByEmail($customerEmail, $websiteId);
 
-        /** @var \Magento\Customer\Model\CustomerRegistry $customerRegistry */
-        $customerRegistry = $this->objectManager->get(\Magento\Customer\Model\CustomerRegistry::class);
-        $customerRegistry->remove($customer->getId());
-
-        $customer = $customerRepository->get($customerEmail);
-
-        return $customer;
+        return $customerRepository->get($customerEmail, $websiteId);
     }
 
     /**
      * Get fresh address list;
      *
+     * @param string|null $websiteCode
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getCustomerAddressList(): array
+    protected function getCustomerAddressList($websiteCode = null): array
     {
-        $customer = $this->getCustomerByEmail('customer@example.com');
+        $customer = $this->getCustomerByEmail('customer@example.com', $websiteCode);
 
         /** @var \Magento\Customer\Api\AddressRepositoryInterface $addressRepo */
         $addressRepo = $this->objectManager->get(\Magento\Customer\Api\AddressRepositoryInterface::class);
@@ -261,7 +263,7 @@ abstract class OrderPlacementBase extends OrderPlacementBaseSales
         /** @var \Magento\Framework\Api\FilterBuilder $filterBuilder */
         $filterBuilder = $this->objectManager->get(\Magento\Framework\Api\FilterBuilder::class);
 
-        $filter =  $filterBuilder->setField('parent_id')
+        $filter = $filterBuilder->setField('parent_id')
             ->setValue($customer->getId())
             ->setConditionType('eq')
             ->create();

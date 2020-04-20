@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupGraphQl\Test\Api;
+namespace Magento\InventoryInStorePickupGraphQl\Test\GraphQl;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -40,7 +40,7 @@ class PickupLocationsPositiveCasesTest extends GraphQlAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoDbIsolation disabled
      *
@@ -155,9 +155,9 @@ QUERY;
             ],
             [ /* Data set #2. Filter by Code and Name with array value type conditions. */
               'pickupLocations(
-  filter:{
+  filters:{
     pickup_location_code: {in: ["eu-3", "eu-2", "eu-1"]}
-    name:{in: ["EU-source-1", "EU-source-2"]}
+    name: {in: ["EU-source-1", "EU-source-2"]}
   }
   )',
               ['eu-1'],
@@ -170,9 +170,9 @@ QUERY;
             ],
             [ /* Data set #3. Filter by Code and Name with sort. */
               'pickupLocations(
-  	filter:{
+  	filters:{
     	pickup_location_code: {like: "eu%"}
-    	name:{like: "%source%"}
+    	name: {like: "%source%"}
     }
     pageSize: 1
     currentPage: 2
@@ -190,7 +190,7 @@ QUERY;
             ],
             [ /* Data set #4. Filter by address attributes only. */
               'pickupLocations(
-    filter:{
+    filters:{
       country_id: {neq:"FR"}
       region: {eq: "Bayern"}
       region_id:{eq: "81"}
@@ -209,10 +209,9 @@ QUERY;
             ],
             [ /* Data set #5. Distance Filter with paging. */
               'pickupLocations(
-    distance:{
+    area:{
       radius: 750
-      country_code: "DE"
-      postcode: "86559"
+      search_term: "86559:DE"
     }
     pageSize: 1
     currentPage: 1
@@ -228,12 +227,11 @@ QUERY;
             ],
             [ /* Data set #6. Distance filter with Filter Name and Code attributes. */
               'pickupLocations(
-    distance:{
+    area:{
       radius: 750
-      country_code: "DE"
-      city: "Adelzhausen"
+      search_term: "Adelzhausen:DE"
     }
-  	filter:{
+  	filters:{
     	name:{like:"%source%"}
     	pickup_location_code:{like:"eu%"}
     }
@@ -250,12 +248,11 @@ QUERY;
             ],
             [ /* Data set #7. Distance filter with Filter address attributes. */
               'pickupLocations(
-    distance:{
+    area:{
       radius: 750
-      country_code: "DE"
-      postcode: "86559"
+      search_term: "86559:DE"
     }
-    filter:{
+    filters:{
       city: {in: ["Kolbermoor", "Mitry-Mory"]}
       region: {eq: "Seine-et-Marne"}
       region_id: {eq: "259"}
@@ -272,9 +269,8 @@ QUERY;
             ],
             [ /* Data set #8. Filter by distance but without sort by distance. */
               'pickupLocations(
-    distance: {
-      country_code:"FR"
-      city:"Saint-Saturnin-lès-Apt"
+    area: {
+      search_term:"Saint-Saturnin-lès-Apt:FR"
       radius: 1000
     }
     sort:{
@@ -291,7 +287,7 @@ QUERY;
             ],
             [ /* Data set #9. Test with all filters. */
                 'pickupLocations(
-    filter:{
+    filters:{
       city: {in: ["Kolbermoor", "Mitry-Mory", "Burlingame"]}
       region: {nin: ["Thüringen", "Bouches-du-Rhône"]}
       region_id: {nin: ["94", "194"]}
@@ -299,10 +295,9 @@ QUERY;
       country_id:{neq: "DE"}
       name:{like:"%source%"}
     }
-    distance:{
+    area:{
       radius: 6371000
-      country_code: "DE"
-      region: "Bayern"
+      search_term: "Bayern"
     }
     pageSize: 2
     currentPage: 1

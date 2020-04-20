@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryLowQuantityNotification\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\App\Cron;
 use Magento\Framework\MessageQueue\ConsumerFactory;
+use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -35,18 +35,13 @@ class DeleteProductTest extends WebapiAbstract
     private $productRepository;
 
     /**
-     * @var ConsumerFactory
-     */
-    private $consumerFactory;
-
-    /**
      * @inheritDoc
      */
     protected function setUp()
     {
         $this->getBySku = Bootstrap::getObjectManager()->get(GetBySku::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
-        $this->consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
+        $this->rejectMessages();
     }
 
     /**
@@ -74,16 +69,39 @@ class DeleteProductTest extends WebapiAbstract
                 'operation' => self::SERVICE_NAME . 'DeleteById',
             ],
         ];
-        TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP ?
-            $this->_webApiCall($serviceInfo, ['sku' => 'SKU-1']) : $this->_webApiCall($serviceInfo);
-        $cronObserver = Bootstrap::getObjectManager()->create(
-            Cron::class,
-            ['parameters' => ['group' => null, 'standaloneProcessStarted' => 0]]
-        );
-        $cronObserver->launch();
-        /*Wait till source items configurations will be removed asynchronously.*/
-        sleep(10);
+        TESTS_WEB_API_ADAPTER === self::ADAPTER_SOAP
+            ? $this->_webApiCall($serviceInfo, ['sku' => 'SKU-1'])
+            : $this->_webApiCall($serviceInfo);
+        $this->runConsumers();
         $sourceItemConfigurations = $this->getBySku->execute('SKU-1');
         self::assertEmpty($sourceItemConfigurations);
+    }
+
+    /**
+     * Run consumers to remove redundant inventory source items.
+     *
+     * @return void
+     */
+    private function runConsumers(): void
+    {
+        $consumerFactory = Bootstrap::getObjectManager()->get(ConsumerFactory::class);
+        $consumer = $consumerFactory->get('inventory.source.items.cleanup');
+        $consumer->process(1);
+        /*Wait till source items will be removed asynchronously.*/
+        sleep(20);
+    }
+
+    /**
+     * Reject all previously created messages.
+     *
+     * @return void
+     */
+    private function rejectMessages()
+    {
+        $queueFactory = Bootstrap::getObjectManager()->get(QueueFactoryInterface::class);
+        $queue = $queueFactory->create('inventory.source.items.cleanup', 'db');
+        while ($envelope = $queue->dequeue()) {
+            $queue->reject($envelope, false);
+        }
     }
 }

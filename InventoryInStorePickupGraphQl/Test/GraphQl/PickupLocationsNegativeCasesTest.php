@@ -5,10 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupGraphQl\Test\Api;
+namespace Magento\InventoryInStorePickupGraphQl\Test\GraphQl;
 
-use Magento\Framework\App\ObjectManager;
-use Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface;
+use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
 /**
@@ -27,7 +26,7 @@ class PickupLocationsNegativeCasesTest extends GraphQlAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *
      * @magentoDbIsolation disabled
      *
@@ -35,14 +34,14 @@ class PickupLocationsNegativeCasesTest extends GraphQlAbstract
      *
      * @param string $body
      * @param string $storeCode
-     * @param string $expectedExceptionMessage
+     * @param string|null $expectedExceptionMessage
      *
      * @throws \Exception
      */
     public function testPickupLocationsEndpoint(
         string $body,
         string $storeCode,
-        string $expectedExceptionMessage
+        string $expectedExceptionMessage = null
     ) {
         $responseTemplate = <<<QUERY
 {
@@ -74,7 +73,9 @@ QUERY;
         $request = '{' . PHP_EOL . $body . $responseTemplate . PHP_EOL . '}';
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage($expectedExceptionMessage);
+        if (null !== $expectedExceptionMessage) {
+            $this->expectExceptionMessage($expectedExceptionMessage);
+        }
 
         $this->graphQlQuery($request, [], '', ['Store' => $storeCode]);
     }
@@ -92,64 +93,49 @@ QUERY;
      */
     public function dataProvider(): array
     {
+        /* Data set #0. Search by not existing address */
         return [
-           [/* Data set #0. Search by not existing address */
-               'pickupLocations(
-    distance:{
+            [/* Data set #0. Search by not existing address */
+                'pickupLocations(
+    area:{
       radius: 750
-      country_code: "ZZZ"
-      postcode: "86559"
+      search_term: "86559:ZZ"
     }
     pageSize: 1
     currentPage: 1
     sort: {distance: ASC}
   )',
-               'store_for_global_website',
-               'Unknown geoname for  86559   ZZZ'
-           ],
-           [/* Data set #1. Wrong page size. */
-            'pickupLocations(
+                'store_for_global_website',
+            ],
+            [/* Data set #1. Wrong page size. */
+                'pickupLocations(
     pageSize: -1
     currentPage: 1
   )',
-            'store_for_global_website',
-            'pageSize value must be greater than 0.'
-           ],
-           [/* Data set #2. Wrong current page. */
-               'pickupLocations(
+                'store_for_global_website',
+                'pageSize value must be greater than 0.',
+            ],
+            [/* Data set #2. Wrong current page. */
+                'pickupLocations(
     pageSize: 10
     currentPage: -1
   )',
-               'store_for_global_website',
-               'currentPage value must be greater than 0.'
-           ],
-           [/* Data set #3. Wrong max page. */
-               'pickupLocations(
-    distance:{
+                'store_for_global_website',
+                'currentPage value must be greater than 0.',
+            ],
+            [/* Data set #3. Wrong max page. */
+                'pickupLocations(
+    area:{
       radius: 750
-      country_code: "DE"
-      postcode: "86559"
+      search_term: "86559:DE"
     }
     pageSize: 1
     currentPage: 4
     sort: {distance: ASC}
   )',
-               'store_for_global_website',
-               'currentPage value 4 specified is greater than the 2 page(s) available.'
-           ],
-           [/* Data set #4. Wrong distance filter input. */
-               'pickupLocations(
-    distance:{
-      radius: 750
-      country_code: "US"
-    }
-    pageSize: 1
-    currentPage: 1
-    sort: {distance: ASC}
-  )',
-               'store_for_global_website',
-               'Region or city or postcode must be specified for the filter by distance.'
-           ]
+                'store_for_global_website',
+                'currentPage value 4 specified is greater than the 2 page(s) available.',
+            ],
         ];
     }
 }
