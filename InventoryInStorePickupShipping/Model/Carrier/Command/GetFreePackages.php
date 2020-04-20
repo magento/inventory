@@ -9,16 +9,15 @@ namespace Magento\InventoryInStorePickupShipping\Model\Carrier\Command;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetFreePackagesInterface;
 use Magento\Quote\Model\Quote\Address\Item as ItemAlias;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
 
 /**
- * @inheritdoc
+ * Get number of packages with free delivery.
  */
-class GetFreePackages implements GetFreePackagesInterface
+class GetFreePackages
 {
     /**
      * @var ProductRepositoryInterface
