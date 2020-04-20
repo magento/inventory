@@ -24,7 +24,7 @@ class IndexScheduler
     private $publisher;
 
     /**
-     * SourceItemScheduler constructor.
+     * IndexScheduler constructor.
      *
      * @param PublisherInterface $publisher
      */
@@ -55,5 +55,4 @@ class IndexScheduler
     {
         $this->publisher->publish(self::TOPIC_SOURCE_ITEMS_INDEX, $sourceCodes);
     }
-
 }

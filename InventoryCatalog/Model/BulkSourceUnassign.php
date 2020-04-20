@@ -78,6 +78,7 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
 
     /**
      * Reindex legacy stock (for default source)
+     *
      * @param array $skus
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

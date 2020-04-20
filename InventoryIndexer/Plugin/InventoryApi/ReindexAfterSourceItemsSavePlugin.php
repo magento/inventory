@@ -13,7 +13,7 @@ use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\IndexScheduler;
 
 /**
- * Reindex after source items save plugin
+ * Plugin for reindex after source items save
  */
 class ReindexAfterSourceItemsSavePlugin
 {
@@ -38,6 +38,8 @@ class ReindexAfterSourceItemsSavePlugin
     }
 
     /**
+     * Method after execution of save source items
+     *
      * @param SourceItemsSaveInterface $subject
      * @param void $result
      * @param SourceItemInterface[] $sourceItems

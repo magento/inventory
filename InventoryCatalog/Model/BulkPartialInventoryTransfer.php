@@ -81,6 +81,8 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
+     * Process sources transfer
+     *
      * @param string $originSourceCode
      * @param string $destinationSourceCode
      * @param PartialInventoryTransferItemInterface[] $items
@@ -97,6 +99,8 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
+     * Update sources indexes
+     *
      * @param string[] $sources
      * @param string[] $skus
      */
@@ -111,6 +115,7 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
+     * Update legacy index by SKUs
      *
      * @param string[] $skus
      */

@@ -13,7 +13,7 @@ use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 use Magento\InventoryIndexer\Indexer\IndexScheduler;
 
 /**
- * Reindex after source items delete plugin
+ * Plugin for reindex after source items delete
  */
 class ReindexAfterSourceItemsDeletePlugin
 {
@@ -27,12 +27,13 @@ class ReindexAfterSourceItemsDeletePlugin
      */
     public function __construct(
         IndexScheduler $indexScheduler
-    )
-    {
+    ) {
         $this->indexScheduler = $indexScheduler;
     }
 
     /**
+     * Method that calls around execution of delete source items
+     *
      * @param SourceItemsDeleteInterface $subject
      * @param callable $proceed
      * @param SourceItemInterface[] $sourceItems

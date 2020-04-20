@@ -79,6 +79,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
 
     /**
      * Reindex legacy stock (for default source)
+     *
      * @param array $productIds
      */
     private function reindexLegacy(array $productIds): void
@@ -103,7 +104,12 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
         );
 
         if (!$validationResult->isValid()) {
-            throw new ValidationException(__('Validation Error: Select different sources for origin and destination.'), null, 0, $validationResult);
+            throw new ValidationException(
+                __('Validation Error: Select different sources for origin and destination.'),
+                null,
+                0,
+                $validationResult
+            );
         }
 
         $this->bulkInventoryTransfer->execute(
