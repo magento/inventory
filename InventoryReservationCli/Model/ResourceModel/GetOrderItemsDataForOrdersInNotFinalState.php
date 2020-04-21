@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
-use Magento\InventoryReservationCli\Model\StoreWebsiteResolver;
 
 /**
  * Loads order item data for orders, which are not in final state
@@ -28,24 +26,15 @@ class GetOrderItemsDataForOrdersInNotFinalState
     private $getCompleteOrderStateList;
 
     /**
-     * @var StoreWebsiteResolver|null
-     */
-    private $storeWebsiteResolver;
-
-    /**
      * @param ResourceConnection $resourceConnection
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
-     * @param StoreWebsiteResolver|null $storeWebsiteResolver
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        GetCompleteOrderStateList $getCompleteOrderStateList,
-        ?StoreWebsiteResolver $storeWebsiteResolver = null
+        GetCompleteOrderStateList $getCompleteOrderStateList
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getCompleteOrderStateList = $getCompleteOrderStateList;
-        $this->storeWebsiteResolver = $storeWebsiteResolver
-            ?? ObjectManager::getInstance()->get(StoreWebsiteResolver::class);
     }
 
     /**
@@ -90,10 +79,33 @@ class GetOrderItemsDataForOrdersInNotFinalState
             ->where('main_table.entity_id IN (?)', $entityIds)
             ->where('item.product_type IN (?)', ['simple']);
         $orderItems = $connection->fetchAll($query);
+        $storeWebsiteIds = $this->getStoreWebsiteIds();
         foreach ($orderItems as $key => $orderItem) {
-            $orderItem['website_id'] = $this->storeWebsiteResolver->execute((int) $orderItem['store_id']);
+            $orderItem['website_id'] = $storeWebsiteIds[$orderItem['store_id']];
             $orderItems[$key] = $orderItem;
         }
         return $orderItems;
+    }
+
+    /**
+     * Get storeIds with their websiteIds
+     *
+     * @return array
+     */
+    private function getStoreWebsiteIds(): array
+    {
+        $storeWebsiteIds = [];
+        $connection = $this->resourceConnection->getConnection();
+        $storeTableName = $this->resourceConnection->getTableName('store');
+        $query = $connection
+            ->select()
+            ->from(
+                ['main_table' => $storeTableName],
+                ['store_id', 'website_id']
+            );
+        foreach ($connection->fetchAll($query) as $store) {
+            $storeWebsiteIds[$store['store_id']] = $store['website_id'];
+        }
+        return $storeWebsiteIds;
     }
 }
