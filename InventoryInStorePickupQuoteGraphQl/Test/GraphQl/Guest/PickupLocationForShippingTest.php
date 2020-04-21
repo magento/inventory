@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupQuoteGraphQl\Test\Api\Guest;
+namespace Magento\InventoryInStorePickupQuoteGraphQl\Test\GraphQl\Guest;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;

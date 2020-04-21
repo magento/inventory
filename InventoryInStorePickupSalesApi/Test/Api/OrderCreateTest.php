@@ -35,12 +35,13 @@ class OrderCreateTest extends OrderPlacementBase
     {
         $this->_markTestAsRestOnly();
         $this->assignCustomerToCustomWebsite('customer@example.com', 'eu_website');
-        $customer = $this->getCustomerByEmail('customer@example.com');
+        $customer = $this->getCustomerByEmail('customer@example.com', 'eu_website');
         $this->assignAddressToTheCustomer((int)$customer->getId());
         $this->setStoreView('store_for_eu_website');
         $this->getCustomerToken('customer@example.com', 'password');
         $this->createCustomerCart();
         $this->addProduct('SKU-1');
+        $customer = $this->getCustomerByEmail('customer@example.com', 'eu_website');
         $this->estimateShippingCostsByAddressId($customer->getDefaultShipping());
         $this->setShippingAndBillingInformation($customer->getDefaultShipping());
         $orderId = $this->submitPaymentInformation();
@@ -177,7 +178,7 @@ class OrderCreateTest extends OrderPlacementBase
 
         $this->setStoreView('store_for_eu_website');
         $this->assignCustomerToCustomWebsite('customer@example.com', 'eu_website');
-        $customer = $this->getCustomerByEmail('customer@example.com');
+        $customer = $this->getCustomerByEmail('customer@example.com', 'eu_website');
         $this->assignAddressToTheCustomer((int)$customer->getId());
 
         $this->getCustomerToken('customer@example.com', 'password');
@@ -188,7 +189,7 @@ class OrderCreateTest extends OrderPlacementBase
         $orderId = $this->submitPaymentInformation();
         $this->verifyCreatedOrder($orderId);
 
-        $addressList = $this->getCustomerAddressList();
+        $addressList = $this->getCustomerAddressList('eu_website');
         // make sure that NO NEW address has been added to address book;
         $this->assertCount(1, $addressList);
 
@@ -234,7 +235,7 @@ class OrderCreateTest extends OrderPlacementBase
         $orderId = $this->submitPaymentInformation();
         $this->verifyCreatedOrder($orderId);
 
-        $addressList = $this->getCustomerAddressList();
+        $addressList = $this->getCustomerAddressList('eu_website');
 
         // make sure that NO address has been added to address book;
         $this->assertCount(0, $addressList);
