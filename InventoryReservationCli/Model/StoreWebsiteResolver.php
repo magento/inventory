@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryReservationCli\Model;
 
 use InvalidArgumentException;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\ResourceConnection;
 
 /**
  * Resolve website ID by store ID
@@ -16,21 +16,22 @@ use Magento\Store\Model\StoreManagerInterface;
 class StoreWebsiteResolver
 {
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-    /**
      * @var array
      */
     private $storeWebsiteIds;
 
     /**
-     * @param StoreManagerInterface $storeManager
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
-        StoreManagerInterface $storeManager
+        ResourceConnection $resourceConnection
     ) {
-        $this->storeManager = $storeManager;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -58,8 +59,16 @@ class StoreWebsiteResolver
     {
         if ($this->storeWebsiteIds === null) {
             $this->storeWebsiteIds = [];
-            foreach ($this->storeManager->getStores() as $store) {
-                $this->storeWebsiteIds[(int) $store->getId()] = (int) $store->getWebsiteId();
+            $connection = $this->resourceConnection->getConnection();
+            $storeTableName = $this->resourceConnection->getTableName('store');
+            $query = $connection
+                ->select()
+                ->from(
+                    ['main_table' => $storeTableName],
+                    ['store_id', 'website_id']
+                );
+            foreach ($connection->fetchAll($query) as $store) {
+                $this->storeWebsiteIds[(int) $store['store_id']] = (int) $store['website_id'];
             }
         }
         return $this->storeWebsiteIds;

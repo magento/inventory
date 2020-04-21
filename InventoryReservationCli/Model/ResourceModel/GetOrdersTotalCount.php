@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
-use Magento\Sales\Model\ResourceModel\Order;
+use Magento\Framework\App\ResourceConnection;
 
 /**
  * Get count of all existing orders
@@ -15,16 +15,17 @@ use Magento\Sales\Model\ResourceModel\Order;
 class GetOrdersTotalCount
 {
     /**
-     * @var Order
+     * @var ResourceConnection
      */
-    private $orderResourceModel;
+    private $resourceConnection;
 
     /**
-     * @param Order $orderResourceModel
+     * @param ResourceConnection $resourceConnection
      */
-    public function __construct(Order $orderResourceModel)
-    {
-        $this->orderResourceModel = $orderResourceModel;
+    public function __construct(
+        ResourceConnection $resourceConnection
+    ) {
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -34,8 +35,9 @@ class GetOrdersTotalCount
      */
     public function execute(): int
     {
-        $connection = $this->orderResourceModel->getConnection();
-        $orderTableName = $this->orderResourceModel->getMainTable();
+        $connection = $this->resourceConnection->getConnection('sales');
+        $orderTableName = $this->resourceConnection->getTableName('sales_order', 'sales');
+
         $query = $connection
             ->select()
             ->from(

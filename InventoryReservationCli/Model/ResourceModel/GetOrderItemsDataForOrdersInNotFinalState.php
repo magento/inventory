@@ -7,9 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
-use Magento\Sales\Model\ResourceModel\Order;
-use Magento\Sales\Model\ResourceModel\Order\Item;
+use Magento\InventoryReservationCli\Model\StoreWebsiteResolver;
 
 /**
  * Loads order item data for orders, which are not in final state
@@ -17,31 +18,34 @@ use Magento\Sales\Model\ResourceModel\Order\Item;
 class GetOrderItemsDataForOrdersInNotFinalState
 {
     /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * @var GetCompleteOrderStateList
      */
     private $getCompleteOrderStateList;
-    /**
-     * @var Order
-     */
-    private $orderResourceModel;
-    /**
-     * @var Item
-     */
-    private $orderItemResourceModel;
 
     /**
-     * @param Order $orderResourceModel
-     * @param Item $orderItemResourceModel
+     * @var StoreWebsiteResolver|null
+     */
+    private $storeWebsiteResolver;
+
+    /**
+     * @param ResourceConnection $resourceConnection
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
+     * @param StoreWebsiteResolver|null $storeWebsiteResolver
      */
     public function __construct(
-        Order $orderResourceModel,
-        Item $orderItemResourceModel,
-        GetCompleteOrderStateList $getCompleteOrderStateList
+        ResourceConnection $resourceConnection,
+        GetCompleteOrderStateList $getCompleteOrderStateList,
+        ?StoreWebsiteResolver $storeWebsiteResolver = null
     ) {
-        $this->orderResourceModel = $orderResourceModel;
-        $this->orderItemResourceModel = $orderItemResourceModel;
+        $this->resourceConnection = $resourceConnection;
         $this->getCompleteOrderStateList = $getCompleteOrderStateList;
+        $this->storeWebsiteResolver = $storeWebsiteResolver
+            ?? ObjectManager::getInstance()->get(StoreWebsiteResolver::class);
     }
 
     /**
@@ -53,9 +57,9 @@ class GetOrderItemsDataForOrdersInNotFinalState
      */
     public function execute(int $bunchSize = 50, int $page = 1): array
     {
-        $connection = $this->orderResourceModel->getConnection();
-        $orderTableName = $this->orderResourceModel->getMainTable();
-        $orderItemTableName = $this->orderItemResourceModel->getMainTable();
+        $connection = $this->resourceConnection->getConnection('sales');
+        $orderTableName = $this->resourceConnection->getTableName('sales_order', 'sales');
+        $orderItemTableName = $this->resourceConnection->getTableName('sales_order_item', 'sales');
 
         $orderEntityIdSelectQuery = $connection
             ->select()
@@ -85,6 +89,11 @@ class GetOrderItemsDataForOrdersInNotFinalState
             )
             ->where('main_table.entity_id IN (?)', $entityIds)
             ->where('item.product_type IN (?)', ['simple']);
-        return $connection->fetchAll($query);
+        $orderItems = $connection->fetchAll($query);
+        foreach ($orderItems as $key => $orderItem) {
+            $orderItem['website_id'] = $this->storeWebsiteResolver->execute((int) $orderItem['store_id']);
+            $orderItems[$key] = $orderItem;
+        }
+        return $orderItems;
     }
 }
