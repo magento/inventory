@@ -11,6 +11,7 @@ use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -66,6 +67,8 @@ class AdaptAssignStatusToProductPlugin
      * @param Product $product
      * @param int|null $status
      * @return array
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeAssignStatusToProduct(
