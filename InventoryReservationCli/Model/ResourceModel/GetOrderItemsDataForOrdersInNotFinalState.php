@@ -7,8 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
+use Magento\Sales\Model\ResourceModel\Order;
+use Magento\Sales\Model\ResourceModel\Order\Item;
 
 /**
  * Loads order item data for orders, which are not in final state
@@ -16,24 +17,30 @@ use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
 class GetOrderItemsDataForOrdersInNotFinalState
 {
     /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
      * @var GetCompleteOrderStateList
      */
     private $getCompleteOrderStateList;
+    /**
+     * @var Order
+     */
+    private $orderResourceModel;
+    /**
+     * @var Item
+     */
+    private $orderItemResourceModel;
 
     /**
-     * @param ResourceConnection $resourceConnection
+     * @param Order $orderResourceModel
+     * @param Item $orderItemResourceModel
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
+        Order $orderResourceModel,
+        Item $orderItemResourceModel,
         GetCompleteOrderStateList $getCompleteOrderStateList
     ) {
-        $this->resourceConnection = $resourceConnection;
+        $this->orderResourceModel = $orderResourceModel;
+        $this->orderItemResourceModel = $orderItemResourceModel;
         $this->getCompleteOrderStateList = $getCompleteOrderStateList;
     }
 
@@ -46,10 +53,9 @@ class GetOrderItemsDataForOrdersInNotFinalState
      */
     public function execute(int $bunchSize = 50, int $page = 1): array
     {
-        $connection = $this->resourceConnection->getConnection();
-        $orderTableName = $this->resourceConnection->getTableName('sales_order');
-        $orderItemTableName = $this->resourceConnection->getTableName('sales_order_item');
-        $storeTableName = $this->resourceConnection->getTableName('store');
+        $connection = $this->orderResourceModel->getConnection();
+        $orderTableName = $this->orderResourceModel->getMainTable();
+        $orderItemTableName = $this->orderItemResourceModel->getMainTable();
 
         $orderEntityIdSelectQuery = $connection
             ->select()
@@ -68,13 +74,9 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 [
                     'main_table.entity_id',
                     'main_table.increment_id',
-                    'main_table.status'
+                    'main_table.status',
+                    'main_table.store_id'
                 ]
-            )
-            ->join(
-                ['store' => $storeTableName],
-                'store.store_id = main_table.store_id',
-                ['store.website_id']
             )
             ->join(
                 ['item' => $orderItemTableName],

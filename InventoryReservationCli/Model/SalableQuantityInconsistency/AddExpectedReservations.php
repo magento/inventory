@@ -10,6 +10,7 @@ namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderItemsDataForOrdersInNotFinalState;
+use Magento\InventoryReservationCli\Model\StoreWebsiteResolver;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
@@ -37,23 +38,30 @@ class AddExpectedReservations
      * @var GetOrderItemsDataForOrdersInNotFinalState
      */
     private $getOrderItemsDataForOrderInNotFinalState;
+    /**
+     * @var StoreWebsiteResolver
+     */
+    private $storeWebsiteResolver;
 
     /**
      * @param ReservationBuilderInterface $reservationBuilder
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param SerializerInterface $serializer
      * @param GetOrderItemsDataForOrdersInNotFinalState $getOrderItemsDataForOrderInNotFinalState
+     * @param StoreWebsiteResolver $storeWebsiteResolver
      */
     public function __construct(
         ReservationBuilderInterface $reservationBuilder,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         SerializerInterface $serializer,
-        GetOrderItemsDataForOrdersInNotFinalState $getOrderItemsDataForOrderInNotFinalState
+        GetOrderItemsDataForOrdersInNotFinalState $getOrderItemsDataForOrderInNotFinalState,
+        StoreWebsiteResolver $storeWebsiteResolver
     ) {
         $this->reservationBuilder = $reservationBuilder;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->serializer = $serializer;
         $this->getOrderItemsDataForOrderInNotFinalState = $getOrderItemsDataForOrderInNotFinalState;
+        $this->storeWebsiteResolver = $storeWebsiteResolver;
     }
 
     /**
@@ -67,7 +75,7 @@ class AddExpectedReservations
     public function execute(Collector $collector, int $bunchSize = 50, int $page = 1): void
     {
         foreach ($this->getOrderItemsDataForOrderInNotFinalState->execute($bunchSize, $page) as $data) {
-            $websiteId = (int)$data['website_id'];
+            $websiteId = $this->storeWebsiteResolver->execute((int) $data['store_id']);
             $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
             $reservation = $this->reservationBuilder
@@ -78,7 +86,7 @@ class AddExpectedReservations
                 ->build();
 
             $collector->addReservation($reservation);
-            $collector->addOrderData($data);
+            $collector->addOrderData($data + ['website_id' => $websiteId]);
         }
     }
 }

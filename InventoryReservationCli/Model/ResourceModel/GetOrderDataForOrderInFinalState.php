@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
+use Magento\Sales\Model\ResourceModel\Order;
 
 /**
  * Load order data for order, which are in final state
@@ -16,24 +16,23 @@ use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
 class GetOrderDataForOrderInFinalState
 {
     /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-
-    /**
      * @var GetCompleteOrderStateList
      */
     private $getCompleteOrderStateList;
+    /**
+     * @var Order
+     */
+    private $orderResourceModel;
 
     /**
-     * @param ResourceConnection $resourceConnection
+     * @param Order $orderResourceModel
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
+        Order $orderResourceModel,
         GetCompleteOrderStateList $getCompleteOrderStateList
     ) {
-        $this->resourceConnection = $resourceConnection;
+        $this->orderResourceModel = $orderResourceModel;
         $this->getCompleteOrderStateList = $getCompleteOrderStateList;
     }
 
@@ -45,10 +44,8 @@ class GetOrderDataForOrderInFinalState
      */
     public function execute(array $orderIds): array
     {
-        $connection = $this->resourceConnection->getConnection();
-        $orderTableName = $this->resourceConnection->getTableName('sales_order');
-        $storeTableName = $this->resourceConnection->getTableName('store');
-
+        $connection = $this->orderResourceModel->getConnection();
+        $orderTableName = $this->orderResourceModel->getMainTable();
         $query = $connection
             ->select()
             ->from(
@@ -57,12 +54,8 @@ class GetOrderDataForOrderInFinalState
                     'main_table.entity_id',
                     'main_table.status',
                     'main_table.increment_id',
+                    'main_table.store_id',
                 ]
-            )
-            ->join(
-                ['store' => $storeTableName],
-                'store.store_id = main_table.store_id',
-                ['store.website_id']
             )
             ->where('main_table.entity_id IN (?)', $orderIds)
             ->where('main_table.state IN (?)', $this->getCompleteOrderStateList->execute());
