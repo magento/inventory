@@ -74,7 +74,8 @@ class GetBundleProductStockStatus
      */
     public function execute(ProductInterface $product, array $bundleOptions, int $stockId): bool
     {
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($product->getSku(), $stockId);
+        //get non processed bundle product sku.
+        $stockItemConfiguration = $this->getStockItemConfiguration->execute($product->getDataByKey('sku'), $stockId);
         if (!$stockItemConfiguration->getExtensionAttributes()->getIsInStock()) {
             return false;
         }
