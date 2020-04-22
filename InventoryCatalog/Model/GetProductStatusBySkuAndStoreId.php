@@ -7,17 +7,16 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
-use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
-use Magento\InventoryCatalog\Model\ResourceModel\GetProductStatusByProductIdAndStockId;
+use Magento\InventoryCatalog\Model\ResourceModel\GetProductStatusByProductIdAndStoreId;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
  * Get product status for given stock service.
  */
-class GetProductStatusForStock
+class GetProductStatusBySkuAndStoreId
 {
     /**
-     * @var GetProductStatusByProductIdAndStockId
+     * @var GetProductStatusByProductIdAndStoreId
      */
     private $getProductStatus;
 
@@ -27,12 +26,11 @@ class GetProductStatusForStock
     private $getProductIdsBySkus;
 
     /**
-     * @param ProductAttributeRepositoryInterface $attributeRepository
-     * @param GetProductStatusByProductIdAndStockId $getProductStatus
+     * @param GetProductStatusByProductIdAndStoreId $getProductStatus
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      */
     public function __construct(
-        GetProductStatusByProductIdAndStockId $getProductStatus,
+        GetProductStatusByProductIdAndStoreId $getProductStatus,
         GetProductIdsBySkusInterface $getProductIdsBySkus
     ) {
         $this->getProductStatus = $getProductStatus;
@@ -43,14 +41,14 @@ class GetProductStatusForStock
      * Retrieve product status by sku.
      *
      * @param string $sku
-     * @param int $stockId
+     * @param int $storeId
      * @return int
      */
-    public function execute(string $sku, int $stockId): int
+    public function execute(string $sku, int $storeId): int
     {
         try {
             $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
-            return $this->getProductStatus->execute((int)$productId, $stockId);
+            return $this->getProductStatus->execute((int)$productId, $storeId);
         } catch (\Exception $e) {
             return 0;
         }

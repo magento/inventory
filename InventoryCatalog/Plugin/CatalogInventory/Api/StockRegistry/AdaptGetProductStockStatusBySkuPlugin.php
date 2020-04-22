@@ -11,7 +11,7 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Model\GetProductStatusForStock;
+use Magento\InventoryCatalog\Model\GetProductStatusBySkuAndStoreId;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -38,26 +38,26 @@ class AdaptGetProductStockStatusBySkuPlugin
     private $stockResolver;
 
     /**
-     * @var GetProductStatusForStock
+     * @var GetProductStatusBySkuAndStoreId
      */
-    private $getProductStatusForStock;
+    private $getProductStatus;
 
     /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
-     * @param GetProductStatusForStock $getProductStatusForStock
+     * @param GetProductStatusBySkuAndStoreId $getProductStatus
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
-        GetProductStatusForStock $getProductStatusForStock
+        GetProductStatusBySkuAndStoreId $getProductStatus
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
-        $this->getProductStatusForStock = $getProductStatusForStock;
+        $this->getProductStatus = $getProductStatus;
     }
 
     /**
@@ -82,7 +82,7 @@ class AdaptGetProductStockStatusBySkuPlugin
             ? $this->storeManager->getWebsite()->getCode()
             : $this->storeManager->getWebsite($scopeId)->getCode();
         $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)->getStockId();
-        $status = $this->getProductStatusForStock->execute($productSku, $stockId);
+        $status = $this->getProductStatus->execute($productSku, (int)$this->storeManager->getStore()->getId());
         if ($status === Status::STATUS_DISABLED) {
             return 0;
         }

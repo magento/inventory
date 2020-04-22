@@ -11,16 +11,14 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Model\ProductStatusSelectProcessorInterface;
 use Magento\Store\Model\Store;
 
 /**
- * @inheritDoc
+ * Retrieve product status resource.
  */
-class ProductStatusSelectProcessor implements ProductStatusSelectProcessorInterface
+class GetProductStatusByProductIdAndStoreId
 {
     /**
      * @var ResourceConnection
@@ -53,10 +51,23 @@ class ProductStatusSelectProcessor implements ProductStatusSelectProcessorInterf
     }
 
     /**
-     * @inheritDoc
+     * Retrieve product status by product id and website code.
+     *
+     * @param int $productId
+     * @param int $storeId
+     * @return int
+     * @throws \Exception
      */
-    public function execute(Select $select, int $stockId): Select
+    public function execute(int $productId, int $storeId): int
     {
+        $connection = $this->resourceConnection->getConnection();
+        $productTable = $this->resourceConnection->getTableName('catalog_product_entity');
+        $select = $connection->select()
+            ->from(['product' => $productTable])
+            ->where(
+                'product.entity_id = ?',
+                $productId
+            );
         $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $select->joinInner(
             ['product_entity_int' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
@@ -68,7 +79,7 @@ class ProductStatusSelectProcessor implements ProductStatusSelectProcessorInterf
             ['product_entity_int_store' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
             'product_entity_int_store.' . $linkField . ' = product.' . $linkField . ' ' .
             'AND product_entity_int_store.attribute_id = ' . $this->getStatusId()
-            . ' AND product_entity_int_store.store_id = ' . $this->getStoreId($stockId),
+            . ' AND product_entity_int_store.store_id = ' . $storeId,
             []
         )->where(
             $select->getConnection()->getIfNullSql(
@@ -78,7 +89,7 @@ class ProductStatusSelectProcessor implements ProductStatusSelectProcessorInterf
             Status::STATUS_ENABLED
         );
 
-        return $select;
+        return $connection->fetchOne($select) ? Status::STATUS_ENABLED : Status::STATUS_DISABLED;
     }
 
     /**
@@ -90,46 +101,5 @@ class ProductStatusSelectProcessor implements ProductStatusSelectProcessorInterf
     private function getStatusId(): int
     {
         return (int)$this->productAttributeRepository->get(ProductInterface::STATUS)->getAttributeId();
-    }
-
-    /**
-     * Retrieve store id for given stock.
-     *
-     * @param int $stockId
-     * @return int
-     */
-    private function getStoreId(int $stockId): int
-    {
-        $salesChannel = $this->resourceConnection->getTableName('inventory_stock_sales_channel');
-        $website = $this->resourceConnection->getTableName('store_website');
-        $store = $this->resourceConnection->getTableName('store');
-        $connection = $this->resourceConnection->getConnection();
-        $query = $connection->select()
-            ->from(
-                ['store' => $store],
-                ['store_id']
-            )->where(
-                'store.is_active = ?',
-                1
-            )
-            ->joinInner(
-                ['website' => $website],
-                'store.website_id = website.website_id',
-                []
-            )
-            ->joinInner(
-                ['sales_channel' => $salesChannel],
-                'sales_channel.code = website.code',
-                []
-            )->where(
-                'sales_channel.type = ?',
-                'website'
-            )
-            ->where(
-                'sales_channel.stock_id = ?',
-                $stockId
-            );
-
-        return (int)$connection->fetchOne($query);
     }
 }

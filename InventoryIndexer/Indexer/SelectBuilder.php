@@ -9,14 +9,12 @@ namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkResourceModel;
 use Magento\Inventory\Model\StockSourceLink;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryCatalogApi\Model\ProductStatusSelectProcessorInterface;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
 
 /**
@@ -40,26 +38,18 @@ class SelectBuilder
     private $productTableName;
 
     /**
-     * @var ProductStatusSelectProcessorInterface
-     */
-    private $productStatusSelectProcessor;
-
-    /**
      * @param ResourceConnection $resourceConnection
      * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
      * @param string $productTableName
-     * @param ProductStatusSelectProcessorInterface $productStatusSelectProcessor
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
-        string $productTableName,
-        ProductStatusSelectProcessorInterface $productStatusSelectProcessor
+        string $productTableName
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
         $this->productTableName = $productTableName;
-        $this->productStatusSelectProcessor = $productStatusSelectProcessor;
     }
 
     /**
@@ -67,7 +57,6 @@ class SelectBuilder
      *
      * @param int $stockId
      * @return Select
-     * @throws NoSuchEntityException
      */
     public function execute(int $stockId): Select
     {
@@ -91,7 +80,6 @@ class SelectBuilder
             'product.entity_id = legacy_stock_item.product_id',
             []
         );
-        $select = $this->productStatusSelectProcessor->execute($select, $stockId);
 
         $select->from(
             ['source_item' => $sourceItemTable],

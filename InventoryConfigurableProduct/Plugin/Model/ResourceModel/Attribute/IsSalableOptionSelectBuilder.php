@@ -7,13 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Attribute;
 
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\ConfigurableProduct\Model\ResourceModel\Attribute\OptionSelectBuilderInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -39,18 +38,26 @@ class IsSalableOptionSelectBuilder
     private $stockIndexTableNameResolver;
 
     /**
+     * @var StockConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @param StockConfigurationInterface $configuration
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
+        StockConfigurationInterface $configuration
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -72,15 +79,17 @@ class IsSalableOptionSelectBuilder
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-
         $select->joinInner(
             ['stock' => $stockTable],
             'stock.sku = entity.sku',
             []
-        )->where(
-            'stock.is_salable = ?',
-            1
         );
+        if (!$this->configuration->isShowOutOfStock() && $this->configuration->getManageStock()) {
+            $select->where(
+                'stock.is_salable = ?',
+                1
+            );
+        }
 
         return $select;
     }
