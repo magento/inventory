@@ -23,6 +23,13 @@ class GetSkusByProductIds implements GetSkusByProductIdsInterface
     private $productResource;
 
     /**
+     * Local cache of productId to Sku mapping.
+     *
+     * @var array
+     */
+    private $productIdToSkuMap = [];
+
+    /**
      * @param ProductResourceModel $productResource
      */
     public function __construct(
@@ -36,20 +43,27 @@ class GetSkusByProductIds implements GetSkusByProductIdsInterface
      */
     public function execute(array $productIds): array
     {
-        $skuByIds = array_column(
-            $this->productResource->getProductsSku($productIds),
-            ProductInterface::SKU,
-            'entity_id'
-        );
-        $notFoundedIds = array_diff($productIds, array_keys($skuByIds));
+        $cachedSkuSet = array_intersect_key($this->productIdToSkuMap, array_flip($productIds));
+        $productIds = array_diff($productIds, array_keys($this->productIdToSkuMap));
+        $skuByIds = [];
 
-        if (!empty($notFoundedIds)) {
-            throw new NoSuchEntityException(
-                __('Following products with requested ids were not found: %1', implode($notFoundedIds, ', '))
+        if (!empty($productIds)) {
+            $skuByIds = array_column(
+                $this->productResource->getProductsSku($productIds),
+                ProductInterface::SKU,
+                'entity_id'
             );
+            $notFoundedIds = array_diff($productIds, array_keys($skuByIds));
+            if (!empty($notFoundedIds)) {
+                throw new NoSuchEntityException(
+                    __('Following products with requested ids were not found: %1', implode($notFoundedIds, ', '))
+                );
+            }
+
+            $skuByIds = array_map('strval', $skuByIds);
+            $this->productIdToSkuMap += $skuByIds;
         }
 
-        $skuByIds = array_map('strval', $skuByIds);
-        return $skuByIds;
+        return $skuByIds + $cachedSkuSet;
     }
 }
