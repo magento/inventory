@@ -116,26 +116,19 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
     private function updateAssignedSources(array $assignedSources, array $stockData): array
     {
         foreach ($assignedSources as $key => $source) {
-            $isSourceUpdated = false;
             if (!key_exists('quantity', $source) && isset($source['qty'])) {
-                $source['quantity'] = (int) $source['qty'];
-                $isSourceUpdated = true;
+                $assignedSources[$key]['quantity'] = (int) $source['qty'];
             }
             if (!key_exists('status', $source) && isset($source['source_status'])) {
-                $source['status'] = (int) $source['source_status'];
-                $isSourceUpdated = true;
+                $assignedSources[$key]['source_status']= (int) $source['source_status'];
             }
             if ($source['notify_stock_qty'] == null) {
-                $source['notify_stock_qty'] = $stockData[StockItemConfigurationInterface::NOTIFY_STOCK_QTY] ?? 0;
-                $isSourceUpdated = true;
+                $assignedSources[$key]['notify_stock_qty'] =
+                    $stockData[StockItemConfigurationInterface::NOTIFY_STOCK_QTY] ?? 0;
             }
             if ($source['notify_stock_qty_use_default'] == null) {
-                $source['notify_stock_qty_use_default'] =
+                $assignedSources[$key]['notify_stock_qty_use_default'] =
                     $stockData[StockItemConfigurationInterface::USE_CONFIG_NOTIFY_STOCK_QTY] ?? 1;
-                $isSourceUpdated = true;
-            }
-            if ($isSourceUpdated) {
-                $assignedSources[$key] = $source;
             }
         }
         return $assignedSources;
