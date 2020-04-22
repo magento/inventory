@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryAdvancedCheckout\Plugin\Model;
 
 use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
+use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResultFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
@@ -41,21 +42,29 @@ class AreProductsSalablePlugin
     private $defaultStockProvider;
 
     /**
+     * @var IsProductsSalableForRequestedQtyResultFactory
+     */
+    private $salableForRequestedQtyResultFactory;
+
+    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param IsProductsSalableForRequestedQtyResultFactory $salableForRequestedQtyResultFactory
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        IsProductsSalableForRequestedQtyResultFactory $salableForRequestedQtyResultFactory
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->salableForRequestedQtyResultFactory = $salableForRequestedQtyResultFactory;
     }
 
     /**
@@ -65,7 +74,7 @@ class AreProductsSalablePlugin
      * @param callable $proceed
      * @param \Magento\AdvancedCheckout\Model\Data\ProductQuantity[] $productQuantities
      * @param int $websiteId
-     * @return bool
+     * @return array
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -74,7 +83,7 @@ class AreProductsSalablePlugin
         callable $proceed,
         array $productQuantities,
         int $websiteId
-    ): bool {
+    ): array {
         $website = $this->websiteRepository->getById($websiteId);
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
         if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
@@ -85,9 +94,13 @@ class AreProductsSalablePlugin
         foreach ($productQuantities as $productQuantity) {
             $skus[] = $productQuantity->getSku();
         }
-        $result = $this->areProductsSalable->execute($skus, $stock->getStockId());
-        $result = current($result);
+        $result = [];
+        foreach ($this->areProductsSalable->execute($skus, $stock->getStockId()) as $productStock) {
+            $result[] = $this->salableForRequestedQtyResultFactory->create(
+                ['sku' => $productStock->getSku(), 'isSalable' => $productStock->isSalable()]
+            );
+        }
 
-        return $result->isSalable();
+        return $result;
     }
 }
