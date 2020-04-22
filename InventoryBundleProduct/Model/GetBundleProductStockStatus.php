@@ -104,6 +104,25 @@ class GetBundleProductStockStatus
     }
 
     /**
+     * Get bundle product selection qty.
+     *
+     * @param Product $product
+     * @param int $stockId
+     * @return float
+     * @throws LocalizedException
+     * @throws SkuIsNotAssignedToStockException
+     */
+    private function getRequestedQty(Product $product, int $stockId): float
+    {
+        if ((int)$product->getSelectionCanChangeQty()) {
+            $stockItemConfiguration = $this->getStockItemConfiguration->execute((string)$product->getSku(), $stockId);
+            return $stockItemConfiguration->getMinSaleQty();
+        }
+
+        return (float)$product->getSelectionQty();
+    }
+
+    /**
      * Get are bundle product selections salable.
      *
      * @param ProductInterface $product
@@ -129,24 +148,5 @@ class GetBundleProductStockStatus
         }
 
         return $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
-    }
-
-    /**
-     * Get bundle product selection qty.
-     *
-     * @param Product $product
-     * @param int $stockId
-     * @return float
-     * @throws LocalizedException
-     * @throws SkuIsNotAssignedToStockException
-     */
-    private function getRequestedQty(Product $product, int $stockId): float
-    {
-        if ((int)$product->getSelectionCanChangeQty()) {
-            $stockItemConfiguration = $this->getStockItemConfiguration->execute((string)$product->getSku(), $stockId);
-            return $stockItemConfiguration->getMinSaleQty();
-        }
-
-        return (float)$product->getSelectionQty();
     }
 }
