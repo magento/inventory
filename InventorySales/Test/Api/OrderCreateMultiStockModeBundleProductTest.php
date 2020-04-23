@@ -82,6 +82,6 @@ class OrderCreateMultiStockModeBundleProductTest extends OrderPlacementBase
         $this->assertEquals('Simple Product', $order['items'][1]['name']);
         $this->assertEquals('simple', $order['items'][1]['product_type']);
         $this->assertEquals('simple', $order['items'][1]['sku']);
-        $this->assertEquals(0, $order['items'][1]['price']);
+        $this->assertEquals(10, $order['items'][1]['price']);
     }
 }

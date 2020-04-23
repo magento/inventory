@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProduct\Model;
 
-use Magento\Bundle\Model\Option;
+use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
 use Magento\Bundle\Model\ResourceModel\Selection\Collection\FilterApplier;
 use Magento\Bundle\Model\ResourceModel\Selection\CollectionFactory;
@@ -53,11 +53,11 @@ class GetProductSelection
      * Retrieve bundle product selection for given bundle product and option.
      *
      * @param ProductInterface $product
-     * @param Option $option
+     * @param OptionInterface $option
      * @return Collection
      * @throws \Exception
      */
-    public function execute(ProductInterface $product, Option $option): Collection
+    public function execute(ProductInterface $product, OptionInterface $option): Collection
     {
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $selectionsCollection = $this->collectionFactory->create();

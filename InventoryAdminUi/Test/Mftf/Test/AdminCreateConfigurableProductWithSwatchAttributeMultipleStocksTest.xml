@@ -42,7 +42,7 @@
             </createData>
             <createData entity="ConfigurableMsiProduct" stepKey="configurableProduct"/>
             <!--Create website, store and store view.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
                 <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
                 <argument name="websiteCode" value="{{customWebsite.code}}"/>
@@ -80,7 +80,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalWebsiteSource">
                 <argument name="sourceCode" value="$$additionalSourceAdditionalWebsite.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category, stocks and revert configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
@@ -141,7 +141,7 @@
             <argument name="sourceCode" value="$$additionalSourceMainWebsite.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillRedVariationQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveRedVariation"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveRedVariation"/>
         <!--Assign additional website source to blue variation.-->
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findBlueVariation">
             <argument name="selector" value="AdminProductGridFilterSection.nameFilter"/>
@@ -152,11 +152,11 @@
             <argument name="sourceCode" value="$$additionalSourceAdditionalWebsite.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillBlueVariationQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveBlueVariation"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveBlueVariation"/>
         <!--Set configurable product stock status.-->
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openProductEditPage"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="setProductStockStatus"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveConfigurableProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
         <!--Verify configurable product with red variation on main website.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyConfigurableVisibleOnStoreFrontMainWebsite">
             <argument name="category" value="$$category$$"/>

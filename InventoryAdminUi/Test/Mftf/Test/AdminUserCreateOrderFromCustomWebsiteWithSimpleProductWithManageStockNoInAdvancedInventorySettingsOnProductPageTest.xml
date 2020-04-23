@@ -28,7 +28,7 @@
             </createData>
             <createData entity="SimpleSubCategory" stepKey="createCategory1"/>
             <createData entity="SimpleMsiProduct" stepKey="simpleProduct"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdmin1"/>
 
             <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="adminCreateNewWebsite">
                 <argument name="newWebsiteName" value="{{NewWebSiteData.name}}"/>

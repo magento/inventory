@@ -3,8 +3,8 @@
 
 type Query {
     pickupLocations (
-        distance: AreaInput @doc(description: "Perform search by location using radius and search term.")
-        filter: PickupLocationFilterInput @doc(description: "Apply filters by attributes.")
+        area: AreaInput @doc(description: "Perform search by location using radius and search term.")
+        filters: PickupLocationFilterInput @doc(description: "Apply filters by attributes.")
         sort: PickupLocationSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
         pageSize: Int = 20 @doc(description: "The maximum number of pickup locations to return at once. The attribute is optional.")
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
@@ -14,10 +14,7 @@ type Query {
 
 input AreaInput @doc(description: "AreaInput defines the parameters which will be used for filter by specified location.") {
     radius: Int! @doc(description: "The radius for the search in KM.")
-    country_code: String! @doc(description: "The country code where search must be performed. Required parameter together with region, city or postcode.")
-    region: String @doc(description: "The region where search must be performed.")
-    city: String @doc(description: "The city where search must be performed.")
-    postcode: String @doc(description: "The postcode which will be used for the search.")
+    search_term: String! @doc(description: "The country code where search must be performed. Required parameter together with region, city or postcode.")
 }
 
 input PickupLocationFilterInput @doc(description: "PickupLocationFilterInput defines the list of attributes and filters for the search.") {

@@ -27,7 +27,7 @@
                 <requiredEntity createDataKey="customSource"/>
             </createData>
             <createData entity="SimpleSubCategory" stepKey="category"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
@@ -42,7 +42,7 @@
             <actionGroup ref="AdminChangeOutOfStockThresholdOnProductEditPageActionGroup" stepKey="setOutOfStockThreshold">
                 <argument name="threshold" value="100"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveEditedSimpleProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveEditedSimpleProduct"/>
         </before>
 
         <after>
@@ -58,7 +58,7 @@
             <deleteData createDataKey="CustomStockMainWebsite" stepKey="deleteStock"/>
             <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!-- Go to storefront category page, assert product isn't visible. -->
