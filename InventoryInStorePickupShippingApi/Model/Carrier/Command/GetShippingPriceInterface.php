@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command;
 
-use Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
 /**
@@ -20,9 +19,8 @@ interface GetShippingPriceInterface
     /**
      * Get shipping price for In-Store Pickup delivery.
      *
-     * @param ShippingPriceRequestInterface $shippingPriceRequest
      * @param RateRequest $rateRequest
      * @return float|null
      */
-    public function execute(ShippingPriceRequestInterface $shippingPriceRequest, RateRequest $rateRequest): ?float;
+    public function execute(RateRequest $rateRequest): ?float;
 }

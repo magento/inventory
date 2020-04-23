@@ -96,7 +96,6 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
                 'page_size' => $searchRequest->getPageSize(),
                 'current_page' => $searchRequest->getCurrentPage(),
                 'total_pages' => $this->getMaxPage($searchRequest, $searchResult)
-
             ],
             'total_count' => $searchResult->getTotalCount()
         ];
