@@ -40,7 +40,7 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <!--Open configurable product edit page-->
-            <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="openConfigurableProductEditPage">
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openConfigurableProductEditPage">
                 <argument name="productId" value="$createConfigurableProduct.id$)"/>
             </actionGroup>
             <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
