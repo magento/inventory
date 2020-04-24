@@ -30,7 +30,7 @@
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
@@ -80,7 +80,7 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>

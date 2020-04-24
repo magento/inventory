@@ -29,7 +29,7 @@
             <createData entity="downloadableLink1" stepKey="addDownloadableLink">
                 <requiredEntity createDataKey="downloadableProduct"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!-- Assign Sales Channel to Default Stock -->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -45,7 +45,7 @@
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
             <magentoCLI stepKey="disableGuestCheckoutForDownloadable" command="config:set catalog/downloadable/disable_guest_checkout 1" />
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Add product to cart.-->

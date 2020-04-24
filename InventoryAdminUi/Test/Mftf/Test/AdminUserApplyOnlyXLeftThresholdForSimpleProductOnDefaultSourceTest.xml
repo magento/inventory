@@ -35,7 +35,7 @@
                 <requiredEntity createDataKey="createSource"/>
             </createData>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
@@ -62,7 +62,7 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
 
             <comment userInput="Revert config 'Only X left Threshold' changes." stepKey="revertConfigChangesComment"/>
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertConfigValue"/>

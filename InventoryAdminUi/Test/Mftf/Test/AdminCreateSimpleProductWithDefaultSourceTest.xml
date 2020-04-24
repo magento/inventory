@@ -23,10 +23,10 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement1"/>
 
             <createData entity="_defaultCategory" stepKey="createPreReqCategory1"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="createPreReqCategory1" stepKey="deletePreReqCategory1"/>
         </after>
 
@@ -46,7 +46,7 @@
 
         <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="{{SimpleMsiProduct.quantity}}" stepKey="fillSourceQtyField1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults2">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

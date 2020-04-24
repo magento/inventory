@@ -32,12 +32,12 @@
                 <requiredEntity createDataKey="source"/>
             </createData>
             <!--Assign created source to product.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProduct1EditPageToAssignSource"/>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
             <!--Add simple product to grouped.-->
             <amOnPage url="{{AdminProductEditPage.url($groupedProduct.id$)}}" stepKey="openGroupedProductEditPage"/>
             <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
@@ -50,7 +50,7 @@
                 <argument name="productName" value="$product.name$"/>
                 <argument name="qty" value="2"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedGroupedProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedGroupedProduct"/>
         </before>
         <after>
             <!--Delete test data.-->
@@ -67,7 +67,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!--Quick search product by name.-->

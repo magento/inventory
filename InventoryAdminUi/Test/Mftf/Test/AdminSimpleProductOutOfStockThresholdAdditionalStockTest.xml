@@ -43,7 +43,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Delete created data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -51,7 +51,7 @@
         </after>
 
         <!--Assign create product to additional stock and set qty.-->
-        <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUSSource1ToCreatedProduct">
             <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
