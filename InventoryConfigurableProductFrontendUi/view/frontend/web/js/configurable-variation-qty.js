@@ -38,8 +38,6 @@ define([
             }).fail(function () {
                 productQtyInfoBlock.hide();
             });
-        } else {
-            productQtyInfoBlock.hide();
         }
     };
 });

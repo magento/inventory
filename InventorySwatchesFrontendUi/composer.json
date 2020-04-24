@@ -7,7 +7,7 @@
   },
   "suggest": {
     "magento/module-swatches": "*",
-    "magento/module-inventory-configurable-product-frontend": "*"
+    "magento/module-inventory-configurable-product-frontend-ui": "*"
   },
   "type": "magento2-module",
   "license": [

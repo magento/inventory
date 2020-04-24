@@ -1,5 +1,5 @@
 {
-  "name": "magento/module-inventory-configurable-product-frontend",
+  "name": "magento/module-inventory-configurable-product-frontend-ui",
   "description": "N/A",
   "require": {
     "php": "~7.1.3||~7.2.0||~7.3.0",
@@ -22,7 +22,7 @@
       "registration.php"
     ],
     "psr-4": {
-      "Magento\\InventoryConfigurableProductFrontend\\": ""
+      "Magento\\InventoryConfigurableProductFrontendUi\\": ""
     }
   }
 }

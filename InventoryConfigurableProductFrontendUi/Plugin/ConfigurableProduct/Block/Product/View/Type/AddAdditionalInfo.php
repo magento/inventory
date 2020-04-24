@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProductFrontend\Plugin\ConfigurableProduct\Block\Product\View\Type;
+namespace Magento\InventoryConfigurableProductFrontendUi\Plugin\ConfigurableProduct\Block\Product\View\Type;
 
 use Magento\ConfigurableProduct\Block\Product\View\Type\Configurable as Subject;
 use Magento\Framework\Serialize\Serializer\Json;

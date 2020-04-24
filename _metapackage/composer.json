@@ -21,7 +21,7 @@
         "magento/module-inventory-configurable-product": "*",
         "magento/module-inventory-configurable-product-admin-ui": "*",
         "magento/module-inventory-configurable-product-indexer": "*",
-        "magento/module-inventory-configurable-product-frontend": "*",
+        "magento/module-inventory-configurable-product-frontend-ui": "*",
         "magento/module-inventory-configuration": "*",
         "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-distance-based-source-selection": "*",

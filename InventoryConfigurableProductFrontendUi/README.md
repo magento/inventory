@@ -1,6 +1,6 @@
-# InventoryConfigurableProductFrontend module
+# InventoryConfigurableProductFrontendUi module
 
-The `InventoryConfigurableProductFrontend` adds info about salable quantity for configurable variations in product page.
+The `InventoryConfigurableProductFrontendUi` adds info about salable quantity for configurable variations in product page.
 
 This module is a part of the new inventory infrastructure. The
 [Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
@@ -13,4 +13,4 @@ is provided by a 3rd-party system or if you run a headless version of Magento.
 
 ## Extensibility
 
-The `InventoryConfigurableProductFrontend` module contains several extension points.
+The `InventoryConfigurableProductFrontendUi` module contains several extension points.

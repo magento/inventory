@@ -6,13 +6,13 @@
 var config = {
     map: {
         '*': {
-            configurableVariationQty: 'Magento_InventoryConfigurableProductFrontend/js/configurable-variation-qty'
+            configurableVariationQty: 'Magento_InventoryConfigurableProductFrontendUi/js/configurable-variation-qty'
         }
     },
     config: {
         mixins: {
             'Magento_ConfigurableProduct/js/configurable': {
-                'Magento_InventoryConfigurableProductFrontend/js/configurable': true
+                'Magento_InventoryConfigurableProductFrontendUi/js/configurable': true
             }
         }
     }
