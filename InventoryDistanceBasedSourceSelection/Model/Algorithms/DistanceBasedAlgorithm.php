@@ -39,20 +39,28 @@ class DistanceBasedAlgorithm implements SourceSelectionInterface
     private $getDistanceFromSourceToAddress;
 
     /**
+     * @var AddressInterfaceFactory
+     */
+    private $addressInterfaceFactory;
+
+    /**
      * DistanceBasedAlgorithm constructor.
      *
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @param GetDefaultSortedSourcesResult $getDefaultSortedSourcesResult
      * @param GetDistanceFromSourceToAddress $getDistanceFromSourceToAddress
+     * @param AddressInterfaceFactory $addressInterfaceFactory
      */
     public function __construct(
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
         GetDefaultSortedSourcesResult $getDefaultSortedSourcesResult,
-        GetDistanceFromSourceToAddress $getDistanceFromSourceToAddress
+        GetDistanceFromSourceToAddress $getDistanceFromSourceToAddress,
+        AddressInterfaceFactory $addressInterfaceFactory
     ) {
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
         $this->getDefaultSortedSourcesResult = $getDefaultSortedSourcesResult;
         $this->getDistanceFromSourceToAddress = $getDistanceFromSourceToAddress;
+        $this->addressInterfaceFactory = $addressInterfaceFactory;
     }
 
     /**
@@ -61,7 +69,8 @@ class DistanceBasedAlgorithm implements SourceSelectionInterface
      */
     public function execute(InventoryRequestInterface $inventoryRequest): SourceSelectionResultInterface
     {
-        $destinationAddress = $inventoryRequest->getExtensionAttributes()->getDestinationAddress();
+        $order = $inventoryRequest->getExtensionAttributes()->getOrder();
+        $destinationAddress = $this->getDestinationAddress($order);
         if ($destinationAddress === null) {
             throw new LocalizedException(__('No destination address was provided in the request'));
         }
@@ -120,5 +129,26 @@ class DistanceBasedAlgorithm implements SourceSelectionInterface
         );
 
         return array_merge($sortSources, $sourcesWithoutDistance);
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @return AddressInterface|null
+     */
+    private function getDestinationAddress(OrderInterface $order): ?AddressInterface
+    {
+        /** @var Address $shippingAddress */
+        $shippingAddress = $order->getShippingAddress();
+        if ($shippingAddress === null) {
+            return null;
+        }
+
+        return $this->addressInterfaceFactory->create([
+            'country' => $shippingAddress->getCountryId(),
+            'postcode' => $shippingAddress->getPostcode() ?? '',
+            'street' => implode("\n", $shippingAddress->getStreet()),
+            'region' => $shippingAddress->getRegion() ?? $shippingAddress->getRegionCode() ?? '',
+            'city' => $shippingAddress->getCity()
+        ]);
     }
 }
