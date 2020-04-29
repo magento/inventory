@@ -20,6 +20,7 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
                           dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
                           stepKey="clickClearFilters"/>
+        <clearField selector="{{AdminDataGridPaginationSection.currentPage}}" stepKey="resetCurrentPage"/>
         <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{sourceCode}}"
                    stepKey="fillKeywordSearchField"/>
         <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch"/>
