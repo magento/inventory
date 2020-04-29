@@ -9,8 +9,8 @@ namespace Magento\InventoryConfigurableProduct\Plugin\Model\Product\Type\Configu
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -20,9 +20,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class IsSalableOptionPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var StoreManagerInterface
@@ -40,18 +40,18 @@ class IsSalableOptionPlugin
     private $stockConfiguration;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockConfigurationInterface $stockConfiguration
     ) {
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockConfiguration = $stockConfiguration;
@@ -70,11 +70,18 @@ class IsSalableOptionPlugin
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
 
+        $skus = [];
+        foreach ($products as $product) {
+            $skus[] = $product->getSku();
+        }
+        $results = $this->areProductsSalable->execute($skus, $stock->getStockId());
         foreach ($products as $key => $product) {
-            if (!$this->isProductSalable->execute($product->getSku(), $stock->getStockId())) {
-                $product->setIsSalable(0);
-                if (!$this->stockConfiguration->isShowOutOfStock()) {
-                    unset($products[$key]);
+            foreach ($results as $result) {
+                if ($result->getSku() === $product->getSku() && !$result->isSalable()) {
+                    $product->setIsSalable(0);
+                    if (!$this->stockConfiguration->isShowOutOfStock()) {
+                        unset($products[$key]);
+                    }
                 }
             }
         }
