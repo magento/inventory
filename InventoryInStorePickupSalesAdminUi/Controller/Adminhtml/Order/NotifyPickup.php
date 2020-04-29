@@ -82,7 +82,7 @@ class NotifyPickup extends Action implements HttpGetActionInterface
         if ($result->isSuccessful()) {
             $this->messageManager->addSuccessMessage(__('The customer has been notified and shipment created.'));
         } else {
-            $error = current($result->getFailed());
+            $error = current($result->getErrors());
             $this->messageManager->addErrorMessage($error['message']);
         }
 

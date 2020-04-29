@@ -5,19 +5,24 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickupSalesApi\Test\Api;
+namespace Magento\InventoryInStorePickupSalesApi\Test\GraphQl;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Registry;
 use Magento\GraphQl\Quote\GetMaskedQuoteIdByReservedOrderId;
 use Magento\Integration\Api\CustomerTokenServiceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
 /**
  * Verify order placement with 'in store pickup' delivery method.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PlaceOrderTest extends GraphQlAbstract
 {
@@ -52,6 +57,11 @@ class PlaceOrderTest extends GraphQlAbstract
     private $customerRepository;
 
     /**
+     * @var OrderInterface
+     */
+    private $order;
+
+    /**
      * @inheritDoc
      */
     protected function setUp()
@@ -63,6 +73,28 @@ class PlaceOrderTest extends GraphQlAbstract
         $this->sourceRepository = $objectManager->get(SourceRepositoryInterface::class);
         $this->customerTokenService = $objectManager->get(CustomerTokenServiceInterface::class);
         $this->customerRepository = $objectManager->get(CustomerRepositoryInterface::class);
+    }
+
+    /**
+     * Tear down.
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        /** @var Registry $registry */
+        $registry = Bootstrap::getObjectManager()->get(Registry::class);
+        $orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
+
+        $registry->unregister('isSecureArea');
+        $registry->register('isSecureArea', true);
+
+        $orderManagement->cancel($this->order->getEntityId());
+        $this->orderRepository->delete($this->order);
+
+        $registry->unregister('isSecureArea');
+        $registry->register('isSecureArea', false);
+        $this->order = null;
     }
 
     /**
@@ -336,16 +368,16 @@ QUERY;
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('increment_id', $response['placeOrder']['order']['order_number'])
             ->create();
-        $order = current($this->orderRepository->getList($searchCriteria)->getItems());
+        $this->order = current($this->orderRepository->getList($searchCriteria)->getItems());
         $source = $this->sourceRepository->get('eu-1');
-        $address = current($order->getExtensionAttributes()->getShippingAssignments())
+        $address = current($this->order->getExtensionAttributes()->getShippingAssignments())
             ->getShipping()
             ->getAddress();
-        self::assertEquals('in_store_pickup', $order->getShippingMethod());
+        self::assertEquals('in_store_pickup', $this->order->getShippingMethod());
         self::assertEquals('John', $address->getFirstName());
         self::assertEquals('Doe', $address->getLastName());
         self::assertEquals('customer@example.com', $address->getEmail());
-        self::assertEquals($source->getSourceCode(), $order->getExtensionAttributes()->getPickupLocationCode());
+        self::assertEquals($source->getSourceCode(), $this->order->getExtensionAttributes()->getPickupLocationCode());
         self::assertEquals($source->getRegion(), $address->getRegion());
         self::assertEquals($source->getPostcode(), $address->getPostCode());
         self::assertEquals($source->getStreet(), current($address->getStreet()));
