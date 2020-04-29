@@ -8,6 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\MessageQueue\PublisherInterface;
+use Magento\InventoryIndexer\Model\IndexerConfig;
+use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 
 /**
  * Index sheduler is responsible for shedule index update via Message Queue
@@ -24,14 +27,35 @@ class IndexScheduler
     private $publisher;
 
     /**
+     * @var IndexerConfig
+     */
+    private $indexerConfig;
+
+    /**
+     * @var SourceItemIndexer
+     */
+    private $sourceItemIndexer;
+
+    /**
+     * @var SourceIndexer
+     */
+    private $sourceIndexer;
+
+    /**
      * IndexScheduler constructor.
      *
      * @param PublisherInterface $publisher
      */
     public function __construct(
-        PublisherInterface $publisher
+        PublisherInterface $publisher,
+        IndexerConfig $indexerConfig,
+        SourceItemIndexer $sourceItemIndexer,
+        SourceIndexer $sourceIndexer
     ) {
         $this->publisher = $publisher;
+        $this->indexerConfig = $indexerConfig;
+        $this->sourceItemIndexer = $sourceItemIndexer;
+        $this->sourceIndexer = $sourceIndexer;
     }
 
     /**
@@ -42,7 +66,11 @@ class IndexScheduler
      */
     public function scheduleSourceItems(array $sourceItemIds)
     {
-        $this->publisher->publish(self::TOPIC_SOURCE_ITEMS_INDEX, $sourceItemIds);
+        if ($this->indexerConfig->isAsyncIndexerEnabled()) {
+            $this->publisher->publish(self::TOPIC_SOURCE_ITEMS_INDEX, $sourceItemIds);
+        }else{
+            $this->sourceItemIndexer->executeList($sourceItemIds);
+        }
     }
 
     /**
@@ -53,6 +81,11 @@ class IndexScheduler
      */
     public function scheduleSources(array $sourceCodes)
     {
-        $this->publisher->publish(self::TOPIC_SOURCE_ITEMS_INDEX, $sourceCodes);
+        if ($this->indexerConfig->isAsyncIndexerEnabled()) {
+            $this->publisher->publish(self::TOPIC_SOURCE_INDEX, $sourceCodes);
+        }else{
+            $this->sourceIndexer->executeList($sourceCodes);
+        }
     }
+
 }
