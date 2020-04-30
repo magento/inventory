@@ -11,7 +11,9 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class IndexerConfig
 {
-    const XML_PATH_INDEXER_ASYNC_ENABLED = 'cataloginventory/indexer/async';
+
+    const XML_PATH_INDEXER_SOURCE_ITEM_STRATEGY = 'cataloginventory/indexer/source_items_strategy';
+    const XML_PATH_INDEXER_SOURCE_STRATEGY = 'cataloginventory/indexer/source_strategy';
 
     /**
      * @var ScopeConfigInterface
@@ -27,10 +29,19 @@ class IndexerConfig
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isAsyncIndexerEnabled(): bool
+    public function getActiveSourceItemIndexStrategy(): string
     {
-        return (bool) $this->scopeConfig->getValue(self::XML_PATH_INDEXER_ASYNC_ENABLED);
+        return $this->scopeConfig->getValue(self::XML_PATH_INDEXER_SOURCE_ITEM_STRATEGY);
     }
+
+    /**
+     * @return string
+     */
+    public function getActiveSourceIndexStrategy(): string
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_INDEXER_SOURCE_STRATEGY);
+    }
+
 }

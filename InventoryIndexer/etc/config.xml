@@ -10,7 +10,8 @@
     <default>
         <cataloginventory>
             <indexer>
-                <async>0</async>
+                <source_items_strategy>sync</source_items_strategy>
+                <source_strategy>sync</source_strategy>
             </indexer>
         </cataloginventory>
     </default>

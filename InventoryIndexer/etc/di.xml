@@ -8,6 +8,22 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface" type="Magento\InventoryIndexer\Indexer\IndexHandler"/>
     <preference for="Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface" type="Magento\InventoryIndexer\Indexer\IndexStructure"/>
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemReindexStrategy">
+        <arguments>
+            <argument name="indexers" xsi:type="array">
+                <item name="async" xsi:type="object">Magento\InventoryIndexer\Indexer\SourceItem\SourceItemAsyncIndexer\Proxy</item>
+                <item name="sync" xsi:type="object">Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\Source\SourceReindexStrategy">
+        <arguments>
+            <argument name="indexers" xsi:type="array">
+                <item name="async" xsi:type="object">Magento\InventoryIndexer\Indexer\Source\SourceAsyncIndexer\Proxy</item>
+                <item name="sync" xsi:type="object">Magento\InventoryIndexer\Indexer\Source\SourceIndexer\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryIndexer\Indexer\IndexHandler">
         <arguments>
             <argument name="batchSize" xsi:type="string">100</argument>
