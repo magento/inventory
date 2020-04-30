@@ -9,7 +9,7 @@ namespace Magento\InventoryInStorePickupApi\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\ResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecoratorFactory;
 
 /**
@@ -23,13 +23,13 @@ class SearchCriteriaResolverChain implements SearchCriteriaResolverInterface
     private $searchCriteriaBuilderFactory;
 
     /**
-     * @var BuilderPartsResolverInterface[]
+     * @var ResolverInterface[]
      */
     private $resolvers;
 
     /**
      * @param SearchCriteriaBuilderDecoratorFactory $searchCriteriaBuilderFactory
-     * @param BuilderPartsResolverInterface[] $resolvers
+     * @param ResolverInterface[] $resolvers
      */
     public function __construct(
         SearchCriteriaBuilderDecoratorFactory $searchCriteriaBuilderFactory,
@@ -58,17 +58,17 @@ class SearchCriteriaResolverChain implements SearchCriteriaResolverInterface
     /**
      * Validate input array.
      *
-     * @param BuilderPartsResolverInterface[] $resolvers
+     * @param ResolverInterface[] $resolvers
      */
     private function validateResolvers(array $resolvers): void
     {
         foreach ($resolvers as $resolver) {
-            if (!$resolver instanceof BuilderPartsResolverInterface) {
+            if (!$resolver instanceof ResolverInterface) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Pickup Locations Search Criteria Resolver must implement %s.' .
                         '%s has been received instead.',
-                        BuilderPartsResolverInterface::class,
+                        ResolverInterface::class,
                         get_class($resolver)
                     )
                 );

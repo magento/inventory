@@ -101,7 +101,6 @@ class PreventDefaultSourceDisablingTest extends WebapiAbstract
                     // @see \Magento\TestFramework\TestCase\WebapiAbstract::getActualWrappedErrors()
                     $expectedWrappedErrors[] = [
                         'message' => $error['message'],
-                        'params' => $error['parameters'],
                     ];
                 }
                 $this->checkSoapFault($e, $expectedErrorData['message'], 'env:Sender', [], $expectedWrappedErrors);

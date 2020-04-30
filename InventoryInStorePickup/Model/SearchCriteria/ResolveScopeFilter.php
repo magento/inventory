@@ -13,7 +13,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
 use Magento\InventoryApi\Api\GetStockSourceLinksInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\ResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 
@@ -22,7 +22,7 @@ use Magento\InventorySalesApi\Api\StockResolverInterface;
  *
  * In case of Distance Filter present in Search Request, the filter will not be added.
  */
-class ResolveScopeFilter implements BuilderPartsResolverInterface
+class ResolveScopeFilter implements ResolverInterface
 {
     /**
      * @var StockResolverInterface

@@ -69,7 +69,7 @@ class GetPickupLocationsTest extends WebapiAbstract
         int $expectedTotalCount
     ): void {
         $payload = [
-            'searchRequest' => $searchRequestData
+            'searchRequest' => $searchRequestData,
         ];
 
         $response = $this->sendRequest($payload);
@@ -117,18 +117,19 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'extensionAttributes' => [
                         'productsInfo' => [
                             [
-                                'sku' => 'SKU-1'
+                                'sku' => 'SKU-1',
                             ],
                             [
-                                'sku' => 'SKU-3'
-                            ]
-                        ]
+                                'sku' => 'SKU-3',
+                            ],
+                        ],
                     ],
                     'scopeType' => 'website',
-                    'scopeCode' => 'eu_website'
+                    'scopeCode' => 'eu_website',
+                    'currentPage' => 1,
                 ],
                 ['eu-2'],
-                1
+                1,
             ],
             [
                 /** Data Set #1 */
@@ -136,18 +137,19 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'extensionAttributes' => [
                         'productsInfo' => [
                             [
-                                'sku' => 'SKU-1'
+                                'sku' => 'SKU-1',
                             ],
                             [
-                                'sku' => 'SKU-2'
-                            ]
-                        ]
+                                'sku' => 'SKU-2',
+                            ],
+                        ],
                     ],
                     'scopeType' => 'website',
-                    'scopeCode' => 'eu_website'
+                    'scopeCode' => 'eu_website',
+                    'currentPage' => 1,
                 ],
                 [],
-                0
+                0,
             ],
             [
                 /** Data Set #2 */
@@ -155,19 +157,20 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'extensionAttributes' => [
                         'productsInfo' => [
                             [
-                                'sku' => 'SKU-1'
-                            ]
-                        ]
+                                'sku' => 'SKU-1',
+                            ],
+                        ],
                     ],
                     'scopeType' => 'website',
-                    'scopeCode' => 'eu_website'
+                    'scopeCode' => 'eu_website',
+                    'currentPage' => 1,
                 ],
                 [
                     'eu-1',
                     'eu-2',
-                    'eu-3'
+                    'eu-3',
                 ],
-                3
+                3,
             ],
             [
                 /** Data Set #3 */
@@ -175,21 +178,22 @@ class GetPickupLocationsTest extends WebapiAbstract
                     'extensionAttributes' => [
                         'productsInfo' => [
                             [
-                                'sku' => 'SKU-1'
+                                'sku' => 'SKU-1',
                             ],
                             [
-                                'sku' => 'SKU-2'
+                                'sku' => 'SKU-2',
                             ],
                             [
-                                'sku' => 'SKU-3'
-                            ]
-                        ]
+                                'sku' => 'SKU-3',
+                            ],
+                        ],
                     ],
                     'scopeType' => 'website',
-                    'scopeCode' => 'eu_website'
+                    'scopeCode' => 'eu_website',
+                    'currentPage' => 1,
                 ],
                 [],
-                0
+                0,
             ],
         ];
     }
@@ -217,16 +221,17 @@ class GetPickupLocationsTest extends WebapiAbstract
                 'extensionAttributes' => [
                     'productsInfo' => [
                         [
-                            'sku' => 'SKU-1'
+                            'sku' => 'SKU-1',
                         ],
                         [
-                            'sku' => 'SKU-3'
-                        ]
-                    ]
+                            'sku' => 'SKU-3',
+                        ],
+                    ],
                 ],
                 'scopeType' => 'website',
-                'scopeCode' => 'eu_website'
-            ]
+                'scopeCode' => 'eu_website',
+                'currentPage' => 1,
+            ],
         ];
         $expected = [];
         $response = $this->sendRequest($searchRequestData);
@@ -252,7 +257,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *
      * @param array $searchRequestData
      * @param string[] $sortedPickupLocationCodes
@@ -271,7 +276,7 @@ class GetPickupLocationsTest extends WebapiAbstract
         int $expectedTotalCount
     ): void {
         $requestData = [
-            'searchRequest' => $searchRequestData
+            'searchRequest' => $searchRequestData,
         ];
 
         $response = $this->sendRequest($requestData);
@@ -319,72 +324,76 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     'area' => [
                         'radius' => 750,
-                        'search_term' => '86559:DE'
+                        'searchTerm' => '86559:DE',
                     ],
                     'filters' => [
-                        'cityFilter' => [
+                        'city' => [
                             'value' => 'Kolbermoor,Mitry-Mory',
-                            'conditionType' => 'in'
+                            'conditionType' => 'in',
                         ],
-                        'regionIdFilter' => [
+                        'regionId' => [
                             'value' => '259',
-                            'conditionType' => 'eq'
+                            'conditionType' => 'eq',
                         ],
-                        'regionFilter' => [
+                        'region' => [
                             'value' => 'Seine-et-Marne',
-                            'conditionType' => 'eq'
+                            'conditionType' => 'eq',
                         ],
                     ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                 ],
                 ['eu-1'],
-                1
+                1,
             ],
             [ /* Data set #1 */
                 [
                     'area' => [
                         'radius' => 6371000,
-                        'search_term' => '86559:DE',
+                        'searchTerm' => '86559:DE',
                     ],
                     'filters' => [
-                        'nameFilter' => [
+                        'name' => [
                             'value' => 'source',
-                            'conditionType' => 'fulltext'
+                            'conditionType' => 'fulltext',
                         ],
-                        'cityFilter' => [
+                        'city' => [
                             'value' => 'Kolbermoor,Mitry-Mory,Burlingame',
-                            'conditionType' => 'in'
+                            'conditionType' => 'in',
                         ],
-                        'countryFilter' => [
+                        'country' => [
                             'value' => 'DE',
-                            'conditionType' => 'neq'
+                            'conditionType' => 'neq',
                         ],
                     ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
                     'pageSize' => 2,
                     'currentPage' => 2,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
-                        ]
-                    ]
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD,
+                        ],
+                    ],
                 ],
                 ['us-1', 'eu-1'],
-                2
+                2,
             ],
             [ /* Data set #2 */
                 [
                     'area' => [
                         'radius' => 750,
-                        'search_term' => '86559:DE',
+                        'searchTerm' => '86559:DE',
                     ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
                     'pageSize' => 1,
                     'currentPage' => 1,
                 ],
                 ['eu-1'],
-                2
+                2,
             ],
         ];
     }
@@ -401,7 +410,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
      *
-     * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
+     * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *
      * @param array $searchRequestData
      * @param string[] $sortedPickupLocationCodes
@@ -416,9 +425,9 @@ class GetPickupLocationsTest extends WebapiAbstract
     public function testExecuteareaOffline(
         array $searchRequestData,
         array $sortedPickupLocationCodes
-    ) : void {
+    ): void {
         $requestData = [
-            'searchRequest' => $searchRequestData
+            'searchRequest' => $searchRequestData,
         ];
 
         $response = $this->sendRequest($requestData);
@@ -464,116 +473,138 @@ class GetPickupLocationsTest extends WebapiAbstract
             [ /* Data set #0 */
                 [
                     'area' => [
-                        'search_term' => '81671:DE',
-                        'radius' => 500
+                        'searchTerm' => '81671:DE',
+                        'radius' => 500,
                     ],
                     'scopeCode' => 'eu_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                 ],
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #1 */
                 [
                     'area' => [
-                        'search_term' => 'Saint-Saturnin-lès-Apt:FR',
-                        'radius' => 1000],
+                        'searchTerm' => 'Saint-Saturnin-lès-Apt:FR',
+                        'radius' => 1000,
+                    ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
-                        ]
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD,
+                        ],
                     ],
                 ],
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #2 */
                 [
                     'area' => [
-                        'search_term' => '12022:IT',
-                        'radius' => 350],
+                        'searchTerm' => '12022:IT',
+                        'radius' => 350,
+                    ],
                     'scopeCode' => 'eu_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
-                        ]
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD,
+                        ],
                     ],
                 ],
-                []
+                [],
             ],
             [ /* Data set #3 */
                 [
                     'area' => [
-                        'search_term' => '39030:IT',
-                        'radius' => 350],
+                        'searchTerm' => '39030:IT',
+                        'radius' => 350,
+                    ],
                     'scopeCode' => 'eu_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                 ],
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #4 */
                 [
                     'area' => [
-                        'search_term' => '86559:DE',
-                        'radius' => 750],
+                        'searchTerm' => '86559:DE',
+                        'radius' => 750,
+                    ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
-                        ]
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD,
+                        ],
                     ],
                 ],
-                ['eu-3', 'eu-1']
+                ['eu-3', 'eu-1'],
             ],
             [ /* Data set #5. Test with descending distance sort. */
                 [
                     'area' => [
-                        'search_term' => '86559:DE',
-                        'radius' => 750],
+                        'searchTerm' => '86559:DE',
+                        'radius' => 750,
+                    ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
-                        ]
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD,
+                        ],
                     ],
                 ],
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #6. Test without distance sort. */
                 [
                     'area' => [
-                        'search_term' => 'Saint-Saturnin-lès-Apt:FR',
-                        'radius' => 1000
+                        'searchTerm' => 'Saint-Saturnin-lès-Apt:FR',
+                        'radius' => 1000,
                     ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => SourceInterface::CITY
-                        ]
+                            SortOrder::FIELD => SourceInterface::CITY,
+                        ],
                     ],
                 ],
-                ['eu-3', 'eu-1']
+                ['eu-3', 'eu-1'],
             ],
             [ /* Data set #7. Test with multiple sorts. Distance must be in priority. */
                 [
                     'area' => [
-                        'search_term' => 'Saint-Saturnin-lès-Apt:FR',
-                        'radius' => 1000],
+                        'searchTerm' => 'Saint-Saturnin-lès-Apt:FR',
+                        'radius' => 1000,
+                    ],
                     'scopeCode' => 'global_website',
+                    'scopeType' => 'website',
+                    'currentPage' => 1,
                     'sort' => [
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => SourceInterface::CITY
+                            SortOrder::FIELD => SourceInterface::CITY,
                         ],
                         [
                             SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD
-                        ]
+                            SortOrder::FIELD => AreaInterface::DISTANCE_FIELD,
+                        ],
                     ],
                 ],
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
         ];
     }
@@ -609,7 +640,9 @@ class GetPickupLocationsTest extends WebapiAbstract
             'searchRequest' => [
                 'filters' => $searchRequestData,
                 'scopeCode' => $salesChannelCode,
-            ]
+                'scopeType' => 'website',
+                'currentPage' => 1,
+            ],
         ];
 
         $response = $this->sendRequest($requestData);
@@ -652,254 +685,254 @@ class GetPickupLocationsTest extends WebapiAbstract
         return [
             [ /* Data set #0 */
                 [
-                    'countryFilter' => ['value' => 'FR', 'conditionType' => 'eq']
+                    'country' => ['value' => 'FR', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #1 */
                 [
-                    'countryFilter' => ['value' => 'DE', 'conditionType' => 'eq']
+                    'country' => ['value' => 'DE', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #2 */
                 [
-                    'countryFilter' => ['value' => 'DE', 'conditionType' => 'neq']
+                    'country' => ['value' => 'DE', 'conditionType' => 'neq'],
                 ],
                 'global_website',
-                ['eu-1', 'us-1']
+                ['eu-1', 'us-1'],
             ],
             [ /* Data set #3 */
                 [
-                    'countryFilter' => ['value' => 'DE,FR', 'conditionType' => 'in']
+                    'country' => ['value' => 'DE,FR', 'conditionType' => 'in'],
                 ],
                 'global_website',
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #4 */
                 [
-                    'countryFilter' => ['value' => 'DE', 'conditionType' => 'neq'],
-                    'cityFilter' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq']
+                    'country' => ['value' => 'DE', 'conditionType' => 'neq'],
+                    'city' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #5 */
                 [
-                    'countryFilter' => ['value' => 'FR', 'conditionType' => 'neq'],
-                    'cityFilter' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq']
+                    'country' => ['value' => 'FR', 'conditionType' => 'neq'],
+                    'city' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                []
+                [],
             ],
             [ /* Data set #6 */
                 [
-                    'cityFilter' => ['value' => 'Kolbermoor', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'Kolbermoor', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #7 */
                 [
-                    'countryFilter' => ['value' => 'DE', 'conditionType' => 'eq'],
-                    'cityFilter' => ['value' => 'Mitry-Mory,Kolbermoor', 'conditionType' => 'in'],
+                    'country' => ['value' => 'DE', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'Mitry-Mory,Kolbermoor', 'conditionType' => 'in'],
                 ],
                 'eu_website',
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #8 */
                 [
-                    'postcodeFilter' => ['value' => '66413', 'conditionType' => 'eq'],
+                    'postcode' => ['value' => '66413', 'conditionType' => 'eq'],
                 ],
                 'global_website',
-                ['us-1']
+                ['us-1'],
             ],
             [ /* Data set #9 */
                 [
-                    'countryFilter' => ['value' => 'FR', 'conditionType' => 'eq'],
-                    'postcodeFilter' => ['value' => '77292 CEDEX', 'conditionType' => 'eq'],
+                    'country' => ['value' => 'FR', 'conditionType' => 'eq'],
+                    'postcode' => ['value' => '77292 CEDEX', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #10 */
                 [
-                    'countryFilter' => ['value' => 'FR,DE', 'conditionType' => 'in'],
-                    'postcodeFilter' => ['value' => '77292 CEDEX,83059', 'conditionType' => 'in'],
+                    'country' => ['value' => 'FR,DE', 'conditionType' => 'in'],
+                    'postcode' => ['value' => '77292 CEDEX,83059', 'conditionType' => 'in'],
                 ],
                 'eu_website',
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #11 */
                 [
-                    'cityFilter' => ['value' => 'Burlingame', 'conditionType' => 'eq'],
-                    'postcodeFilter' => ['value' => '66413', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'Burlingame', 'conditionType' => 'eq'],
+                    'postcode' => ['value' => '66413', 'conditionType' => 'eq'],
                 ],
                 'global_website',
-                ['us-1']
+                ['us-1'],
             ],
             [ /* Data set #12 */
                 [
-                    'cityFilter' => ['value' => 'Burlingame', 'conditionType' => 'eq'],
-                    'postcodeFilter' => ['value' => '66413', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'Burlingame', 'conditionType' => 'eq'],
+                    'postcode' => ['value' => '66413', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                []
+                [],
             ],
             [ /* Data set #13 */
                 [
-                    'streetFilter' => ['value' => 'Bloomquist Dr 100', 'conditionType' => 'eq'],
+                    'street' => ['value' => 'Bloomquist Dr 100', 'conditionType' => 'eq'],
                 ],
                 'global_website',
-                ['us-1']
+                ['us-1'],
             ],
             [ /* Data set #14 */
                 [
-                    'cityFilter' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq'],
-                    'streetFilter' => ['value' => 'Rue Paul Vaillant Couturier 31', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq'],
+                    'street' => ['value' => 'Rue Paul Vaillant Couturier 31', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #15 */
                 [
-                    'streetFilter' => ['value' => 'Rosenheimer%', 'conditionType' => 'like'],
+                    'street' => ['value' => 'Rosenheimer%', 'conditionType' => 'like'],
                 ],
                 'eu_website',
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #16 */
                 [
-                    'postcodeFilter' => ['value' => '77292 CEDEX', 'conditionType' => 'eq'],
-                    'streetFilter' => ['value' => 'Rue Paul%', 'conditionType' => 'like'],
+                    'postcode' => ['value' => '77292 CEDEX', 'conditionType' => 'eq'],
+                    'street' => ['value' => 'Rue Paul%', 'conditionType' => 'like'],
                 ],
                 'global_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #17 */
                 [
-                    'countryFilter' => ['value' => 'US', 'conditionType' => 'neq'],
-                    'cityFilter' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq'],
-                    'postcodeFilter' => ['value' => '77%', 'conditionType' => 'like'],
-                    'streetFilter' => ['value' => 'Rue Paul%', 'conditionType' => 'like'],
+                    'country' => ['value' => 'US', 'conditionType' => 'neq'],
+                    'city' => ['value' => 'Mitry-Mory', 'conditionType' => 'eq'],
+                    'postcode' => ['value' => '77%', 'conditionType' => 'like'],
+                    'street' => ['value' => 'Rue Paul%', 'conditionType' => 'like'],
                 ],
                 'global_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #18 */
                 [
-                    'regionIdFilter' => ['value' => '81', 'conditionType' => 'eq'],
+                    'regionId' => ['value' => '81', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #19 */
                 [
-                    'regionFilter' => ['value' => 'Seine-et-Marne', 'conditionType' => 'eq'],
+                    'region' => ['value' => 'Seine-et-Marne', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #20 */
                 [
-                    'regionFilter' => ['value' => 'California', 'conditionType' => 'eq'],
-                    'regionIdFilter' => ['value' => '12', 'conditionType' => 'eq'],
+                    'region' => ['value' => 'California', 'conditionType' => 'eq'],
+                    'regionId' => ['value' => '12', 'conditionType' => 'eq'],
                 ],
                 'global_website',
-                ['us-1']
+                ['us-1'],
             ],
             [ /* Data set #21 */
                 [
-                    'regionFilter' => ['value' => 'California', 'conditionType' => 'eq'],
-                    'regionIdFilter' => ['value' => '94', 'conditionType' => 'eq'],
+                    'region' => ['value' => 'California', 'conditionType' => 'eq'],
+                    'regionId' => ['value' => '94', 'conditionType' => 'eq'],
                 ],
                 'global_website',
-                []
+                [],
             ],
             [ /* Data set #22 */
                 [
-                    'countryFilter' => ['value' => 'FR', 'conditionType' => 'neq'],
-                    'regionFilter' => ['value' => 'Bayern', 'conditionType' => 'eq'],
-                    'regionIdFilter' => ['value' => '81', 'conditionType' => 'eq'],
-                    'cityFilter' => ['value' => 'K%', 'conditionType' => 'like'],
-                    'postcodeFilter' => ['value' => '83059,13100', 'conditionType' => 'in'],
-                    'streetFilter' => ['value' => 'heimer', 'conditionType' => 'fulltext'],
+                    'country' => ['value' => 'FR', 'conditionType' => 'neq'],
+                    'region' => ['value' => 'Bayern', 'conditionType' => 'eq'],
+                    'regionId' => ['value' => '81', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'K%', 'conditionType' => 'like'],
+                    'postcode' => ['value' => '83059,13100', 'conditionType' => 'in'],
+                    'street' => ['value' => 'heimer', 'conditionType' => 'fulltext'],
                 ],
                 'global_website',
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #23 */
                 [
-                    'pickupLocationCodeFilter' => ['value' => 'eu-1', 'conditionType' => 'eq']
+                    'pickupLocationCode' => ['value' => 'eu-1', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #24 */
                 [
-                    'pickupLocationCodeFilter' => ['value' => 'eu-1,eu-3', 'conditionType' => 'in']
+                    'pickupLocationCode' => ['value' => 'eu-1,eu-3', 'conditionType' => 'in'],
                 ],
                 'eu_website',
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #25 */
                 [
-                    'pickupLocationCodeFilter' => ['value' => 'eu%', 'conditionType' => 'like']
+                    'pickupLocationCode' => ['value' => 'eu%', 'conditionType' => 'like'],
                 ],
                 'global_website',
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #26 */
                 [
-                    'pickupLocationCodeFilter' => ['value' => 'u', 'conditionType' => 'fulltext']
+                    'pickupLocationCode' => ['value' => 'u', 'conditionType' => 'fulltext'],
                 ],
                 'global_website',
-                ['eu-1', 'eu-3', 'us-1']
+                ['eu-1', 'eu-3', 'us-1'],
             ],
             [ /* Data set #27 */
                 [
-                    'pickupLocationCodeFilter' => ['value' => 'eu-2', 'conditionType' => 'eq']
+                    'pickupLocationCode' => ['value' => 'eu-2', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                []
+                [],
             ],
             [ /* Data set #28 */
                 [
-                    'nameFilter' => ['value' => 'EU-source-1', 'conditionType' => 'eq']
+                    'name' => ['value' => 'EU-source-1', 'conditionType' => 'eq'],
                 ],
                 'eu_website',
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #29 */
                 [
-                    'nameFilter' => ['value' => 'source', 'conditionType' => 'fulltext']
+                    'name' => ['value' => 'source', 'conditionType' => 'fulltext'],
                 ],
                 'global_website',
-                ['eu-1', 'eu-3', 'us-1']
+                ['eu-1', 'eu-3', 'us-1'],
             ],
             [ /* Data set #30 */
                 [
-                    'nameFilter' => ['value' => 'source', 'conditionType' => 'fulltext'],
-                    'pickupLocationCodeFilter' => ['value' => 'eu%', 'conditionType' => 'like']
+                    'name' => ['value' => 'source', 'conditionType' => 'fulltext'],
+                    'pickupLocationCode' => ['value' => 'eu%', 'conditionType' => 'like'],
                 ],
                 'global_website',
-                ['eu-1', 'eu-3']
+                ['eu-1', 'eu-3'],
             ],
             [ /* Data set #31 */
                 [
-                    'countryFilter' => ['value' => 'FR', 'conditionType' => 'neq'],
-                    'regionFilter' => ['value' => 'Bayern', 'conditionType' => 'eq'],
-                    'regionIdFilter' => ['value' => '81', 'conditionType' => 'eq'],
-                    'cityFilter' => ['value' => 'K%', 'conditionType' => 'like'],
-                    'postcodeFilter' => ['value' => '83059,13100', 'conditionType' => 'in'],
-                    'streetFilter' => ['value' => 'heimer', 'conditionType' => 'fulltext'],
-                    'nameFilter' => ['value' => 'source', 'conditionType' => 'fulltext'],
-                    'pickupLocationCodeFilter' => ['value' => 'eu%', 'conditionType' => 'like']
+                    'country' => ['value' => 'FR', 'conditionType' => 'neq'],
+                    'region' => ['value' => 'Bayern', 'conditionType' => 'eq'],
+                    'regionId' => ['value' => '81', 'conditionType' => 'eq'],
+                    'city' => ['value' => 'K%', 'conditionType' => 'like'],
+                    'postcode' => ['value' => '83059,13100', 'conditionType' => 'in'],
+                    'street' => ['value' => 'heimer', 'conditionType' => 'fulltext'],
+                    'name' => ['value' => 'source', 'conditionType' => 'fulltext'],
+                    'pickupLocationCode' => ['value' => 'eu%', 'conditionType' => 'like'],
                 ],
                 'global_website',
-                ['eu-3']
+                ['eu-3'],
             ],
         ];
     }
@@ -936,10 +969,11 @@ class GetPickupLocationsTest extends WebapiAbstract
         $requestData = [
             'searchRequest' => [
                 'scopeCode' => $salesChannelCode,
+                'scopeType' => 'website',
                 'sort' => $sortOrder,
                 'pageSize' => current($paging),
-                'currentPage' => next($paging)
-            ]
+                'currentPage' => next($paging),
+            ],
         ];
 
         $response = $this->sendRequest($requestData);
@@ -984,28 +1018,28 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [],
                 3,
                 [],
-                ['eu-1', 'eu-3', 'us-1']
+                ['eu-1', 'eu-3', 'us-1'],
             ],
             [ /* Data set #1 */
                 'global_website',
                 [],
                 3,
                 [],
-                ['eu-1', 'eu-3', 'us-1']
+                ['eu-1', 'eu-3', 'us-1'],
             ],
             [ /* Data set #2 */
                 'global_website',
                 [1, 1],
                 3,
                 [],
-                ['eu-1']
+                ['eu-1'],
             ],
             [ /* Data set #3 */
                 'global_website',
                 [1, 2],
                 3,
                 [],
-                ['eu-3']
+                ['eu-3'],
             ],
             [ /* Data set #4 */
                 'global_website',
@@ -1014,10 +1048,10 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     [
                         SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                        SortOrder::FIELD => SourceInterface::COUNTRY_ID
-                    ]
+                        SortOrder::FIELD => SourceInterface::COUNTRY_ID,
+                    ],
                 ],
-                ['us-1', 'eu-1', 'eu-3']
+                ['us-1', 'eu-1', 'eu-3'],
             ],
             [ /* Data set #5 */
                 'global_website',
@@ -1026,14 +1060,14 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     [
                         SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                        SortOrder::FIELD => SourceInterface::POSTCODE
+                        SortOrder::FIELD => SourceInterface::POSTCODE,
                     ],
                     [
                         SortOrder::DIRECTION => SortOrder::SORT_ASC,
-                        SortOrder::FIELD => SourceInterface::COUNTRY_ID
-                    ]
+                        SortOrder::FIELD => SourceInterface::COUNTRY_ID,
+                    ],
                 ],
-                ['eu-3', 'eu-1', 'us-1']
+                ['eu-3', 'eu-1', 'us-1'],
             ],
             [ /* Data set #6 */
                 'global_website',
@@ -1042,10 +1076,10 @@ class GetPickupLocationsTest extends WebapiAbstract
                 [
                     [
                         SortOrder::DIRECTION => SortOrder::SORT_DESC,
-                        SortOrder::FIELD => SourceInterface::COUNTRY_ID
-                    ]
+                        SortOrder::FIELD => SourceInterface::COUNTRY_ID,
+                    ],
                 ],
-                ['eu-1']
+                ['eu-1'],
             ],
         ];
     }
