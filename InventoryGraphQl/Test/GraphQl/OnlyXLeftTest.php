@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGraphQl\Test\Api;
+namespace Magento\InventoryGraphQl\Test\GraphQl;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Config\Model\PreparedValueFactory;
@@ -66,7 +66,7 @@ class OnlyXLeftTest extends GraphQlAbstract
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
@@ -100,7 +100,7 @@ QUERY;
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
@@ -135,7 +135,7 @@ QUERY;
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock
@@ -172,7 +172,7 @@ QUERY;
         $productSku = 'simple';
         $query = <<<QUERY
         {
-            products(filter: { sku: { like: "{$productSku}"}})
+            products(filter: { sku: { eq: "{$productSku}"}})
           {
             items {
               only_x_left_in_stock

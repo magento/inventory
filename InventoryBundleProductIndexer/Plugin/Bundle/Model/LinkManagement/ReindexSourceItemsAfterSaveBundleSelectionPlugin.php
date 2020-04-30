@@ -9,6 +9,8 @@ namespace Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManageme
 
 use Magento\Bundle\Api\Data\LinkInterface;
 use Magento\Bundle\Api\ProductLinkManagementInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
@@ -65,7 +67,8 @@ class ReindexSourceItemsAfterSaveBundleSelectionPlugin
      * @param string $sku
      * @param LinkInterface $linkedProduct
      * @return bool
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws InputException
+     * @throws NoSuchEntityException
      */
     public function afterSaveChild(
         ProductLinkManagementInterface $subject,
@@ -73,7 +76,17 @@ class ReindexSourceItemsAfterSaveBundleSelectionPlugin
         string $sku,
         LinkInterface $linkedProduct
     ): bool {
-        $sourceItems = $this->getSourceItemsBySku->execute($linkedProduct->getSku());
+        $skus = [$linkedProduct->getSku()];
+        $children = $subject->getChildren($sku);
+        foreach ($children as $child) {
+            $skus[] = $child->getSku();
+        }
+        $skus = array_unique($skus);
+        $sourceItems = [];
+        foreach ($skus as $sku) {
+            $sourceItems[] = $this->getSourceItemsBySku->execute($sku);
+        }
+        $sourceItems = array_merge(...$sourceItems);
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         try {
             $this->sourceItemIndexer->executeList($sourceItemIds);
