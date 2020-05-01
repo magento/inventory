@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupShipping\Model\Carrier\Command;
 
-use Magento\InventoryInStorePickupShippingApi\Api\Data\ShippingPriceRequestInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 
@@ -17,14 +16,36 @@ use Magento\Quote\Model\Quote\Address\RateRequest;
 class GetShippingPrice implements GetShippingPriceInterface
 {
     /**
+     * @var GetFreePackages
+     */
+    private $getFreePackages;
+
+    /**
+     * @var GetConfigPrice
+     */
+    private $getConfigPrice;
+
+    /**
+     * @param GetFreePackages $getFreePackages
+     * @param GetConfigPrice $getConfigPrice
+     */
+    public function __construct(
+        GetFreePackages $getFreePackages,
+        GetConfigPrice $getConfigPrice
+    ) {
+        $this->getFreePackages = $getFreePackages;
+        $this->getConfigPrice = $getConfigPrice;
+    }
+
+    /**
      * @inheritdoc
      */
-    public function execute(ShippingPriceRequestInterface $shippingPriceRequest, RateRequest $rateRequest): float
+    public function execute(RateRequest $rateRequest): float
     {
-        if ($shippingPriceRequest->getFreePackages() === (float)$rateRequest->getPackageQty()) {
+        if ($this->getFreePackages->execute($rateRequest) === (float)$rateRequest->getPackageQty()) {
             return 0.0;
         }
 
-        return $shippingPriceRequest->getDefaultPrice();
+        return $this->getConfigPrice->execute((int)$rateRequest->getStoreId());
     }
 }
