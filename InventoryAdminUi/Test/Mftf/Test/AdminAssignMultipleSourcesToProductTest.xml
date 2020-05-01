@@ -20,7 +20,7 @@
         </annotations>
 
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Create mora than 20 sources-->
             <createData entity="_minimalSource" stepKey="createFirstCustomSource"/>
             <createData entity="_minimalSource" stepKey="createSecondCustomSource"/>
