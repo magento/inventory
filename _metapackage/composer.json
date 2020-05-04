@@ -1,5 +1,5 @@
 {
-    "name": "magento/inventory-composer-metapackage-dev",
+    "name": "magento/inventory-composer-metapackage",
     "version": "1.2.0-dev",
     "description": "Metapackage with Magento Inventory modules for simple installation",
     "type": "metapackage",
