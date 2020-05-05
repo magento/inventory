@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem;
 
+use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryIndexer\Model\IndexerConfig;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -15,13 +16,17 @@ use Magento\Framework\Exception\LocalizedException;
  *
  * @api
  */
-class SourceItemReindexStrategy implements SourceItemReindexStrategyInterface
+class SourceItemReindexStrategy
 {
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
 
     /**
-     * @var SourceItemIndexerInterface[]
+     * @var array
      */
-    private $indexers;
+    private $strategies;
 
     /**
      * @var IndexerConfig
@@ -29,28 +34,56 @@ class SourceItemReindexStrategy implements SourceItemReindexStrategyInterface
     private $indexerConfig;
 
     /**
-     * ReindexStrategy constructor
-     *
+     * @param ObjectManagerInterface $objectManager
      * @param IndexerConfig $indexerConfig
-     * @param SourceItemIndexerInterface[] $indexers
-    */
+     * @param array $strategies
+     */
     public function __construct(
+        ObjectManagerInterface $objectManager,
         IndexerConfig $indexerConfig,
-        $indexers = []
+        $strategies = []
     ) {
-        $this->indexers = $indexers;
+        $this->objectManager = $objectManager;
+        $this->strategies = $strategies;
         $this->indexerConfig = $indexerConfig;
     }
 
     /**
-     * @inheritdoc
+     * @param array $sourceItemIds
+     * @return void
      */
-    public function getStrategy(): SourceItemIndexerInterface
+    public function executeList(array $sourceItemIds) : void
+    {
+        $this->getStrategy()->executeList($sourceItemIds);
+    }
+
+    /**
+     * @return void
+     */
+    public function executeFull()
+    {
+        $this->getStrategy()->executeFull();
+    }
+
+    /**
+     * @param int $sourceItemId
+     * @return void
+     */
+    public function executeRow(int $sourceItemId)
+    {
+        $this->getStrategy()->executeList([$sourceItemId]);
+    }
+
+    /**
+     * @return mixed
+     * @throws LocalizedException
+     */
+    private function getStrategy()
     {
         $enabledStrategy = $this->indexerConfig->getActiveSourceItemIndexStrategy();
-        if (!isset($this->indexers[$enabledStrategy])) {
+        if (!isset($this->strategies[$enabledStrategy])) {
             throw new LocalizedException(__("Index Strategy not found, please check system settings."));
         }
-        return $this->indexers[$enabledStrategy];
+        return $this->objectManager->get($this->strategies[$enabledStrategy]);
     }
 }

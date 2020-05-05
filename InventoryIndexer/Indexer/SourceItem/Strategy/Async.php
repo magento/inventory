@@ -5,20 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryIndexer\Indexer\SourceItem;
+namespace Magento\InventoryIndexer\Indexer\SourceItem\Strategy;
 
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
-use Magento\InventoryIndexer\Indexer\IndexerInterface;
 
-/**
- * Source Asynchronous Item indexer
- *
- * @api
- */
-class SourceItemAsyncIndexer implements SourceItemIndexerInterface
+class Async
 {
-    public const TOPIC_SOURCE_ITEMS_INDEX = "inventory.indexer.sourceItem";
+    private const TOPIC_SOURCE_ITEMS_INDEX = "inventory.indexer.sourceItem";
 
     /**
      * @var StockIndexer
@@ -53,7 +47,7 @@ class SourceItemAsyncIndexer implements SourceItemIndexerInterface
     }
 
     /**
-     * Shedule Reindex of one item by id
+     * Schedule Reindex of one item by id
      *
      * @param int $sourceItemId
      * @return void
@@ -64,7 +58,7 @@ class SourceItemAsyncIndexer implements SourceItemIndexerInterface
     }
 
     /**
-     * Shedule Reindex of items list
+     * Schedule Reindex of items list
      *
      * @param array $sourceItemIds
      * @return void
