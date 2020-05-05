@@ -15,13 +15,14 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Indexer\IndexerInterface;
 
 /**
  * Source Item indexer
  *
  * @api
  */
-class SourceItemIndexer
+class SourceItemIndexer implements SourceItemIndexerInterface
 {
     /**
      * @var GetSkuListInStock
@@ -90,25 +91,29 @@ class SourceItemIndexer
     /**
      * @return void
      */
-    public function executeFull()
+    public function executeFull(): void
     {
         $this->stockIndexer->executeFull();
     }
 
     /**
+     * Reindex one item by id
+     *
      * @param int $sourceItemId
      * @return void
      */
-    public function executeRow(int $sourceItemId)
+    public function executeRow(int $sourceItemId): void
     {
         $this->executeList([$sourceItemId]);
     }
 
     /**
+     * Reindex items list
+     *
      * @param array $sourceItemIds
      * @return void
      */
-    public function executeList(array $sourceItemIds)
+    public function executeList(array $sourceItemIds): void
     {
         $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
 

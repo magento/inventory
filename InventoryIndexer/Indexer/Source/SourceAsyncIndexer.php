@@ -7,19 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\Source;
 
+use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Indexer\IndexerInterface;
 
 /**
- * Source indexer
+ * Source Asynchronous Item indexer
  *
  * @api
  */
-class SourceIndexer implements SourceIndexerInterface
+class SourceAsyncIndexer implements SourceIndexerInterface
 {
-    /**
-     * @var GetAssignedStockIds
-     */
-    private $getAssignedStockIds;
+    public const TOPIC_SOURCE_INDEX = "inventory.indexer.source";
 
     /**
      * @var StockIndexer
@@ -27,14 +26,21 @@ class SourceIndexer implements SourceIndexerInterface
     private $stockIndexer;
 
     /**
-     * @param GetAssignedStockIds $getAssignedStockIds
+     * @var PublisherInterface
+     */
+    private $publisher;
+
+    /**
+     * Source Asynchronous Item indexer constructor
+     *
+     * @param PublisherInterface $publisher
      * @param StockIndexer $stockIndexer
      */
     public function __construct(
-        GetAssignedStockIds $getAssignedStockIds,
+        PublisherInterface $publisher,
         StockIndexer $stockIndexer
     ) {
-        $this->getAssignedStockIds = $getAssignedStockIds;
+        $this->publisher = $publisher;
         $this->stockIndexer = $stockIndexer;
     }
 
@@ -47,6 +53,8 @@ class SourceIndexer implements SourceIndexerInterface
     }
 
     /**
+     * Shedule Reindex of one item by id
+     *
      * @param string $sourceCode
      * @return void
      */
@@ -56,11 +64,13 @@ class SourceIndexer implements SourceIndexerInterface
     }
 
     /**
+     * Shedule Reindex of items list
+     *
      * @param array $sourceCodes
+     * @return void
      */
     public function executeList(array $sourceCodes): void
     {
-        $stockIds = $this->getAssignedStockIds->execute($sourceCodes);
-        $this->stockIndexer->executeList($stockIds);
+        $this->publisher->publish(self::TOPIC_SOURCE_INDEX, $sourceCodes);
     }
 }

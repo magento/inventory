@@ -11,7 +11,7 @@ use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface;
 use Magento\InventoryCatalogApi\Model\BulkSourceAssignValidatorInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\BulkSourceAssign as BulkSourceAssignResource;
-use Magento\InventoryIndexer\Indexer\IndexScheduler;
+use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemReindexStrategy;
 
 /**
  * @inheritdoc
@@ -29,25 +29,24 @@ class BulkSourceAssign implements BulkSourceAssignInterface
     private $bulkSourceAssign;
 
     /**
-     * @var IndexScheduler
+     * @var SourceItemReindexStrategy
      */
-    private $indexScheduler;
+    private $sourceItemReindexStrategy;
 
     /**
      * MassProductSourceAssign constructor.
      * @param BulkSourceAssignValidatorInterface $assignValidator
      * @param BulkSourceAssignResource $bulkSourceAssign
-     * @param IndexScheduler $indexScheduler
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
         BulkSourceAssignValidatorInterface $assignValidator,
         BulkSourceAssignResource $bulkSourceAssign,
-        IndexScheduler $indexScheduler
+        SourceItemReindexStrategy $sourceItemReindexStrategy
     ) {
         $this->assignValidator = $assignValidator;
         $this->bulkSourceAssign = $bulkSourceAssign;
-        $this->indexScheduler = $indexScheduler;
+        $this->sourceItemReindexStrategy = $sourceItemReindexStrategy;
     }
 
     /**
@@ -61,7 +60,9 @@ class BulkSourceAssign implements BulkSourceAssignInterface
         }
 
         $res = $this->bulkSourceAssign->execute($skus, $sourceCodes);
-        $this->indexScheduler->scheduleSourceItems($sourceCodes);
+        $this->sourceItemReindexStrategy
+            ->getStrategy()
+            ->executeList($sourceCodes);
 
         return $res;
     }
