@@ -20,8 +20,7 @@
 
         <before>
             <!--Create test data.-->
-            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
-            <createData entity="productAttributeWithTwoOptionsNotVisible" stepKey="configurableAttribute1"/>
+            <createData entity="productAttributeWithTwoOptions" stepKey="configurableAttribute1"/>
             <createData entity="productAttributeOption1" stepKey="option1">
                 <requiredEntity createDataKey="configurableAttribute1"/>
             </createData>
@@ -55,17 +54,24 @@
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="configurableAttribute1" stepKey="deleteConfigurableAttribute1"/>
             <deleteData createDataKey="configurableAttribute2" stepKey="deleteConfigurableAttribute2"/>
+            <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductIndexPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilter"/>
+            <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="selectNumberOfProductsPerPage">
+                <argument name="perPage" value="100"/>
+            </actionGroup>
+            <actionGroup ref="DeleteProductsIfTheyExistActionGroup" stepKey="deleteAllProducts"/>
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
