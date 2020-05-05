@@ -21,8 +21,8 @@ use Magento\InventoryCatalog\Model\ResourceModel\UpdateLegacyStockItems;
 use Magento\InventoryCatalog\Model\UpdateInventory\InventoryData;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
+use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 use Psr\Log\LoggerInterface;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemReindexStrategy;
 
 /**
  * Asynchronous inventory update service.
@@ -70,14 +70,14 @@ class UpdateInventory
     private $getSourceItemsBySku;
 
     /**
+     * @var SourceItemIndexer
+     */
+    private $sourceItemIndexer;
+
+    /**
      * @var GetSourceItemIds
      */
     private $getSourceItemIds;
-
-    /**
-     * @var SourceItemReindexStrategy
-     */
-    private $sourceItemReindexStrategy;
 
     /**
      * @param Processor $stockIndexerProcessor
@@ -87,9 +87,9 @@ class UpdateInventory
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param GetSourceItemIds $getSourceItemIds
+     * @param SourceItemIndexer $sourceItemIndexer
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @param SourceItemReindexStrategy $sourceItemReindexStrategy
      */
     public function __construct(
         Processor $stockIndexerProcessor,
@@ -99,9 +99,9 @@ class UpdateInventory
         SourceItemsSaveInterface $sourceItemsSave,
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
         GetSourceItemIds $getSourceItemIds,
+        SourceItemIndexer $sourceItemIndexer,
         SerializerInterface $serializer,
-        LoggerInterface $logger,
-        SourceItemReindexStrategy $sourceItemReindexStrategy
+        LoggerInterface $logger
     ) {
         $this->stockIndexerProcessor = $stockIndexerProcessor;
         $this->updateLegacyStockItems = $updateLegacyStockItems;
@@ -111,8 +111,8 @@ class UpdateInventory
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->getSourceItemsBySku = $getSourceItemsBySku;
+        $this->sourceItemIndexer = $sourceItemIndexer;
         $this->getSourceItemIds = $getSourceItemIds;
-        $this->sourceItemReindexStrategy = $sourceItemReindexStrategy;
     }
 
     /**
@@ -180,6 +180,6 @@ class UpdateInventory
         }
         $sourceItems = array_merge(...$sourceItems);
         $sourceItemsIds = $this->getSourceItemIds->execute($sourceItems);
-        $this->sourceItemReindexStrategy->getStrategy()->executeList($sourceItemsIds);
+        $this->sourceItemIndexer->executeList($sourceItemsIds);
     }
 }

@@ -10,10 +10,10 @@ namespace Magento\InventoryIndexer\Plugin\InventoryApi;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemReindexStrategy;
+use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
 /**
- * Plugin for reindex after source items save
+ * Reindex after source items save plugin
  */
 class ReindexAfterSourceItemsSavePlugin
 {
@@ -23,23 +23,21 @@ class ReindexAfterSourceItemsSavePlugin
     private $getSourceItemIds;
 
     /**
-     * @var SourceItemReindexStrategy
+     * @var SourceItemIndexer
      */
-    private $sourceItemReindexStrategy;
+    private $sourceItemIndexer;
 
     /**
      * @param GetSourceItemIds $getSourceItemIds
-     * @param SourceItemReindexStrategy $sourceItemReindexStrategy
+     * @param SourceItemIndexer $sourceItemIndexer
      */
-    public function __construct(GetSourceItemIds $getSourceItemIds, SourceItemReindexStrategy $sourceItemReindexStrategy)
+    public function __construct(GetSourceItemIds $getSourceItemIds, SourceItemIndexer $sourceItemIndexer)
     {
         $this->getSourceItemIds = $getSourceItemIds;
-        $this->sourceItemReindexStrategy = $sourceItemReindexStrategy;
+        $this->sourceItemIndexer = $sourceItemIndexer;
     }
 
     /**
-     * Method after execution of save source items
-     *
      * @param SourceItemsSaveInterface $subject
      * @param void $result
      * @param SourceItemInterface[] $sourceItems
@@ -53,7 +51,7 @@ class ReindexAfterSourceItemsSavePlugin
     ) {
         $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         if (count($sourceItemIds)) {
-            $this->sourceItemReindexStrategy->getStrategy()->executeList($sourceItemIds);
+            $this->sourceItemIndexer->executeList($sourceItemIds);
         }
     }
 }

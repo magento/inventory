@@ -12,7 +12,7 @@ use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\BulkSourceUnassignValidatorInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\BulkSourceUnassign as BulkSourceUnassignResource;
-use Magento\InventoryIndexer\Indexer\Source\SourceReindexStrategyInterface;
+use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 use Magento\CatalogInventory\Model\Indexer\Stock as LegacyIndexer;
 
 /**
@@ -31,9 +31,9 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
     private $bulkSourceUnassign;
 
     /**
-     * @var SourceReindexStrategyInterface
+     * @var SourceIndexer
      */
-    private $sourceReindexStrategyInterface;
+    private $sourceIndexer;
 
     /**
      * @var LegacyIndexer
@@ -56,7 +56,7 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
      * @param BulkSourceUnassignResource $bulkSourceUnassign
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetProductIdsBySkus $getProductIdsBySkus
-     * @param SourceReindexStrategyInterface $sourceReindexStrategyInterface
+     * @param SourceIndexer $sourceIndexer
      * @param LegacyIndexer $legacyIndexer
      * @SuppressWarnings(PHPMD.LongVariable)
      */
@@ -65,12 +65,12 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
         BulkSourceUnassignResource $bulkSourceUnassign,
         DefaultSourceProviderInterface $defaultSourceProvider,
         GetProductIdsBySkus $getProductIdsBySkus,
-        SourceReindexStrategyInterface $sourceReindexStrategyInterface,
+        SourceIndexer $sourceIndexer,
         LegacyIndexer $legacyIndexer
     ) {
         $this->unassignValidator = $unassignValidator;
         $this->bulkSourceUnassign = $bulkSourceUnassign;
-        $this->sourceReindexStrategyInterface = $sourceReindexStrategyInterface;
+        $this->sourceIndexer = $sourceIndexer;
         $this->legacyIndexer = $legacyIndexer;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
@@ -78,7 +78,6 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
 
     /**
      * Reindex legacy stock (for default source)
-     *
      * @param array $skus
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -101,7 +100,7 @@ class BulkSourceUnassign implements BulkSourceUnassignInterface
 
         $res = $this->bulkSourceUnassign->execute($skus, $sourceCodes);
 
-        $this->sourceReindexStrategyInterface->getStrategy()->executeList($sourceCodes);
+        $this->sourceIndexer->executeList($sourceCodes);
         if (in_array($this->defaultSourceProvider->getCode(), $sourceCodes, true)) {
             $this->reindexLegacy($skus);
         }

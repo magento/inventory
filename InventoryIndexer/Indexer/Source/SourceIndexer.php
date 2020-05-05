@@ -14,7 +14,7 @@ use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
  *
  * @api
  */
-class SourceIndexer implements SourceIndexerInterface
+class SourceIndexer
 {
     /**
      * @var GetAssignedStockIds
@@ -41,7 +41,7 @@ class SourceIndexer implements SourceIndexerInterface
     /**
      * @return void
      */
-    public function executeFull(): void
+    public function executeFull()
     {
         $this->stockIndexer->executeFull();
     }
@@ -50,7 +50,7 @@ class SourceIndexer implements SourceIndexerInterface
      * @param string $sourceCode
      * @return void
      */
-    public function executeRow(string $sourceCode): void
+    public function executeRow(string $sourceCode)
     {
         $this->executeList([$sourceCode]);
     }
@@ -58,7 +58,7 @@ class SourceIndexer implements SourceIndexerInterface
     /**
      * @param array $sourceCodes
      */
-    public function executeList(array $sourceCodes): void
+    public function executeList(array $sourceCodes)
     {
         $stockIds = $this->getAssignedStockIds->execute($sourceCodes);
         $this->stockIndexer->executeList($stockIds);

@@ -15,7 +15,7 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\Data\PartialInventoryTransferItemInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorInterface;
-use Magento\InventoryIndexer\Indexer\Source\SourceReindexStrategyInterface;
+use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 
 class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterface
 {
@@ -31,8 +31,8 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     /** @var DefaultSourceProviderInterface  */
     private $defaultSourceProvider;
 
-    /** @var SourceReindexStrategyInterface  */
-    private $sourceReindexStrategyInterface;
+    /** @var SourceIndexer  */
+    private $sourceIndexer;
 
     /** @var LegacyIndexer  */
     private $legacyIndexer;
@@ -42,7 +42,7 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
      * @param TransferInventoryPartially $transferInventoryPartiallyCommand
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param SourceReindexStrategyInterface $sourceReindexStrategyInterface
+     * @param SourceIndexer $sourceIndexer
      * @param LegacyIndexer $legacyIndexer
      */
     public function __construct(
@@ -50,14 +50,14 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
         TransferInventoryPartially $transferInventoryPartiallyCommand,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        SourceReindexStrategyInterface $sourceReindexStrategyInterface,
+        SourceIndexer $sourceIndexer,
         LegacyIndexer $legacyIndexer
     ) {
         $this->transferValidator = $partialInventoryTransferValidator;
         $this->transferCommand = $transferInventoryPartiallyCommand;
         $this->productIdsBySkus = $getProductIdsBySkus;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->sourceReindexStrategyInterface = $sourceReindexStrategyInterface;
+        $this->sourceIndexer = $sourceIndexer;
         $this->legacyIndexer = $legacyIndexer;
     }
 
@@ -81,8 +81,6 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
-     * Process sources transfer
-     *
      * @param string $originSourceCode
      * @param string $destinationSourceCode
      * @param PartialInventoryTransferItemInterface[] $items
@@ -99,15 +97,13 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
-     * Update sources indexes
-     *
      * @param string[] $sources
      * @param string[] $skus
      */
     private function updateIndexes(array $sources, array $skus)
     {
         $sources = array_unique($sources);
-        $this->sourceReindexStrategyInterface->getStrategy()->executeList($sources);
+        $this->sourceIndexer->executeList($sources);
 
         if (in_array($this->defaultSourceProvider->getCode(), $sources)) {
             $this->updateLegacyIndex($skus);
@@ -115,7 +111,6 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
-     * Update legacy index by SKUs
      *
      * @param string[] $skus
      */

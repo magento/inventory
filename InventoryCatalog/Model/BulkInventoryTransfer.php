@@ -14,7 +14,7 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\BulkInventoryTransferValidatorInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock as LegacyIndexer;
-use Magento\InventoryIndexer\Indexer\Source\SourceReindexStrategy;
+use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 
 /**
  * @inheritdoc
@@ -47,15 +47,15 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
     private $defaultSourceProvider;
 
     /**
-     * @var SourceReindexStrategy
+     * @var SourceIndexer
      */
-    private $sourceReindexStrategy;
+    private $sourceIndexer;
 
     /**
      * MassProductSourceAssign constructor.
      * @param BulkInventoryTransferValidatorInterface $inventoryTransferValidator
      * @param BulkInventoryTransferResource $bulkInventoryTransfer
-     * @param SourceReindexStrategy $sourceReindexStrategy
+     * @param SourceIndexer $sourceIndexer
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param LegacyIndexer $legacyIndexer
@@ -64,7 +64,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
     public function __construct(
         BulkInventoryTransferValidatorInterface $inventoryTransferValidator,
         BulkInventoryTransferResource $bulkInventoryTransfer,
-        SourceReindexStrategy $sourceReindexStrategy,
+        SourceIndexer $sourceIndexer,
         DefaultSourceProviderInterface $defaultSourceProvider,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         LegacyIndexer $legacyIndexer
@@ -74,12 +74,11 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->legacyIndexer = $legacyIndexer;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->sourceReindexStrategy = $sourceReindexStrategy;
+        $this->sourceIndexer = $sourceIndexer;
     }
 
     /**
      * Reindex legacy stock (for default source)
-     *
      * @param array $productIds
      */
     private function reindexLegacy(array $productIds): void
@@ -119,7 +118,7 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
             $unassignFromOrigin
         );
 
-        $this->sourceReindexStrategy->getStrategy()->executeList([$originSource, $destinationSource]);
+        $this->sourceIndexer->executeList([$originSource, $destinationSource]);
 
         if (($this->defaultSourceProvider->getCode() === $originSource) ||
             ($this->defaultSourceProvider->getCode() === $destinationSource)) {
