@@ -18,6 +18,9 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 
+/**
+ * Reindex source items synchronously.
+ */
 class Sync
 {
     /**
@@ -84,6 +87,12 @@ class Sync
         $this->defaultStockProvider = $defaultStockProvider;
     }
 
+    /**
+     * Reindex list of source items by provided ids.
+     *
+     * @param int[] $sourceItemIds
+     * @throws \Magento\Framework\Exception\StateException
+     */
     public function executeList(array $sourceItemIds) : void
     {
         $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
@@ -122,18 +131,22 @@ class Sync
     }
 
     /**
+     * Reindex all source items
+     *
      * @return void
      */
-    public function executeFull()
+    public function executeFull() : void
     {
         $this->stockIndexer->executeFull();
     }
 
     /**
+     * Reindex single source item by id
+     *
      * @param int $sourceItemId
      * @return void
      */
-    public function executeRow(int $sourceItemId)
+    public function executeRow(int $sourceItemId) : void
     {
         $this->executeList([$sourceItemId]);
     }

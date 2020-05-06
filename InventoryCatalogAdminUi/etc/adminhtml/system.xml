@@ -38,9 +38,10 @@
                 <label>Inventory Indexer Settings</label>
                 <field id="async" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0"
                        showInStore="0" canRestore="1">
-                    <label>Run Stock/Source index asynchronously</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>An asynchronous queue manager must be configured</comment>
+                    <label>Stock/Source reindex strategy</label>
+                    <source_model>Magento\InventoryIndexer\Model\ReindexStrategyOptions</source_model>
+                    <config_path>cataloginventory/indexer/strategy</config_path>
+                    <comment>An asynchronous queue manager must be configured for async mode.</comment>
                 </field>
             </group>
         </section>

@@ -6,10 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
-    <topic name="inventory.indexer.sourceItem" is_synchronous="false" request="string[]">
-        <handler name="inventory.indexer.sourceItem.handler" type="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer" method="executeList" />
+    <topic name="inventory.indexer.sourceItem" is_synchronous="false" request="int[]">
+        <handler name="inventory.indexer.sourceItem.handler" type="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync" method="executeList" />
     </topic>
-    <topic name="inventory.indexer.source" is_synchronous="false" request="string[]">
-        <handler name="inventory.indexer.source.handler" type="Magento\InventoryIndexer\Indexer\Source\SourceIndexer" method="executeList" />
+    <topic name="inventory.indexer.stock" is_synchronous="false" request="int[]">
+        <handler name="inventory.indexer.stock.handler" type="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync" method="executeList" />
     </topic>
 </config>

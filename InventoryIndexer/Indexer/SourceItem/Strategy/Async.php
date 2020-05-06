@@ -10,6 +10,9 @@ namespace Magento\InventoryIndexer\Indexer\SourceItem\Strategy;
 use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 
+/**
+ * Reindex source items asynchronously.
+ */
 class Async
 {
     private const TOPIC_SOURCE_ITEMS_INDEX = "inventory.indexer.sourceItem";
@@ -25,8 +28,6 @@ class Async
     private $publisher;
 
     /**
-     * Source Asynchronous Item indexer constructor
-     *
      * @param PublisherInterface $publisher
      * @param StockIndexer $stockIndexer
      */
@@ -39,32 +40,35 @@ class Async
     }
 
     /**
+     * Schedule full stock reindex.
+     *
      * @return void
      */
-    public function executeFull(): void
+    public function executeFull() : void
     {
         $this->stockIndexer->executeFull();
     }
 
     /**
-     * Schedule Reindex of one item by id
+     * Schedule reindex of one item by id.
      *
      * @param int $sourceItemId
      * @return void
      */
-    public function executeRow(int $sourceItemId): void
+    public function executeRow(int $sourceItemId) : void
     {
         $this->executeList([$sourceItemId]);
     }
 
     /**
-     * Schedule Reindex of items list
+     * Schedule reindex of source items list
      *
-     * @param array $sourceItemIds
+     * @param int[] $sourceItemIds
      * @return void
      */
-    public function executeList(array $sourceItemIds): void
+    public function executeList(array $sourceItemIds) : void
     {
+        $sourceItemIds = array_map('intval', $sourceItemIds);
         $this->publisher->publish(self::TOPIC_SOURCE_ITEMS_INDEX, $sourceItemIds);
     }
 }

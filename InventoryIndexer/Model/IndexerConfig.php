@@ -9,11 +9,12 @@ namespace Magento\InventoryIndexer\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
+/**
+ * Reindex strategy config provider.
+ */
 class IndexerConfig
 {
-
-    const XML_PATH_INDEXER_SOURCE_ITEM_STRATEGY = 'cataloginventory/indexer/source_items_strategy';
-    const XML_PATH_INDEXER_SOURCE_STRATEGY = 'cataloginventory/indexer/source_strategy';
+    private const XML_PATH_INDEXER_STRATEGY = 'cataloginventory/indexer/strategy';
 
     /**
      * @var ScopeConfigInterface
@@ -29,19 +30,12 @@ class IndexerConfig
     }
 
     /**
+     * Return active strategy for reindex process.
+     *
      * @return string
      */
-    public function getActiveSourceItemIndexStrategy(): string
+    public function getActiveIndexStrategy(): string
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_INDEXER_SOURCE_ITEM_STRATEGY);
+        return $this->scopeConfig->getValue(self::XML_PATH_INDEXER_STRATEGY);
     }
-
-    /**
-     * @return string
-     */
-    public function getActiveSourceIndexStrategy(): string
-    {
-        return $this->scopeConfig->getValue(self::XML_PATH_INDEXER_SOURCE_STRATEGY);
-    }
-
 }

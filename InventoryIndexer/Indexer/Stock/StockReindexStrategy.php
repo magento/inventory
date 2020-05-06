@@ -3,20 +3,19 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
-namespace Magento\InventoryIndexer\Indexer\SourceItem;
+namespace Magento\InventoryIndexer\Indexer\Stock;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryIndexer\Model\IndexerConfig;
-use Magento\Framework\Exception\LocalizedException;
 
 /**
- * Receiver of currently active reindex strategy for source items
+ * Receiver of currently active reindex strategy for stock
  *
  * @api
  */
-class SourceItemReindexStrategy
+class StockReindexStrategy
 {
     /**
      * @var ObjectManagerInterface
@@ -49,29 +48,29 @@ class SourceItemReindexStrategy
     }
 
     /**
-     * @param array $sourceItemIds
      * @return void
      */
-    public function executeList(array $sourceItemIds) : void
-    {
-        $this->getStrategy()->executeList($sourceItemIds);
-    }
-
-    /**
-     * @return void
-     */
-    public function executeFull() : void
+    public function executeFull(): void
     {
         $this->getStrategy()->executeFull();
     }
 
     /**
-     * @param int $sourceItemId
+     * @param int $stockId
      * @return void
      */
-    public function executeRow(int $sourceItemId) : void
+    public function executeRow(int $stockId): void
     {
-        $this->getStrategy()->executeList([$sourceItemId]);
+        $this->getStrategy()->executeList([$stockId]);
+    }
+
+    /**
+     * @param array $stockIds
+     * @return void
+     */
+    public function executeList(array $stockIds): void
+    {
+        $this->getStrategy()->executeList($stockIds);
     }
 
     /**

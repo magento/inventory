@@ -42,7 +42,7 @@ class SourceItemIndexer
      */
     public function executeRow(int $sourceItemId)
     {
-        $this->executeList([$sourceItemId]);
+        $this->sourceItemReindexStrategy->executeRow($sourceItemId);
     }
 
     /**

@@ -9,7 +9,7 @@
     <publisher topic="inventory.indexer.sourceItem">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
-    <publisher topic="inventory.indexer.source">
+    <publisher topic="inventory.indexer.stock">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
 </config>
