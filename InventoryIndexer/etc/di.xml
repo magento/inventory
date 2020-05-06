@@ -77,4 +77,7 @@
             <argument name="dimensionName" xsi:type="string">stock_</argument>
         </arguments>
     </type>
+    <type name="Magento\InventorySales\Model\PlaceReservationsForSalesEvent">
+        <plugin name="schedule_reservation_place" type="Magento\InventoryIndexer\Plugin\InventorySales\ScheduleAfterPlaceReservationsForSalesEvent"/>
+    </type>
 </config>

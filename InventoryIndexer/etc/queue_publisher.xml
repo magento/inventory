@@ -10,6 +10,7 @@
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
     <publisher topic="inventory.indexer.stock">
+    <publisher topic="inventory.reservation.place">
         <connection name="db" exchange="magento-db" disabled="false" />
     </publisher>
 </config>
