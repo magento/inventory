@@ -41,7 +41,7 @@ class GetPickupLocationInformationPluginTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->addressExtensionInterfaceFactory = $this->getMockBuilder(AddressExtensionInterfaceFactory::class)
             ->disableOriginalConstructor()
@@ -84,7 +84,7 @@ class GetPickupLocationInformationPluginTest extends TestCase
                 'iplqa' . '.address_id = main_table.address_id',
                 [PickupLocationInterface::PICKUP_LOCATION_CODE]
             )->willReturnSelf();
-        /** @var Collection|\PHPUnit_Framework_MockObject_MockObject $collection */
+        /** @var Collection|\PHPUnit\Framework\MockObject\MockObject $collection */
         $collection = $this->getMockBuilder(Collection::class)
             ->setMethods(['getSelect', 'isLoaded'])
             ->disableOriginalConstructor()

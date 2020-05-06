@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Test\Unit\Model;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryImportExport\Model\Import\Validator\ValidatorChain;
 use Magento\InventoryImportExport\Model\Import\Validator\ValidatorInterface;
@@ -16,17 +17,17 @@ use PHPUnit\Framework\TestCase;
 class ValidatorChainTest extends TestCase
 {
     /**
-     * @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $qtyValidator;
 
     /**
-     * @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $skuValidator;
 
     /**
-     * @var ValidationResultFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidationResultFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     private $validationResultFactory;
 
@@ -38,16 +39,18 @@ class ValidatorChainTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->validationResultFactory = $this->createMock(ValidationResultFactory::class);
-        $this->qtyValidator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
-        $this->skuValidator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
+        $this->qtyValidator = $this->getMockBuilder(ValidatorInterface::class)
+            ->getMock();
+        $this->skuValidator = $this->getMockBuilder(ValidatorInterface::class)
+            ->getMock();
     }
 
     public function testValidateWithOutValidators()
     {
-        $emptyValidatorResult = $this->createMock(\Magento\Framework\Validation\ValidationResult::class);
+        $emptyValidatorResult = $this->createMock(ValidationResult::class);
         $this->validationResultFactory->expects($this->once())
             ->method('create')
             ->with(['errors' =>[]])
@@ -67,7 +70,7 @@ class ValidatorChainTest extends TestCase
 
     public function testValidateWithOutErros()
     {
-        $emptyValidatorResult = $this->createMock(\Magento\Framework\Validation\ValidationResult::class);
+        $emptyValidatorResult = $this->createMock(ValidationResult::class);
         $emptyValidatorResult->expects($this->once())->method('isValid')
             ->willReturn(true);
 
@@ -93,7 +96,7 @@ class ValidatorChainTest extends TestCase
 
     public function testValidateWithErros()
     {
-        $validatorResult = $this->createMock(\Magento\Framework\Validation\ValidationResult::class);
+        $validatorResult = $this->createMock(ValidationResult::class);
 
         $validatorResult->expects($this->once())->method('isValid')
             ->willReturn(false);

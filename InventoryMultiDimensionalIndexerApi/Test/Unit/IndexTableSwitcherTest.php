@@ -9,10 +9,10 @@ namespace Magento\InventoryMultiDimensionalIndexerApi\Test\Unit;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcher;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,34 +21,34 @@ use PHPUnit\Framework\TestCase;
 class IndexTableSwitcherTest extends TestCase
 {
     /**
-     * @var IndexTableSwitcher|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexTableSwitcher|\PHPUnit\Framework\MockObject\MockObject
      */
     private $indexTableSwitcher;
 
     /**
-     * @var IndexName|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexName|\PHPUnit\Framework\MockObject\MockObject
      */
     private $indexName;
 
     /**
-     * @var ResourceConnection|\PHPUnit_Framework_MockObject_MockObject
+     * @var ResourceConnection|\PHPUnit\Framework\MockObject\MockObject
      */
     private $resourceConnection;
 
     /**
-     * @var IndexNameResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexNameResolverInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $indexNameResolver;
 
     /**
-     * @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AdapterInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $adapter;
 
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
