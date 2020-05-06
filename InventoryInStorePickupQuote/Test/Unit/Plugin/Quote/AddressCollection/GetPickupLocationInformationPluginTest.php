@@ -14,6 +14,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection\GetPickupLocationInformationPlugin;
 use Magento\Quote\Api\Data\AddressExtensionInterfaceFactory;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Collection;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -84,7 +85,7 @@ class GetPickupLocationInformationPluginTest extends TestCase
                 'iplqa' . '.address_id = main_table.address_id',
                 [PickupLocationInterface::PICKUP_LOCATION_CODE]
             )->willReturnSelf();
-        /** @var Collection|\PHPUnit\Framework\MockObject\MockObject $collection */
+        /** @var Collection|MockObject $collection */
         $collection = $this->getMockBuilder(Collection::class)
             ->setMethods(['getSelect', 'isLoaded'])
             ->disableOriginalConstructor()

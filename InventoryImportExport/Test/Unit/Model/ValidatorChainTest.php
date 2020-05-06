@@ -12,22 +12,23 @@ use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryImportExport\Model\Import\Validator\ValidatorChain;
 use Magento\InventoryImportExport\Model\Import\Validator\ValidatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ValidatorChainTest extends TestCase
 {
     /**
-     * @var ValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var ValidatorInterface|MockObject
      */
     private $qtyValidator;
 
     /**
-     * @var ValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var ValidatorInterface|MockObject
      */
     private $skuValidator;
 
     /**
-     * @var ValidationResultFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var ValidationResultFactory|MockObject
      */
     private $validationResultFactory;
 

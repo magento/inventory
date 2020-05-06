@@ -14,31 +14,32 @@ use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryReservations\Model\ReservationBuilder;
 use Magento\InventoryReservations\Model\SnakeToCamelCaseConverter;
 use Magento\InventoryReservationsApi\Model\ReservationInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ReservationBuilderTest extends TestCase
 {
     /**
-     * @var ObjectManager|\PHPUnit\Framework\MockObject\MockObject
+     * @var ObjectManager|MockObject
      */
     private $objectManager;
 
     /**
-     * @var ReservationInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var ReservationInterface|MockObject
      */
     private $reservation;
 
     /**
-     * @var ValidationResult|\PHPUnit\Framework\MockObject\MockObject
+     * @var ValidationResult|MockObject
      */
     private $validationResult;
 
     /**
-     * @var SnakeToCamelCaseConverter|\PHPUnit\Framework\MockObject\MockObject
+     * @var SnakeToCamelCaseConverter|MockObject
      */
     private $snakeToCamelCaseConverter;
 
-    /** @var  ValidationResultFactory|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var  ValidationResultFactory|MockObject */
     private $validationResultFactory;
 
     /**

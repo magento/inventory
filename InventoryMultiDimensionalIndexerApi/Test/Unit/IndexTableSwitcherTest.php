@@ -13,6 +13,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcher;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,27 +22,27 @@ use PHPUnit\Framework\TestCase;
 class IndexTableSwitcherTest extends TestCase
 {
     /**
-     * @var IndexTableSwitcher|\PHPUnit\Framework\MockObject\MockObject
+     * @var IndexTableSwitcher|MockObject
      */
     private $indexTableSwitcher;
 
     /**
-     * @var IndexName|\PHPUnit\Framework\MockObject\MockObject
+     * @var IndexName|MockObject
      */
     private $indexName;
 
     /**
-     * @var ResourceConnection|\PHPUnit\Framework\MockObject\MockObject
+     * @var ResourceConnection|MockObject
      */
     private $resourceConnection;
 
     /**
-     * @var IndexNameResolverInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var IndexNameResolverInterface|MockObject
      */
     private $indexNameResolver;
 
     /**
-     * @var AdapterInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var AdapterInterface|MockObject
      */
     private $adapter;
 
