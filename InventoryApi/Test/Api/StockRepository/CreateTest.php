@@ -64,7 +64,7 @@ class CreateTest extends WebapiAbstract
         AssertArrayContains::assert($expectedData, $this->getStockDataById($stockId));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (null !== $this->stockId) {
             $this->stockRepository->deleteById($this->stockId);

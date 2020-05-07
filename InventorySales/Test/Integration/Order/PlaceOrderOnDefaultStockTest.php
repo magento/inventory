@@ -246,7 +246,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         return $cartItem;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

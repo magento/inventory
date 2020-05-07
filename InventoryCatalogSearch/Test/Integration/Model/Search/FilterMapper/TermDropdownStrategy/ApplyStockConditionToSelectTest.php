@@ -96,7 +96,7 @@ class ApplyStockConditionToSelectTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

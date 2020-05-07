@@ -222,7 +222,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->registry->register('isSecureArea', false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

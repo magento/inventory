@@ -153,7 +153,7 @@ class ReservationPlacingDuringRegisterProductsSaleTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

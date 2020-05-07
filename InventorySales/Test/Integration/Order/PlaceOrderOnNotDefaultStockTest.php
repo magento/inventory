@@ -351,7 +351,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

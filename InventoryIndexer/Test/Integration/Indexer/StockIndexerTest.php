@@ -42,7 +42,7 @@ class StockIndexerTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->removeIndexData->execute([10, 20, 30]);
     }

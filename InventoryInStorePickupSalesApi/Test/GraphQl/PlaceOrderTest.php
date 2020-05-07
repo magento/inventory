@@ -78,7 +78,7 @@ class PlaceOrderTest extends GraphQlAbstract
     /**
      * Tear down.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

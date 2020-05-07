@@ -232,7 +232,7 @@ QUERY;
     /**
      * @inheritDoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $resource = $this->objectManager->get(Data::class);
         $resource->clearScopeData('default', 0);
