@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem;
 
+use Magento\Framework\Exception\LocalizedException;
+
 /**
- * Source Item indexer
+ * Index source items service.
  *
  * @api
  */
@@ -29,7 +31,10 @@ class SourceItemIndexer
     }
 
     /**
+     * Reindex all source items.
+     *
      * @return void
+     * @throws LocalizedException
      */
     public function executeFull()
     {
@@ -37,8 +42,11 @@ class SourceItemIndexer
     }
 
     /**
+     * Reindex given source item.
+     *
      * @param int $sourceItemId
      * @return void
+     * @throws LocalizedException
      */
     public function executeRow(int $sourceItemId)
     {
@@ -46,8 +54,11 @@ class SourceItemIndexer
     }
 
     /**
+     * Reindex given source items.
+     *
      * @param array $sourceItemIds
      * @return void
+     * @throws LocalizedException
      */
     public function executeList(array $sourceItemIds)
     {

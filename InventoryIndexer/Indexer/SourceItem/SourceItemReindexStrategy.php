@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryIndexer\Model\IndexerConfig;
-use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Receiver of currently active reindex strategy for source items
@@ -49,32 +49,43 @@ class SourceItemReindexStrategy
     }
 
     /**
+     * Reindex given source items.
+     *
      * @param array $sourceItemIds
      * @return void
+     * @throws LocalizedException
      */
-    public function executeList(array $sourceItemIds) : void
+    public function executeList(array $sourceItemIds): void
     {
         $this->getStrategy()->executeList($sourceItemIds);
     }
 
     /**
+     * Reindex all source items.
+     *
      * @return void
+     * @throws LocalizedException
      */
-    public function executeFull() : void
+    public function executeFull(): void
     {
         $this->getStrategy()->executeFull();
     }
 
     /**
+     * Reindex given source item.
+     *
      * @param int $sourceItemId
      * @return void
+     * @throws LocalizedException
      */
-    public function executeRow(int $sourceItemId) : void
+    public function executeRow(int $sourceItemId): void
     {
         $this->getStrategy()->executeList([$sourceItemId]);
     }
 
     /**
+     * Retrieve enabled strategy for reindex.
+     *
      * @return mixed
      * @throws LocalizedException
      */
@@ -84,6 +95,7 @@ class SourceItemReindexStrategy
         if (!isset($this->strategies[$enabledStrategy])) {
             throw new LocalizedException(__("Index Strategy not found, please check system settings."));
         }
+
         return $this->objectManager->get($this->strategies[$enabledStrategy]);
     }
 }

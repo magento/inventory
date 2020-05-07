@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
+use Magento\Framework\Exception\LocalizedException;
+
 /**
  * Stock indexer
  * Extension point for indexation
@@ -23,14 +25,16 @@ class StockIndexer
     /**
      * @param StockReindexStrategy $stockReindexStrategy
      */
-    public function __construct(
-        \Magento\InventoryIndexer\Indexer\Stock\StockReindexStrategy $stockReindexStrategy
-    ) {
+    public function __construct(StockReindexStrategy $stockReindexStrategy)
+    {
         $this->stockReindexStrategy = $stockReindexStrategy;
     }
 
     /**
+     * Reindex all stocks.
+     *
      * @return void
+     * @throws LocalizedException
      */
     public function executeFull()
     {
@@ -38,8 +42,11 @@ class StockIndexer
     }
 
     /**
+     * Reindex given stock.
+     *
      * @param int $stockId
      * @return void
+     * @throws LocalizedException
      */
     public function executeRow(int $stockId)
     {
@@ -47,8 +54,11 @@ class StockIndexer
     }
 
     /**
+     * Reindex given stocks.
+     *
      * @param array $stockIds
      * @return void
+     * @throws LocalizedException
      */
     public function executeList(array $stockIds)
     {

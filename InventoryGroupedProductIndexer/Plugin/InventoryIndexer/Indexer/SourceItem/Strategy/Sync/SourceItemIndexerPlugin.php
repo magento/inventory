@@ -5,12 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer;
+namespace Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryGroupedProductIndexer\Indexer\SourceItem\SourceItemIndexer as GroupedProductsSourceItemIndexer;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
+/**
+ * Reindex grouped product.
+ */
 class SourceItemIndexerPlugin
 {
     /**
@@ -28,7 +31,9 @@ class SourceItemIndexerPlugin
     }
 
     /**
-     * @param SourceItemIndexer $subject
+     * Reindex grouped product.
+     *
+     * @param Sync $subject
      * @param void $result
      * @param array $sourceItemIds
      * @return void
@@ -37,7 +42,7 @@ class SourceItemIndexerPlugin
      * @throws StateException
      */
     public function afterExecuteList(
-        SourceItemIndexer $subject,
+        Sync $subject,
         $result,
         array $sourceItemIds
     ) {

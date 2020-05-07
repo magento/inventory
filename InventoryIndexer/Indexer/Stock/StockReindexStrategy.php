@@ -48,7 +48,10 @@ class StockReindexStrategy
     }
 
     /**
+     * Reindex all stocks.
+     *
      * @return void
+     * @throws LocalizedException
      */
     public function executeFull(): void
     {
@@ -56,8 +59,11 @@ class StockReindexStrategy
     }
 
     /**
+     * Reindex given stock.
+     *
      * @param int $stockId
      * @return void
+     * @throws LocalizedException
      */
     public function executeRow(int $stockId): void
     {
@@ -65,8 +71,11 @@ class StockReindexStrategy
     }
 
     /**
+     * Reindex given stocks.
+     *
      * @param array $stockIds
      * @return void
+     * @throws LocalizedException
      */
     public function executeList(array $stockIds): void
     {
@@ -74,6 +83,8 @@ class StockReindexStrategy
     }
 
     /**
+     * Retrieve reindex strategy.
+     *
      * @return mixed
      * @throws LocalizedException
      */
