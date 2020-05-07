@@ -40,7 +40,7 @@ class PluginTest extends TestCase
     {
         $this->cartMock = $this->createMock(Cart::class);
         $this->quoteMock = $this->getMockBuilder(Quote::class)
-            ->setMethods(['setIsMultiShipping', 'getIsMultiShipping'])
+            ->addMethods(['setIsMultiShipping', 'getIsMultiShipping'])
             ->onlyMethods(['__wakeUp'])
             ->disableOriginalConstructor()
             ->getMock();
