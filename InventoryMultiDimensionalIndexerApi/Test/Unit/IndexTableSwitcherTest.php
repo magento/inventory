@@ -56,8 +56,8 @@ class IndexTableSwitcherTest extends TestCase
         $objectManager = new ObjectManager($this);
         $this->indexName = $this->createMock(IndexName::class);
         $this->resourceConnection = $this->createMock(ResourceConnection::class);
-        $this->indexNameResolver = $this->createMock(IndexNameResolverInterface::class);
-        $this->adapter = $this->createMock(AdapterInterface::class);
+        $this->indexNameResolver = $this->getMockForAbstractClass(IndexNameResolverInterface::class);
+        $this->adapter = $this->getMockForAbstractClass(AdapterInterface::class);
 
         $this->indexTableSwitcher = $objectManager->getObject(
             IndexTableSwitcher::class,

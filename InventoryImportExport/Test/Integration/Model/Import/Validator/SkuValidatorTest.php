@@ -20,7 +20,7 @@ class SkuValidatorTest extends TestCase
     private $importer;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $importDataMock;
 
