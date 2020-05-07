@@ -46,7 +46,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
     /** @var RequestInterface */
     private $request;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
 

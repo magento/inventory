@@ -95,11 +95,42 @@ class ProcessSourceItemConfigurationsObserver implements ObserverInterface
             ];
         } else {
             $sources = $controller->getRequest()->getParam('sources', []);
-            if (isset($sources['assigned_sources']) && is_array($sources['assigned_sources'])) {
-                $assignedSources = $sources['assigned_sources'];
-            }
+            $stockData = $controller->getRequest()->getParam('product', [])['stock_data'] ?? [];
+            $assignedSources =
+                isset($sources['assigned_sources'])
+                && is_array($sources['assigned_sources'])
+                    ? $this->updateAssignedSources($sources['assigned_sources'], $stockData)
+                    : [];
         }
 
         $this->sourceItemsConfigurationProcessor->process($product->getSku(), $assignedSources);
+    }
+
+    /**
+     * Update assign source item quantity, status notify_stock_qty and notify_stock_qty_use_default
+     *
+     * @param array $assignedSources
+     * @param array $stockData
+     * @return array
+     */
+    private function updateAssignedSources(array $assignedSources, array $stockData): array
+    {
+        foreach ($assignedSources as $key => $source) {
+            if (!key_exists('quantity', $source) && isset($source['qty'])) {
+                $assignedSources[$key]['quantity'] = (int) $source['qty'];
+            }
+            if (!key_exists('status', $source) && isset($source['source_status'])) {
+                $assignedSources[$key]['source_status']= (int) $source['source_status'];
+            }
+            if ($source['notify_stock_qty'] == null) {
+                $assignedSources[$key]['notify_stock_qty'] =
+                    $stockData[StockItemConfigurationInterface::NOTIFY_STOCK_QTY] ?? 0;
+            }
+            if ($source['notify_stock_qty_use_default'] == null) {
+                $assignedSources[$key]['notify_stock_qty_use_default'] =
+                    $stockData[StockItemConfigurationInterface::USE_CONFIG_NOTIFY_STOCK_QTY] ?? 1;
+            }
+        }
+        return $assignedSources;
     }
 }

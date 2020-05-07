@@ -18,7 +18,7 @@ class GetSkusByProductIdsTest extends TestCase
      */
     private $getSkusByProductIds;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

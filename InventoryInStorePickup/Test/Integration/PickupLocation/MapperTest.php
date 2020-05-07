@@ -40,7 +40,7 @@ class MapperTest extends TestCase
      */
     private $templateFilter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->sourceRepository = $this->objectManager->create(SourceRepositoryInterface::class);

@@ -25,7 +25,7 @@ class NameValidatorTest extends TestCase
      */
     private $sourceFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
