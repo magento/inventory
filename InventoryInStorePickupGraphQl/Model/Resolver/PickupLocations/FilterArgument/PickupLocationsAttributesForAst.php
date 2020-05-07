@@ -50,13 +50,19 @@ class PickupLocationsAttributesForAst implements FieldEntityAttributesInterface
 
         $fields = [];
         foreach ($pickupLocationTypeSchema->getFields() as $field) {
-            $fields[$field->getName()] = 'String';
+            $fields[$field->getName()] = [
+                'type' => 'String',
+                'fieldName' => $field->getName(),
+            ];
         }
 
         foreach ($this->additionalAttributes as $attribute) {
-            $fields[$attribute] = 'String';
+            $fields[$attribute] = [
+                'type' => 'String',
+                'fieldName' => $attribute,
+            ];
         }
 
-        return array_keys($fields);
+        return $fields;
     }
 }
