@@ -29,7 +29,7 @@ class GetOrdersTotalCountTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = new ObjectManager($this);
@@ -59,7 +59,7 @@ class GetOrdersTotalCountTest extends TestCase
             ->willReturnArgument(0);
         $this->resourceConnection->expects($this->exactly(1))
             ->method('getConnection')
-            ->with($this->equalTo($salesConnectionName))
+            ->with($salesConnectionName)
             ->willReturn($salesConnection);
         $this->assertEquals($ordersCount, $this->model->execute());
     }
