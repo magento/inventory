@@ -8,7 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryAdvancedCheckout\Plugin\Model;
 
 use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
-use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResultFactory;
+use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
@@ -42,29 +43,21 @@ class AreProductsSalablePlugin
     private $defaultStockProvider;
 
     /**
-     * @var IsProductsSalableForRequestedQtyResultFactory
-     */
-    private $salableForRequestedQtyResultFactory;
-
-    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param IsProductsSalableForRequestedQtyResultFactory $salableForRequestedQtyResultFactory
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
-        DefaultStockProviderInterface $defaultStockProvider,
-        IsProductsSalableForRequestedQtyResultFactory $salableForRequestedQtyResultFactory
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->salableForRequestedQtyResultFactory = $salableForRequestedQtyResultFactory;
     }
 
     /**
@@ -96,7 +89,8 @@ class AreProductsSalablePlugin
         }
         $result = [];
         foreach ($this->areProductsSalable->execute($skus, $stock->getStockId()) as $productStock) {
-            $result[] = $this->salableForRequestedQtyResultFactory->create(
+            $result[] = ObjectManager::getInstance()->create(
+                IsProductsSalableForRequestedQtyResult::class,
                 ['sku' => $productStock->getSku(), 'isSalable' => $productStock->isSalable()]
             );
         }
