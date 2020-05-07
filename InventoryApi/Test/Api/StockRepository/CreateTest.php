@@ -33,7 +33,7 @@ class CreateTest extends WebapiAbstract
      */
     private $stockId;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);

@@ -23,7 +23,7 @@ class GetPickupLocationTest extends TestCase
      */
     private $getPickupLocation;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getPickupLocation = Bootstrap::getObjectManager()->get(
             GetPickupLocation::class

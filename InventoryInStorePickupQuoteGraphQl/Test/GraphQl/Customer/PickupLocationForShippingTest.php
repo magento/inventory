@@ -44,7 +44,7 @@ class PickupLocationForShippingTest extends GraphQlAbstract
      */
     private $customerTokenService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);

@@ -61,7 +61,7 @@ class SourcesTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->importDataMock = $this->getMockBuilder(ImportData::class)
             ->disableOriginalConstructor()

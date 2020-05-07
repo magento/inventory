@@ -59,7 +59,7 @@ class BackorderConditionTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->stockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);

@@ -25,7 +25,7 @@ class SourcesTest extends TestCase
      */
     private $exportFilePath;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $sandboxDir = Bootstrap::getInstance()->getBootstrap()->getApplication()->getTempDir();
         $this->exportFilePath = implode(DIRECTORY_SEPARATOR, [

@@ -27,7 +27,7 @@ class SkuValidatorTest extends TestCase
     /**
      * Setup for Sku Validator Integration Test Class
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->importDataMock = $this->getMockBuilder(ImportData::class)
             ->disableOriginalConstructor()

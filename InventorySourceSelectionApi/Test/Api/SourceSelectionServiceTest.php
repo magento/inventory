@@ -30,7 +30,7 @@ class SourceSelectionServiceTest extends WebapiAbstract
      */
     private $defaultAlgorithmCode;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->defaultAlgorithmCode = Bootstrap::getObjectManager()->get(

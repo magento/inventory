@@ -32,7 +32,7 @@ class OrderExtensionTest extends TestCase
     /** @var  OrderExtensionFactory */
     private $orderExtensionFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
 

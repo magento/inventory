@@ -129,7 +129,7 @@ class ReservationPlacingDuringRegisterProductsSaleTest extends TestCase
      */
     private $storeRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
         $this->cartItemFactory = Bootstrap::getObjectManager()->get(CartItemInterfaceFactory::class);

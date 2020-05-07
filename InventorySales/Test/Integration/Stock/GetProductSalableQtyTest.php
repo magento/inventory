@@ -36,7 +36,7 @@ class GetProductSalableQtyTest extends TestCase
      */
     private $getProductSalableQty;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);

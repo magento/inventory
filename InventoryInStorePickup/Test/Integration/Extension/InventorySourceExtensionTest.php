@@ -27,7 +27,7 @@ class InventorySourceExtensionTest extends TestCase
     /** @var SourceRepositoryInterface */
     private $sourceRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->sourceRepository = $this->objectManager->get(SourceRepositoryInterface::class);

@@ -40,7 +40,7 @@ class IsInStorePickupDeliveryAvailableForCartTest extends TestCase
     /**
      * @inheritdoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);

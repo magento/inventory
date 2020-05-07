@@ -60,7 +60,7 @@ class ReservationPlacingDuringBackItemQtyTest extends TestCase
      */
     private $stockManagement;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getProductSalableQty = Bootstrap::getObjectManager()->get(GetProductSalableQtyInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);

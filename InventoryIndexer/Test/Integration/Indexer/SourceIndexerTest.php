@@ -30,7 +30,7 @@ class SourceIndexerTest extends TestCase
      */
     private $removeIndexData;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sourceIndexer = Bootstrap::getObjectManager()->get(SourceIndexer::class);
         $this->getStockItemData = Bootstrap::getObjectManager()->get(GetStockItemData::class);

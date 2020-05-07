@@ -73,7 +73,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $dataObjectFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
