@@ -55,14 +55,13 @@ class StatusValidator implements SourceItemValidatorInterface
     {
         $value = $source->getStatus();
         $errors = [
-            $this->isNumericValue->execute(SourceItemInterface::QUANTITY, $value)
+            $this->isNumericValue->execute(SourceItemInterface::STATUS, $value)
         ];
 
         if (!in_array((int)$value, array_values($this->allowedSourceItemStatuses), true)) {
-            $errors[] = __(
-                '"%field" should a known status.',
-                ['field' => SourceItemInterface::STATUS]
-            );
+            $errors[] = [
+                __('"%field" should a known status.', ['field' => SourceItemInterface::STATUS])
+            ];
         }
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
