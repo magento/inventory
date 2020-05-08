@@ -63,6 +63,7 @@ class Collector
     {
         $metadata = $this->serializer->unserialize($reservation->getMetadata());
         $objectId = $metadata['object_id'];
+        $objectIncrementId = $metadata['object_increment_id'] ?? '';
         $stockId = $reservation->getStockId();
         $key = $objectId . '-' . $stockId;
 
@@ -71,6 +72,7 @@ class Collector
         }
 
         $this->items[$key]->setObjectId((int)$objectId);
+        $this->items[$key]->setOrderIncrementId((string)$objectIncrementId);
         $this->items[$key]->setStockId((int)$stockId);
         $this->items[$key]->addItemQty($reservation->getSku(), $reservation->getQuantity());
     }
@@ -92,6 +94,7 @@ class Collector
         }
 
         $this->items[$key]->setOrderIncrementId($order->getIncrementId());
+        $this->items[$key]->setHasAssignedOrder(true);
         $this->items[$key]->setOrderStatus($order->getStatus());
     }
 
@@ -112,6 +115,7 @@ class Collector
         }
 
         $this->items[$key]->setOrderIncrementId($orderData['increment_id']);
+        $this->items[$key]->setHasAssignedOrder(true);
         $this->items[$key]->setOrderStatus($orderData['status']);
     }
 
