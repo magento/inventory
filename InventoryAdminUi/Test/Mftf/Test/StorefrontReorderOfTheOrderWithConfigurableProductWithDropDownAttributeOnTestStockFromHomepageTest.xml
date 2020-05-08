@@ -20,6 +20,9 @@
             <severity value="BLOCKER"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="https://github.com/magento/inventory/issues/3022" />
+            </skip>
         </annotations>
 
         <before>
