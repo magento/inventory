@@ -10,4 +10,7 @@
         <plugin name="disable_grouped_type"
                 type="Magento\InventoryGroupedProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableGroupedTypePlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Helper\Stock">
+        <plugin name="adapt_assign_stock_status_to_grouped_product" type="Magento\InventoryGroupedProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
+    </type>
 </config>

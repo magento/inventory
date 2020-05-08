@@ -12,7 +12,9 @@ use Magento\Bundle\Model\ResourceModel\Selection\Collection;
 use Magento\Bundle\Model\ResourceModel\Selection\Collection\FilterApplier;
 use Magento\Bundle\Model\ResourceModel\Selection\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Retrieve bundle product selection service.
@@ -35,18 +37,26 @@ class GetProductSelection
     private $selectionCollectionFilterApplier;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * @param CollectionFactory $collectionFactory
      * @param MetadataPool $metadataPool
      * @param FilterApplier $selectionCollectionFilterApplier
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         CollectionFactory $collectionFactory,
         MetadataPool $metadataPool,
-        FilterApplier $selectionCollectionFilterApplier
+        FilterApplier $selectionCollectionFilterApplier,
+        StoreManagerInterface $storeManager
     ) {
         $this->collectionFactory = $collectionFactory;
         $this->metadataPool = $metadataPool;
         $this->selectionCollectionFilterApplier = $selectionCollectionFilterApplier;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -61,7 +71,8 @@ class GetProductSelection
     {
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $selectionsCollection = $this->collectionFactory->create();
-        $selectionsCollection->addAttributeToSelect('status');
+        $selectionsCollection->addStoreFilter($this->storeManager->getStore());
+        $selectionsCollection->addAttributeToFilter(ProductInterface::STATUS, Status::STATUS_ENABLED);
         $selectionsCollection->setFlag('product_children', true);
         $selectionsCollection->addFilterByRequiredOptions();
         $selectionsCollection->setOptionIdsFilter([$option->getId()]);
