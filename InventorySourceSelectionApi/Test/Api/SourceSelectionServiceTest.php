@@ -106,8 +106,8 @@ class SourceSelectionServiceTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo, $requestData)
             : $this->_webApiCall($serviceInfo, $requestData);
 
-        self::assertInternalType('array', $sourceSelectionAlgorithmResult);
-        self::assertNotEmpty($sourceSelectionAlgorithmResult);
+        $this->assertIsArray($sourceSelectionAlgorithmResult);
+        $this->assertNotEmpty($sourceSelectionAlgorithmResult);
         AssertArrayContains::assert($expectedResultData, $sourceSelectionAlgorithmResult);
     }
 }

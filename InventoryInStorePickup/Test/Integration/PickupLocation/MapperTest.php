@@ -150,7 +150,6 @@ class MapperTest extends TestCase
     private function getMap(): array
     {
         return [
-            'source_code' => 'source_code',
             'email' => 'email',
             'fax' => 'fax',
             'contact_name' => 'contact_name',

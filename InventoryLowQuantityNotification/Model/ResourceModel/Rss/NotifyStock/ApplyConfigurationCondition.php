@@ -36,6 +36,8 @@ class ApplyConfigurationCondition
     }
 
     /**
+     * Add additional condition to the select.
+     *
      * @param Select $select
      * @return void
      */
