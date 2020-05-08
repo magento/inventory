@@ -56,7 +56,7 @@ class CodeValidatorTest extends TestCase
         $errors = $result->getErrors();
         foreach ($errorStrings as $errorString) {
             $errorText = array_shift($errors);
-            $this->assertContains($errorString, (string)$errorText);
+            $this->assertStringContainsString((string)$errorString, (string)$errorText);
         }
     }
 

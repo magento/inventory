@@ -40,12 +40,11 @@ class BundleProductShipTogetherSaveChildValidationTest extends WebapiAbstract
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
      * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle_ship_together.php
-     *
-     * @expectedException \Exception
-     * @expectedExceptionMessage cannot be added to bundle product
      */
     public function testAddOptionShipmentTypeTogetherMultipleSources(): void
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('cannot be added to bundle product');
         $bundleProduct = $this->productRepository->get('bundle-ship-together');
         $options = $bundleProduct->getExtensionAttributes()->getBundleProductOptions();
         $option = current($options);

@@ -51,12 +51,15 @@ class MapperTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Wrong mapping provided for Magento\InventoryApi\Api\Data\SourceInterface. Field
-     *     'source_fail_field' is not found.
      */
     public function testWrongMappingForSource()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Wrong mapping provided for Magento\InventoryApi\Api\Data\SourceInterface. '
+            . 'Field \'source_fail_field\' is not found.'
+        );
+
         $source = $this->sourceRepository->get($this->sourceCode);
         $map = $this->getMap();
         $map['source_fail_field'] = 'fail_field';
@@ -67,13 +70,15 @@ class MapperTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Wrong mapping provided for
-     *     Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface. Field 'extension_attributes.fail_field'
-     *     is not found.
      */
     public function testWrongMappingForPickupLocationExtensionAttributes()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Wrong mapping provided for Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface. '
+            . 'Field \'extension_attributes.fail_field\' is not found.'
+        );
+
         $source = $this->sourceRepository->get($this->sourceCode);
         $map = $this->getMap();
         $map['name'] = 'extension_attributes.fail_field';
@@ -84,12 +89,15 @@ class MapperTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/pickup_location.php
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Wrong mapping provided for
-     *     Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface. Field 'fail_field' is not found.
      */
     public function testWrongMappingForPickupLocation()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Wrong mapping provided for Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface. '
+            . 'Field \'fail_field\' is not found.'
+        );
+
         $source = $this->sourceRepository->get($this->sourceCode);
         $map = $this->getMap();
         $map['name'] = 'fail_field';
@@ -118,7 +126,7 @@ class MapperTest extends TestCase
             $this->templateFilter->filter($source->getExtensionAttributes()->getFrontendDescription()),
             $pickupLocation->getDescription()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '/pub/media/test/location.png" alt="/"',
             $pickupLocation->getDescription()
         );

@@ -105,12 +105,12 @@ class ApplyNameAttributeJoin
         $connection = $this->resourceConnection->getConnection();
 
         return implode(
+            ' ' . Select::SQL_AND . ' ',
             [
                 $alias . '.' . $linkField . ' = product.' . $linkField,
                 $connection->prepareSqlCondition($alias . '.store_id', $storeId),
                 $connection->prepareSqlCondition($alias . '.attribute_id', $attributeId),
-            ],
-            ' ' . Select::SQL_AND . ' '
+            ]
         );
     }
 }

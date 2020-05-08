@@ -101,7 +101,7 @@ class GetPickupLocationTest extends TestCase
                 'us-1',
                 'eu_website',
                 true,
-                __(
+                (string)__(
                     'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'us-1',
@@ -114,7 +114,7 @@ class GetPickupLocationTest extends TestCase
                 'zzz',
                 'global_website',
                 true,
-                __(
+                (string)__(
                     'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'zzz',
@@ -127,7 +127,7 @@ class GetPickupLocationTest extends TestCase
                 'eu-2',
                 'eu_website',
                 true,
-                __(
+                (string)__(
                     'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'eu-2',
