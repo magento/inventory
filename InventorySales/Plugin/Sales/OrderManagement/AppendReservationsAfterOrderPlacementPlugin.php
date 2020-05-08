@@ -162,8 +162,9 @@ class AppendReservationsAfterOrderPlacementPlugin
         $this->checkItemsQuantity->execute($itemsBySku, $stockId);
 
         /** @var SalesEventExtensionInterface */
-        $salesEventExtension = $this->salesEventExtensionFactory->create();
-        $salesEventExtension->setData('objectIncrementId', (string)$order->getIncrementId());
+        $salesEventExtension = $this->salesEventExtensionFactory->create([
+            'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
+        ]);
 
         /** @var SalesEventInterface $salesEvent */
         $salesEvent = $this->salesEventFactory->create([
@@ -184,7 +185,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         try {
             $order = $proceed($order);
         } catch (\Exception $e) {
-            //add rollback reservation
+            //add compensation
             foreach ($itemsToSell as $item) {
                 $item->setQuantity(-(float)$item->getQuantity());
             }
