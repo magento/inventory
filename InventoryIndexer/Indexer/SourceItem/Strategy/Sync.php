@@ -91,7 +91,6 @@ class Sync
      * Reindex list of source items by provided ids.
      *
      * @param int[] $sourceItemIds
-     * @throws \Magento\Framework\Exception\StateException
      */
     public function executeList(array $sourceItemIds) : void
     {
