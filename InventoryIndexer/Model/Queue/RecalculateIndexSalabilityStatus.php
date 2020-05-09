@@ -20,5 +20,6 @@ class RecalculateIndexSalabilityStatus
     public function execute(ReservationData $reservationData): void
     {
         //TODO
+        list($skus, $stock) = [$reservationData->getSkus(), $reservationData->getStock()];
     }
 }
