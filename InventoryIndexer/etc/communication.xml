@@ -12,7 +12,7 @@
     <topic name="inventory.indexer.stock" is_synchronous="false" request="int[]">
         <handler name="inventory.indexer.stock.handler" type="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync" method="executeList" />
     </topic>
-    <topic name="inventory.reservation.place" is_synchronous="false" request="string[]">
-        <handler name="inventory.reservation.place.handler" type="Magento\InventoryIndexer\Model\ReservationDummy" method="execute" />
+    <topic name="inventory.reservation.place" is_synchronous="false" request="Magento\InventoryIndexer\Model\Queue\ReservationData">
+        <handler name="inventory.reservation.place.handler" type="Magento\InventoryIndexer\Model\Queue\RecalculateIndexSalabilityStatus" method="execute" />
     </topic>
 </config>
