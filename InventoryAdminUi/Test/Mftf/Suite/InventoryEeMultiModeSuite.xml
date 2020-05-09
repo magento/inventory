@@ -7,21 +7,20 @@
 -->
 <suites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
-    <suite name="MSI_B2B_Single_Mode">
+    <suite name="InventoryEeMultiModeSuite">
         <before>
-            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
-            <magentoCLI stepKey="disableWYSYWYG" command="config:set cms/wysiwyg/enabled disabled"/>
+            <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG" />
             <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
         </before>
         <include>
-            <group name="msi_b2b"/>
+            <group name="msi_ee"/>
         </include>
         <exclude>
             <group name="skip"/>
-            <group name="multi_mode"/>
+            <group name="single_mode"/>
         </exclude>
         <after>
-            <magentoCLI stepKey="maintenanceDisable" command="maintenance:disable"/>
+            <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG" />
         </after>
     </suite>
 </suites>

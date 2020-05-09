@@ -46,7 +46,7 @@ class IsAnySourceItemInStockConditionTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->areProductsSalableForRequestedQty = $objectManager->get(

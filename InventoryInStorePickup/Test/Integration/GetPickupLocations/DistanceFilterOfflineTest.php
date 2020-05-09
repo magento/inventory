@@ -39,7 +39,7 @@ class DistanceFilterOfflineTest extends TestCase
      */
     private $sortOrderBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
         $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilderInterface::class);
