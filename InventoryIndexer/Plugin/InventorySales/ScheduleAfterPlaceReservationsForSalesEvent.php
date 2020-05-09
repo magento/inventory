@@ -7,16 +7,23 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Plugin\InventorySales;
 
-use Magento\InventorySales\Model\PlaceReservationsForSalesEvent;
 use Magento\Framework\MessageQueue\PublisherInterface;
+use Magento\InventoryIndexer\Model\Queue\ReservationData;
+use Magento\InventoryIndexer\Model\Queue\ReservationDataFactory;
+use Magento\InventorySales\Model\PlaceReservationsForSalesEvent;
+use Magento\InventorySalesApi\Api\Data\ItemToSellInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface;
 
 /**
- * Invalidate Inventory Indexer after Source was enabled or disabled.
+ * Enqueue reservations processing after appending in order to recalculate index salability status.
  */
 class ScheduleAfterPlaceReservationsForSalesEvent
 {
-
-    public const TOPIC_RESERVATION_PLACED = "inventory.reservation.place";
+    /**
+     * Queue topic name.
+     */
+    private const TOPIC_RESERVATION_PLACED = "inventory.reservation.place";
 
     /**
      * @var PublisherInterface
@@ -24,25 +31,71 @@ class ScheduleAfterPlaceReservationsForSalesEvent
     private $publisher;
 
     /**
+     * @var GetAssignedStockIdForWebsiteInterface
+     */
+    private $getAssignedStockIdForWebsite;
+
+    /**
+     * @var ReservationDataFactory
+     */
+    private $reservationDataFactory;
+
+    /**
      * @param PublisherInterface $publisher
+     * @param GetAssignedStockIdForWebsiteInterface $getAssignedStockIdForWebsite
+     * @param ReservationDataFactory $reservationDataFactory
      */
     public function __construct(
-        PublisherInterface $publisher
+        PublisherInterface $publisher,
+        GetAssignedStockIdForWebsiteInterface $getAssignedStockIdForWebsite,
+        ReservationDataFactory $reservationDataFactory
     ) {
         $this->publisher = $publisher;
+        $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
+        $this->reservationDataFactory = $reservationDataFactory;
     }
 
     /**
-     * Schedule stock status update after resevation placed
-     *
      * @param PlaceReservationsForSalesEvent $subject
-     * @param void $result
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param null $result
+     * @param ItemToSellInterface[] $items
+     * @param SalesChannelInterface $salesChannel
+     *
+     * @return void
      */
     public function afterExecute(
         PlaceReservationsForSalesEvent $subject,
-        $result
+        $result,
+        array $items,
+        SalesChannelInterface $salesChannel
     ) {
-        $this->publisher->publish(self::TOPIC_RESERVATION_PLACED, []);
+        $this->publisher->publish(
+            self::TOPIC_RESERVATION_PLACED,
+            $this->getReservationsDataObject($salesChannel, $items)
+        );
+    }
+
+    /**
+     * @param SalesChannelInterface $salesChannel
+     * @param ItemToSellInterface[] $items
+     *
+     * @return ReservationData
+     */
+    private function getReservationsDataObject(SalesChannelInterface $salesChannel, array $items): ReservationData
+    {
+        $stockId = $this->getAssignedStockIdForWebsite->execute($salesChannel->getCode());
+        $skus = array_map(
+            function (ItemToSellInterface $itemToSell): string {
+                return $itemToSell->getSku();
+            },
+            $items
+        );
+
+        return $this->reservationDataFactory->create(
+            [
+                'stockId' => $stockId,
+                'skus' => $skus
+            ]
+        );
     }
 }
