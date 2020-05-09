@@ -29,7 +29,7 @@ class GetOrdersTotalCountTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = new ObjectManager($this);
@@ -59,7 +59,7 @@ class GetOrdersTotalCountTest extends TestCase
             ->willReturnArgument(0);
         $this->resourceConnection->expects($this->exactly(1))
             ->method('getConnection')
-            ->with($this->equalTo($salesConnectionName))
+            ->with($salesConnectionName)
             ->willReturn($salesConnection);
         $this->assertEquals($ordersCount, $this->model->execute());
     }
@@ -70,7 +70,7 @@ class GetOrdersTotalCountTest extends TestCase
      */
     private function createConnectionMock(MockObject $select): MockObject
     {
-        $connection = $this->createMock(AdapterInterface::class);
+        $connection = $this->getMockForAbstractClass(AdapterInterface::class);
         $connection->method('select')
             ->willReturn($select);
         return $connection;

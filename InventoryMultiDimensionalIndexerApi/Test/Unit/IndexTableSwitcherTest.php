@@ -9,10 +9,11 @@ namespace Magento\InventoryMultiDimensionalIndexerApi\Test\Unit;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcher;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,42 +22,42 @@ use PHPUnit\Framework\TestCase;
 class IndexTableSwitcherTest extends TestCase
 {
     /**
-     * @var IndexTableSwitcher|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexTableSwitcher|MockObject
      */
     private $indexTableSwitcher;
 
     /**
-     * @var IndexName|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexName|MockObject
      */
     private $indexName;
 
     /**
-     * @var ResourceConnection|\PHPUnit_Framework_MockObject_MockObject
+     * @var ResourceConnection|MockObject
      */
     private $resourceConnection;
 
     /**
-     * @var IndexNameResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexNameResolverInterface|MockObject
      */
     private $indexNameResolver;
 
     /**
-     * @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AdapterInterface|MockObject
      */
     private $adapter;
 
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $objectManager = new ObjectManager($this);
         $this->indexName = $this->createMock(IndexName::class);
         $this->resourceConnection = $this->createMock(ResourceConnection::class);
-        $this->indexNameResolver = $this->createMock(IndexNameResolverInterface::class);
-        $this->adapter = $this->createMock(AdapterInterface::class);
+        $this->indexNameResolver = $this->getMockForAbstractClass(IndexNameResolverInterface::class);
+        $this->adapter = $this->getMockForAbstractClass(AdapterInterface::class);
 
         $this->indexTableSwitcher = $objectManager->getObject(
             IndexTableSwitcher::class,
