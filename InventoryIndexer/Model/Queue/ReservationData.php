@@ -24,12 +24,12 @@ class ReservationData
 
     /**
      * @param string[] $skus
-     * @param int $stockId
+     * @param int $stock
      */
-    public function __construct(array $skus, int $stockId)
+    public function __construct(array $skus, int $stock)
     {
         $this->skus = $skus;
-        $this->stockId = $stockId;
+        $this->stockId = $stock;
     }
 
     /**
@@ -47,7 +47,7 @@ class ReservationData
      *
      * @return int
      */
-    public function getStockId(): int
+    public function getStock(): int
     {
         return $this->stockId;
     }
