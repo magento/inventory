@@ -27,7 +27,7 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
         $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);

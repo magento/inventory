@@ -106,7 +106,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      */
     private $saveStockItemConfiguration;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);
@@ -351,7 +351,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

@@ -129,7 +129,7 @@ class ReservationPlacingDuringRegisterProductsSaleTest extends TestCase
      */
     private $storeRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
         $this->cartItemFactory = Bootstrap::getObjectManager()->get(CartItemInterfaceFactory::class);
@@ -153,7 +153,7 @@ class ReservationPlacingDuringRegisterProductsSaleTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

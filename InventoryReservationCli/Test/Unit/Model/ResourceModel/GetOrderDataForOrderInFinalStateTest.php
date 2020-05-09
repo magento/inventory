@@ -30,7 +30,7 @@ class GetOrderDataForOrderInFinalStateTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = new ObjectManager($this);
@@ -106,7 +106,7 @@ class GetOrderDataForOrderInFinalStateTest extends TestCase
      */
     private function createConnectionMock(MockObject $select): MockObject
     {
-        $connection = $this->createMock(AdapterInterface::class);
+        $connection = $this->getMockForAbstractClass(AdapterInterface::class);
         $connection->method('select')
             ->willReturn($select);
         return $connection;

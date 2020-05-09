@@ -31,7 +31,7 @@ class RenameWebsiteToStockLinkTest extends TestCase
      */
     private $websiteResource;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->websiteFactory = Bootstrap::getObjectManager()->get(WebsiteFactory::class);
         $this->getAssignedStockIdForWebsite = Bootstrap::getObjectManager()->get(

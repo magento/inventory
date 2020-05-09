@@ -38,7 +38,7 @@ class GetStockStatusTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkusInterface::class);
