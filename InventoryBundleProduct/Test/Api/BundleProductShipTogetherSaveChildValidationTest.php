@@ -37,9 +37,9 @@ class BundleProductShipTogetherSaveChildValidationTest extends WebapiAbstract
     /**
      * Verify, simple product cannot be replaced in bundle product "Ship Together" in case of multiple sources.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle_ship_together.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryBundleProduct::Test/_files/product_bundle_ship_together.php
      */
     public function testAddOptionShipmentTypeTogetherMultipleSources(): void
     {
@@ -67,9 +67,9 @@ class BundleProductShipTogetherSaveChildValidationTest extends WebapiAbstract
     /**
      * Verify, simple product can be replaced in bundle product "Ship Together" in case of single source.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle_ship_together.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryBundleProduct::Test/_files/product_bundle_ship_together.php
      */
     public function testAddOptionShipmentTypeTogetherSingleSource(): void
     {
@@ -96,9 +96,9 @@ class BundleProductShipTogetherSaveChildValidationTest extends WebapiAbstract
     /**
      * Verify, simple product can be replaced in bundle product "Ship Separately" in case of multiple sources.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/product_bundle_ship_separately.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryBundleProduct::Test/_files/product_bundle_ship_separately.php
      */
     public function testAddOptionShipmentTypeSeparately(): void
     {

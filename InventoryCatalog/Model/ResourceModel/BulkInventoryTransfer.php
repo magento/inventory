@@ -92,7 +92,7 @@ class BulkInventoryTransfer
             ->where(SourceItemInterface::SKU . ' = ?', $sku);
 
         $res = $connection->fetchRow($query);
-        if ($res === false) {
+        if (empty($res)) {
             return null;
         }
 
