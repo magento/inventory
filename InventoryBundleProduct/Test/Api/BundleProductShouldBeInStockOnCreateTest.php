@@ -44,7 +44,7 @@ class BundleProductShouldBeInStockOnCreateTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
      */
     public function testIsBundleProductWithSimpleProductInStockAfterCreate()
     {
