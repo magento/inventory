@@ -40,7 +40,7 @@ class GetProductIdsBySkus implements GetProductIdsBySkusInterface
 
         if (!empty($notFoundedSkus)) {
             throw new NoSuchEntityException(
-                __('Following products with requested skus were not found: %1', implode($notFoundedSkus, ', '))
+                __('Following products with requested skus were not found: %1', implode(', ', $notFoundedSkus))
             );
         }
 

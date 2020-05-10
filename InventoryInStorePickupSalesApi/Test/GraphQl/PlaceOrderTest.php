@@ -64,7 +64,7 @@ class PlaceOrderTest extends GraphQlAbstract
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);
@@ -78,7 +78,7 @@ class PlaceOrderTest extends GraphQlAbstract
     /**
      * Tear down.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

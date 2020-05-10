@@ -27,7 +27,7 @@
         <waitForPageLoad stepKey="waitForProductPageLoad"/>
         <!--Verify Notify Quantity has changed.-->
         <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyQuantityUseDefaultIsNotUsed"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="95" stepKey="verifyNotifyQuantityValue"/>
+        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="95.0000" stepKey="verifyNotifyQuantityValue"/>
         <!--Resume to Notify Quantity 'Use Default'.-->
         <checkOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="checkNotifyQtyUseDefault"/>
         <click selector="{{AdminProductFormSection.save}}" stepKey="saveProductAfterNotifyQuantitySetToUseDefault"/>

@@ -19,7 +19,7 @@ class LowQuantityCollectionTest extends TestCase
      */
     private $lowQuantityCollection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->lowQuantityCollection = Bootstrap::getObjectManager()->create(LowQuantityCollection::class);
     }
