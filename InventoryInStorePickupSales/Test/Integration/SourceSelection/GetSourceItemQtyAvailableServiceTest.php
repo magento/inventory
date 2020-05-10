@@ -36,7 +36,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      */
     private $searchCriteriaBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $om = Bootstrap::getObjectManager();
         $this->getSourceItemQtyAvailableService = $om->get(GetSourceItemQtyAvailableService::class);
