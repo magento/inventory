@@ -23,7 +23,7 @@ class ScheduleAfterPlaceReservationsForSalesEvent
     /**
      * Queue topic name.
      */
-    private const TOPIC_RESERVATION_PLACED = "inventory.reservation.place";
+    private const TOPIC_RESERVATIONS_UPDATE_SALABILITY_STATUS = "inventory.reservations.updateSalabilityStatus";
 
     /**
      * @var PublisherInterface
@@ -70,7 +70,7 @@ class ScheduleAfterPlaceReservationsForSalesEvent
         SalesChannelInterface $salesChannel
     ) {
         $this->publisher->publish(
-            self::TOPIC_RESERVATION_PLACED,
+            self::TOPIC_RESERVATIONS_UPDATE_SALABILITY_STATUS,
             $this->getReservationsDataObject($salesChannel, $items)
         );
     }

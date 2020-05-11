@@ -7,6 +7,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
     <exchange name="magento-db" type="topic" connection="db">
-        <binding id="InventoryReservationPlaceDb" topic="inventory.reservation.place" destinationType="queue" destination="inventory.reservation.place"/>
+        <binding id="InventoryReservationUpdateSalabilityStatus" topic="inventory.reservations.updateSalabilityStatus" destinationType="queue" destination="inventory.reservations.updateSalabilityStatus"/>
     </exchange>
 </config>
