@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminLowStockReportSimpleProductTwoWebsitesTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Low stock report simple product two stocks, two websites."/>
+            <description value="Verify low stock report filters results by website"/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/446482/scenarios/4453945"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Crate additional stock and source.-->
+            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="BasicMsiStock1" stepKey="stock"/>
+            <!--Link additional source with stock.-->
+            <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <!--Create category and product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <!--Create new website,store and store view-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite" >
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView" >
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!--Assign Custom Stock to Additional Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="$stock.stock[name]$"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Assign product to custom website and source.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="goToProductEditPage"/>
+            <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource1">
+                <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+                <argument name="qty" value="{{defaultProductQty.value}}" />
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToCreatedProduct">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <!--Set notify quantity for sources.-->
+            <actionGroup ref="AdminFillNotifyQtyActionGroup" stepKey="fillNotifyQuantityForDefaultSource">
+                <argument name="qty" value="{{101ProductQty.value}}"/>
+                <argument name="rowIndex" value="0"/>
+            </actionGroup>
+            <actionGroup ref="AdminFillNotifyQtyActionGroup" stepKey="fillNotifyQuantityForCustomSource">
+                <argument name="qty" value="{{101ProductQty.value}}"/>
+                <argument name="rowIndex" value="1"/>
+            </actionGroup>
+            <!--Assign product to additional website.-->
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignGroupedProductToAdditionalWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+        </before>
+        <after>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Delete custom website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Verify report for main website.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPage"/>
+        <actionGroup ref="AdminSwitchStoreViewNoConfirmationActionGroup" stepKey="selectDefaultStoreView">
+            <argument name="storeView" value="_defaultStore.name"/>
+        </actionGroup>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmptyForCustomSource">
+            <argument name="productSku" value="$product.sku$"/>
+            <argument name="sourceCode" value="$source.source[source_code]$"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyForCustomSource"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportForDefaultSource">
+            <argument name="productSku" value="$product.sku$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyProductReport">
+            <argument name="product" value="$product$"/>
+            <argument name="productQty" value="{{defaultProductQty.value}}"/>
+            <argument name="source" value="_defaultSource"/>
+        </actionGroup>
+        <!--Verify report for custom website.-->
+        <actionGroup ref="AdminSwitchStoreViewNoConfirmationActionGroup" stepKey="selectCustomStoreView">
+            <argument name="storeView" value="customStore.name"/>
+        </actionGroup>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmptyForDefaultSource">
+            <argument name="productSku" value="$product.sku$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyForDefaultSource"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportForCustomSource">
+            <argument name="productSku" value="$product.sku$"/>
+            <argument name="sourceCode" value="$source.source[source_code]$"/>
+        </actionGroup>
+        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyProductReportForCustomSource">
+            <argument name="product" value="$product$"/>
+            <argument name="productQty" value="{{defaultProductQty.value}}"/>
+            <argument name="source" value="$source$"/>
+        </actionGroup>
+    </test>
+</tests>

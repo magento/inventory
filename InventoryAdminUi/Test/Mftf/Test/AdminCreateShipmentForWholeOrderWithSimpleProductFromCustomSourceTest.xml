@@ -27,7 +27,7 @@
             <createData entity="_minimalSource" stepKey="createSource4"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
             <!-- Assign Sources to Stock -->
             <actionGroup ref="AssignSourceToStockActionGroup" stepKey="assignSourceToStock1">
@@ -93,10 +93,10 @@
                        stepKey="fillSourceQtyField3"/>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="{{SimpleMsiProduct.quantity}}"
                        stepKey="fillSourceQtyField4"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
         </after>

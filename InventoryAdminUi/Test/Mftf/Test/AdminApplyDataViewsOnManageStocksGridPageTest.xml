@@ -18,9 +18,9 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockListPage1"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         </before>
@@ -29,7 +29,7 @@
             <click selector="{{AdminGridDefaultViewControls.viewByName('Default View')}}" stepKey="clickOnDefaultViewMenuOption1"/>
             <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnTheColumnsButton1"/>
             <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns1"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnTheColumnsButton1"/>

@@ -29,7 +29,7 @@ class CreateStockTableTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class CreateStockTableTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDbIsolation disabled
      */
     public function testExecute()

@@ -28,10 +28,10 @@ use PHPUnit\Framework\TestCase;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
- * @magentoDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/default_stock_bundle_products.php
- * @magentoDataFixture ../../../../app/code/Magento/InventoryBundleProduct/Test/_files/source_items_for_bundle_options_on_default_source.php
- * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
- * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+ * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/default_stock_bundle_products.php
+ * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/source_items_for_bundle_options_on_default_source.php
+ * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+ * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
 {
@@ -98,7 +98,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
@@ -135,12 +135,10 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->deleteOrderById((int)$orderId);
     }
 
-    /**
-     * @expectedException \Magento\Framework\Exception\LocalizedException
-     * @expectedExceptionMessage Product that you are trying to add is not available.
-     */
     public function testPlaceOrderWithOutOfStockProduct()
     {
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $this->expectExceptionMessage('Product that you are trying to add is not available.');
         $bundleSku = 'bundle-product-out-of-stock';
         $qty = 3;
         $cart = $this->getCart();
@@ -262,7 +260,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

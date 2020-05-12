@@ -40,7 +40,7 @@ class AppendReservationsTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getSalableQuantityInconsistencies = Bootstrap::getObjectManager()
             ->get(GetSalableQuantityInconsistencies::class);
@@ -52,7 +52,7 @@ class AppendReservationsTest extends TestCase
     /**
      * Verify create-compensations command will correctly compensate qty for configurable product default stock.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/incomplete_order_without_reservation_configurable_product.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/incomplete_order_without_reservation_configurable_product.php
      *
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/909285/scenarios/3529620
      * @return void
@@ -72,17 +72,17 @@ class AppendReservationsTest extends TestCase
     /**
      * Verify create-compensations will correctly compensate qty for configurable product custom stock.
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/product_configurable.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/source_items_configurable.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/create_quote_on_us_website.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/order_configurable_product.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryReservationCli/Test/Integration/_files/delete_reservations.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/create_quote_on_us_website.php
+     * @magentoDataFixture Magento_InventoryShipping::Test/_files/order_configurable_product.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php
      * @magentoDbIsolation disabled
      *
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/909285/scenarios/3529695

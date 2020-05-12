@@ -39,7 +39,7 @@ class CombinedTest extends TestCase
      */
     private $sortOrderBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getPickupLocations = Bootstrap::getObjectManager()->get(GetPickupLocations::class);
         $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilderInterface::class);
@@ -47,14 +47,14 @@ class CombinedTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
@@ -65,13 +65,13 @@ class CombinedTest extends TestCase
     public function testExecuteDistanceFilterWithAddressFilters()
     {
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
-                                                    ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-                                                    ->setAreaRadius(750)
-                                                    ->setAreaSearchTerm('86559:DE')
-                                                    ->setCityFilter('Kolbermoor,Mitry-Mory', 'in')
-                                                    ->setRegionIdFilter('259')
-                                                    ->setRegionFilter('Seine-et-Marne')
-                                                    ->create();
+            ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
+            ->setAreaRadius(750)
+            ->setAreaSearchTerm('86559:DE')
+            ->setCityFilter('Kolbermoor,Mitry-Mory', 'in')
+            ->setRegionIdFilter('259')
+            ->setRegionFilter('Seine-et-Marne')
+            ->create();
 
         /** @var SearchResultInterface $result */
         $result = $this->getPickupLocations->execute($searchRequest);
@@ -82,14 +82,14 @@ class CombinedTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
@@ -100,14 +100,14 @@ class CombinedTest extends TestCase
     public function testExecuteDistanceFilterWithGeneralFilters()
     {
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
-                                                    ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-                                                    ->setAreaRadius(750)
-                                                    ->setAreaSearchTerm('86559:DE')
-                                                    ->setNameFilter('source', 'fulltext')
-                                                    ->setPickupLocationCodeFilter('eu%', 'like')
-                                                    ->setCurrentPage(2)
-                                                    ->setPageSize(1)
-                                                    ->create();
+            ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
+            ->setAreaRadius(750)
+            ->setAreaSearchTerm('86559:DE')
+            ->setNameFilter('source', 'fulltext')
+            ->setPickupLocationCodeFilter('eu%', 'like')
+            ->setCurrentPage(2)
+            ->setPageSize(1)
+            ->create();
 
         /** @var SearchResultInterface $result */
         $result = $this->getPickupLocations->execute($searchRequest);
@@ -118,14 +118,14 @@ class CombinedTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
@@ -140,18 +140,18 @@ class CombinedTest extends TestCase
             ->create();
 
         $searchRequest = $this->searchRequestBuilder->setScopeCode('global_website')
-                                                    ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
-                                                    ->setAreaRadius(6371000)
-                                                    ->setAreaSearchTerm('86559:DE')
-                                                    ->setNameFilter('source', 'fulltext')
-                                                    ->setCityFilter(
-                                                        'Kolbermoor,Mitry-Mory,Burlingame',
-                                                        'in'
-                                                    )->setCountryFilter('DE', 'neq')
-                                                    ->setPageSize(2)
-                                                    ->setCurrentPage(2)
-                                                    ->setSortOrders([$sort])
-                                                    ->create();
+            ->setScopeType(SalesChannelInterface::TYPE_WEBSITE)
+            ->setAreaRadius(6371000)
+            ->setAreaSearchTerm('86559:DE')
+            ->setNameFilter('source', 'fulltext')
+            ->setCityFilter(
+                'Kolbermoor,Mitry-Mory,Burlingame',
+                'in'
+            )->setCountryFilter('DE', 'neq')
+            ->setPageSize(2)
+            ->setCurrentPage(1)
+            ->setSortOrders([$sort])
+            ->create();
 
         /** @var SearchResultInterface $result */
         $result = $this->getPickupLocations->execute($searchRequest);
@@ -164,14 +164,14 @@ class CombinedTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
      *
      * @magentoConfigFixture default/cataloginventory/source_selection_distance_based/provider offline
      *
@@ -182,11 +182,11 @@ class CombinedTest extends TestCase
     public function testExecuteDistanceFilterWithPaging()
     {
         $searchRequest = $this->searchRequestBuilder->setAreaRadius(750)
-                                                    ->setAreaSearchTerm('86559:DE')
-                                                    ->setScopeCode('global_website')
-                                                    ->setPageSize(1)
-                                                    ->setCurrentPage(1)
-                                                    ->create();
+            ->setAreaSearchTerm('86559:DE')
+            ->setScopeCode('global_website')
+            ->setPageSize(1)
+            ->setCurrentPage(1)
+            ->create();
 
         /** @var SearchResultInterface $result */
         $result = $this->getPickupLocations->execute($searchRequest);

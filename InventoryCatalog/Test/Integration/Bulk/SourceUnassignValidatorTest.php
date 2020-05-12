@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright :copyright: Magento, Inc. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
@@ -18,14 +18,14 @@ class SourceUnassignValidatorTest extends TestCase
      */
     private $massUnassignValidator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->massUnassignValidator = Bootstrap::getObjectManager()->get(BulkSourceUnassignValidatorInterface::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      */
     public function testSourceValidator()
     {

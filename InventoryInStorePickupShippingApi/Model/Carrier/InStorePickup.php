@@ -9,9 +9,7 @@ namespace Magento\InventoryInStorePickupShippingApi\Model\Carrier;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetFreePackagesInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceInterface;
-use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Command\GetShippingPriceRequestInterface;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\Validation\RequestValidatorInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\Error;
@@ -21,6 +19,7 @@ use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\ResultFactory;
+use Magento\Store\Api\Data\StoreInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -61,16 +60,6 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
     private $requestValidator;
 
     /**
-     * @var GetFreePackagesInterface
-     */
-    private $getFreePackages;
-
-    /**
-     * @var GetShippingPriceRequestInterface
-     */
-    private $getShippingPriceRequest;
-
-    /**
      * @var GetCarrierTitle
      */
     private $getCarrierTitle;
@@ -83,8 +72,6 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      * @param MethodFactory $rateMethodFactory
      * @param GetShippingPriceInterface $getShippingPrice
      * @param RequestValidatorInterface $requestValidator
-     * @param GetFreePackagesInterface $getFreePackages
-     * @param GetShippingPriceRequestInterface $getShippingPriceRequest
      * @param GetCarrierTitle $getCarrierTitle
      * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -97,8 +84,6 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         MethodFactory $rateMethodFactory,
         GetShippingPriceInterface $getShippingPrice,
         RequestValidatorInterface $requestValidator,
-        GetFreePackagesInterface $getFreePackages,
-        GetShippingPriceRequestInterface $getShippingPriceRequest,
         GetCarrierTitle $getCarrierTitle,
         array $data = []
     ) {
@@ -106,13 +91,11 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         $this->rateMethodFactory = $rateMethodFactory;
         $this->getShippingPrice = $getShippingPrice;
         $this->requestValidator = $requestValidator;
-        $this->getFreePackages = $getFreePackages;
-        $this->getShippingPriceRequest = $getShippingPriceRequest;
+        $this->getCarrierTitle = $getCarrierTitle;
 
         $this->_code = self::CARRIER_CODE;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
-        $this->getCarrierTitle = $getCarrierTitle;
     }
 
     /**
@@ -124,8 +107,6 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
         $validationResult = $this->requestValidator->validate($request);
 
         if (!$validationResult->isValid()) {
-            $this->debug($validationResult->getErrors());
-
             return $this->createErrorResult();
         }
 
@@ -157,14 +138,7 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
             return null;
         }
 
-        $freeBoxes = $this->getFreePackages->execute($request);
-        $shippingPriceRequest = $this->getShippingPriceRequest->execute(
-            $request,
-            (float)$this->getConfigData('price'),
-            $freeBoxes
-        );
-
-        $shippingPrice = $this->getShippingPrice->execute($shippingPriceRequest, $request);
+        $shippingPrice = $this->getShippingPrice->execute($request);
 
         $result = $this->rateResultFactory->create();
 
@@ -182,11 +156,17 @@ class InStorePickup extends AbstractCarrier implements CarrierInterface
      */
     private function createResultMethod(float $shippingPrice): Method
     {
+        $store = $this->getStore();
+
+        if ($store instanceof StoreInterface) {
+            $store = $store->getId();
+        }
+
         $method = $this->rateMethodFactory->create(
             [
                 'data' => [
                     'carrier' => self::CARRIER_CODE,
-                    'carrier_title' => $this->getCarrierTitle->execute(),
+                    'carrier_title' => $this->getCarrierTitle->execute((int)$store),
                     'method' => self::METHOD_CODE,
                     'method_title' => $this->getConfigData('name'),
                     'cost' => $shippingPrice

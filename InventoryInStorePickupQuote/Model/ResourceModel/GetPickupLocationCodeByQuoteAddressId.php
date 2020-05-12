@@ -40,8 +40,8 @@ class GetPickupLocationCodeByQuoteAddressId
      */
     public function execute(int $addressId): ?string
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_pickup_location_quote_address');
+        $connection = $this->connection->getConnection('checkout');
+        $table = $this->connection->getTableName('inventory_pickup_location_quote_address', 'checkout');
 
         $columns = [PickupLocationInterface::PICKUP_LOCATION_CODE => PickupLocationInterface::PICKUP_LOCATION_CODE];
         $select = $connection->select()

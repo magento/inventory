@@ -21,13 +21,13 @@
 
         <before>
             <createData entity="BasicMsiStock1" stepKey="createStock1"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{BasicMsiWebsite1.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <!-- Copy of "AdminDefaultStockCannotBeDeletedTest steps until we figure out how to post it via the Admin Form. -->
@@ -73,7 +73,7 @@
 
         <unselectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite1.name}}" stepKey="unSelectNewWebsite1"/>
         <dontSeeOptionIsSelected selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite1.name}}" stepKey="dontSeeBasicWebbSiteSelected1"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
 
         <dontSee userInput="{{BasicMsiWebsite1.name}}" selector="{{AdminGridRow.rowByIndex('0')}}" stepKey="dontSeeWebsiteInTheGrid1"/>
 
@@ -86,7 +86,7 @@
 
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{BasicMsiWebsite1.name}}" stepKey="unSelectNewWebsite2"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad4"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose2"/>
 
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchByKeyword2">
             <argument name="keyword" value="$$createStock1.stock[name]$$"/>

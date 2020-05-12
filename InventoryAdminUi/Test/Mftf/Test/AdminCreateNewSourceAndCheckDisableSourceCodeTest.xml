@@ -20,11 +20,11 @@
         </annotations>
 
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
 
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheSourcesListPage"/>
@@ -54,6 +54,8 @@
         <waitForPageLoad time="30" stepKey="waitForSourceSaved"/>
 
         <comment userInput="Check source code field is disabled" stepKey="checkDisabledSourceCode"/>
-        <assertElementContainsAttribute selector="{{AdminEditSourceGeneralSection.code}}" attribute="disabled" stepKey="seeSourceCodeFieldIsDisabled"/>
+        <assertElementContainsAttribute stepKey="seeSourceCodeFieldIsDisabled">
+			<expectedResult selector="{{AdminEditSourceGeneralSection.code}}" attribute="disabled" type="string"></expectedResult>
+        </assertElementContainsAttribute>
     </test>
 </tests>

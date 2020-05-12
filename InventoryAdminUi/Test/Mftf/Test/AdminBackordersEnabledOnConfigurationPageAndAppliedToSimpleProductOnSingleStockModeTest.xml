@@ -33,7 +33,7 @@
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
             <createData entity="Msi_US_Customer" stepKey="createCustomer"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
@@ -55,7 +55,7 @@
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertBackordersConfig"/>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertBackordersConfig"/>
 
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>

@@ -45,7 +45,7 @@
             </createData>
             <createData entity="Simple_US_Customer" stepKey="customer"/>
             <createData entity="_minimalSource" stepKey="source"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Assign Default Stock to Main Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -68,7 +68,7 @@
             <deleteData createDataKey="configurableAttribute2" stepKey="deleteConfigurableAttribute2"/>
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Add product to cart.-->
@@ -92,7 +92,7 @@
             <argument name="sourceName" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
-        <magentoCron stepKey="runConsumers"/>
+        <magentoCron groups="consumers" stepKey="runConsumers"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
