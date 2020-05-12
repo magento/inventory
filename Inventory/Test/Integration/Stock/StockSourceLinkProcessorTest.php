@@ -40,7 +40,7 @@ class StockSourceLinkProcessorTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->getStockSourceLinks = Bootstrap::getObjectManager()->get(GetStockSourceLinksInterface::class);

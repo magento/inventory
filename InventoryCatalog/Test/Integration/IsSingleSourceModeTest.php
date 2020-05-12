@@ -27,7 +27,7 @@ class IsSingleSourceModeTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->isSingleSourceMode = Bootstrap::getObjectManager()->get(IsSingleSourceModeInterface::class);
         $this->sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);

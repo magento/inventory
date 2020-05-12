@@ -46,7 +46,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
     /** @var RequestInterface */
     private $request;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
@@ -135,7 +135,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
         // assert created shipment;
         $this->assertTrue((bool)$createdShipment);
         $this->assertEquals('SKU-1', $shipmentItem->getSku());
-        $this->assertEquals('3.5', $shipmentItem->getQty());
+        $this->assertEquals((float)'3.5', $shipmentItem->getQty());
         $this->assertEquals($sourceId, $createdShipment->getExtensionAttributes()->getSourceCode());
     }
 

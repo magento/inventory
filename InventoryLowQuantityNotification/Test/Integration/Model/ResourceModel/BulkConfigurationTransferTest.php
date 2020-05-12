@@ -24,7 +24,7 @@ class BulkConfigurationTransferTest extends TestCase
      */
     private $getSourceItemConfiguration;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->bulkConfigurationTransfer = Bootstrap::getObjectManager()->get(BulkConfigurationTransfer::class);

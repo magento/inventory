@@ -49,7 +49,7 @@ class SourcesTest extends TestCase
     private $searchCriteriaBuilder;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $importDataMock;
 
@@ -61,7 +61,7 @@ class SourcesTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->importDataMock = $this->getMockBuilder(ImportData::class)
             ->disableOriginalConstructor()
