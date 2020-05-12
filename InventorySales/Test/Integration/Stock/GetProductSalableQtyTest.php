@@ -36,7 +36,7 @@ class GetProductSalableQtyTest extends TestCase
      */
     private $getProductSalableQty;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
@@ -49,7 +49,7 @@ class GetProductSalableQtyTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

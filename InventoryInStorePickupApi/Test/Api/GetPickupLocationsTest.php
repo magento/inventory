@@ -35,7 +35,7 @@ class GetPickupLocationsTest extends WebapiAbstract
      */
     private $getPickupLocation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->getPickupLocation = ObjectManager::getInstance()->get(GetPickupLocationInterface::class);
     }

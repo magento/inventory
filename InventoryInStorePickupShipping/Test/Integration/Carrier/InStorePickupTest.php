@@ -34,7 +34,7 @@ class InStorePickupTest extends TestCase
     /**
      * @inheritdoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
