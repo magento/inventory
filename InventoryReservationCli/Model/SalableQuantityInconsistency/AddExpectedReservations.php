@@ -77,7 +77,8 @@ class AddExpectedReservations
                 ->setMetadata($this->serializer->serialize(
                     [
                         'object_id' => (int)$data['entity_id'],
-                        'object_increment_id' => (string)$data['increment_id']]
+                        'object_increment_id' => (string)$data['increment_id']
+                    ]
                 ))
                 ->build();
 
