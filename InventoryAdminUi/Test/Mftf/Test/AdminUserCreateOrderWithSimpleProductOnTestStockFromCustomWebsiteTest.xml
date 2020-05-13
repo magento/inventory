@@ -16,6 +16,9 @@
             <description value="Admin user create order with Simple product on Test stock from Custom website."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419534/scenarios/2905285"/>
             <severity value="CRITICAL"/>
+            <skip>
+                <issueId value="https://github.com/magento/inventory/issues/3022" />
+            </skip>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
