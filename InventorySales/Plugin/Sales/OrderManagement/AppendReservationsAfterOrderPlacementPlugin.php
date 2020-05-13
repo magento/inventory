@@ -97,7 +97,7 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
-     * @SuppressWarnings(PHPMD.LongParameterList)
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
