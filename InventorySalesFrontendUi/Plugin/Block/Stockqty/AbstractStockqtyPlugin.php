@@ -14,7 +14,11 @@ use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\InventoryCatalogFrontendUi\Model\QtyLeftChecker;
 
+/**
+ * Plugin for adapting stock qty for block.
+ */
 class AbstractStockqtyPlugin
 {
     /**
@@ -38,24 +42,34 @@ class AbstractStockqtyPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
+     * @var QtyLeftChecker
+     */
+    private $qtyLeftChecker;
+
+    /**
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteId
      * @param GetStockItemConfigurationInterface $getStockItemConfig
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
+     * @param QtyLeftChecker $qtyLeftChecker
      */
     public function __construct(
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
         GetStockItemConfigurationInterface $getStockItemConfig,
         GetProductSalableQtyInterface $getProductSalableQty,
-        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
+        IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
+        QtyLeftChecker $qtyLeftChecker
     ) {
         $this->getStockItemConfiguration = $getStockItemConfig;
         $this->stockByWebsiteId = $stockByWebsiteId;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
+        $this->qtyLeftChecker = $qtyLeftChecker;
     }
 
     /**
+     * Is message visible.
+     *
      * @param AbstractStockqty $subject
      * @param callable $proceed
      * @return bool
@@ -75,14 +89,13 @@ class AbstractStockqtyPlugin
             return false;
         }
         $productSalableQty = $this->getProductSalableQty->execute($sku, $stockId);
-        return ($stockItemConfig->getBackorders() === StockItemConfigurationInterface::BACKORDERS_NO
-            || $stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
-            && $stockItemConfig->getMinQty() < 0)
-            && $productSalableQty <= $stockItemConfig->getStockThresholdQty()
-            && $productSalableQty > 0;
+
+        return $this->qtyLeftChecker->isSalableQtyAvailableForDisplaying($productSalableQty);
     }
 
     /**
+     * Get stock qty left.
+     *
      * @param AbstractStockqty $subject
      * @param callable $proceed
      * @return float
