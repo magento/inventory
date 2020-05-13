@@ -26,6 +26,7 @@ use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
 /**
  * Add reservation during order placement
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {
@@ -96,6 +97,7 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
+     * @SuppressWarnings(PHPMD.LongParameterList)
      */
     public function __construct(
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
