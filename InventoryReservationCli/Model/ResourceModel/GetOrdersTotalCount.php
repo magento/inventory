@@ -35,8 +35,8 @@ class GetOrdersTotalCount
      */
     public function execute(): int
     {
-        $connection = $this->resourceConnection->getConnection();
-        $orderTableName = $this->resourceConnection->getTableName('sales_order');
+        $connection = $this->resourceConnection->getConnection('sales');
+        $orderTableName = $this->resourceConnection->getTableName('sales_order', 'sales');
 
         $query = $connection
             ->select()

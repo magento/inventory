@@ -31,7 +31,7 @@ class SourceUnassignTest extends TestCase
      */
     private $sourceItemRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->bulkSourceUnassign = Bootstrap::getObjectManager()->get(BulkSourceUnassignInterface::class);

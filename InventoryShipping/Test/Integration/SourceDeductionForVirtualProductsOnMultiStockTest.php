@@ -57,7 +57,7 @@ class SourceDeductionForVirtualProductsOnMultiStockTest extends TestCase
      */
     private $getProductSalableQty;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->invoiceOrder = Bootstrap::getObjectManager()->get(InvoiceOrderInterface::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);

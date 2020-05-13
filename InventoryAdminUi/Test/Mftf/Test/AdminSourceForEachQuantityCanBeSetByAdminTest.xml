@@ -92,8 +92,8 @@
 
         <click selector="{{AdminGridMainControls.save}}" stepKey="clickOnSave"/>
 
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="2" stepKey="seeSourceNotifyQuantityInField1"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="5" stepKey="seeSourceNotifyQuantityInField2"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('2')}}" userInput="10" stepKey="seeSourceNotifyQuantityInField3"/>
+        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="2.0000" stepKey="seeSourceNotifyQuantityInField1"/>
+        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('1')}}" userInput="5.0000" stepKey="seeSourceNotifyQuantityInField2"/>
+        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('2')}}" userInput="10.0000" stepKey="seeSourceNotifyQuantityInField3"/>
     </test>
 </tests>
