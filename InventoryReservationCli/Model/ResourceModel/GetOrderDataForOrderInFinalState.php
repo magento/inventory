@@ -49,6 +49,9 @@ class GetOrderDataForOrderInFinalState
         $connection = $this->resourceConnection->getConnection('sales');
         $orderTableName = $this->resourceConnection->getTableName('sales_order', 'sales');
 
+        $entityIdCondition = $connection->quoteInto('main_table.entity_id IN (?)', $orderIds);
+        $incrementIdCondition = $connection->quoteInto('main_table.increment_id IN (?)', $orderIncrementIds);
+
         $query = $connection
             ->select()
             ->from(
@@ -60,10 +63,10 @@ class GetOrderDataForOrderInFinalState
                     'main_table.store_id'
                 ]
             )
-            ->where('main_table.entity_id IN (:orderIds) OR main_table.increment_id IN (:orderIncrementIds)')
+            ->where($entityIdCondition . ' OR ' . $incrementIdCondition)
             ->where('main_table.state IN (?)', $this->getCompleteOrderStateList->execute());
 
-        $orders = $connection->fetchAll($query, ['orderIds' => $orderIds, 'orderIncrementIds' => $orderIncrementIds]);
+        $orders = $connection->fetchAll($query);
         $storeWebsiteIds = $this->getStoreWebsiteIds();
         foreach ($orders as $key => $order) {
             $order['website_id'] = $storeWebsiteIds[$order['store_id']];
