@@ -24,6 +24,9 @@ use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
+/**
+ * Add reservation during order placement
+ */
 class AppendReservationsAfterOrderPlacementPlugin
 {
     /**
@@ -121,6 +124,10 @@ class AppendReservationsAfterOrderPlacementPlugin
     }
 
     /**
+     * Add reservation before place order
+     *
+     * In case of error during order placement exception add compensation
+     *
      * @param OrderManagementInterface $subject
      * @param callable $proceed
      * @param OrderInterface $order
