@@ -32,16 +32,22 @@ interface SalesEventInterface extends \Magento\Framework\Api\ExtensibleDataInter
     /**#@-*/
 
     /**
+     * Get type
+     *
      * @return string
      */
     public function getType(): string;
 
     /**
+     * Get object type
+     *
      * @return string
      */
     public function getObjectType(): string;
 
     /**
+     * Get object id
+     *
      * @return string
      */
     public function getObjectId(): string;
