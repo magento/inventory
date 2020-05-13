@@ -201,7 +201,7 @@ class AppendReservationsAfterOrderPlacementPlugin
 
             /** @var SalesEventInterface $salesEvent */
             $salesEvent = $this->salesEventFactory->create([
-                'type' => SalesEventInterface::EVENT_ORDER_CANCELED,
+                'type' => SalesEventInterface::EVENT_ORDER_PLACE_FAILED,
                 'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
                 'objectId' => (string)$order->getEntityId()
             ]);

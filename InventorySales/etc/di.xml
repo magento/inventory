@@ -141,6 +141,9 @@
         <plugin name="process_back_item_qty" type="Magento\InventorySales\Plugin\CatalogInventory\StockManagement\ProcessBackItemQtyPlugin"/>
         <plugin name="process_revert_products_sale" type="Magento\InventorySales\Plugin\CatalogInventory\StockManagement\ProcessRevertProductsSalePlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Api\RegisterProductSaleInterface">
+        <plugin name="process_register_products_sale" type="Magento\InventorySales\Plugin\CatalogInventory\StockManagement\ProcessRegisterProductsSalePlugin"/>
+    </type>
     <!-- Append Reservations when Order Is Placed  -->
     <type name="Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" type="Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin"/>
