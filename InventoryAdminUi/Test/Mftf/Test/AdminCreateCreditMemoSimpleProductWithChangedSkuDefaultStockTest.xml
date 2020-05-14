@@ -16,14 +16,10 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/3022" />
-            </skip>
         </annotations>
 
         <before>
             <!--Create test data.-->
-            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
@@ -40,8 +36,8 @@
             <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setProductQuantity"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete test data.-->
@@ -77,7 +73,8 @@
         <waitForPageLoad stepKey="waitForProductPage"/>
         <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-        <magentoCron groups="consumers" stepKey="runConsumers"/>
+        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup" stepKey="cleanUpSourceItems"/>
+        <magentoCLI command="queue:consumers:start inventory.reservations.update" stepKey="updateReservations"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>

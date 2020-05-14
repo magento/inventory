@@ -16,9 +16,6 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/3022" />
-            </skip>
         </annotations>
 
         <before>
@@ -101,7 +98,7 @@
             <argument name="sourceName" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
-        <magentoCron groups="consumers" stepKey="runConsumers"/>
+        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup" stepKey="cleanUpSourceItems"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
