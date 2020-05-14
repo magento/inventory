@@ -93,7 +93,7 @@ class ScheduleAfterPlaceReservationsForSalesEvent
 
         return $this->reservationDataFactory->create(
             [
-                'stockId' => $stockId,
+                'stock' => $stockId,
                 'skus' => $skus
             ]
         );
