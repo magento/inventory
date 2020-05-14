@@ -11,9 +11,13 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Reindex strategy config provider.
+ * @api
  */
 class IndexerConfig
 {
+    /**
+     * Reindex strategy config path.
+     */
     private const XML_PATH_INDEXER_STRATEGY = 'cataloginventory/indexer/strategy';
 
     /**

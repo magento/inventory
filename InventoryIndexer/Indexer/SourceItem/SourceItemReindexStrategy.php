@@ -12,7 +12,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryIndexer\Model\IndexerConfig;
 
 /**
- * Receiver of currently active reindex strategy for source items
+ * Retrieve currently active reindex strategy for source items.
  *
  * @api
  */
@@ -57,7 +57,8 @@ class SourceItemReindexStrategy
      */
     public function executeList(array $sourceItemIds): void
     {
-        $this->getStrategy()->executeList($sourceItemIds);
+        $strategy = $this->objectManager->get($this->getStrategy());
+        $strategy->executeList($sourceItemIds);
     }
 
     /**
@@ -68,7 +69,8 @@ class SourceItemReindexStrategy
      */
     public function executeFull(): void
     {
-        $this->getStrategy()->executeFull();
+        $strategy = $this->objectManager->get($this->getStrategy());
+        $strategy->executeFull();
     }
 
     /**
@@ -80,22 +82,23 @@ class SourceItemReindexStrategy
      */
     public function executeRow(int $sourceItemId): void
     {
-        $this->getStrategy()->executeList([$sourceItemId]);
+        $strategy = $this->objectManager->get($this->getStrategy());
+        $strategy->executeList([$sourceItemId]);
     }
 
     /**
      * Retrieve enabled strategy for reindex.
      *
-     * @return mixed
+     * @return string
      * @throws LocalizedException
      */
-    private function getStrategy()
+    private function getStrategy(): string
     {
         $enabledStrategy = $this->indexerConfig->getActiveIndexStrategy();
         if (!isset($this->strategies[$enabledStrategy])) {
             throw new LocalizedException(__("Index Strategy not found, please check system settings."));
         }
 
-        return $this->objectManager->get($this->strategies[$enabledStrategy]);
+        return $this->strategies[$enabledStrategy];
     }
 }

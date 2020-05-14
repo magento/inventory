@@ -55,7 +55,8 @@ class StockReindexStrategy
      */
     public function executeFull(): void
     {
-        $this->getStrategy()->executeFull();
+        $strategy = $this->objectManager->get($this->getStrategy());
+        $strategy->executeFull();
     }
 
     /**
@@ -67,7 +68,8 @@ class StockReindexStrategy
      */
     public function executeRow(int $stockId): void
     {
-        $this->getStrategy()->executeList([$stockId]);
+        $strategy = $this->objectManager->get($this->getStrategy());
+        $strategy->executeList([$stockId]);
     }
 
     /**
@@ -79,21 +81,22 @@ class StockReindexStrategy
      */
     public function executeList(array $stockIds): void
     {
-        $this->getStrategy()->executeList($stockIds);
+        $strategy = $this->objectManager->get($this->getStrategy());
+        $strategy->executeList($stockIds);
     }
 
     /**
      * Retrieve reindex strategy.
      *
-     * @return mixed
+     * @return string
      * @throws LocalizedException
      */
-    private function getStrategy()
+    private function getStrategy(): string
     {
         $enabledStrategy = $this->indexerConfig->getActiveIndexStrategy();
         if (!isset($this->strategies[$enabledStrategy])) {
             throw new LocalizedException(__("Index Strategy not found, please check system settings."));
         }
-        return $this->objectManager->get($this->strategies[$enabledStrategy]);
+        return $this->strategies[$enabledStrategy];
     }
 }

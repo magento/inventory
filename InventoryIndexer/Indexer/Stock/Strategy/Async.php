@@ -14,6 +14,9 @@ use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
  */
 class Async
 {
+    /**
+     * Queue topic name.
+     */
     private const TOPIC_STOCK_INDEX = "inventory.indexer.stock";
 
     /**

@@ -15,6 +15,9 @@ use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
  */
 class Async
 {
+    /**
+     * Queue topic name.
+     */
     private const TOPIC_SOURCE_ITEMS_INDEX = "inventory.indexer.sourceItem";
 
     /**
