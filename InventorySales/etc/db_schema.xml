@@ -10,7 +10,7 @@
     <table name="inventory_stock_sales_channel" resource="default" engine="innodb">
         <column xsi:type="varchar" name="type" nullable="false" length="64"/>
         <column xsi:type="varchar" name="code" nullable="false" length="64"/>
-        <column xsi:type="int" name="stock_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+        <column xsi:type="int" name="stock_id" unsigned="true" nullable="false" identity="false"/>
         <constraint xsi:type="foreign" referenceId="INVENTORY_STOCK_SALES_CHANNEL_STOCK_ID_INVENTORY_STOCK_STOCK_ID"
                     table="inventory_stock_sales_channel" column="stock_id" referenceTable="inventory_stock"
                     referenceColumn="stock_id" onDelete="CASCADE"/>
