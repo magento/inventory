@@ -37,7 +37,7 @@ class InventoryTransferTest extends TestCase
      */
     private $defaultSourceProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->bulkInventoryTransfer = Bootstrap::getObjectManager()->get(BulkInventoryTransferInterface::class);

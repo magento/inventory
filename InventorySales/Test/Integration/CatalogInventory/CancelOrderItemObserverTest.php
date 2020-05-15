@@ -101,7 +101,7 @@ class CancelOrderItemObserverTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
@@ -212,7 +212,7 @@ class CancelOrderItemObserverTest extends \PHPUnit\Framework\TestCase
         $this->registry->register('isSecureArea', false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

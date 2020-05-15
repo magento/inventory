@@ -36,7 +36,7 @@ class IsOrderReadyForPickupTest extends \PHPUnit\Framework\TestCase
     /** @var OrderExtensionInterface */
     private $orderExtensionFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
 

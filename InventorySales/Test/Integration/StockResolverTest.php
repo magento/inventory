@@ -42,7 +42,7 @@ class StockResolverTest extends TestCase
     /**
      * Create objects.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->stockRepository = $this->objectManager->get(StockRepositoryInterface::class);

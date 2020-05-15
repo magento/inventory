@@ -45,7 +45,7 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->areProductsSalable = Bootstrap::getObjectManager()->get(AreProductsSalableInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkus::class);

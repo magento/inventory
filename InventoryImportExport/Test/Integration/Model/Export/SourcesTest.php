@@ -25,7 +25,7 @@ class SourcesTest extends TestCase
      */
     private $exportFilePath;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $sandboxDir = Bootstrap::getInstance()->getBootstrap()->getApplication()->getTempDir();
         $this->exportFilePath = implode(DIRECTORY_SEPARATOR, [
@@ -41,7 +41,7 @@ class SourcesTest extends TestCase
         ));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unlink($this->exportFilePath);
     }
@@ -65,7 +65,7 @@ class SourcesTest extends TestCase
         );
 
         foreach ($exportFullLines as $line) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $line,
                 file_get_contents($this->exportFilePath)
             );
