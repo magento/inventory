@@ -21,14 +21,14 @@ class IsProductSalable implements IsProductSalableInterface
     /**
      * @var GetStockItemDataInterface
      */
-    private $stockItemData;
+    private $getStockItemData;
 
     /**
      * @param GetStockItemDataInterface $stockItemData
      */
-    public function __construct(GetStockItemDataInterface $stockItemData)
+    public function __construct(GetStockItemDataInterface $getStockItemData)
     {
-        $this->stockItemData = $stockItemData;
+        $this->getStockItemData = $getStockItemData;
     }
 
     /**
@@ -37,7 +37,7 @@ class IsProductSalable implements IsProductSalableInterface
     public function execute(string $sku, int $stockId): bool
     {
         try {
-            $stockItem = $this->stockItemData->execute($sku, $stockId);
+            $stockItem = $this->getStockItemData->execute($sku, $stockId);
             $isSalable = (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
         } catch (LocalizedException $exception) {
             $isSalable = false;
