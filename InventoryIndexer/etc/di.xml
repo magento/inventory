@@ -78,6 +78,6 @@
         </arguments>
     </type>
     <type name="Magento\InventorySales\Model\PlaceReservationsForSalesEvent">
-        <plugin name="schedule_reservation_place" type="Magento\InventoryIndexer\Plugin\InventorySales\ScheduleAfterPlaceReservationsForSalesEvent"/>
+        <plugin name="schedule_reservation_place" type="Magento\InventoryIndexer\Plugin\InventorySales\EnqueueAfterPlaceReservationsForSalesEvent"/>
     </type>
 </config>
