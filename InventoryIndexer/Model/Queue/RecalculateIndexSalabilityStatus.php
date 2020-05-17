@@ -138,12 +138,16 @@ class RecalculateIndexSalabilityStatus
      * @param int $stockId
      *
      * @return float|null
-     * @throws LocalizedException
      */
     private function getIndexQty(string $sku, int $stockId): ?float
     {
-        $data = $this->getStockItemData->execute($sku, $stockId);
+        try {
+            $data = $this->getStockItemData->execute($sku, $stockId);
+            $qty = $data ? (float)$data[GetStockItemDataInterface::QUANTITY] : null;
+        } catch (LocalizedException $e) {
+            $qty = null;
+        }
 
-        return $data ? (float)$data[GetStockItemDataInterface::QUANTITY] : null;
+        return $qty;
     }
 }

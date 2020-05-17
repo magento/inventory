@@ -18,12 +18,12 @@ use Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface;
 /**
  * Enqueue reservations processing after appending in order to recalculate index salability status.
  */
-class ScheduleAfterPlaceReservationsForSalesEvent
+class EnqueueAfterPlaceReservationsForSalesEvent
 {
     /**
      * Queue topic name.
      */
-    private const TOPIC_RESERVATIONS_UPDATE_SALABILITY_STATUS = "inventory.reservations.updateSalabilityStatus";
+    private const TOPIC_RESERVATIONS_UPDATE_SALABILITY_STATUS = 'inventory.reservations.updateSalabilityStatus';
 
     /**
      * @var PublisherInterface
@@ -68,7 +68,7 @@ class ScheduleAfterPlaceReservationsForSalesEvent
         $result,
         array $items,
         SalesChannelInterface $salesChannel
-    ) {
+    ): void {
         $this->publisher->publish(
             self::TOPIC_RESERVATIONS_UPDATE_SALABILITY_STATUS,
             $this->getReservationsDataObject($salesChannel, $items)
