@@ -82,7 +82,7 @@ class UpdateIndexSalabilityStatus
     /**
      * @param ReservationData $reservationData
      *
-     * @return bool[] - ['sku' => bool]
+     * @return bool[] - ['sku' => bool]: list of SKUs with salability status changed.
      * @throws StateException
      */
     public function execute(ReservationData $reservationData): array
