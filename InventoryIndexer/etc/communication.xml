@@ -7,6 +7,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
     <topic name="inventory.reservations.updateSalabilityStatus" is_synchronous="false" request="Magento\InventoryIndexer\Model\Queue\ReservationData">
-        <handler name="inventory.reservations.updateSalabilityStatus.handler" type="Magento\InventoryIndexer\Model\Queue\RecalculateIndexSalabilityStatus" method="execute" />
+        <handler name="inventory.reservations.updateSalabilityStatus.handler" type="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus" method="execute" />
     </topic>
 </config>
