@@ -9,8 +9,8 @@ namespace Magento\InventoryAdvancedCheckout\Plugin\Model;
 
 use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
 use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -43,7 +43,7 @@ class AreProductsSalablePlugin
     private $defaultStockProvider;
 
     /**
-     * @var ObjectManager
+     * @var ObjectManagerInterface
      */
     private $objectManager;
 
@@ -52,14 +52,14 @@ class AreProductsSalablePlugin
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param ObjectManager $objectManager
+     * @param ObjectManagerInterface $objectManager
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
         DefaultStockProviderInterface $defaultStockProvider,
-        ObjectManager $objectManager
+        ObjectManagerInterface $objectManager
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
