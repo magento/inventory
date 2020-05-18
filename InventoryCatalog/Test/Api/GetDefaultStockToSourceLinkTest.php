@@ -26,7 +26,7 @@ class GetDefaultStockToSourceLinkTest extends WebapiAbstract
      */
     private $defaultStockProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(DefaultSourceProviderInterface::class);

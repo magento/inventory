@@ -80,7 +80,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $orderManagement;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
@@ -246,7 +246,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         return $cartItem;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

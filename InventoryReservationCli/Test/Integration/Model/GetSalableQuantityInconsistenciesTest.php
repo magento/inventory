@@ -32,7 +32,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     /**
      * Initialize test dependencies
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getSalableQuantityInconsistencies
             = Bootstrap::getObjectManager()->get(GetSalableQuantityInconsistencies::class);

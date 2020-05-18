@@ -123,8 +123,7 @@
         <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}"
                   stepKey="navigateToEditedProductCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryLoad"/>
-        <dontSee userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsAbsentOnCategoryPage"/>
-        <dontSee userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsAbsentOnCategoryPage"/>
+        <see selector=".empty" userInput="We can't find products matching the selection." stepKey="verifyProductIsAbsentOnCategoryPage"/>
 
         <!-- Turn off Manage Stock-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForTurnOffManageStock"/>
