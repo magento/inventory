@@ -43,21 +43,29 @@ class AreProductsSalablePlugin
     private $defaultStockProvider;
 
     /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
+    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param ObjectManager $objectManager
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ObjectManager $objectManager
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -89,7 +97,7 @@ class AreProductsSalablePlugin
         }
         $result = [];
         foreach ($this->areProductsSalable->execute($skus, $stock->getStockId()) as $productStock) {
-            $result[] = ObjectManager::getInstance()->create(
+            $result[] = $this->objectManager->create(
                 IsProductsSalableForRequestedQtyResult::class,
                 ['sku' => $productStock->getSku(), 'isSalable' => $productStock->isSalable()]
             );
