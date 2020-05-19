@@ -5,13 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer;
+namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryConfigurableProductIndexer\Indexer\Stock\StockIndexer as ConfigurableProductsStockIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
-class StockIndexerPlugin
+/**
+ * Reindex configurable product plugin.
+ */
+class ReindexListPlugin
 {
     /**
      * @var ConfigurableProductsStockIndexer
@@ -28,6 +32,8 @@ class StockIndexerPlugin
     }
 
     /**
+     * Reindex configurable product.
+     *
      * @param StockIndexer $subject
      * @param void $result
      * @param array $stockIds
@@ -37,7 +43,7 @@ class StockIndexerPlugin
      * @throws StateException
      */
     public function afterExecuteList(
-        StockIndexer $subject,
+        Sync $subject,
         $result,
         array $stockIds
     ) {

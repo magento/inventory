@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer;
+namespace Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryBundleProductIndexer\Indexer\StockIndexer as BundleProductsStockIndexer;
-use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
 /**
- * Index bundle products for given stocks plugin.
+ * Index bundle products for stocks plugin.
  */
-class StockIndexerPlugin
+class ReindexFullPlugin
 {
     /**
      * @var BundleProductsStockIndexer
@@ -31,21 +31,19 @@ class StockIndexerPlugin
     }
 
     /**
-     * Index bundle products for given stocks.
+     * Index bundle products for stocks.
      *
-     * @param StockIndexer $subject
+     * @param Sync $subject
      * @param void $result
-     * @param array $stockIds
      * @return void
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws StateException
      */
-    public function afterExecuteList(
-        StockIndexer $subject,
-        $result,
-        array $stockIds
+    public function afterExecuteFull(
+        Sync $subject,
+        $result
     ): void {
-        $this->bundleProductsStockIndexer->executeList($stockIds);
+        $this->bundleProductsStockIndexer->executeFull();
     }
 }
