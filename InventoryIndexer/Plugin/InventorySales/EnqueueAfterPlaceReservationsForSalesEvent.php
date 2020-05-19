@@ -59,7 +59,7 @@ class EnqueueAfterPlaceReservationsForSalesEvent
      * Publish reservation data for reindex.
      *
      * @param PlaceReservationsForSalesEvent $subject
-     * @param null $result
+     * @param void $result
      * @param ItemToSellInterface[] $items
      * @param SalesChannelInterface $salesChannel
      *
