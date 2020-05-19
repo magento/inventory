@@ -12,8 +12,6 @@ use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
 /**
- * @inheritDoc
- *
  * Lightweight implementation for Storefront application.
  */
 class IsProductSalable implements IsProductSalableInterface
@@ -24,7 +22,7 @@ class IsProductSalable implements IsProductSalableInterface
     private $getStockItemData;
 
     /**
-     * @param GetStockItemDataInterface $stockItemData
+     * @param GetStockItemDataInterface $getStockItemData
      */
     public function __construct(GetStockItemDataInterface $getStockItemData)
     {

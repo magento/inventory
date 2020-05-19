@@ -56,12 +56,15 @@ class EnqueueAfterPlaceReservationsForSalesEvent
     }
 
     /**
+     * Publish reservation data for reindex.
+     *
      * @param PlaceReservationsForSalesEvent $subject
      * @param null $result
      * @param ItemToSellInterface[] $items
      * @param SalesChannelInterface $salesChannel
      *
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecute(
         PlaceReservationsForSalesEvent $subject,
@@ -76,6 +79,8 @@ class EnqueueAfterPlaceReservationsForSalesEvent
     }
 
     /**
+     * Build reservation data transfer objects.
+     *
      * @param SalesChannelInterface $salesChannel
      * @param ItemToSellInterface[] $items
      *

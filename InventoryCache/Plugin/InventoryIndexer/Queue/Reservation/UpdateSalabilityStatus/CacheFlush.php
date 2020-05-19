@@ -40,6 +40,8 @@ class CacheFlush
     }
 
     /**
+     * Flush cache after reindex.
+     *
      * @param UpdateIndexSalabilityStatus $subject
      * @param array $skusAffected
      *
