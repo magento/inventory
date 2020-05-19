@@ -53,7 +53,6 @@
     <type name="Magento\CatalogInventory\Helper\Stock">
         <plugin name="adapt_add_in_stock_filter_to_collection" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock\AdaptAddInStockFilterToCollectionPlugin"/>
         <plugin name="adapt_add_stock_status_to_products" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock\AdaptAddStockStatusToProductsPlugin"/>
-        <plugin name="adapt_assign_status_to_product" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
     <type name="Magento\InventoryApi\Model\SourceValidatorChain">
         <arguments>
@@ -164,6 +163,12 @@
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save">
         <plugin name="inventoryUpdate" type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save\ProcessInventoryPlugin"/>
         <plugin name="massAction" disabled="true"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="is_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\AfterGetIsSaleable" />
+    </type>
+    <type name="Magento\Catalog\Model\Product\Type\AbstractType">
+        <plugin name="is_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\Type\AfterGetIsSaleable" />
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
         <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
