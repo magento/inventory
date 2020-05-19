@@ -5,31 +5,35 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer;
+namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Framework\Exception\StateException;
-use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer
-    as ConfigurableProductsSourceItemIndexer;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
+/**
+ * Reindex configurable source items.
+ */
 class SourceItemIndexerPlugin
 {
     /**
-     * @var ConfigurableProductsSourceItemIndexer
+     * @var SourceItemIndexer
      */
     private $configurableProductsSourceItemIndexer;
 
     /**
-     * @param ConfigurableProductsSourceItemIndexer $configurableProductsSourceItemIndexer
+     * @param SourceItemIndexer $configurableProductsSourceItemIndexer
      */
     public function __construct(
-        ConfigurableProductsSourceItemIndexer $configurableProductsSourceItemIndexer
+        SourceItemIndexer $configurableProductsSourceItemIndexer
     ) {
         $this->configurableProductsSourceItemIndexer = $configurableProductsSourceItemIndexer;
     }
 
     /**
-     * @param SourceItemIndexer $subject
+     * Reindex configurable product.
+     *
+     * @param Sync $subject
      * @param void $result
      * @param array $sourceItemIds
      * @return void
@@ -38,7 +42,7 @@ class SourceItemIndexerPlugin
      * @throws StateException
      */
     public function afterExecuteList(
-        SourceItemIndexer $subject,
+        Sync $subject,
         $result,
         array $sourceItemIds
     ) {
