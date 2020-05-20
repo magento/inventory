@@ -5,13 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer;
+namespace Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryGroupedProductIndexer\Indexer\Stock\StockIndexer as GroupedProductStockIndexer;
-use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
-class StockIndexerPlugin
+/**
+ * Reindex grouped product.
+ */
+class ReindexListPlugin
 {
     /**
      * @var GroupedProductStockIndexer
@@ -28,7 +31,9 @@ class StockIndexerPlugin
     }
 
     /**
-     * @param StockIndexer $subject
+     * Reindex grouped product.
+     *
+     * @param Sync $subject
      * @param void $result
      * @param array $stockIds
      * @return void
@@ -37,10 +42,10 @@ class StockIndexerPlugin
      * @throws StateException
      */
     public function afterExecuteList(
-        StockIndexer $subject,
+        Sync $subject,
         $result,
         array $stockIds
-    ) {
+    ): void {
         $this->groupedProductStockIndexer->executeList($stockIds);
     }
 }

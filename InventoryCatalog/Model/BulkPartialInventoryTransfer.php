@@ -7,34 +7,47 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
-use Magento\Framework\Validation\ValidationException;
 use Magento\CatalogInventory\Model\Indexer\Stock as LegacyIndexer;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalog\Model\ResourceModel\TransferInventoryPartially;
 use Magento\InventoryCatalogApi\Api\BulkPartialInventoryTransferInterface;
-use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Api\Data\PartialInventoryTransferItemInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorInterface;
 use Magento\InventoryIndexer\Indexer\Source\SourceIndexer;
 
 class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterface
 {
-    /** @var PartialInventoryTransferValidatorInterface  */
+    /**
+     * @var PartialInventoryTransferValidatorInterface
+     */
     private $transferValidator;
 
-    /** @var TransferInventoryPartially  */
+    /**
+     * @var TransferInventoryPartially
+     */
     private $transferCommand;
 
-    /** @var GetProductIdsBySkusInterface  */
+    /**
+     * @var GetProductIdsBySkusInterface
+     */
     private $productIdsBySkus;
 
-    /** @var DefaultSourceProviderInterface  */
+    /**
+     * @var DefaultSourceProviderInterface
+     */
     private $defaultSourceProvider;
 
-    /** @var SourceIndexer  */
+    /**
+     * @var SourceIndexer
+     */
     private $sourceIndexer;
 
-    /** @var LegacyIndexer  */
+    /**
+     * @var LegacyIndexer
+     */
     private $legacyIndexer;
 
     /**
@@ -68,7 +81,8 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
      * @param string $destinationSourceCode
      * @param PartialInventoryTransferItemInterface[] $items
      * @return void
-     * @throws \Magento\Framework\Validation\ValidationException
+     * @throws ValidationException
+     * @throws NoSuchEntityException
      */
     public function execute(string $originSourceCode, string $destinationSourceCode, array $items): void
     {
@@ -81,9 +95,12 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
     }
 
     /**
+     * Transfer source items.
+     *
      * @param string $originSourceCode
      * @param string $destinationSourceCode
      * @param PartialInventoryTransferItemInterface[] $items
+     * @throws NoSuchEntityException
      */
     private function processTransfer(string $originSourceCode, string $destinationSourceCode, array $items): void
     {
@@ -93,30 +110,12 @@ class BulkPartialInventoryTransfer implements BulkPartialInventoryTransferInterf
             $processedSkus[] = $item->getSku();
         }
 
-        $this->updateIndexes([$originSourceCode, $destinationSourceCode], $processedSkus);
-    }
-
-    /**
-     * @param string[] $sources
-     * @param string[] $skus
-     */
-    private function updateIndexes(array $sources, array $skus)
-    {
-        $sources = array_unique($sources);
+        $sources = array_unique([$originSourceCode, $destinationSourceCode]);
         $this->sourceIndexer->executeList($sources);
 
         if (in_array($this->defaultSourceProvider->getCode(), $sources)) {
-            $this->updateLegacyIndex($skus);
+            $productIds = $this->productIdsBySkus->execute($processedSkus);
+            $this->legacyIndexer->executeList($productIds);
         }
-    }
-
-    /**
-     *
-     * @param string[] $skus
-     */
-    private function updateLegacyIndex(array $skus)
-    {
-        $productIds = $this->productIdsBySkus->execute($skus);
-        $this->legacyIndexer->executeList($productIds);
     }
 }
