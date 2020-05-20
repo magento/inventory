@@ -162,9 +162,6 @@
         <plugin name="massAction" disabled="true"/>
     </type>
     <type name="Magento\Catalog\Model\Product">
-        <plugin name="is_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\AfterGetIsSaleable" />
-    </type>
-    <type name="Magento\Catalog\Model\Product\Type\AbstractType">
-        <plugin name="is_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\Type\AfterGetIsSaleable" />
+        <plugin name="is_available" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\IsAvailable" />
     </type>
 </config>

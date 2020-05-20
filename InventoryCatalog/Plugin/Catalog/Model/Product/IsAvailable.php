@@ -6,13 +6,12 @@
 
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product\Type;
+namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product;
 
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
-class AfterGetIsSaleable
+class IsAvailable
 {
     /**
      * @var IsProductSalable
@@ -29,14 +28,11 @@ class AfterGetIsSaleable
     }
 
     /**
-     * @param AbstractType $subject
-     * @param callable $proceed
      * @param Product $product
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
-    public function aroundIsSalable(AbstractType $subject, callable $proceed, $product): bool
+    public function aroundIsAvailable(Product $product): bool
     {
         return $this->isProductSalable->execute($product);
     }
