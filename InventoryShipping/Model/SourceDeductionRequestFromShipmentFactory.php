@@ -18,7 +18,6 @@ use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterfaceFactory;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
-
 class SourceDeductionRequestFromShipmentFactory
 {
     /**
@@ -68,6 +67,8 @@ class SourceDeductionRequestFromShipmentFactory
     }
 
     /**
+     * Get source deduction request
+     *
      * @param Shipment $shipment
      * @param string $sourceCode
      * @param array $items
