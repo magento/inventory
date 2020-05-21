@@ -10,4 +10,7 @@
         <plugin name="disable_grouped_type"
                 type="Magento\InventoryGroupedProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableGroupedTypePlugin"/>
     </type>
+    <type name="Magento\GroupedProduct\Model\Product\Type\Grouped">
+        <plugin name="adapt_is_salable_option" type="Magento\InventoryGroupedProduct\Plugin\GroupedProduct\Model\Product\Type\Grouped\AdaptIsSalableOptionPlugin"/>
+    </type>
 </config>

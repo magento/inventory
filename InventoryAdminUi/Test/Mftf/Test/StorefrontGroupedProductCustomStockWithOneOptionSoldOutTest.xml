@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontGroupedProductCustomStockWithOneOptionSoldOutTest">
+        <annotations>
+            <stories value="Grouped Product Custom Stock."/>
+            <title value="Grouped product option salability on custom stock."/>
+            <description value="Verify totally sold out grouped product option on custom stock is not visible on storefront."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/912250/scenarios/4747577"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <createData entity="ApiGroupedProduct" stepKey="groupedProduct"/>
+            <createData entity="ApiProductWithDescription" stepKey="product1"/>
+            <createData entity="ApiProductWithDescription" stepKey="product2"/>
+            <createData entity="OneSimpleProductLink" stepKey="addProductOne">
+                <requiredEntity createDataKey="groupedProduct"/>
+                <requiredEntity createDataKey="product1"/>
+            </createData>
+            <updateData entity="OneMoreSimpleProductLink" createDataKey="addProductOne" stepKey="addProductTwo">
+                <requiredEntity createDataKey="groupedProduct"/>
+                <requiredEntity createDataKey="product2"/>
+            </updateData>
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign sources to product1.-->
+            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToSimpleProduct1">
+                <argument name="product" value="$product1$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct1">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+                <argument name="sourceQty" value="{{minimalProductQty.value}}"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct1"/>
+            <!--Assign sources to product2.-->
+            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToSimpleProduct2">
+                <argument name="product" value="$product2$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceToProduct2">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
+        </before>
+        <after>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
+            <deleteData createDataKey="product1" stepKey="deleteSimpleProduct1"/>
+            <deleteData createDataKey="product2" stepKey="deleteSimpleProduct2"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Disable created sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+        </after>
+
+        <!--Login To storefront as Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!--Add grouped product to cart.-->
+        <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDP">
+            <argument name="product" value="$groupedProduct$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddGroupedProductWithTwoLinksToCartActionGroup" stepKey="addGroupedProductToCart">
+            <argument name="product" value="$groupedProduct$"/>
+            <argument name="linkedProduct1Name" value="$product1.name$"/>
+            <argument name="linkedProduct2Name" value="$product2.name$"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <!--Verify grouped product PDP.-->
+        <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
+            <argument name="product" value="$groupedProduct$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAssertLinkIsNotVisibleOnGroupedProductPageActionGroup" stepKey="verifyFirstOptionIsNotPresentedOnPage">
+            <argument name="productName" value="$product1.name$"/>
+        </actionGroup>
+        <actionGroup ref="AssertLinkPresenceOnGroupedProductPage" stepKey="verifySecondOptionIsStillPresentedOnPage">
+            <argument name="productName" value="$product2.name$"/>
+        </actionGroup>
+    </test>
+</tests>
