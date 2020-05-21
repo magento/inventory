@@ -19,6 +19,7 @@
             <group value="catalog"/>
             <group value="configurableProduct"/>
         </annotations>
+
         <before>
             <!--Create configurable product-->
             <createData entity="ApiConfigurableProductWithDescription" stepKey="createConfigurableProduct"/>
@@ -66,6 +67,7 @@
             </actionGroup>
             <actionGroup ref="GenerateAndSaveConfiguredProductAfterSettingOptionsActionGroup" stepKey="generateOptionsAndSaveProduct"/>
         </before>
+
         <after>
             <!--Reset configs-->
             <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultThresholdQty"/>
@@ -81,6 +83,7 @@
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
         </after>
+
         <!--Check configurable product options on storefront-->
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openConfigurableProductViewPage">
             <argument name="productUrl" value="$createConfigurableProduct.custom_attributes[url_key]$"/>
