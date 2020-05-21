@@ -98,7 +98,8 @@
             <argument name="sourceName" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveConfigurableProduct"/>
-        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup" stepKey="cleanUpSourceItems"/>
+        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup --max-messages=1" stepKey="cleanUpSourceItems"/>
+        <magentoCLI command="queue:consumers:start inventory.reservations.cleanup --max-messages=1" stepKey="updateReservations"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>

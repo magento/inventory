@@ -42,6 +42,7 @@
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <actionGroup ref="DeleteProductActionGroup" stepKey="deleteProduct">
@@ -73,8 +74,8 @@
         <waitForPageLoad stepKey="waitForProductPage"/>
         <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup" stepKey="cleanUpSourceItems"/>
-        <magentoCLI command="queue:consumers:start inventory.reservations.update" stepKey="updateReservations"/>
+        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup --max-messages=1" stepKey="cleanUpSourceItems"/>
+        <magentoCLI command="queue:consumers:start inventory.reservations.update --max-messages=1" stepKey="updateReservations"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>

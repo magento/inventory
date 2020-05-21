@@ -43,12 +43,12 @@
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
-            <magentoCLI command="queue:consumers:start inventory.source.items.cleanup" stepKey="cleanUpSourceItems"/>
-            <magentoCLI command="queue:consumers:start inventory.reservations.update" stepKey="updateReservations"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <actionGroup ref="DeleteProductByNameActionGroup" stepKey="deleteProduct">
@@ -83,8 +83,8 @@
         <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup" stepKey="cleanUpSourceItems"/>
-        <magentoCLI command="queue:consumers:start inventory.reservations.update" stepKey="updateReservations"/>
+        <magentoCLI command="queue:consumers:start inventory.source.items.cleanup --max-messages=1" stepKey="cleanUpSourceItems"/>
+        <magentoCLI command="queue:consumers:start inventory.reservations.update --max-messages=1" stepKey="updateReservations"/>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
