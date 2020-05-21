@@ -198,6 +198,6 @@
         <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Model\Quote\Item\CartItemPersister\ValidateQtyBeforePersist" />
     </type>
     <type name="Magento\Quote\Api\CartItemRepositoryInterface">
-        <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Model\Quote\Item\CartItemPersister\ValidateQtyBeforePersist" />
+        <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Api\ValidateQtyBeforeSave" />
     </type>
 </config>
