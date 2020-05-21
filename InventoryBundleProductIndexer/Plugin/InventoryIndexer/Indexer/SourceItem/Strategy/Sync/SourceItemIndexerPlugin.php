@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer;
+namespace Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer as BundleProductsSourceItemIndexer;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 /**
  * Reindex bundle product source items.
@@ -33,7 +33,7 @@ class SourceItemIndexerPlugin
     /**
      * Reindex source items list for bundle products.
      *
-     * @param SourceItemIndexer $subject
+     * @param Sync $subject
      * @param void $result
      * @param array $sourceItemIds
      * @return void
@@ -42,7 +42,7 @@ class SourceItemIndexerPlugin
      * @throws StateException
      */
     public function afterExecuteList(
-        SourceItemIndexer $subject,
+        Sync $subject,
         $result,
         array $sourceItemIds
     ): void {
