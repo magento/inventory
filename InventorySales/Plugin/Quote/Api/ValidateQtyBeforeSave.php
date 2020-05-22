@@ -41,11 +41,14 @@ class ValidateQtyBeforeSave
     }
 
     /**
+     * Validate qty before save cart item.
+     *
      * @param CartItemRepositoryInterface $subject
      * @param CartItemInterface $item
      *
      * @return array
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(CartItemRepositoryInterface $subject, CartItemInterface $item): array
     {

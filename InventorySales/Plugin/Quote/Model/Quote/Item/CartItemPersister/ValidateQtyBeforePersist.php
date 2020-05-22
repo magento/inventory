@@ -17,7 +17,7 @@ use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Model\Quote\Item\CartItemPersister;
 
 /**
- * Validate qty before persist.
+ * Validate cart item qty before persist.
  */
 class ValidateQtyBeforePersist
 {
@@ -49,7 +49,6 @@ class ValidateQtyBeforePersist
      *
      * @return array
      * @throws LocalizedException
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeSave(CartItemPersister $subject, CartInterface $quote, CartItemInterface $item): array
