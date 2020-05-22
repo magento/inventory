@@ -53,19 +53,15 @@ class ValidateQtyBeforePersist
      */
     public function beforeSave(CartItemPersister $subject, CartInterface $quote, CartItemInterface $item): array
     {
-        /** @var Event $event */
-        $event = $this->observerFactory->create(Event::class, ['data' => ['item' => $item]]);
-        /** @var Observer $observer */
-        $observer = $this->observerFactory->create(Observer::class, ['data' => ['event' => $event]]);
-
-        $this->qtyValidator->validate($observer);
-        if (!empty($item->getMessage()) && $item->getHasError()) {
-            throw new LocalizedException(__($item->getMessage()));
+        if ($quote->getIsActive()) {
+            $event = $this->observerFactory->create(Event::class, ['data' => ['item' => $item]]);
+            $observer = $this->observerFactory->create(Observer::class, ['data' => ['event' => $event]]);
+            $this->qtyValidator->validate($observer);
+            if (!empty($item->getMessage()) && $item->getHasError()) {
+                throw new LocalizedException(__($item->getMessage()));
+            }
         }
 
-        return [
-            $quote,
-            $item
-        ];
+        return [$quote, $item];
     }
 }
