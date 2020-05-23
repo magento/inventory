@@ -5,11 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryAdvancedCheckout\Plugin\Model\IsProductInStock;
+namespace Magento\InventoryAdvancedCheckout\Plugin\Model;
 
-use Magento\AdvancedCheckout\Model\IsProductInStockInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
+use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -19,13 +20,8 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
 /**
  * Provides multi-sourcing capabilities for Advanced Checkout Order By SKU feature.
  */
-class ProductInStockPlugin
+class AreProductsSalablePlugin
 {
-    /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-
     /**
      * @var AreProductsSalableInterface
      */
@@ -47,53 +43,66 @@ class ProductInStockPlugin
     private $defaultStockProvider;
 
     /**
-     * @param ProductRepositoryInterface $productRepository
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
+    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param ObjectManagerInterface $objectManager
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository,
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ObjectManagerInterface $objectManager
     ) {
-        $this->productRepository = $productRepository;
         $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->objectManager = $objectManager;
     }
 
     /**
      * Get is product out of stock for given Product id in a given Website id in MSI context.
      *
-     * @param IsProductInStockInterface $subject
+     * @param AreProductsSalableForRequestedQtyInterface $subject
      * @param callable $proceed
-     * @param int $productId
+     * @param \Magento\AdvancedCheckout\Model\Data\ProductQuantity[] $productQuantities
      * @param int $websiteId
-     * @return bool
+     * @return array
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
-        IsProductInStockInterface $subject,
+        AreProductsSalableForRequestedQtyInterface $subject,
         callable $proceed,
-        int $productId,
+        array $productQuantities,
         int $websiteId
-    ): bool {
-        $product = $this->productRepository->getById($productId);
+    ): array {
         $website = $this->websiteRepository->getById($websiteId);
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
         if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
-            return $proceed($productId, $websiteId);
+            return $proceed($productQuantities, $websiteId);
         }
 
-        $result = $this->areProductsSalable->execute([$product->getSku()], $stock->getStockId());
-        $result = current($result);
+        $skus = [];
+        foreach ($productQuantities as $productQuantity) {
+            $skus[] = $productQuantity->getSku();
+        }
+        $result = [];
+        foreach ($this->areProductsSalable->execute($skus, $stock->getStockId()) as $productStock) {
+            $result[] = $this->objectManager->create(
+                IsProductsSalableForRequestedQtyResult::class,
+                ['sku' => $productStock->getSku(), 'isSalable' => $productStock->isSalable()]
+            );
+        }
 
-        return $result->isSalable();
+        return $result;
     }
 }
