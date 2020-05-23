@@ -26,4 +26,14 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
+        <arguments>
+            <argument name="conditions" xsi:type="array">
+                <item name="product_options_in_stock" xsi:type="array">
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="object" xsi:type="object">Magento\InventoryBundleProduct\Model\IsProductSalableCondition\ProductOptionsCondition</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>
