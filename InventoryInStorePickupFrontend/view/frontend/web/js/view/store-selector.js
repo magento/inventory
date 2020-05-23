@@ -15,8 +15,7 @@ define([
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-    'Magento_Checkout/js/checkout-data',
-    'Magento_InventoryInStorePickupFrontend/js/view/store-pickup'
+    'Magento_Checkout/js/checkout-data'
 ], function (
     $,
     _,
@@ -72,10 +71,10 @@ define([
             updateNearbyLocations = _.debounce(function (searchQuery) {
                 country = quote.shippingAddress() && quote.shippingAddress().countryId ?
                     quote.shippingAddress().countryId : this.defaultCountryId;
-                this.updateNearbyLocations(searchQuery + this.delimiter + country);
+                searchQuery = searchQuery ? searchQuery + this.delimiter + country: searchQuery;
+                this.updateNearbyLocations(searchQuery);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
-            this.searchQuery.notifySubscribers('');
 
             return this;
         },
@@ -124,15 +123,16 @@ define([
         openPopup: function () {
             var shippingAddress = quote.shippingAddress(),
                 country = shippingAddress.countryId ? shippingAddress.countryId :
-                this.defaultCountryId;
+                this.defaultCountryId,
+                searchQuery = '';
 
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                this.updateNearbyLocations(
-                    shippingAddress.postcode + this.delimiter + country
-                );
+                searchQuery = shippingAddress.postcode + this.delimiter + country;
             }
+
+            this.updateNearbyLocations(searchQuery);
         },
 
         /**
@@ -171,17 +171,22 @@ define([
                 }
             });
 
+            let searchCriteria = {
+                extensionAttributes: {
+                    productsInfo: productsInfo
+                },
+                pageSize: this.nearbySearchLimit
+            };
+
+            if (searchQuery) {
+                searchCriteria.area = {
+                    radius: this.nearbySearchRadius,
+                    searchTerm: searchQuery
+                };
+            }
+
             return pickupLocationsService
-                .getNearbyLocations({
-                    area: {
-                        radius: this.nearbySearchRadius,
-                        searchTerm: searchQuery
-                    },
-                    extensionAttributes: {
-                        productsInfo: productsInfo
-                    },
-                    pageSize: this.nearbySearchLimit
-                })
+                .getNearbyLocations(searchCriteria)
                 .then(function (locations) {
                     self.nearbyLocations(locations);
                 })
