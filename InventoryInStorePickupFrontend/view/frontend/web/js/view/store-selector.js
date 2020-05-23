@@ -71,7 +71,7 @@ define([
             updateNearbyLocations = _.debounce(function (searchQuery) {
                 country = quote.shippingAddress() && quote.shippingAddress().countryId ?
                     quote.shippingAddress().countryId : this.defaultCountryId;
-                searchQuery = searchQuery ? searchQuery + this.delimiter + country: searchQuery;
+                searchQuery = this.getSearchTerm(searchQuery, country);
                 this.updateNearbyLocations(searchQuery);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
@@ -118,21 +118,32 @@ define([
         },
 
         /**
+         * Get Search Term from search query and country.
+         *
+         * @param {String} searchQuery
+         * @param {String} country
+         * @returns {String}
+         */
+        getSearchTerm: function(searchQuery, country) {
+            return searchQuery ? searchQuery + this.delimiter + country : searchQuery;
+        },
+
+        /**
          * @returns void
          */
         openPopup: function () {
             var shippingAddress = quote.shippingAddress(),
                 country = shippingAddress.countryId ? shippingAddress.countryId :
                 this.defaultCountryId,
-                searchQuery = '';
+                searchTerm = '';
 
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                searchQuery = shippingAddress.postcode + this.delimiter + country;
+                searchTerm = this.getSearchTerm(shippingAddress.postcode, country);
             }
 
-            this.updateNearbyLocations(searchQuery);
+            this.updateNearbyLocations(searchTerm);
         },
 
         /**
