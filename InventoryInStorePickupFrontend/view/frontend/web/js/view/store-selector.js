@@ -124,7 +124,7 @@ define([
          * @param {String} country
          * @returns {String}
          */
-        getSearchTerm: function(searchQuery, country) {
+        getSearchTerm: function (searchQuery, country) {
             return searchQuery ? searchQuery + this.delimiter + country : searchQuery;
         },
 
