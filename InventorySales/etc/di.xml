@@ -198,10 +198,7 @@
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyRequest"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyResult"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\IsProductSalableResult"/>
-    <type name="Magento\Quote\Model\Quote\Item\CartItemPersister">
-        <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Model\Quote\Item\CartItemPersister\ValidateQtyBeforePersist" />
-    </type>
-    <type name="Magento\Quote\Api\CartItemRepositoryInterface">
-        <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Api\ValidateQtyBeforeSave" />
+    <type name="Magento\Quote\Model\Quote\Item">
+        <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Model\Quote\Item\ValidateQtyBeforePersist" />
     </type>
 </config>

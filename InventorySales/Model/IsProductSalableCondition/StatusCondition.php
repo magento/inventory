@@ -6,9 +6,13 @@
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
+/**
+ * Is product enabled condition.
+ */
 class StatusCondition implements IsProductSalableInterface
 {
     /**
@@ -17,7 +21,6 @@ class StatusCondition implements IsProductSalableInterface
     private $productRepository;
 
     /**
-     * StatusCondition constructor.
      * @param ProductRepository $productRepository
      */
     public function __construct(ProductRepository $productRepository)
@@ -30,7 +33,6 @@ class StatusCondition implements IsProductSalableInterface
      */
     public function execute(string $sku, int $stockId): bool
     {
-        $product = $this->productRepository->get($sku);
-        return $product->getStatus() === \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED;
+        return (int)$this->productRepository->get($sku)->getStatus() === Status::STATUS_ENABLED;
     }
 }

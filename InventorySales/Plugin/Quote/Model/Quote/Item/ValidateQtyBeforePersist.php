@@ -5,16 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\Quote\Model\Quote\Item\CartItemPersister;
+namespace Magento\InventorySales\Plugin\Quote\Model\Quote\Item;
 
 use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator;
 use Magento\Framework\Event;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Quote\Api\Data\CartInterface;
-use Magento\Quote\Api\Data\CartItemInterface;
-use Magento\Quote\Model\Quote\Item\CartItemPersister;
+use Magento\Quote\Model\Quote\Item;
 
 /**
  * Validate cart item qty before persist.
@@ -25,6 +23,7 @@ class ValidateQtyBeforePersist
      * @var QuantityValidator
      */
     private $qtyValidator;
+
     /**
      * @var ObserverFactory
      */
@@ -43,25 +42,21 @@ class ValidateQtyBeforePersist
     /**
      * Validate item qty before save.
      *
-     * @param CartItemPersister $subject
-     * @param CartInterface $quote
-     * @param CartItemInterface $item
-     *
-     * @return array
+     * @param Item $subject
+     * @return void
      * @throws LocalizedException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeSave(CartItemPersister $subject, CartInterface $quote, CartItemInterface $item): array
+    public function beforeBeforeSave(Item $subject): void
     {
-        if ($quote->getIsActive()) {
-            $event = $this->observerFactory->create(Event::class, ['data' => ['item' => $item]]);
-            $observer = $this->observerFactory->create(Observer::class, ['data' => ['event' => $event]]);
-            $this->qtyValidator->validate($observer);
-            if (!empty($item->getMessage()) && $item->getHasError()) {
-                throw new LocalizedException(__($item->getMessage()));
-            }
+        $quote = $subject->getQuote();
+        if ($quote->getIsActive() === false) {
+            return;
         }
-
-        return [$quote, $item];
+        $event = $this->observerFactory->create(Event::class, ['data' => ['item' => $subject]]);
+        $observer = $this->observerFactory->create(Observer::class, ['data' => ['event' => $event]]);
+        $this->qtyValidator->validate($observer);
+        if (!empty($subject->getMessage()) && $subject->getHasError()) {
+            throw new LocalizedException(__($subject->getMessage()));
+        }
     }
 }

@@ -8,10 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product;
 
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Type\Simple;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
-
+/**
+ * Is product available in multi stock environment plugin.
+ */
 class IsAvailablePlugin
 {
     /**
@@ -31,14 +32,13 @@ class IsAvailablePlugin
     /**
      * Fetches is salable status from multi-stock.
      *
-     * @param Simple $subject
+     * @param Product $subject
      * @param \Closure $proceed
-     * @param Product $product
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundIsAvailable(Product $product): bool
+    public function aroundIsAvailable(Product $subject, \Closure $proceed): bool
     {
-        return $this->isProductSalable->execute($product);
+        return $this->isProductSalable->execute($subject);
     }
 }
