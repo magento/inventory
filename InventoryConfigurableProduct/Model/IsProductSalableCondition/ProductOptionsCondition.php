@@ -7,10 +7,13 @@
 namespace Magento\InventoryConfigurableProduct\Model\IsProductSalableCondition;
 
 use Magento\Catalog\Model\ProductRepository;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventoryConfigurableProduct\Model\IsAnyConfigurableOptionSalable;
+use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
+/**
+ * Are configurable product option in stock condition.
+ */
 class ProductOptionsCondition implements IsProductSalableInterface
 {
     /**
@@ -19,29 +22,22 @@ class ProductOptionsCondition implements IsProductSalableInterface
     private $productRepository;
 
     /**
-     * @var Configurable
+     * @var IsAnyConfigurableOptionSalable
      */
-    private $type;
+    private $isAnyConfigurableOptionSalable;
 
     /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
-    /**
-     * @param Configurable $type
      * @param ProductRepository $productRepository
-     * @param AreProductsSalableInterface $areProductsSalable
+     * @param IsAnyConfigurableOptionSalable $isAnyConfigurableOptionSalable
      */
     public function __construct(
-        Configurable $type,
         ProductRepository $productRepository,
-        AreProductsSalableInterface $areProductsSalable
+        IsAnyConfigurableOptionSalable $isAnyConfigurableOptionSalable
     ) {
-        $this->type = $type;
         $this->productRepository = $productRepository;
-        $this->areProductsSalable = $areProductsSalable;
+        $this->isAnyConfigurableOptionSalable = $isAnyConfigurableOptionSalable;
     }
+
     /**
      * @inheritdoc
      */
@@ -51,20 +47,7 @@ class ProductOptionsCondition implements IsProductSalableInterface
         $product = $this->productRepository->get($sku);
 
         if ($product->getTypeId() === Configurable::TYPE_CODE) {
-            $status = false;
-            $options = $this->type->getConfigurableOptions($product);
-            $skus = [[]];
-            foreach ($options as $attribute) {
-                $skus[] = array_column($attribute, 'sku');
-            }
-            $skus = array_merge(...$skus);
-            $results = $this->areProductsSalable->execute($skus, $stockId);
-            foreach ($results as $result) {
-                if ($result->isSalable()) {
-                    $status = true;
-                    break;
-                }
-            }
+            $status = $this->isAnyConfigurableOptionSalable->execute($product, $stockId);
         }
         return $status;
     }
