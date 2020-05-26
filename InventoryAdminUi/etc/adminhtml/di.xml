@@ -25,4 +25,7 @@
             <argument name="sortOrder" xsi:type="number">30</argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Backend\Ui\Component\Listing\Column\EditAction">
+        <plugin name="edit_action" type="Magento\InventoryAdminUi\Plugin\Ui\Component\Listing\Column\EditActionPlugin"/>
+    </type>
 </config>

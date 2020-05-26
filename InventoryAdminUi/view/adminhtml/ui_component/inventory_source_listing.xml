@@ -58,7 +58,7 @@
                 </templates>
             </settings>
         </filters>
-        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions" class="Magento\InventoryAdminUi\Ui\Component\Listing\MassAction">
             <action name="enable">
                 <settings>
                     <confirm>
@@ -84,7 +84,7 @@
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
-    <columns name="inventory_source_listing_columns">
+    <columns name="inventory_source_listing_columns" class="Magento\InventoryAdminUi\Ui\Component\Listing\Columns">
         <settings>
             <editorConfig>
                 <param name="clientConfig" xsi:type="array">
