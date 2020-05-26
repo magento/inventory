@@ -96,8 +96,8 @@ class SourceListingTest extends TestCase
         );
 
         $resultBlock = $this->processUiComponent();
-        $this->assertStringContainsString('"Enable"', $resultBlock->toHtml());
-        $this->assertStringContainsString('"Edit","hidden":false', $resultBlock->toHtml());
+        $this->assertContains('"Enable"', $resultBlock->toHtml());
+        $this->assertContains('"Edit","hidden":false', $resultBlock->toHtml());
     }
 
     /**
@@ -112,8 +112,8 @@ class SourceListingTest extends TestCase
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
         $resultBlock = $this->processUiComponent();
-        $this->assertStringNotContainsString('"Enable"', $resultBlock->toHtml());
-        $this->assertStringContainsString('"Edit","hidden":true', $resultBlock->toHtml());
+        $this->assertNotContains('"Enable"', $resultBlock->toHtml());
+        $this->assertContains('"Edit","hidden":true', $resultBlock->toHtml());
     }
 
     /**
