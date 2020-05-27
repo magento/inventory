@@ -23,7 +23,6 @@ use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Add reservation during order placement
@@ -87,11 +86,6 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $salesEventExtensionFactory;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -117,8 +111,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        SalesEventExtensionFactory $salesEventExtensionFactory,
-        LoggerInterface $logger
+        SalesEventExtensionFactory $salesEventExtensionFactory
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -131,7 +124,6 @@ class AppendReservationsAfterOrderPlacementPlugin
         $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->salesEventExtensionFactory = $salesEventExtensionFactory;
-        $this->logger = $logger;
     }
 
     /**
