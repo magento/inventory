@@ -23,6 +23,7 @@ use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Add reservation during order placement
@@ -86,6 +87,11 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $salesEventExtensionFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -97,6 +103,7 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
+     * @param LoggerInterface $logger
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -110,7 +117,8 @@ class AppendReservationsAfterOrderPlacementPlugin
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        SalesEventExtensionFactory $salesEventExtensionFactory
+        SalesEventExtensionFactory $salesEventExtensionFactory,
+        LoggerInterface $logger
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -123,6 +131,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->salesEventExtensionFactory = $salesEventExtensionFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -168,8 +177,6 @@ class AppendReservationsAfterOrderPlacementPlugin
         $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
-        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
-
         /** @var SalesEventExtensionInterface */
         $salesEventExtension = $this->salesEventExtensionFactory->create([
             'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
@@ -189,6 +196,7 @@ class AppendReservationsAfterOrderPlacementPlugin
             ]
         ]);
 
+        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
         $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
 
         try {
