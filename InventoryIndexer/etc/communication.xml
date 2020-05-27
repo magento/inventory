@@ -15,4 +15,7 @@
     <topic name="inventory.indexer.stock" is_synchronous="false" request="int[]">
         <handler name="inventory.indexer.stock.handler" type="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync" method="executeList" />
     </topic>
+    <topic name="inventory.reservations.updateSalabilityStatus" is_synchronous="false" request="Magento\InventoryIndexer\Model\Queue\ReservationData">
+        <handler name="inventory.reservations.updateSalabilityStatus.handler" type="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus" method="execute" />
+    </topic>
 </config>
