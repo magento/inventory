@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryAdminUi\Test\Integration\Ui\Component;
 
 use Magento\Backend\Model\Auth;
+use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\View\Layout\Data\Structure;
 use Magento\Framework\View\Layout\Generator\ContextFactory as GeneratorContextFactory;
 use Magento\Framework\View\Layout\Generator\UiComponent;
@@ -108,7 +109,7 @@ class SourceListingTest extends TestCase
     public function testPrepareUserWithRestrictedRole(): void
     {
         $this->auth->login(
-            'customRoleUser',
+            'sourceAccessUser',
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
         $resultBlock = $this->processUiComponent();
@@ -117,9 +118,9 @@ class SourceListingTest extends TestCase
     }
 
     /**
-     * @return bool|\Magento\Framework\View\Element\BlockInterface
+     * @return BlockInterface
      */
-    private function processUiComponent()
+    private function processUiComponent(): BlockInterface
     {
         $this->scheduledStructure->setElement(
             'inventory_source_listing',
