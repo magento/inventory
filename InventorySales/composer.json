@@ -19,8 +19,7 @@
         "magento/module-sales": "*"
     },
     "suggest": {
-        "magento/module-inventory-catalog": "*",
-        "magento/module-quote": "*"
+        "magento/module-inventory-catalog": "*"
     },
     "require-dev": {
         "magento/module-inventory-indexer": "*"

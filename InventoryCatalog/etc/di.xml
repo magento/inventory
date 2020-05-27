@@ -164,4 +164,10 @@
     <type name="Magento\Catalog\Model\Product\Type\Simple">
         <plugin name="is_simple_product_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Type\Simple\IsSalablePlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\Product\Type\Virtual">
+        <plugin name="is_virtual_product_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Type\Virtual\IsSalablePlugin"/>
+    </type>
+    <type name="Magento\Downloadable\Model\Product\Type">
+        <plugin name="is_downloadable_product_salable" type="Magento\InventoryCatalog\Plugin\Downloadable\Model\Product\Type\IsSalablePlugin"/>
+    </type>
 </config>

@@ -57,10 +57,6 @@
     <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
-                <item name="product_status" xsi:type="array">
-                    <item name="required" xsi:type="boolean">true</item>
-                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\StatusCondition</item>
-                </item>
                 <item name="stock_item_is_in_stock" xsi:type="array">
                     <item name="required" xsi:type="boolean">true</item>
                     <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\IsSetInStockStatusForCompositeProductCondition</item>
@@ -198,7 +194,4 @@
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyRequest"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyResult"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\IsProductSalableResult"/>
-    <type name="Magento\Quote\Model\Quote\Item">
-        <plugin name="validate_qty_before_save_item" type="Magento\InventorySales\Plugin\Quote\Model\Quote\Item\ValidateQtyBeforePersist" />
-    </type>
 </config>
