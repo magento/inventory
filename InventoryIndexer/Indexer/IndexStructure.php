@@ -77,6 +77,7 @@ class IndexStructure implements IndexStructureInterface
 
     /**
      * Create the index table
+     *
      * @param AdapterInterface $connection
      * @param string $tableName
      * @return void
