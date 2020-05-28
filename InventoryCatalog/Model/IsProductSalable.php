@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
@@ -47,10 +47,10 @@ class IsProductSalable
     /**
      * Verify product salable status.
      *
-     * @param Product $product
+     * @param ProductInterface $product
      * @return bool
      */
-    public function execute(Product $product): bool
+    public function execute(ProductInterface $product): bool
     {
         if (null === $product->getSku() || (int)$product->getStatus() === Status::STATUS_DISABLED) {
             return false;

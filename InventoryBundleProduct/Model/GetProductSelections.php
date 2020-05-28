@@ -15,9 +15,9 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 
 /**
- * Retrieve bundle product selection service.
+ * Retrieve bundle product selections service.
  */
-class GetProductSelection
+class GetProductSelections
 {
     /**
      * @var CollectionFactory
@@ -65,7 +65,6 @@ class GetProductSelection
         $selectionsCollection->setFlag('product_children', true);
         $selectionsCollection->addFilterByRequiredOptions();
         $selectionsCollection->setOptionIdsFilter([$option->getId()]);
-
         $this->selectionCollectionFilterApplier->apply(
             $selectionsCollection,
             'parent_product_id',

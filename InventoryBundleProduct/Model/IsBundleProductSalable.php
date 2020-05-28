@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProduct\Model;
 use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
@@ -19,9 +18,9 @@ use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInt
 use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface;
 
 /**
- * Get bundle product stock status service.
+ * Get bundle product salable status considering bundle product selections service.
  */
-class GetBundleProductStockStatus
+class IsBundleProductSalable
 {
     /**
      * @var GetProductSelections
@@ -67,18 +66,12 @@ class GetBundleProductStockStatus
      * @param ProductInterface $product
      * @param OptionInterface[] $bundleOptions
      * @param int $stockId
-     *
      * @return bool
      * @throws LocalizedException
      * @throws SkuIsNotAssignedToStockException
      */
     public function execute(ProductInterface $product, array $bundleOptions, int $stockId): bool
     {
-        //get non processed bundle product sku.
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($product->getDataByKey('sku'), $stockId);
-        if (!$stockItemConfiguration->getExtensionAttributes()->getIsInStock()) {
-            return false;
-        }
         $isSalable = false;
         foreach ($bundleOptions as $option) {
             $hasSalable = false;
@@ -103,6 +96,32 @@ class GetBundleProductStockStatus
     }
 
     /**
+     * Get are bundle product selections salable.
+     *
+     * @param ProductInterface $product
+     * @param OptionInterface $option
+     * @param int $stockId
+     * @return IsProductSalableForRequestedQtyResultInterface[]
+     * @throws LocalizedException
+     * @throws SkuIsNotAssignedToStockException
+     */
+    private function getAreSalableSelections(ProductInterface $product, OptionInterface $option, int $stockId): array
+    {
+        $bundleSelections = $this->getProductSelection->execute($product, $option);
+        $skuRequests = [];
+        foreach ($bundleSelections->getItems() as $selection) {
+            $skuRequests[] = $this->isProductSalableForRequestedQtyRequestFactory->create(
+                [
+                    'sku' => (string)$selection->getSku(),
+                    'qty' => $this->getRequestedQty($selection, $stockId),
+                ]
+            );
+        }
+
+        return $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
+    }
+
+    /**
      * Get bundle product selection qty.
      *
      * @param Product $product
@@ -119,33 +138,5 @@ class GetBundleProductStockStatus
         }
 
         return (float)$product->getSelectionQty();
-    }
-
-    /**
-     * Get are bundle product selections salable.
-     *
-     * @param ProductInterface $product
-     * @param OptionInterface $option
-     * @param int $stockId
-     * @return IsProductSalableForRequestedQtyResultInterface[]
-     * @throws LocalizedException
-     * @throws SkuIsNotAssignedToStockException
-     */
-    private function getAreSalableSelections(ProductInterface $product, OptionInterface $option, int $stockId): array
-    {
-        $bundleSelections = $this->getProductSelection->execute($product, $option);
-        $skuRequests = [];
-        foreach ($bundleSelections->getItems() as $selection) {
-            if ((int)$selection->getStatus() === Status::STATUS_ENABLED) {
-                $skuRequests[] = $this->isProductSalableForRequestedQtyRequestFactory->create(
-                    [
-                        'sku' => (string)$selection->getSku(),
-                        'qty' => $this->getRequestedQty($selection, $stockId),
-                    ]
-                );
-            }
-        }
-
-        return $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
     }
 }

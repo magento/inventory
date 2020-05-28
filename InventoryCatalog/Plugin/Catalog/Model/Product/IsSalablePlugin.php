@@ -5,9 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Type\Virtual;
+namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product;
 
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type\Simple;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
 /**
@@ -32,13 +33,12 @@ class IsSalablePlugin
     /**
      * Fetches is salable status from multi-stock.
      *
-     * @param Product\Type\Virtual $subject
-     * @param \Closure $proceed
      * @param Product $product
+     * @param \Closure $proceed
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundIsSalable(Product\Type\Virtual $subject, \Closure $proceed, Product $product): bool
+    public function aroundIsSalable(Product $product, \Closure $proceed): bool
     {
         return $this->isProductSalable->execute($product);
     }

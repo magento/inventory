@@ -26,4 +26,22 @@
     <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
         <plugin name="adapt_parent_stock_processor" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor\AdaptParentItemProcessorPlugin"/>
     </type>
+    <type name="Magento\InventoryConfigurableProduct\Model\IsConfigurableProductSalable">
+        <arguments>
+            <argument name="areProductsSalable" xsi:type="object">Magento\InventorySalesApi\Api\AreProductsSalableInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventoryCatalog\Model\IsProductSalable">
+        <plugin name="is_configurable_product_salable" type="Magento\InventoryConfigurableProduct\Plugin\InventoryCatalog\Model\IsProductSalable\IsConfigurableProductSalablePlugin"/>
+    </type>
+    <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
+        <arguments>
+            <argument name="conditions" xsi:type="array">
+                <item name="product_options_in_stock" xsi:type="array">
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="object" xsi:type="object">Magento\InventoryConfigurableProduct\Model\IsProductSalableCondition\ProductOptionsCondition</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>
