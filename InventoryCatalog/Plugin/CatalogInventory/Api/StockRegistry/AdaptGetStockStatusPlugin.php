@@ -12,6 +12,7 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -50,24 +51,32 @@ class AdaptGetStockStatusPlugin
     private $stockResolver;
 
     /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         GetProductSalableQtyInterface $getProductSalableQty,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->getProductSalableQty = $getProductSalableQty;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -92,6 +101,9 @@ class AdaptGetStockStatusPlugin
             ? $this->storeManager->getWebsite()->getCode()
             : $this->storeManager->getWebsite($scopeId)->getCode();
         $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)->getStockId();
+        if ($this->defaultStockProvider->getId() === $stockId) {
+            return $stockStatus;
+        }
         $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
 
         $result = $this->areProductsSalable->execute([$sku], $stockId);
