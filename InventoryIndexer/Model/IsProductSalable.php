@@ -47,7 +47,8 @@ class IsProductSalable implements IsProductSalableInterface
             $stockItem = $this->getStockItemData->execute($sku, $stockId);
             $isSalable = (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
         } catch (LocalizedException $exception) {
-            $this->logger->warning(sprintf(
+            $this->logger->warning(
+                sprintf(
                     'Unable to fetch stock #%s data for SKU %s. Reason: %s',
                     $stockId,
                     $sku,
