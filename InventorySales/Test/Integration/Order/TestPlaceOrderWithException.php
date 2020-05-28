@@ -17,7 +17,7 @@ use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class PlaceOrderWithException extends TestCase
+class TestPlaceOrderWithException extends TestCase
 {
     /**
      * @var ProductRepositoryInterface
@@ -60,11 +60,10 @@ class PlaceOrderWithException extends TestCase
     }
 
     /**
-     * @magentoDataFixture Magento/Sales/_files/order.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testPlaceOrderWithException()
     {
