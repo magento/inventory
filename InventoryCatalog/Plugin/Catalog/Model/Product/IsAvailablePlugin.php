@@ -11,9 +11,9 @@ use Magento\Catalog\Model\Product;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
 /**
- * Apply the inventory is-salable result to the according method of the product type model.
+ * Apply the inventory is-available result to the according method of the product type model.
  */
-class IsSalablePlugin
+class IsAvailablePlugin
 {
     /**
      * @var IsProductSalable
@@ -37,7 +37,7 @@ class IsSalablePlugin
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundIsSalable(Product $product, \Closure $proceed): bool
+    public function aroundIsAvailable(Product $product, \Closure $proceed): bool
     {
         return $this->isProductSalable->execute($product);
     }

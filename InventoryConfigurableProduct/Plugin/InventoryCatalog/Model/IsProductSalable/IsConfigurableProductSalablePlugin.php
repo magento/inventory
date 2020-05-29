@@ -9,7 +9,6 @@ namespace Magento\InventoryConfigurableProduct\Plugin\InventoryCatalog\Model\IsP
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\InventoryBundleProduct\Model\GetProductSelections;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
 /**
@@ -23,18 +22,11 @@ class IsConfigurableProductSalablePlugin
     private $type;
 
     /**
-     * @var GetProductSelections
-     */
-    private $getProductSelections;
-
-    /**
      * @param Configurable $type
-     * @param GetProductSelections $getProductSelections
      */
-    public function __construct(Configurable $type, GetProductSelections $getProductSelections)
+    public function __construct(Configurable $type)
     {
         $this->type = $type;
-        $this->getProductSelections = $getProductSelections;
     }
 
     /**

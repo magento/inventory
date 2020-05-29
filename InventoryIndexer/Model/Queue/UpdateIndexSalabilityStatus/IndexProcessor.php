@@ -17,7 +17,6 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
 /**
  * Update 'is salable' index data processor.
@@ -40,9 +39,9 @@ class IndexProcessor
     private $areProductsSalable;
 
     /**
-     * @var GetStockItemDataInterface
+     * @var GetDataForUpdate
      */
-    private $getStockItemData;
+    private $getDataForUpdate;
 
     /**
      * @var UpdateIsSalable
@@ -53,7 +52,7 @@ class IndexProcessor
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexStructureInterface $indexStructure
      * @param AreProductsSalableInterface $areProductsSalable
-     * @param GetStockItemDataInterface $getDataForUpdate
+     * @param GetDataForUpdate $getDataForUpdate
      * @param UpdateIsSalable $updateIsSalable
      */
     public function __construct(
@@ -66,7 +65,7 @@ class IndexProcessor
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexStructure = $indexStructure;
         $this->areProductsSalable = $areProductsSalable;
-        $this->getStockItemData = $getDataForUpdate;
+        $this->getDataForUpdate = $getDataForUpdate;
         $this->updateIsSalable = $updateIsSalable;
     }
 
@@ -93,7 +92,7 @@ class IndexProcessor
             $reservationData->getStock()
         );
 
-        $dataForUpdate = $this->getDataForUpdate($salabilityData, $stockId);
+        $dataForUpdate = $this->getDataForUpdate->execute($salabilityData, $stockId);
         $this->updateIsSalable->execute(
             $mainIndexName,
             $dataForUpdate,

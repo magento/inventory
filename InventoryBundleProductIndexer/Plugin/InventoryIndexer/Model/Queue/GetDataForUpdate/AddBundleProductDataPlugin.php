@@ -13,6 +13,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor\GetDataForUpdate;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Psr\Log\LoggerInterface;
 
@@ -42,6 +43,11 @@ class AddBundleProductDataPlugin
     private $getStockItemData;
 
     /**
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -51,6 +57,7 @@ class AddBundleProductDataPlugin
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param GetStockItemDataInterface $getStockItemData
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -58,6 +65,7 @@ class AddBundleProductDataPlugin
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         GetStockItemDataInterface $getStockItemData,
+        AreProductsSalableInterface $areProductsSalable,
         LoggerInterface $logger
     ) {
         $this->type = $type;
@@ -65,6 +73,7 @@ class AddBundleProductDataPlugin
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->getStockItemData = $getStockItemData;
         $this->logger = $logger;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
@@ -87,10 +96,13 @@ class AddBundleProductDataPlugin
         foreach ($childrenIds as $childId) {
             $bundleProductsIds[] = $this->type->getParentIdsByChild($childId);
         }
-
-        $bundleSkus = $this->getSkusByProductIds->execute($bundleProductsIds);
-        foreach ($bundleSkus as $bundleSku) {
-            $bundleData[$bundleSku] = $this->getIndexSalabilityStatus($bundleSku, $stockId);
+        $bundleProductsIds = array_merge(...$bundleProductsIds);
+        $bundleSkus = $bundleProductsIds ? $this->getSkusByProductIds->execute($bundleProductsIds) : [];
+        $areBundleProdcutsSalable = $this->areProductsSalable->execute($bundleSkus, $stockId);
+        foreach ($areBundleProdcutsSalable as $salableResult) {
+            if ($salableResult->isSalable() !== $this->getIndexSalabilityStatus($salableResult->getSku(), $stockId)) {
+                $bundleData[$salableResult->getSku()] = $salableResult->isSalable();
+            }
         }
 
         return array_merge($result, $bundleData);

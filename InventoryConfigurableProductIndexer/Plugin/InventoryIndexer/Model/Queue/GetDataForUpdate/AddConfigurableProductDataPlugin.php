@@ -13,6 +13,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor\GetDataForUpdate;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Psr\Log\LoggerInterface;
 
@@ -42,6 +43,11 @@ class AddConfigurableProductDataPlugin
     private $getStockItemData;
 
     /**
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -51,6 +57,7 @@ class AddConfigurableProductDataPlugin
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param GetStockItemDataInterface $getStockItemData
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -58,6 +65,7 @@ class AddConfigurableProductDataPlugin
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         GetStockItemDataInterface $getStockItemData,
+        AreProductsSalableInterface $areProductsSalable,
         LoggerInterface $logger
     ) {
         $this->type = $type;
@@ -65,6 +73,7 @@ class AddConfigurableProductDataPlugin
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->getStockItemData = $getStockItemData;
         $this->logger = $logger;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
@@ -87,10 +96,13 @@ class AddConfigurableProductDataPlugin
         foreach ($childrenIds as $childId) {
             $configurableProductIds[] = $this->type->getParentIdsByChild($childId);
         }
-
-        $configurableSkus = $this->getSkusByProductIds->execute($configurableProductIds);
-        foreach ($configurableSkus as $configurableSku) {
-            $configurableData[$configurableSku] = $this->getIndexSalabilityStatus($configurableSku, $stockId);
+        $configurableProductIds = array_merge(...$configurableProductIds);
+        $configurableSkus = $configurableProductIds ? $this->getSkusByProductIds->execute($configurableProductIds) : [];
+        $areConfigurableProductsSalable = $this->areProductsSalable->execute($configurableSkus, $stockId);
+        foreach ($areConfigurableProductsSalable as $salableResult) {
+            if ($salableResult->isSalable() !== $this->getIndexSalabilityStatus($salableResult->getSku(), $stockId)) {
+                $configurableData[$salableResult->getSku()] = $salableResult->isSalable();
+            }
         }
 
         return array_merge($result, $configurableData);

@@ -163,5 +163,6 @@
     </type>
     <type name="Magento\Catalog\Model\Product">
         <plugin name="is_product_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\IsSalablePlugin"/>
+        <plugin name="is_product_available" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\IsAvailablePlugin"/>
     </type>
 </config>

@@ -10,6 +10,7 @@
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-indexer": "*",
         "magento/module-inventory-multi-dimensional-indexer-api": "*"
+        "magento/module-inventory-sales-api": "*"
     },
     "suggest": {
         "magento/module-inventory": "*"
