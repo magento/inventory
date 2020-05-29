@@ -49,7 +49,7 @@ class PlaceOrderWithExceptionTest extends TestCase
      */
     private $getReservationsQuantity;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
