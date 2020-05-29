@@ -17,7 +17,7 @@ use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
-class TestPlaceOrderWithException extends TestCase
+class PlaceOrderWithExceptionTest extends TestCase
 {
     /**
      * @var ProductRepositoryInterface
