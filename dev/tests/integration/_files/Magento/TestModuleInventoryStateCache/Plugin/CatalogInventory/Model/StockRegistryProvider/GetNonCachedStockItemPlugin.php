@@ -56,16 +56,16 @@ class GetNonCachedStockItemPlugin
      *
      * @param StockRegistryProviderInterface $subject
      * @param \Closure $proceed
-     * @param int $productId
-     * @param int $stockId
+     * @param int|null $productId
+     * @param int|null $stockId
      * @return StockItemInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundGetStockItem(
         StockRegistryProviderInterface $subject,
         \Closure $proceed,
-        int $productId,
-        int $stockId
+        ?int $productId,
+        ?int $stockId
     ): StockItemInterface {
         $criteria = $this->stockItemCriteriaFactory->create();
         $criteria->setProductsFilter($productId);
