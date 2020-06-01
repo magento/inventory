@@ -41,11 +41,6 @@ class AdaptAssignStatusToProductPlugin
     private $getProductIdsBySkus;
 
     /**
-     * @var array
-     */
-    private $productStatus;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AreProductsSalableInterface $areProductsSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
@@ -67,43 +62,32 @@ class AdaptAssignStatusToProductPlugin
      * Assign stock status to product considering multi stock environment.
      *
      * @param Stock $subject
-     * @param callable $proceed
      * @param Product $product
      * @param int|null $status
-     * @return void
+     * @return array
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundAssignStatusToProduct(
+    public function beforeAssignStatusToProduct(
         Stock $subject,
-        callable $proceed,
         Product $product,
-        $status = null
-    ) {
+        ?int $status
+    ): array {
         if (null === $product->getSku()) {
-            return;
-        }
-
-        $stockId = $this->getStockIdForCurrentWebsite->execute();
-        if (isset($this->productStatus[$stockId][$product->getSku()])) {
-            $proceed($product, $this->productStatus[$stockId][$product->getSku()]);
-            return;
+            return [$product, $status];
         }
 
         try {
             $this->getProductIdsBySkus->execute([$product->getSku()]);
-
             if (null === $status) {
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
                 $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
                 $result = current($result);
                 $status = (int)$result->isSalable();
-                $this->productStatus[$stockId][$product->getSku()] = $status;
             }
-
-            $proceed($product, $status);
         } catch (NoSuchEntityException $e) {
-            return;
+            // Product id not found.
         }
+        return [$product, $status];
     }
 }
