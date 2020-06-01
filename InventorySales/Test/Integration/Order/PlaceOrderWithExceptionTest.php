@@ -13,6 +13,8 @@ use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\CartManagementInterface;
+use Magento\Sales\Api\OrderManagementInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -64,6 +66,8 @@ class PlaceOrderWithExceptionTest extends TestCase
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     *
+     * @magentoDbIsolation disabled
      */
     public function testPlaceOrderWithException()
     {
@@ -97,7 +101,7 @@ class PlaceOrderWithExceptionTest extends TestCase
         $cartId = $cart->getId();
         $this->cartRepository->save($cart);
 
-        $this->cartManagement->placeOrder($cartId);
+        $orderId = $this->cartManagement->placeOrder($cartId);
         $salableQtyBefore = $this->getReservationsQuantity->execute($sku, $stockId);
 
         self::expectException(\Exception::class);
@@ -105,5 +109,13 @@ class PlaceOrderWithExceptionTest extends TestCase
 
         $salableQtyAfter = $this->getReservationsQuantity->execute($sku, $stockId);
         self::assertSame($salableQtyBefore, $salableQtyAfter);
+
+        /** @var OrderRepositoryInterface $orderRepository */
+        $orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
+        /** @var OrderManagementInterface $orderManagement */
+        $orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
+
+        $orderManagement->cancel($orderId);
+        $orderRepository->delete($orderRepository->get($orderId));
     }
 }
