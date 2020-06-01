@@ -19,6 +19,9 @@ use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class SetDataToLegacyStockItemAtSourceItemsSaveTest extends TestCase
 {
     /**

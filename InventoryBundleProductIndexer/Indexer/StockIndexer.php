@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProductIndexer\Indexer;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryBundleProductIndexer\Indexer\Stock\IndexDataByStockIdProvider;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
 use Magento\InventoryIndexer\Indexer\Stock\PrepareIndexDataForClearingIndex;
@@ -56,11 +55,6 @@ class StockIndexer
     private $indexTableSwitcher;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @var PrepareIndexDataForClearingIndex
      */
     private $prepareIndexDataForClearingIndex;
@@ -74,7 +68,6 @@ class StockIndexer
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexDataByStockIdProvider $indexDataByStockIdProvider
      * @param IndexTableSwitcherInterface $indexTableSwitcher
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
      */
     public function __construct(
@@ -84,7 +77,6 @@ class StockIndexer
         IndexNameBuilder $indexNameBuilder,
         IndexDataByStockIdProvider $indexDataByStockIdProvider,
         IndexTableSwitcherInterface $indexTableSwitcher,
-        DefaultStockProviderInterface $defaultStockProvider,
         PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
     ) {
         $this->getAllStockIds = $getAllStockIds;
@@ -93,7 +85,6 @@ class StockIndexer
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexDataByStockIdProvider = $indexDataByStockIdProvider;
         $this->indexTableSwitcher = $indexTableSwitcher;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex;
     }
 
@@ -131,10 +122,6 @@ class StockIndexer
     public function executeList(array $stockIds)
     {
         foreach ($stockIds as $stockId) {
-            if ($this->defaultStockProvider->getId() === $stockId) {
-                continue;
-            }
-
             $mainIndexName = $this->indexNameBuilder
                 ->setIndexId(InventoryIndexer::INDEXER_ID)
                 ->addDimension('stock_', (string)$stockId)

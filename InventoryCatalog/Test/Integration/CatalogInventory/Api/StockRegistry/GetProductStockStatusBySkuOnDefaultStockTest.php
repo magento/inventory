@@ -12,6 +12,9 @@ use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class GetProductStockStatusBySkuOnDefaultStockTest extends TestCase
 {
     /**

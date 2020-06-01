@@ -9,11 +9,10 @@ namespace Magento\InventoryIndexer\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
+use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
-use Magento\InventoryIndexer\Indexer\IndexStructure;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
  * @inheritdoc
@@ -31,11 +30,6 @@ class GetStockItemData implements GetStockItemDataInterface
     private $stockIndexTableNameResolver;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @var GetProductIdsBySkusInterface
      */
     private $getProductIdsBySkus;
@@ -43,18 +37,15 @@ class GetStockItemData implements GetStockItemDataInterface
     /**
      * @param ResourceConnection $resource
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      */
     public function __construct(
         ResourceConnection $resource,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider,
         GetProductIdsBySkusInterface $getProductIdsBySkus
     ) {
         $this->resource = $resource;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
     }
 
@@ -65,34 +56,19 @@ class GetStockItemData implements GetStockItemDataInterface
     {
         $connection = $this->resource->getConnection();
         $select = $connection->select();
+        $stockItemTableName = $this->stockIndexTableNameResolver->execute($stockId);
+        $select->from(
+            $stockItemTableName,
+            [
+                GetStockItemDataInterface::QUANTITY => IndexStructure::QUANTITY,
+                GetStockItemDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
+            ]
+        )->where(IndexStructure::SKU . ' = ?', $sku);
 
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            $productId = current($this->getProductIdsBySkus->execute([$sku]));
-            $stockItemTableName = $this->resource->getTableName('cataloginventory_stock_status');
-            $select->from(
-                $stockItemTableName,
-                [
-                    GetStockItemDataInterface::QUANTITY => 'qty',
-                    GetStockItemDataInterface::IS_SALABLE => 'stock_status',
-                ]
-            )->where('product_id = ?', $productId);
-
+        try {
             return $connection->fetchRow($select) ?: null;
-        } else {
-            $stockItemTableName = $this->stockIndexTableNameResolver->execute($stockId);
-            $select->from(
-                $stockItemTableName,
-                [
-                    GetStockItemDataInterface::QUANTITY => IndexStructure::QUANTITY,
-                    GetStockItemDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
-                ]
-            )->where(IndexStructure::SKU . ' = ?', $sku);
-
-            try {
-                    return $connection->fetchRow($select) ?: null;
-            } catch (\Exception $e) {
-                throw new LocalizedException(__('Could not receive Stock Item data'), $e);
-            }
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Could not receive Stock Item data'), $e);
         }
     }
 }

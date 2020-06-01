@@ -77,6 +77,7 @@ class SetOutOfStockToLegacyStockStatusAtSourceItemsDeleteTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
      */
     public function testSetOutOfStock()
     {

@@ -11,6 +11,9 @@ use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class GetSourceCodesBySkusTest extends TestCase
 {
     /**

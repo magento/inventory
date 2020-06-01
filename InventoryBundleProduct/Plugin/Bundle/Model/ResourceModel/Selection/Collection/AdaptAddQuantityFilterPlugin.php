@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection;
 
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -34,26 +33,18 @@ class AdaptAddQuantityFilterPlugin
     private $stockByWebsiteIdResolver;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StoreManagerInterface $storeManager
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StoreManagerInterface $storeManager,
-        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        DefaultStockProviderInterface $defaultStockProvider
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->storeManager = $storeManager;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -69,9 +60,6 @@ class AdaptAddQuantityFilterPlugin
     ): Collection {
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockByWebsiteIdResolver->execute((int)$website->getId());
-        if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
-            return $proceed();
-        }
         $skus = [];
         $skusToExclude = [];
         foreach ($subject->getData() as $item) {

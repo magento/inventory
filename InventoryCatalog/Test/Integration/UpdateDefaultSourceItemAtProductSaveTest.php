@@ -36,7 +36,7 @@ class UpdateDefaultSourceItemAtProductSaveTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
-     * @magentoDbIsolation enabled
+     * @magentoDbIsolation disabled
      */
     public function testSaveOutOfStockProductNotAssignedToDefaultSource()
     {

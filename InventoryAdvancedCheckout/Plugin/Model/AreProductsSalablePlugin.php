@@ -11,7 +11,6 @@ use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
 use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -38,11 +37,6 @@ class AreProductsSalablePlugin
     private $websiteRepository;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @var ObjectManagerInterface
      */
     private $objectManager;
@@ -51,20 +45,17 @@ class AreProductsSalablePlugin
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param WebsiteRepositoryInterface $websiteRepository
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param ObjectManagerInterface $objectManager
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
         WebsiteRepositoryInterface $websiteRepository,
-        DefaultStockProviderInterface $defaultStockProvider,
         ObjectManagerInterface $objectManager
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->stockResolver = $stockResolver;
         $this->websiteRepository = $websiteRepository;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->objectManager = $objectManager;
     }
 
@@ -87,10 +78,6 @@ class AreProductsSalablePlugin
     ): array {
         $website = $this->websiteRepository->getById($websiteId);
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-        if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
-            return $proceed($productQuantities, $websiteId);
-        }
-
         $skus = [];
         foreach ($productQuantities as $productQuantity) {
             $skus[] = $productQuantity->getSku();
