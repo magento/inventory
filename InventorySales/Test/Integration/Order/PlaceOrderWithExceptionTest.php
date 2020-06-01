@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\Order;
 
+use Magento\Framework\Registry;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\CartManagementInterface;
+use Magento\Sales\Api\OrderManagementInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -49,6 +52,21 @@ class PlaceOrderWithExceptionTest extends TestCase
      */
     private $getReservationsQuantity;
 
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @var OrderManagementInterface
+     */
+    private $orderManagement;
+
     protected function setUp()
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
@@ -57,6 +75,9 @@ class PlaceOrderWithExceptionTest extends TestCase
         $this->cartItemFactory = Bootstrap::getObjectManager()->get(CartItemInterfaceFactory::class);
         $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
         $this->getReservationsQuantity = Bootstrap::getObjectManager()->get(GetReservationsQuantityInterface::class);
+        $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
+        $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
+        $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
     }
 
     /**
@@ -106,6 +127,11 @@ class PlaceOrderWithExceptionTest extends TestCase
         $salableQtyAfter = $this->getReservationsQuantity->execute($sku, $stockId);
         self::assertSame($salableQtyBefore, $salableQtyAfter);
 
-        $this->deleteOrderById((int)$orderId);
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', true);
+        $this->orderManagement->cancel($orderId);
+        $this->orderRepository->delete($this->orderRepository->get($orderId));
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', false);
     }
 }
