@@ -67,7 +67,7 @@ class PlaceOrderWithExceptionTest extends TestCase
      */
     private $orderManagement;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
