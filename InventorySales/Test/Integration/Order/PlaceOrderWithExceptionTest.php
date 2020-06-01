@@ -66,8 +66,6 @@ class PlaceOrderWithExceptionTest extends TestCase
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
-     *
-     * @magentoDbIsolation disabled
      */
     public function testPlaceOrderWithException()
     {
