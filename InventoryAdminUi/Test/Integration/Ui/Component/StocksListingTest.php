@@ -96,8 +96,10 @@ class StocksListingTest extends TestCase
         );
 
         $resultBlock = $this->processUiComponent();
-        $this->assertContains('"Delete"', $resultBlock->toHtml());
-        $this->assertContains('"Edit","hidden":false', $resultBlock->toHtml());
+        $resultHtml = $resultBlock->toHtml();
+
+        $this->assertContains('"Delete"', $resultHtml);
+        $this->assertContains('"Edit","hidden":false', $resultHtml);
     }
 
     /**
@@ -112,8 +114,10 @@ class StocksListingTest extends TestCase
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
         $resultBlock = $this->processUiComponent();
-        $this->assertNotContains('"Delete"', $resultBlock->toHtml());
-        $this->assertContains('"Edit","hidden":true', $resultBlock->toHtml());
+        $resultHtml = $resultBlock->toHtml();
+
+        $this->assertNotContains('"Delete"', $resultHtml);
+        $this->assertContains('"Edit","hidden":true', $resultHtml);
     }
 
     /**
