@@ -41,7 +41,7 @@ class NewButton implements ButtonProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getButtonData()
     {

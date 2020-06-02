@@ -15,6 +15,9 @@ use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\Ui\Component\Container;
 
+/**
+ * Assign sources button.
+ */
 class Button extends Container
 {
     /**

@@ -19,7 +19,8 @@ use Magento\InventoryApi\Api\StockSourceLinksDeleteInterface;
 use Magento\InventoryApi\Api\StockSourceLinksSaveInterface;
 
 /**
- * At the time of processing Stock save form this class used to save links correctly
+ * At the time of processing Stock save form this class used to save links correctly.
+ *
  * Performs replace strategy of sources for the stock
  */
 class StockSourceLinkProcessor
@@ -87,6 +88,8 @@ class StockSourceLinkProcessor
     }
 
     /**
+     * Performs replace strategy of sources for the stock.
+     *
      * @param int $stockId
      * @param array $linksData
      * @return void
