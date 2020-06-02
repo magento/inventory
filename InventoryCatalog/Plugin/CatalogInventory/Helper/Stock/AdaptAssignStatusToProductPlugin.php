@@ -83,10 +83,10 @@ class AdaptAssignStatusToProductPlugin
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
                 $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
                 $result = current($result);
-                $status = (int)$result->isSalable();
+                return [$product, (int)$result->isSalable()];
             }
         } catch (NoSuchEntityException $e) {
-            // Product id not found.
+            return [$product, $status];
         }
         return [$product, $status];
     }
