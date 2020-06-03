@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests for \Magento\InventoryAdminUi\Model\Stock\StockSourceLinkProcessor.
  *
- *  @magentoAppArea adminhtml
+ * @magentoAppArea adminhtml
  */
 class StockSourceLinkProcessorTest extends TestCase
 {
