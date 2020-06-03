@@ -42,7 +42,7 @@ class PriceIndexUpdater
      * Reindex product prices.
      *
      * @param Sync $subject
-     * @param $result
+     * @param void $result
      * @param array $sourceItemIds
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
