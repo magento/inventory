@@ -42,7 +42,7 @@ class CacheFlush
      * Clean cache for specific products after source items reindex.
      *
      * @param Sync $subject
-     * @param null $result
+     * @param void $result
      * @param array $sourceItemIds
      * @throws \Exception in case catalog product entity type hasn't been initialize.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
