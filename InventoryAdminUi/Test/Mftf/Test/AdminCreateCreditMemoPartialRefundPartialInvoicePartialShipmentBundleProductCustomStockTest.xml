@@ -10,7 +10,7 @@
     <test name="AdminCreateCreditMemoPartialRefundPartialInvoicePartialShipmentBundleProductCustomStockTest">
         <annotations>
             <stories value="Bundle Product Custom Stock."/>
-            <title value="Create partial credit Memo with bundle product on custom stock."/>
+            <title value="Create partial credit Memo after partial invoice and partial shipment for bundle product on custom stock."/>
             <description value="Verify, admin able to create credit memo with partial refund after partial invoice and partial shipment with bundle product on custom stock."/>
             <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/735178/scenarios/2565617"/>
             <severity value="CRITICAL"/>
