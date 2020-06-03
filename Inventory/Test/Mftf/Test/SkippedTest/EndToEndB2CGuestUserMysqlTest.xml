@@ -9,6 +9,10 @@
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="EndToEndB2CGuestUserMysqlTest">
         <annotations>
+            <stories value="B2C Guest User Mysql Test"/>
+            <title value="B2C Guest User Mysql Test"/>
+            <description value="B2C guest user mysql test"/>
+            <severity value="MAJOR"/>
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
