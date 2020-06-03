@@ -170,7 +170,8 @@ define([
         updateNearbyLocations: function (searchQuery) {
             var self = this,
                 productsInfo = [],
-                items = quote.getItems();
+                items = quote.getItems(),
+                searchCriteria;
 
             _.each(items, function (item) {
                 if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
@@ -182,7 +183,7 @@ define([
                 }
             });
 
-            let searchCriteria = {
+            searchCriteria = {
                 extensionAttributes: {
                     productsInfo: productsInfo
                 },
