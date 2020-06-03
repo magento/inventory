@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Source\SourceItemIndexer;
+namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;

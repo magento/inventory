@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem;
+namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;

@@ -22,7 +22,10 @@
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\PriceIndexUpdater"/>
+        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater"/>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
+        <plugin name="update_product_prices_plugin" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\PriceIndexUpdatePlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\Indexer\ProductPriceIndexFilter">
         <plugin name="change_select_for_price_modifier" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Indexer\ModifySelectInProductPriceIndexFilter"/>

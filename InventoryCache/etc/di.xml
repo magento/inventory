@@ -6,16 +6,11 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\InventoryIndexer\Indexer\Stock\StockIndexer">
-        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Stock\StockIndexer\CacheFlush"/>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
+        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\CacheFlush"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Source\SourceItemIndexer\CacheFlush"/>
-    </type>
-    <type name="Magento\InventoryCache\Model\ResourceModel\GetProductIdsByStockIds">
-        <arguments>
-            <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
-        </arguments>
+        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\CacheFlush"/>
     </type>
     <type name="Magento\InventoryCache\Model\FlushCacheByProductIds">
         <arguments>
