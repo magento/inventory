@@ -35,4 +35,7 @@
     <type name="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor\GetDataForUpdate">
         <plugin name="add_configurable_products_data" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Model\Queue\GetDataForUpdate\AddConfigurableProductDataPlugin"/>
     </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="reindex_configurable_source_items_after_save" type="Magento\InventoryConfigurableProductIndexer\Plugin\Catalog\Model\ResourceModel\Product\ReindexSourceItemsPlugin"/>
+    </type>
 </config>
