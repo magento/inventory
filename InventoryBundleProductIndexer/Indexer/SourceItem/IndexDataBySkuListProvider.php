@@ -73,6 +73,6 @@ class IndexDataBySkuListProvider
             }
         }
 
-        return new \ArrayIterator(reset($results));
+        return new \ArrayIterator($results);
     }
 }

@@ -10,6 +10,7 @@ namespace Magento\InventoryBundleProductIndexer\Indexer\SourceItem;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\PrepareIndexDataForClearingIndex;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -51,12 +52,18 @@ class SourceItemIndexer
     private $siblingSkuListInStockProvider;
 
     /**
+     * @var PrepareIndexDataForClearingIndex
+     */
+    private $prepareIndexDataForClearingIndex;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexHandlerInterface $indexHandler
      * @param IndexStructureInterface $indexStructure
      * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param SiblingSkuListInStockProvider $siblingSkuListInStockProvider
+     * @param PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
      */
     public function __construct(
         ResourceConnection $resourceConnection,
@@ -64,7 +71,8 @@ class SourceItemIndexer
         IndexHandlerInterface $indexHandler,
         IndexStructureInterface $indexStructure,
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
-        SiblingSkuListInStockProvider $siblingSkuListInStockProvider
+        SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
+        PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -72,6 +80,7 @@ class SourceItemIndexer
         $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexStructure = $indexStructure;
         $this->siblingSkuListInStockProvider = $siblingSkuListInStockProvider;
+        $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex;
     }
 
     /**
@@ -104,7 +113,7 @@ class SourceItemIndexer
 
             $this->indexHandler->cleanIndex(
                 $mainIndexName,
-                $indexData,
+                $this->prepareIndexDataForClearingIndex->execute($indexData),
                 ResourceConnection::DEFAULT_CONNECTION
             );
 
