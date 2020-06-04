@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCache\Model\ResourceModel;
+namespace Magento\InventoryIndexer\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
