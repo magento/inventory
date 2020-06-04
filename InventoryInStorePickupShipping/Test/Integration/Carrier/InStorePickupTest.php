@@ -53,8 +53,8 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/price 5.95
      *
      * @magentoDbIsolation disabled
      */
@@ -82,8 +82,8 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDataFixture Magento/Sales/_files/quote.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/price 5.95
      *
      * @magentoAppArea frontend
      *
@@ -131,8 +131,8 @@ class InStorePickupTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/price 5.95
      *
      * @magentoDbIsolation disabled
      */

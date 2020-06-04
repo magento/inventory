@@ -13,12 +13,12 @@ $config = Bootstrap::getObjectManager()->get(
     ApiMutableScopeConfig::class
 );
 $config->setValue(
-    'carriers/in_store/active',
+    'carriers/instore/active',
     1,
     ScopeConfigInterface::SCOPE_TYPE_DEFAULT
 );
 $config->setValue(
-    'carriers/in_store/price',
+    'carriers/instore/price',
     5.95,
     ScopeConfigInterface::SCOPE_TYPE_DEFAULT
 );
