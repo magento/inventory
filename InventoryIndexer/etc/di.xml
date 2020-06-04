@@ -80,4 +80,9 @@
     <type name="Magento\InventorySales\Model\PlaceReservationsForSalesEvent">
         <plugin name="schedule_reservation_place" type="Magento\InventoryIndexer\Plugin\InventorySales\EnqueueAfterPlaceReservationsForSalesEvent"/>
     </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsByStockIds">
+        <arguments>
+            <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
+        </arguments>
+    </type>
 </config>

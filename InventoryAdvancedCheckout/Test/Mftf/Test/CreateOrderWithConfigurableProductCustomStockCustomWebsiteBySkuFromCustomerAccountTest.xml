@@ -10,8 +10,11 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="CreateOrderWithConfigurableProductCustomStockCustomWebsiteBySkuFromCustomerAccountTest" extends="AddConfigurableProductBySkuFromCustomerAccountTest">
         <annotations>
+            <stories value="Add configurable product by sku from customer account, Additional Stock, Additional Website"/>
+            <title value="Add configurable product by sku from customer account, Additional Stock, Additional Website"/>
             <description value="Add configurable product by sku from customer account, Additional Stock, Additional Website."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/987821/scenarios/3371234"/>
+            <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
         </annotations>
