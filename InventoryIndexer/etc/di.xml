@@ -77,4 +77,9 @@
             <argument name="dimensionName" xsi:type="string">stock_</argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsByStockIds">
+        <arguments>
+            <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
+        </arguments>
+    </type>
 </config>
