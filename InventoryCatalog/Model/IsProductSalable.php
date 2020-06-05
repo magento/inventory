@@ -59,14 +59,15 @@ class IsProductSalable
             return (bool)$product->getData('is_salable');
         }
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        if (isset($this->productStatusCache[$stockId][$product->getSku()])) {
+        //use getData('sku') to get non processed product sku for complex products.
+        if (isset($this->productStatusCache[$stockId][$product->getData('sku')])) {
             return $this->productStatusCache[$stockId][$product->getSku()];
         }
 
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        $result = current($this->areProductsSalable->execute([$product->getSku()], $stockId));
+        $result = current($this->areProductsSalable->execute([$product->getData('sku')], $stockId));
         $salabilityStatus = $result->isSalable();
-        $this->productStatusCache[$stockId][$product->getSku()] = $salabilityStatus;
+        $this->productStatusCache[$stockId][$product->getData('sku')] = $salabilityStatus;
 
         return $salabilityStatus;
     }

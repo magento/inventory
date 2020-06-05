@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Plugin\InventoryCatalog\Model\IsProductSalable;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
@@ -44,8 +45,12 @@ class IsConfigurableProductSalablePlugin
         if ($product->getTypeId() !== Configurable::TYPE_CODE || !$result) {
             return $result;
         }
-        $options = $this->type->getConfigurableOptions($product);
 
-        return !empty($options);
+        $collection = $this->type->getUsedProductCollection($product)->addAttributeToFilter(
+            ProductInterface::STATUS,
+            Status::STATUS_ENABLED
+        );
+
+        return $collection->count() > 0;
     }
 }
