@@ -66,7 +66,7 @@ class InStorePickupTest extends TestCase
         /** @var \Magento\Quote\Api\Data\CartInterface $cart */
         $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
 
-        $this->assertEquals("in_store_pickup", $cart->getShippingAddress()->getShippingMethod());
+        $this->assertEquals("instore_pickup", $cart->getShippingAddress()->getShippingMethod());
         $this->assertEquals(5.95, $cart->getShippingAddress()->getShippingAmount());
     }
 
