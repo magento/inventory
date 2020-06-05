@@ -12,7 +12,7 @@ define(
         'use strict';
 
         return function () {
-            var STORE_PICKUP_METHOD = 'in_store_pickup',
+            var STORE_PICKUP_METHOD = 'instore_pickup',
                 SOURCES_FIELD_SELECTOR = '#shipping_form_pickup_location_source',
                 SAME_AS_BILLING_SELECTOR = '#order-shipping_same_as_billing',
                 CUSTOMER_SHIPPING_ADDRESS_ID_SELECTOR = '#order-shipping_address_customer_address_id',
