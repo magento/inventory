@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryAdminUi\Ui\Component\Listing\Stock\Buttons;
 
-use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
@@ -17,11 +16,6 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 class NewButton implements ButtonProviderInterface
 {
     /**
-     * @var AuthorizationInterface
-     */
-    private $authorization;
-
-    /**
      * URL builder
      *
      * @var UrlInterface
@@ -29,14 +23,11 @@ class NewButton implements ButtonProviderInterface
     private $urlBuilder;
 
     /**
-     * @param AuthorizationInterface $authorization
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
-        AuthorizationInterface $authorization,
         UrlInterface $urlBuilder
     ) {
-        $this->authorization = $authorization;
         $this->urlBuilder = $urlBuilder;
     }
 
