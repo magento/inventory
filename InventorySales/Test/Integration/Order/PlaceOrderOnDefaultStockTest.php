@@ -195,6 +195,57 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testPlaceOrderWithException()
+    {
+        $sku = 'SKU-2';
+        $stockId = 30;
+        $quoteItemQty = 2;
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('reserved_order_id', 'test_order_1')
+            ->create();
+        /** @var CartInterface $cart */
+        $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
+        $cart->setStoreId(1);
+
+        $product = $this->productRepository->get($sku);
+
+        /** @var CartItemInterface $cartItem */
+        $cartItem =
+            $this->cartItemFactory->create(
+                [
+                    'data' => [
+                        CartItemInterface::KEY_SKU => $product->getSku(),
+                        CartItemInterface::KEY_QTY => $quoteItemQty,
+                        CartItemInterface::KEY_QUOTE_ID => (int)$cart->getId(),
+                        'product_id' => $product->getId(),
+                        'product' => $product
+                    ]
+                ]
+            );
+        $cart->addItem($cartItem);
+        $cartId = $cart->getId();
+        $this->cartRepository->save($cart);
+
+        $orderId = $this->cartManagement->placeOrder($cartId);
+        $salableQtyBefore = $this->getReservationsQuantity->execute($sku, $stockId);
+
+        self::expectException(\Exception::class);
+        $this->cartManagement->placeOrder($cartId);
+
+        $salableQtyAfter = $this->getReservationsQuantity->execute($sku, $stockId);
+        self::assertSame($salableQtyBefore, $salableQtyAfter);
+
+        //cleanup
+        $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
      * @return CartInterface
      */
     protected function getCart(): CartInterface
