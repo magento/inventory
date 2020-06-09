@@ -17,7 +17,7 @@ define(
                 SAME_AS_BILLING_SELECTOR = '#order-shipping_same_as_billing',
                 CUSTOMER_SHIPPING_ADDRESS_ID_SELECTOR = '#order-shipping_address_customer_address_id',
                 CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR = '#order-shipping_address_save_in_address_book',
-                IN_STORE_PICKUP_CHECKBOX_SELECTOR = '#s_method_in_store_pickup';
+                IN_STORE_PICKUP_CHECKBOX_SELECTOR = '#s_method_instore_pickup';
 
             /**
              * Disable shipping address form elements;
