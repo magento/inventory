@@ -9,6 +9,7 @@ use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\App\Config\Value;
 use Magento\TestFramework\Helper\Bootstrap;
 
+/* comment */
 $objectManager = Bootstrap::getObjectManager();
 /** @var Value $value */
 $value = $objectManager->get(Value::class);
