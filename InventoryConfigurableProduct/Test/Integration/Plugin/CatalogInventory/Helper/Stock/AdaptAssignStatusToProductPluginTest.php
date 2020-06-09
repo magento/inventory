@@ -25,6 +25,8 @@ class AdaptAssignStatusToProductPluginTest extends TestCase
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->subject = Bootstrap::getObjectManager()->get(AdaptAssignStatusToProductPlugin::class);
     }
 
