@@ -11,9 +11,12 @@
     <test name="VerifyThatMessageOnlyZeroLeftNotAppearedOnSimpleProductPageOnFrontendWithMainWebsiteAssignedAsSalesChannelTest"
           extends="VerifyThatMessageOnlyZeroLeftNotAppearedOnSimpleProductPageOnFrontendTest">
         <annotations>
+            <stories value="Verify that message 'Only 0 left' not appeared on Simple product page on frontend with Main Website assigned as Sales Channel"/>
+            <title value="Verify that message 'Only 0 left' not appeared on Simple product page on frontend with Main Website assigned as Sales Channel"/>
             <description
                     value="Verify that message 'Only 0 left' not appeared on Simple product page on frontend with Main Website assigned as Sales Channel"/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/908790/scenarios/3041071"/>
+            <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
