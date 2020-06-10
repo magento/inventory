@@ -96,7 +96,12 @@
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
         <!--Verify grouped product PDP.-->
         <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
             <argument name="product" value="$groupedProduct$"/>
