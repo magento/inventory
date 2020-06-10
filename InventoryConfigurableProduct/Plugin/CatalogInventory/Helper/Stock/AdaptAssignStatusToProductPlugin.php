@@ -87,9 +87,11 @@ class AdaptAssignStatusToProductPlugin
             $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
             $stockId = $stock->getStockId();
             $stockItemData = $this->getStockItemData->execute($product->getSku(), $stockId);
-            $salableConfigurable = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE];
-            if (!$salableConfigurable) {
-                return [$product, $status];
+            if (null !== $stockItemData) {
+                $salableConfigurable = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE];
+                if (!$salableConfigurable) {
+                    return [$product, $status];
+                }
             }
             $options = $this->configurable->getConfigurableOptions($product);
             $status = 0;
