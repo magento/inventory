@@ -8,8 +8,8 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="inventory_reservation" resource="default" engine="innodb">
-        <column xsi:type="int" name="reservation_id" padding="10" unsigned="true" nullable="false" identity="true"/>
-        <column xsi:type="int" name="stock_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+        <column xsi:type="int" name="reservation_id" unsigned="true" nullable="false" identity="true"/>
+        <column xsi:type="int" name="stock_id" unsigned="true" nullable="false" identity="false"/>
         <column xsi:type="varchar" name="sku" nullable="false" length="64"/>
         <column xsi:type="decimal" name="quantity" scale="4" precision="10" unsigned="false" nullable="false"
                 default="0"/>

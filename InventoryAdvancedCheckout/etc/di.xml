@@ -6,7 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\AdvancedCheckout\Model\IsProductInStockInterface">
-        <plugin name="inventory_advanced_checkout_is_in_stock" type="Magento\InventoryAdvancedCheckout\Plugin\Model\IsProductInStock\ProductInStockPlugin"/>
+    <type name="Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQty">
+        <plugin name="inventory_advanced_checkout_is_in_stock" type="Magento\InventoryAdvancedCheckout\Plugin\Model\AreProductsSalablePlugin"/>
     </type>
 </config>

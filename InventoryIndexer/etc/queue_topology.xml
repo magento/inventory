@@ -9,5 +9,6 @@
     <exchange name="magento-db" type="topic" connection="db" >
         <binding id="InventorySourceItemIndexer" topic="inventory.indexer.sourceItem" destinationType="queue" destination="inventory.indexer.sourceItem"/>
         <binding id="InventoryStockIndexer" topic="inventory.indexer.stock" destinationType="queue" destination="inventory.indexer.stock"/>
+        <binding id="InventoryReservationUpdateSalabilityStatus" topic="inventory.reservations.updateSalabilityStatus" destinationType="queue" destination="inventory.reservations.updateSalabilityStatus"/>
     </exchange>
 </config>
