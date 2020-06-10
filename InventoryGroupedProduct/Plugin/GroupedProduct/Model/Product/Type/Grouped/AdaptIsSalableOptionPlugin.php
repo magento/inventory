@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryGroupedProduct\Plugin\GroupedProduct\Model\Product\Type\Grouped;
 
 use Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\GroupedProduct\Model\Product\Type\Grouped;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
@@ -36,18 +37,26 @@ class AdaptIsSalableOptionPlugin
     private $stockResolver;
 
     /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfiguration;
+
+    /**
      * @param AreProductsSalableInterface $areProductsSalable
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
+     * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
         AreProductsSalableInterface $areProductsSalable,
         StockResolverInterface $stockResolver,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        StockConfigurationInterface $stockConfiguration
     ) {
         $this->areProductsSalable = $areProductsSalable;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->stockConfiguration = $stockConfiguration;
     }
 
     /**
@@ -61,6 +70,9 @@ class AdaptIsSalableOptionPlugin
      */
     public function afterGetAssociatedProductCollection(Grouped $subject, Collection $result): Collection
     {
+        if ($this->stockConfiguration->isShowOutOfStock()) {
+            return $result;
+        }
         $website = $this->storeManager->getStore($result->getStoreId())->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
         $skus = array_column($result->getData(), 'sku');
