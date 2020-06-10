@@ -10,7 +10,7 @@
     <test name="StorefrontReorderOfTheOrderWithBundleProductFromHomepageOnDefaultStockTest">
         <annotations>
             <stories value="Bundle Product Default Stock."/>
-            <title value="Re-order button for bundle product on default stock."/>
+            <title value="Re-order button for bundle product from homepage on default stock."/>
             <description value="Reorder of the Order with Bundle product from Homepage on Default stock."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735206/scenarios/1677047"/>
             <severity value="CRITICAL"/>

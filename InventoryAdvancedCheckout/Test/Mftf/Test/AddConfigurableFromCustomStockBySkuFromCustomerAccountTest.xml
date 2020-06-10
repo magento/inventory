@@ -10,7 +10,10 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AddConfigurableFromCustomStockBySkuFromCustomerAccountTest" extends="AddConfigurableProductBySkuFromCustomerAccountTest">
         <annotations>
+            <stories value="Add configurable product by sku from customer account, Additional Stock"/>
+            <title value="Add configurable product by sku from customer account, Additional Stock"/>
             <description value="Add configurable product by sku from customer account, Additional Stock."/>
+            <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
         </annotations>
