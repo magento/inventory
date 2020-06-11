@@ -23,7 +23,7 @@ class Delete extends Action implements HttpPostActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock';
+    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_delete';
 
     /**
      * @var StockRepositoryInterface
