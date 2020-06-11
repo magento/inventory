@@ -21,6 +21,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Adapt stock status filter to multi stocks
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AdaptStockStatusFilterPlugin
@@ -81,6 +82,8 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Adds filter by stock status to base select
+     *
      * @param StockStatusFilter $subject
      * @param callable $proceed
      * @param Select $select
@@ -126,6 +129,8 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Modify select to add join clause for product with product entity table
+     *
      * @param Select $select
      * @param string $mainTableAlias
      */
@@ -139,6 +144,8 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Modify select to add join clause for sub product with product entity table
+     *
      * @param Select $select
      * @param string $mainTableAlias
      */
@@ -152,13 +159,15 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Modify select to add join clause for product with stock table
+     *
      * @param Select $select
      * @param bool $showOutOfStockFlag
      * @return void
      */
     private function addInventoryStockJoin(Select $select, $showOutOfStockFlag)
     {
-        $select->joinInner(
+        $select->{$showOutOfStockFlag ? 'joinLeft' : 'join'}(
             ['stock_index' => $this->getStockTableName()],
             'stock_index.sku = product.sku',
             []
@@ -171,13 +180,15 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Modify select to add join clause for sub product with stock table
+     *
      * @param Select $select
      * @param bool $showOutOfStockFlag
      * @return void
      */
     private function addSubProductInventoryStockJoin(Select $select, bool $showOutOfStockFlag)
     {
-        $select->joinInner(
+        $select->{$showOutOfStockFlag ? 'joinLeft' : 'join'}(
             ['sub_product_stock_index' => $this->getStockTableName()],
             'sub_product_stock_index.sku = sub_product.sku',
             []
@@ -208,6 +219,8 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Get current website stock table
+     *
      * @return string
      */
     private function getStockTableName(): string
@@ -217,6 +230,8 @@ class AdaptStockStatusFilterPlugin
     }
 
     /**
+     * Get current website stock ID
+     *
      * @return int
      */
     private function getStockId(): int
