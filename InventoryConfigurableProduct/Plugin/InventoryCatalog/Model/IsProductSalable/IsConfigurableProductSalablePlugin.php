@@ -50,7 +50,12 @@ class IsConfigurableProductSalablePlugin
             ProductInterface::STATUS,
             Status::STATUS_ENABLED
         );
+        foreach ($collection->getItems() as $item) {
+            if ($item->isSalable()) {
+                return true;
+            }
+        }
 
-        return $collection->count() > 0;
+        return false;
     }
 }
