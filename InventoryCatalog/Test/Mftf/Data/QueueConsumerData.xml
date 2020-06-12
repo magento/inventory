@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="AdminInventorySourceItemsCleanupData">
+        <data key="consumerName">inventory.source.items.cleanup</data>
+        <data key="messageLimit">10</data>
+    </entity>
+    <entity name="AdminInventoryReservationsUpdateData">
+        <data key="consumerName">inventory.reservations.update</data>
+        <data key="messageLimit">10</data>
+    </entity>
+    <entity name="AdminInventoryReservationsCleanupData">
+        <data key="consumerName">inventory.reservations.cleanup</data>
+        <data key="messageLimit">10</data>
+    </entity>
+</entities>
