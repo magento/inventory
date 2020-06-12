@@ -79,12 +79,13 @@ class SelectBuilder
             []
         );
 
+        $isSalableExpression = new \Zend_Db_Expr($this->getIsStockItemSalableCondition->execute($select));
         $select->from(
             ['source_item' => $sourceItemTable],
             [
                 SourceItemInterface::SKU,
                 IndexStructure::QUANTITY => 'SUM(' . $quantityExpression . ')',
-                IndexStructure::IS_SALABLE => $this->getIsStockItemSalableCondition->execute($select),
+                IndexStructure::IS_SALABLE => $isSalableExpression
             ]
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)

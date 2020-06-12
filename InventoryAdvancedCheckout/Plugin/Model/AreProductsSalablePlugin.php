@@ -11,7 +11,7 @@ use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
 use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
 use Magento\AdvancedCheckout\Model\Data\ProductQuantity;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
 
 /**
@@ -30,27 +30,19 @@ class AreProductsSalablePlugin
     private $productRepository;
 
     /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param ProductRepositoryInterface $productRepository
      * @param ObjectManagerInterface $objectManager
      */
     public function __construct(
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         ProductRepositoryInterface $productRepository,
         ObjectManagerInterface $objectManager
     ) {
         $this->objectManager = $objectManager;
         $this->productRepository = $productRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
-     * Get is product out of stock for given Product id in a given Website id in MSI context.
+     * Get products salable status for given sku requests.
      *
      * @param AreProductsSalableForRequestedQtyInterface $subject
      * @param callable $proceed
@@ -58,6 +50,7 @@ class AreProductsSalablePlugin
      * @param int $websiteId
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws NoSuchEntityException in case product doesn't exists
      */
     public function aroundExecute(
         AreProductsSalableForRequestedQtyInterface $subject,
@@ -65,14 +58,9 @@ class AreProductsSalablePlugin
         array $productQuantities,
         int $websiteId
     ): array {
-        $skus = [];
-        foreach ($productQuantities as $productQuantity) {
-            $skus[] = $productQuantity->getSku();
-        }
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('sku', $skus, 'in')->create();
-        $products = $this->productRepository->getList($searchCriteria);
         $result = [];
-        foreach ($products->getItems() as $product) {
+        foreach ($productQuantities as $productQuantity) {
+            $product = $this->productRepository->get($productQuantity->getSku());
             $result[] = $this->objectManager->create(
                 IsProductsSalableForRequestedQtyResult::class,
                 ['sku' => $product->getSku(), 'isSalable' => $product->isSalable()]
