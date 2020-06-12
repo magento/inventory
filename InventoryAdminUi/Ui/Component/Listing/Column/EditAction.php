@@ -27,17 +27,17 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
+     * @param AuthorizationInterface $authorization
      * @param array $components
      * @param array $data
-     * @param AuthorizationInterface $authorization
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
+        AuthorizationInterface $authorization,
         array $components = [],
-        array $data = [],
-        AuthorizationInterface $authorization
+        array $data = []
     ) {
         $this->authorization = $authorization;
         parent::__construct($context, $uiComponentFactory, $urlBuilder, $components, $data);
