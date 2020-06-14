@@ -29,4 +29,14 @@
     <type name="Magento\CatalogInventory\Helper\Stock">
         <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
+    <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
+        <arguments>
+            <argument name="conditions" xsi:type="array">
+                <item name="is_bundle_saleable_condition" xsi:type="array">
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="object" xsi:type="object">Magento\InventoryBundleProduct\Model\IsProductSalableCondition\IsBundleSaleableCondition</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>
