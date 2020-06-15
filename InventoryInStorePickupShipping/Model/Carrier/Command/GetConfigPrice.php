@@ -15,7 +15,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class GetConfigPrice
 {
-    private const CONFIG_PATH = 'carriers/in_store/price';
+    private const CONFIG_PATH = 'carriers/instore/price';
 
     /**
      * @var ScopeConfigInterface
