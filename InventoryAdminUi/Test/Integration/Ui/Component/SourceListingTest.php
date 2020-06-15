@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
  * Test for \Magento\InventoryAdminUi\Ui\Component\Listing\MassAction
  *
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation disabled
  */
 class SourceListingTest extends TestCase
 {
