@@ -13,15 +13,10 @@ use Magento\User\Model\UserFactory;
 use Magento\User\Model\User;
 use Magento\Authorization\Model\RulesFactory;
 use Magento\Authorization\Model\Rules;
-use Magento\Framework\Registry;
 
 //Deleting the user and the role.
 /** @var \Magento\Framework\ObjectManagerInterface $objectManager */
 $objectManager = Bootstrap::getObjectManager();
-
-$registry = $objectManager->get(Registry::class);
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', true);
 
 /** @var User $user */
 $user = $objectManager->create(UserFactory::class)->create();
@@ -44,6 +39,3 @@ if ($rules->getId() !== null) {
 if ($role->getId() !== null) {
     $role->delete();
 }
-
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', false);
