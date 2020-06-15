@@ -50,7 +50,6 @@ class AreProductsSalablePlugin
      * @param int $websiteId
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @throws NoSuchEntityException in case product doesn't exists
      */
     public function aroundExecute(
         AreProductsSalableForRequestedQtyInterface $subject,
@@ -60,11 +59,18 @@ class AreProductsSalablePlugin
     ): array {
         $result = [];
         foreach ($productQuantities as $productQuantity) {
-            $product = $this->productRepository->get($productQuantity->getSku());
-            $result[] = $this->objectManager->create(
-                IsProductsSalableForRequestedQtyResult::class,
-                ['sku' => $product->getSku(), 'isSalable' => $product->isSalable()]
-            );
+            try {
+                $product = $this->productRepository->get($productQuantity->getSku());
+                $result[] = $this->objectManager->create(
+                    IsProductsSalableForRequestedQtyResult::class,
+                    ['sku' => $product->getSku(), 'isSalable' => $product->isSalable()]
+                );
+            } catch (NoSuchEntityException $e) {
+                $result[] = $this->objectManager->create(
+                    IsProductsSalableForRequestedQtyResult::class,
+                    ['sku' => $productQuantity->getSku(), 'isSalable' => false]
+                );
+            }
         }
 
         return $result;
