@@ -10,7 +10,7 @@
         <section id="carriers" translate="label" type="text" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Delivery Methods</label>
             <resource>Magento_InventoryInStorePickupApi::inStorePickup</resource>
-            <group id="in_store" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="instore" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>In-Store Delivery</label>
                 <field id="active" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enabled</label>
