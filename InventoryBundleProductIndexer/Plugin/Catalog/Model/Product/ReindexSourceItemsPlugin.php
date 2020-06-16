@@ -11,6 +11,7 @@ use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
+use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 
@@ -35,18 +36,26 @@ class ReindexSourceItemsPlugin
     private $sourceItemIndexer;
 
     /**
+     * @var GetSkusByProductIdsInterface
+     */
+    private $getSkusByProductIds;
+
+    /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param GetSourceItemIds $getSourceItemIds
      * @param SourceItemIndexer $sourceItemIndexer
+     * @param GetSkusByProductIdsInterface $getSkusByProductIds
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
         GetSourceItemIds $getSourceItemIds,
-        SourceItemIndexer $sourceItemIndexer
+        SourceItemIndexer $sourceItemIndexer,
+        GetSkusByProductIdsInterface $getSkusByProductIds
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->getSourceItemIds = $getSourceItemIds;
         $this->sourceItemIndexer = $sourceItemIndexer;
+        $this->getSkusByProductIds = $getSkusByProductIds;
     }
 
     /**
@@ -58,17 +67,12 @@ class ReindexSourceItemsPlugin
      * @throws LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(Product $subject, Product $result): Product
+    public function afterAfterSave(Product $subject, Product $result): Product
     {
         if ($result->getTypeId() !== Type::TYPE_CODE) {
             return $result;
         }
-        $bundleSelectionsData = $result->getBundleSelectionsData() ?: [];
-        $skus = [];
-        foreach ($bundleSelectionsData as $option) {
-            $skus[] = array_column($option, 'sku');
-        }
-        $skus = $skus ? array_merge(...$skus) : $skus;
+        $skus = $this->getSelectionsSku($result);
         $sourceItems = [[]];
         foreach ($skus as $sku) {
             $sourceItems[] = $this->getSourceItemsBySku->execute($sku);
@@ -78,5 +82,31 @@ class ReindexSourceItemsPlugin
         $this->sourceItemIndexer->executeList($sourceItemIds);
 
         return $result;
+    }
+
+    /**
+     * Retrieve bundle selections skus.
+     *
+     * @param Product $result
+     * @return array
+     */
+    private function getSelectionsSku(Product $result): array
+    {
+        $bundleSelectionsData = $result->getBundleSelectionsData() ?: [];
+        $skus = [];
+        foreach ($bundleSelectionsData as $option) {
+            $skus[] = array_column($option, 'sku');
+        }
+        $skus = $skus ? array_merge(...$skus) : $skus;
+        if ($skus) {
+            return $skus;
+        }
+        $ids = [];
+        foreach ($bundleSelectionsData as $option) {
+            $ids[] = array_column($option, 'product_id');
+        }
+        $ids = $ids ? array_merge(...$ids) : $ids;
+
+        return $this->getSkusByProductIds->execute($ids);
     }
 }

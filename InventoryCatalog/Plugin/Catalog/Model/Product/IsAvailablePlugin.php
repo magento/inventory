@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\Catalog\Model\Product;
 
-use Magento\Catalog\Helper\Product as ProductHelper;
 use Magento\Catalog\Model\Product;
 use Magento\InventoryCatalog\Model\IsProductSalable;
 
@@ -22,20 +21,12 @@ class IsAvailablePlugin
     private $isProductSalable;
 
     /**
-     * @var ProductHelper
-     */
-    private $product;
-
-    /**
      * @param IsProductSalable $isProductSalable
-     * @param ProductHelper $product
      */
     public function __construct(
-        IsProductSalable $isProductSalable,
-        ProductHelper $product
+        IsProductSalable $isProductSalable
     ) {
         $this->isProductSalable = $isProductSalable;
-        $this->product = $product;
     }
 
     /**
@@ -48,10 +39,6 @@ class IsAvailablePlugin
      */
     public function aroundIsAvailable(Product $product, \Closure $proceed): bool
     {
-        if ($this->product->getSkipSaleableCheck()) {
-            return true;
-        }
-
         return $this->isProductSalable->execute($product);
     }
 }

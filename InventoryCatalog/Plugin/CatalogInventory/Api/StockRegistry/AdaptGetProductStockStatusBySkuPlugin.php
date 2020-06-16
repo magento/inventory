@@ -7,13 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Adapt getProductStockStatusBySku for multi stocks.
@@ -21,33 +17,17 @@ use Magento\Store\Model\StoreManagerInterface;
 class AdaptGetProductStockStatusBySkuPlugin
 {
     /**
-     * @var AreProductsSalableInterface
+     * @var ProductRepositoryInterface
      */
-    private $areProductsSalable;
+    private $productRepository;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @param AreProductsSalableInterface $areProductsSalable
-     * @param StoreManagerInterface $storeManager
-     * @param StockResolverInterface $stockResolver
+     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
-        AreProductsSalableInterface $areProductsSalable,
-        StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        ProductRepositoryInterface $productRepository
     ) {
-        $this->areProductsSalable = $areProductsSalable;
-        $this->storeManager = $storeManager;
-        $this->stockResolver = $stockResolver;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -58,7 +38,6 @@ class AdaptGetProductStockStatusBySkuPlugin
      * @param string $productSku
      * @param int $scopeId
      * @return int
-     * @throws LocalizedException
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -68,14 +47,8 @@ class AdaptGetProductStockStatusBySkuPlugin
         $productSku,
         $scopeId = null
     ): int {
-        $websiteCode = null === $scopeId
-            ? $this->storeManager->getWebsite()->getCode()
-            : $this->storeManager->getWebsite($scopeId)->getCode();
-        $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)->getStockId();
+        $product = $this->productRepository->get($productSku);
 
-        $result = $this->areProductsSalable->execute([$productSku], $stockId);
-        $result = current($result);
-
-        return (int)$result->isSalable();
+        return (int)$product->isAvailable();
     }
 }

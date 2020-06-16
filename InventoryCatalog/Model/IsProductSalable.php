@@ -53,7 +53,8 @@ class IsProductSalable
      */
     public function execute(ProductInterface $product): bool
     {
-        if (null === $product->getSku() || (int)$product->getStatus() === Status::STATUS_DISABLED) {
+        if (null === $product->getSku() ||
+            (null !== $product->getStatus() && (int)$product->getStatus() !== Status::STATUS_ENABLED)) {
             return false;
         }
         if ($product->getData('is_salable') !== null) {
@@ -63,7 +64,7 @@ class IsProductSalable
         $stockId = $this->stockByWebsiteIdResolver->execute($websiteId)->getStockId();
         //use getData('sku') to get non processed product sku for complex products.
         if (isset($this->productStatusCache[$stockId][$product->getData('sku')])) {
-            return $this->productStatusCache[$stockId][$product->getSku()];
+            return $this->productStatusCache[$stockId][$product->getData('sku')];
         }
 
         $result = current($this->areProductsSalable->execute([$product->getData('sku')], $stockId));

@@ -47,7 +47,7 @@ class PriceIndexUpdatePlugin
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(Sync $subject, $result, array $stockIds)
+    public function afterExecuteList(Sync $subject, $result, array $stockIds): void
     {
         $productIds = $this->getProductIdsByStockIds->execute($stockIds);
         if (!empty($productIds)) {
