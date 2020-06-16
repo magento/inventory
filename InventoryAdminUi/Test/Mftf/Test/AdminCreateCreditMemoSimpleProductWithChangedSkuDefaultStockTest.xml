@@ -70,7 +70,14 @@
         <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-        <magentoCron stepKey="runConsumers"/>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="cleanUpSourceItems">
+            <argument name="consumerName" value="{{AdminInventorySourceItemsCleanupData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventorySourceItemsCleanupData.messageLimit}}"/>
+        </actionGroup>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="updateReservations">
+            <argument name="consumerName" value="{{AdminInventoryReservationsUpdateData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryReservationsUpdateData.messageLimit}}"/>
+        </actionGroup>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
