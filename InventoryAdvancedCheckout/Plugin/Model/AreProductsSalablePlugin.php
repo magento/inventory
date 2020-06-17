@@ -8,11 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryAdvancedCheckout\Plugin\Model;
 
 use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
-use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
+use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResultFactory;
 use Magento\AdvancedCheckout\Model\Data\ProductQuantity;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\ObjectManagerInterface;
 
 /**
  * Provides multi-sourcing capabilities for Advanced Checkout Order By SKU feature.
@@ -20,25 +19,25 @@ use Magento\Framework\ObjectManagerInterface;
 class AreProductsSalablePlugin
 {
     /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
-
-    /**
      * @var ProductRepositoryInterface
      */
     private $productRepository;
 
     /**
+     * @var IsProductsSalableForRequestedQtyResultFactory
+     */
+    private $isProductsSalableForRequestedQtyResultFactory;
+
+    /**
      * @param ProductRepositoryInterface $productRepository
-     * @param ObjectManagerInterface $objectManager
+     * @param IsProductsSalableForRequestedQtyResultFactory $isProductsSalableForRequestedQtyResultFactory
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
-        ObjectManagerInterface $objectManager
+        IsProductsSalableForRequestedQtyResultFactory $isProductsSalableForRequestedQtyResultFactory
     ) {
-        $this->objectManager = $objectManager;
         $this->productRepository = $productRepository;
+        $this->isProductsSalableForRequestedQtyResultFactory = $isProductsSalableForRequestedQtyResultFactory;
     }
 
     /**
@@ -61,13 +60,11 @@ class AreProductsSalablePlugin
         foreach ($productQuantities as $productQuantity) {
             try {
                 $product = $this->productRepository->get($productQuantity->getSku());
-                $result[] = $this->objectManager->create(
-                    IsProductsSalableForRequestedQtyResult::class,
+                $result[] = $this->isProductsSalableForRequestedQtyResultFactory->create(
                     ['sku' => $product->getSku(), 'isSalable' => $product->isSalable()]
                 );
             } catch (NoSuchEntityException $e) {
-                $result[] = $this->objectManager->create(
-                    IsProductsSalableForRequestedQtyResult::class,
+                $result[] = $this->isProductsSalableForRequestedQtyResultFactory->create(
                     ['sku' => $productQuantity->getSku(), 'isSalable' => false]
                 );
             }

@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalog\Model;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\InventoryCatalog\Model\IsProductSalable\IsProductSalableDataStorage;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
@@ -24,25 +25,28 @@ class IsProductSalable
     private $areProductsSalable;
 
     /**
-     * @var array
-     */
-    private $productStatusCache;
-
-    /**
      * @var StockByWebsiteIdResolverInterface
      */
     private $stockByWebsiteIdResolver;
 
     /**
+     * @var IsProductSalableDataStorage
+     */
+    private $isProductSalableDataStorage;
+
+    /**
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param IsProductSalableDataStorage $isProductSalableDataStorage
      */
     public function __construct(
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        AreProductsSalableInterface $areProductsSalable
+        AreProductsSalableInterface $areProductsSalable,
+        IsProductSalableDataStorage $isProductSalableDataStorage
     ) {
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->areProductsSalable = $areProductsSalable;
+        $this->isProductSalableDataStorage = $isProductSalableDataStorage;
     }
 
     /**
@@ -63,13 +67,13 @@ class IsProductSalable
         $websiteId = (int)$product->getStore()->getWebsite()->getId();
         $stockId = $this->stockByWebsiteIdResolver->execute($websiteId)->getStockId();
         //use getData('sku') to get non processed product sku for complex products.
-        if (isset($this->productStatusCache[$stockId][$product->getData('sku')])) {
-            return $this->productStatusCache[$stockId][$product->getData('sku')];
+        if (null !== $this->isProductSalableDataStorage->getIsSalable($product->getData('sku'), $stockId)) {
+            return $this->isProductSalableDataStorage->getIsSalable($product->getData('sku'), $stockId);
         }
 
         $result = current($this->areProductsSalable->execute([$product->getData('sku')], $stockId));
         $salabilityStatus = $result->isSalable();
-        $this->productStatusCache[$stockId][$product->getData('sku')] = $salabilityStatus;
+        $this->isProductSalableDataStorage->setIsSalable($product->getData('sku'), $stockId, $salabilityStatus);
 
         return $salabilityStatus;
     }

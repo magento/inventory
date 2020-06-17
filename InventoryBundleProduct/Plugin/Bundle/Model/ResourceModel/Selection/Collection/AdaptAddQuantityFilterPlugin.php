@@ -8,7 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection;
 
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\CatalogInventory\Model\ResourceModel\Stock\Item;
+use Magento\CatalogInventory\Model\Stock;
+use Magento\InventoryIndexer\Indexer\IndexStructure;
+use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -18,9 +21,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class AdaptAddQuantityFilterPlugin
 {
     /**
-     * @var AreProductsSalableInterface
+     * @var Item
      */
-    private $areProductsSalable;
+    private $stockItem;
 
     /**
      * @var StoreManagerInterface
@@ -33,18 +36,26 @@ class AdaptAddQuantityFilterPlugin
     private $stockByWebsiteIdResolver;
 
     /**
-     * @param AreProductsSalableInterface $areProductsSalable
+     * @var StockIndexTableNameResolverInterface
+     */
+    private $stockIndexTableNameResolver;
+
+    /**
+     * @param Item $stockItem
      * @param StoreManagerInterface $storeManager
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
+     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      */
     public function __construct(
-        AreProductsSalableInterface $areProductsSalable,
+        Item $stockItem,
         StoreManagerInterface $storeManager,
-        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver
     ) {
-        $this->areProductsSalable = $areProductsSalable;
+        $this->stockItem = $stockItem;
         $this->storeManager = $storeManager;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
+        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
     }
 
     /**
@@ -53,28 +64,51 @@ class AdaptAddQuantityFilterPlugin
      * @param Collection $subject
      * @param \Closure $proceed
      * @return Collection
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddQuantityFilter(
         Collection $subject,
         \Closure $proceed
     ): Collection {
-        $website = $this->storeManager->getWebsite();
-        $stock = $this->stockByWebsiteIdResolver->execute((int)$website->getId());
-        $skus = [];
-        $skusToExclude = [];
-        foreach ($subject->getData() as $item) {
-            $skus[] = (string)$item['sku'];
-        }
-        $results = $this->areProductsSalable->execute($skus, $stock->getStockId());
-        foreach ($results as $result) {
-            if (!$result->isSalable()) {
-                $skusToExclude[] = $result->getSku();
-            }
-        }
-        if ($skusToExclude) {
-            $subject->getSelect()->where('e.sku NOT IN(?)', implode(',', $skusToExclude));
-        }
-        $subject->resetData();
+        $store = $this->storeManager->getStore($subject->getStoreId());
+        $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
+        $stockIndexTableName = $this->stockIndexTableNameResolver->execute($stock->getStockId());
+        $resource = $subject->getResource();
+        $subject->getSelect()->join(
+            ['product_entity' => $resource->getTable('catalog_product_entity')],
+            sprintf('product_entity.entity_id = %s.entity_id', Collection::MAIN_TABLE_ALIAS),
+            []
+        );
+        $isSalableColumnName = IndexStructure::IS_SALABLE;
+        $subject->getSelect()
+            ->join(
+                ['inventory_stock' => $stockIndexTableName],
+                'product_entity.sku = inventory_stock.' . IndexStructure::SKU,
+                [$isSalableColumnName]
+            );
+        $manageStockExpr = $this->stockItem->getManageStockExpr('stock_item');
+        $backordersExpr = $this->stockItem->getBackordersExpr('stock_item');
+        $minQtyExpr = $subject->getConnection()->getCheckSql(
+            'selection.selection_can_change_qty',
+            $this->stockItem->getMinSaleQtyExpr('stock_item'),
+            'selection.selection_qty'
+        );
+        $where = $manageStockExpr . ' = 0';
+        $where .= ' OR ('
+            . 'inventory_stock.is_salable = ' . Stock::STOCK_IN_STOCK
+            . ' AND ('
+            . $backordersExpr . ' != ' . Stock::BACKORDERS_NO
+            . ' OR '
+            . $minQtyExpr . ' <= inventory_stock.quantity'
+            . ')'
+            . ')';
+        $subject->getSelect()
+            ->joinInner(
+                ['stock_item' => $this->stockItem->getMainTable()],
+                'selection.product_id = stock_item.product_id',
+                []
+            )
+            ->where($where);
 
         return $subject;
     }
