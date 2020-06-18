@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem;
+namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
-use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
 
 /**
@@ -39,13 +39,15 @@ class PriceIndexUpdater
     }
 
     /**
-     * @param SourceItemIndexer $subject
-     * @param $result
+     * Reindex product prices.
+     *
+     * @param Sync $subject
+     * @param void $result
      * @param array $sourceItemIds
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterExecuteList(
-        SourceItemIndexer $subject,
+        Sync $subject,
         $result,
         array $sourceItemIds
     ): void {
