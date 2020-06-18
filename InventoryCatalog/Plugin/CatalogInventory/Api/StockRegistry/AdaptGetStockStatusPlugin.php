@@ -88,16 +88,13 @@ class AdaptGetStockStatusPlugin
         $productId,
         $scopeId = null
     ): StockStatusInterface {
-        $website = null === $scopeId
-            ? $this->storeManager->getWebsite()
-            : $this->storeManager->getWebsite($scopeId);
-        $stockId = $this->stockResolver->execute(
-            SalesChannelInterface::TYPE_WEBSITE,
-            $website->getCode()
-        )->getStockId();
+        $website = $this->storeManager->getWebsite($scopeId);
+        $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode())
+            ->getStockId();
         $sku = $this->getSkusByProductIds->execute([$productId])[$productId];
-        $storeId = $website->getDefaultStore()->getId();
-        $product = $this->productRepository->get($sku, (int)$storeId);
+        $product = $website->getCurrentStore() === null
+            ? $this->productRepository->get($sku)
+            : $this->productRepository->get($sku, false, (int)$website->getDefaultStore()->getId());
 
         try {
             $qty = $this->getProductSalableQty->execute($sku, $stockId);

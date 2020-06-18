@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selec
 use Magento\Bundle\Model\ResourceModel\Selection\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item;
 use Magento\CatalogInventory\Model\Stock;
-use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -73,19 +72,6 @@ class AdaptAddQuantityFilterPlugin
         $store = $this->storeManager->getStore($subject->getStoreId());
         $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
         $stockIndexTableName = $this->stockIndexTableNameResolver->execute($stock->getStockId());
-        $resource = $subject->getResource();
-        $subject->getSelect()->join(
-            ['product_entity' => $resource->getTable('catalog_product_entity')],
-            sprintf('product_entity.entity_id = %s.entity_id', Collection::MAIN_TABLE_ALIAS),
-            []
-        );
-        $isSalableColumnName = IndexStructure::IS_SALABLE;
-        $subject->getSelect()
-            ->join(
-                ['inventory_stock' => $stockIndexTableName],
-                'product_entity.sku = inventory_stock.' . IndexStructure::SKU,
-                [$isSalableColumnName]
-            );
         $manageStockExpr = $this->stockItem->getManageStockExpr('stock_item');
         $backordersExpr = $this->stockItem->getBackordersExpr('stock_item');
         $minQtyExpr = $subject->getConnection()->getCheckSql(
@@ -103,6 +89,11 @@ class AdaptAddQuantityFilterPlugin
             . ')'
             . ')';
         $subject->getSelect()
+            ->joinInner(
+                ['inventory_stock' => $stockIndexTableName],
+                'e.sku = inventory_stock.sku',
+                []
+            )
             ->joinInner(
                 ['stock_item' => $this->stockItem->getMainTable()],
                 'selection.product_id = stock_item.product_id',

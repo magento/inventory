@@ -57,11 +57,10 @@ class AdaptGetProductStockStatusBySkuPlugin
         $productSku,
         $scopeId = null
     ): int {
-        $storeId = null === $scopeId
-            ? $this->storeManager->getWebsite()->getDefaultStore()->getId()
-            : $this->storeManager->getWebsite($scopeId)->getDefaultStore()->getId();
-
-        $product = $this->productRepository->get($productSku, false, (int)$storeId);
+        $store = $this->storeManager->getWebsite($scopeId)->getDefaultStore();
+        $product = $store
+            ? $this->productRepository->get($productSku, false, (int)$store->getId())
+            : $this->productRepository->get($productSku);
 
         return (int)$product->isAvailable();
     }

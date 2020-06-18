@@ -57,11 +57,10 @@ class AdaptGetProductStockStatusPlugin
         $productId,
         $scopeId = null
     ): int {
-        $storeId = null === $scopeId
-            ? $this->storeManager->getWebsite()->getDefaultStore()->getId()
-            : $this->storeManager->getWebsite($scopeId)->getDefaultStore()->getId();
-
-        $product = $this->productRepository->getById($productId, false, (int)$storeId);
+        $store = $this->storeManager->getWebsite($scopeId)->getDefaultStore();
+        $product = $store
+            ? $this->productRepository->getById($productId, false, (int)$store->getId())
+            : $this->productRepository->getById($productId);
 
         return (int)$product->isAvailable();
     }
