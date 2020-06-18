@@ -6,8 +6,7 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="ReorderButtonGroupedProductOnTestStockTest">
         <annotations>
             <stories value="Grouped Product Custom Stock."/>
@@ -17,9 +16,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/3022" />
-            </skip>
         </annotations>
 
         <before>
@@ -40,9 +36,7 @@
         </before>
         <after>
             <!--Disable additional source.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
-                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
-            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableCustomSource"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
