@@ -16,9 +16,6 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/3022" />
-            </skip>
         </annotations>
 
         <before>
@@ -45,6 +42,7 @@
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <!--Disable source.-->
@@ -67,7 +65,14 @@
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Delete product.-->
         <deleteData createDataKey="product" stepKey="deleteProduct"/>
-        <magentoCron groups="consumers" stepKey="runConsumers"/>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="cleanUpSourceItems">
+            <argument name="consumerName" value="inventory.source.items.cleanup"/>
+            <argument name="maxMessages" value="1"/>
+        </actionGroup>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="cleanUpReservation">
+            <argument name="consumerName" value="inventory.reservations.cleanup"/>
+            <argument name="maxMessages" value="1"/>
+        </actionGroup>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>
