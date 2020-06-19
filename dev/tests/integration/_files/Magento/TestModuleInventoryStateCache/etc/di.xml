@@ -22,4 +22,7 @@
     <type name="Magento\Catalog\Api\ProductRepositoryInterface">
         <plugin name="get_non_cached_products" type="Magento\TestModuleInventoryStateCache\Plugin\Catalog\Model\ProductRepository\GetNonCachedProductsPlugin"/>
     </type>
+    <type name="Magento\InventoryCatalog\Model\IsProductSalable\IsProductSalableDataStorage">
+        <plugin name="disable_is_salable_cache" type="Magento\TestModuleInventoryStateCache\Plugin\InventoryCatalog\Model\IsProductSalableDataStorage\DisableStoragePlugin"/>
+    </type>
 </config>

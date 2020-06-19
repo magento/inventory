@@ -166,6 +166,7 @@
     </type>
     <type name="Magento\Catalog\Model\Product">
         <plugin name="is_product_available" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\IsAvailablePlugin"/>
+        <plugin name="is_product_salable" type="Magento\InventoryCatalog\Plugin\Catalog\Model\Product\GetIsSalablePlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\StockRegistryStorage">
         <plugin name="clean_is_salable_data_storage" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\StockRegistryStorage\CleanIsSalableDataStoragePlugin"/>

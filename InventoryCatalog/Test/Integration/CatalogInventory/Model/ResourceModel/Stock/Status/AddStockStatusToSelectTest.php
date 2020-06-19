@@ -70,7 +70,7 @@ class AddStockStatusToSelectTest extends TestCase
         $this->stockStatus->addStockStatusToSelect($collection->getSelect(), $this->website);
 
         foreach ($collection as $item) {
-            $item->getIsSalable() == 1 ? $actualIsSalableCount++ : $actualNotSalableCount++;
+            $item->getData('is_salable') == 1 ? $actualIsSalableCount++ : $actualNotSalableCount++;
         }
 
         self::assertEquals($expectedIsSalableCount, $actualIsSalableCount);
