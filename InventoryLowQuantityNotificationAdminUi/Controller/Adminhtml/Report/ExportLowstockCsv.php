@@ -28,7 +28,7 @@ class ExportLowstockCsv extends ProductReportController
      */
     public function execute()
     {
-        $this->_view->loadLayout(false);
+        $this->_view->loadLayout('reports_report_product_lowstock');
         $fileName = 'products_lowstock.csv';
 
         $exportBlock = $this->_view->getLayout()->getChildBlock(
