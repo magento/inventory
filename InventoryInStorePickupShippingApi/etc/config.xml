@@ -8,7 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <carriers>
-            <in_store>
+            <instore>
                 <active>0</active>
                 <sallowspecific>0</sallowspecific>
                 <model>Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup</model>
@@ -17,7 +17,7 @@
                 <price>0.00</price>
                 <search_radius>200</search_radius>
                 <specificerrmsg>In-Store Delivery is not available. To use this delivery method, please contact us.</specificerrmsg>
-            </in_store>
+            </instore>
         </carriers>
     </default>
 </config>
