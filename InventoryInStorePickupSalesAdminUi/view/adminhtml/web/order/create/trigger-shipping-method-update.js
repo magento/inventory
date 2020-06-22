@@ -12,7 +12,7 @@ define(
         'use strict';
 
         return function () {
-            var storePickupCheckbox = $('#s_method_in_store_pickup');
+            var storePickupCheckbox = $('#s_method_instore_pickup');
 
             if (storePickupCheckbox.length && storePickupCheckbox.prop('checked')) {
                 window.order.setShippingMethod(storePickupCheckbox.val());
