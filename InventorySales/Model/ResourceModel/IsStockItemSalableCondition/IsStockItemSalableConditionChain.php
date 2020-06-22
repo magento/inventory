@@ -35,6 +35,8 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
     /**
      * @param ResourceConnection $resourceConnection
      * @param StockConfigurationInterface $configuration
+     * @param array $conditions
+     * @throws LocalizedException
      */
     public function __construct(
         ResourceConnection $resourceConnection,

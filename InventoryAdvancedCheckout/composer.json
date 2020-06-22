@@ -4,9 +4,7 @@
     "require": {
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-store": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/module-catalog": "*"
     },
     "suggest": {
         "magento/module-advanced-checkout": "*"

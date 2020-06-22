@@ -14,6 +14,9 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 
+/**
+ * Configurable product source item indexer.
+ */
 class SourceItemIndexer
 {
     /**
@@ -71,6 +74,8 @@ class SourceItemIndexer
     }
 
     /**
+     * Reindex given source items.
+     *
      * @param array $sourceItemIds
      */
     public function executeList(array $sourceItemIds)

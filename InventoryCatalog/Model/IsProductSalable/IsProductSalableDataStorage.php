@@ -44,6 +44,7 @@ class IsProductSalableDataStorage
 
     /**
      * Clean is salable status for given product and stock.
+     *
      * @param string $sku
      * @param int $stockId
      * @return void

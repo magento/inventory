@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model;
 
-use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
@@ -55,7 +54,7 @@ class IsProductSalable implements IsProductSalableInterface
     public function execute(string $sku, int $stockId): bool
     {
         try {
-            $showOutOfStock = (int)$this->config->getValue(Configuration::XML_PATH_SHOW_OUT_OF_STOCK);
+            $showOutOfStock = (int)$this->config->getValue('cataloginventory/options/show_out_of_stock');
             $stockItem = $this->getStockItemData->execute($sku, $stockId);
             $isSalable = $showOutOfStock ? true : (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
         } catch (LocalizedException $exception) {

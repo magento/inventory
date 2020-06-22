@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProduct\Plugin\InventoryCatalog\Model\IsProductSalable;
 
 use Magento\Bundle\Model\Product\Type;
+use Magento\Bundle\Model\ResourceModel\Option\Collection;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\InventoryBundleProduct\Model\GetProductSelections;
@@ -62,6 +63,22 @@ class IsBundleProductSalablePlugin
             return false;
         }
         $bundleOptions = $this->type->getOptionsCollection($product);
+        $isSalable = $this->isSalable($bundleOptions, $product);
+        $product->setData('all_items_salable', $isSalable);
+
+        return $isSalable;
+    }
+
+    /**
+     * Verify bundle product has salable option.
+     *
+     * @param Collection $bundleOptions
+     * @param ProductInterface $product
+     * @return bool
+     * @throws \Exception
+     */
+    private function isSalable(Collection $bundleOptions, ProductInterface $product): bool
+    {
         $isSalable = false;
         foreach ($bundleOptions as $option) {
             $selections = $this->getProductSelections->execute($product, $option);
@@ -75,13 +92,11 @@ class IsBundleProductSalablePlugin
             if ($hasSalable) {
                 $isSalable = true;
             }
-
             if (!$hasSalable && $option->getRequired()) {
                 $isSalable = false;
                 break;
             }
         }
-        $product->setData('all_items_salable', $isSalable);
 
         return $isSalable;
     }

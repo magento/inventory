@@ -12,7 +12,7 @@ use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 
 /**
- * Add Stock data to collection
+ * Add inventory stock data to collection resource.
  */
 class AddStockDataToCollection
 {
@@ -31,6 +31,8 @@ class AddStockDataToCollection
     }
 
     /**
+     * Add inventory stock data for multi stock environment.
+     *
      * @param Collection $collection
      * @param bool $isFilterInStock
      * @param int $stockId

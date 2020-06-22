@@ -33,6 +33,7 @@ class CleanIsSalableDataStoragePlugin
      *
      * @param StockRegistryStorage $subject
      * @param void $result
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterClean(StockRegistryStorage $subject, $result): void
     {

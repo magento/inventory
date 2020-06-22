@@ -18,7 +18,7 @@ use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Add bundle product data plugin.
+ * Add bundle product data to index data plugin.
  */
 class AddBundleProductDataPlugin
 {

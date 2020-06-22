@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\Stock\Status;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
@@ -56,7 +54,6 @@ class AdaptAddIsInStockFilterToCollectionPlugin
         callable $proceed,
         $collection
     ) {
-        $collection->addAttributeToFilter(ProductInterface::STATUS, ProductStatus::STATUS_ENABLED);
         $stockId = $this->getStockIdForCurrentWebsite->execute();
         $this->addIsInStockFilterToCollection->execute($collection, $stockId);
 

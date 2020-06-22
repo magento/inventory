@@ -92,8 +92,11 @@ class ReindexSourceItemsPlugin
      */
     private function getSelectionsSku(Product $result): array
     {
+        $skus = $this->getSkusFromOptions($result);
+        if ($skus) {
+            return $skus;
+        }
         $bundleSelectionsData = $result->getBundleSelectionsData() ?: [];
-        $skus = [];
         foreach ($bundleSelectionsData as $option) {
             $skus[] = array_column($option, 'sku');
         }
@@ -108,5 +111,24 @@ class ReindexSourceItemsPlugin
         $ids = $ids ? array_merge(...$ids) : $ids;
 
         return $this->getSkusByProductIds->execute($ids);
+    }
+
+    /**
+     * Retrieve selection's skus from bundle product options.
+     *
+     * @param Product $result
+     * @return array
+     */
+    private function getSkusFromOptions(Product $result): array
+    {
+        $skus = [];
+        $options = $result->getExtensionAttributes()->getBundleProductOptions() ?: [];
+        foreach ($options as $option) {
+            $links = $option->getProductLinks();
+            foreach ($links as $link) {
+                $skus[] = $link->getSku();
+            }
+        }
+        return $skus;
     }
 }

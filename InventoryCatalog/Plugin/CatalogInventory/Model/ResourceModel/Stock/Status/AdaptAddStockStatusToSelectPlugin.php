@@ -11,7 +11,6 @@ use Magento\CatalogInventory\Model\ResourceModel\Stock\Status;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Model\ResourceModel\AddStatusFilterToSelect;
 use Magento\InventoryCatalog\Model\ResourceModel\AddStockStatusToSelect;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -33,23 +32,15 @@ class AdaptAddStockStatusToSelectPlugin
     private $addStockStatusToSelect;
 
     /**
-     * @var AddStatusFilterToSelect
-     */
-    private $addStatusFilterToSelect;
-
-    /**
      * @param StockResolverInterface $stockResolver
      * @param AddStockStatusToSelect $addStockStatusToSelect
-     * @param AddStatusFilterToSelect $addStatusFilterToSelect
      */
     public function __construct(
         StockResolverInterface $stockResolver,
-        AddStockStatusToSelect $addStockStatusToSelect,
-        AddStatusFilterToSelect $addStatusFilterToSelect
+        AddStockStatusToSelect $addStockStatusToSelect
     ) {
         $this->stockResolver = $stockResolver;
         $this->addStockStatusToSelect = $addStockStatusToSelect;
-        $this->addStatusFilterToSelect = $addStatusFilterToSelect;
     }
 
     /**
@@ -62,7 +53,6 @@ class AdaptAddStockStatusToSelectPlugin
      * @return Status
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \Zend_Db_Select_Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundAddStockStatusToSelect(
@@ -79,7 +69,6 @@ class AdaptAddStockStatusToSelectPlugin
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         $this->addStockStatusToSelect->execute($select, $stockId);
-        $this->addStatusFilterToSelect->execute($select);
 
         return $stockStatus;
     }
