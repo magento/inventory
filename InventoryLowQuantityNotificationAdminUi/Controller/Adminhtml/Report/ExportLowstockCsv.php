@@ -8,11 +8,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryLowQuantityNotificationAdminUi\Controller\Adminhtml\Report;
 
-use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Reports\Controller\Adminhtml\Report\Product as ProductReportController;
 
-class ExportLowstockCsv extends ProductReportController
+class ExportLowstockCsv extends ProductReportController implements HttpGetActionInterface
 {
     /**
      * Authorization level of a basic admin session
