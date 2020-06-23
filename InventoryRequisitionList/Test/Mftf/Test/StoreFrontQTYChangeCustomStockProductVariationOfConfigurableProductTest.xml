@@ -10,7 +10,10 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="StoreFrontQTYChangeCustomStockProductVariationOfConfigurableProductTest" extends="StoreFrontQTYChangeProductVariationOfConfigurableProductTest">
         <annotations>
+            <stories value="Check QTY change only for variation product of configurable product on additional stock"/>
+            <title value="Check QTY change only for variation product of configurable product on additional stock"/>
             <description value="Check QTY change only for variation product of configurable product on additional stock."/>
+            <severity value="MAJOR"/>
             <group value="msi_b2b"/>
             <group value="multi_mode"/>
         </annotations>

@@ -10,8 +10,8 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminInvoiceCreatedForWholeOrderWithGroupedProductWithChildsProductOnNonDefaultStockTest">
         <annotations>
-            <stories value="Grouped Product Custom Stock."/>
-            <title value="Create Grouped Product On Custom Stock."/>
+            <stories value="Grouped Product Custom Stock"/>
+            <title value="Create Grouped Product On Custom Stock - Invoice"/>
             <description value="Invoice created for whole order with Grouped product with childs product on non-default stock in Admin."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735236/scenarios/1619654"/>
             <severity value="CRITICAL"/>

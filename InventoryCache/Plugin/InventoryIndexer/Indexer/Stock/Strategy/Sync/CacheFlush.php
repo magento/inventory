@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Stock\StockIndexer;
+namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
-use Magento\InventoryCache\Model\ResourceModel\GetProductIdsByStockIds;
-use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
+use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsByStockIds;
+use Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync;
 
 /**
  * Clean cache for specific products after non default stock reindex.
@@ -41,14 +41,14 @@ class CacheFlush
     /**
      * Clean cache after non default stock reindex.
      *
-     * @param StockIndexer $subject
+     * @param Sync $subject
      * @param callable $proceed
      * @param array $stockIds
      * @return void
      * @throws \Exception in case product entity type hasn't been initialize.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundExecuteList(StockIndexer $subject, callable $proceed, array $stockIds)
+    public function aroundExecuteList(Sync $subject, callable $proceed, array $stockIds)
     {
         $beforeReindexProductIds = $this->getProductIdsByStockIds->execute($stockIds);
         $proceed($stockIds);

@@ -10,10 +10,13 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AddBundleDynamicFromCustomStockBySkuFromCustomerAccountTest" extends="AddBundleDynamicProductBySkuFromCustomerAccountTest">
         <annotations>
+            <stories value="Add bundle dynamic product by sku from customer account on Additional Stock"/>
+            <title value="Add bundle dynamic product by sku from customer account on Additional Stock"/>
             <description value="Add bundle dynamic product by sku from customer account on Additional Stock."/>
             <skip>
                 <issueId value="https://github.com/magento/inventory/issues/1487"/>
             </skip>
+            <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
         </annotations>

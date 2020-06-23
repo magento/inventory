@@ -19,7 +19,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class LayoutProcessor implements LayoutProcessorInterface
 {
-    private const SEARCH_RADIUS = 'carriers/in_store/search_radius';
+    private const SEARCH_RADIUS = 'carriers/instore/search_radius';
 
     /**
      * @var ArrayManager
