@@ -13,6 +13,9 @@ use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
+/**
+ * Update salability status for the product.
+ */
 class UpdateIsSalable
 {
     /**

@@ -20,4 +20,8 @@
         <data key="consumerName">inventory.reservations.cleanup</data>
         <data key="messageLimit">10</data>
     </entity>
+    <entity name="AdminInventoryReservationsSalableStatusData">
+        <data key="consumerName">inventory.reservations.updateSalabilityStatus</data>
+        <data key="messageLimit">10</data>
+    </entity>
 </entities>

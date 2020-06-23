@@ -93,7 +93,10 @@
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="updateSalability">
+            <argument name="consumerName" value="{{AdminInventoryReservationsSalableStatusData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryReservationsSalableStatusData.messageLimit}}"/>
+        </actionGroup>
         <!--Verify, configurable product has 'out of stock' status.-->
         <amOnPage url="{{StorefrontProductPage.url($configurableProduct.custom_attributes[url_key]$)}}" stepKey="navigateToConfigurablePDP"/>
         <see selector="{{StorefrontProductInfoMainSection.productStockStatus}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyProductStatus"/>
