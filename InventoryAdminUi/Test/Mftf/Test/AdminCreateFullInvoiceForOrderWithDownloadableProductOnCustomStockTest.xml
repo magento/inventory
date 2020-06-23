@@ -6,9 +6,8 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateFullInvoiceForOrderWithDownloadableProductOnCustomStockTest" extends="AdminCreateFullInvoiceForOrderWithSimpleProductOnCustomStockTest">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateFullInvoiceForOrderWithDownloadableProductOnCustomStockTest">
         <annotations>
             <stories value="Downloadable product Custom Stock"/>
             <title value="Full Invoice with downloadable product on custom stock."/>
@@ -20,29 +19,76 @@
         </annotations>
 
         <before>
+            <!--Create test data.-->
             <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add example.com static.magento.com" before="category"/>
-            <remove keyForRemoval="simpleProduct"/>
-            <!-- Create downloadable Product -->
-            <createData entity="DownloadableProductWithTwoLink100" stepKey="simpleProduct" after="cleanCache">
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="DownloadableProductWithTwoLink100" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <createData entity="downloadableLink1" stepKey="addDownloadableLink1" after="simpleProduct">
-                <requiredEntity createDataKey="simpleProduct"/>
+            <createData entity="downloadableLink1" stepKey="addDownloadableLink1">
+                <requiredEntity createDataKey="product"/>
             </createData>
-            <createData entity="downloadableLink2" stepKey="addDownloadableLink2" after="addDownloadableLink1">
-                <requiredEntity createDataKey="simpleProduct"/>
+            <createData entity="downloadableLink2" stepKey="addDownloadableLink2">
+                <requiredEntity createDataKey="product"/>
             </createData>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+            <!-- Assign source to product. -->
+            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToProductEditPage">
+                <argument name="product" value="$$product$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct" >
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <!--Delete category-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
-        <remove keyForRemoval="seeOrderSubTotal"/>
-        <remove keyForRemoval="selectShippingMethodComment"/>
-        <remove keyForRemoval="selectFlatRateShipping"/>
-        <remove keyForRemoval="seeOrderShipping"/>
-        <see selector="{{AdminOrderFormTotalSection.total('Subtotal')}}" userInput="$50.99" stepKey="seeOrderSubTotal" after="waitForPageLoadOrder"/>
-        <remove keyForRemoval="checkOrderStatus"/>
-        <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="Complete" stepKey="checkOrderStatus" after="checkSuccessMessage"/>
+        <!--- Place order and create invoice. -->
+        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <fillField selector="{{AdminOrderFormAccountSection.email}}" userInput="{{Msi_US_Customer.email}}" stepKey="fillEmailField"/>
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">
+            <argument name="product" value="$$product$$"/>
+            <argument name="productQty" value="{{fivePiecesAddToCart.value}}"/>
+        </actionGroup>
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerInfo">
+            <argument name="customer" value="Msi_US_Customer"/>
+            <argument name="address" value="US_Address_TX"/>
+        </actionGroup>
+        <waitForPageLoad stepKey="waitForPageLoadOrder"/>
+        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
+        <waitForPageLoad stepKey="waitForOrderPlacement"/>
+        <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>
+        <!--Verify product quantity.-->
+        <actionGroup ref="NavigateToAndResetProductGridToDefaultViewActionGroup" stepKey="navigateToProductGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="checkProductQty">
+            <argument name="sourceName" value="$$source.source[name]$$"/>
+            <argument name="stockName" value="$$stock.stock[name]$$"/>
+            <argument name="sourceQty" value="{{defaultProductQtyBoughtWith5Pieces.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWith5Pieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>

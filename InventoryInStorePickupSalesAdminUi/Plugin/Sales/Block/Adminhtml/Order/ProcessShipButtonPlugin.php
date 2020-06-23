@@ -16,7 +16,7 @@ use Magento\Sales\Block\Adminhtml\Order\View;
 class ProcessShipButtonPlugin
 {
     /**
-     * Remove 'Ship' button in case order shipping method is 'in_store_pickup'.
+     * Remove 'Ship' button in case order shipping method is 'instore_pickup'.
      *
      * @param View $subject
      * @param \Closure $proceed
