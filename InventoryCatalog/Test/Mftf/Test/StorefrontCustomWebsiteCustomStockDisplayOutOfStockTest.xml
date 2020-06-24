@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontCustomWebsiteCustomStockDisplayOutOfStockTest">
+        <annotations>
+            <stories value="Product not assigned to inventory sources"/>
+            <title value="Product not assigned to inventory sources"/>
+            <description value="Check that product not assigned to inventory sources is shown on storefront as out of stock when Display Out Of Stock is enabled"/>
+            <testCaseId value="MC-34591"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!-- Login to backend-->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Display out of stock product -->
+            <actionGroup ref="displayOutOfStockProduct" stepKey="displayOutOfStockProduct"/>
+            <!--Add store code to url.-->
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <!--Create source -->
+            <createData entity="_minimalSource" stepKey="source"/>
+            <!--Create stock -->
+            <createData entity="BasicMsiStock1" stepKey="stock"/>
+            <!--Link stock to source-->
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <!--Create category-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <!--Create product and assign to category-->
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Create product and assign to category-->
+            <createData entity="SimpleProduct" stepKey="product2">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Create website-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <!--Create store and assign to website-->
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <!--Create store view and assign to store-->
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!--Assign stock to website-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="$stock.stock[name]$"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Open product edit page-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <waitForPageLoad stepKey="waitForProductEditPage"/>
+            <!--Assign product to website-->
+            <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Save product-->
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!-- Don't display out of stock product -->
+            <actionGroup ref="noDisplayOutOfStockProduct" stepKey="revertDisplayOutOfStockProduct"/>
+            <!--Disable 'add store code to url'-->
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+            <!--Delete category-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Delete product-->
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Delete second product-->
+            <deleteData createDataKey="product2" stepKey="deleteProduct2"/>
+            <!--Delete created website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Delete stock.-->
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Logout from backend-->
+            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+        </after>
+        <!-- Assert product is visible on default website category page-->
+        <amOnPage url="{{StorefrontHomePage.url}}/{{_defaultStore.code}}/$category.name$.html" stepKey="navigateToDefaultWebsite"/>
+        <see userInput="$product.name$" stepKey="assertProductPresentOnDefaultWebsite"/>
+        <!-- Assert product 2 is visible on default website category page-->
+        <see userInput="$product2.name$" stepKey="assertProduct2PresentOnDefaultWebsite"/>
+        <!-- Assert product is visible on custom website category page-->
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$category.name$.html" stepKey="navigateToCustomWebsite"/>
+        <see userInput="$product.name$" stepKey="assertProductPresentOnCustomWebsite"/>
+        <!-- Assert product 2 is not visible on custom website category page-->
+        <dontSee userInput="$product2.name$" stepKey="assertProduct2AbsentOnCategoryPage"/>
+    </test>
+</tests>
