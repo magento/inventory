@@ -122,7 +122,7 @@
             <argument name="consumerName" value="{{AdminInventoryReservationsSalableStatusData.consumerName}}"/>
             <argument name="maxMessages" value="{{AdminInventoryReservationsSalableStatusData.messageLimit}}"/>
         </actionGroup>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <magentoCLI command="cache:clean full_page" stepKey="cleanFPC"/>
         <!-- Assert out of stock option is absent on product page -->
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>

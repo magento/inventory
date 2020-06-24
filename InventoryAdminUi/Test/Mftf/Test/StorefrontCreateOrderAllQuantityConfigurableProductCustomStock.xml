@@ -97,6 +97,7 @@
             <argument name="consumerName" value="{{AdminInventoryReservationsSalableStatusData.consumerName}}"/>
             <argument name="maxMessages" value="{{AdminInventoryReservationsSalableStatusData.messageLimit}}"/>
         </actionGroup>
+        <magentoCLI command="cache:clean full_page" stepKey="cleanFPC"/>
         <!--Verify, configurable product has 'out of stock' status.-->
         <amOnPage url="{{StorefrontProductPage.url($configurableProduct.custom_attributes[url_key]$)}}" stepKey="navigateToConfigurablePDP"/>
         <see selector="{{StorefrontProductInfoMainSection.productStockStatus}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyProductStatus"/>
