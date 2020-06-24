@@ -8,6 +8,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\InventorySourceSelectionApi\Api\Data\InventoryRequestInterface">
-        <attribute code="destination_address" type="Magento\InventorySourceSelectionApi\Api\Data\AddressInterface" />
+        <attribute code="order" type="Magento\Sales\Api\Data\OrderInterface" />
     </extension_attributes>
 </config>

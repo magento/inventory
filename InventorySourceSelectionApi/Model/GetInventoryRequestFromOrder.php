@@ -41,11 +41,6 @@ class GetInventoryRequestFromOrder
     private $orderRepository;
 
     /**
-     * @var AddressInterfaceFactory
-     */
-    private $addressInterfaceFactory;
-
-    /**
      * @var StoreManagerInterface
      */
     private $storeManager;
@@ -59,7 +54,6 @@ class GetInventoryRequestFromOrder
      * @param InventoryRequestInterfaceFactory $inventoryRequestFactory
      * @param InventoryRequestExtensionInterfaceFactory $inventoryRequestExtensionFactory
      * @param OrderRepositoryInterface $orderRepository
-     * @param AddressInterfaceFactory $addressInterfaceFactory
      * @param StoreManagerInterface $storeManager
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      */
@@ -67,14 +61,12 @@ class GetInventoryRequestFromOrder
         InventoryRequestInterfaceFactory $inventoryRequestFactory,
         InventoryRequestExtensionInterfaceFactory $inventoryRequestExtensionFactory,
         OrderRepositoryInterface $orderRepository,
-        AddressInterfaceFactory $addressInterfaceFactory,
         StoreManagerInterface $storeManager,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
     ) {
         $this->inventoryRequestFactory = $inventoryRequestFactory;
         $this->inventoryRequestExtensionFactory = $inventoryRequestExtensionFactory;
         $this->orderRepository = $orderRepository;
-        $this->addressInterfaceFactory = $addressInterfaceFactory;
         $this->storeManager = $storeManager;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
     }
@@ -100,39 +92,10 @@ class GetInventoryRequestFromOrder
             ]
         );
 
-        $address = $this->getAddressFromOrder($order);
-        if ($address !== null) {
-            $extensionAttributes = $this->inventoryRequestExtensionFactory->create();
-            $extensionAttributes->setDestinationAddress($address);
-            $inventoryRequest->setExtensionAttributes($extensionAttributes);
-        }
+        $extensionAttributes = $this->inventoryRequestExtensionFactory->create();
+        $extensionAttributes->setOrder($order);
+        $inventoryRequest->setExtensionAttributes($extensionAttributes);
 
         return $inventoryRequest;
-    }
-
-    /**
-     * Create an address from an order
-     *
-     * @param OrderInterface $order
-     *
-     * @return null|AddressInterface
-     */
-    private function getAddressFromOrder(OrderInterface $order): ?AddressInterface
-    {
-        /** @var Address $shippingAddress */
-        $shippingAddress = $order->getShippingAddress();
-        if ($shippingAddress === null) {
-            return null;
-        }
-
-        return $this->addressInterfaceFactory->create(
-            [
-                'country' => $shippingAddress->getCountryId(),
-                'postcode' => $shippingAddress->getPostcode() ?? '',
-                'street' => implode("\n", $shippingAddress->getStreet()),
-                'region' => $shippingAddress->getRegion() ?? $shippingAddress->getRegionCode() ?? '',
-                'city' => $shippingAddress->getCity()
-            ]
-        );
     }
 }
