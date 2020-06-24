@@ -22,6 +22,6 @@
     </entity>
     <entity name="AdminInventoryReservationsSalableStatusData">
         <data key="consumerName">inventory.reservations.updateSalabilityStatus</data>
-        <data key="messageLimit">10</data>
+        <data key="messageLimit">100</data>
     </entity>
 </entities>
