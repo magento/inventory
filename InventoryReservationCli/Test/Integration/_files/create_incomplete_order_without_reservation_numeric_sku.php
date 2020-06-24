@@ -13,11 +13,10 @@ use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
-require __DIR__ . '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/default_rollback.php';
+require '/var/www/magento2/dev/tests/integration/testsuite/Magento/Sales/_files/default_rollback.php';
 require __DIR__ . '/simple_product_numeric_sku.php';
 
-$addressData = include __DIR__ .
-    '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/address_data.php';
+$addressData = include '/var/www/magento2/dev/tests/integration/testsuite/Magento/Sales/_files/address_data.php';
 
 $objectManager = Bootstrap::getObjectManager();
 $billingAddress = $objectManager->create(OrderAddress::class, ['data' => $addressData]);

@@ -20,8 +20,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 
 \Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
 
-require __DIR__ .
-    '/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/configurable_attribute.php';
+require '/var/www/magento2/dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/configurable_attribute.php';
 
 /** @var ProductRepositoryInterface $productRepository */
 $productRepository = Bootstrap::getObjectManager()->create(ProductRepositoryInterface::class);

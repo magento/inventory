@@ -97,7 +97,6 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
-     * @param LoggerInterface $logger
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -169,6 +168,8 @@ class AppendReservationsAfterOrderPlacementPlugin
         $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
 
+        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
+
         /** @var SalesEventExtensionInterface */
         $salesEventExtension = $this->salesEventExtensionFactory->create([
             'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
@@ -188,7 +189,6 @@ class AppendReservationsAfterOrderPlacementPlugin
             ]
         ]);
 
-        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
         $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
 
         try {

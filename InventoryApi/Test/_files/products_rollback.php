@@ -36,6 +36,7 @@ $products = $productRepository->getList($searchCriteria)->getItems();
  * Tests which are wrapped with MySQL transaction clear all data by transaction rollback.
  * In that case there is "if" which checks that the products still exist in database.
  */
+/*
 if (!empty($products)) {
     $currentArea = $registry->registry('isSecureArea');
     $registry->unregister('isSecureArea');
@@ -57,3 +58,4 @@ if (!empty($products)) {
     $registry->unregister('isSecureArea');
     $registry->register('isSecureArea', $currentArea);
 }
+*/
