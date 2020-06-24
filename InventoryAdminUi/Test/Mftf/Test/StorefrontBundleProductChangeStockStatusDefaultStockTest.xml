@@ -34,7 +34,7 @@
                 <requiredEntity createDataKey="bundleOption"/>
                 <requiredEntity createDataKey="product"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign default stock to main website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -61,13 +61,13 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Verify product is not visible on storefront.-->
-        <actionGroup ref="StorefrontAssertProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductNotVisibleOnStorefront">
-            <argument name="category" value="$category$"/>
-            <argument name="product" value="$bundleProduct$"/>
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductNotVisibleOnStorefront">
+            <argument name="categoryUrlKey" value="$category.url_key$"/>
+            <argument name="productName" value="$bundleProduct.name$"/>
         </actionGroup>
         <!--Set bundle product stock status to "In Stock".-->
         <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openBundleProductEditPage"/>

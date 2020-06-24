@@ -69,7 +69,7 @@ class SourceDeductionForVirtualProductsOnDefaultStockTest extends TestCase
      */
     private $invoiceRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->invoiceOrder = Bootstrap::getObjectManager()->get(InvoiceOrderInterface::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);

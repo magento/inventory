@@ -32,7 +32,7 @@ class OrderExtensionTest extends TestCase
     /** @var  OrderExtensionFactory */
     private $orderExtensionFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
@@ -55,8 +55,8 @@ class OrderExtensionTest extends TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/price 5.95
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/price 5.95
      *
      * @magentoDbIsolation disabled
      */

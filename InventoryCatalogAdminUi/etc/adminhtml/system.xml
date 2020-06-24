@@ -33,6 +33,17 @@
                     </depends>
                 </field>
             </group>
+            <group id="indexer" translate="label" type="text" sortOrder="600" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Inventory Indexer Settings</label>
+                <field id="async" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0"
+                       showInStore="0" canRestore="1">
+                    <label>Stock/Source reindex strategy</label>
+                    <source_model>Magento\InventoryIndexer\Model\ReindexStrategyOptions</source_model>
+                    <config_path>cataloginventory/indexer/strategy</config_path>
+                    <comment>An asynchronous queue manager must be configured for async mode.</comment>
+                </field>
+            </group>
         </section>
     </system>
 </config>

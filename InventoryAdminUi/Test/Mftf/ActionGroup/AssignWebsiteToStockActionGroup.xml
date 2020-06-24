@@ -18,6 +18,7 @@
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{stockName}}" stepKey="fillKeywordSearchField"/>
         <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch"/>
+        <waitForPageLoad stepKey="waitForFilteredStockGrid"/>
         <click selector="{{AdminGridRow.editByValue(stockName)}}" stepKey="clickOnEditStock"/>
         <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
         <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="{{websiteName}}" stepKey="selectWebsiteAsSalesChannel"/>

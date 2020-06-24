@@ -29,10 +29,10 @@
             <createData entity="SimpleProduct" stepKey="simpleProduct1">
                 <requiredEntity createDataKey="simpleCategory1"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
         </after>
@@ -50,7 +50,7 @@
         <click selector="{{AdminGridRow.checkboxByValue($$createSource1.source[name]$$)}}" stepKey="clickOnTheCheckboxForSource2"/>
         <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDone1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose1"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
         <seeElement selector=".success" stepKey="seeSuccessMessage"/>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
@@ -66,7 +66,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField2"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose2"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose2"/>
 
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="goToOrdersPage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>

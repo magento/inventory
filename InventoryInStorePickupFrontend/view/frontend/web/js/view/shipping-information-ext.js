@@ -48,7 +48,7 @@ define([
                 isStorePickup = false;
 
             if (shippingMethod !== null) {
-                isStorePickup = shippingMethod['carrier_code'] === 'in_store' &&
+                isStorePickup = shippingMethod['carrier_code'] === 'instore' &&
                     shippingMethod['method_code'] === 'pickup';
             }
 

@@ -23,12 +23,12 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement1"/>
 
             <createData entity="_defaultCategory" stepKey="createCategory"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridPage"/>
             <waitForPageLoad time="30" stepKey="waitForProductGridPageLoad"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
         </after>
 
@@ -40,7 +40,7 @@
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
         <scrollToTopOfPage stepKey="scrollToTopOfPage"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProduct"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

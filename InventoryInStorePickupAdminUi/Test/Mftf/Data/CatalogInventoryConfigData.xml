@@ -8,19 +8,19 @@
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="EnableInStorePickup">
-        <data key="path">carriers/in_store/active</data>
+        <data key="path">carriers/instore/active</data>
         <data key="value">1</data>
     </entity>
     <entity name="DisableInStorePickup">
-        <data key="path">carriers/in_store/active</data>
+        <data key="path">carriers/instore/active</data>
         <data key="value">0</data>
     </entity>
     <entity name="SetDefaultSearchRadius">
-        <data key="path">carriers/in_store/search_radius</data>
+        <data key="path">carriers/instore/search_radius</data>
         <data key="value">200</data>
     </entity>
     <entity name="IncreaseSearchRadius">
-        <data key="path">carriers/in_store/search_radius</data>
+        <data key="path">carriers/instore/search_radius</data>
         <data key="value">10000</data>
     </entity>
 </entities>

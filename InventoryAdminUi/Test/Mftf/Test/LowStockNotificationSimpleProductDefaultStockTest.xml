@@ -27,7 +27,7 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -39,7 +39,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
         </after>
@@ -49,7 +49,7 @@
         <uncheckOption selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="uncheckNotifyQtyUseDefault"/>
         <fillField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="95" stepKey="setLowStockNotification"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setProductQty"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         <!--Verify report is empty.-->
         <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageBeforeApplyCustomNotifyQtyForProduct"/>
         <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmpty">
@@ -60,7 +60,7 @@
         <!--Set product qty lower than notify quantity.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToChangeQty"/>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="94" stepKey="setProductQtyLowerThanNotifyQuantity"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProductWithChangedQuantity"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProductWithChangedQuantity"/>
         <!--Verify report contains product.-->
         <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageAfterApplyCustomNotifyQtyForProduct"/>
         <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportContainsProduct">

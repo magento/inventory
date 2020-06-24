@@ -9,8 +9,8 @@
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminNotAbleCreateBundleProductShipTogetherCustomStockTest">
         <annotations>
-            <stories value="Bundle Product Custom Stock."/>
-            <title value="Create bundle product with shipment type 'Ship Together'."/>
+            <stories value="Bundle Product Custom Stock"/>
+            <title value="Not able to create bundle product with shipment type 'Ship Together'"/>
             <description value="Verify, admin not able to add bundle selections with several sources to bundle product with shipment type 'Ship Together'."/>
             <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/457016/scenarios/4373048"/>
             <severity value="CRITICAL"/>
@@ -39,7 +39,7 @@
             <createData entity="SimpleProduct" stepKey="product2">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign source1 and set simple product1 quantity-->
             <amOnPage url="{{AdminProductEditPage.url($product1.id$)}}" stepKey="openSimple1ProductEditPage"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
@@ -73,7 +73,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Try to add simple products to bundle product.-->
