@@ -15,8 +15,7 @@ define([
     'Magento_Checkout/js/model/address-converter',
     'Magento_Checkout/js/action/set-shipping-information',
     'Magento_InventoryInStorePickupFrontend/js/model/pickup-locations-service',
-    'Magento_Checkout/js/checkout-data',
-    'Magento_InventoryInStorePickupFrontend/js/view/store-pickup'
+    'Magento_Checkout/js/checkout-data'
 ], function (
     $,
     _,
@@ -72,10 +71,10 @@ define([
             updateNearbyLocations = _.debounce(function (searchQuery) {
                 country = quote.shippingAddress() && quote.shippingAddress().countryId ?
                     quote.shippingAddress().countryId : this.defaultCountryId;
-                this.updateNearbyLocations(searchQuery + this.delimiter + country);
+                searchQuery = this.getSearchTerm(searchQuery, country);
+                this.updateNearbyLocations(searchQuery);
             }, this.searchDebounceTimeout).bind(this);
             this.searchQuery.subscribe(updateNearbyLocations);
-            this.searchQuery.notifySubscribers('');
 
             return this;
         },
@@ -119,20 +118,32 @@ define([
         },
 
         /**
+         * Get Search Term from search query and country.
+         *
+         * @param {String} searchQuery
+         * @param {String} country
+         * @returns {String}
+         */
+        getSearchTerm: function (searchQuery, country) {
+            return searchQuery ? searchQuery + this.delimiter + country : searchQuery;
+        },
+
+        /**
          * @returns void
          */
         openPopup: function () {
             var shippingAddress = quote.shippingAddress(),
                 country = shippingAddress.countryId ? shippingAddress.countryId :
-                this.defaultCountryId;
+                this.defaultCountryId,
+                searchTerm = '';
 
             this.getPopup().openModal();
 
             if (shippingAddress.city && shippingAddress.postcode) {
-                this.updateNearbyLocations(
-                    shippingAddress.postcode + this.delimiter + country
-                );
+                searchTerm = this.getSearchTerm(shippingAddress.postcode, country);
             }
+
+            this.updateNearbyLocations(searchTerm);
         },
 
         /**
@@ -159,7 +170,8 @@ define([
         updateNearbyLocations: function (searchQuery) {
             var self = this,
                 productsInfo = [],
-                items = quote.getItems();
+                items = quote.getItems(),
+                searchCriteria;
 
             _.each(items, function (item) {
                 if (item['qty_options'] === undefined || item['qty_options'].length === 0) {
@@ -171,17 +183,22 @@ define([
                 }
             });
 
+            searchCriteria = {
+                extensionAttributes: {
+                    productsInfo: productsInfo
+                },
+                pageSize: this.nearbySearchLimit
+            };
+
+            if (searchQuery) {
+                searchCriteria.area = {
+                    radius: this.nearbySearchRadius,
+                    searchTerm: searchQuery
+                };
+            }
+
             return pickupLocationsService
-                .getNearbyLocations({
-                    area: {
-                        radius: this.nearbySearchRadius,
-                        searchTerm: searchQuery
-                    },
-                    extensionAttributes: {
-                        productsInfo: productsInfo
-                    },
-                    pageSize: this.nearbySearchLimit
-                })
+                .getNearbyLocations(searchCriteria)
                 .then(function (locations) {
                     self.nearbyLocations(locations);
                 })

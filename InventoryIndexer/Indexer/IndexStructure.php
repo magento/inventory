@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexName;
@@ -76,11 +77,12 @@ class IndexStructure implements IndexStructureInterface
 
     /**
      * Create the index table
-     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
+     *
+     * @param AdapterInterface $connection
      * @param string $tableName
      * @return void
      */
-    private function createTable(\Magento\Framework\DB\Adapter\AdapterInterface $connection, string $tableName)
+    private function createTable(AdapterInterface $connection, string $tableName)
     {
         $table = $connection->newTable(
             $this->resourceConnection->getTableName($tableName)
@@ -115,6 +117,10 @@ class IndexStructure implements IndexStructureInterface
                 Table::OPTION_NULLABLE => false,
             ],
             'Is Salable'
+        )->addIndex(
+            'index_sku_qty',
+            [self::SKU, self::QUANTITY],
+            ['type' => AdapterInterface::INDEX_TYPE_INDEX]
         );
         $connection->createTable($table);
     }
