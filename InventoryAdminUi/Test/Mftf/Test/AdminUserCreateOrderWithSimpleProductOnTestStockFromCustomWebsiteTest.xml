@@ -6,10 +6,8 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminUserCreateOrderWithSimpleProductOnTestStockFromCustomWebsiteTest"
-          extends="StorefrontLoggedInCustomerCreateOrderWithSimpleProductOnTestStockFromCustomWebsiteTest">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminUserCreateOrderWithSimpleProductOnTestStockFromCustomWebsiteTest">
         <annotations>
             <stories value="Admin user create order."/>
             <title value="Admin user create order with Simple product on Test stock from Custom website."/>
@@ -19,39 +17,98 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        <!-- remove storefront steps -->
-        <remove keyForRemoval="openProductPageUsingStoreCodeInUrl"/>
-        <remove keyForRemoval="fillCorrectQuantity"/>
-        <remove keyForRemoval="addProductToCart"/>
-        <remove keyForRemoval="openMiniCart"/>
-        <remove keyForRemoval="goToCheckout"/>
-        <remove keyForRemoval="waitForCheckoutPage"/>
-        <remove keyForRemoval="fillShippingAddress"/>
-        <remove keyForRemoval="clickNext"/>
-        <remove keyForRemoval="waitForShipmentPageLoad"/>
-        <remove keyForRemoval="placeOrder"/>
-        <remove keyForRemoval="waitUntilOrderPlaced"/>
-        <remove keyForRemoval="grabOrderNumber"/>
-        <remove keyForRemoval="checkOrderPlaceSuccessMessage"/>
+        <before>
+            <!--Create test data.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="BasicMsiStock1" stepKey="stock"/>
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite" >
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView" >
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!-- Assign product to custom website -->
+            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToProductEditPage">
+                <argument name="product" value="$$product$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct" >
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignProductToAdditionalWebsite" >
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Assign Custom Stock to Additional Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrl"/>
+            <magentoCron groups="index" stepKey="reindex"/>
+        </before>
+        <after>
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="removeStoreCodeFromUrl" />
+            <!--Delete category-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Delete created website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite" >
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
 
-        <!--- Place order via Admin -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer" before="navigateToProductIndexPageForCheckProductQtyAfterReorder">
-            <argument name="customer" value="MsiCustomer1"/>
+        <!--- Place order. -->
+        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="storeView" value="customStore"/>
         </actionGroup>
-        <waitForPageLoad time="20" stepKey="waitForPageLoad" after="createNewOrderForCustomer"/>
-        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder" after="waitForPageLoad">
-            <argument name="product" value="$$simpleProduct$$"/>
-            <argument name="productQty" value="5"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <fillField selector="{{AdminOrderFormAccountSection.email}}" userInput="{{Msi_US_Customer.email}}" stepKey="fillEmailField"/>
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">
+            <argument name="product" value="$$product$$"/>
+            <argument name="productQty" value="{{fivePiecesAddToCart.value}}"/>
         </actionGroup>
-        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerInfo" after="addSimpleProductToOrder">
-            <argument name="customer" value="MsiCustomer1"/>
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerInfo">
+            <argument name="customer" value="Msi_US_Customer"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
-        <waitForPageLoad time="20" stepKey="waitForPageLoadOrder" after="fillCustomerInfo"/>
-        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping" after="waitForPageLoadOrder"/>
-        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder" after="selectFlatRateShipping"/>
-        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." after="clickSubmitOrder" stepKey="seeSuccessMessageOrderPlaced"/>
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber" after="seeSuccessMessageOrderPlaced"/>
+        <waitForPageLoad stepKey="waitForPageLoadOrder"/>
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
+        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
+        <waitForPageLoad stepKey="waitForOrderPlacement"/>
+        <!--Verify product quantity.-->
+        <actionGroup ref="NavigateToAndResetProductGridToDefaultViewActionGroup" stepKey="navigateToProductGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$product.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="checkProductQty">
+            <argument name="sourceName" value="$$source.source[name]$$"/>
+            <argument name="stockName" value="$$stock.stock[name]$$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWith5Pieces.value}}"/>
+        </actionGroup>
     </test>
 </tests>

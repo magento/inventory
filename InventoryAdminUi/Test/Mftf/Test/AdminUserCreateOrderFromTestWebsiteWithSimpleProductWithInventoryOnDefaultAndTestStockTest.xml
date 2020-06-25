@@ -29,7 +29,7 @@
             <createData entity="SimpleSubCategory" stepKey="createCategory1"/>
             <createData entity="SimpleMsiProduct" stepKey="createProduct1"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdmin1"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
             <!--Create new website,store and store view-->
             <comment userInput="Create new website,store and store view" stepKey="createWebsite"/>
@@ -82,7 +82,7 @@
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
         </after>
-        <actionGroup ref="GoToProductPageViaIDActionGroup" stepKey="goToProduct1">
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">
             <argument name="productId" value="$createProduct1.id$"/>
         </actionGroup>
         <!-- Add this product to second website -->
@@ -95,7 +95,7 @@
             <argument name="filter_value" value="$$createSource1.source[source_code]$$"/>
         </actionGroup>
         <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="10" stepKey="fillSourceQuantityField"/>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseFourthProductForm"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseFourthProductForm"/>
 
         <comment userInput="Create order with simple product from admin area."
                  stepKey="createOrderWithGroupedProductComment"/>

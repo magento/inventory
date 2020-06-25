@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Unit\Model\IsProductSalableCondition;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
@@ -40,7 +41,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $objectManager = new ObjectManager($this);
@@ -107,7 +108,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
      * @param int $backOrders
      * @param bool $manageStock
      * @param array $errors
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testExecute(?array $stockData, int $reqQty, int $backOrders, bool $manageStock, array $errors): void
     {

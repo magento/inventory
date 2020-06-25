@@ -23,7 +23,7 @@ class BundleProductShouldBeInStockOnCreateTest extends WebapiAbstract
     /**
      * Execute per test cleanup
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $resourcePath = self::RESOURCE_PATH . '/' . self::BUNDLE_PRODUCT_SKU;
         $serviceInfo = [
@@ -44,7 +44,7 @@ class BundleProductShouldBeInStockOnCreateTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
      */
     public function testIsBundleProductWithSimpleProductInStockAfterCreate()
     {

@@ -37,7 +37,7 @@
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
             <!--Assign crated source to product and set product to Out of Stock.-->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
             <!--Unassign Default Source.-->
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSource">
@@ -69,7 +69,7 @@
             <deleteData stepKey="deleteProduct" createDataKey="simpleProduct"/>
             <deleteData stepKey="deleteCategory" createDataKey="simpleCategory"/>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
         <!--Verify product is not visible in storefront page.-->

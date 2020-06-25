@@ -81,7 +81,7 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
         if ($this->isSingleSourceMode->execute()) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }
-        $products = $this->bundleProductsByChildSku->execute($sourceItem->getSku());
+        $products = $this->bundleProductsByChildSku->execute((string)$sourceItem->getSku());
         if (!$products) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }

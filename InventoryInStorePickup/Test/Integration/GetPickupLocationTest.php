@@ -23,7 +23,7 @@ class GetPickupLocationTest extends TestCase
      */
     private $getPickupLocation;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getPickupLocation = Bootstrap::getObjectManager()->get(
             GetPickupLocation::class
@@ -31,13 +31,13 @@ class GetPickupLocationTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      *
      * @param string $pickupLocationCode
      * @param string $salesChannelCode
@@ -101,7 +101,7 @@ class GetPickupLocationTest extends TestCase
                 'us-1',
                 'eu_website',
                 true,
-                __(
+                (string)__(
                     'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'us-1',
@@ -114,7 +114,7 @@ class GetPickupLocationTest extends TestCase
                 'zzz',
                 'global_website',
                 true,
-                __(
+                (string)__(
                     'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'zzz',
@@ -127,7 +127,7 @@ class GetPickupLocationTest extends TestCase
                 'eu-2',
                 'eu_website',
                 true,
-                __(
+                (string)__(
                     'Can not find Pickup Location with code %1 for %2 Sales Channel "%3".',
                     [
                         'eu-2',

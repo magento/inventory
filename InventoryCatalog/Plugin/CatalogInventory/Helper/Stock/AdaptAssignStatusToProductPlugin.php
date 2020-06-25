@@ -13,7 +13,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
  * Adapt assignStatusToProduct for multi stocks.
@@ -26,9 +26,9 @@ class AdaptAssignStatusToProductPlugin
     private $getStockIdForCurrentWebsite;
 
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
      * @var DefaultStockProviderInterface
@@ -42,52 +42,52 @@ class AdaptAssignStatusToProductPlugin
 
     /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      */
     public function __construct(
         GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         DefaultStockProviderInterface $defaultStockProvider,
         GetProductIdsBySkusInterface $getProductIdsBySkus
     ) {
         $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
-        $this->isProductSalable = $isProductSalable;
+        $this->areProductsSalable = $areProductsSalable;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
     }
 
     /**
+     * Assign stock status to product considering multi stock environment.
+     *
      * @param Stock $subject
-     * @param callable $proceed
      * @param Product $product
      * @param int|null $status
-     * @return void
+     * @return array
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundAssignStatusToProduct(
+    public function beforeAssignStatusToProduct(
         Stock $subject,
-        callable $proceed,
         Product $product,
-        $status = null
-    ) {
+        ?int $status
+    ): array {
         if (null === $product->getSku()) {
-            return;
+            return [$product, $status];
         }
 
         try {
             $this->getProductIdsBySkus->execute([$product->getSku()]);
-
             if (null === $status) {
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
-                $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+                $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
+                $result = current($result);
+                return [$product, (int)$result->isSalable()];
             }
-
-            $proceed($product, $status);
         } catch (NoSuchEntityException $e) {
-            return;
+            return [$product, $status];
         }
+        return [$product, $status];
     }
 }

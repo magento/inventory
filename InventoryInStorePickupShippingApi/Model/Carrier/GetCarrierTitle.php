@@ -18,7 +18,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class GetCarrierTitle
 {
-    private const CONFIG_PATH = 'carriers/in_store/title';
+    private const CONFIG_PATH = 'carriers/instore/title';
 
     /**
      * @var ScopeConfigInterface

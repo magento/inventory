@@ -73,7 +73,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $dataObjectFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
@@ -88,8 +88,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      */
     public function testPlaceOrderWithInStockProduct()
     {
@@ -110,8 +110,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
      */
     public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn()
@@ -133,8 +133,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      */
     public function testPlaceOrderWithOutOffStockProduct()
     {
@@ -153,9 +153,9 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/disable_config_use_manage_stock.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/disable_config_use_manage_stock.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      */
     public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
     {
@@ -222,7 +222,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->registry->register('isSecureArea', false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

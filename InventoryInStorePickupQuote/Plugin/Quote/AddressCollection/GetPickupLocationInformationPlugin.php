@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Plugin\Quote\AddressCollection;
 
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressExtensionInterfaceFactory;
@@ -26,11 +27,20 @@ class GetPickupLocationInformationPlugin
     private $addressExtensionInterfaceFactory;
 
     /**
-     * @param AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory
+     * @var ResourceConnection
      */
-    public function __construct(AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory)
-    {
+    private $connection;
+
+    /**
+     * @param AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory
+     * @param ResourceConnection $connection
+     */
+    public function __construct(
+        AddressExtensionInterfaceFactory $addressExtensionInterfaceFactory,
+        ResourceConnection $connection
+    ) {
         $this->addressExtensionInterfaceFactory = $addressExtensionInterfaceFactory;
+        $this->connection = $connection;
     }
 
     /**
@@ -55,8 +65,9 @@ class GetPickupLocationInformationPlugin
         }
 
         if (!isset($collection->getSelect()->getPart(Select::FROM)[self::TABLE_ALIAS])) {
+            $table = $this->connection->getTableName('inventory_pickup_location_quote_address', 'checkout');
             $collection->getSelect()->joinLeft(
-                [self::TABLE_ALIAS => 'inventory_pickup_location_quote_address'],
+                [self::TABLE_ALIAS => $table],
                 self::TABLE_ALIAS . '.address_id = main_table.address_id',
                 [PickupLocationInterface::PICKUP_LOCATION_CODE]
             );

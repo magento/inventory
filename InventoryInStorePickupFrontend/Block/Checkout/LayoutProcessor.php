@@ -8,19 +8,18 @@ declare(strict_types=1);
 namespace Magento\InventoryInStorePickupFrontend\Block\Checkout;
 
 use Magento\Checkout\Block\Checkout\LayoutProcessorInterface;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\ArrayManager;
-use Magento\InventoryInStorePickupFrontend\Model\Validator\IsStorePickUpAvailableForWebsiteValidator;
+use Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCartInterface;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Add store pickup information on checkout page.
  */
 class LayoutProcessor implements LayoutProcessorInterface
 {
-    private const SEARCH_RADIUS = 'carriers/in_store/search_radius';
+    private const SEARCH_RADIUS = 'carriers/instore/search_radius';
 
     /**
      * @var ArrayManager
@@ -28,36 +27,36 @@ class LayoutProcessor implements LayoutProcessorInterface
     private $arrayManager;
 
     /**
-     * @var IsStorePickUpAvailableForWebsiteValidator
-     */
-    private $storePickUpValidator;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * @var ScopeConfigInterface
      */
     private $config;
 
     /**
-     * @param StoreManagerInterface $storeManager
+     * @var Session
+     */
+    private $checkoutSession;
+
+    /**
+     * @var \Magento\InventoryInStorePickupShippingApi\Model\IsInStorePickupDeliveryAvailableForCartInterface
+     */
+    private $inStorePickupDeliveryAvailableForCart;
+
+    /**
      * @param ArrayManager $arrayManager
-     * @param IsStorePickUpAvailableForWebsiteValidator $storePickUpValidator
      * @param ScopeConfigInterface $config
+     * @param Session $session
+     * @param IsInStorePickupDeliveryAvailableForCartInterface $inStorePickupDeliveryAvailableForCart
      */
     public function __construct(
-        StoreManagerInterface $storeManager,
         ArrayManager $arrayManager,
-        IsStorePickUpAvailableForWebsiteValidator $storePickUpValidator,
-        ScopeConfigInterface $config
+        ScopeConfigInterface $config,
+        Session $session,
+        IsInStorePickupDeliveryAvailableForCartInterface $inStorePickupDeliveryAvailableForCart
     ) {
         $this->arrayManager = $arrayManager;
-        $this->storePickUpValidator = $storePickUpValidator;
-        $this->storeManager = $storeManager;
         $this->config = $config;
+        $this->checkoutSession = $session;
+        $this->inStorePickupDeliveryAvailableForCart = $inStorePickupDeliveryAvailableForCart;
     }
 
     /**
@@ -65,17 +64,18 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     public function process($jsLayout)
     {
-        $website = $this->storeManager->getWebsite();
-        if (!$this->storePickUpValidator->execute($website->getCode())) {
-            return $this->removeStorePickup($jsLayout);
+        if ($this->inStorePickupDeliveryAvailableForCart->execute((int)$this->checkoutSession->getQuoteId())) {
+            return $this->addStorePickupComponents($jsLayout);
         }
-        return $this->addStorePickupComponents($jsLayout);
+
+        return $this->removeStorePickup($jsLayout);
     }
 
     /**
      * Remove store pickup ui components from layout.
      *
      * @param array $jsLayout
+     *
      * @return array
      */
     private function removeStorePickup(array $jsLayout): array
@@ -90,6 +90,7 @@ class LayoutProcessor implements LayoutProcessorInterface
      * Add ui store pickup components to layout.
      *
      * @param array $jsLayout
+     *
      * @return array
      */
     private function addStorePickupComponents(array $jsLayout): array
@@ -112,12 +113,6 @@ class LayoutProcessor implements LayoutProcessorInterface
      */
     private function getSearchRadius(): float
     {
-        try {
-            $website = $this->storeManager->getWebsite();
-        } catch (LocalizedException $e) {
-            return (float)$this->config->getValue(self::SEARCH_RADIUS);
-        }
-
-        return (float)$this->config->getValue(self::SEARCH_RADIUS, ScopeInterface::SCOPE_WEBSITE, $website->getId());
+        return (float)$this->config->getValue(self::SEARCH_RADIUS, ScopeInterface::SCOPE_WEBSITE);
     }
 }

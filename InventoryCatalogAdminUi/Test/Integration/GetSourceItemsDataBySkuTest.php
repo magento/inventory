@@ -19,16 +19,16 @@ class GetSourceItemsDataBySkuTest extends TestCase
      */
     private $getSourceItemsDataBySku;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->getSourceItemsDataBySku = Bootstrap::getObjectManager()->get(GetSourceItemsDataBySku::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      */
     public function testExecute()
     {
