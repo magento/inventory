@@ -57,4 +57,3 @@ if (!empty($products)) {
     $registry->unregister('isSecureArea');
     $registry->register('isSecureArea', $currentArea);
 }
-
