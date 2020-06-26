@@ -12,6 +12,7 @@
           extends="AdminCreateOrderWithGroupedProductDefaultStockTest">
         <annotations>
             <stories value="Orders with grouped products"/>
+            <description value="Logged in Customer ordered Grouped product with child products assigned to default Stock from Homepage"/>
             <title value="Logged in Customer ordered Grouped product with child products assigned to default Stock from Homepage"/>
             <testCaseId value="https://app.hiptest.com/projects/69435/tests-plan/folders/419537/scenarios/1437519"/>
             <severity value="CRITICAL"/>

@@ -36,6 +36,7 @@ define([
     return {
         isLoading: ko.observable(false),
         selectedLocation: ko.observable(null),
+        locationsCache: [],
 
         /**
          * Get shipping rates for specified address.
@@ -72,14 +73,20 @@ define([
             var self = this,
                 serviceUrl = resourceUrlManager.getUrlForNearbyPickupLocations(websiteCode, searchCriteria);
 
+            if (self.locationsCache[serviceUrl]) {
+                return $.Deferred().resolve(self.locationsCache[serviceUrl]).promise();
+            }
+
             self.isLoading(true);
 
             return storage
                 .get(serviceUrl, {}, false)
                 .then(function (result) {
-                    return _.map(result.items, function (address) {
+                    self.locationsCache[serviceUrl] = _.map(result.items, function (address) {
                         return self.formatAddress(address);
                     });
+
+                    return self.locationsCache[serviceUrl];
                 })
                 .fail(function (response) {
                     self.processError(response);
