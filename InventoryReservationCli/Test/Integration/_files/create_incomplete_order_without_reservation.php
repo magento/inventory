@@ -12,11 +12,12 @@ use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Store\Model\StoreManagerInterface;
 
-require '/var/www/magento2/dev/tests/integration/testsuite/Magento/Sales/_files/default_rollback.php';
-require '/var/www/magento2/dev/tests/integration/testsuite/Magento/Catalog/_files/product_simple.php';
+require __DIR__ . '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/default_rollback.php';
+require __DIR__ . '/../../../../../../../dev/tests/integration/testsuite/Magento/Catalog/_files/product_simple.php';
 /** @var \Magento\Catalog\Model\Product $product */
 
-$addressData = include '/var/www/magento2/dev/tests/integration/testsuite/Magento/Sales/_files/address_data.php';
+$addressData = include __DIR__ .
+    '/../../../../../../../dev/tests/integration/testsuite/Magento/Sales/_files/address_data.php';
 
 $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
