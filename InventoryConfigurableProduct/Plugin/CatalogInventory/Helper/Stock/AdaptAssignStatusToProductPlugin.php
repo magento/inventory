@@ -89,9 +89,9 @@ class AdaptAssignStatusToProductPlugin
             $stockItemData = $this->getStockItemData->execute($product->getSku(), $stockId);
             if (null !== $stockItemData) {
                 $salableConfigurable = (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE];
-                if (!$salableConfigurable) {
-                    return [$product, $status];
-                }
+//                if (!$salableConfigurable) {
+//                    return [$product, $status];
+//                }
             }
             $options = $this->configurable->getConfigurableOptions($product);
             $status = 0;
