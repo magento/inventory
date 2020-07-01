@@ -86,7 +86,8 @@ class SelectBuilder
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable)) ',
+                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
+//                    IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))',
                 ]
             )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -100,12 +101,13 @@ class SelectBuilder
                 ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'parent_product_entity.' . $linkField . ' = parent_link.parent_id',
                 []
-            )->joinInner(
-                ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
-                'inventory_stock_item.product_id = parent_product_entity.entity_id',
-                []
+//            )->joinInner(
+//                ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+//                'inventory_stock_item.product_id = parent_product_entity.entity_id',
+//                []
             )
-            ->group(['parent_product_entity.sku', 'inventory_stock_item.item_id']);
+//            ->group(['parent_product_entity.sku', 'inventory_stock_item.item_id']);
+            ->group(['parent_product_entity.sku']);
 
         return $select;
     }
