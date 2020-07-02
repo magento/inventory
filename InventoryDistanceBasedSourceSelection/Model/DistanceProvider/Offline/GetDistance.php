@@ -16,7 +16,7 @@ use Magento\InventoryDistanceBasedSourceSelectionApi\Api\GetDistanceInterface;
 class GetDistance implements GetDistanceInterface
 {
     // Earth radius in kilometers used for distance calculation on earth surface between two points
-    private const EARTH_RADIUS_KM = 6371000;
+    const EARTH_RADIUS_KM = 6371000;
 
     /**
      * @inheritdoc
