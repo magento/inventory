@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCache\Model\ResourceModel;
+namespace Magento\InventoryIndexer\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -70,15 +70,14 @@ class GetProductIdsByStockIds
             }
             $stockIndexTableName = $this->stockIndexTableNameResolver->execute($stockId);
             $connection = $this->resource->getConnection();
-
-                $sql = $connection->select()
-                    ->from(['stock_index' => $stockIndexTableName], [])
-                    ->join(
-                        ['product' => $this->resource->getTableName($this->productTableName)],
-                        'product.sku = stock_index.' . IndexStructure::SKU,
-                        ['product.entity_id']
-                    );
-                $productIds[] = $connection->fetchCol($sql);
+            $sql = $connection->select()
+                ->from(['stock_index' => $stockIndexTableName], [])
+                ->join(
+                    ['product' => $this->resource->getTableName($this->productTableName)],
+                    'product.sku = stock_index.' . IndexStructure::SKU,
+                    ['product.entity_id']
+                );
+            $productIds[] = $connection->fetchCol($sql);
         }
         $productIds = array_merge(...$productIds);
 
