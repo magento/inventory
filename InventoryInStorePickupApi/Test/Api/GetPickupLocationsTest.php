@@ -122,6 +122,12 @@ class GetPickupLocationsTest extends WebapiAbstract
                             [
                                 'sku' => 'SKU-3',
                             ],
+                            [
+                                'sku' => 'SKU-3',
+                            ],
+                            [
+                                'sku' => 'SKU-3',
+                            ],
                         ],
                     ],
                     'scopeType' => 'website',
