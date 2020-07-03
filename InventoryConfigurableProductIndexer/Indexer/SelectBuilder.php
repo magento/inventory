@@ -86,7 +86,7 @@ class SelectBuilder
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable))',
+                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
 //                    IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))',
                 ]
             )->joinInner(
