@@ -100,6 +100,10 @@ class SelectBuilder
                 ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'parent_product_entity.' . $linkField . ' = parent_link.parent_id',
                 []
+            )->joinInner(
+                ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                'inventory_stock_item.product_id = parent_product_entity.entity_id',
+                []
             )
             ->group(['parent_product_entity.sku', 'inventory_stock_item.item_id']);
 
