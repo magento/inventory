@@ -42,7 +42,7 @@ define([
             isAvailable: false,
             isStorePickupSelected: false,
             rate: {
-                'carrier_code': 'in_store',
+                'carrier_code': 'instore',
                 'method_code': 'pickup'
             },
             nearbySearchLimit: 50,

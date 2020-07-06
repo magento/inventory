@@ -72,7 +72,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      *
      * @magentoDbIsolation disabled
      * @magentoAppIsolation enabled
@@ -111,7 +111,7 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_in_store_pickup_quote_on_eu_website_guest.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_order.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      *
      * @magentoDbIsolation disabled
      */
