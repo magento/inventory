@@ -18,7 +18,7 @@
         <waitForPageLoad stepKey="waitForJavascriptToFinish"/>
         <click selector="{{AdminOrderFormPaymentSection.getShippingMethods}}" stepKey="clickShippingMethods"/>
         <waitForElementVisible selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" stepKey="waitForShippingOptions"/>
-        <selectOption selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" userInput="in_store_pickup" stepKey="checkInStorePickup"/>
+        <selectOption selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" userInput="instore_pickup" stepKey="checkInStorePickup"/>
         <selectOption selector="{{AdminOrderFormPaymentSection.pickupLocationSource}}" userInput="{{sourceName}}" stepKey="selectSourceToPickup"/>
     </actionGroup>
 </actionGroups>

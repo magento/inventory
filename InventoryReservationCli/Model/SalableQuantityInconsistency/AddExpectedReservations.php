@@ -74,7 +74,12 @@ class AddExpectedReservations
                 ->setSku($data['sku'])
                 ->setQuantity((float)$data['qty_ordered'])
                 ->setStockId($stockId)
-                ->setMetadata($this->serializer->serialize(['object_id' => (int)$data['entity_id']]))
+                ->setMetadata($this->serializer->serialize(
+                    [
+                        'object_id' => (int)$data['entity_id'],
+                        'object_increment_id' => (string)$data['increment_id']
+                    ]
+                ))
                 ->build();
 
             $collector->addReservation($reservation);
