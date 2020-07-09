@@ -93,8 +93,7 @@
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
-        <magentoCLI command="queue:consumers:start inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate"/>
-        <wait time="30" stepKey="waitForSalabilityUpdate"/>
+        <magentoCLI command="queue:consumers:start inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="90"/>
         <magentoCLI command="cache:clean full_page" stepKey="cleanFPC"/>
         <!--Verify, configurable product has 'out of stock' status.-->
         <amOnPage url="{{StorefrontProductPage.url($configurableProduct.custom_attributes[url_key]$)}}" stepKey="navigateToConfigurablePDP"/>
