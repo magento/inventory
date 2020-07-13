@@ -19,7 +19,6 @@ interface SalesEventInterface extends \Magento\Framework\Api\ExtensibleDataInter
      */
     const EVENT_ORDER_PLACED = 'order_placed';
     const EVENT_ORDER_CANCELED = 'order_canceled';
-    const EVENT_ORDER_PLACE_FAILED = 'order_place_failed';
     const EVENT_SHIPMENT_CREATED = 'shipment_created';
     const EVENT_CREDITMEMO_CREATED = 'creditmemo_created';
     const EVENT_INVOICE_CREATED = 'invoice_created';

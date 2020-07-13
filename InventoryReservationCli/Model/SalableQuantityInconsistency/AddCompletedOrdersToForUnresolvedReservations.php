@@ -38,17 +38,11 @@ class AddCompletedOrdersToForUnresolvedReservations
         $inconsistencies = $collector->getItems();
 
         $orderIds = [];
-        $orderIncrementIds = [];
         foreach ($inconsistencies as $inconsistency) {
-            if ($inconsistency->getObjectId()) {
-                $orderIds[] = $inconsistency->getObjectId();
-            }
-            if ($inconsistency->getOrderIncrementId()) {
-                $orderIncrementIds[] = $inconsistency->getOrderIncrementId();
-            }
+            $orderIds[] = $inconsistency->getObjectId();
         }
 
-        foreach ($this->getOrderDataForOrderInFinalState->execute($orderIds, $orderIncrementIds) as $orderData) {
+        foreach ($this->getOrderDataForOrderInFinalState->execute($orderIds) as $orderData) {
             $collector->addOrderData($orderData);
         }
 
