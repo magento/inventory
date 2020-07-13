@@ -118,7 +118,7 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
         $invoicedItemsToReturn = $result = [];
         $stockId = (int)$this->stockByWebsiteIdResolver->execute($websiteId)->getStockId();
         foreach ($invoicedItems as $sku => $qty) {
-            $sourceCode = $this->getSourceCodeWithHighestPriorityBySku($sku, $stockId);
+            $sourceCode = $this->getSourceCodeWithHighestPriorityBySku((string)$sku, $stockId);
             $invoicedItemsToReturn[$sourceCode][] = $this->sourceDeductedOrderItemFactory->create([
                 'sku' => $sku,
                 'quantity' => $qty
