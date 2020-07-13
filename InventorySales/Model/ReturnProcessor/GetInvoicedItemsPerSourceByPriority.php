@@ -165,6 +165,7 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
             }
         } catch (LocalizedException $e) {
             //Use Default Source if the source can't be resolved
+            return $sourceCode;
         }
 
         return $sourceCode;
