@@ -89,6 +89,7 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
