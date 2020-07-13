@@ -17,6 +17,7 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\InventorySales\Model\ReturnProcessor\GetInvoicedItemsPerSourceByPriority;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItemFactory;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItem;
