@@ -60,6 +60,8 @@ class SourceDeductionRequestFromShipmentFactory
     }
 
     /**
+     * Get source deduction request
+     *
      * @param Shipment $shipment
      * @param string $sourceCode
      * @param array $items

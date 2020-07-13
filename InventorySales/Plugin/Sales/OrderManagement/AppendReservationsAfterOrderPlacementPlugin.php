@@ -22,6 +22,10 @@ use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 
+/**
+ * Add reservation during order placement
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AppendReservationsAfterOrderPlacementPlugin
 {
     /**
@@ -111,6 +115,8 @@ class AppendReservationsAfterOrderPlacementPlugin
     }
 
     /**
+     * Add reservation after place order
+     *
      * @param OrderManagementInterface $subject
      * @param OrderInterface $order
      * @return OrderInterface
