@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Model\ReturnProcessor;
+namespace Magento\InventorySales\Test\Unit\Model\ReturnProcessor;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Sales\Model\Order;
@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test returning invoiced items per source by priority
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GetInvoicedItemsPerSourceByPriorityTest extends TestCase
 {

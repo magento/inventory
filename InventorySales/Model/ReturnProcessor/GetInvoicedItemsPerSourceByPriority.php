@@ -21,6 +21,9 @@ use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderIt
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItemsResultFactory;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItemsResult;
 
+/**
+ * Class returns invoice items per source with highest priority
+ */
 class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItemsInterface
 {
     /**
@@ -86,6 +89,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Returns invoice items per source with highest priority
+     *
      * @param OrderInterface $order
      * @param array $returnToStockItems
      * @return SourceDeductedOrderItemsResult[]
@@ -109,6 +114,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Returns source deducted invoice items
+     *
      * @param array $invoicedItems
      * @param int $websiteId
      * @return SourceDeductedOrderItemsResult[]
@@ -136,6 +143,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Returns source code with highest priority by sku
+     *
      * @param string $sku
      * @param int $stockId
      * @return string
@@ -162,6 +171,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Checks valid item
+     *
      * @param OrderItemModel $orderItem
      * @param array $returnToStockItems
      * @return bool
