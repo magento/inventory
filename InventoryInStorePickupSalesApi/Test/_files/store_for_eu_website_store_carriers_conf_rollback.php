@@ -13,12 +13,12 @@ $config = Bootstrap::getObjectManager()->get(
     MutableScopeConfigInterface::class
 );
 $config->setValue(
-    'carriers/in_store/active',
+    'carriers/instore/active',
     0,
     ScopeConfigInterface::SCOPE_TYPE_DEFAULT
 );
 $config->setValue(
-    'carriers/in_store/price',
+    'carriers/instore/price',
     0,
     ScopeConfigInterface::SCOPE_TYPE_DEFAULT
 );
