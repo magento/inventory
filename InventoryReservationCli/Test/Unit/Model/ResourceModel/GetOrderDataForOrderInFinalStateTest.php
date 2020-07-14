@@ -97,7 +97,7 @@ class GetOrderDataForOrderInFinalStateTest extends TestCase
                     [$defaultConnectionName, $defaultConnection],
                 ]
             );
-        $this->assertEquals($expected, $this->model->execute([1, 2, 3], []));
+        $this->assertEquals($expected, $this->model->execute([1, 2, 3]));
     }
 
     /**

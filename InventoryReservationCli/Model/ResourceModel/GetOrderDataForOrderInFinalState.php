@@ -41,16 +41,12 @@ class GetOrderDataForOrderInFinalState
      * Load order data for order, which are in final state
      *
      * @param array $orderIds
-     * @param array $orderIncrementIds
      * @return array
      */
-    public function execute(array $orderIds, array $orderIncrementIds): array
+    public function execute(array $orderIds): array
     {
         $connection = $this->resourceConnection->getConnection('sales');
         $orderTableName = $this->resourceConnection->getTableName('sales_order', 'sales');
-
-        $entityIdCondition = $connection->quoteInto('main_table.entity_id IN (?)', $orderIds);
-        $incrementIdCondition = $connection->quoteInto('main_table.increment_id IN (?)', $orderIncrementIds);
 
         $query = $connection
             ->select()
@@ -63,7 +59,7 @@ class GetOrderDataForOrderInFinalState
                     'main_table.store_id'
                 ]
             )
-            ->where($entityIdCondition . ' OR ' . $incrementIdCondition)
+            ->where('main_table.entity_id IN (?)', $orderIds)
             ->where('main_table.state IN (?)', $this->getCompleteOrderStateList->execute());
 
         $orders = $connection->fetchAll($query);
