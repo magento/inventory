@@ -22,10 +22,12 @@ class SalesEventToArrayConverter
      */
     public function execute(SalesEventInterface $salesEvent): array
     {
+        $extensionData = $salesEvent->getExtensionAttributes()->__toArray();
         return [
             'event_type' => $salesEvent->getType(),
             'object_type' => $salesEvent->getObjectType(),
             'object_id' => $salesEvent->getObjectId(),
+            'object_increment_id' => $extensionData['objectIncrementId'] ?? ''
         ];
     }
 }

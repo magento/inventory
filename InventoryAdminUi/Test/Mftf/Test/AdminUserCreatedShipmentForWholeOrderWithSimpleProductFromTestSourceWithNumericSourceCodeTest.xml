@@ -10,6 +10,7 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminUserCreatedShipmentForWholeOrderWithSimpleProductFromTestSourceWithNumericSourceCodeTest">
         <annotations>
+            <stories value="Admin user created shipment for whole order with Simple product from Test source with numeric source code"/>
             <title value="Admin user created shipment for whole order with Simple product from Test source with numeric source code"/>
             <description value="Check sources with numeric source code can be used for shipment creation."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735286/scenarios/3041438"/>
