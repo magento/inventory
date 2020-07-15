@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AddVisualSwatchCustomSourceToProductActionGroup" extends="AddVisualSwatchToProductActionGroup">
+        <annotations>
+            <description>Adds the provided Visual Swatch Attribute and Options (2) to a Product on the Admin Product creation/edit page considering source.</description>
+        </annotations>
+        <arguments>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+        </arguments>
+
+        <remove keyForRemoval="enterAttributeQuantity"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow" after="clickOnApplySingleQuantityToEachSku"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForGrid" after="openSelectSourcesModalWindow"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter" after="waitForGrid"/>
+        <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{sourceName}}" stepKey="fillKeywordSearchField" after="clearSourcesFilter"/>
+        <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch" after="fillKeywordSearchField"/>
+        <waitForPageLoad stepKey="waitForSearch" after="clickKeywordSearch"/>
+        <click selector="{{AdminGridRow.checkboxByValue(sourceName)}}" stepKey="selectCustomSource" after="waitForSearch"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources" after="selectCustomSource"/>
+        <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="{{defaultProductQty.value}}" stepKey="fillQuantityForCustomSource" after="doneAssignSources"/>
+    </actionGroup>
+</actionGroups>
