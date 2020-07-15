@@ -13,11 +13,7 @@
     </argument>
     <settings>
         <buttons>
-            <button name="add">
-                <url path="*/*/new"/>
-                <class>primary</class>
-                <label translate="true">Add New Stock</label>
-            </button>
+            <button name="add" class="Magento\InventoryAdminUi\Ui\Component\Listing\Stock\Buttons\NewButton"/>
         </buttons>
         <spinner>inventory_stock_listing_columns</spinner>
         <deps>
@@ -58,7 +54,7 @@
                 </templates>
             </settings>
         </filters>
-        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions" class="Magento\InventoryAdminUi\Ui\Component\Listing\Stock\MassAction">
             <action name="delete">
                 <settings>
                     <confirm>
@@ -73,7 +69,7 @@
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
-    <columns name="inventory_stock_listing_columns">
+    <columns name="inventory_stock_listing_columns" class="Magento\InventoryAdminUi\Ui\Component\Listing\Stock\Columns">
         <settings>
             <editorConfig>
                 <param name="clientConfig" xsi:type="array">
@@ -127,7 +123,7 @@
                 <sortable>false</sortable>
             </settings>
         </column>
-        <actionsColumn name="actions" class="Magento\Backend\Ui\Component\Listing\Column\EditAction" sortOrder="100">
+        <actionsColumn name="actions" class="Magento\InventoryAdminUi\Ui\Component\Listing\Stock\Column\EditAction" sortOrder="100">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="editUrlPath" xsi:type="string">inventory/stock/edit</item>
