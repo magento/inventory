@@ -16,6 +16,7 @@ use Magento\Framework\Filesystem;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -23,6 +24,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/2219820
+ *
+ * @magentoDbIsolation disabled
  */
 class ProductTest extends TestCase
 {
@@ -75,8 +78,10 @@ class ProductTest extends TestCase
 
     /**
      * Test that following a Product Import Source Item is created as expected
+     *
+     * @return void
      */
-    public function testSourceItemCreatedOnProductImport()
+    public function testSourceItemCreatedOnProductImport(): void
     {
         $pathToFile = __DIR__ . '/_files/product_import.csv';
         /** @var Product $productImporterModel */
@@ -106,8 +111,10 @@ class ProductTest extends TestCase
 
     /**
      * Test that following a Product Import Source Item is updated as expected
+     *
+     * @return void
      */
-    public function testSourceItemUpdatedOnProductImport()
+    public function testSourceItemUpdatedOnProductImport(): void
     {
         $pathToFile = __DIR__ . '/_files/product_import_updated_qty.csv';
         /** @var Product $productImporterModel */
@@ -138,9 +145,9 @@ class ProductTest extends TestCase
     /**
      * Get List of Source Items which match SKU and Source ID of dummy data
      *
-     * @return \Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface
+     * @return SourceItemSearchResultsInterface
      */
-    private function getSourceItemList()
+    private function getSourceItemList(): SourceItemSearchResultsInterface
     {
         /** @var SearchCriteriaBuilder $searchCriteria */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
@@ -165,7 +172,7 @@ class ProductTest extends TestCase
      * @param SourceItemInterface[] $sourceItems
      * @return array
      */
-    private function buildDataArray(array $sourceItems)
+    private function buildDataArray(array $sourceItems): array
     {
         $comparableArray = [];
         foreach ($sourceItems as $sourceItem) {
@@ -190,7 +197,7 @@ class ProductTest extends TestCase
     private function getProductImporterModel(
         $pathToFile,
         $behavior = Import::BEHAVIOR_ADD_UPDATE
-    ) {
+    ): Product {
         /** @var Filesystem\Directory\WriteInterface $directory */
         $directory = $this->filesystem
             ->getDirectoryWrite(DirectoryList::ROOT);
