@@ -71,6 +71,9 @@ class IsFulfillable
 
         if ($sourceCode) {
             foreach ($order->getItems() as $item) {
+                if ($item->getHasChildren()) {
+                    continue;
+                }
                 if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
                     return false;
                 }

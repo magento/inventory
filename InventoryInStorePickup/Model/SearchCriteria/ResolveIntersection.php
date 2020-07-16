@@ -53,7 +53,9 @@ class ResolveIntersection implements ResolverInterface
         $extensionAttributes = $searchRequest->getExtensionAttributes();
         $skus = [];
         foreach ($extensionAttributes->getProductsInfo() as $item) {
-            $skus[] = $item->getSku();
+            if (!in_array($item->getSku(), $skus)) {
+                $skus[] = $item->getSku();
+            }
         }
 
         $codes = $this->getPickupLocationIntersectionForSkus->execute($skus);
