@@ -16,6 +16,7 @@ use Magento\Framework\Data\Collection\EntityFactoryInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Inventory\Model\ResourceModel\Source;
@@ -156,6 +157,7 @@ class LowQuantityCollection extends AbstractCollection
      * JoinCatalogProduct depends on dynamic condition 'filterStoreId'
      *
      * @return void
+     * @throws NoSuchEntityException
      */
     private function joinCatalogProduct(): void
     {
@@ -301,8 +303,65 @@ class LowQuantityCollection extends AbstractCollection
     private function addSourceItemInStockFilter(): void
     {
         $condition = '(' . SourceItemInterface::QUANTITY . ' > 0 AND main_table.status = ' .
-            SourceItemInterface::STATUS_IN_STOCK . ') OR
-            (' . SourceItemInterface::QUANTITY . ' = 0)';
+            SourceItemInterface::STATUS_IN_STOCK . ')';
         $this->getSelect()->where($condition);
+    }
+
+    /**
+     * Filter collection based on notifyStockQty
+     *
+     * @param int|null $storeId
+     * @return void
+     */
+    public function useNotifyStockQtyFilter(int $storeId = null): void
+    {
+        $notifyStockQtyConfigValue = $this->getNotifyQuantityFromConfiguration($storeId);
+        array_filter(
+            $this->getData(),
+            function ($product) use ($notifyStockQtyConfigValue) {
+                $sourceItemConfigurationData = $this->getAssignedSourceDetails(
+                    $product[SourceInterface::SOURCE_CODE],
+                    $product['sku']
+                );
+                $notifyStockQuantity = empty($sourceItemConfigurationData) ? $notifyStockQtyConfigValue :
+                    (int) $sourceItemConfigurationData[SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY];
+                $productQuantity = (int) $product['quantity'];
+                $productStatus = (int) $product['status'];
+                return $productQuantity == 0 ? false : (
+                    $productQuantity < $notifyStockQuantity &&
+                    $productStatus == SourceItemInterface::STATUS_IN_STOCK
+                );
+            }
+        );
+    }
+
+    /**
+     * Get notifyQty value from store configuration
+     *
+     * @param int|null $storeId
+     * @return int
+     */
+    private function getNotifyQuantityFromConfiguration(int $storeId = null): int
+    {
+        return (int) $this->stockConfiguration->getNotifyStockQty($storeId);
+    }
+
+    /**
+     * Get assigned source details ofr the product
+     *
+     * @param string $sourceCode
+     * @param string $sku
+     * @return array|null
+     */
+    private function getAssignedSourceDetails(string $sourceCode, string $sku)
+    {
+        $sourceItemConfigurationTable = $this->getTable('inventory_low_stock_notification_configuration');
+        $select = $this->getConnection()->select()
+            ->from($sourceItemConfigurationTable)
+            ->where(SourceItemConfigurationInterface::SOURCE_CODE . ' = ?', $sourceCode)
+            ->where(SourceItemConfigurationInterface::SKU . ' = ?', $sku)
+            ->where(SourceItemConfigurationInterface::INVENTORY_NOTIFY_QTY . ' IS NOT NULL');
+        $row = $this->getConnection()->fetchRow($select);
+        return $row ? $row : null;
     }
 }

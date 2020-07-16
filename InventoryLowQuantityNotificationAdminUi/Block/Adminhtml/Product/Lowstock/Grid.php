@@ -10,6 +10,7 @@ namespace Magento\InventoryLowQuantityNotificationAdminUi\Block\Adminhtml\Produc
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget\Grid as GridWidget;
 use Magento\Backend\Helper\Data;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\LowQuantityCollection;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\LowQuantityCollectionFactory;
 
@@ -42,7 +43,10 @@ class Grid extends GridWidget
     }
 
     /**
+     * Prepare collection widget
+     *
      * @return GridWidget
+     * @throws LocalizedException
      */
     protected function _prepareCollection(): GridWidget
     {
@@ -62,14 +66,17 @@ class Grid extends GridWidget
             $storeId = null;
         }
 
-        /** @var LowQuantityCollection $collection  */
         $collection = $this->lowQuantityCollectionFactory->create();
+        $this->setCollection($collection);
+        parent::_prepareCollection();
 
         if (null !== $storeId) {
             $collection->addStoreFilter((int)$storeId);
         }
-        $this->setCollection($collection);
+        if (!empty($collection)) {
+            $collection->useNotifyStockQtyFilter((int)$storeId);
+        }
 
-        return parent::_prepareCollection();
+        return $this;
     }
 }
