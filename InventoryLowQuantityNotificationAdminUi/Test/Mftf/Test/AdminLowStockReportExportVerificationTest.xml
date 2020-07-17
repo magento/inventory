@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminLowStockReportExportVerificationTest">
+        <annotations>
+            <stories value="Low Stock Report Export Error"/>
+            <title value="Low Stock Report Export Error"/>
+            <description value="Verify Low Stock Report Export Error"/>
+            <testCaseId value="MC-33760"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create category and product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="firstProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Enable Manage Stock in case it's been disabled in previous tests.-->
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <!--Set "Notify Quantity Below" configuration.-->
+            <magentoCLI command="config:set {{NotifyQuantityBelow.path}} {{NotifyQuantityBelow.value}}" stepKey="setNotifyQuantityBelow"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+        </before>
+        <after>
+            <deleteData createDataKey="firstProduct" stepKey="deleteFirstProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Revert "Notify Quantity Below" configuration.-->
+            <magentoCLI command="config:set {{RevertNotifyQuantityBelow.path}} {{RevertNotifyQuantityBelow.value}}" stepKey="revertNotifyQtyBelow"/>
+            <!--Disable "Manage Stock" in configuration.-->
+            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Disable additional sources.-->
+        <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+        <!--Set first product qty to 4.-->
+        <amOnPage url="{{AdminProductEditPage.url($$firstProduct.id$$)}}" stepKey="openFirstProductEditPageToChangeQty4"/>
+        <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="4" stepKey="fillFirstProductQtyWith4"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectFirstProductInStockStatus"/>
+        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveFirstProductWithChangedQuantity"/>
+        <waitForPageLoad time="60" stepKey="waitForFirstProductSave"/>
+
+        <!--Verify report is available with in stock product.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPage"/>
+        <click selector="{{LowStockProductGridSection.exportButton}}" stepKey="exportCSV"/>
+        <waitForPageLoad time="30" stepKey="waitForExport"/>
+        <dontSee userInput="Could not export low stock report" stepKey="verifyThereIsNoError"/>
+
+        <!--Verify there are no errors and we can see the product after export has been done.-->
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="searchFirstProduct">
+            <argument name="productSku" value="$$firstProduct.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyFirstProductInReport">
+            <argument name="product" value="$$firstProduct$$"/>
+            <argument name="productQty" value="4"/>
+            <argument name="source" value="_defaultSource"/>
+        </actionGroup>
+    </test>
+</tests>
