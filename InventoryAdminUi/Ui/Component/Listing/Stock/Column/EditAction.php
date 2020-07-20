@@ -46,20 +46,20 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
     /**
      * @inheritDoc
      */
-    public function prepareDataSource(array $dataSource)
+    public function prepareDataSource(array $sourceData)
     {
-        $dataSource = parent::prepareDataSource($dataSource);
-        $actionsName = $this->getData('name');
+        $sourceData = parent::prepareDataSource($sourceData);
+        $actionsTitle = $this->getData('name');
 
-        if (isset($dataSource['data']['items'])) {
-            foreach ($dataSource['data']['items'] as &$item) {
-                if (!empty($item[$actionsName]['edit'])) {
-                    $item[$actionsName]['edit']['hidden'] =
+        if (isset($sourceData['data']['items'])) {
+            foreach ($sourceData['data']['items'] as &$item) {
+                if (!empty($item[$actionsTitle]['edit'])) {
+                    $item[$actionsTitle]['edit']['hidden'] =
                         !$this->authorization->isAllowed('Magento_InventoryApi::stock_edit');
                 }
             }
         }
 
-        return $dataSource;
+        return $sourceData;
     }
 }
