@@ -4,15 +4,15 @@
     "require": {
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-export-stock-api": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-sales": "*",
+        "magento/module-inventory-api": "1.1.*",
+        "magento/module-inventory-export-stock-api": "1.1.*",
+        "magento/module-inventory-sales-api": "1.1.*",
+        "magento/module-inventory-sales": "1.1.*",
         "magento/module-catalog": "*",
         "magento/module-catalog-inventory": "*",
-        "magento/module-inventory-indexer": "*",
-        "magento/module-inventory-configuration": "*",
-        "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-indexer": "2.0.*",
+        "magento/module-inventory-configuration": "1.1.*",
+        "magento/module-inventory-configuration-api": "1.1.*",
         "magento/module-configurable-product": "*",
         "magento/module-grouped-product": "*"
     },
@@ -28,5 +28,6 @@
         "psr-4": {
             "Magento\\InventoryExportStock\\": ""
         }
-    }
+    },
+    "version": "1.1.0"
 }

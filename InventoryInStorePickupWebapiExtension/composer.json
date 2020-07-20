@@ -19,5 +19,6 @@
         "psr-4": {
             "Magento\\InventoryInStorePickupWebapiExtension\\": ""
         }
-    }
+    },
+    "version": "1.0.0"
 }
