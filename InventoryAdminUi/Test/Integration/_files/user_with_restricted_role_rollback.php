@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 declare(strict_types=1);
 
 use Magento\Authorization\Model\RoleFactory;
@@ -18,7 +19,7 @@ use Magento\Authorization\Model\Rules;
 $objectManager = Bootstrap::getObjectManager();
 /** @var User $user */
 $user = $objectManager->create(UserFactory::class)->create();
-$user->load('stocksAccessUser', 'username');
+$user->load('sourceAccessUser', 'username');
 
 if ($user->getId() !== null) {
     $user->delete();
@@ -26,7 +27,7 @@ if ($user->getId() !== null) {
 
 /** @var Role $role */
 $role = Bootstrap::getObjectManager()->get(RoleFactory::class)->create();
-$role->load('stocks_access_role', 'role_name');
+$role->load('source_access_role', 'role_name');
 /** @var Rules $rules */
 $rules = Bootstrap::getObjectManager()->get(RulesFactory::class)->create();
 $rules->load($role->getId(), 'role_id');
