@@ -39,7 +39,8 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
         array $data = [],
         ?AuthorizationInterface $authorizationObject = null
     ) {
-        $this->authorizationObject = $authorizationObject ?? ObjectManager::getInstance()->get(AuthorizationInterface::class);
+        $this->authorizationObject = $authorizationObject ?? ObjectManager::getInstance()
+                ->get(AuthorizationInterface::class);
         parent::__construct($context, $uiComponentFactory, $urlBuilder, $components, $data);
     }
 
