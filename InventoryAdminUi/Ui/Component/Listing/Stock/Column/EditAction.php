@@ -21,7 +21,7 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
     /**
      * @var AuthorizationInterface
      */
-    private $authorization;
+    private $authorizationObject;
 
     /**
      * @param ContextInterface $context
@@ -29,7 +29,7 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
      * @param UrlInterface $urlBuilder
      * @param array $components
      * @param array $data
-     * @param AuthorizationInterface|null $authorization
+     * @param AuthorizationInterface|null $authorizationObject
      */
     public function __construct(
         ContextInterface $context,
@@ -37,9 +37,9 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
         UrlInterface $urlBuilder,
         array $components = [],
         array $data = [],
-        ?AuthorizationInterface $authorization = null
+        ?AuthorizationInterface $authorizationObject = null
     ) {
-        $this->authorization = $authorization ?? ObjectManager::getInstance()->get(AuthorizationInterface::class);
+        $this->authorizationObject = $authorizationObject ?? ObjectManager::getInstance()->get(AuthorizationInterface::class);
         parent::__construct($context, $uiComponentFactory, $urlBuilder, $components, $data);
     }
 
@@ -55,7 +55,7 @@ class EditAction extends \Magento\Backend\Ui\Component\Listing\Column\EditAction
             foreach ($sourceData['data']['items'] as &$item) {
                 if (!empty($item[$actionsTitle]['edit'])) {
                     $item[$actionsTitle]['edit']['hidden'] =
-                        !$this->authorization->isAllowed('Magento_InventoryApi::stock_edit');
+                        !$this->authorizationObject->isAllowed('Magento_InventoryApi::stock_edit');
                 }
             }
         }
