@@ -111,7 +111,7 @@ class CancelOrderItemObserver implements ObserverInterface
 
         /** @var SalesEventExtensionInterface */
         $salesEventExtension = $this->salesEventExtensionFactory->create([
-            'data' => ['objectIncrementId' => (string)$orderItem->getIncrementId()]
+            'data' => ['objectIncrementId' => (string)$orderItem->getOrder()->getIncrementId()]
         ]);
 
         $salesEvent = $this->salesEventFactory->create([
