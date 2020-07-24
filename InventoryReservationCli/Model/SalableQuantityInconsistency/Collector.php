@@ -46,29 +46,21 @@ class Collector
     private $getOrderIncrementId;
 
     /**
-     * @var GetOrderId
-     */
-    private $getOrderId;
-
-    /**
      * @param SalableQuantityInconsistencyFactory $salableQuantityInconsistencyFactory
      * @param SerializerInterface $serializer
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetOrderIncrementId $getOrderIncrementId
-     * @param GetOrderId $getOrderId
      */
     public function __construct(
         SalableQuantityInconsistencyFactory $salableQuantityInconsistencyFactory,
         SerializerInterface $serializer,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        GetOrderIncrementId $getOrderIncrementId,
-        GetOrderId $getOrderId
+        GetOrderIncrementId $getOrderIncrementId
     ) {
         $this->salableQuantityInconsistencyFactory = $salableQuantityInconsistencyFactory;
         $this->serializer = $serializer;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getOrderIncrementId = $getOrderIncrementId;
-        $this->getOrderId = $getOrderId;
     }
 
     /**
