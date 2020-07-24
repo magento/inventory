@@ -12,6 +12,7 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterfaceFactory;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterface;

@@ -12,6 +12,7 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
 use Magento\InventoryShipping\Model\GetSourceSelectionResultFromInvoice;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterface;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface;
