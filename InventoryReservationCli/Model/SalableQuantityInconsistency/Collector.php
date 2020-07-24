@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderId;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistencyFactory;
 use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderIncrementId;
