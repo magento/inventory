@@ -49,24 +49,32 @@ class GetSourceDeductionRequestFromSourceSelection
     private $websiteRepository;
 
     /**
+     * @var SalesEventExtensionFactory;
+     */
+    private $salesEventExtensionFactory;
+
+    /**
      * @param ItemToDeductInterfaceFactory $itemToDeductFactory
      * @param SourceDeductionRequestInterfaceFactory $sourceDeductionRequestFactory
      * @param SalesChannelInterfaceFactory $salesChannelFactory
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param WebsiteRepositoryInterface $websiteRepository
+     * @param SalesEventExtensionFactory $salesEventExtensionFactory
      */
     public function __construct(
         ItemToDeductInterfaceFactory $itemToDeductFactory,
         SourceDeductionRequestInterfaceFactory $sourceDeductionRequestFactory,
         SalesChannelInterfaceFactory $salesChannelFactory,
         SalesEventInterfaceFactory $salesEventFactory,
-        WebsiteRepositoryInterface $websiteRepository
+        WebsiteRepositoryInterface $websiteRepository,
+        SalesEventExtensionFactory $salesEventExtensionFactory
     ) {
         $this->itemToDeductFactory = $itemToDeductFactory;
         $this->sourceDeductionRequestFactory = $sourceDeductionRequestFactory;
         $this->salesChannelFactory = $salesChannelFactory;
         $this->salesEventFactory = $salesEventFactory;
         $this->websiteRepository = $websiteRepository;
+        $this->salesEventExtensionFactory = $salesEventExtensionFactory;
     }
 
     /**
@@ -90,11 +98,17 @@ class GetSourceDeductionRequestFromSourceSelection
             ]
         ]);
 
+        /** @var SalesEventExtensionInterface */
+        $salesEventExtension = $this->salesEventExtensionFactory->create([
+            'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
+        ]);
+
         $salesEvent = $this->salesEventFactory->create([
             'type' => SalesEventInterface::EVENT_CREDITMEMO_CREATED,
             'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
             'objectId' => (string)$order->getEntityId()
         ]);
+        $salesEvent->setExtensionAttributes($salesEventExtension);
 
         foreach ($this->getItemsPerSource($sourceSelectionResult->getSourceSelectionItems()) as $sourceCode => $items) {
             /** @var SourceDeductionRequestInterface[] $sourceDeductionRequests */

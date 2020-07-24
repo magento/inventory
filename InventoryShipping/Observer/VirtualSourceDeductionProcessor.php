@@ -57,12 +57,18 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
     private $placeReservationsForSalesEvent;
 
     /**
+     * @var SalesEventExtensionFactory;
+     */
+    private $salesEventExtensionFactory;
+
+    /**
      * @param GetSourceSelectionResultFromInvoice $getSourceSelectionResultFromInvoice
      * @param SourceDeductionServiceInterface $sourceDeductionService
      * @param SourceDeductionRequestsFromSourceSelectionFactory $sourceDeductionRequestsFromSourceSelectionFactory
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param ItemToSellInterfaceFactory $itemToSellFactory
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
+     * @param SalesEventExtensionFactory $salesEventExtensionFactory
      */
     public function __construct(
         GetSourceSelectionResultFromInvoice $getSourceSelectionResultFromInvoice,
@@ -70,7 +76,8 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
         SourceDeductionRequestsFromSourceSelectionFactory $sourceDeductionRequestsFromSourceSelectionFactory,
         SalesEventInterfaceFactory $salesEventFactory,
         ItemToSellInterfaceFactory $itemToSellFactory,
-        PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
+        PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
+        SalesEventExtensionFactory $salesEventExtensionFactory
     ) {
         $this->getSourceSelectionResultFromInvoice = $getSourceSelectionResultFromInvoice;
         $this->sourceDeductionService = $sourceDeductionService;
@@ -78,6 +85,7 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
         $this->salesEventFactory = $salesEventFactory;
         $this->itemToSellFactory = $itemToSellFactory;
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
+        $this->salesEventExtensionFactory = $salesEventExtensionFactory;
     }
 
     /**
@@ -95,12 +103,18 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
 
         $sourceSelectionResult = $this->getSourceSelectionResultFromInvoice->execute($invoice);
 
+        /** @var SalesEventExtensionInterface */
+        $salesEventExtension = $this->salesEventExtensionFactory->create([
+            'data' => ['objectIncrementId' => (string)$invoice->getOrder()->getIncrementId()]
+        ]);
+
         /** @var SalesEventInterface $salesEvent */
         $salesEvent = $this->salesEventFactory->create([
             'type' => SalesEventInterface::EVENT_INVOICE_CREATED,
             'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
             'objectId' => $invoice->getOrderId(),
         ]);
+        $salesEvent->setExtensionAttributes($salesEventExtension);
 
         $sourceDeductionRequests = $this->sourceDeductionRequestsFromSourceSelectionFactory->create(
             $sourceSelectionResult,
