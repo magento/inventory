@@ -86,6 +86,8 @@ class CancelOrderItemObserver implements ObserverInterface
     }
 
     /**
+     * Add compensatory reservation for the canceled order
+     *
      * @param EventObserver $observer
      * @return void
      */

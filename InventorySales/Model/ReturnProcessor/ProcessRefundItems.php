@@ -23,6 +23,9 @@ use Magento\InventorySourceDeductionApi\Model\ItemToDeductFactory;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestFactory;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionService;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ProcessRefundItems implements ProcessRefundItemsInterface
 {
     /**
@@ -112,7 +115,7 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(
@@ -184,6 +187,8 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     }
 
     /**
+     * Returns total deducted quantity
+     *
      * @param $item
      * @param array $deductedItems
      * @return float
@@ -205,6 +210,8 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     }
 
     /**
+     * Return sales channel for order
+     *
      * @param OrderInterface $order
      * @return SalesChannelInterface
      */
