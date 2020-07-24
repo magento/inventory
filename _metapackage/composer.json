@@ -50,6 +50,7 @@
         "magento/module-inventory-shipping-admin-ui": "*",
         "magento/module-inventory-source-deduction-api": "*",
         "magento/module-inventory-source-selection": "*",
-        "magento/module-inventory-source-selection-api": "*"
+        "magento/module-inventory-source-selection-api": "*",
+        "magento/module-inventory-visual-merchandiser": "*"
     }
 }
