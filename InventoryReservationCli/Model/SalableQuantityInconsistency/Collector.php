@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderId;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistencyFactory;
 use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderIncrementId;
@@ -46,21 +47,29 @@ class Collector
     private $getOrderIncrementId;
 
     /**
+     * @var GetOrderId
+     */
+    private $getOrderId;
+
+    /**
      * @param SalableQuantityInconsistencyFactory $salableQuantityInconsistencyFactory
      * @param SerializerInterface $serializer
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param GetOrderIncrementId $getOrderIncrementId
+     * @param GetOrderId $getOrderId
      */
     public function __construct(
         SalableQuantityInconsistencyFactory $salableQuantityInconsistencyFactory,
         SerializerInterface $serializer,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
-        GetOrderIncrementId $getOrderIncrementId
+        GetOrderIncrementId $getOrderIncrementId,
+        GetOrderId $getOrderId
     ) {
         $this->salableQuantityInconsistencyFactory = $salableQuantityInconsistencyFactory;
         $this->serializer = $serializer;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->getOrderIncrementId = $getOrderIncrementId;
+        $this->getOrderId = $getOrderId;
     }
 
     /**
@@ -72,7 +81,7 @@ class Collector
     {
         $metadata = $this->serializer->unserialize($reservation->getMetadata());
         $objectId = $metadata['object_id'];
-        $objectIncrementId = $metadata['object_increment_id'] ?? $this->getOrderIncrementId->execute((int)$objectId);
+        $objectIncrementId = $metadata['object_increment_id'] ?: $this->getOrderIncrementId->execute((int)$objectId);
         $stockId = $reservation->getStockId();
         $key = $objectIncrementId . '-' . $stockId;
 
