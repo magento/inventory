@@ -8,12 +8,16 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
-use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
+use Magento\Sales\Api\Data\OrderItemInterface;
 
+/**
+ * @inheritDoc
+ */
 class GetSkuFromOrderItem implements GetSkuFromOrderItemInterface
 {
     /**
@@ -43,9 +47,14 @@ class GetSkuFromOrderItem implements GetSkuFromOrderItemInterface
      */
     public function execute(OrderItemInterface $orderItem): string
     {
+        $itemSku = $orderItem->getSku();
+        if ($orderItem->getProductType() === Type::TYPE_BUNDLE) {
+            $orderItemOptions = $orderItem->getProductOptions();
+            $value = reset($orderItemOptions['bundle_options']);
+            $value = reset($value['value']);
+            $itemSku = $value['title'];
+        }
         try {
-            $itemSku = $orderItem->getSku();
-
             if ($this->isSourceItemManagementAllowedForProductType->execute($orderItem->getProductType())) {
                 $itemSku = $this->getSkusByProductIds->execute(
                     [$orderItem->getProductId()]

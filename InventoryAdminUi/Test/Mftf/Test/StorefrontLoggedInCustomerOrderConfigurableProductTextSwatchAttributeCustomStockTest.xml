@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontLoggedInCustomerOrderConfigurableProductTextSwatchAttributeCustomStockTest">
+        <annotations>
+            <stories value="Configurable Product Custom Stock."/>
+            <title value="Order Configurable Product with Text Swatch on Additional Stock."/>
+            <description value="Verify customer able to order configurable product with text swatch on additional stock."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419535/scenarios/1432531"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Enable 'Mange Stock' in configuration.-->
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <magentoCLI command="cache:clean config" stepKey="cleanCache"/>
+            <!--Create test data.-->
+            <createData entity="Msi_US_Customer" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="_minimalSource" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <!--Create text swatch attribute with 3 options:  Black, White and Blue-->
+            <actionGroup ref="AddTextSwatchToProductActionGroup" stepKey="addTextSwatchAttribute">
+                <argument name="attributeName" value="{{ProductColorAttribute.frontend_label}}"/>
+                <argument name="attributeCode" value="{{ProductColorAttribute.attribute_code}}"/>
+                <argument name="option1" value="Black"/>
+                <argument name="option2" value="White"/>
+                <argument name="option3" value="Blue"/>
+                <argument name="usedInProductListing" value="Yes"/>
+            </actionGroup>
+            <!--Start creating configurable product.-->
+            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
+            <waitForPageLoad stepKey="waitForProductGridPageLoad"/>
+            <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="createConfigurableProduct">
+                <argument name="product" value="ConfigurableMsiProduct"/>
+            </actionGroup>
+            <!--Fill main product fields.-->
+            <actionGroup ref="FillMainProductFormNoWeightActionGroup" stepKey="fillMainProductForm">
+                <argument name="product" value="ConfigurableMsiProduct"/>
+            </actionGroup>
+            <!--Generate variations.-->
+            <actionGroup ref="AdminCreateOptionsForAttributeMultiStockActionGroup" stepKey="generateVariations">
+                <argument name="attributeCode" value="{{ProductColorAttribute.attribute_code}}"/>
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveConfigurableProductActionGroup" stepKey="saveConfigurable">
+                <argument name="product" value="ConfigurableMsiProduct"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToConfigurableProduct">
+                <argument name="categoryName" value="$$category.name$$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <!--Delete configurable product.-->
+            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGridToDeleteProducts"/>
+            <actionGroup ref="DeleteProductActionGroup" stepKey="deleteConfigurableProduct">
+                <argument name="productName" value="ConfigurableMsiProduct.name"/>
+            </actionGroup>
+            <!--Assign Default Stock to Main Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable main website source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalWebsiteSource">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Add configurable product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$" />
+        </actionGroup>
+        <actionGroup ref="StorefrontAddConfigurableProductWithTextSwatchToTheCartActionGroup" stepKey="addConfigurableProductToCart">
+            <argument name="urlKey" value="{{ConfigurableMsiProduct.urlKey}}" />
+            <argument name="productAttribute" value="{{ProductColorAttribute.frontend_label}}"/>
+            <argument name="productOption" value="White"/>
+            <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Verify Order.-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" stepKey="waitForViewOrderedQuantity"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Ordered {{tenPiecesAddToCart.value}}" stepKey="verifyOrderedQuantity"/>
+        <!--Verify product quantity.-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findConfigurableProductVariation">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="{{ConfigurableMsiProduct.sku}}-White"/>
+        </actionGroup>
+        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
+            <argument name="sourceName" value="$source.source[name]$"/>
+            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
+            <argument name="stockName" value="$stock.stock[name]$"/>
+            <argument name="stockQty" value="{{defaultProductQtyBoughtWith10Pieces.value}}"/>
+        </actionGroup>
+    </test>
+</tests>

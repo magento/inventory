@@ -7,11 +7,12 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer">
-        <plugin name="configurable_product_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\SourceItemIndexerPlugin" sortOrder="10"/>
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+        <plugin name="configurable_product_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" sortOrder="10"/>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\StockIndexer">
-        <plugin name="configurable_product_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\StockIndexerPlugin"/>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
+        <plugin name="configurable_product_full_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin"/>
+        <plugin name="configurable_product_index_list" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin"/>
     </type>
     <type name="Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer">
         <arguments>

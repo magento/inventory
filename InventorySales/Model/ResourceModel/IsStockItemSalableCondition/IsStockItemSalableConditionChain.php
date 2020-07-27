@@ -65,7 +65,7 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
             }
         }
 
-        $isSalableString = '(' . implode($conditionStrings, ') OR (') . ')';
+        $isSalableString = '(' . implode(') OR (', $conditionStrings) . ')';
         return (string)$this->resourceConnection->getConnection()->getCheckSql($isSalableString, 1, 0);
     }
 }

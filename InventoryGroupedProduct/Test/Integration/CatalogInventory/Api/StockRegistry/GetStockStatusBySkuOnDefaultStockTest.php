@@ -27,14 +27,14 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
         $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku
@@ -50,7 +50,7 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku

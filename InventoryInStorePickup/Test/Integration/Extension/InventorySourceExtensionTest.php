@@ -27,40 +27,38 @@ class InventorySourceExtensionTest extends TestCase
     /** @var SourceRepositoryInterface */
     private $sourceRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->sourceRepository = $this->objectManager->get(SourceRepositoryInterface::class);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
      *
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
-     *
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage Validation Failed
      */
     public function testSaveDefaultSourceAsPickupLocation()
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation Failed');
         $source = $this->sourceRepository->get('default');
         $source->getExtensionAttributes()->setIsPickupLocationActive(true);
         $this->sourceRepository->save($source);
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      *
      * @throws NoSuchEntityException
      * @throws CouldNotSaveException
-     *
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage Validation Failed
      */
     public function testSaveSourceAsPickupLocationWithoutStreet()
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation Failed');
         $source = $this->sourceRepository->get('eu-1');
         $source->getExtensionAttributes()->setIsPickupLocationActive(true);
         $source->setCity('Some City');
@@ -68,16 +66,15 @@ class InventorySourceExtensionTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      *
      * @throws NoSuchEntityException
      * @throws CouldNotSaveException
-     *
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage Validation Failed
      */
     public function testSaveSourceAsPickupLocationWithoutCity()
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation Failed');
         $source = $this->sourceRepository->get('eu-2');
         $source->getExtensionAttributes()->setIsPickupLocationActive(true);
         $source->setStreet('Some Street');
@@ -85,8 +82,8 @@ class InventorySourceExtensionTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
      */
     public function testGetListOfSourcesWithPickupLocationExtensionAfterSave(): void
     {
@@ -125,8 +122,8 @@ class InventorySourceExtensionTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
      *
      * @dataProvider dataProvider
      *

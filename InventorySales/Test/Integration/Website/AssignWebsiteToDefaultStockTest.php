@@ -44,7 +44,7 @@ class AssignWebsiteToDefaultStockTest extends TestCase
      */
     private $registry;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->websiteFactory = Bootstrap::getObjectManager()->get(WebsiteFactory::class);
         $this->stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);

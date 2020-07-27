@@ -7,7 +7,7 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="ReorderOfTheOrderWithSimpleProductOnTestStockFromAdmin">
+    <test name="ReorderOfTheOrderWithSimpleProductOnTestStockFromAdminTest">
         <annotations>
             <stories value="Reorder of the Order with Simple product on Test stock from Admin"/>
             <title value="Reorder of the Order with Simple product on Test stock from Admin"/>
@@ -30,12 +30,12 @@
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AdminProductEditPage.url($simpleProduct.id$)}}" stepKey="openProductEditPage"/>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct">
                 <argument name="sourceCode" value="$createSource.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveProduct"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
@@ -48,7 +48,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!-- Login as customer -->

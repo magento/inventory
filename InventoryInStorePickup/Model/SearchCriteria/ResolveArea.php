@@ -11,7 +11,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\SearchRequest\Area\GetDistanceToSources;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\ResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 
 /**
@@ -19,7 +19,7 @@ use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilder
  *
  * Apply filter by Source Codes, limited by distance and assignment to the Scope.
  */
-class ResolveArea implements BuilderPartsResolverInterface
+class ResolveArea implements ResolverInterface
 {
     /**
      * @var GetDistanceToSources

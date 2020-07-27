@@ -11,6 +11,8 @@ namespace Magento\InventorySalesApi\Api;
  * Service which detects whether Product is salable for a given Stock (stock data + reservations)
  *
  * @api
+ * @deprecated in favor of bulk API
+ * @see \Magento\InventorySalesApi\Api\AreProductsSalableInterface
  */
 interface IsProductSalableInterface
 {

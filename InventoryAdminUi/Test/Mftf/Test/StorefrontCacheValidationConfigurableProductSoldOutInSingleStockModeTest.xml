@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontCacheValidationConfigurableProductSoldOutInSingleStockModeTest">
+        <annotations>
+            <stories value="Configurable Product Single Stock."/>
+            <title value="Cache Validation Configurable Product Single Stock."/>
+            <description value="Verify, configurable product is not visible on storefront after has been totally sold in single stock mode."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/909090/scenarios/2199920"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <!--Create test data.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="ApiConfigurableProduct" stepKey="configurableProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="productAttributeWithTwoOptions" stepKey="configurableProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="configurableProductAttributeOption">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <createData entity="AddToDefaultSet" stepKey="createConfigAddToAttributeSet">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </createData>
+            <getData entity="ProductAttributeOptionGetter" index="1" stepKey="getConfigAttributeOption">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+            </getData>
+            <createData entity="ApiSimpleOne" stepKey="configurableChildProduct">
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductTwoOptions" stepKey="configurableProductOption">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="configurableProductAddChild">
+                <requiredEntity createDataKey="configurableProduct"/>
+                <requiredEntity createDataKey="configurableChildProduct"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+        </before>
+        <after>
+            <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="configurableChildProduct" stepKey="deleteConfigurableProductVariation"/>
+            <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigurableProductAttribute"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Add configurable product to cart.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$customer$" />
+        </actionGroup>
+        <actionGroup ref="StorefrontAddConfigurableProductToTheCartActionGroup" stepKey="addConfigurableProductToCart">
+            <argument name="urlKey" value="$configurableProduct.custom_attributes[url_key]$" />
+            <argument name="productAttribute" value="$configurableProductAttribute.default_value$"/>
+            <argument name="productOption" value="$getConfigAttributeOption.value$"/>
+            <argument name="qty" value="{{productWithThousandQty.value}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
+        <!--Verify product is not visible on storefront.-->
+        <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
+        <see selector="{{StorefrontCategoryMainSection.emptyProductMessage}}" userInput="We can't find products matching the selection." stepKey="seeEmptyProductMessage"/>
+    </test>
+</tests>

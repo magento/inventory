@@ -10,8 +10,11 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="CreateOrderWithConfigurableProductCustomStockCustomWebsiteBySkuFromCustomerAccountTest" extends="AddConfigurableProductBySkuFromCustomerAccountTest">
         <annotations>
+            <stories value="Add configurable product by sku from customer account, Additional Stock, Additional Website"/>
+            <title value="Add configurable product by sku from customer account, Additional Stock, Additional Website"/>
             <description value="Add configurable product by sku from customer account, Additional Stock, Additional Website."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/987821/scenarios/3371234"/>
+            <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
         </annotations>
@@ -28,7 +31,7 @@
                 <requiredEntity createDataKey="additionalStock"/>
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminPanel" after="createConfigProductAddChildTwo"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel" after="createConfigProductAddChildTwo"/>
             <!--Create website, store and store view.-->
             <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
                 <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
@@ -87,7 +90,7 @@
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite" before="logout">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logout" before="deleteStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteConfigChildProductOne"/>
             <!--Revert "Add Store Code To URL" configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable" after="deleteStock"/>

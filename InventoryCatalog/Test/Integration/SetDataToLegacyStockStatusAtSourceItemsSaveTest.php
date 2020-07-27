@@ -71,7 +71,7 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
 
@@ -94,9 +94,9 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
      * Tests that legacy stock status data will updates with legacy source item data while the indexer is "On Update".
      *
      * @return void
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
     public function testSetDataIndexedOnUpdate(): void
     {
@@ -142,9 +142,9 @@ class SetDataToLegacyStockStatusAtSourceItemsSaveTest extends TestCase
      *
      * @return void
      * @magentoDbIsolation disabled
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      **/
     public function testSetDataWithoutIndexing(): void
     {

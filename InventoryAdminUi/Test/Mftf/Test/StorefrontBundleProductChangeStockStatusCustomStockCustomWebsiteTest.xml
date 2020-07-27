@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontBundleProductChangeStockStatusCustomStockCustomWebsiteTest">
+        <annotations>
+            <stories value="Bundle Product Custom Stock."/>
+            <title value="Stock status bundle product custom stock, custom website."/>
+            <description value="Verify, change stock status for bundle product on custom stock and custom website will affect product visibility on storefront."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/457016/scenarios/4092805"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+            <skip>
+                <issueId value="https://github.com/magento/inventory/issues/1821"/>
+            </skip>
+        </annotations>
+
+        <before>
+            <!--Add store code to url.-->
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <!--Create test data.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStock1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption">
+                <requiredEntity createDataKey="bundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Create website, store and store view-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!--Assign Stock to Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="$stock.stock[name]$"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Assign source, website and set simple product quantity-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openSimpleProductEditPage"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+            </actionGroup>
+            <scrollToTopOfPage stepKey="scrollToTopOfSimpleProductEditPage"/>
+            <actionGroup ref="AdminUnassignCategoryOnProductAndSaveActionGroup" stepKey="unassignCategoryAndSaveProduct">
+                <argument name="categoryName" value="$category.name$"/>
+            </actionGroup>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignSimpleProductToAdditionalWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Assign bundle product to category, website and set stock status to "Out of Stock".-->
+            <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openBundleProductEditPage"/>
+            <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="selectOutOfStock"/>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
+                <argument name="categoryName" value="$category.name$"/>
+            </actionGroup>
+            <actionGroup ref="AddWebsiteToProductActionGroup" stepKey="assignBundleProductToAdditionalWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+        </before>
+        <after>
+            <!-- Revert configuration.-->
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+            <!--Delete test data.-->
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Disable created sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Delete created website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+
+        <!--Verify product is not visible on storefront.-->
+        <actionGroup ref="StorefrontAssertProductAbsentOnCategoryPageAdditionalWebsiteActionGroup" stepKey="verifyProductNotVisibleOnCategoryPage">
+            <argument name="categoryName" value="$category.name$"/>
+            <argument name="storeCode" value="{{customStore.code}}"/>
+            <argument name="productName" value="$bundleProduct.name$"/>
+        </actionGroup>
+        <!--Set bundle product stock status to "In Stock".-->
+        <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openBundleProductEditPage"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="{{SourceStatusInStock.value}}" stepKey="selectOutOfStock"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        <!-- Check product is visible on Storefront-->
+        <actionGroup ref="StorefrontAssertProductOnCategoryPageAdditionalWebsiteActionGroup" stepKey="verifyProductOnCategoryPage">
+            <argument name="categoryName" value="$category.name$"/>
+            <argument name="storeCode" value="{{customStore.code}}"/>
+            <argument name="productName" value="$bundleProduct.name$"/>
+        </actionGroup>
+    </test>
+</tests>

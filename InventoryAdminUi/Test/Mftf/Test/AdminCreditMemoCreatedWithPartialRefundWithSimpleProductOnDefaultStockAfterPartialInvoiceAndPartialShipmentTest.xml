@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreditMemoCreatedWithPartialRefundWithSimpleProductOnDefaultStockAfterPartialInvoiceAndPartialShipment">
+    <test name="AdminCreditMemoCreatedWithPartialRefundWithSimpleProductOnDefaultStockAfterPartialInvoiceAndPartialShipmentTest">
         <annotations>
             <stories value="MSI Credit Memo"/>
             <title value="Credit Memo created with partial refund with Simple product on Default stock after partial invoice and partial shipment"/>
@@ -26,7 +26,7 @@
                 <requiredEntity createDataKey="createStock"/>
                 <requiredEntity createDataKey="createSource"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
@@ -47,7 +47,7 @@
             <createData entity="MsiCustomer1" stepKey="createCustomer"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>

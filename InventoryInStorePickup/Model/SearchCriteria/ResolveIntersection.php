@@ -10,13 +10,13 @@ namespace Magento\InventoryInStorePickup\Model\SearchCriteria;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickup\Model\ResourceModel\GetPickupLocationIntersectionForSkus;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchCriteria\BuilderPartsResolverInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchCriteria\ResolverInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchCriteria\SearchCriteriaBuilderDecorator;
 
 /**
  * Find intersection of assignments of products between Pickup Locations and filter by codes.
  */
-class ResolveIntersection implements BuilderPartsResolverInterface
+class ResolveIntersection implements ResolverInterface
 {
     /**
      * @var GetPickupLocationIntersectionForSkus
@@ -53,7 +53,9 @@ class ResolveIntersection implements BuilderPartsResolverInterface
         $extensionAttributes = $searchRequest->getExtensionAttributes();
         $skus = [];
         foreach ($extensionAttributes->getProductsInfo() as $item) {
-            $skus[] = $item->getSku();
+            if (!in_array($item->getSku(), $skus)) {
+                $skus[] = $item->getSku();
+            }
         }
 
         $codes = $this->getPickupLocationIntersectionForSkus->execute($skus);

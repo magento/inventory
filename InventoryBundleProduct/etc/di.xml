@@ -7,7 +7,26 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface">
-        <plugin name="disable_bundle_type"
-                type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
+        <plugin name="disable_bundle_type" type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
+    </type>
+    <type name="Magento\Bundle\Model\Product\Type">
+        <plugin name="adapt_is_product_salable" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\Product\Type\AdaptIsSalablePlugin"/>
+    </type>
+    <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
+        <plugin name="adapt_add_quantity_filter" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection\AdaptAddQuantityFilterPlugin"/>
+    </type>
+    <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
+        <plugin name="validate_source_items_before_add_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ValidateSourceItemsBeforeAddBundleSelectionPlugin"/>
+        <plugin name="validate_source_items_before_save_bundle_selection" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\LinkManagement\ValidateSourceItemsBeforeSaveBundleSelectionPlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Model\SourceItemValidatorChain">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="shipmentType" xsi:type="object">Magento\InventoryBundleProduct\Model\SourceItem\Validator\ShipmentTypeValidator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogInventory\Helper\Stock">
+        <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
 </config>

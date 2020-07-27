@@ -22,11 +22,11 @@
         <before>
             <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com"/>
             <createData entity="SimpleSubCategory" stepKey="simpleCategory1"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com"/>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <comment userInput="Create downloadable product with category and link." stepKey="createDownloadableProductComment"/>
@@ -62,7 +62,7 @@
         <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="100" stepKey="fillProductQty1"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="goToHomePage1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>

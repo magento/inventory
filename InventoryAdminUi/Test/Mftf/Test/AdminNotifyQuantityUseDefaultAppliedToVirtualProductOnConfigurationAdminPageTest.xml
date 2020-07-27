@@ -26,7 +26,7 @@
             <createData entity="_minimalSource" stepKey="createSource1"/>
             <createData entity="BasicMsiStock1" stepKey="createStock1"/>
 
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea1"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea1"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
 
             <comment userInput="Assign source and sales channel to stock." stepKey="assignCustomSourceToCustomStockComment1"/>
@@ -58,7 +58,7 @@
             <click selector="{{AdminGridRow.editByValue($$createSource1.source[source_code]$$)}}" stepKey="editCustomSource1"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableCustomSource1"/>
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveDisabledCustomSource1"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveDisabledCustomSource1"/>
 
             <comment userInput=" Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment1"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockGridPage1"/>
@@ -74,7 +74,7 @@
             <comment userInput="Set 'Notify for Quantity Below' to '1' by default" stepKey="revertNotifyQtyBelowComment1"/>
             <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 1" stepKey="setNotifyForQuantityBelowToOne1"/>
 
-            <actionGroup ref="logout" stepKey="logOutFromAdminArea1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logOutFromAdminArea1"/>
 
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory1"/>
         </after>
@@ -107,7 +107,7 @@
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{VirtualMsiProduct.quantity}}" stepKey="fillSourceQty1"/>
 
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedProduct1"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveAndCloseCreatedProduct1"/>
 
         <comment userInput="Change config value for 'Notify for Quantity Below'." stepKey="setNotifyForQuantityBelowToFiveComment1"/>
         <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 5" stepKey="setNotifyForQuantityBelowToFive1"/>

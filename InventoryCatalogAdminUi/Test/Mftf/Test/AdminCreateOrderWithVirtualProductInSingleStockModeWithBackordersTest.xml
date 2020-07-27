@@ -25,7 +25,7 @@
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
             <waitForPageLoad stepKey="waitForDashboardLoad"/>
 
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
@@ -57,10 +57,10 @@
             <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDoneToSetOutOfStockThreshold"/>
             <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$createCategory.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
-            <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndClose"/>
+            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
         </before>
         <after>
-            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteProduct"/>
         </after>

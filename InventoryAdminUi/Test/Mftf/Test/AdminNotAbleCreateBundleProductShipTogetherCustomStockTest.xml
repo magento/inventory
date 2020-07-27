@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminNotAbleCreateBundleProductShipTogetherCustomStockTest">
+        <annotations>
+            <stories value="Bundle Product Custom Stock"/>
+            <title value="Not able to create bundle product with shipment type 'Ship Together'"/>
+            <description value="Verify, admin not able to add bundle selections with several sources to bundle product with shipment type 'Ship Together'."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/457016/scenarios/4373048"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="FullSource1" stepKey="source1"/>
+            <createData entity="FullSource1" stepKey="source2"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source1"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source2"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="SimpleProduct" stepKey="product1">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="product2">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign source1 and set simple product1 quantity-->
+            <amOnPage url="{{AdminProductEditPage.url($product1.id$)}}" stepKey="openSimple1ProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct1">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetProduct1Qty">
+                <argument name="sourceCode" value="$source1.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct1"/>
+            <!--Assign source2 and set simple product2 quantity-->
+            <amOnPage url="{{AdminProductEditPage.url($product2.id$)}}" stepKey="openSimple2ProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetProduct2Qty">
+                <argument name="sourceCode" value="$source2.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
+        </before>
+        <after>
+            <!--Delete test data.-->
+            <deleteData createDataKey="product1" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="product2" stepKey="deleteProduct2"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Disable created sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Assign default stock to main website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+
+        <!--Try to add simple products to bundle product.-->
+        <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openBundleProductEditPage"/>
+        <actionGroup ref="AddBundleOptionWithTwoProductsActionGroup" stepKey="addBundleOption2">
+            <argument name="x" value="0"/>
+            <argument name="n" value="1"/>
+            <argument name="prodOneSku" value="$product1.sku$"/>
+            <argument name="prodTwoSku" value="$product2.sku$"/>
+            <argument name="optionTitle" value="{{DropDownBundleOption.title}}"/>
+            <argument name="inputType" value="{{DropDownBundleOption.type}}"/>
+        </actionGroup>
+        <actionGroup ref="SaveProductFormNoSuccessCheckActionGroup" stepKey="saveProduct"/>
+        <see selector="{{AdminProductMessagesSection.errorMessage}}" userInput="cannot be added to bundle product" stepKey="seeErrorMessage"/>
+    </test>
+</tests>

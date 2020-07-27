@@ -29,7 +29,7 @@ class Save extends Action implements HttpPostActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock';
+    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_edit';
 
     /**
      * @var StockSaveProcessor
@@ -65,6 +65,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Save stock process.
+     *
      * @param array $requestData
      * @param RequestInterface $request
      * @param Redirect $resultRedirect
@@ -106,6 +108,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Process result redirect after success save according params.
+     *
      * @param Redirect $resultRedirect
      * @param int $stockId
      *
@@ -128,6 +132,8 @@ class Save extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Process result redirect after failed save according params.
+     *
      * @param Redirect $resultRedirect
      * @param int|null $stockId
      *

@@ -19,11 +19,11 @@
         </annotations>
 
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <!--Create test data.-->
             <createData entity="_defaultCategory" stepKey="category"/>
-            <createData entity="ApiBundleProduct" stepKey="bundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
             <createData entity="VirtualProduct" stepKey="product"/>
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <!--Add virtual product to bundle-->
@@ -53,7 +53,7 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <actionGroup ref="logout" stepKey="logout"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
         </after>
 
         <!--Login To storefront as Customer-->

@@ -29,14 +29,14 @@
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct"/>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <!--Disable additional source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
         </after>
@@ -53,7 +53,7 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="AssertAdminNotifyQtyActionGroup" stepKey="AssertNotifyQty">
-            <argument name="qty" value="10"/>
+            <argument name="qty" value="10.0000"/>
             <argument name="rowIndex" value="0"/>
         </actionGroup>
     </test>

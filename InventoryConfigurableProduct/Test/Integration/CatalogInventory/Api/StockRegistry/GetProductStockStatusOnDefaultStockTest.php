@@ -33,7 +33,7 @@ class GetProductStockStatusOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkusInterface::class);
@@ -41,7 +41,7 @@ class GetProductStockStatusOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku
@@ -57,7 +57,7 @@ class GetProductStockStatusOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      *
      * @dataProvider getStockDataProvider
      * @param string $sku

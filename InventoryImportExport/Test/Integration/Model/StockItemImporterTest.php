@@ -48,7 +48,7 @@ class StockItemImporterTest extends TestCase
     /**
      * Setup Test for Stock Item Importer
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(
             DefaultSourceProviderInterface::class
@@ -71,7 +71,7 @@ class StockItemImporterTest extends TestCase
      * Tests Source Item Import of default source should use
      * MSI Plugin on Magento\Catalog\ImportExport\Model\StockItemImporter::import()
      *
-     * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDbIsolation enabled
      */
     public function testSourceItemImportWithDefaultSource()

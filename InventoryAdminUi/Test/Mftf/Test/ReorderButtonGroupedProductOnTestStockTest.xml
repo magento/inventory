@@ -6,8 +6,7 @@
   */
 -->
 
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="ReorderButtonGroupedProductOnTestStockTest">
         <annotations>
             <stories value="Grouped Product Custom Stock."/>
@@ -28,7 +27,7 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!--Assign Default Stock to Main Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -37,10 +36,8 @@
         </before>
         <after>
             <!--Disable additional source.-->
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
-                <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
-            </actionGroup>
-            <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableCustomSource"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -65,7 +62,7 @@
             <argument name="productName" value="$$product.name$$"/>
             <argument name="qty" value="2"/>
         </actionGroup>
-        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseGroupedProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
