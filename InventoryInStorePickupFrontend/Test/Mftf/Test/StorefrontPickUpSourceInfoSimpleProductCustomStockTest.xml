@@ -65,13 +65,13 @@
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
-        <actionGroup ref="NavigateToMediaGalleryActionGroup" stepKey="navigateToMediaGallery"/>
-        <actionGroup ref="NavigateToMediaFolderActionGroup" stepKey="navigateToFolder">
-            <argument name="FolderName" value="Storage Root"/>
-        </actionGroup>
-        <actionGroup ref="DeleteImageFromStorageActionGroup" stepKey="deleteImageFromStorage">
-            <argument name="Image" value="ImageUpload3"/>
-        </actionGroup>
+            <actionGroup ref="NavigateToMediaGalleryActionGroup" stepKey="navigateToMediaGallery"/>
+            <actionGroup ref="NavigateToMediaFolderActionGroup" stepKey="navigateToFolder">
+                <argument name="FolderName" value="Storage Root"/>
+            </actionGroup>
+            <actionGroup ref="DeleteImageFromStorageActionGroup" stepKey="deleteImageFromStorage">
+                <argument name="Image" value="ImageUpload3"/>
+            </actionGroup>
             <!--Revert Distance Provider for Distance Based SSA to online.-->
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Disable 'In Store Pickup' shipping method.-->
