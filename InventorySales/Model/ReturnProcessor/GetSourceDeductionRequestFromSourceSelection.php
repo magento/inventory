@@ -79,6 +79,8 @@ class GetSourceDeductionRequestFromSourceSelection
     }
 
     /**
+     * Returns source deduction request based on the source selection.
+     *
      * @param OrderInterface $order
      * @param SourceSelectionResultInterface $sourceSelectionResult
      * @return array|SourceDeductionRequestInterface[]
@@ -125,6 +127,8 @@ class GetSourceDeductionRequestFromSourceSelection
     }
 
     /**
+     * Returns items per source.
+     *
      * @param SourceSelectionItemInterface[] $sourceSelectionItems
      * @return ItemToDeductInterface[]
      */

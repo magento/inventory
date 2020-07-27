@@ -23,7 +23,7 @@ use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 
 /**
- * Class VirtualSourceDeductionProcessor
+ * Class Virtual source deduction mechanism.
  */
 class VirtualSourceDeductionProcessor implements ObserverInterface
 {
@@ -90,6 +90,8 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
     }
 
     /**
+     * Process virtual source deduction.
+     *
      * @param EventObserver $observer
      * @return void
      * @throws LocalizedException
@@ -151,6 +153,8 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
     }
 
     /**
+     * Is invoice valid.
+     *
      * @param InvoiceInterface $invoice
      * @return bool
      */
@@ -164,6 +168,8 @@ class VirtualSourceDeductionProcessor implements ObserverInterface
     }
 
     /**
+     * Invoice items validation.
+     *
      * @param InvoiceInterface $invoice
      * @return bool
      */
