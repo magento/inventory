@@ -28,7 +28,7 @@ class MassDisable extends Action implements HttpPostActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::source';
+    const ADMIN_RESOURCE = 'Magento_InventoryApi::source_edit';
 
     /**
      * @var Filter

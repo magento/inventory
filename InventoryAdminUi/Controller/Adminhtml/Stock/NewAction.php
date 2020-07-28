@@ -22,7 +22,7 @@ class NewAction extends Action implements HttpGetActionInterface
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock';
+    const ADMIN_RESOURCE = 'Magento_InventoryApi::stock_edit';
 
     /**
      * @inheritdoc
