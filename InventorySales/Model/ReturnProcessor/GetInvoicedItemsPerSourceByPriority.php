@@ -21,6 +21,9 @@ use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderIt
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItemsResultFactory;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Result\SourceDeductedOrderItemsResult;
 
+/**
+ * Class returns invoice items per source with highest priority
+ */
 class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItemsInterface
 {
     /**
@@ -86,6 +89,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Returns invoice items per source with highest priority
+     *
      * @param OrderInterface $order
      * @param array $returnToStockItems
      * @return SourceDeductedOrderItemsResult[]
@@ -109,6 +114,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Returns source deducted invoice items
+     *
      * @param array $invoicedItems
      * @param int $websiteId
      * @return SourceDeductedOrderItemsResult[]
@@ -118,7 +125,7 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
         $invoicedItemsToReturn = $result = [];
         $stockId = (int)$this->stockByWebsiteIdResolver->execute($websiteId)->getStockId();
         foreach ($invoicedItems as $sku => $qty) {
-            $sourceCode = $this->getSourceCodeWithHighestPriorityBySku($sku, $stockId);
+            $sourceCode = $this->getSourceCodeWithHighestPriorityBySku((string)$sku, $stockId);
             $invoicedItemsToReturn[$sourceCode][] = $this->sourceDeductedOrderItemFactory->create([
                 'sku' => $sku,
                 'quantity' => $qty
@@ -136,6 +143,8 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
     }
 
     /**
+     * Returns source code with highest priority by sku
+     *
      * @param string $sku
      * @param int $stockId
      * @return string
@@ -156,12 +165,15 @@ class GetInvoicedItemsPerSourceByPriority implements GetSourceDeductedOrderItems
             }
         } catch (LocalizedException $e) {
             //Use Default Source if the source can't be resolved
+            return $sourceCode;
         }
 
         return $sourceCode;
     }
 
     /**
+     * Checks valid item
+     *
      * @param OrderItemModel $orderItem
      * @param array $returnToStockItems
      * @return bool
