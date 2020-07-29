@@ -12,7 +12,6 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Setup\CategorySetup;
-use Magento\Framework\Registry;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -78,10 +77,6 @@ $product->setTypeId(Type::TYPE_SIMPLE)
 $product = $productRepository->save($product);
 
 // Remove any previously created product with the same id.
-/** @var Registry $registry */
-$registry = Bootstrap::getObjectManager()->get(Registry::class);
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', true);
 try {
     $productToDelete = $productRepository->getById(1);
     $productRepository->delete($productToDelete);
@@ -95,5 +90,3 @@ try {
 } catch (\Exception $e) {
     // Nothing to remove
 }
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', false);
