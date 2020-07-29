@@ -131,7 +131,7 @@ class GetInventoryRequestFromOrder
                 'postcode' => $shippingAddress->getPostcode() ?? '',
                 'street' => implode("\n", $shippingAddress->getStreet()),
                 'region' => $shippingAddress->getRegion() ?? $shippingAddress->getRegionCode() ?? '',
-                'city' => $shippingAddress->getCity()
+                'city' => $shippingAddress->getCity() ?? ''
             ]
         );
     }

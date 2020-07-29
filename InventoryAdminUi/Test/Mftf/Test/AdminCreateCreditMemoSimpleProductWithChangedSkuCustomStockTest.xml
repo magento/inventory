@@ -20,7 +20,6 @@
 
         <before>
             <!--Create test data.-->
-            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
@@ -43,12 +42,13 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete test data.-->
             <magentoCLI command="config:set {{DisableInventorySynchronization.path}} {{DisableInventorySynchronization.value}}" stepKey="disableInventorySynchronization"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <actionGroup ref="DeleteProductByNameActionGroup" stepKey="deleteProduct">
@@ -83,7 +83,14 @@
         <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
         <actionGroup ref="AdminChangeProductSkuActionGroup" stepKey="changeProductSku"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
-        <magentoCron groups="consumers" stepKey="runConsumers"/>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="cleanUpSourceItems">
+            <argument name="consumerName" value="inventory.source.items.cleanup"/>
+            <argument name="maxMessages" value="1"/>
+        </actionGroup>
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="updateReservations">
+            <argument name="consumerName" value="inventory.reservations.update"/>
+            <argument name="maxMessages" value="1"/>
+        </actionGroup>
         <!--Create Shipment-->
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
             <argument name="orderId" value="{$orderNumber}"/>

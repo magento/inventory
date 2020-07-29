@@ -34,7 +34,7 @@ class SearchRequestBuilderTest extends TestCase
      */
     private $sortOrderBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->searchRequestBuilder = Bootstrap::getObjectManager()->get(SearchRequestBuilder::class);
         $this->sortOrderBuilder = Bootstrap::getObjectManager()->get(SortOrderBuilder::class);

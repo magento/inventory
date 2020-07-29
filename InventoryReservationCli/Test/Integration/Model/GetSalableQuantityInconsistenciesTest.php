@@ -32,7 +32,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     /**
      * Initialize test dependencies
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getSalableQuantityInconsistencies
             = Bootstrap::getObjectManager()->get(GetSalableQuantityInconsistencies::class);
@@ -53,6 +53,16 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      * @throws \Magento\Framework\Validation\ValidationException
      */
     public function testIncompleteOrderWithoutReservation(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        self::assertCount(1, $inconsistencies);
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_order_without_reservation_virtual_product.php
+     * @throws \Magento\Framework\Validation\ValidationException
+     */
+    public function testIncompleteOrderWithoutReservationVirtualProduct(): void
     {
         $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
         self::assertCount(1, $inconsistencies);

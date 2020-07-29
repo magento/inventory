@@ -19,7 +19,7 @@ class ReservationPlacingOnUseConfigManageStockSetToZeroTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class)->execute();
     }

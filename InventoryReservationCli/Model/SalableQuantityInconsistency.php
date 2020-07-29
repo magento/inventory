@@ -135,8 +135,17 @@ class SalableQuantityInconsistency
      */
     public function setOrderIncrementId(string $orderIncrementId): void
     {
-        $this->hasAssignedOrder = true;
         $this->orderIncrementId = $orderIncrementId;
+    }
+
+    /**
+     * Setter for hasAssignedOrder property
+     *
+     * @param bool $hasAssignedOrder
+     */
+    public function setHasAssignedOrder(bool $hasAssignedOrder): void
+    {
+        $this->hasAssignedOrder = $hasAssignedOrder;
     }
 
     /**

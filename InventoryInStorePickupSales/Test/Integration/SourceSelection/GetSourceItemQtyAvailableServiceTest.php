@@ -36,7 +36,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      */
     private $searchCriteriaBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $om = Bootstrap::getObjectManager();
         $this->getSourceItemQtyAvailableService = $om->get(GetSourceItemQtyAvailableService::class);
@@ -86,7 +86,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_multiple_quotes_on_eu_website.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
      *
      * @magentoDbIsolation disabled
@@ -123,7 +123,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_orders_pickup_location.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
      *
      * @magentoDbIsolation disabled

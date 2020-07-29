@@ -29,7 +29,7 @@ class InvalidateAfterEnablingOrDisablingSourceTest extends TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);
         /** @var IndexerRegistry $indexerRegistry */

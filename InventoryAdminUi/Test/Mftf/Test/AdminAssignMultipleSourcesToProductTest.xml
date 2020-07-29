@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminAssignMultipleSourcesToProductTest">
+        <annotations>
+            <stories value="Cannot assign more than 20 sources to product."/>
+            <title value="Product Source Grid Verification for multiple product sources."/>
+            <description value="Verify admin user able to assign multiple sources to product on product edit page."/>
+            <testCaseId value="MC-32285"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <!--Create mora than 20 sources-->
+            <createData entity="_minimalSource" stepKey="createFirstCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createSecondCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createThirdCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createFourthCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createFifthCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createSixthCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createSeventhCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createEighthCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createNineCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createTenthCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createEleventhCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createTwelveCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createThirteenCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createFourteenthCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createFifteenCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createSixteenCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createSeventeenCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createEighteenCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createNineteenCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createTwentyCustomSource"/>
+            <createData entity="_minimalSource" stepKey="createTwentyOneCustomSource"/>
+            <!--Create category and simple product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+        </before>
+        <after>
+            <!--Disable multiple sources.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFirstCreatedSource">
+                <argument name="sourceCode" value="$$createFirstCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSecondCreatedSource">
+                <argument name="sourceCode" value="$$createSecondCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
+                <argument name="sourceCode" value="$$createThirdCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFourthCreatedSource">
+                <argument name="sourceCode" value="$$createFourthCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFifthCreatedSource">
+                <argument name="sourceCode" value="$$createFifthCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSixthCreatedSource">
+                <argument name="sourceCode" value="$$createSixthCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSeventhCreatedSource">
+                <argument name="sourceCode" value="$$createSeventhCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableEighthCreatedSource">
+                <argument name="sourceCode" value="$$createEighthCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableNineCreatedSource">
+                <argument name="sourceCode" value="$$createNineCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTenthCreatedSource">
+                <argument name="sourceCode" value="$$createTenthCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableEleventhCreatedSource">
+                <argument name="sourceCode" value="$$createEleventhCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTwelveCreatedSource">
+                <argument name="sourceCode" value="$$createTwelveCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirteenCreatedSource">
+                <argument name="sourceCode" value="$$createThirteenCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFourteenthCreatedSource">
+                <argument name="sourceCode" value="$$createFourteenthCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableFifteenCreatedSource">
+                <argument name="sourceCode" value="$$createFifteenCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSixteenCreatedSource">
+                <argument name="sourceCode" value="$$createSixteenCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSeventeenCreatedSource">
+                <argument name="sourceCode" value="$$createSeventeenCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableEighteenCreatedSource">
+                <argument name="sourceCode" value="$$createEighteenCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableNineteenCreatedSource">
+                <argument name="sourceCode" value="$$createNineteenCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTwentyCreatedSource">
+                <argument name="sourceCode" value="$$createTwentyCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableTwentyOneCreatedSource">
+                <argument name="sourceCode" value="$$createTwentyOneCustomSource.source[source_code]$$"/>
+            </actionGroup>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Search for the product and open in edit mode.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToAssignSources"/>
+        <!--Assign multiple sources to product.-->
+        <waitForPageLoad time="60" stepKey="waitForAssignSourcesToProduct"/>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFirstSourceToProduct">
+            <argument name="sourceCode" value="$$createFirstCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSecondSourceToProduct">
+            <argument name="sourceCode" value="$$createSecondCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignThirdSourceToProduct">
+            <argument name="sourceCode" value="$$createThirdCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFourthSourceToProduct">
+            <argument name="sourceCode" value="$$createFourthCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFifthSourceToProduct">
+            <argument name="sourceCode" value="$$createFifthCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSixthSourceToProduct">
+            <argument name="sourceCode" value="$$createSixthCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSeventhSourceToProduct">
+            <argument name="sourceCode" value="$$createSeventhCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignEighthSourceToProduct">
+            <argument name="sourceCode" value="$$createEighthCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignNineSourceToProduct">
+            <argument name="sourceCode" value="$$createNineCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTenthSourceToProduct">
+            <argument name="sourceCode" value="$$createTenthCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignEleventhSourceToProduct">
+            <argument name="sourceCode" value="$$createEleventhCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTwelveSourceToProduct">
+            <argument name="sourceCode" value="$$createTwelveCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignThirteenSourceToProduct">
+            <argument name="sourceCode" value="$$createThirteenCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFourteenthSourceToProduct">
+            <argument name="sourceCode" value="$$createFourteenthCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFifteenSourceToProduct">
+            <argument name="sourceCode" value="$$createFifteenCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSixteenSourceToProduct">
+            <argument name="sourceCode" value="$$createSixteenCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSeventeenSourceToProduct">
+            <argument name="sourceCode" value="$$createSeventeenCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignEighteenSourceToProduct">
+            <argument name="sourceCode" value="$$createEighteenCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignNineteenSourceToProduct">
+            <argument name="sourceCode" value="$$createNineteenCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTwentySourceToProduct">
+            <argument name="sourceCode" value="$$createTwentyCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignTwentyOneSourceToProduct">
+            <argument name="sourceCode" value="$$createTwentyOneCustomSource.source[source_code]$$"/>
+        </actionGroup>
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProductQuantity"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        <waitForPageLoad stepKey="waitForProductSave"/>
+        <!--see success message-->
+        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage"/>
+    </test>
+</tests>

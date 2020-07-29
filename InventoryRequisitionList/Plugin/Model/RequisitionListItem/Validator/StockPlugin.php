@@ -11,8 +11,9 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterfaceFactory;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\RequisitionList\Api\Data\RequisitionListItemInterface;
 use Magento\RequisitionList\Model\RequisitionListItem\Validator\Stock;
@@ -38,34 +39,42 @@ class StockPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
-    private $isProductSalable;
+    private $areProductsSalable;
 
     /**
-     * @var IsProductSalableForRequestedQtyInterface
+     * @var AreProductsSalableForRequestedQtyInterface
      */
-    private $isProductSalableForRequestedQty;
+    private $areProductsSalableForRequestedQty;
+
+    /**
+     * @var IsProductSalableForRequestedQtyRequestInterfaceFactory
+     */
+    private $isProductSalableForRequestedQtyRequestFactory;
 
     /**
      * @param ProductRepositoryInterface $productRepository
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteId
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $areProductsSalable
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
-     * @param IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
+     * @param AreProductsSalableForRequestedQtyInterface $isProductSalableForRequestedQty
+     * @param IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $areProductsSalable,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        IsProductSalableForRequestedQtyInterface $isProductSalableForRequestedQty
+        AreProductsSalableForRequestedQtyInterface $isProductSalableForRequestedQty,
+        IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory
     ) {
         $this->productRepository = $productRepository;
         $this->stockByWebsiteId = $stockByWebsiteId;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->isProductSalable = $isProductSalable;
-        $this->isProductSalableForRequestedQty = $isProductSalableForRequestedQty;
+        $this->areProductsSalable = $areProductsSalable;
+        $this->areProductsSalableForRequestedQty = $isProductSalableForRequestedQty;
+        $this->isProductSalableForRequestedQtyRequestFactory = $isProductSalableForRequestedQtyRequestFactory;
     }
 
     /**
@@ -89,18 +98,23 @@ class StockPlugin
 
         $websiteId = (int)$product->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteId->execute($websiteId)->getStockId();
-        $isSalable = $this->isProductSalable->execute($product->getSku(), $stockId);
+        $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
+        $result = current($result);
+        $isSalable = $result->isSalable();
 
         if (!$isSalable) {
             $errors[$subject::ERROR_OUT_OF_STOCK] = __('The SKU is out of stock.');
             return $errors;
         }
-        $productSalableResult = $this->isProductSalableForRequestedQty->execute(
-            $product->getSku(),
-            $stockId,
-            (float)$item->getQty()
+        $request = $this->isProductSalableForRequestedQtyRequestFactory->create(
+            [
+                'sku' => $product->getSku(),
+                'qty' => (float)$item->getQty(),
+            ]
         );
-        if (!$productSalableResult->isSalable() && !$product->isComposite()) {
+        $result = $this->areProductsSalableForRequestedQty->execute([$request], $stockId);
+        $result = current($result);
+        if (!$result->isSalable() && !$product->isComposite()) {
             $errors[$subject::ERROR_LOW_QUANTITY] = __('The requested qty is not available');
             return $errors;
         }
