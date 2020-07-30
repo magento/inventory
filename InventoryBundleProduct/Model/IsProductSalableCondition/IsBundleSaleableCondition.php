@@ -14,6 +14,9 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
+/**
+ * Check if bundle product is salable with bundle options.
+ */
 class IsBundleSaleableCondition implements IsProductSalableInterface
 {
     /**
@@ -24,7 +27,7 @@ class IsBundleSaleableCondition implements IsProductSalableInterface
     /**
      * @var ProductRepositoryInterface
      */
-    private $repository;
+    private $productRepository;
 
     /**
      * @var GetBundleProductStockStatus
@@ -42,7 +45,7 @@ class IsBundleSaleableCondition implements IsProductSalableInterface
         GetBundleProductStockStatus $getBundleProductStockStatus
     ) {
         $this->bundleProductType = $type;
-        $this->repository = $repository;
+        $this->productRepository = $repository;
         $this->getBundleProductStockStatus = $getBundleProductStockStatus;
     }
 
@@ -56,18 +59,20 @@ class IsBundleSaleableCondition implements IsProductSalableInterface
      */
     public function execute(string $sku, int $stockId): bool
     {
-        $status = false;
+        $status = true;
         try {
-            $product = $this->repository->get($sku);
-            if ($product->getTypeId() === Type::TYPE_CODE) {
-                /** @noinspection PhpParamsInspection */
-                $options = $this->bundleProductType->getOptionsCollection($product);
-                $status = (int)$this->getBundleProductStockStatus->execute(
-                    $product,
-                    $options->getItems(),
-                    $stockId
-                );
+            $product = $this->productRepository->get($sku);
+            if ($product->getTypeId() !== Type::TYPE_CODE) {
+                return $status;
             }
+
+            /** @noinspection PhpParamsInspection */
+            $options = $this->bundleProductType->getOptionsCollection($product);
+            $status = (int)$this->getBundleProductStockStatus->execute(
+                $product,
+                $options->getItems(),
+                $stockId
+            );
         } catch (LocalizedException $e) {
             $status = false;
         }
