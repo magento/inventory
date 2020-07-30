@@ -14,6 +14,9 @@
         "magento/module-configurable-product": "*",
         "magento/module-inventory-sales": "*"
     },
+    "suggest": {
+        "magento/module-inventory-sales": "*"
+    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
