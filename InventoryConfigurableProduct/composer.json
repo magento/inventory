@@ -11,9 +11,7 @@
         "magento/module-store": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-sales": "*",
-        "magento/module-configurable-product": "*"
-    },
-    "suggest": {
+        "magento/module-configurable-product": "*",
         "magento/module-inventory-sales": "*"
     },
     "type": "magento2-module",
