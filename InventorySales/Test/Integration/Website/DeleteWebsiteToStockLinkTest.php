@@ -26,7 +26,7 @@ class DeleteWebsiteToStockLinkTest extends TestCase
      */
     private $getAssignedStockIdForWebsite;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->websiteFactory = Bootstrap::getObjectManager()->get(WebsiteFactory::class);
         $this->getAssignedStockIdForWebsite = Bootstrap::getObjectManager()->get(

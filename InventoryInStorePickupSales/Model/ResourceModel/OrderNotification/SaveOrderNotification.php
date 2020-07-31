@@ -42,8 +42,8 @@ class SaveOrderNotification
      */
     public function execute(int $orderId, int $sendNotification = 0, int $notificationSent = 0): void
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_order_notification');
+        $connection = $this->connection->getConnection('sales');
+        $table = $this->connection->getTableName('inventory_order_notification', 'sales');
         $data = [
             self::ORDER_ID => $orderId,
             self::SEND_NOTIFICATION => $sendNotification,

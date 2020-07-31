@@ -18,7 +18,7 @@ class GetAssignedStockIdsBySkuTest extends TestCase
      */
     private $getAssignedStockIdsBySku;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -63,7 +63,7 @@ class StockSourceLinksSaveTest extends WebapiAbstract
         AssertArrayContains::assert($links, $actualData['items']);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $links = [
             [

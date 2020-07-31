@@ -124,7 +124,7 @@ class OrderCreateSingleStockModeConfigurableProductTest extends OrderPlacementBa
         $this->assertEquals('simple_10', $order['items'][1]['sku']);
         $this->assertEquals('Configurable OptionOption 1', $order['items'][1]['name']);
         $this->assertEquals('simple', $order['items'][1]['product_type']);
-        $this->assertEquals(0, $order['items'][1]['price']);
+        $this->assertEquals(10, $order['items'][1]['price']);
         $this->assertEquals(1, $order['items'][1]['qty_ordered']);
     }
 }

@@ -27,7 +27,7 @@ class InventorySourceExtensionTest extends TestCase
     /** @var SourceRepositoryInterface */
     private $sourceRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->sourceRepository = $this->objectManager->get(SourceRepositoryInterface::class);
@@ -39,12 +39,11 @@ class InventorySourceExtensionTest extends TestCase
      *
      * @throws CouldNotSaveException
      * @throws NoSuchEntityException
-     *
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage Validation Failed
      */
     public function testSaveDefaultSourceAsPickupLocation()
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation Failed');
         $source = $this->sourceRepository->get('default');
         $source->getExtensionAttributes()->setIsPickupLocationActive(true);
         $this->sourceRepository->save($source);
@@ -55,12 +54,11 @@ class InventorySourceExtensionTest extends TestCase
      *
      * @throws NoSuchEntityException
      * @throws CouldNotSaveException
-     *
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage Validation Failed
      */
     public function testSaveSourceAsPickupLocationWithoutStreet()
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation Failed');
         $source = $this->sourceRepository->get('eu-1');
         $source->getExtensionAttributes()->setIsPickupLocationActive(true);
         $source->setCity('Some City');
@@ -72,12 +70,11 @@ class InventorySourceExtensionTest extends TestCase
      *
      * @throws NoSuchEntityException
      * @throws CouldNotSaveException
-     *
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage Validation Failed
      */
     public function testSaveSourceAsPickupLocationWithoutCity()
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation Failed');
         $source = $this->sourceRepository->get('eu-2');
         $source->getExtensionAttributes()->setIsPickupLocationActive(true);
         $source->setStreet('Some Street');

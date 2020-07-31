@@ -8,7 +8,7 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="inventory_pickup_location_order" resource="sales" engine="innodb">
-        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Order ID" />
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" identity="true" comment="Order ID" />
         <column xsi:type="varchar" name="pickup_location_code" nullable="false" comment="Pickup Location Code"/>
         <constraint xsi:type="foreign" referenceId="INVENTORY_PICKUP_LOCATION_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID" table="inventory_pickup_location_order" column="order_id" referenceTable="sales_order"  referenceColumn="entity_id" onDelete="CASCADE"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -21,8 +21,8 @@
             <column name="pickup_location_code"/>
         </index>
     </table>
-    <table name="inventory_order_notification" resource="default" engine="innodb">
-        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Order ID" />
+    <table name="inventory_order_notification" resource="sales" engine="innodb">
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" identity="true" comment="Order ID" />
         <column xsi:type="smallint" name="notification_sent" nullable="false" comment="Has Notification Been Sent For Order"/>
         <column xsi:type="smallint" name="send_notification" nullable="false" comment="Should Notification Be Send For Order"/>
         <constraint xsi:type="foreign" referenceId="INVENTORY_ORDER_NOTIFICATION_ORDER_ID_SALES_ORDER_ENTITY_ID" table="inventory_order_notification" column="order_id" referenceTable="sales_order"  referenceColumn="entity_id" onDelete="CASCADE"/>

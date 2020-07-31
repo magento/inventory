@@ -11,7 +11,7 @@
     <test name="StorefrontSalableQuantityOnNonDefaultStockForGroupedProductAfterPlacingOrderCountedCorrectlyTest">
         <annotations>
             <stories value="Grouped Product Custom Stock."/>
-            <title value="Create Grouped Product On Custom Stock."/>
+            <title value="Create Grouped Product On Custom Stock - Salable Quantity"/>
             <description value="Salable Quantity on non default stock for Grouped Product after placing order counted correctly."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735248/scenarios/1469248"/>
             <severity value="CRITICAL"/>

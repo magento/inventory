@@ -18,7 +18,7 @@ class GetDefaultSourceItemBySkuTest extends TestCase
      */
     private $getDefaultSourceItemBySku;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->getDefaultSourceItemBySku = Bootstrap::getObjectManager()->get(GetDefaultSourceItemBySku::class);

@@ -132,6 +132,10 @@ class PickupLocationsAvailabilityValidator implements RequestValidatorInterface
     {
         $productsInfo = [];
         foreach ($items as $item) {
+            if (!empty($item->getChildren())) {
+                continue;
+            }
+
             $productsInfo[] = $this->productInfoFactory->create(['sku' => $item->getSku()]);
         }
 

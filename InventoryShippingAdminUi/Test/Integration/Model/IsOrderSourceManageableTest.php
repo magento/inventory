@@ -30,7 +30,7 @@ class IsOrderSourceManageableTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->isOrderSourceManageable = Bootstrap::getObjectManager()->get(IsOrderSourceManageable::class);
         $this->disableManageStock();
