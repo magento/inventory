@@ -17,7 +17,6 @@ use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductInterfaceFactory;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterface;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterfaceFactory;
-use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionItemInterface;
 use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
@@ -129,7 +128,7 @@ class GetSourceDeductionRequestFromSourceSelection
     /**
      * Returns items per source.
      *
-     * @param SourceSelectionItemInterface[] $sourceSelectionItems
+     * @param array $sourceSelectionItems
      * @return ItemToDeductInterface[]
      */
     private function getItemsPerSource(array $sourceSelectionItems): array

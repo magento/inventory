@@ -79,7 +79,8 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
      * @param ItemToDeductFactory $itemToDeductFactory
      * @param SourceDeductionRequestFactory $sourceDeductionRequestFactory
      * @param SourceDeductionService $sourceDeductionService
-     * @param SalesEventExtensionFactory $salesEventExtensionFactory\
+     * @param SalesEventExtensionFactory $salesEventExtensionFactory
+     * @param GetSalesChannelForOrder $getSalesChannelForOrder
      */
     public function __construct(
         SalesEventInterfaceFactory $salesEventFactory,

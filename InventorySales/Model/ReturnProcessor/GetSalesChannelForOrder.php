@@ -35,7 +35,6 @@ class GetSalesChannelForOrder
         $this->salesChannelFactory = $salesChannelFactory;
     }
 
-
     /**
      * Return sales channel for order
      *
