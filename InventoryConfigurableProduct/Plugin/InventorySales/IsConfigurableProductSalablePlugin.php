@@ -11,6 +11,7 @@ namespace Magento\InventoryConfigurableProduct\Plugin\InventorySales;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
@@ -34,20 +35,27 @@ class IsConfigurableProductSalablePlugin
      * @var Configurable
      */
     private $configurableProductType;
+    /**
+     * @var GetProductTypesBySkusInterface
+     */
+    private $getProductTypesBySkus;
 
     /**
      * @param ProductRepositoryInterface $productRepository
      * @param AreProductsSalableInterface $areProductsSalable
      * @param Configurable $configurableProductType
+     * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         AreProductsSalableInterface $areProductsSalable,
-        Configurable $configurableProductType
+        Configurable $configurableProductType,
+        GetProductTypesBySkusInterface $getProductTypesBySkus
     ) {
         $this->productRepository = $productRepository;
         $this->areProductsSalable = $areProductsSalable;
         $this->configurableProductType = $configurableProductType;
+        $this->getProductTypesBySkus = $getProductTypesBySkus;
     }
 
     /**
@@ -73,11 +81,13 @@ class IsConfigurableProductSalablePlugin
         }
 
         try {
-            $product = $this->productRepository->get($sku);
-            if ($product->getTypeId() !== Configurable::TYPE_CODE) {
+            $types = $this->getProductTypesBySkus->execute([$sku]);
+
+            if (!isset($types[$sku]) || $types[$sku] !== Configurable::TYPE_CODE) {
                 return $resultStatus;
             }
 
+            $product = $this->productRepository->get($sku);
             /** @noinspection PhpParamsInspection */
             $options = $this->configurableProductType->getConfigurableOptions($product);
             $skus = [[]];
