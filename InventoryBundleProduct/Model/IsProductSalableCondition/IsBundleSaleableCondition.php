@@ -78,7 +78,7 @@ class IsBundleSaleableCondition implements IsProductSalableInterface
             $product = $this->productRepository->get($sku);
             /** @noinspection PhpParamsInspection */
             $options = $this->bundleProductType->getOptionsCollection($product);
-            $status = (int)$this->getBundleProductStockStatus->execute(
+            $status = $this->getBundleProductStockStatus->execute(
                 $product,
                 $options->getItems(),
                 $stockId
