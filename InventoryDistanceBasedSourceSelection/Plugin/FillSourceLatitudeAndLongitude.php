@@ -72,9 +72,11 @@ class FillSourceLatitudeAndLongitude
                 $source->setLatitude($latLng->getLat());
                 $source->setLongitude($latLng->getLng());
             } catch (LocalizedException $exception) {
-                $this->logger->error($exception->getMessage());
+                $this->logger->error($exception);
                 $this->messageManager->addWarningMessage($exception->getMessage());
-                unset($exception); // Silently fail geo coding
+            } catch (\Exception $exception) {
+                $this->logger->error($exception);
+                $this->messageManager->addWarningMessage(__('Failed to geocode the source address'));
             }
         }
 
