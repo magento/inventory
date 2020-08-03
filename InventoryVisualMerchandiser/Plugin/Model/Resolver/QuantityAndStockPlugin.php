@@ -74,7 +74,7 @@ class QuantityAndStockPlugin
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
-            return $collection;
+            return $proceed($collection);
         }
 
         $collection->getSelect()->joinLeft(
