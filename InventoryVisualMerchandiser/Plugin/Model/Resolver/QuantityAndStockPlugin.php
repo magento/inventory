@@ -5,20 +5,21 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Category;
+namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Resolver;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\VisualMerchandiser\Model\Category\Products;
+use Magento\VisualMerchandiser\Model\Resolver\QuantityAndStock;
 
 /**
  * This plugin adds multi-source stock calculation capabilities to the Visual Merchandiser feature.
  */
-class ProductsPlugin
+class QuantityAndStockPlugin
 {
     /**
      * @var StoreManagerInterface
@@ -61,11 +62,13 @@ class ProductsPlugin
     /**
      * Extend Visual Merchandiser collection with multi-sourcing capabilities.
      *
-     * @param Products $subject
+     * @param QuantityAndStock $subject
+     * @param callable $proceed
      * @param Collection $collection
      * @return Collection
+     * @throws LocalizedException
      */
-    public function afterGetCollectionForGrid(Products $subject, Collection $collection): Collection
+    public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
