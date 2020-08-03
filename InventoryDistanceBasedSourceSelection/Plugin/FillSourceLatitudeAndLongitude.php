@@ -11,8 +11,9 @@ namespace Magento\InventoryDistanceBasedSourceSelection\Plugin;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
 use Magento\InventoryDistanceBasedSourceSelection\Model\DistanceProvider\GetLatLngFromSource;
-use Psr\Log\LoggerInterface;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Compute latitude and longitude for a source if none is defined
@@ -70,7 +71,7 @@ class FillSourceLatitudeAndLongitude
 
                 $source->setLatitude($latLng->getLat());
                 $source->setLongitude($latLng->getLng());
-            } catch (\Exception $exception) {
+            } catch (LocalizedException $exception) {
                 $this->logger->error($exception->getMessage());
                 $this->messageManager->addWarningMessage($exception->getMessage());
                 unset($exception); // Silently fail geo coding
