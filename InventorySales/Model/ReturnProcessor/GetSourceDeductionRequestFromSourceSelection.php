@@ -21,6 +21,11 @@ use Magento\InventorySourceSelectionApi\Api\Data\SourceSelectionResultInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
+/**
+ * Create source deduction request based on the source selection.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class GetSourceDeductionRequestFromSourceSelection
 {
     /**
