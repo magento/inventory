@@ -16,12 +16,6 @@ use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
 
-
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
 $category = Bootstrap::getObjectManager()->create(Category::class);
 $category->isObjectNew(true);
 $category->setId(

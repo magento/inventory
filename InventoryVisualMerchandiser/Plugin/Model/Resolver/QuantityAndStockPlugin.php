@@ -67,6 +67,7 @@ class QuantityAndStockPlugin
      * @param Collection $collection
      * @return Collection
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {

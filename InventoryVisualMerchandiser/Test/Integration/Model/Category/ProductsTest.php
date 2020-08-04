@@ -24,7 +24,7 @@ class ProductsTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryVisualMerchandiser/Test/_files/source_items_products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDbIsolation disabled
+     * @magentoDbIsolation enabled
      */
     public function testProductsInCategory()
     {

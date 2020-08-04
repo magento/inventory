@@ -11,11 +11,13 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /** @var ProductRepositoryInterface $productRepository */
-$productRepository = $objectManager->create(ProductRepositoryInterface::class);
+$productRepository = Bootstrap::getObjectManager()->create(ProductRepositoryInterface::class);
 
 try {
     $product = $productRepository->get('simple_10', false, null, true);
-    $productRepository->delete($product);
+    if ($product->getId()) {
+        $productRepository->delete($product);
+    }
 } catch (NoSuchEntityException $exception) {
     //Product already removed
 }
