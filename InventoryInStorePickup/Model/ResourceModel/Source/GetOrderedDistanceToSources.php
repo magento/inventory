@@ -62,7 +62,7 @@ class GetOrderedDistanceToSources
         }
         $distances = [];
         foreach (array_reverse($distancesChunks) as $distanceChunk) {
-          $distances = $distances + $distanceChunk;
+            $distances = $distances + $distanceChunk;
         }
 
         return array_map('floatval', $distances);
@@ -75,6 +75,7 @@ class GetOrderedDistanceToSources
      * @param int $radius
      * @param array $latLngs
      * @return Select
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function processHavingClause(Select $query, int $radius, array $latLngs): Select
     {
