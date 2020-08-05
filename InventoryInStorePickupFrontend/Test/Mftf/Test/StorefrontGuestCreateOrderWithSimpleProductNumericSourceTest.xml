@@ -49,41 +49,25 @@
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
-        <after>
-            <!--Revert Distance Provider for Distance Based SSA to online.-->
-            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
-            <!--Disable 'In Store Pickup' shipping method.-->
-            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
-            <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <deleteData createDataKey="product" stepKey="deleteProduct"/>
-            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
-            <!--Assign Default Stock to Default Website.-->
-            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
-                <argument name="stockName" value="{{_defaultStock.name}}"/>
-                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
-            </actionGroup>
-            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <deleteData createDataKey="stock" stepKey="deleteStock"/>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
-        </after>
-        <!--Assign simple product to grouped product.-->
-        <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
-        <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
-        <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
-        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterGroupedProductOptionsBySimple">
-            <argument name="product" value="$$product$$"/>
-        </actionGroup>
-        <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProductFilterResult"/>
-        <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
-        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForSimpleProduct">
-            <argument name="productName" value="$$product.name$$"/>
-            <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
-        </actionGroup>
-        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
+        <!--<after>-->
+            <!--&lt;!&ndash;Revert Distance Provider for Distance Based SSA to online.&ndash;&gt;-->
+            <!--<magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>-->
+            <!--&lt;!&ndash;Disable 'In Store Pickup' shipping method.&ndash;&gt;-->
+            <!--<magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>-->
+            <!--<deleteData createDataKey="category" stepKey="deleteCategory"/>-->
+            <!--<deleteData createDataKey="product" stepKey="deleteProduct"/>-->
+            <!--&lt;!&ndash;Assign Default Stock to Default Website.&ndash;&gt;-->
+            <!--<actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">-->
+                <!--<argument name="stockName" value="{{_defaultStock.name}}"/>-->
+                <!--<argument name="websiteName" value="{{_defaultWebsite.name}}"/>-->
+            <!--</actionGroup>-->
+            <!--<actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>-->
+            <!--<deleteData createDataKey="stock" stepKey="deleteStock"/>-->
+            <!--<actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>-->
+        <!--</after>-->
         <!--Add product to cart.-->
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
-            <argument name="product" value="$$groupedProduct$$"/>
+            <argument name="product" value="$$product$$"/>
         </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
@@ -91,8 +75,8 @@
         <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
         <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
-            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
-            <argument name="sourceName" value="$culverSource.source[name]$"/>
+            <argument name="searchString" value="{{CulverStorePickupNumericSource.city}}"/>
+            <argument name="sourceName" value="$culverNumericSource.source[name]$"/>
         </actionGroup>
         <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
         <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
@@ -107,19 +91,7 @@
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
-            <argument name="sourceName" value="$culverSource.source[name]$"/>
-        </actionGroup>
-        <!--Verify product quantity.-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQty"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQty">
-            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$product.sku$"/>
-        </actionGroup>
-        <actionGroup ref="AssertAdminSalableProductQtyActionGroup" stepKey="verifyProductQuantity">
-            <argument name="sourceName" value="$culverSource.source[name]$"/>
-            <argument name="stockName" value="$stock.stock[name]$"/>
-            <argument name="sourceQty" value="{{defaultProductQty.value}}"/>
-            <argument name="stockQty" value="{{defaultProductStockQtyWithTwoSourcesBoughtWith10Pieces.value}}"/>
+            <argument name="sourceName" value="$culverNumericSource.source[name]$"/>
         </actionGroup>
     </test>
 </tests>
