@@ -6,10 +6,16 @@
 declare(strict_types=1);
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsDeleteInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+
+/** @var Registry $registry */
+$registry = Bootstrap::getObjectManager()->get(Registry::class);
+$registry->unregister('isSecureArea');
+$registry->register('isSecureArea', true);
 
 /** @var SourceItemRepositoryInterface $sourceItemRepository */
 $sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);
@@ -32,3 +38,6 @@ $sourceItems = $sourceItemRepository->getList($searchCriteria)->getItems();
 if (!empty($sourceItems)) {
     $sourceItemsDelete->execute($sourceItems);
 }
+
+$registry->unregister('isSecureArea');
+$registry->register('isSecureArea', false);

@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryVisualMerchandiser\Test\Integration\Model\Category;
 
+use Magento\Catalog\Model\Product;
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\VisualMerchandiser\Model\Category\Products;
 use PHPUnit\Framework\TestCase;
@@ -24,11 +26,18 @@ class ProductsTest extends TestCase
      * @magentoDataFixture ../../../../app/code/Magento/InventoryVisualMerchandiser/Test/_files/source_items_products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     * @magentoDbIsolation enabled
+     * @magentoDbIsolation disabled
      */
-    public function testProductsInCategory()
+    public function testProductsInCategory(): void
     {
         $categoryId = 1234;
+
+        /** @var StoreManagerInterface $storeManager */
+        $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
+        /** @var $product Product */
+        $product = Bootstrap::getObjectManager()->create(Product::class);
+        $product->setStoreId($storeManager->getStore('store_for_us_website')->getId());
+        $product->load(10);
         /** @var Products $productsModel */
         $productsModel = Bootstrap::getObjectManager()->get(Products::class);
         $collection = $productsModel->getCollectionForGrid($categoryId, 'store_for_us_website');
@@ -37,6 +46,6 @@ class ProductsTest extends TestCase
             $productsStockData[$item->getSku()] = $item->getData('stock');
         }
 
-        self::assertEquals(100, (int)$productsStockData['simple_10']);
+        self::assertEquals($product->getQty(), (int)$productsStockData['simple_10']);
     }
 }

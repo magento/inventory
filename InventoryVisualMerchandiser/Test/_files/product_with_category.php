@@ -12,6 +12,7 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Setup\CategorySetup;
+use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\Quote\Model\ResourceModel\Quote\Item as QuoteItem;
 use Magento\Store\Model\Website;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -69,6 +70,19 @@ $product->setTypeId(Type::TYPE_SIMPLE)
     ->setStockData(['use_config_manage_stock' => 1, 'qty' => 100, 'is_qty_decimal' => 0, 'is_in_stock' => 1]);
 
 $product = $productRepository->save($product);
+
+/** @var Item $stockItem */
+$stockItem = Bootstrap::getObjectManager()->create(Item::class);
+$stockItem->load($productId, 'product_id');
+
+if (!$stockItem->getProductId()) {
+    $stockItem->setProductId($productId);
+}
+$stockItem->setUseConfigManageStock(1);
+$stockItem->setQty(100);
+$stockItem->setIsQtyDecimal(0);
+$stockItem->setIsInStock(1);
+$stockItem->save();
 
 // Remove any previously created product with the same id.
 try {
