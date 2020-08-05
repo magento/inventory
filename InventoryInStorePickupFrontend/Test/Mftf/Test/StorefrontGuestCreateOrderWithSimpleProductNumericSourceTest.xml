@@ -28,11 +28,11 @@
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
             <actionGroup ref="AdminReindexAndFlushCache" stepKey="ReindexAndCache"/>
             <!--Create test data.-->
-            <createData entity="CulverStorePickupNumericSource" stepKey="culverNumericSource"/>
+            <createData entity="PickupNumericSource" stepKey="numericSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
             <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
                 <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="culverNumericSource"/>
+                <requiredEntity createDataKey="numericSource"/>
             </createData>
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
@@ -44,27 +44,27 @@
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
-                <argument name="sourceCode" value="culverNumericSource.source[source_code]$"/>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignNumericSourceAndSetQty">
+                <argument name="sourceCode" value="$numericSource.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
-        <!--<after>-->
-            <!--&lt;!&ndash;Revert Distance Provider for Distance Based SSA to online.&ndash;&gt;-->
-            <!--<magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>-->
-            <!--&lt;!&ndash;Disable 'In Store Pickup' shipping method.&ndash;&gt;-->
-            <!--<magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>-->
-            <!--<deleteData createDataKey="category" stepKey="deleteCategory"/>-->
-            <!--<deleteData createDataKey="product" stepKey="deleteProduct"/>-->
-            <!--&lt;!&ndash;Assign Default Stock to Default Website.&ndash;&gt;-->
-            <!--<actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">-->
-                <!--<argument name="stockName" value="{{_defaultStock.name}}"/>-->
-                <!--<argument name="websiteName" value="{{_defaultWebsite.name}}"/>-->
-            <!--</actionGroup>-->
-            <!--<actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>-->
-            <!--<deleteData createDataKey="stock" stepKey="deleteStock"/>-->
-            <!--<actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>-->
-        <!--</after>-->
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
         <!--Add product to cart.-->
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
@@ -75,8 +75,8 @@
         <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
         <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
-            <argument name="searchString" value="{{CulverStorePickupNumericSource.city}}"/>
-            <argument name="sourceName" value="$culverNumericSource.source[name]$"/>
+            <argument name="searchString" value="{{PickupNumericSource.city}}"/>
+            <argument name="sourceName" value="$numericSource.source[name]$"/>
         </actionGroup>
         <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
         <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
@@ -91,7 +91,7 @@
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
         <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
-            <argument name="sourceName" value="$culverNumericSource.source[name]$"/>
+            <argument name="sourceName" value="$numericSource.source[name]$"/>
         </actionGroup>
     </test>
 </tests>
