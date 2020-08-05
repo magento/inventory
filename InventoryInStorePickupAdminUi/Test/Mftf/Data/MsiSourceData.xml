@@ -133,8 +133,8 @@
     </entity>
     <entity name="PickupNumericSource" type="source">
         <data key="id_field_name">source_code</data>
-        <data key="name">123456789</data>
-        <data key="source_code">123456789</data>
+        <data key="name">1234567890</data>
+        <data key="source_code">1234567890</data>
         <data key="enabled">1</data>
         <data key="description">Numeric Source for "In Store Pickup" shipping method with Culver City address.</data>
         <data key="priority">100</data>
