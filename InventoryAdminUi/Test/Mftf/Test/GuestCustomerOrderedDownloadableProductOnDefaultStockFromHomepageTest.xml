@@ -21,6 +21,7 @@
         <before>
             <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
             <magentoCLI stepKey="enableGuestCheckoutForDownloadable" command="config:set catalog/downloadable/disable_guest_checkout 0" />
+            <magentoCLI stepKey="enableShareableDownloadableItems" command="config:set catalog/downloadable/shareable 1" />
             <createData entity="FullSource1" stepKey="createSource"/>
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="MsiDownloadableProduct" stepKey="downloadableProduct">
@@ -28,6 +29,7 @@
             </createData>
             <createData entity="downloadableLink1" stepKey="addDownloadableLink">
                 <requiredEntity createDataKey="downloadableProduct"/>
+                <field key="is_shareable">1</field>
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!-- Assign Sales Channel to Default Stock -->
@@ -44,6 +46,7 @@
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
             <magentoCLI stepKey="disableGuestCheckoutForDownloadable" command="config:set catalog/downloadable/disable_guest_checkout 1" />
+            <magentoCLI stepKey="disableShareableDownloadableItems" command="config:set catalog/downloadable/shareable 0" />
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>

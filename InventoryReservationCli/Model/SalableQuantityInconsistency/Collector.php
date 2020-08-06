@@ -72,7 +72,9 @@ class Collector
     {
         $metadata = $this->serializer->unserialize($reservation->getMetadata());
         $objectId = $metadata['object_id'];
-        $objectIncrementId = $metadata['object_increment_id'] ?? $this->getOrderIncrementId->execute((int)$objectId);
+        $objectIncrementId = !empty($metadata['object_increment_id'])
+            ? $metadata['object_increment_id']
+            : $this->getOrderIncrementId->execute((int)$objectId);
         $stockId = $reservation->getStockId();
         $key = $objectIncrementId . '-' . $stockId;
 
