@@ -30,8 +30,11 @@ class ProductsTest extends TestCase
      */
     public function testProductsInCategory(): void
     {
-        $categoryId = 1234;
+        if (!class_exists(Products::class)) {
+            return;
+        }
 
+        $categoryId = 1234;
         /** @var StoreManagerInterface $storeManager */
         $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
         /** @var $product Product */
