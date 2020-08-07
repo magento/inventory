@@ -31,7 +31,7 @@ class ProductsTest extends TestCase
     public function testProductsInCategory(): void
     {
         if (!class_exists(Products::class)) {
-            return;
+            $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
         $categoryId = 1234;
