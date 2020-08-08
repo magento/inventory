@@ -6,19 +6,20 @@
 
 declare(strict_types=1);
 
-namespace Magento\InventoryBundleProduct\Model\IsProductSalableCondition;
+namespace Magento\InventoryBundleProduct\Plugin\InventorySales;
 
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain;
 
 /**
  * Check if bundle product is salable with bundle options.
  */
-class IsBundleSaleableCondition implements IsProductSalableInterface
+class IsBundleProductSalablePlugin
 {
     /**
      * @var Type
@@ -59,23 +60,40 @@ class IsBundleSaleableCondition implements IsProductSalableInterface
     }
 
     /**
-     * Is product salable for bundle product.
-     *
+     * @param IsProductSalableConditionChain $subject
+     * @param \Closure $proceed
      * @param string $sku
      * @param int $stockId
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function execute(string $sku, int $stockId): bool
-    {
-        $status = true;
+    public function aroundExecute(
+        IsProductSalableConditionChain $subject,
+        \Closure $proceed,
+        string $sku,
+        int $stockId
+    ): bool {
         try {
             $types = $this->getProductTypesBySkus->execute([$sku]);
             if (!isset($types[$sku]) || $types[$sku] !== Type::TYPE_CODE) {
-                return $status;
+                return $proceed($sku, $stockId);
             }
 
-            $product = $this->productRepository->get($sku);
+            // @TODO VERY temporary solution untill https://github.com/magento/inventory/pull/3088 will be resolved
+            // Product salability MUST NOT BE CALLED during product load.
+            // Tests stabilization.
+            /** @var \Magento\Framework\Registry $registry */
+            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
+            $key = 'inventory_check_product' . $sku;
+
+            if ($registry->registry($key)) {
+                $product = $registry->registry($key);
+            } else {
+                $product = $this->productRepository->get($sku);
+            }
+
             /** @noinspection PhpParamsInspection */
             $options = $this->bundleProductType->getOptionsCollection($product);
             $status = $this->getBundleProductStockStatus->execute(

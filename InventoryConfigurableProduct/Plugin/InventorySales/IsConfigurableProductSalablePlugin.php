@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProduct\Plugin\InventorySales;
 
+use Closure;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain;
@@ -35,6 +37,7 @@ class IsConfigurableProductSalablePlugin
      * @var Configurable
      */
     private $configurableProductType;
+
     /**
      * @var GetProductTypesBySkusInterface
      */
@@ -62,7 +65,7 @@ class IsConfigurableProductSalablePlugin
      * Is configurable product salable.
      *
      * @param IsProductSalableConditionChain $subject
-     * @param bool $resultStatus
+     * @param Closure $proceed
      * @param string $sku
      * @param int $stockId
      *
@@ -70,24 +73,33 @@ class IsConfigurableProductSalablePlugin
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecute(
+    public function aroundExecute(
         IsProductSalableConditionChain $subject,
-        bool $resultStatus,
+        Closure $proceed,
         string $sku,
         int $stockId
     ): bool {
-        if (!$resultStatus) {
-            return $resultStatus;
-        }
-
         try {
             $types = $this->getProductTypesBySkus->execute([$sku]);
 
             if (!isset($types[$sku]) || $types[$sku] !== Configurable::TYPE_CODE) {
-                return $resultStatus;
+                return $proceed($sku, $stockId);
             }
 
-            $product = $this->productRepository->get($sku);
+            // @TODO VERY temporary solution untill https://github.com/magento/inventory/pull/3088 will be resolved
+            // Product salability MUST NOT BE CALLED during product load.
+            // Tests stabilization.
+            /** @var \Magento\Framework\Registry $registry */
+            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
+            $key = 'inventory_check_product' . $sku;
+
+            if ($registry->registry($key)) {
+                $product = $registry->registry($key);
+            } else {
+                $product = $this->productRepository->get($sku);
+            }
+
+            $resultStatus = false;
             /** @noinspection PhpParamsInspection */
             $options = $this->configurableProductType->getConfigurableOptions($product);
             $skus = [[]];
