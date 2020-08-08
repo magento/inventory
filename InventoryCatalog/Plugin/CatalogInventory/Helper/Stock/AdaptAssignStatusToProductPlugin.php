@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -78,6 +79,17 @@ class AdaptAssignStatusToProductPlugin
         }
 
         try {
+            // @TODO VERY temporary solution untill https://github.com/magento/inventory/pull/3088 will be resolved
+            // Product salability MUST NOT BE CALLED during product load.
+            // Tests stabilization.
+            /** @var \Magento\Framework\Registry $registry */
+            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
+            $key = 'inventory_check_product' . $product->getSku();
+            if ($registry->registry($key)) {
+                $registry->unregister($key);
+            }
+            $registry->register($key, $product);
+
             $this->getProductIdsBySkus->execute([$product->getSku()]);
             if (null === $status) {
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
