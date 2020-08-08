@@ -128,6 +128,6 @@ class IsProductSalableConditionChain implements IsProductSalableInterface
             return false;
         }
 
-        return false;
+        return true;
     }
 }
