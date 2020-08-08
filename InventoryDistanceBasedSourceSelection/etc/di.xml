@@ -60,7 +60,7 @@
 
     <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
         <plugin sortOrder="10" name="updateSourceLatitudeAndLongitude"
-                type="Magento\InventoryDistanceBasedSourceSelection\Plugin\FillSourceLatitudeAndLongitude"/>
+                type="Magento\InventoryDistanceBasedSourceSelection\Plugin\InventoryApi\SourceRepository\FillSourceLatitudeAndLongitude"/>
     </type>
 
     <type name="Magento\Config\Model\Config\TypePool">

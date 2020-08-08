@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Magento\InventoryDistanceBasedSourceSelection\Plugin;
+namespace Magento\InventoryDistanceBasedSourceSelection\Plugin\InventoryApi\SourceRepository\Adminhtml;
 
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
