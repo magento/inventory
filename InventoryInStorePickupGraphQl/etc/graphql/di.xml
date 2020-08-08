@@ -14,6 +14,7 @@
                 <item name="currentPage" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\CurrentPage</item>
                 <item name="pageSize" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\PageSize</item>
                 <item name="sort" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\Sort</item>
+                <item name="productsInfo" xsi:type="object">Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest\ProductsInfo</item>
             </argument>
         </arguments>
     </type>
