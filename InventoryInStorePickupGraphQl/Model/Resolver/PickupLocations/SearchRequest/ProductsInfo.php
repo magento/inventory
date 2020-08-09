@@ -29,6 +29,10 @@ class ProductsInfo implements ResolverInterface
      */
     private $productInfoInterfaceFactory;
 
+    /**
+     * @param SearchRequestExtensionFactory $searchRequestExtensionFactory
+     * @param ProductInfoInterfaceFactory $productInfoInterfaceFactory
+     */
     public function __construct(
         SearchRequestExtensionFactory $searchRequestExtensionFactory,
         ProductInfoInterfaceFactory $productInfoInterfaceFactory
@@ -38,7 +42,7 @@ class ProductsInfo implements ResolverInterface
     }
 
     /**
-     * @@inheritdoc
+     * @inheritdoc
      */
     public function resolve(
         SearchRequestBuilderInterface $searchRequestBuilder,
