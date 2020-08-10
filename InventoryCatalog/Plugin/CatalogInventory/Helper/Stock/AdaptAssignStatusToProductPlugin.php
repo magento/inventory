@@ -71,7 +71,7 @@ class AdaptAssignStatusToProductPlugin
     public function beforeAssignStatusToProduct(
         Stock $subject,
         Product $product,
-        ?int $status
+        ?int $status = null
     ): array {
         if (null === $product->getSku()) {
             return [$product, $status];
