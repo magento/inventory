@@ -18,7 +18,7 @@ use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\DataProvider\PickupLocation;
-use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequest;
+use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequestBuilder;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -29,7 +29,7 @@ use Magento\Store\Model\StoreManagerInterface;
 class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterface
 {
     /**
-     * @var SearchRequest
+     * @var SearchRequestBuilder
      */
     private $searchRequestResolver;
 
@@ -53,14 +53,14 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     private $storeManager;
 
     /**
-     * @param SearchRequest $searchRequestResolver
+     * @param SearchRequestBuilder $searchRequestResolver
      * @param SearchRequestBuilderInterface $searchRequestBuilder
      * @param GetPickupLocationsInterface $getPickupLocations
      * @param PickupLocation $dataProvider
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        SearchRequest $searchRequestResolver,
+        SearchRequestBuilder $searchRequestResolver,
         SearchRequestBuilderInterface $searchRequestBuilder,
         GetPickupLocationsInterface $getPickupLocations,
         PickupLocation $dataProvider,
@@ -80,8 +80,8 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     {
         $this->validateInput($args);
 
-        $this->searchRequestBuilder->setScopeCode($this->storeManager->getWebsite()->getCode());
         $builder = $this->searchRequestResolver->resolve($this->searchRequestBuilder, $field->getName(), $args);
+        $builder->setScopeCode($this->storeManager->getWebsite()->getCode());
 
         $searchRequest = $builder->create();
         try {
