@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminNotifyCustomerForPickupOrderGroupedProductTest">
+        <annotations>
+            <stories value="Notify Customer Grouped Product."/>
+            <title value="Admin Notify customer for Pickup order with Grouped product."/>
+            <description value="Verify, Admin user able notify customer for Pickup order with Grouped product."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/1063873/scenarios/4934156"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="store_pickup"/>
+        </annotations>
+
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <actionGroup ref="AdminReindexAndFlushCache" stepKey="ReindexAndCache"/>
+            <!--Create test data.-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="GroupedProduct" stepKey="groupedProduct"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign product to sources.-->
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <!--Assign simple product to grouped product.-->
+        <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
+        <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
+        <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
+        <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterGroupedProductOptionsBySimple">
+            <argument name="product" value="$$product$$"/>
+        </actionGroup>
+        <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkProductFilterResult"/>
+        <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
+        <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForSimpleProduct">
+            <argument name="productName" value="$$product.name$$"/>
+            <argument name="qty" value="{{tenPiecesAddToCart.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
+        <!--Add product to cart.-->
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$$groupedProduct$$"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
+            <argument name="customerVar" value="Simple_US_Customer"/>
+            <argument name="customerAddressVar" value="US_Address_TX"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{CheckoutPaymentSection.orderSummarySubtotal}}" time="30" stepKey="waitForOrderSummaryBlock"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="orderNumber"/>
+        <!--Verify order-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <!--Notify customer order ready for pickup.-->
+        <actionGroup ref="AdminCreateShipmentWithStorePickupActionGroup" stepKey="clickNotifyOrderReadyForPickUp"/>
+        <actionGroup ref="AdminAssertOrderStatusActionGroup" stepKey="verifyOrderStatus">
+            <argument name="orderStatus" value="{{OrderStatus.complete}}"/>
+        </actionGroup>
+    </test>
+</tests>

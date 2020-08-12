@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminNotifyCustomerForPickupOrderBundleProductTest">
+        <annotations>
+            <stories value="Notify Customer Bundle Product."/>
+            <title value="Admin Notify customer for Pickup order with Bundle product."/>
+            <description value="Verify, Admin user able notify customer for Pickup order with Bundle product."/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/1063873/scenarios/4934154"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="store_pickup"/>
+        </annotations>
+
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <actionGroup ref="AdminReindexAndFlushCache" stepKey="ReindexAndCache"/>
+            <!--Create test data.-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption">
+                <requiredEntity createDataKey="bundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product"/>
+            </createData>
+            <!--Assign product to sources.-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+            <!--Assign bundle product to category.-->
+            <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openBundleProductEditPage"/>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
+                <argument name="categoryName" value="$category.name$"/>
+            </actionGroup>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online.-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method.-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <!--Add bundle product to cart.-->
+        <amOnPage url="{{StorefrontProductPage.url($bundleProduct.custom_attributes[url_key]$)}}" stepKey="navigateToBundlePDP"/>
+        <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="productName" value="$bundleProduct.name$"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <actionGroup ref="StorefrontPickInStoreGuestCustomerFillBillingAddressActionGroup" stepKey="fillAddress">
+            <argument name="customerVar" value="Simple_US_Customer"/>
+            <argument name="customerAddressVar" value="US_Address_TX"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{CheckoutPaymentSection.orderSummarySubtotal}}" time="30" stepKey="waitForOrderSummaryBlock"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="orderNumber"/>
+        <!--Verify order-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$orderNumber}"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertOrderWithStorePickupShippingMethodActionGroup" stepKey="verifyShippingInformation">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <!--Notify customer order ready for pickup.-->
+        <actionGroup ref="AdminCreateShipmentWithStorePickupActionGroup" stepKey="clickNotifyOrderReadyForPickUp"/>
+        <actionGroup ref="AdminAssertOrderStatusActionGroup" stepKey="verifyOrderStatus">
+            <argument name="orderStatus" value="{{OrderStatus.complete}}"/>
+        </actionGroup>
+    </test>
+</tests>
