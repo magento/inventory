@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-    namespace Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations;
+namespace Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations;
 
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
@@ -14,6 +14,7 @@ use Magento\Framework\GraphQl\Query\Resolver\Argument\Filter\Clause;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
+use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterfaceFactory;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequestBuilder\ExtensionProvider;
 
 /**
@@ -45,6 +46,11 @@ class SearchRequestBuilder
     private $extensionProvider;
 
     /**
+     * @var SearchRequestBuilderInterfaceFactory
+     */
+    private $searchRequestBuilderFactory;
+
+    /**
      * @param AstConverter $astConverter
      * @param SortOrderBuilder $sortOrderBuilder
      * @param ExtensionProvider $extensionProvider
@@ -52,27 +58,27 @@ class SearchRequestBuilder
     public function __construct(
         AstConverter $astConverter,
         SortOrderBuilder $sortOrderBuilder,
-        ExtensionProvider $extensionProvider
+        ExtensionProvider $extensionProvider,
+        SearchRequestBuilderInterfaceFactory $searchRequestBuilderFactory
     ) {
         $this->astConverter = $astConverter;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->extensionProvider = $extensionProvider;
+        $this->searchRequestBuilderFactory = $searchRequestBuilderFactory;
     }
 
     /**
      * Resolve Search Request Builder parameters from arguments.
      *
-     * @param SearchRequestBuilderInterface $searchRequestBuilder
      * @param string $fieldName
      * @param array $argument
      *
      * @return SearchRequestBuilderInterface
      */
-    public function resolve(
-        SearchRequestBuilderInterface $searchRequestBuilder,
-        string $fieldName,
-        array $argument
-    ): SearchRequestBuilderInterface {
+    public function resolve(string $fieldName, array $argument): SearchRequestBuilderInterface
+    {
+        $searchRequestBuilder = $this->searchRequestBuilderFactory->create();
+
         foreach (array_keys($argument) as $argumentName) {
             $this->resolveAttributeValue($searchRequestBuilder, $fieldName, $argumentName, $argument);
         }

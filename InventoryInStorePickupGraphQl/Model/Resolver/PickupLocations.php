@@ -16,7 +16,6 @@ use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchRequestInterface;
 use Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface;
 use Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface;
-use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\DataProvider\PickupLocation;
 use Magento\InventoryInStorePickupGraphQl\Model\Resolver\PickupLocations\SearchRequestBuilder;
 use Magento\Store\Model\StoreManagerInterface;
@@ -31,12 +30,7 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     /**
      * @var SearchRequestBuilder
      */
-    private $searchRequestResolver;
-
-    /**
-     * @var SearchRequestBuilderInterface
-     */
-    private $searchRequestBuilder;
+    private $searchRequestBuilderResolver;
 
     /**
      * @var GetPickupLocationsInterface
@@ -47,27 +41,25 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
      * @var PickupLocation
      */
     private $dataProvider;
+
     /**
      * @var StoreManagerInterface
      */
     private $storeManager;
 
     /**
-     * @param SearchRequestBuilder $searchRequestResolver
-     * @param SearchRequestBuilderInterface $searchRequestBuilder
+     * @param SearchRequestBuilder $searchRequestBuilderResolver
      * @param GetPickupLocationsInterface $getPickupLocations
      * @param PickupLocation $dataProvider
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        SearchRequestBuilder $searchRequestResolver,
-        SearchRequestBuilderInterface $searchRequestBuilder,
+        SearchRequestBuilder $searchRequestBuilderResolver,
         GetPickupLocationsInterface $getPickupLocations,
         PickupLocation $dataProvider,
         StoreManagerInterface $storeManager
     ) {
-        $this->searchRequestResolver = $searchRequestResolver;
-        $this->searchRequestBuilder = $searchRequestBuilder;
+        $this->searchRequestBuilderResolver = $searchRequestBuilderResolver;
         $this->getPickupLocations = $getPickupLocations;
         $this->dataProvider = $dataProvider;
         $this->storeManager = $storeManager;
@@ -80,7 +72,7 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     {
         $this->validateInput($args);
 
-        $builder = $this->searchRequestResolver->resolve($this->searchRequestBuilder, $field->getName(), $args);
+        $builder = $this->searchRequestBuilderResolver->resolve($field->getName(), $args);
         $builder->setScopeCode($this->storeManager->getWebsite()->getCode());
 
         $searchRequest = $builder->create();
