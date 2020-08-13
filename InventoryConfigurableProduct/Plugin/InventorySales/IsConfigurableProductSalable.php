@@ -21,7 +21,7 @@ use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
  * Check if configurable product is salable.
  * Moved from chain due to framework limitations (usage of 'AreProductsSalableInterface' provides cyclical dependency).
  */
-class IsConfigurableProductSalablePlugin
+class IsConfigurableProductSalable
 {
     /**
      * @var ProductRepositoryInterface
@@ -86,7 +86,7 @@ class IsConfigurableProductSalablePlugin
                 return $proceed($sku, $stockId);
             }
 
-            // @TODO VERY temporary solution untill https://github.com/magento/inventory/pull/3088 will be resolved
+            // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
             // Product salability MUST NOT BE CALLED during product load.
             // Tests stabilization.
             /** @var \Magento\Framework\Registry $registry */

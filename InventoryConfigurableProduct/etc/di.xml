@@ -27,7 +27,7 @@
         <plugin name="adapt_parent_stock_processor" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor\AdaptParentItemProcessorPlugin"/>
     </type>
     <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
-        <plugin name="is_configurable_product_salable" type="\Magento\InventoryConfigurableProduct\Plugin\InventorySales\IsConfigurableProductSalablePlugin" />
+        <plugin name="is_configurable_product_salable" type="\Magento\InventoryConfigurableProduct\Plugin\InventorySales\IsConfigurableProductSalable" />
     </type>
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
         <arguments>
