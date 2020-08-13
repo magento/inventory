@@ -75,7 +75,7 @@ class SearchRequestBuilder
      *
      * @return SearchRequestBuilderInterface
      */
-    public function resolve(string $fieldName, array $argument): SearchRequestBuilderInterface
+    public function getBuilderFromArgument(string $fieldName, array $argument): SearchRequestBuilderInterface
     {
         $searchRequestBuilder = $this->searchRequestBuilderFactory->create();
 

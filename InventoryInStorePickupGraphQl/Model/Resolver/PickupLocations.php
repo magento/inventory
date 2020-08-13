@@ -72,7 +72,7 @@ class PickupLocations implements \Magento\Framework\GraphQl\Query\ResolverInterf
     {
         $this->validateInput($args);
 
-        $builder = $this->searchRequestBuilderResolver->resolve($field->getName(), $args);
+        $builder = $this->searchRequestBuilderResolver->getBuilderFromArgument($field->getName(), $args);
         $builder->setScopeCode($this->storeManager->getWebsite()->getCode());
 
         $searchRequest = $builder->create();
