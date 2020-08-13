@@ -9,6 +9,7 @@ namespace Magento\InventoryIndexer\Model\Queue;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\DefaultStockProcessor;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
 
 /**
@@ -25,17 +26,24 @@ class UpdateIndexSalabilityStatus
      * @var IndexProcessor
      */
     private $indexProcessor;
+    /**
+     * @var DefaultStockProcessor
+     */
+    private $defaultStockProcessor;
 
     /**
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param IndexProcessor $indexProcessor
+     * @param DefaultStockProcessor $defaultStockProcessor
      */
     public function __construct(
         DefaultStockProviderInterface $defaultStockProvider,
-        IndexProcessor $indexProcessor
+        IndexProcessor $indexProcessor,
+        DefaultStockProcessor $defaultStockProcessor
     ) {
         $this->defaultStockProvider = $defaultStockProvider;
         $this->indexProcessor = $indexProcessor;
+        $this->defaultStockProcessor = $defaultStockProcessor;
     }
 
     /**
@@ -50,8 +58,12 @@ class UpdateIndexSalabilityStatus
     {
         $stockId = $reservationData->getStock();
         $dataForUpdate = [];
-        if ($stockId !== $this->defaultStockProvider->getId() && $reservationData->getSkus()) {
-            $dataForUpdate = $this->indexProcessor->execute($reservationData, $stockId);
+        if ($reservationData->getSkus()) {
+            if ($stockId !== $this->defaultStockProvider->getId()) {
+                $dataForUpdate = $this->indexProcessor->execute($reservationData, $stockId);
+            } else {
+                $dataForUpdate = $this->defaultStockProcessor->execute($reservationData);
+            }
         }
 
         return $dataForUpdate;
