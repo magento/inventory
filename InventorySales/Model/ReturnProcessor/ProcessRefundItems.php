@@ -10,29 +10,22 @@ namespace Magento\InventorySales\Model\ReturnProcessor;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
+use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySalesApi\Model\ReturnProcessor\ProcessRefundItemsInterface;
 use Magento\InventorySalesApi\Model\ReturnProcessor\GetSourceDeductedOrderItemsInterface;
+use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\InventorySourceDeductionApi\Model\ItemToDeductFactory;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestFactory;
 use Magento\InventorySourceDeductionApi\Model\SourceDeductionService;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ProcessRefundItems implements ProcessRefundItemsInterface
 {
-    /**
-     * @var WebsiteRepositoryInterface
-     */
-    private $websiteRepository;
-
-    /**
-     * @var SalesChannelInterfaceFactory
-     */
-    private $salesChannelFactory;
-
     /**
      * @var SalesEventInterfaceFactory
      */
@@ -69,8 +62,16 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     private $sourceDeductionService;
 
     /**
-     * @param WebsiteRepositoryInterface $websiteRepository
-     * @param SalesChannelInterfaceFactory $salesChannelFactory
+     * @var SalesEventExtensionFactory;
+     */
+    private $salesEventExtensionFactory;
+
+    /**
+     * @var GetSalesChannelForOrder
+     */
+    private $getSalesChannelForOrder;
+
+    /**
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param ItemToSellInterfaceFactory $itemsToSellFactory
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
@@ -78,20 +79,20 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
      * @param ItemToDeductFactory $itemToDeductFactory
      * @param SourceDeductionRequestFactory $sourceDeductionRequestFactory
      * @param SourceDeductionService $sourceDeductionService
+     * @param SalesEventExtensionFactory $salesEventExtensionFactory
+     * @param GetSalesChannelForOrder $getSalesChannelForOrder
      */
     public function __construct(
-        WebsiteRepositoryInterface $websiteRepository,
-        SalesChannelInterfaceFactory $salesChannelFactory,
         SalesEventInterfaceFactory $salesEventFactory,
         ItemToSellInterfaceFactory $itemsToSellFactory,
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
         GetSourceDeductedOrderItemsInterface $getSourceDeductedOrderItems,
         ItemToDeductFactory $itemToDeductFactory,
         SourceDeductionRequestFactory $sourceDeductionRequestFactory,
-        SourceDeductionService $sourceDeductionService
+        SourceDeductionService $sourceDeductionService,
+        SalesEventExtensionFactory $salesEventExtensionFactory,
+        GetSalesChannelForOrder $getSalesChannelForOrder
     ) {
-        $this->websiteRepository = $websiteRepository;
-        $this->salesChannelFactory = $salesChannelFactory;
         $this->salesEventFactory = $salesEventFactory;
         $this->itemsToSellFactory = $itemsToSellFactory;
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
@@ -99,10 +100,12 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
         $this->itemToDeductFactory = $itemToDeductFactory;
         $this->sourceDeductionRequestFactory = $sourceDeductionRequestFactory;
         $this->sourceDeductionService = $sourceDeductionService;
+        $this->salesEventExtensionFactory = $salesEventExtensionFactory;
+        $this->getSalesChannelForOrder = $getSalesChannelForOrder;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(
@@ -110,7 +113,7 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
         array $itemsToRefund,
         array $returnToStockItems
     ) {
-        $salesChannel = $this->getSalesChannelForOrder($order);
+        $salesChannel = $this->getSalesChannelForOrder->execute($order);
         $deductedItems = $this->getSourceDeductedOrderItems->execute($order, $returnToStockItems);
         $itemToSell = $backItemsPerSource = [];
 
@@ -147,12 +150,18 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
             }
         }
 
+        /** @var SalesEventExtensionInterface */
+        $salesEventExtension = $this->salesEventExtensionFactory->create([
+            'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
+        ]);
+
         /** @var SalesEventInterface $salesEvent */
         $salesEvent = $this->salesEventFactory->create([
             'type' => SalesEventInterface::EVENT_CREDITMEMO_CREATED,
             'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
             'objectId' => (string)$order->getEntityId()
         ]);
+        $salesEvent->setExtensionAttributes($salesEventExtension);
 
         foreach ($backItemsPerSource as $sourceCode => $items) {
             $sourceDeductionRequest = $this->sourceDeductionRequestFactory->create([
@@ -168,11 +177,13 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
     }
 
     /**
-     * @param $item
+     * Returns total deducted quantity
+     *
+     * @param ItemsToRefundInterface $item
      * @param array $deductedItems
      * @return float
      */
-    private function getTotalDeductedQty($item, array $deductedItems): float
+    private function getTotalDeductedQty(ItemsToRefundInterface $item, array $deductedItems): float
     {
         $result = 0;
 
@@ -186,23 +197,6 @@ class ProcessRefundItems implements ProcessRefundItemsInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param OrderInterface $order
-     * @return SalesChannelInterface
-     */
-    private function getSalesChannelForOrder(OrderInterface $order): SalesChannelInterface
-    {
-        $websiteId = (int)$order->getStore()->getWebsiteId();
-        $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
-
-        return $this->salesChannelFactory->create([
-            'data' => [
-                'type' => SalesChannelInterface::TYPE_WEBSITE,
-                'code' => $websiteCode
-            ]
-        ]);
     }
 
     /**
