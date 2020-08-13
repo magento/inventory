@@ -1,9 +1,10 @@
 {
-    "name": "magento/inventory-composer-metapackage-dev",
+    "name": "magento/inventory-composer-metapackage",
     "version": "1.1.6",
     "description": "Metapackage with Magento Inventory modules for simple installation",
     "type": "metapackage",
     "require": {
+        "magento/inventory-composer-installer": "1.1.0",
         "magento/module-inventory": "1.0.9",
         "magento/module-inventory-admin-ui": "1.0.10",
         "magento/module-inventory-advanced-checkout": "1.0.1",
