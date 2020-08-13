@@ -19,7 +19,7 @@ use Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableCondi
 /**
  * Check if bundle product is salable with bundle options.
  */
-class IsBundleProductSalablePlugin
+class IsBundleProductSalable
 {
     /**
      * @var Type
@@ -60,6 +60,8 @@ class IsBundleProductSalablePlugin
     }
 
     /**
+     * Get bundle product status based on child statuses.
+     *
      * @param IsProductSalableConditionChain $subject
      * @param \Closure $proceed
      * @param string $sku
@@ -81,7 +83,7 @@ class IsBundleProductSalablePlugin
                 return $proceed($sku, $stockId);
             }
 
-            // @TODO VERY temporary solution untill https://github.com/magento/inventory/pull/3088 will be resolved
+            // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
             // Product salability MUST NOT BE CALLED during product load.
             // Tests stabilization.
             /** @var \Magento\Framework\Registry $registry */
