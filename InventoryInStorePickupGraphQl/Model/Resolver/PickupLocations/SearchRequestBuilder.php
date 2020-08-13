@@ -54,6 +54,7 @@ class SearchRequestBuilder
      * @param AstConverter $astConverter
      * @param SortOrderBuilder $sortOrderBuilder
      * @param ExtensionProvider $extensionProvider
+     * @param SearchRequestBuilderInterfaceFactory $searchRequestBuilderFactory
      */
     public function __construct(
         AstConverter $astConverter,
