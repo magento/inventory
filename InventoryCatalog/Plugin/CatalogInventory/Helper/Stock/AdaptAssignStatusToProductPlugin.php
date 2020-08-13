@@ -79,7 +79,7 @@ class AdaptAssignStatusToProductPlugin
         }
 
         try {
-            // @TODO VERY temporary solution untill https://github.com/magento/inventory/pull/3088 will be resolved
+            // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
             // Product salability MUST NOT BE CALLED during product load.
             // Tests stabilization.
             /** @var \Magento\Framework\Registry $registry */
@@ -95,9 +95,12 @@ class AdaptAssignStatusToProductPlugin
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
                 $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
                 $result = current($result);
+                $registry->unregister($key);
                 return [$product, (int)$result->isSalable()];
             }
+            $registry->unregister($key);
         } catch (NoSuchEntityException $e) {
+            $registry->unregister($key);
             return [$product, $status];
         }
         return [$product, $status];

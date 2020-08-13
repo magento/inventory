@@ -30,6 +30,6 @@
         <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
     <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
-        <plugin name="is_bundle_product_salable" type="Magento\InventoryBundleProduct\Plugin\InventorySales\IsBundleProductSalablePlugin" />
+        <plugin name="is_bundle_product_salable" type="Magento\InventoryBundleProduct\Plugin\InventorySales\IsBundleProductSalable" />
     </type>
 </config>
