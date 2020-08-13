@@ -7,12 +7,12 @@
         "magento/module-catalog": "*",
         "magento/module-grouped-product": "*",
         "magento/module-ui": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-catalog-admin-ui": "*"
+        "magento/module-inventory-api": "1.0.*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-catalog-admin-ui": "1.0.*"
     },
     "suggest": {
-      "magento/module-inventory-configuration-api": "*"
+        "magento/module-inventory-configuration-api": "1.0.*"
     },
     "type": "magento2-module",
     "license": [
@@ -26,5 +26,6 @@
         "psr-4": {
             "Magento\\InventoryGroupedProductAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.0.8"
 }
