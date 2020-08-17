@@ -11,9 +11,9 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
- * Update default stock status for given skus.
+ * Update legacy stock status for given skus.
  */
-class UpdateDefaultStockStatus
+class UpdateLegacyStockStatus
 {
     /**
      * @var ResourceConnection
@@ -38,7 +38,7 @@ class UpdateDefaultStockStatus
     }
 
     /**
-     * Update default stock status for given skus.
+     * Update legacy stock status for given skus.
      *
      * @param array $dataForUpdate
      * @param string $connectionName

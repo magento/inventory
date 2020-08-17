@@ -10,7 +10,7 @@ namespace Magento\InventoryIndexer\Test\Unit\Model\Queue;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\Queue\ReservationData;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus;
-use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\DefaultStockProcessor;
+use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -29,9 +29,9 @@ class UpdateIndexSalabilityStatusTest extends TestCase
      */
     private $indexProcessor;
     /**
-     * @var DefaultStockProcessor|MockObject
+     * @var UpdateLegacyStock|MockObject
      */
-    private $defaultStockProcessor;
+    private $updateLegacyStock;
     /**
      * @var UpdateIndexSalabilityStatus
      */
@@ -47,31 +47,31 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         $this->defaultStockProvider->method('getId')
             ->willReturn(1);
         $this->indexProcessor = $this->createMock(IndexProcessor::class);
-        $this->defaultStockProcessor = $this->createMock(DefaultStockProcessor::class);
+        $this->updateLegacyStock = $this->createMock(UpdateLegacyStock::class);
         $this->model = new UpdateIndexSalabilityStatus(
             $this->defaultStockProvider,
             $this->indexProcessor,
-            $this->defaultStockProcessor
+            $this->updateLegacyStock
         );
     }
 
     /**
-     * Test that default stock indexer is executed if the stock is default otherwise custom stock indexer is executed
+     * Test that legacy stock indexer is executed if the stock is default otherwise custom stock indexer is executed
      *
      * @param int $stockId
-     * @param int $defaultProcessorInvokeCount
+     * @param int $updateLegacyStockInvokeCount
      * @param int $indexProcessorInvokeCount
      * @dataProvider executeDataProvider
      */
     public function testExecute(
         int $stockId,
-        int $defaultProcessorInvokeCount,
+        int $updateLegacyStockInvokeCount,
         int $indexProcessorInvokeCount
     ): void {
         $skus = ['P1', 'P2'];
         $changes = ['P1' => false];
         $reservation = new ReservationData($skus, $stockId);
-        $this->defaultStockProcessor->expects($this->exactly($defaultProcessorInvokeCount))
+        $this->updateLegacyStock->expects($this->exactly($updateLegacyStockInvokeCount))
             ->method('execute')
             ->with($reservation)
             ->willReturn($changes);

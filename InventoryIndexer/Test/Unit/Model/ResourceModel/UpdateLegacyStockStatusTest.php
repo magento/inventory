@@ -10,14 +10,14 @@ namespace Magento\InventoryIndexer\Test\Unit\Model\ResourceModel;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
-use Magento\InventoryIndexer\Model\ResourceModel\UpdateDefaultStockStatus;
+use Magento\InventoryIndexer\Model\ResourceModel\UpdateLegacyStockStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for UpdateDefaultStockStatus
+ * Test for UpdateLegacyStock
  */
-class UpdateDefaultStockStatusTest extends TestCase
+class UpdateLegacyStockStatusTest extends TestCase
 {
     /**
      * @var ResourceConnection|MockObject
@@ -32,7 +32,7 @@ class UpdateDefaultStockStatusTest extends TestCase
      */
     private $connection;
     /**
-     * @var UpdateDefaultStockStatus
+     * @var UpdateLegacyStockStatus
      */
     private $model;
 
@@ -48,7 +48,7 @@ class UpdateDefaultStockStatusTest extends TestCase
         $this->connection->method('getTableName')->willReturnArgument(0);
         $this->getProductIdsBySkus = $this->createMock(GetProductIdsBySkusInterface::class);
         $this->getProductIdsBySkus->method('execute')->willReturnCallback('array_flip');
-        $this->model = new UpdateDefaultStockStatus(
+        $this->model = new UpdateLegacyStockStatus(
             $this->resource,
             $this->getProductIdsBySkus
         );

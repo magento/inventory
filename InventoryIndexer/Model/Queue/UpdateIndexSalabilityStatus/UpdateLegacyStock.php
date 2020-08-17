@@ -10,44 +10,44 @@ namespace Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Model\Queue\GetSalabilityDataForUpdate;
 use Magento\InventoryIndexer\Model\Queue\ReservationData;
-use Magento\InventoryIndexer\Model\ResourceModel\UpdateDefaultStockStatus;
+use Magento\InventoryIndexer\Model\ResourceModel\UpdateLegacyStockStatus;
 
 /**
- * Update default stock status for given reservation.
+ * Update legacy stock status for given reservation.
  */
-class DefaultStockProcessor
+class UpdateLegacyStock
 {
     /**
      * @var GetSalabilityDataForUpdate
      */
     private $getSalabilityDataForUpdate;
     /**
-     * @var UpdateDefaultStockStatus
+     * @var UpdateLegacyStockStatus
      */
-    private $updateDefaultStockStatus;
+    private $updateLegacyStockStatus;
 
     /**
      * @param GetSalabilityDataForUpdate $getSalabilityDataForUpdate
-     * @param UpdateDefaultStockStatus $updateDefaultStockStatus
+     * @param UpdateLegacyStockStatus $updateLegacyStockStatus
      */
     public function __construct(
         GetSalabilityDataForUpdate $getSalabilityDataForUpdate,
-        UpdateDefaultStockStatus $updateDefaultStockStatus
+        UpdateLegacyStockStatus $updateLegacyStockStatus
     ) {
         $this->getSalabilityDataForUpdate = $getSalabilityDataForUpdate;
-        $this->updateDefaultStockStatus = $updateDefaultStockStatus;
+        $this->updateLegacyStockStatus = $updateLegacyStockStatus;
     }
 
     /**
-     * Update default stock status for given reservation.
+     * Update legacy stock status for given reservation.
      *
      * @param ReservationData $reservationData
      * @return bool[]
      */
-    public function execute(ReservationData $reservationData)
+    public function execute(ReservationData $reservationData): array
     {
         $dataForUpdate = $this->getSalabilityDataForUpdate->execute($reservationData);
-        $this->updateDefaultStockStatus->execute($dataForUpdate, ResourceConnection::DEFAULT_CONNECTION);
+        $this->updateLegacyStockStatus->execute($dataForUpdate, ResourceConnection::DEFAULT_CONNECTION);
 
         return $dataForUpdate;
     }

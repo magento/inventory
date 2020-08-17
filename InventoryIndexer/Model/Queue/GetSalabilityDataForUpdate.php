@@ -44,7 +44,7 @@ class GetSalabilityDataForUpdate
      * @param ReservationData $reservationData
      * @return bool[] - ['sku' => bool]
      */
-    public function execute(ReservationData $reservationData)
+    public function execute(ReservationData $reservationData): array
     {
         $salabilityData = $this->areProductsSalable->execute(
             $reservationData->getSkus(),
@@ -57,7 +57,7 @@ class GetSalabilityDataForUpdate
                 $isProductSalableResult->getSku(),
                 $reservationData->getStock()
             );
-            if ($isProductSalableResult->isSalable() != $currentStatus && $currentStatus !== null) {
+            if ($isProductSalableResult->isSalable() !== $currentStatus) {
                 $data[$isProductSalableResult->getSku()] = $isProductSalableResult->isSalable();
             }
         }
@@ -71,15 +71,15 @@ class GetSalabilityDataForUpdate
      * @param string $sku
      * @param int $stockId
      *
-     * @return bool|null
+     * @return bool
      */
-    private function getSalabilityStatus(string $sku, int $stockId): ?bool
+    private function getSalabilityStatus(string $sku, int $stockId): bool
     {
         try {
             $data = $this->getStockItemData->execute($sku, $stockId);
             $isSalable = $data ? (bool)$data[GetStockItemDataInterface::IS_SALABLE] : false;
         } catch (LocalizedException $e) {
-            $isSalable = null;
+            $isSalable = false;
         }
 
         return $isSalable;

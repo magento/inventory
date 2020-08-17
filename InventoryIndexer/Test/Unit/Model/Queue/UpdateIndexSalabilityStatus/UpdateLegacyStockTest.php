@@ -10,26 +10,26 @@ namespace Magento\InventoryIndexer\Test\Unit\Model\Queue\UpdateIndexSalabilitySt
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Model\Queue\GetSalabilityDataForUpdate;
 use Magento\InventoryIndexer\Model\Queue\ReservationData;
-use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\DefaultStockProcessor;
-use Magento\InventoryIndexer\Model\ResourceModel\UpdateDefaultStockStatus;
+use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
+use Magento\InventoryIndexer\Model\ResourceModel\UpdateLegacyStockStatus;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for DefaultStockProcessor
+ * Test for UpdateLegacyStock
  */
-class DefaultStockProcessorTest extends TestCase
+class UpdateLegacyStockTest extends TestCase
 {
     /**
      * @var GetSalabilityDataForUpdate|MockObject
      */
     private $getSalabilityDataForUpdate;
     /**
-     * @var UpdateDefaultStockStatus|MockObject
+     * @var UpdateLegacyStockStatus|MockObject
      */
-    private $updateDefaultStockStatus;
+    private $updateLegacyStockStatus;
     /**
-     * @var DefaultStockProcessor
+     * @var UpdateLegacyStock
      */
     private $model;
 
@@ -40,10 +40,10 @@ class DefaultStockProcessorTest extends TestCase
     {
         parent::setUp();
         $this->getSalabilityDataForUpdate = $this->createMock(GetSalabilityDataForUpdate::class);
-        $this->updateDefaultStockStatus = $this->createMock(UpdateDefaultStockStatus::class);
-        $this->model = new DefaultStockProcessor(
+        $this->updateLegacyStockStatus = $this->createMock(UpdateLegacyStockStatus::class);
+        $this->model = new UpdateLegacyStock(
             $this->getSalabilityDataForUpdate,
-            $this->updateDefaultStockStatus
+            $this->updateLegacyStockStatus
         );
     }
 
@@ -59,7 +59,7 @@ class DefaultStockProcessorTest extends TestCase
         $this->getSalabilityDataForUpdate->expects($this->once())
             ->method('execute')
             ->willReturn($changes);
-        $this->updateDefaultStockStatus->expects($this->once())
+        $this->updateLegacyStockStatus->expects($this->once())
             ->method('execute')
             ->with($changes, ResourceConnection::DEFAULT_CONNECTION);
         $this->assertEquals($changes, $this->model->execute($reservation));
