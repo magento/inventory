@@ -53,7 +53,7 @@ class GetSalabilityDataForUpdate
 
         $data = [];
         foreach ($salabilityData as $isProductSalableResult) {
-            $currentStatus = $this->getSalabilityStatus(
+            $currentStatus = $this->isCurrentlySalable(
                 $isProductSalableResult->getSku(),
                 $reservationData->getStock()
             );
@@ -73,7 +73,7 @@ class GetSalabilityDataForUpdate
      *
      * @return bool
      */
-    private function getSalabilityStatus(string $sku, int $stockId): bool
+    private function isCurrentlySalable(string $sku, int $stockId): bool
     {
         try {
             $data = $this->getStockItemData->execute($sku, $stockId);
