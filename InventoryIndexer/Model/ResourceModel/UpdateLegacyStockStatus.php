@@ -41,11 +41,10 @@ class UpdateLegacyStockStatus
      * Update legacy stock status for given skus.
      *
      * @param array $dataForUpdate
-     * @param string $connectionName
      */
-    public function execute(array $dataForUpdate, string $connectionName): void
+    public function execute(array $dataForUpdate): void
     {
-        $connection = $this->resource->getConnection($connectionName);
+        $connection = $this->resource->getConnection();
         $tableName = $connection->getTableName('cataloginventory_stock_status');
         $productIds = $this->getProductIdsBySkus->execute(array_keys($dataForUpdate));
         foreach ($dataForUpdate as $sku => $isSalable) {

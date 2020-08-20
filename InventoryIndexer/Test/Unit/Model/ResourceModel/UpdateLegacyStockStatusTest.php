@@ -60,7 +60,6 @@ class UpdateLegacyStockStatusTest extends TestCase
     public function testExecute(): void
     {
         $salability = ['P1' => false, 'P2' => true];
-        $connection = ResourceConnection::DEFAULT_CONNECTION;
         $tableName = 'cataloginventory_stock_status';
         $this->connection->expects($this->exactly(2))
             ->method('update')
@@ -76,6 +75,6 @@ class UpdateLegacyStockStatusTest extends TestCase
                     ['product_id = ?' => 1]
                 ],
             );
-        $this->model->execute($salability, $connection);
+        $this->model->execute($salability);
     }
 }

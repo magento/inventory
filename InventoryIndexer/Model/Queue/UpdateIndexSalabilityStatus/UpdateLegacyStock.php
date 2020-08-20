@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Model\Queue\GetSalabilityDataForUpdate;
 use Magento\InventoryIndexer\Model\Queue\ReservationData;
 use Magento\InventoryIndexer\Model\ResourceModel\UpdateLegacyStockStatus;
@@ -47,7 +46,7 @@ class UpdateLegacyStock
     public function execute(ReservationData $reservationData): array
     {
         $dataForUpdate = $this->getSalabilityDataForUpdate->execute($reservationData);
-        $this->updateLegacyStockStatus->execute($dataForUpdate, ResourceConnection::DEFAULT_CONNECTION);
+        $this->updateLegacyStockStatus->execute($dataForUpdate);
 
         return $dataForUpdate;
     }

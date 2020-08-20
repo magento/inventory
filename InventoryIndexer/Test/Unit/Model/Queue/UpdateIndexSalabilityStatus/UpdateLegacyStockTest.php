@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Test\Unit\Model\Queue\UpdateIndexSalabilityStatus;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryIndexer\Model\Queue\GetSalabilityDataForUpdate;
 use Magento\InventoryIndexer\Model\Queue\ReservationData;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
@@ -61,7 +60,7 @@ class UpdateLegacyStockTest extends TestCase
             ->willReturn($changes);
         $this->updateLegacyStockStatus->expects($this->once())
             ->method('execute')
-            ->with($changes, ResourceConnection::DEFAULT_CONNECTION);
+            ->with($changes);
         $this->assertEquals($changes, $this->model->execute($reservation));
     }
 }
