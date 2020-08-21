@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductIndexer\Indexer;
 
 use Exception;
+use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
@@ -80,10 +81,10 @@ class SelectBuilder
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
-        $isSalable = $stockId == 1
+        $isSalable = $stockId == Stock::DEFAULT_STOCK_ID
             ? 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))'
             : 'MAX(stock.is_salable)';
-        $joinCondition = $stockId == 1
+        $joinCondition = $stockId == Stock::DEFAULT_STOCK_ID
             ? 'inventory_stock_item.product_id = parent_product_entity.entity_id' .
             ' AND inventory_stock_item.stock_id = ' . $stockId
             : 'inventory_stock_item.product_id = parent_product_entity.entity_id';
