@@ -80,8 +80,13 @@ class SelectBuilder
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
-        $isSalable = $stockId == 1 ? 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))' : 'MAX(stock.is_salable)';
-        $joinCondition = $stockId == 1 ? 'inventory_stock_item.product_id = parent_product_entity.entity_id AND inventory_stock_item.stock_id = ' . $stockId : 'inventory_stock_item.product_id = parent_product_entity.entity_id';
+        $isSalable = $stockId == 1
+            ? 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))'
+            : 'MAX(stock.is_salable)';
+        $joinCondition = $stockId == 1
+            ? 'inventory_stock_item.product_id = parent_product_entity.entity_id' .
+            ' AND inventory_stock_item.stock_id = ' . $stockId
+            : 'inventory_stock_item.product_id = parent_product_entity.entity_id';
 
         $select = $connection->select()
             ->from(
@@ -89,7 +94,6 @@ class SelectBuilder
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-//                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
                     IndexStructure::IS_SALABLE => $isSalable,
                 ]
             )->joinInner(
@@ -109,7 +113,6 @@ class SelectBuilder
                 $joinCondition,
                 []
             )->group(['parent_product_entity.sku']);
-//            ->group(['parent_product_entity.sku', 'inventory_stock_item.item_id']);
 
         return $select;
     }
