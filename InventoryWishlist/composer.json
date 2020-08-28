@@ -1,0 +1,25 @@
+{
+    "name": "magento/module-inventory-wishlist",
+    "description": "N/A",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*"
+    },
+    "suggest": {
+        "magento/module-wishlist": "*",
+        "magento/module-inventory": "*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventoryWishlist\\": ""
+        }
+    }
+}
