@@ -66,7 +66,7 @@ class Collector
     /**
      * Add reservation to collectors items
      *
-     * @param ReservationInterface $reservation
+     * @param ReservationInterface $reservationMagento\CatalogInventory\Helper\Stock
      */
     public function addReservation(ReservationInterface $reservation): void
     {
