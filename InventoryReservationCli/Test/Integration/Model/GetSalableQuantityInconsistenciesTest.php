@@ -125,4 +125,18 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
         $items = reset($inconsistencies)->getItems();
         self::assertEquals(3, $items['simple_10']);
     }
+
+    /**
+     * Verify Reservation with only object_id in metadata
+     *
+     * @magentoDataFixture Magento/Sales/_files/order_with_shipping_and_invoice.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/reservation_with_order_id_only.php
+     * @throws \Magento\Framework\Validation\ValidationException
+     */
+    public function testReservationWithObjectId(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        self::assertSame([], $inconsistencies);
+    }
 }
