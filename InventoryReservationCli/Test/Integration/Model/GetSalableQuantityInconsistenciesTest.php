@@ -129,7 +129,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     /**
      * Verify Reservation with only objectId in the metadata
      *
-     * @magentoDataFixture Magento/Sales/_files/order_with_shipping_and_invoice.php
+     * @magentoDataFixture Magento/Sales/_files/order.php
      * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php
      * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/reservation_with_order_id_only.php
      * @throws \Magento\Framework\Validation\ValidationException
@@ -143,7 +143,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     /**
      * Verify Reservation with only objectIncrementId in the metadata
      *
-     * @magentoDataFixture Magento/Sales/_files/order_with_shipping_and_invoice.php
+     * @magentoDataFixture Magento/Sales/_files/order.php
      * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php
      * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/reservation_with_order_increment_id_only.php
      * @throws \Magento\Framework\Validation\ValidationException
