@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\StockState;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\DataObject\Factory as ObjectFactory;
@@ -21,6 +22,7 @@ use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInt
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventorySales\Model\GetBackorderQty;
 
 /**
  * Replace legacy quote item check
@@ -69,6 +71,11 @@ class CheckQuoteItemQtyPlugin
     private $backOrderNotifyCustomerCondition;
 
     /**
+     * @var GetBackorderQty
+     */
+    private $getBackorderQty;
+
+    /**
      * @param ObjectFactory $objectFactory
      * @param FormatInterface $format
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
@@ -77,6 +84,7 @@ class CheckQuoteItemQtyPlugin
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
      * @param BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition
+     * @param GetBackorderQty|null $getBackorderQty
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
@@ -87,7 +95,8 @@ class CheckQuoteItemQtyPlugin
         GetSkusByProductIdsInterface $getSkusByProductIds,
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager,
-        BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition
+        BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition,
+        GetBackorderQty $getBackorderQty = null
     ) {
         $this->objectFactory = $objectFactory;
         $this->format = $format;
@@ -97,6 +106,8 @@ class CheckQuoteItemQtyPlugin
         $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
         $this->backOrderNotifyCustomerCondition = $backOrderNotifyCustomerCondition;
+        $this->getBackorderQty = $getBackorderQty
+            ?? ObjectManager::getInstance()->get(GetBackorderQty::class);
     }
 
     /**
@@ -158,6 +169,10 @@ class CheckQuoteItemQtyPlugin
                 foreach ($productSalableResult->getErrors() as $error) {
                     $result->setMessage($error->getMessage());
                 }
+            }
+            $backorderQty = $this->getBackorderQty->execute($productSku, (int)$stockId, $qty);
+            if ($backorderQty > 0) {
+                $result->setItemBackorders($backorderQty);
             }
         }
 
