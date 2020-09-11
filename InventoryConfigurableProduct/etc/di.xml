@@ -27,7 +27,8 @@
         <plugin name="adapt_parent_stock_processor" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor\AdaptParentItemProcessorPlugin"/>
     </type>
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
-        <plugin name="filter_select_by_inventory"
-                type="Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Product\Indexer\Price\Configurable\FilterSelectByInventoryPlugin"/>
+        <arguments>
+            <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\StockStatusBaseSelectProcessor</argument>
+        </arguments>
     </type>
 </config>

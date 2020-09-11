@@ -5,26 +5,36 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Product\Indexer\Price\Configurable;
+namespace Magento\InventoryConfigurableProduct\Pricing\Price\Indexer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable;
+use Magento\Catalog\Model\ResourceModel\Product\BaseSelectProcessorInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\DB\Select;
 
 /**
- * Plugin for FilterSelectByInventory to add "is_salable" filter.
+ * Base select processor.
  */
-class FilterSelectByInventoryPlugin
+class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
 {
+    /**
+     * @var StockIndexTableNameResolverInterface
+     */
+    private $stockIndexTableNameResolver;
+
+    /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfig;
+
     /**
      * @var StoreManagerInterface
      */
@@ -34,11 +44,6 @@ class FilterSelectByInventoryPlugin
      * @var StockResolverInterface
      */
     private $stockResolver;
-
-    /**
-     * @var StockIndexTableNameResolverInterface
-     */
-    private $stockIndexTableNameResolver;
 
     /**
      * @var DefaultStockProviderInterface
@@ -56,48 +61,50 @@ class FilterSelectByInventoryPlugin
     private $metadataPool;
 
     /**
+     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @param StockConfigurationInterface $stockConfig
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
-     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param ResourceConnection $resourceConnection
+     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param MetadataPool $metadataPool
      */
     public function __construct(
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
+        StockConfigurationInterface $stockConfig,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider,
         ResourceConnection $resourceConnection,
+        DefaultStockProviderInterface $defaultStockProvider,
         MetadataPool $metadataPool
     ) {
+        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
+        $this->stockConfig = $stockConfig;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
-        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->resourceConnection = $resourceConnection;
+        $this->defaultStockProvider = $defaultStockProvider;
         $this->metadataPool = $metadataPool;
     }
 
     /**
-     * Add "is_salable" filter to select.
+     * Improves the select with stock status sub query.
      *
-     * @param Configurable $subject
-     * @param callable $proceed
      * @param Select $select
      * @return Select
-     *
-     * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundFilterSelectByInventory(Configurable $subject, callable $proceed, Select $select): Select
+    public function process(Select $select)
     {
+        if (!$this->stockConfig->isShowOutOfStock()) {
+            return $select;
+        }
+
         $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
-            return $proceed($select);
+            return $select;
         }
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
