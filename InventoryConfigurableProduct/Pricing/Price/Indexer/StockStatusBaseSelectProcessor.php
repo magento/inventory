@@ -10,6 +10,7 @@ namespace Magento\InventoryConfigurableProduct\Pricing\Price\Indexer;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\BaseSelectProcessorInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
@@ -104,34 +105,53 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
-            return $select;
+            $select->join(
+                ['si' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                'si.product_id = l.product_id',
+                []
+            );
+            $select->joinInner(
+                ['stock_parent' => $this->stockIndexTableNameResolver->execute($stockId)],
+                'stock_parent.sku = le.sku',
+                []
+            );
+            $select->joinLeft(
+                ['si_parent' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+                'si_parent.product_id = l.parent_id',
+                []
+            );
+            $select->where('si.is_in_stock = ?', Stock::STOCK_IN_STOCK);
+            $select->orWhere(
+                'IFNULL(si_parent.is_in_stock, stock_parent.is_salable) = ?',
+                Stock::STOCK_OUT_OF_STOCK
+            );
+        } else {
+            $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
+            $linkField = $metadata->getLinkField();
+
+            $select->joinInner(
+                ['le2' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'le2.' . $linkField . ' = l.product_id',
+                []
+            )->joinInner(
+                ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
+                'stock.sku = le2.sku',
+                []
+            )->joinInner(
+                ['stock_parent' => $this->stockIndexTableNameResolver->execute($stockId)],
+                'stock_parent.sku = le.sku',
+                []
+            )->where(
+                'stock.is_salable = ?',
+                1
+            )->orWhere(
+                'stock.is_salable = ?',
+                0
+            )->where(
+                'stock_parent.is_salable = ?',
+                0
+            );
         }
-
-        $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
-        $linkField = $metadata->getLinkField();
-
-        $select->joinInner(
-            ['le2' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            'le2.' . $linkField . ' = l.product_id',
-            []
-        )->joinInner(
-            ['stock' => $this->stockIndexTableNameResolver->execute($stockId)],
-            'stock.sku = le2.sku',
-            []
-        )->joinInner(
-            ['stock_parent' => $this->stockIndexTableNameResolver->execute($stockId)],
-            'stock_parent.sku = le.sku',
-            []
-        )->where(
-            'stock.is_salable = ?',
-            1
-        )->orWhere(
-            'stock.is_salable = ?',
-            0
-        )->where(
-            'stock_parent.is_salable = ?',
-            0
-        );
 
         return $select;
     }
