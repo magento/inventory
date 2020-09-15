@@ -86,7 +86,7 @@ class IndexPriceTest extends TestCase
      * Test index price when out of stock in default stock
      *
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
-     * @magentoDataFixture Magento_ConfigurableProduct::Test/_files/configurable_attribute.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
      * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
