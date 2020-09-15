@@ -96,6 +96,7 @@ class StockIndexer
      * @param PrepareIndexDataForClearingIndex|null $prepareIndexDataForClearingIndex
      * @param Batch|null $batch
      * @param int|null $batchSize
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
