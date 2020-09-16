@@ -20,6 +20,7 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterface;
+use ArrayIterator;
 
 /**
  * Configurable product stock indexer class
@@ -174,7 +175,8 @@ class StockIndexer
             $indexData = $this->indexDataByStockIdProvider->execute((int)$stockId);
 
             if ($indexData->count()) {
-                foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchIndexData) {
+                foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchData) {
+                    $batchIndexData = new ArrayIterator($batchData);
                     $this->indexHandler->cleanIndex(
                         $mainIndexName,
                         $this->prepareIndexDataForClearingIndex->execute($batchIndexData),
