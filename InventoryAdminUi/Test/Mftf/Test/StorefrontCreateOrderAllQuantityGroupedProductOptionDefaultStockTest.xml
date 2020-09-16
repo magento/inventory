@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontCreateOrderAllQuantityGroupedProductOptionDefaultStockTest">
+        <annotations>
+            <stories value="Grouped Product Default Stock."/>
+            <title value="Place order with all quantity with grouped product option on default stock."/>
+            <description value="Verify, grouped product option will change status after order placement with all it's quantity on default stock"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Login to admin-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Disable all custom sources-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
+            <!--Create category-->
+            <createData entity="ApiCategory" stepKey="createCategory"/>
+            <!--Create grouped product-->
+            <createData entity="ApiGroupedProduct" stepKey="groupedProduct"/>
+            <!--Create simple product (1) with qty 10-->
+            <createData entity="ApiSimplePrice10Qty10" stepKey="product1">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!--Create simple product (2) with qty 10-->
+            <createData entity="ApiSimplePrice10Qty10" stepKey="product2">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!--Add simple product (1) to grouped product-->
+            <createData entity="OneSimpleProductLink" stepKey="addProductOne">
+                <requiredEntity createDataKey="groupedProduct"/>
+                <requiredEntity createDataKey="product1"/>
+            </createData>
+            <!--Add simple product (2) to grouped product-->
+            <updateData entity="OneMoreSimpleProductLink" createDataKey="addProductOne" stepKey="addProductTwo">
+                <requiredEntity createDataKey="groupedProduct"/>
+                <requiredEntity createDataKey="product2"/>
+            </updateData>
+            <!--Create customer-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+        </before>
+        <after>
+            <!--Logout from admin-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <!--Delete category-->
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <!--Delete grouped product-->
+            <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
+            <!--Delete simple product (1)-->
+            <deleteData createDataKey="product1" stepKey="deleteSimpleProduct1"/>
+            <!--Delete simple product (2)-->
+            <deleteData createDataKey="product2" stepKey="deleteSimpleProduct2"/>
+            <!--Delete customer-->
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+        </after>
+
+        <!--Login To storefront as Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!--Navigate to group product PDP.-->
+        <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDP">
+            <argument name="product" value="$groupedProduct$"/>
+        </actionGroup>
+        <!--Add grouped product to cart with all available quantity of product (1).-->
+        <actionGroup ref="StorefrontAddGroupedProductWithTwoLinksToCartActionGroup" stepKey="addGroupedProductToCart">
+            <argument name="product" value="$groupedProduct$"/>
+            <argument name="linkedProduct1Name" value="$product1.name$"/>
+            <argument name="linkedProduct2Name" value="$product2.name$"/>
+            <argument name="linkedProduct1Qty" value="{{Qty_10.qty}}"/>
+            <argument name="linkedProduct2Qty" value="{{Qty_1.qty}}"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
+        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+        <!--Run queue consumer.-->
+        <magentoCLI command="queue:consumers:start" arguments="inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="30"/>
+        <!--Navigate to group product PDP.-->
+        <actionGroup ref="StorefrontOpenProductEntityPageActionGroup" stepKey="navigateToGroupedProductPDPAfterOrderPlacement">
+            <argument name="product" value="$groupedProduct$"/>
+        </actionGroup>
+        <!--Verify that product1 is not present.-->
+        <dontSee selector="{{StorefrontProductInfoMainSection.groupedProductsTable}}" userInput="$product1.name$" stepKey="dontSeeProduct1"/>
+        <!--Verify that product2 is present.-->
+        <actionGroup ref="AssertLinkPresenceOnGroupedProductPage" stepKey="verifySecondOptionIsStillPresentedOnPage">
+            <argument name="productName" value="$product2.name$"/>
+        </actionGroup>
+    </test>
+</tests>
