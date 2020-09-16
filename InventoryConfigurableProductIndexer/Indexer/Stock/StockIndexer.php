@@ -106,7 +106,7 @@ class StockIndexer
         IndexDataByStockIdProvider $indexDataByStockIdProvider,
         IndexTableSwitcherInterface $indexTableSwitcher,
         DefaultStockProviderInterface $defaultStockProvider,
-        PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex = null,
+        ?PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex = null,
         ?Batch $batch = null,
         ?int $batchSize = null
     ) {
