@@ -79,8 +79,10 @@ class IsBundleProductSalable
     ): bool {
         try {
             $types = $this->getProductTypesBySkus->execute([$sku]);
-            if (!isset($types[$sku]) || $types[$sku] !== Type::TYPE_CODE) {
-                return $proceed($sku, $stockId);
+
+            $isProductSalable = $proceed($sku, $stockId);
+            if (!isset($types[$sku]) || $types[$sku] !== Type::TYPE_CODE || !$isProductSalable) {
+                return $isProductSalable;
             }
 
             // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
