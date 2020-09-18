@@ -174,21 +174,19 @@ class StockIndexer
 
             $indexData = $this->indexDataByStockIdProvider->execute((int)$stockId);
 
-            if ($indexData->count()) {
-                foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchData) {
-                    $batchIndexData = new ArrayIterator($batchData);
-                    $this->indexHandler->cleanIndex(
-                        $mainIndexName,
-                        $this->prepareIndexDataForClearingIndex->execute($batchIndexData),
-                        ResourceConnection::DEFAULT_CONNECTION
-                    );
+            foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchData) {
+                $batchIndexData = new ArrayIterator($batchData);
+                $this->indexHandler->cleanIndex(
+                    $mainIndexName,
+                    $this->prepareIndexDataForClearingIndex->execute($batchIndexData),
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
 
-                    $this->indexHandler->saveIndex(
-                        $mainIndexName,
-                        $batchIndexData,
-                        ResourceConnection::DEFAULT_CONNECTION
-                    );
-                }
+                $this->indexHandler->saveIndex(
+                    $mainIndexName,
+                    $batchIndexData,
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
             }
         }
     }
