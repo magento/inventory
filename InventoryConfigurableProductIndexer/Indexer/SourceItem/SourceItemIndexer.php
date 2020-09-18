@@ -18,6 +18,11 @@ use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use ArrayIterator;
 
+/**
+ * Configurable product source item indexer
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) Will be removed after deleting DefaultStockProviderInterface
+ */
 class SourceItemIndexer
 {
     /**
@@ -104,6 +109,8 @@ class SourceItemIndexer
     }
 
     /**
+     * Executes index by list of stock ids
+     *
      * @param array $sourceItemIds
      */
     public function executeList(array $sourceItemIds)
