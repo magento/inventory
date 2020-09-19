@@ -9,13 +9,18 @@ namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
 use Magento\Inventory\Model\ResourceModel\StockSourceLink as StockSourceLinkResourceModel;
 use Magento\Inventory\Model\StockSourceLink;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 /**
  * Select builder
@@ -38,18 +43,42 @@ class SelectBuilder
     private $productTableName;
 
     /**
+     * @var IndexNameBuilder
+     */
+    private $indexNameBuilder;
+
+    /**
+     * @var IndexNameResolverInterface
+     */
+    private $indexNameResolver;
+
+    /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition
      * @param string $productTableName
+     * @param IndexNameBuilder $indexNameBuilder
+     * @param IndexNameResolverInterface $indexNameResolver
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         GetIsStockItemSalableConditionInterface $getIsStockItemSalableCondition,
-        string $productTableName
+        string $productTableName,
+        IndexNameBuilder $indexNameBuilder,
+        IndexNameResolverInterface $indexNameResolver,
+        MetadataPool $metadataPool
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getIsStockItemSalableCondition = $getIsStockItemSalableCondition;
         $this->productTableName = $productTableName;
+        $this->indexNameBuilder = $indexNameBuilder;
+        $this->indexNameResolver = $indexNameResolver;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -89,6 +118,47 @@ class SelectBuilder
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)
             ->group([SourceItemInterface::SKU]);
+
+        $indexName = $this->indexNameBuilder
+            ->setIndexId(InventoryIndexer::INDEXER_ID)
+            ->addDimension('stock_', (string)$stockId)
+            ->setAlias(Alias::ALIAS_MAIN)
+            ->build();
+
+        $indexTableName = $this->indexNameResolver->resolveName($indexName);
+
+        $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
+        $linkField = $metadata->getLinkField();
+
+        $select2 = $connection->select()
+            ->from(
+                ['stock' => $indexTableName],
+                [
+                    IndexStructure::SKU => 'parent_product_entity.sku',
+                    IndexStructure::QUANTITY => 'SUM(stock.quantity)',
+                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
+                ]
+            )->joinInner(
+                ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'product_entity.sku = stock.sku',
+                []
+            )->joinInner(
+                ['parent_link' => $this->resourceConnection->getTableName('catalog_product_super_link')],
+                'parent_link.product_id = product_entity.entity_id',
+                []
+            )->joinInner(
+                ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+                'parent_product_entity.' . $linkField . ' = parent_link.parent_id',
+                []
+            )
+            ->group(['parent_product_entity.sku']);
+
+        return $connection->select()->union(
+            [
+                $select,
+                $select2
+            ]
+        );
 
         return $select;
     }
