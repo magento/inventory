@@ -7,11 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Test\Integration\Model\Import;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogImportExport\Model\Import\Product;
+use Magento\CatalogImportExport\Model\Import\ProductFactory;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
@@ -26,6 +29,7 @@ use PHPUnit\Framework\TestCase;
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/2219820
  *
  * @magentoDbIsolation disabled
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ProductTest extends TestCase
 {
@@ -40,9 +44,9 @@ class ProductTest extends TestCase
     private $filesystem;
 
     /**
-     * @var Product
+     * @var ProductFactory
      */
-    private $productImporter;
+    private $productImporterFactory;
 
     /**
      * @var SearchCriteriaBuilderFactory
@@ -55,6 +59,11 @@ class ProductTest extends TestCase
     private $sourceItemRepository;
 
     /**
+     * @var string[]
+     */
+    private $importedProducts;
+
+    /**
      * Setup Test for Product Import
      */
     public function setUp(): void
@@ -65,8 +74,8 @@ class ProductTest extends TestCase
         $this->filesystem = Bootstrap::getObjectManager()->get(
             Filesystem::class
         );
-        $this->productImporter = Bootstrap::getObjectManager()->get(
-            Product::class
+        $this->productImporterFactory = Bootstrap::getObjectManager()->get(
+            ProductFactory::class
         );
         $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
             SearchCriteriaBuilderFactory::class
@@ -107,6 +116,7 @@ class ProductTest extends TestCase
             $expectedData,
             $compareData[$sku]
         );
+        $this->importedProducts = [$sku];
     }
 
     /**
@@ -140,6 +150,7 @@ class ProductTest extends TestCase
             $expectedData,
             $compareData[$sku]
         );
+        $this->importedProducts = [$sku];
     }
 
     /**
@@ -209,13 +220,43 @@ class ProductTest extends TestCase
                 'directory' => $directory
             ]
         );
-        $this->productImporter->setParameters(
+        $productImporter = $this->productImporterFactory->create();
+        $productImporter->setParameters(
             [
                 'behavior' => $behavior,
                 'entity' => \Magento\Catalog\Model\Product::ENTITY
             ]
         )->setSource($source);
 
-        return $this->productImporter;
+        return $productImporter;
+    }
+
+    /**
+     * Cleanup test by removing products.
+     *
+     * @param string[] $skus
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        if (!empty($this->importedProducts)) {
+            $objectManager = Bootstrap::getObjectManager();
+            /** @var ProductRepositoryInterface $productRepository */
+            $productRepository = $objectManager->create(ProductRepositoryInterface::class);
+            $registry = $objectManager->get(\Magento\Framework\Registry::class);
+            /** @var ProductRepositoryInterface $productRepository */
+            $registry->unregister('isSecureArea');
+            $registry->register('isSecureArea', true);
+
+            foreach ($this->importedProducts as $sku) {
+                try {
+                    $productRepository->deleteById($sku);
+                } catch (NoSuchEntityException $e) {
+                    // product already deleted
+                }
+            }
+            $registry->unregister('isSecureArea');
+            $registry->register('isSecureArea', false);
+        }
     }
 }
