@@ -1,0 +1,34 @@
+{
+    "name": "magento/module-inventory-visual-merchandiser",
+    "description": "N/A",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/module-catalog": "*",
+        "magento/module-inventory": "*",
+        "magento/module-inventory-catalog-api": "*",
+        "magento/module-inventory-indexer": "*",
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-store": "*"
+    },
+    "require-dev": {
+        "magento/module-inventory-api": "*",
+        "magento/module-inventory-configuration-api": "*"
+    },
+    "suggest": {
+        "magento/module-visual-merchandiser": "*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventoryVisualMerchandiser\\": ""
+        }
+    }
+}

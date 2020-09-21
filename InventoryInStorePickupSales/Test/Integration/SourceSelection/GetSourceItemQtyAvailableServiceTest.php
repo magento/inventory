@@ -70,11 +70,11 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
@@ -86,7 +86,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/create_multiple_quotes_on_eu_website.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
      *
      * @magentoDbIsolation disabled
@@ -106,11 +106,11 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
@@ -123,7 +123,7 @@ class GetSourceItemQtyAvailableServiceTest extends TestCase
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/place_multiple_orders_on_eu_website.php
      * @magentoDataFixture Magento_InventoryInStorePickupSalesApi::Test/_files/set_orders_pickup_location.php
      *
-     * @magentoConfigFixture store_for_eu_website_store carriers/in_store/active 1
+     * @magentoConfigFixture store_for_eu_website_store carriers/instore/active 1
      * @magentoConfigFixture store_for_eu_website_store carriers/flatrate/active 1
      *
      * @magentoDbIsolation disabled

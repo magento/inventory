@@ -46,17 +46,38 @@ class CleanupReservations implements CleanupReservationsInterface
         $connection = $this->resource->getConnection();
         $reservationTable = $this->resource->getTableName('inventory_reservation');
 
+        $groupedReservationIds = implode(
+            ',',
+            array_unique(
+                array_merge(
+                    $this->getReservationIdsByField('object_id'),
+                    $this->getReservationIdsByField('object_increment_id')
+                )
+            )
+        );
+
+        $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => explode(',', $groupedReservationIds)];
+        $connection->delete($reservationTable, $condition);
+    }
+
+    /**
+     * Returns reservation ids by specified field.
+     *
+     * @param string $field
+     * @return array
+     */
+    private function getReservationIdsByField(string $field) : array
+    {
+        $connection = $this->resource->getConnection();
+        $reservationTable = $this->resource->getTableName('inventory_reservation');
         $select = $connection->select()
             ->from(
                 $reservationTable,
                 ['GROUP_CONCAT(' . ReservationInterface::RESERVATION_ID . ')']
             )
-            ->group("JSON_EXTRACT(metadata, '$.object_id')")
+            ->group("JSON_EXTRACT(metadata, '$.$field')", "JSON_EXTRACT(metadata, '$.object_type')")
             ->having('SUM(' . ReservationInterface::QUANTITY . ') = 0');
-            $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
-        $groupedReservationIds = implode(',', $connection->fetchCol($select));
-
-        $condition = [ReservationInterface::RESERVATION_ID . ' IN (?)' => explode(',', $groupedReservationIds)];
-        $connection->delete($reservationTable, $condition);
+        $connection->query('SET group_concat_max_len = ' . $this->groupConcatMaxLen);
+        return $connection->fetchCol($select);
     }
 }
