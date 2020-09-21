@@ -9,8 +9,6 @@ namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryIndexer\Indexer\SelectBuilder;
-use Magento\InventoryConfigurableProductIndexer\Indexer\SelectBuilder as LinkedSelectBuilder;
 
 /**
  * Returns all data for the index
@@ -23,31 +21,25 @@ class IndexDataProviderByStockId
     private $resourceConnection;
 
     /**
-     * @var SelectBuilder
+     * @var array
      */
-    private $selectBuilder;
-
-    /**
-     * @var LinkedSelectBuilder
-     */
-    private $linkedSelectBuilder;
+    private $selectBuilders;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param SelectBuilder $selectBuilder
-     * @param LinkedSelectBuilder $linkedSelectBuilder
+     * @param array $selectBuilders
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        SelectBuilder $selectBuilder,
-        LinkedSelectBuilder $linkedSelectBuilder
+        array $selectBuilders
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->selectBuilder = $selectBuilder;
-        $this->linkedSelectBuilder = $linkedSelectBuilder;
+        $this->selectBuilders = $selectBuilders;
     }
 
     /**
+     * Returns selected data
+     *
      * @param int $stockId
      * @throws \Exception
      * @return ArrayIterator
@@ -55,12 +47,13 @@ class IndexDataProviderByStockId
     public function execute(int $stockId): ArrayIterator
     {
         $result = [];
-        $select = $this->selectBuilder->execute($stockId);
-
         $connection = $this->resourceConnection->getConnection();
-        $result = array_merge($result, $connection->fetchAll($select));
-        $linkedSelect = $this->linkedSelectBuilder->execute($stockId);
-        $result = array_merge($result, $connection->fetchAll($linkedSelect));
-        return new ArrayIterator($result);
+
+        foreach ($this->selectBuilders as $selectBuilder) {
+            $select = $selectBuilder->execute($stockId);
+            $result[] = $connection->fetchAll($select);
+        }
+
+        return new ArrayIterator(array_merge([], ...$result));
     }
 }

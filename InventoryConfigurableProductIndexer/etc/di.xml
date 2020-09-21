@@ -10,9 +10,12 @@
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
         <plugin name="configurable_product_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" sortOrder="10"/>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
-        <plugin name="configurable_product_full_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin"/>
-        <plugin name="configurable_product_index_list" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin"/>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId">
+        <arguments>
+            <argument name="selectBuilders" xsi:type="array">
+                <item name="configurable" xsi:type="object">Magento\InventoryConfigurableProductIndexer\Indexer\SelectBuilder</item>
+            </argument>
+        </arguments>
     </type>
     <type name="Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer">
         <arguments>
