@@ -25,9 +25,17 @@
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <!--Enable Manage Stock in case it's been disabled in previous tests.-->
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <!--Set "Notify Quantity Below" configuration.-->
+            <magentoCLI command="config:set {{NotifyQuantityBelowOne.path}} {{NotifyQuantityBelowOne.value}}" stepKey="setNotifyQuantityBelow"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
         </before>
         <after>
+            <!--Disable "Manage Stock" in configuration.-->
+            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
+            <!--Revert "Notify Quantity Below" configuration.-->
+            <magentoCLI command="config:set {{RevertNotifyQuantityBelow.path}} {{RevertNotifyQuantityBelow.value}}" stepKey="revertNotifyQtyBelow"/>
             <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>

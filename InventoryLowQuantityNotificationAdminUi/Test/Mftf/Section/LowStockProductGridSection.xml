@@ -10,5 +10,6 @@
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="LowStockProductGridSection">
         <element name="productSourceCode" type="input" selector="//tr[1]/td[@data-column='sourceCode']"/>
+        <element name="exportButton" type="button" selector="//button[@title='Export']"/>
     </section>
 </sections>
