@@ -8,16 +8,15 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductIndexer\Indexer;
 
 use Exception;
-use Magento\CatalogInventory\Model\Stock;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\InventoryIndexer\Indexer\IndexStructure;
+use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
-use Magento\InventoryIndexer\Indexer\IndexStructure;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
-use Magento\Framework\EntityManager\MetadataPool;
-use Magento\Catalog\Api\Data\ProductInterface;
 
 class SelectBuilder
 {
@@ -81,21 +80,13 @@ class SelectBuilder
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
-        $isSalable = $stockId == Stock::DEFAULT_STOCK_ID
-            ? 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))'
-            : 'MAX(stock.is_salable)';
-        $joinCondition = $stockId == Stock::DEFAULT_STOCK_ID
-            ? 'inventory_stock_item.product_id = parent_product_entity.entity_id' .
-            ' AND inventory_stock_item.stock_id = ' . $stockId
-            : 'inventory_stock_item.product_id = parent_product_entity.entity_id';
-
         $select = $connection->select()
             ->from(
                 ['stock' => $indexTableName],
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => $isSalable,
+                    IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, MAX(stock.is_salable))',
                 ]
             )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -109,11 +100,13 @@ class SelectBuilder
                 ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'parent_product_entity.' . $linkField . ' = parent_link.parent_id',
                 []
-            )->joinInner(
+            )->joinLeft(
                 ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
-                $joinCondition,
+                'inventory_stock_item.product_id = parent_product_entity.entity_id'
+                . ' AND inventory_stock_item.stock_id = ' . \Magento\CatalogInventory\Model\Stock::DEFAULT_STOCK_ID,
                 []
-            )->group(['parent_product_entity.sku']);
+            )
+            ->group(['parent_product_entity.sku']);
 
         return $select;
     }
