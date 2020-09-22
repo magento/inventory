@@ -45,11 +45,7 @@
             <argument name="productSku" value="$$product.sku$$"/>
             <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
-        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyProductReportWithZeroQuantity">
-            <argument name="product" value="$$product$$"/>
-            <argument name="productQty" value="0"/>
-            <argument name="source" value="_defaultSource"/>
-        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyWithZeroQuantity"/>
 
         <!--Set Low Stock Notification quantity to zero and status out of stock for created product.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetStatus"/>
@@ -61,11 +57,7 @@
             <argument name="productSku" value="$$product.sku$$"/>
             <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
         </actionGroup>
-        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyProductReportWithSetOutOfStockStatusOfCurrentProduct">
-            <argument name="product" value="$$product$$"/>
-            <argument name="productQty" value="0"/>
-            <argument name="source" value="_defaultSource"/>
-        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyWithOutOfStockStatus"/>
         <!--Set product qty to 10.-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToChangeQty10"/>
         <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="10" stepKey="fillProductQtyWith10"/>
