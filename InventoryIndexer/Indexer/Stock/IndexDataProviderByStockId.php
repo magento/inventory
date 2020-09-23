@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use ArrayIterator;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryIndexer\Indexer\SelectBuilderInterface;
 
 /**
  * Returns all data for the index
@@ -21,19 +23,28 @@ class IndexDataProviderByStockId
     private $resourceConnection;
 
     /**
-     * @var array
+     * @var SelectBuilderInterface[]
      */
     private $selectBuilders;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param array $selectBuilders
+     * @param SelectBuilderInterface[] $selectBuilders
+     * @throws LocalizedException
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         array $selectBuilders
     ) {
         $this->resourceConnection = $resourceConnection;
+
+        foreach ($selectBuilders as $selectBuilder) {
+            if (!$selectBuilder instanceof SelectBuilderInterface) {
+                throw new LocalizedException(
+                    __('SelectBuilder must implement SelectBuilderInterface.')
+                );
+            }
+        }
         $this->selectBuilders = $selectBuilders;
     }
 

@@ -20,7 +20,7 @@ use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIs
 /**
  * Select builder
  */
-class SelectBuilder
+class SelectBuilder implements SelectBuilderInterface
 {
     /**
      * @var ResourceConnection
