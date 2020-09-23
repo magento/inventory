@@ -5,10 +5,10 @@
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
         "magento/module-ui": "*",
-        "magento/module-inventory-in-store-pickup-api": "*",
-        "magento/module-inventory-admin-ui": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-api": "*"
+        "magento/module-inventory-in-store-pickup-api": "1.0.*",
+        "magento/module-inventory-admin-ui": "1.1.*",
+        "magento/module-inventory-catalog-api": "1.2.*",
+        "magento/module-inventory-api": "1.1.*"
     },
     "type": "magento2-module",
     "license": [
@@ -22,5 +22,6 @@
         "psr-4": {
             "Magento\\InventoryInStorePickupAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.0.1"
 }

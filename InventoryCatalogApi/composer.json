@@ -17,5 +17,6 @@
         "psr-4": {
             "Magento\\InventoryCatalogApi\\": ""
         }
-    }
+    },
+    "version": "1.2.0"
 }

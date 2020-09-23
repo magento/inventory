@@ -4,7 +4,7 @@
     "require": {
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-inventory-in-store-pickup-shipping-api": "*"
+        "magento/module-inventory-in-store-pickup-shipping-api": "1.0.*"
     },
     "suggest": {
         "magento/module-shipping": "*"
@@ -21,5 +21,6 @@
         "psr-4": {
             "Magento\\InventoryInStorePickupShippingAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.0.0"
 }
