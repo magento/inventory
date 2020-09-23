@@ -23,7 +23,6 @@
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="_minimalSource" stepKey="customSource"/>
             <createData entity="BasicMsiStock1" stepKey="customStock"/>
-            <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource"/>
@@ -94,7 +93,6 @@
             <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
@@ -108,10 +106,10 @@
         <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="fillCategory"/>
         <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToAdditionalWebsite" >
             <argument name="website" value="{{NewWebSiteData.name}}"/>
         </actionGroup>
-        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="fillCategory"/>
         <actionGroup ref="createConfigurationsForTwoAttributeCustomSource" stepKey="createConfigurationsWithCustomStock">
             <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
