@@ -9,7 +9,6 @@ namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryIndexer\Indexer\SelectBuilder;
 
 /**
  * Returns all data for the index
@@ -22,31 +21,39 @@ class IndexDataProviderByStockId
     private $resourceConnection;
 
     /**
-     * @var SelectBuilder
+     * @var array
      */
-    private $selectBuilder;
+    private $selectBuilders;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param SelectBuilder $selectBuilder
+     * @param array $selectBuilders
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        SelectBuilder $selectBuilder
+        array $selectBuilders
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->selectBuilder = $selectBuilder;
+        $this->selectBuilders = $selectBuilders;
     }
 
     /**
+     * Returns selected data
+     *
      * @param int $stockId
+     * @throws \Exception
      * @return ArrayIterator
      */
     public function execute(int $stockId): ArrayIterator
     {
-        $select = $this->selectBuilder->execute($stockId);
-
+        $result = [];
         $connection = $this->resourceConnection->getConnection();
-        return new ArrayIterator($connection->fetchAll($select));
+
+        foreach ($this->selectBuilders as $selectBuilder) {
+            $select = $selectBuilder->execute($stockId);
+            $result[] = $connection->fetchAll($select);
+        }
+
+        return new ArrayIterator(array_merge([], ...$result));
     }
 }
