@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Test\Integration;
 
+use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId;
 use PHPUnit\Framework\TestCase;
 
