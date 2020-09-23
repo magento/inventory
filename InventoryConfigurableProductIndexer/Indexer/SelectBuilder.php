@@ -12,6 +12,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
@@ -39,23 +40,30 @@ class SelectBuilder
      * @var MetadataPool
      */
     private $metadataPool;
+    /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
 
     /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool
+        MetadataPool $metadataPool,
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
+        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -103,7 +111,7 @@ class SelectBuilder
             )->joinLeft(
                 ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
                 'inventory_stock_item.product_id = parent_product_entity.entity_id'
-                . ' AND inventory_stock_item.stock_id = ' . \Magento\CatalogInventory\Model\Stock::DEFAULT_STOCK_ID,
+                . ' AND inventory_stock_item.stock_id = ' . $this->defaultStockProvider->getId(),
                 []
             )
             ->group(['parent_product_entity.sku']);
