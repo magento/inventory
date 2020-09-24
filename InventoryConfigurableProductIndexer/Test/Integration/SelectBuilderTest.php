@@ -46,9 +46,16 @@ class SelectBuilderTest extends TestCase
      * @magentoDbIsolation disabled
      */
     // @codingStandardsIgnoreEnd
-    public function testConfigurableExistInData()
+    public function testConfigurableExistsInData()
     {
+        $configurableFound = false;
         $result = iterator_to_array($this->indexDataProviderByStockId->execute(10));
-        self::assertContains('configurable_1', $result);
+        //check that configurable product exist in result
+        foreach ($result as $item) {
+            if ($item['sku'] === 'configurable_1') {
+                $configurableFound = true;
+            }
+        }
+        self::assertTrue($configurableFound);
     }
 }
