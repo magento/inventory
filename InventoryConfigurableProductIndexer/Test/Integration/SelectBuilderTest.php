@@ -48,7 +48,7 @@ class SelectBuilderTest extends TestCase
     // @codingStandardsIgnoreEnd
     public function testConfigurableExistInData()
     {
-        $result = $this->indexDataProviderByStockId->execute(10);
+        $result = iterator_to_array($this->indexDataProviderByStockId->execute(10));
         self::assertContains('configurable_1', $result);
     }
 }
