@@ -24,7 +24,7 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * Base select processor.
  */
-class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
+class BaseStockStatusSelectProcessor implements BaseSelectProcessorInterface
 {
     /**
      * @var StockIndexTableNameResolverInterface

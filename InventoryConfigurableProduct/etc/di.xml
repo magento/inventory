@@ -28,7 +28,7 @@
     </type>
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
         <arguments>
-            <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\StockStatusBaseSelectProcessor</argument>
+            <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
         </arguments>
     </type>
 </config>
