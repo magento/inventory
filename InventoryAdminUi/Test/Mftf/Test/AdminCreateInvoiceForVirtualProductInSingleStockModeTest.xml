@@ -59,7 +59,9 @@
         </actionGroup>
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForPageLoad stepKey="waitForPageLoad2"/>
-        <fillField selector=".cart-item-qty" userInput="50" stepKey="setProductQtyToFiftyInMiniCart"/>
+        <doubleClick selector="{{StorefrontMinicartSection.cartItemQty}}" stepKey="doubleClickOnQty"/>
+        <pressKey selector="{{StorefrontMinicartSection.cartItemQty}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::DELETE]" stepKey="clearQty"/>
+        <fillField selector="{{StorefrontMinicartSection.cartItemQty}}" userInput="50" stepKey="fillQty"/>
         <click selector=".update-cart-item" stepKey="updateQtyInMiniCart"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
