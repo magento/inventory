@@ -72,7 +72,8 @@
         <waitForText userInput="1" selector="{{StorefrontMinicartSection.productCount}}" time="30" stepKey="assertProductCount"/>
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForElementVisible selector="{{StorefrontMinicartSection.viewAndEditCart}}" stepKey="waitForViewAndEditCartVisible"/>
-        <clearField selector="{{StorefrontMinicartSection.itemQuantity($$simpleProduct.name$$)}}" stepKey="clearField"/>
+        <doubleClick selector="{{StorefrontMinicartSection.itemQuantity($$simpleProduct.name$$)}}" stepKey="doubleClickOnQtyInput"/>
+        <pressKey selector="{{StorefrontMinicartSection.itemQuantity($$simpleProduct.name$$)}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::DELETE]" stepKey="clearQty"/>
         <fillField selector="{{StorefrontMinicartSection.itemQuantity($$simpleProduct.name$$)}}" userInput="5" stepKey="setProductQtyToFiftyInMiniCart"/>
         <click selector="{{StorefrontMinicartSection.itemQuantityUpdate($$simpleProduct.name$$)}}" stepKey="updateQtyInMiniCart"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
