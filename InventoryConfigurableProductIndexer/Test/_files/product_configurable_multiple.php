@@ -47,7 +47,7 @@ foreach ($configurableIds as $configurableId) {
     $associatedProductIds = [];
     $productIds = [10, 20, 30];
     array_shift($options); //remove the first option which is empty
-
+    $inc = 0;
     foreach ($options as $option) {
         /** @var $product Product */
         $product = Bootstrap::getObjectManager()->create(Product::class);
@@ -57,6 +57,7 @@ foreach ($configurableIds as $configurableId) {
             ->setAttributeSetId($attributeSetId)
             ->setWebsiteIds($websiteIds)
             ->setName('Configurable Option' . $option->getLabel())
+            ->setUrlKey('Configurable Option ' . $option->getLabel() . '-' . ($inc++))
             ->setSku('simple_' . $productId)
             ->setPrice($productId)
             ->setTestConfigurable($option->getValue())
