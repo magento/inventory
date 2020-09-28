@@ -89,11 +89,13 @@ class AdaptAssignStatusToProductPlugin
             $stockId = $stock->getStockId();
             try {
                 $stockItemData = $this->getStockItemData->execute($product->getSku(), $stockId);
+            } catch (NoSuchEntityException $exception) {
+                $stockItemData = null;
+            }
+            if (null !== $stockItemData) {
                 if (!((bool) $stockItemData[GetStockItemDataInterface::IS_SALABLE])) {
                     return [$product, $status];
                 }
-            } catch (NoSuchEntityException $exception) {
-                $stockItemData = null;
             }
             $options = $this->configurable->getConfigurableOptions($product);
             $status = 0;
