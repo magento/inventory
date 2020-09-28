@@ -17,6 +17,7 @@ use Magento\Authorization\Model\Rules;
 //Deleting the user and the role.
 /** @var \Magento\Framework\ObjectManagerInterface $objectManager */
 $objectManager = Bootstrap::getObjectManager();
+
 /** @var User $user */
 $user = $objectManager->create(UserFactory::class)->create();
 $user->load('sourceAccessUser', 'username');
