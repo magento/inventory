@@ -78,7 +78,7 @@ class AdaptAssignStatusToProductPlugin
             return [$product, $status];
         }
 
-        // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
+        // TODO: remove in https://github.com/magento/inventory/issues/3201
         // Product salability MUST NOT BE CALLED during product load.
         // Tests stabilization.
         /** @var \Magento\Framework\Registry $registry */
