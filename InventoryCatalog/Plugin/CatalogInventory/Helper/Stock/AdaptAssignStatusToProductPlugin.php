@@ -78,13 +78,13 @@ class AdaptAssignStatusToProductPlugin
             return [$product, $status];
         }
 
+        // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
+        // Product salability MUST NOT BE CALLED during product load.
+        // Tests stabilization.
+        /** @var \Magento\Framework\Registry $registry */
+        $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
+        $key = 'inventory_check_product' . $product->getSku();
         try {
-            // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
-            // Product salability MUST NOT BE CALLED during product load.
-            // Tests stabilization.
-            /** @var \Magento\Framework\Registry $registry */
-            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
-            $key = 'inventory_check_product' . $product->getSku();
             if ($registry->registry($key)) {
                 $registry->unregister($key);
             }
