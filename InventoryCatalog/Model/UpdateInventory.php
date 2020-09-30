@@ -122,9 +122,9 @@ class UpdateInventory
      * Update legacy stock items, default source items and reindex inventory for given product skus.
      *
      * @param InventoryData $data
-     * @return array
+     * @return void
      */
-    public function execute(InventoryData $data)
+    public function execute(InventoryData $data): void
     {
         $skus = $data->getSkus();
         try {
@@ -144,7 +144,6 @@ class UpdateInventory
             }
         }
         $this->reindexSourceItems($skus);
-        return $productIds;
     }
 
     /**
