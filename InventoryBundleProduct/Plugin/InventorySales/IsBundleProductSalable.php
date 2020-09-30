@@ -78,26 +78,17 @@ class IsBundleProductSalable
         int $stockId
     ): bool {
         try {
-            $types = $this->getProductTypesBySkus->execute([$sku]);
-
             $isProductSalable = $proceed($sku, $stockId);
-            if (!isset($types[$sku]) || $types[$sku] !== Type::TYPE_CODE || !$isProductSalable) {
+            if (!$isProductSalable) {
                 return $isProductSalable;
             }
 
-            // TODO: remove in https://github.com/magento/inventory/issues/3201
-            // Product salability MUST NOT BE CALLED during product load.
-            // Tests stabilization.
-            /** @var \Magento\Framework\Registry $registry */
-            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
-            $key = 'inventory_check_product' . $sku;
-
-            if ($registry->registry($key)) {
-                $product = $registry->registry($key);
-            } else {
-                $product = $this->productRepository->get($sku);
+            $types = $this->getProductTypesBySkus->execute([$sku]);
+            if (!isset($types[$sku]) || $types[$sku] !== Type::TYPE_CODE) {
+                return $isProductSalable;
             }
 
+            $product = $this->productRepository->get($sku);
             /** @noinspection PhpParamsInspection */
             $options = $this->bundleProductType->getOptionsCollection($product);
             $status = $this->getBundleProductStockStatus->execute(

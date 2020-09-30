@@ -80,30 +80,18 @@ class IsConfigurableProductSalable
         int $stockId
     ): bool {
         try {
-            $types = $this->getProductTypesBySkus->execute([$sku]);
-
             $isProductSalable = $proceed($sku, $stockId);
-            if (!isset($types[$sku]) || $types[$sku] !== Configurable::TYPE_CODE || !$isProductSalable) {
+            if (!$isProductSalable) {
                 return $isProductSalable;
             }
 
-            // TODO: remove in https://github.com/magento/inventory/issues/3201
-            // Product salability MUST NOT BE CALLED during product load.
-            // Tests stabilization.
-            /** @var \Magento\Framework\Registry $registry */
-            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
-            $key = 'inventory_check_product' . $sku;
-
-            if ($registry->registry($key)) {
-                $product = $registry->registry($key);
-            } else {
-                $product = $this->productRepository->get($sku);
+            $types = $this->getProductTypesBySkus->execute([$sku]);
+            if (!isset($types[$sku]) || $types[$sku] !== Configurable::TYPE_CODE) {
+                return $isProductSalable;
             }
 
+            $product = $this->productRepository->get($sku);
             $resultStatus = false;
-            // TODO: remove in https://github.com/magento/inventory/issues/3201
-            $product->unsetData('_cache_instance_used_product_attributes');
-            $product->unsetData('_cache_instance_configurable_attributes');
             $options = $this->configurableProductType->getConfigurableOptions($product);
             $skus = [[]];
             foreach ($options as $attribute) {
