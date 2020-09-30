@@ -31,14 +31,17 @@ class PickupLocationsPositiveCasesTest extends GraphQlAbstract
     }
 
     /**
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
+     *
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoApiDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
      *
      * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *
@@ -315,6 +318,66 @@ QUERY;
               2,
               1,
               1
+            ],
+            [ /* Data set #10. Test with intersection filter. */
+              'pickupLocations(
+    productsInfo: [
+        {
+            sku: "SKU-1"
+        },
+        {
+            sku: "SKU-6"
+        }
+    ]
+    filters:{
+      city: {in: ["Kolbermoor", "Mitry-Mory", "Burlingame"]}
+      region: {nin: ["Thüringen", "Bouches-du-Rhône"]}
+      region_id: {nin: ["94", "194"]}
+      postcode: {in: ["77292 CEDEX", "13100", "83059", "99098", "66413"]}
+      country_id:{neq: "DE"}
+      name:{like:"%source%"}
+    }
+    area:{
+      radius: 6371000
+      search_term: "Bayern"
+    }
+    pageSize: 2
+    currentPage: 1
+    sort:{
+        distance: DESC
+        city: ASC
+        pickup_location_code: ASC
+        name: DESC
+    }
+  )',
+              ['eu-1'],
+              'global_website',
+              'store_for_global_website',
+              1,
+              2,
+              1,
+              1
+            ],
+            [ /* Data set #11. Test with intersection filter and empty result. */
+              'pickupLocations(
+    productsInfo: [
+        {
+            sku: "SKU-1"
+        },
+        {
+            sku: "SKU-2"
+        }
+    ]
+    pageSize: 2
+    currentPage: 1
+  )',
+              [],
+              'global_website',
+              'store_for_global_website',
+              0,
+              2,
+              1,
+              0
             ]
         ];
     }
