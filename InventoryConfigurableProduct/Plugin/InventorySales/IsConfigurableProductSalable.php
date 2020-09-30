@@ -87,7 +87,7 @@ class IsConfigurableProductSalable
                 return $isProductSalable;
             }
 
-            // @TODO VERY temporary solution until https://github.com/magento/inventory/pull/3039 is resolved
+            // TODO: remove in https://github.com/magento/inventory/issues/3201
             // Product salability MUST NOT BE CALLED during product load.
             // Tests stabilization.
             /** @var \Magento\Framework\Registry $registry */
@@ -101,6 +101,7 @@ class IsConfigurableProductSalable
             }
 
             $resultStatus = false;
+            // TODO: remove in https://github.com/magento/inventory/issues/3201
             $product->unsetData('_cache_instance_used_product_attributes');
             $product->unsetData('_cache_instance_configurable_attributes');
             $options = $this->configurableProductType->getConfigurableOptions($product);
