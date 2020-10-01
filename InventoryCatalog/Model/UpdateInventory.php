@@ -26,8 +26,6 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Asynchronous inventory update service.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpdateInventory
 {
@@ -92,7 +90,6 @@ class UpdateInventory
      * @param SourceItemIndexer $sourceItemIndexer
      * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         Processor $stockIndexerProcessor,
