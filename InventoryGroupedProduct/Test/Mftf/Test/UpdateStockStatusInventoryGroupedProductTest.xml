@@ -12,6 +12,8 @@
         <annotations>
             <stories value="Inventory Create/Edit grouped product in Admin"/>
             <title value="Stock status of grouped product after changing quantity of child product should be changed with Inventory"/>
+            <description value="Change stock of grouped product after changing quantity of child product with Inventory"/>
+            <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
