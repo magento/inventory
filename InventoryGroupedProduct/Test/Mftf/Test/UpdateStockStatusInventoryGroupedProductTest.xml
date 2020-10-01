@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="UpdateStockStatusInventoryGroupedProductTest" extends="UpdateStockStatusGroupedProductTest">
+        <annotations>
+            <features value="GroupedProduct"/>
+            <stories value="Create/Edit grouped product in Admin"/>
+            <title value="Stock status of grouped product after changing quantity of child product should be changed"/>
+            <description value="Change stock of grouped product after changing quantity of child product"/>
+            <testCaseId value="MC-38057"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <!--Run cron for start consumer -->
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="startMessageQueue" after="setProductToOutOfStock">
+            <argument name="consumerName" value="{{AdminInventoryMassUpdateConsumerData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryMassUpdateConsumerData.messageLimit}}"/>
+        </actionGroup>
+        <!--Run cron for start consumer second-->
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="startMessageQueueSecond" after="returnProductToInStock">
+            <argument name="consumerName" value="{{AdminInventoryMassUpdateConsumerData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryMassUpdateConsumerData.messageLimit}}"/>
+        </actionGroup>
+    </test>
+</tests>
