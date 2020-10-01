@@ -48,10 +48,10 @@ class GetQty extends Action implements HttpGetActionInterface
         GetProductQtyLeft $productQty,
         StockResolverInterface $stockResolver
     ) {
+        parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
         $this->productQty = $productQty;
         $this->stockResolver = $stockResolver;
-        parent::__construct($context);
     }
 
     /**

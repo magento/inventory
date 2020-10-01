@@ -9,12 +9,11 @@ namespace Magento\InventorySalesFrontendUi\Plugin\Block\Stockqty;
 
 use Magento\CatalogInventory\Block\Stockqty\AbstractStockqty;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
-use Magento\InventoryCatalogFrontendUi\Model\QtyLeftChecker;
+use Magento\InventoryCatalogFrontendUi\Model\IsSalableQtyAvailableForDisplaying;
 
 /**
  * Plugin for adapting stock qty for block.
@@ -42,7 +41,7 @@ class AbstractStockqtyPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
-     * @var QtyLeftChecker
+     * @var IsSalableQtyAvailableForDisplaying
      */
     private $qtyLeftChecker;
 
@@ -51,14 +50,14 @@ class AbstractStockqtyPlugin
      * @param GetStockItemConfigurationInterface $getStockItemConfig
      * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
-     * @param QtyLeftChecker $qtyLeftChecker
+     * @param IsSalableQtyAvailableForDisplaying $qtyLeftChecker
      */
     public function __construct(
         StockByWebsiteIdResolverInterface $stockByWebsiteId,
         GetStockItemConfigurationInterface $getStockItemConfig,
         GetProductSalableQtyInterface $getProductSalableQty,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        QtyLeftChecker $qtyLeftChecker
+        IsSalableQtyAvailableForDisplaying $qtyLeftChecker
     ) {
         $this->getStockItemConfiguration = $getStockItemConfig;
         $this->stockByWebsiteId = $stockByWebsiteId;
@@ -90,7 +89,7 @@ class AbstractStockqtyPlugin
         }
         $productSalableQty = $this->getProductSalableQty->execute($sku, $stockId);
 
-        return $this->qtyLeftChecker->isSalableQtyAvailableForDisplaying($productSalableQty);
+        return $this->qtyLeftChecker->execute($productSalableQty);
     }
 
     /**

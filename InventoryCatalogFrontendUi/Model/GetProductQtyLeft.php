@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogFrontendUi\Model;
 
-use Magento\InventoryCatalogFrontendUi\Model\QtyLeftChecker;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 
 /**
@@ -16,7 +15,7 @@ use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 class GetProductQtyLeft
 {
     /**
-     * @var QtyLeftChecker
+     * @var IsSalableQtyAvailableForDisplaying
      */
     private $qtyLeftChecker;
 
@@ -26,11 +25,11 @@ class GetProductQtyLeft
     private $getProductSalableQty;
 
     /**
-     * @param QtyLeftChecker $qtyLeftChecker
+     * @param IsSalableQtyAvailableForDisplaying $qtyLeftChecker
      * @param GetProductSalableQtyInterface $getProductSalableQty
      */
     public function __construct(
-        QtyLeftChecker $qtyLeftChecker,
+        IsSalableQtyAvailableForDisplaying $qtyLeftChecker,
         GetProductSalableQtyInterface $getProductSalableQty
     ) {
         $this->qtyLeftChecker = $qtyLeftChecker;
@@ -47,7 +46,7 @@ class GetProductQtyLeft
     public function execute(string $productSku, int $stockId): ?float
     {
         $productSalableQty = $this->getProductSalableQty->execute($productSku, $stockId);
-        if ($this->qtyLeftChecker->isSalableQtyAvailableForDisplaying((float)$productSalableQty)) {
+        if ($this->qtyLeftChecker->execute((float)$productSalableQty)) {
             return $productSalableQty;
         }
 
