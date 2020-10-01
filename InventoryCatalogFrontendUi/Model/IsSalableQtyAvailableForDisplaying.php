@@ -12,7 +12,7 @@ use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 /**
  * Check if it is necessary to show qty left.
  */
-class QtyLeftChecker
+class IsSalableQtyAvailableForDisplaying
 {
     /**
      * @var StockItemConfigurationInterface
@@ -34,7 +34,7 @@ class QtyLeftChecker
      * @param float $productSalableQty
      * @return bool
      */
-    public function isSalableQtyAvailableForDisplaying(float $productSalableQty): bool
+    public function execute(float $productSalableQty): bool
     {
         return ($this->stockItemConfig->getBackorders() === StockItemConfigurationInterface::BACKORDERS_NO
                 || $this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
