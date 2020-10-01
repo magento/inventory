@@ -15,7 +15,7 @@
             <description value="Change stock of grouped product after changing quantity of child product with Inventory"/>
             <severity value="MAJOR"/>
             <group value="msi"/>
-            <group value="multi_mode"/>
+            <group value="single_mode"/>
         </annotations>
         <!--Run cron for start consumer -->
         <actionGroup ref="CliConsumerStartActionGroup" stepKey="startMessageQueue" after="setProductToOutOfStock">
