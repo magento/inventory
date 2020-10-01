@@ -8,6 +8,7 @@ type Query {
         sort: PickupLocationSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
         pageSize: Int = 20 @doc(description: "The maximum number of pickup locations to return at once. The attribute is optional.")
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
+        productsInfo: [ProductInfoInput] @doc(description: "Information about products which should be delivered.")
     ): PickupLocations
     @resolver(class: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations") @doc(description: "The pickup locations query searches for locations that match the search request requirements.") @cache(cacheIdentity: "Magento\\InventoryInStorePickupGraphQl\\Model\\Resolver\\PickupLocations\\Identity")
 }
@@ -18,7 +19,7 @@ input AreaInput @doc(description: "AreaInput defines the parameters which will b
 }
 
 input PickupLocationFilterInput @doc(description: "PickupLocationFilterInput defines the list of attributes and filters for the search.") {
-    name: FilterTypeInput @doc(description: "Filter by pickup location name."),
+    name: FilterTypeInput @doc(description: "Filter by pickup location name.")
     pickup_location_code: FilterTypeInput @doc(description: "Filter by pickup location code.")
     country_id: FilterTypeInput @doc(description: "Filter by country.")
     postcode: FilterTypeInput @doc(description: "Filter by postcode.")
@@ -69,4 +70,8 @@ type PickupLocation @doc(description: "Defines Pickup Location information.") {
     street: String
     postcode: String
     phone: String
+}
+
+input ProductInfoInput @doc(description: "Product Information used for Pickup Locations search.") {
+    sku: String! @doc(description: "Product SKU.")
 }
