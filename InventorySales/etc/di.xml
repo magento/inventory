@@ -57,10 +57,6 @@
     <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
-                <item name="product_status" xsi:type="array">
-                    <item name="required" xsi:type="boolean">true</item>
-                    <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\StatusCondition</item>
-                </item>
                 <item name="stock_item_is_in_stock" xsi:type="array">
                     <item name="required" xsi:type="boolean">true</item>
                     <item name="object" xsi:type="object">Magento\InventorySales\Model\IsProductSalableCondition\IsSetInStockStatusForCompositeProductCondition</item>
