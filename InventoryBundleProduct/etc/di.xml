@@ -26,4 +26,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
+        <plugin name="is_bundle_product_salable" type="Magento\InventoryBundleProduct\Plugin\InventorySales\IsBundleProductSalable" />
+    </type>
 </config>
