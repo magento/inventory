@@ -10,6 +10,7 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\Validators\NotAnEmptyString;
+use Magento\Inventory\Model\Validators\NotExistentSku;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -29,15 +30,24 @@ class SkuValidator implements SourceItemValidatorInterface
     private $notAnEmptyString;
 
     /**
+     * @var NotExistentSku
+     */
+    private $NotExistentSku;
+
+
+    /**
      * @param ValidationResultFactory $validationResultFactory
      * @param NotAnEmptyString $notAnEmptyString
+     * @param NotExistentSku $notExistentSku
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
-        NotAnEmptyString $notAnEmptyString
+        NotAnEmptyString $notAnEmptyString,
+        NotExistentSku $notExistentSku
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->notAnEmptyString = $notAnEmptyString;
+        $this->NotExistentSku = $notExistentSku;
     }
 
     /**
@@ -47,7 +57,8 @@ class SkuValidator implements SourceItemValidatorInterface
     {
         $value = $source->getSku();
         $errors = [
-            $this->notAnEmptyString->execute(SourceItemInterface::SKU, (string)$value)
+            $this->notAnEmptyString->execute(SourceItemInterface::SKU, (string)$value),
+            $this->NotExistentSku->execute(SourceItemInterface::SKU, (string)$value)
         ];
         $errors = !empty($errors) ? array_merge(...$errors) : $errors;
 
