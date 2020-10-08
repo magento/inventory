@@ -41,7 +41,7 @@ class NotExistentSku
         try {
             $this->getProductIdsBySkus->execute([$value]);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
-            $errors[] = __('Product with requested %field: %value was was not found.', ['field' => $fieldName, 'value' => $value]);
+            $errors[] = __('Product with requested "%field": "%value" was was not found.', ['field' => $fieldName, 'value' => $value]);
         }
 
         return $errors;
