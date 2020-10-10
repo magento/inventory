@@ -103,6 +103,7 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
     }
 
     /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php

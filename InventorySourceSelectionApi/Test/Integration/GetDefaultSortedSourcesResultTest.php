@@ -136,6 +136,7 @@ class GetDefaultSortedSourcesResultTest extends TestCase
     }
 
     /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
@@ -193,6 +194,7 @@ class GetDefaultSortedSourcesResultTest extends TestCase
      *
      * SKU is not updated in source item table if the new SKU value is insensitively equal to the old value
      *
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
