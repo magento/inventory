@@ -19,12 +19,12 @@ $sourceItemFactory = Bootstrap::getObjectManager()->get(SourceItemInterfaceFacto
 $sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
 
 $sourcesItemsData = [
-    [
-        SourceItemInterface::SOURCE_CODE => 'us-1',
-        SourceItemInterface::SKU => 'simple_10',
-        SourceItemInterface::QUANTITY => 100,
-        SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
-    ],
+//    [
+//        SourceItemInterface::SOURCE_CODE => 'us-1',
+//        SourceItemInterface::SKU => 'simple_10',
+//        SourceItemInterface::QUANTITY => 100,
+//        SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+//    ],
     [
         SourceItemInterface::SOURCE_CODE => 'us-1',
         SourceItemInterface::SKU => 'simple_20',
