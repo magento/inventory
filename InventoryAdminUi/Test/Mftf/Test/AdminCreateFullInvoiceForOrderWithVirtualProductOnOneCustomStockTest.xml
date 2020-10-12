@@ -60,6 +60,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="ClearProductsFilterActionGroup" stepKey="clearProductsFilter"/>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
@@ -89,6 +90,5 @@
         </actionGroup>
         <see selector="{{AdminProductGridSection.productQtyPerSource('1',$customSource.source[name]$)}}" userInput="99" stepKey="checkProductSourceQtyAfterInvoiceCreated"/>
         <see selector="{{AdminProductGridSection.productSalableQty('1',$customStock.stock[name]$)}}" userInput="99" stepKey="checkSalableQtyAfterInvoiceCreated"/>
-        <actionGroup ref="ClearProductsFilterActionGroup" stepKey="clearProductsFilter"/>
     </test>
 </tests>
