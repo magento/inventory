@@ -10,7 +10,7 @@ namespace Magento\Inventory\Model\Validators;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 
 /**
- * Checks whether given value is an empty string
+ * Checks whether given value is an existent Sku
  */
 class NotExistentSku
 {
@@ -19,16 +19,17 @@ class NotExistentSku
      */
     private $getProductIdsBySkus;
 
-
+    /**
+     * @param GetProductIdsBySkusInterface $getProductIdsBySkus
+     */
     public function __construct(
         GetProductIdsBySkusInterface $getProductIdsBySkus
-    )
-    {
+    ) {
         $this->getProductIdsBySkus = $getProductIdsBySkus;
     }
 
     /**
-     * Checks whether given value is an empty string.
+     * Checks whether given value is an existent Sku.
      *
      * @param string $fieldName
      * @param string $value
@@ -41,7 +42,10 @@ class NotExistentSku
         try {
             $this->getProductIdsBySkus->execute([$value]);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
-            $errors[] = __('Product with requested "%field": "%value" was was not found.', ['field' => $fieldName, 'value' => $value]);
+            $errors[] = __(
+                'Product with requested "%field": "%value" was was not found.',
+                ['field' => $fieldName, 'value' => $value]
+            );
         }
 
         return $errors;

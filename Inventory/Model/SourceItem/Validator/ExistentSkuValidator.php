@@ -14,7 +14,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
 /**
- * Check that sku is valid
+ * Check that sku is valid and exists
  */
 class ExistentSkuValidator implements SourceItemValidatorInterface
 {
@@ -27,7 +27,6 @@ class ExistentSkuValidator implements SourceItemValidatorInterface
      * @var NotExistentSku
      */
     private $NotExistentSku;
-
 
     /**
      * @param ValidationResultFactory $validationResultFactory
