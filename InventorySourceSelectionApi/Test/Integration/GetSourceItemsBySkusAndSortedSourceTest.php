@@ -114,7 +114,7 @@ class GetSourceItemsBySkusAndSortedSourceTest extends TestCase
     }
 
     /**
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products_numeric.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items_numeric_skus.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
