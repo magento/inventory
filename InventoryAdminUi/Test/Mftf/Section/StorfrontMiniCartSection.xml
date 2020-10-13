@@ -11,5 +11,6 @@
     <section name="StorefrontMinicartSection">
         <element name="itemQuantity" type="input" selector="//a[text()='{{productName}}']/../..//input[contains(@class,'cart-item-qty')]" parameterized="true"/>
         <element name="itemQuantityUpdate" type="button" selector="//a[text()='{{productName}}']/../..//span[text()='Update']" parameterized="true"/>
+        <element name="cartItemQty" type="input" selector=".cart-item-qty"/>
     </section>
 </sections>
