@@ -26,7 +26,9 @@ class FilterUnresolvedReservations
             $inconsistency->setItems(
                 array_filter(
                     $inconsistency->getItems(),
-                    function ($qty) { return $qty > 0; }
+                    function ($qty) {
+                        return $qty > 0;
+                    }
                 )
             );
         }
