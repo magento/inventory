@@ -373,7 +373,7 @@ QUERY;
         $address = current($this->order->getExtensionAttributes()->getShippingAssignments())
             ->getShipping()
             ->getAddress();
-        self::assertEquals('in_store_pickup', $this->order->getShippingMethod());
+        self::assertEquals('instore_pickup', $this->order->getShippingMethod());
         self::assertEquals('John', $address->getFirstName());
         self::assertEquals('Doe', $address->getLastName());
         self::assertEquals('customer@example.com', $address->getEmail());

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminLowStockReportForSimpleProductWithDefaultStockAndZeroQuantityTest">
+        <annotations>
+            <stories value="MSI Low Stock Report Grid Empty"/>
+            <title value="Low Stock Report For Simple Product With Zero Quantity"/>
+            <description value="Verify Low Stock Report With Zero Quantity Product Appears In The Report."/>
+            <testCaseId value="MC-34794"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create category and product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+        </before>
+        <after>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+        </after>
+
+        <!--Disable additional sources.-->
+        <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+        <!--Set Low Stock Notification quantity to zero for created product.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQty"/>
+        <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="0" stepKey="fillProductWithZeroQuantity"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProductWithZeroQuantity"/>
+        <!--Verify report is available with zero quantity.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageWithZeroQuantity"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmptyWithZeroQuantity">
+            <argument name="productSku" value="$$product.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyWithZeroQuantity"/>
+
+        <!--Set Low Stock Notification quantity to zero and status out of stock for created product.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetStatus"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="selectOutOfStockStatus"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProductWithSetOutOfStockStatus"/>
+        <!--Verify report is available with out of stock status.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageWithSetOutOfStockStatusOfCurrentProduct"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmptyWithSetOutOfStockStatusOfCurrentProduct">
+            <argument name="productSku" value="$$product.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyWithOutOfStockStatus"/>
+        <!--Set product qty to 10.-->
+        <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToChangeQty10"/>
+        <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="10" stepKey="fillProductQtyWith10"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectInStockStatus"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProductWithChangedQuantity"/>
+        <!--Verify report does not contain product.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageAfterApplyCustomNotifyQtyForProduct"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmpty">
+            <argument name="productSku" value="$$product.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmpty"/>
+    </test>
+</tests>

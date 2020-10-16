@@ -45,6 +45,9 @@
             <amOnPage url="{{AdminEditSourcePage.url($culverSource.source[source_code]$)}}" stepKey="navigateToCulverSourceEditPage"/>
             <actionGroup ref="AdminAddImageToSourceDescriptionActionGroup" stepKey="addImage"/>
             <actionGroup ref="ClickBrowseBtnOnUploadPopupActionGroup" stepKey="clickBrowserBtn"/>
+            <actionGroup ref="NavigateToMediaFolderActionGroup" stepKey="navigateToFolder">
+                 <argument name="FolderName" value="Storage Root"/>
+            </actionGroup>
             <actionGroup ref="CreateImageFolderActionGroup" stepKey="CreateImageFolder">
                 <argument name="ImageFolder" value="ImageFolder"/>
             </actionGroup>
@@ -65,6 +68,10 @@
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
+            <actionGroup ref="NavigateToMediaGalleryActionGroup" stepKey="navigateToMediaGallery"/>
+             <actionGroup ref="DeleteFolderActionGroup" stepKey="DeleteCreatedFolder">
+                <argument name="ImageFolder" value="ImageFolder"/>
+            </actionGroup>
             <!--Revert Distance Provider for Distance Based SSA to online.-->
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Disable 'In Store Pickup' shipping method.-->

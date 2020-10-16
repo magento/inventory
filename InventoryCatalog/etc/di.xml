@@ -21,8 +21,11 @@
         <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save"
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin"/>
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer">
-        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\PriceIndexUpdater"/>
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater"/>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
+        <plugin name="update_product_prices_plugin" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\PriceIndexUpdatePlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Model\Indexer\ProductPriceIndexFilter">
         <plugin name="change_select_for_price_modifier" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Indexer\ModifySelectInProductPriceIndexFilter"/>
@@ -37,7 +40,6 @@
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
         <plugin name="update_source_item_at_legacy_stock_item_save"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin"/>
-        <plugin name="priceIndexUpdater" disabled="true"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Status">
         <plugin name="adapt_add_stock_data_to_collection"
@@ -161,5 +163,8 @@
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save">
         <plugin name="inventoryUpdate" type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save\ProcessInventoryPlugin"/>
         <plugin name="massAction" disabled="true"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
+        <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
     </type>
 </config>

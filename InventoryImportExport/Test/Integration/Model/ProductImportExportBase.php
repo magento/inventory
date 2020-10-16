@@ -13,6 +13,7 @@ use Magento\CatalogImportExport\Model\Export\Product as ProductExporter;
 use Magento\CatalogImportExport\Model\Import\Product as ProductImporter;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Export\Adapter\Csv as ExportCsv;
@@ -159,5 +160,35 @@ abstract class ProductImportExportBase extends TestCase
         $searchCriteria = $this->objectManager->get(SearchCriteriaBuilder::class)->create();
 
         return $productRepository->getList($searchCriteria)->getItems();
+    }
+
+    /**
+     * Cleanup test by removing products.
+     *
+     * @param string[] $skus
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        $importedProducts = $this->getImportedProducts();
+        if (!empty($importedProducts)) {
+            $objectManager = Bootstrap::getObjectManager();
+            /** @var ProductRepositoryInterface $productRepository */
+            $productRepository = $objectManager->create(ProductRepositoryInterface::class);
+            $registry = $objectManager->get(\Magento\Framework\Registry::class);
+            $registry->unregister('isSecureArea');
+            $registry->register('isSecureArea', true);
+
+            /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
+            foreach ($importedProducts as $product) {
+                try {
+                    $productRepository->delete($product);
+                } catch (NoSuchEntityException $e) {
+                    // product already deleted
+                }
+            }
+            $registry->unregister('isSecureArea');
+            $registry->register('isSecureArea', false);
+        }
     }
 }

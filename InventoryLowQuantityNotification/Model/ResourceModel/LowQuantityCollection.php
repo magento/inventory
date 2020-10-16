@@ -16,6 +16,7 @@ use Magento\Framework\Data\Collection\EntityFactoryInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Inventory\Model\ResourceModel\Source;
@@ -155,6 +156,7 @@ class LowQuantityCollection extends AbstractCollection
      * JoinCatalogProduct depends on dynamic condition 'filterStoreId'
      *
      * @return void
+     * @throws NoSuchEntityException
      */
     private function joinCatalogProduct(): void
     {
@@ -299,7 +301,9 @@ class LowQuantityCollection extends AbstractCollection
      */
     private function addSourceItemInStockFilter(): void
     {
-        $this->addFieldToFilter('main_table.status', SourceItemInterface::STATUS_IN_STOCK);
+        $condition = '(' . SourceItemInterface::QUANTITY . ' > 0 AND main_table.status = ' .
+            SourceItemInterface::STATUS_IN_STOCK . ')';
+        $this->getSelect()->where($condition);
     }
 
     /**

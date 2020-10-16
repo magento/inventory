@@ -7,11 +7,12 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer">
-        <plugin name="grouped_product_index" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\SourceItemIndexerPlugin" />
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+        <plugin name="grouped_product_index" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" />
     </type>
-    <type name="Magento\InventoryIndexer\Indexer\Stock\StockIndexer">
-        <plugin name="grouped_product_index" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\StockIndexerPlugin" />
+    <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
+        <plugin name="grouped_product_index_list" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin" />
+        <plugin name="grouped_product_index_full" type="Magento\InventoryGroupedProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin" />
     </type>
     <type name="Magento\InventoryGroupedProductIndexer\Indexer\Stock\StockIndexer">
         <arguments>

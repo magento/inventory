@@ -10,6 +10,7 @@ namespace Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistency;
 use Magento\InventoryReservationCli\Model\SalableQuantityInconsistencyFactory;
+use Magento\InventoryReservationCli\Model\ResourceModel\GetOrderIncrementId;
 use Magento\InventoryReservationsApi\Model\ReservationInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -40,18 +41,26 @@ class Collector
     private $stockByWebsiteIdResolver;
 
     /**
+     * @var GetOrderIncrementId
+     */
+    private $getOrderIncrementId;
+
+    /**
      * @param SalableQuantityInconsistencyFactory $salableQuantityInconsistencyFactory
      * @param SerializerInterface $serializer
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
+     * @param GetOrderIncrementId $getOrderIncrementId
      */
     public function __construct(
         SalableQuantityInconsistencyFactory $salableQuantityInconsistencyFactory,
         SerializerInterface $serializer,
-        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
+        GetOrderIncrementId $getOrderIncrementId
     ) {
         $this->salableQuantityInconsistencyFactory = $salableQuantityInconsistencyFactory;
         $this->serializer = $serializer;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
+        $this->getOrderIncrementId = $getOrderIncrementId;
     }
 
     /**
@@ -63,14 +72,19 @@ class Collector
     {
         $metadata = $this->serializer->unserialize($reservation->getMetadata());
         $objectId = $metadata['object_id'];
+        $objectIncrementId = !empty($metadata['object_increment_id'])
+            ? $metadata['object_increment_id']
+            : $this->getOrderIncrementId->execute((int)$objectId);
         $stockId = $reservation->getStockId();
-        $key = $objectId . '-' . $stockId;
+        $key = $objectIncrementId . '-' . $stockId;
 
         if (!isset($this->items[$key])) {
             $this->items[$key] = $this->salableQuantityInconsistencyFactory->create();
         }
 
         $this->items[$key]->setObjectId((int)$objectId);
+        $this->items[$key]->setOrderIncrementId((string)$objectIncrementId);
+        $this->items[$key]->setHasAssignedOrder((int)$objectId || (string)$objectIncrementId);
         $this->items[$key]->setStockId((int)$stockId);
         $this->items[$key]->addItemQty($reservation->getSku(), $reservation->getQuantity());
     }
@@ -82,16 +96,17 @@ class Collector
      */
     public function addOrder(OrderInterface $order): void
     {
-        $objectId = $order->getEntityId();
+        $objectIncrementId = $order->getIncrementId();
         $websiteId = (int)$order->getStore()->getWebsiteId();
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-        $key = $objectId . '-' . $stockId;
+        $key = $objectIncrementId . '-' . $stockId;
 
         if (!isset($this->items[$key])) {
             $this->items[$key] = $this->salableQuantityInconsistencyFactory->create();
         }
 
-        $this->items[$key]->setOrderIncrementId($order->getIncrementId());
+        $this->items[$key]->setOrderIncrementId($objectIncrementId);
+        $this->items[$key]->setHasAssignedOrder(true);
         $this->items[$key]->setOrderStatus($order->getStatus());
     }
 
@@ -102,16 +117,17 @@ class Collector
      */
     public function addOrderData(array $orderData): void
     {
-        $objectId = $orderData['entity_id'];
+        $objectIncrementId = $orderData['increment_id'];
         $websiteId = (int)$orderData['website_id'];
         $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-        $key = $objectId . '-' . $stockId;
+        $key = $objectIncrementId . '-' . $stockId;
 
         if (!isset($this->items[$key])) {
             $this->items[$key] = $this->salableQuantityInconsistencyFactory->create();
         }
 
         $this->items[$key]->setOrderIncrementId($orderData['increment_id']);
+        $this->items[$key]->setHasAssignedOrder(true);
         $this->items[$key]->setOrderStatus($orderData['status']);
     }
 

@@ -4,6 +4,7 @@
     "description": "Metapackage with Magento Inventory modules for simple installation",
     "type": "metapackage",
     "require": {
+        "magento/inventory-composer-installer": "1.1.0",
         "magento/module-inventory": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-inventory-advanced-checkout": "*",
@@ -67,6 +68,7 @@
         "magento/module-inventory-shipping-admin-ui": "*",
         "magento/module-inventory-source-deduction-api": "*",
         "magento/module-inventory-source-selection": "*",
-        "magento/module-inventory-source-selection-api": "*"
+        "magento/module-inventory-source-selection-api": "*",
+        "magento/module-inventory-visual-merchandiser": "*"
     }
 }
