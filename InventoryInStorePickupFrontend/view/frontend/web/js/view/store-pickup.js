@@ -152,7 +152,7 @@ define([
 
         /**
          * @param {Object} shippingMethod
-         * @returns void             
+         * @returns void
          */
         selectShippingMethod: function (shippingMethod) {
             selectShippingMethodAction(shippingMethod);
@@ -162,7 +162,7 @@ define([
                     null
             );
         },
-        
+
         /**
          * @param {Object} shippingAddress
          * @returns void
@@ -172,13 +172,13 @@ define([
                 this.lastNonPickupShippingAddress(shippingAddress);
             }
         },
-        
+
         /**
          * @returns void
          */
         restoreLastShippingAddress: function () {
             var shippingAddress = this.lastNonPickupShippingAddress();
-            
+
             selectShippingAddressAction(shippingAddress);
             checkoutData.setSelectedShippingAddress(shippingAddress.getKey());
         },
