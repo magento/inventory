@@ -144,8 +144,8 @@ define([
                 },
                 this
             );
-            this.saveLastShippingAddress(quote.shippingAddress());
 
+            this.saveLastShippingAddress(quote.shippingAddress());
             this.preselectLocation();
             this.selectShippingMethod(pickupShippingMethod);
         },
