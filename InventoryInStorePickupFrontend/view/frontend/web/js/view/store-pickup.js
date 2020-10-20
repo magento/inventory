@@ -11,6 +11,7 @@ define([
     'uiRegistry',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/action/select-shipping-method',
+    'Magento_Checkout/js/action/select-shipping-address',
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/shipping-service',
     'Magento_Checkout/js/model/step-navigator',
@@ -25,6 +26,7 @@ define([
     registry,
     quote,
     selectShippingMethodAction,
+    selectShippingAddressAction,
     checkoutData,
     shippingService,
     stepNavigator,
@@ -41,6 +43,7 @@ define([
             isVisible: false,
             isAvailable: false,
             isStorePickupSelected: false,
+            lastNonPickupShippingAddress: null,
             rate: {
                 'carrier_code': 'instore',
                 'method_code': 'pickup'
@@ -48,8 +51,7 @@ define([
             nearbySearchLimit: 50,
             defaultCountry: window.checkoutConfig.defaultCountryId,
             delimiter: window.checkoutConfig.storePickupApiSearchTermDelimiter,
-            rates: shippingService.getShippingRates(),
-            inStoreMethod: null
+            rates: shippingService.getShippingRates()
         },
 
         /**
@@ -61,9 +63,9 @@ define([
             shippingRateService.registerProcessor('store-pickup-address', shippingRateProcessor);
 
             quote.shippingAddress.subscribe(function (shippingAddress) {
-                this.convertAddressType(shippingAddress);
+                this.saveLastShippingAddress(shippingAddress);
             }, this);
-            this.convertAddressType(quote.shippingAddress());
+            this.saveLastShippingAddress(quote.shippingAddress());
 
             this.isStorePickupSelected.subscribe(function () {
                 this.preselectLocation();
@@ -79,7 +81,7 @@ define([
          * @return {exports}
          */
         initObservable: function () {
-            this._super().observe(['isVisible']);
+            this._super().observe(['isVisible', 'lastNonPickupShippingAddress']);
 
             this.isStorePickupSelected = ko.pureComputed(function () {
                 return _.isMatch(quote.shippingMethod(), this.rate);
@@ -124,23 +126,17 @@ define([
                     );
                 },
                 this
-            );
+            ) || null;
 
+            this.restoreLastShippingAddress();
             this.selectShippingMethod(nonPickupShippingMethod);
-
-            registry.async('checkoutProvider')(function (checkoutProvider) {
-                checkoutProvider.set(
-                    'shippingAddress',
-                    quote.shippingAddress()
-                );
-                checkoutProvider.trigger('data.reset');
-            });
         },
 
         /**
          * @returns void
          */
         selectStorePickup: function () {
+            this.saveLastShippingAddress(quote.shippingAddress());
             var pickupShippingMethod = _.findWhere(
                 this.rates(),
                 {
@@ -156,45 +152,35 @@ define([
 
         /**
          * @param {Object} shippingMethod
+         * @returns void             
          */
         selectShippingMethod: function (shippingMethod) {
             selectShippingMethodAction(shippingMethod);
-            checkoutData.setSelectedShippingAddress(
-                quote.shippingAddress().getKey()
+            checkoutData.setSelectedShippingRate(
+                shippingMethod ?
+                    shippingMethod['carrier_code'] + '_' + shippingMethod['method_code'] :
+                    null
             );
         },
-
+        
         /**
          * @param {Object} shippingAddress
          * @returns void
          */
-        convertAddressType: function (shippingAddress) {
-            if (
-                !this.isStorePickupAddress(shippingAddress) &&
-                this.isStorePickupSelected()
-            ) {
-                quote.shippingAddress(
-                    $.extend({}, shippingAddress, {
-                        /**
-                         * Is address can be used for billing
-                         *
-                         * @return {Boolean}
-                         */
-                        canUseForBilling: function () {
-                            return false;
-                        },
-
-                        /**
-                         * Returns address type
-                         *
-                         * @return {String}
-                         */
-                        getType: function () {
-                            return 'store-pickup-address';
-                        }
-                    })
-                );
+        saveLastShippingAddress: function (shippingAddress) {
+            if (!this.isStorePickupAddress(shippingAddress)) {
+                this.lastNonPickupShippingAddress(shippingAddress);
             }
+        },
+        
+        /**
+         * @returns void
+         */
+        restoreLastShippingAddress: function () {
+            var shippingAddress = this.lastNonPickupShippingAddress();
+            
+            selectShippingAddressAction(shippingAddress);
+            checkoutData.setSelectedShippingAddress(shippingAddress.getKey());
         },
 
         /**
