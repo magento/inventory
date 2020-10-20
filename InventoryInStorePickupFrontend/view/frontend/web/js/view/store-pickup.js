@@ -136,7 +136,6 @@ define([
          * @returns void
          */
         selectStorePickup: function () {
-            this.saveLastShippingAddress(quote.shippingAddress());
             var pickupShippingMethod = _.findWhere(
                 this.rates(),
                 {
@@ -145,6 +144,7 @@ define([
                 },
                 this
             );
+            this.saveLastShippingAddress(quote.shippingAddress());
 
             this.preselectLocation();
             this.selectShippingMethod(pickupShippingMethod);
