@@ -164,4 +164,7 @@
         <plugin name="inventoryUpdate" type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save\ProcessInventoryPlugin"/>
         <plugin name="massAction" disabled="true"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
+        <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
+    </type>
 </config>
