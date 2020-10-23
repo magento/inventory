@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProduct\Plugin\InventorySales;
 
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryBundleProduct\Model\GetBundleProductStockStatus;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
@@ -85,17 +84,10 @@ class IsBundleProductSalable
                 return $isProductSalable;
             }
 
-            // TODO: remove in https://github.com/magento/inventory/issues/3201
-            // Product salability MUST NOT BE CALLED during product load.
-            // Tests stabilization.
-            /** @var \Magento\Framework\Registry $registry */
-            $registry = ObjectManager::getInstance()->get(\Magento\Framework\Registry::class);
-            $key = 'inventory_check_product' . $sku;
+            $product = $this->productRepository->get($sku);
 
-            if ($registry->registry($key)) {
-                $product = $registry->registry($key);
-            } else {
-                $product = $this->productRepository->get($sku);
+            if ($product->hasData('all_items_salable')) {
+                return $product->getData('all_items_salable');
             }
 
             /** @noinspection PhpParamsInspection */
@@ -105,6 +97,7 @@ class IsBundleProductSalable
                 $options->getItems(),
                 $stockId
             );
+            $product->setData('all_items_salable', $status);
         } catch (LocalizedException $e) {
             $status = false;
         }
