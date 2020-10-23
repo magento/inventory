@@ -50,7 +50,7 @@ class IsProductSalable
         if (null === $product->getSku() || !((int)$product->getStatus() === Status::STATUS_ENABLED)) {
             return false;
         }
-        if ($product->getData('is_salable') !== null) {
+        if ($product->hasData('is_salable')) {
             return (bool)$product->getData('is_salable');
         }
         $stockId = $this->getStockIdForCurrentWebsite->execute();
