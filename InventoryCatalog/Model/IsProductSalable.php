@@ -52,7 +52,7 @@ class IsProductSalable
      */
     public function execute(Product $product): bool
     {
-        if (null === $product->getSku() || (int)$product->getStatus() === Status::STATUS_DISABLED) {
+        if (null === $product->getSku() || !((int)$product->getStatus() === Status::STATUS_ENABLED)) {
             return false;
         }
         if ($product->getData('is_salable') !== null) {
