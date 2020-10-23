@@ -28,11 +28,6 @@ class IsProductSalable
     private $areProductsSalable;
 
     /**
-     * @var array
-     */
-    private $productStatusCache;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AreProductsSalableInterface $areProductsSalable
      */
@@ -59,15 +54,10 @@ class IsProductSalable
             return (bool)$product->getData('is_salable');
         }
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        if (isset($this->productStatusCache[$stockId][$product->getSku()])) {
-            return $this->productStatusCache[$stockId][$product->getSku()];
-        }
-
-        $stockId = $this->getStockIdForCurrentWebsite->execute();
         $result = current($this->areProductsSalable->execute([$product->getSku()], $stockId));
-        $salabilityStatus = $result->isSalable();
-        $this->productStatusCache[$stockId][$product->getSku()] = $salabilityStatus;
+        $isSalable = $result->isSalable();
+        $product->setData('is_salable', $isSalable);
 
-        return $salabilityStatus;
+        return $isSalable;
     }
 }
