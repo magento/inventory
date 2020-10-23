@@ -85,11 +85,7 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             if (null === $stockItemData) {
                 return $this->productSalableResultFactory->create(['errors' => []]);
             }
-
-            $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
-            $backOrderQty = $requestedQty - $salableQty;
-            $displayQty = $this->getDisplayQty($backOrderQty, $salableQty, $requestedQty);
-
+            $displayQty = $this->getBackOrdersQty($sku, $stockId, $requestedQty);
             if ($displayQty > 0) {
                 $errors = [
                     $this->productSalabilityErrorFactory->create([
@@ -124,5 +120,22 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             $displayQty = $requestedQty;
         }
         return $displayQty;
+    }
+
+    /**
+     * Get back orders qty
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @param float $requestedQty
+     *
+     * @return float
+     */
+    public function getBackOrdersQty(string $sku, int $stockId, float $requestedQty): float
+    {
+        $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
+        $backOrderQty = $requestedQty - $salableQty;
+
+        return $this->getDisplayQty($backOrderQty, $salableQty, $requestedQty);
     }
 }

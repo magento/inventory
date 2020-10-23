@@ -167,4 +167,8 @@
     <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
         <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItem">
+        <plugin name="quantity_validator_initializer_stock_item"
+                type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItemPlugin"/>
+    </type>
 </config>
