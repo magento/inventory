@@ -28,7 +28,7 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
     /**
      * @var array
      */
-    private $productIdsBySkus = [];
+    private $cache = [];
 
     /**
      * @param GetProductIdsBySkus $getProductIdsBySkus
@@ -47,11 +47,47 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
      */
     public function execute(array $skus): array
     {
-        $cacheKey = $this->jsonSerializer->serialize($skus);
-        if (!isset($this->productIdsBySkus[$cacheKey])) {
-            $this->productIdsBySkus[$cacheKey] = $this->getProductIdsBySkus->execute($skus);
+        $idsBySkus = [];
+        $loadSkus = [];
+        foreach ($skus as $sku) {
+            $nSku = $this->normalizeSku($sku);
+            if (isset($this->cache[$nSku])) {
+                $idsBySkus[$sku] = $this->cache[$nSku];
+            } else {
+                $loadSkus[] = $sku;
+                $idsBySkus[$sku] = null;
+            }
+        }
+        if ($loadSkus) {
+            $loadedIdsBySkus = $this->getProductIdsBySkus->execute($loadSkus);
+            foreach ($loadedIdsBySkus as $sku => $id) {
+                $idsBySkus[$sku] = $id;
+                $this->cache[$this->normalizeSku($sku)] = $id;
+            }
         }
 
-        return $this->productIdsBySkus[$cacheKey];
+        return $idsBySkus;
+    }
+
+    /**
+     * Saves sku/id pair into cache
+     *
+     * @param string $sku
+     * @param int $id
+     */
+    public function save(string $sku, int $id): void
+    {
+        $this->cache[$this->normalizeSku($sku)] = $id;
+    }
+
+    /**
+     * Normalize SKU by converting it to lowercase.
+     *
+     * @param string $sku
+     * @return string
+     */
+    private function normalizeSku(string $sku): string
+    {
+        return mb_convert_case($sku, MB_CASE_LOWER, 'UTF-8');
     }
 }
