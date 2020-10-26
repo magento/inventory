@@ -50,7 +50,7 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
         $typesBySkus = [];
         $loadSkus = [];
         foreach ($skus as $sku) {
-            $nSku = $this->normalizeSku($sku);
+            $nSku = $this->normalizeSku((string) $sku);
             if (isset($this->cache[$nSku])) {
                 $typesBySkus[$sku] = $this->cache[$nSku];
             } else {
@@ -61,8 +61,9 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
         if ($loadSkus) {
             $loadedTypesBySkus = $this->getProductTypesBySkus->execute($loadSkus);
             foreach ($loadedTypesBySkus as $sku => $type) {
+                $nSku = $this->normalizeSku((string) $sku);
                 $typesBySkus[$sku] = $type;
-                $this->cache[$this->normalizeSku($sku)] = $type;
+                $this->cache[$nSku] = $type;
             }
         }
 
