@@ -168,8 +168,10 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->cartRepository->save($cart);
 
         $orderId = $this->cartManagement->placeOrder($cart->getId());
-
+        $order = $this->orderRepository->get($orderId);
+        $items = $order->getItems();
         self::assertNotNull($orderId);
+        self::assertNotNull(array_shift($items)->getQtyBackordered());
 
         //cleanup
         $this->deleteOrderById((int)$orderId);
