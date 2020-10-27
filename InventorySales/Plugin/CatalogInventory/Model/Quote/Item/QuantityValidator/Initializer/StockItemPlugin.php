@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer;
+namespace Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer;
 
 use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItem;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;

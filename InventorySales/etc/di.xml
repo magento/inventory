@@ -194,4 +194,8 @@
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyRequest"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyResult"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\IsProductSalableResult"/>
+    <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItem">
+        <plugin name="quantity_validator_initializer_stock_item"
+                type="Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItemPlugin"/>
+    </type>
 </config>
