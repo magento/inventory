@@ -85,16 +85,20 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             if (null === $stockItemData) {
                 return $this->productSalableResultFactory->create(['errors' => []]);
             }
-            $displayQty = $this->getBackOrdersQty($sku, $stockId, $requestedQty);
+
+            $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
+            $backOrderQty = $requestedQty - $salableQty;
+            $displayQty = $this->getDisplayQty($backOrderQty, $salableQty, $requestedQty);
+
             if ($displayQty > 0) {
                 $errors = [
                     $this->productSalabilityErrorFactory->create([
-                            'code' => 'back_order-not-enough',
-                            'message' => __(
-                                'We don\'t have as many quantity as you requested, '
-                                . 'but we\'ll back order the remaining %1.',
-                                $displayQty * 1
-                            )])
+                        'code' => 'back_order-not-enough',
+                        'message' => __(
+                            'We don\'t have as many quantity as you requested, '
+                            . 'but we\'ll back order the remaining %1.',
+                            $displayQty * 1
+                        )])
                 ];
                 return $this->productSalableResultFactory->create(['errors' => $errors]);
             }
@@ -120,22 +124,5 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             $displayQty = $requestedQty;
         }
         return $displayQty;
-    }
-
-    /**
-     * Get back orders qty
-     *
-     * @param string $sku
-     * @param int $stockId
-     * @param float $requestedQty
-     *
-     * @return float
-     */
-    public function getBackOrdersQty(string $sku, int $stockId, float $requestedQty): float
-    {
-        $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
-        $backOrderQty = $requestedQty - $salableQty;
-
-        return $this->getDisplayQty($backOrderQty, $salableQty, $requestedQty);
     }
 }

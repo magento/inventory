@@ -9,14 +9,13 @@ namespace Magento\InventorySales\Plugin\CatalogInventory\Model\Quote\Item\Quanti
 
 use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\Initializer\StockItem;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
-use Magento\InventorySales\Model\IsProductSalableCondition\BackOrderNotifyCustomerCondition;
+use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableForRequestedQtyInterface;
@@ -57,14 +56,14 @@ class StockItemPlugin
     private $storeManager;
 
     /**
-     * @var BackOrderNotifyCustomerCondition
-     */
-    private $backOrderNotifyCustomerCondition;
-
-    /**
      * @var GetStockItemConfigurationInterface
      */
     private $getStockItemConfiguration;
+
+    /**
+     * @var GetProductSalableQtyInterface
+     */
+    private $getProductSalableQty;
 
     /**
      * @param FormatInterface $format
@@ -72,8 +71,8 @@ class StockItemPlugin
      * @param IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory
      * @param StockResolverInterface $stockResolver
      * @param StoreManagerInterface $storeManager
-     * @param BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
+     * @param GetProductSalableQtyInterface|null $getProductSalableQty
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
@@ -82,16 +81,16 @@ class StockItemPlugin
         IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory,
         StockResolverInterface $stockResolver,
         StoreManagerInterface $storeManager,
-        BackOrderNotifyCustomerCondition $backOrderNotifyCustomerCondition,
-        GetStockItemConfigurationInterface $getStockItemConfiguration
+        GetStockItemConfigurationInterface $getStockItemConfiguration,
+        GetProductSalableQtyInterface $getProductSalableQty
     ) {
         $this->format = $format;
         $this->areProductsSalableForRequestedQty = $areProductsSalableForRequestedQty;
         $this->isProductSalableForRequestedQtyRequestInterfaceFactory = $isProductSalableForRequestedQtyRequestFactory;
         $this->stockResolver = $stockResolver;
         $this->storeManager = $storeManager;
-        $this->backOrderNotifyCustomerCondition = $backOrderNotifyCustomerCondition;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
+        $this->getProductSalableQty = $getProductSalableQty;
     }
 
     /**
@@ -131,7 +130,7 @@ class StockItemPlugin
             $productsSalableResult = $this->areProductsSalableForRequestedQty->execute([$request], (int)$stockId);
             $productsSalableResult = current($productsSalableResult);
             if ($productsSalableResult->isSalable()) {
-                $backOrdersQty = $this->backOrderNotifyCustomerCondition->getBackOrdersQty(
+                $backOrdersQty = $this->getBackOrdersQty(
                     $productSku,
                     (int)$stockId,
                     $qty
@@ -188,5 +187,27 @@ class StockItemPlugin
         }
 
         return $result;
+    }
+
+    /**
+     * Get back orders qty
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @param float $requestedQty
+     *
+     * @return float
+     */
+    private function getBackOrdersQty(string $sku, int $stockId, float $requestedQty): float
+    {
+        $backOrderQty = 0;
+        $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
+        if (($requestedQty - $salableQty) > 0 && $salableQty > 0) {
+            $backOrderQty = $requestedQty - $salableQty;
+        } elseif ($requestedQty > $salableQty) {
+            $backOrderQty = $requestedQty;
+        }
+
+        return $backOrderQty;
     }
 }
