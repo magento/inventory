@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Model\ResourceModel;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\CatalogInventory\Model\StockRegistryStorage;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryCatalog\Model\LegacyStockStatusCache;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
@@ -29,9 +29,9 @@ class GetLegacyStockStatusDataFromStockRegistry
      */
     private $stockConfiguration;
     /**
-     * @var StockRegistryStorage
+     * @var LegacyStockStatusCache
      */
-    private $stockRegistryStorage;
+    private $legacyStockStatusCache;
     /**
      * @var GetProductIdsBySkusInterface
      */
@@ -44,20 +44,20 @@ class GetLegacyStockStatusDataFromStockRegistry
     /**
      * @param GetStockItemData $getStockItemData
      * @param StockConfigurationInterface $stockConfiguration
-     * @param StockRegistryStorage $stockRegistryStorage
+     * @param LegacyStockStatusCache $legacyStockStatusCache
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockItemData $getStockItemData,
         StockConfigurationInterface $stockConfiguration,
-        StockRegistryStorage $stockRegistryStorage,
+        LegacyStockStatusCache $legacyStockStatusCache,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->stockConfiguration = $stockConfiguration;
-        $this->stockRegistryStorage = $stockRegistryStorage;
+        $this->legacyStockStatusCache = $legacyStockStatusCache;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->defaultStockProvider = $defaultStockProvider;
     }
@@ -78,7 +78,7 @@ class GetLegacyStockStatusDataFromStockRegistry
         if ($this->defaultStockProvider->getId() === $stockId) {
             try {
                 $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
-                $stockItem = $this->stockRegistryStorage->getStockStatus(
+                $stockItem = $this->legacyStockStatusCache->load(
                     $productId,
                     $this->stockConfiguration->getDefaultScopeId()
                 );
