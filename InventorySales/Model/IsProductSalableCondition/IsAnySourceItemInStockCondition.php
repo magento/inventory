@@ -46,10 +46,12 @@ class IsAnySourceItemInStockCondition implements IsProductSalableInterface
      * @var ManageStockCondition
      */
     private $manageStockCondition;
+
     /**
      * @var CollectionProcessorInterface
      */
     private $collectionProcessor;
+
     /**
      * @var CollectionFactory
      */

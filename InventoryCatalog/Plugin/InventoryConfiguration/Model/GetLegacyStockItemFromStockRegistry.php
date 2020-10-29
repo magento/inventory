@@ -23,10 +23,12 @@ class GetLegacyStockItemFromStockRegistry
      * @var StockConfigurationInterface
      */
     private $stockConfiguration;
+
     /**
      * @var StockRegistryStorage
      */
     private $stockRegistryStorage;
+
     /**
      * @var GetProductIdsBySkusInterface
      */
