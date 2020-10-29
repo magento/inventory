@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\ResourceModel;
 
+use Magento\InventoryCatalog\Model\Cache\ProductTypesBySkusStorage;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
-use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * @inheritdoc
@@ -19,27 +19,21 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
      * @var GetProductTypesBySkus
      */
     private $getProductTypesBySkus;
-
     /**
-     * @var Json
+     * @var ProductTypesBySkusStorage
      */
-    private $jsonSerializer;
-
-    /**
-     * @var array
-     */
-    private $cache = [];
+    private $cache;
 
     /**
      * @param GetProductTypesBySkus $getProductTypesBySkus
-     * @param Json $jsonSerializer
+     * @param ProductTypesBySkusStorage $cache
      */
     public function __construct(
         GetProductTypesBySkus $getProductTypesBySkus,
-        Json $jsonSerializer
+        ProductTypesBySkusStorage $cache
     ) {
         $this->getProductTypesBySkus = $getProductTypesBySkus;
-        $this->jsonSerializer = $jsonSerializer;
+        $this->cache = $cache;
     }
 
     /**
@@ -50,9 +44,9 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
         $typesBySkus = [];
         $loadSkus = [];
         foreach ($skus as $sku) {
-            $nSku = $this->normalizeSku((string) $sku);
-            if (isset($this->cache[$nSku])) {
-                $typesBySkus[$sku] = $this->cache[$nSku];
+            $type = $this->cache->load((string) $sku);
+            if ($type !== null) {
+                $typesBySkus[$sku] = $type;
             } else {
                 $loadSkus[] = $sku;
                 $typesBySkus[$sku] = null;
@@ -61,34 +55,11 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
         if ($loadSkus) {
             $loadedTypesBySkus = $this->getProductTypesBySkus->execute($loadSkus);
             foreach ($loadedTypesBySkus as $sku => $type) {
-                $nSku = $this->normalizeSku((string) $sku);
-                $typesBySkus[$sku] = $type;
-                $this->cache[$nSku] = $type;
+                $typesBySkus[$sku] = (string) $type;
+                $this->cache->save((string) $sku, (string) $type);
             }
         }
 
         return $typesBySkus;
-    }
-
-    /**
-     * Saves sku/type pair into cache
-     *
-     * @param string $sku
-     * @param string $type
-     */
-    public function save(string $sku, string $type): void
-    {
-        $this->cache[$this->normalizeSku($sku)] = $type;
-    }
-
-    /**
-     * Normalize SKU by converting it to lowercase.
-     *
-     * @param string $sku
-     * @return string
-     */
-    private function normalizeSku(string $sku): string
-    {
-        return mb_convert_case($sku, MB_CASE_LOWER, 'UTF-8');
     }
 }

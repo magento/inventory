@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\InventoryCatalog\Model\Cache\ProductSkusByIdsStorage;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 
 /**
@@ -18,19 +19,21 @@ class GetSkusByProductIdsCache implements GetSkusByProductIdsInterface
      * @var GetSkusByProductIds
      */
     private $getSkusByProductIds;
-
     /**
-     * @var array
+     * @var ProductSkusByIdsStorage
      */
-    private $cache = [];
+    private $cache;
 
     /**
      * @param GetSkusByProductIds $getSkusByProductIds
+     * @param ProductSkusByIdsStorage $cache
      */
     public function __construct(
-        GetSkusByProductIds $getSkusByProductIds
+        GetSkusByProductIds $getSkusByProductIds,
+        ProductSkusByIdsStorage $cache
     ) {
         $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->cache = $cache;
     }
 
     /**
@@ -41,8 +44,9 @@ class GetSkusByProductIdsCache implements GetSkusByProductIdsInterface
         $skusByIds = [];
         $loadIds = [];
         foreach ($productIds as $productId) {
-            if (isset($this->cache[$productId])) {
-                $skusByIds[$productId] = $this->cache[$productId];
+            $sku = $this->cache->load((int) $productId);
+            if ($sku !== null) {
+                $skusByIds[$productId] = $sku;
             } else {
                 $loadIds[] = $productId;
                 $skusByIds[$productId] = null;
@@ -51,22 +55,11 @@ class GetSkusByProductIdsCache implements GetSkusByProductIdsInterface
         if ($loadIds) {
             $loadedSkuByIds = $this->getSkusByProductIds->execute($loadIds);
             foreach ($loadedSkuByIds as $productId => $sku) {
-                $skusByIds[$productId] = $sku;
-                $this->cache[$productId] = $sku;
+                $skusByIds[$productId] = (string) $sku;
+                $this->cache->save((int) $productId, (string) $sku);
             }
         }
 
         return $skusByIds;
-    }
-
-    /**
-     * Saves id/sku pair into cache
-     *
-     * @param int $id
-     * @param string $sku
-     */
-    public function save(int $id, string $sku): void
-    {
-        $this->cache[$id] = $sku;
     }
 }

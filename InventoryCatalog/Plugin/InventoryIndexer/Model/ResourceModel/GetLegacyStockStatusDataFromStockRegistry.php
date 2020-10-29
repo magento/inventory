@@ -9,7 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Model\ResourceModel;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalog\Model\LegacyStockStatusCache;
+use Magento\InventoryCatalog\Model\Cache\LegacyStockStatusStorage;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
@@ -29,10 +29,6 @@ class GetLegacyStockStatusDataFromStockRegistry
      */
     private $stockConfiguration;
     /**
-     * @var LegacyStockStatusCache
-     */
-    private $legacyStockStatusCache;
-    /**
      * @var GetProductIdsBySkusInterface
      */
     private $getProductIdsBySkus;
@@ -40,24 +36,28 @@ class GetLegacyStockStatusDataFromStockRegistry
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
+    /**
+     * @var LegacyStockStatusStorage
+     */
+    private $legacyStockStatusStorage;
 
     /**
      * @param GetStockItemData $getStockItemData
      * @param StockConfigurationInterface $stockConfiguration
-     * @param LegacyStockStatusCache $legacyStockStatusCache
+     * @param LegacyStockStatusStorage $legacyStockStatusStorage
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetStockItemData $getStockItemData,
         StockConfigurationInterface $stockConfiguration,
-        LegacyStockStatusCache $legacyStockStatusCache,
+        LegacyStockStatusStorage $legacyStockStatusStorage,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         DefaultStockProviderInterface $defaultStockProvider
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->stockConfiguration = $stockConfiguration;
-        $this->legacyStockStatusCache = $legacyStockStatusCache;
+        $this->legacyStockStatusStorage = $legacyStockStatusStorage;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->defaultStockProvider = $defaultStockProvider;
     }
@@ -78,8 +78,8 @@ class GetLegacyStockStatusDataFromStockRegistry
         if ($this->defaultStockProvider->getId() === $stockId) {
             try {
                 $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
-                $stockItem = $this->legacyStockStatusCache->load(
-                    $productId,
+                $stockItem = $this->legacyStockStatusStorage->load(
+                    (int) $productId,
                     $this->stockConfiguration->getDefaultScopeId()
                 );
             } catch (NoSuchEntityException $skuNotFoundInCatalog) {

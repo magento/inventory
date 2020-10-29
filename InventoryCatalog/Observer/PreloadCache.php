@@ -11,10 +11,10 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\InventoryCatalog\Model\GetProductIdsBySkusCache;
-use Magento\InventoryCatalog\Model\GetSkusByProductIdsCache;
+use Magento\InventoryCatalog\Model\Cache\ProductIdsBySkusStorage;
+use Magento\InventoryCatalog\Model\Cache\ProductSkusByIdsStorage;
+use Magento\InventoryCatalog\Model\Cache\ProductTypesBySkusStorage;
 use Magento\InventoryCatalog\Model\LegacyStockStatusCache;
-use Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkusCache;
 
 /**
  * Preload id/sku, sku/id and sku/type pairs into cache
@@ -22,37 +22,37 @@ use Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkusCache;
 class PreloadCache implements ObserverInterface
 {
     /**
-     * @var GetProductTypesBySkusCache
+     * @var ProductTypesBySkusStorage
      */
-    private $getProductTypesBySkus;
+    private $productTypesBySkusStorage;
     /**
-     * @var GetProductIdsBySkusCache
+     * @var ProductIdsBySkusStorage
      */
-    private $getProductIdsBySkus;
+    private $productIdsBySkusStorage;
     /**
-     * @var GetSkusByProductIdsCache
+     * @var ProductSkusByIdsStorage
      */
-    private $getSkusByProductIds;
+    private $productSkusByIdsStorage;
     /**
      * @var LegacyStockStatusCache
      */
     private $legacyStockStatusCache;
 
     /**
-     * @param GetProductTypesBySkusCache $getProductTypesBySkus
-     * @param GetProductIdsBySkusCache $getProductIdsBySkus
-     * @param GetSkusByProductIdsCache $getSkusByProductIds
+     * @param ProductTypesBySkusStorage $productTypesBySkusStorage
+     * @param ProductIdsBySkusStorage $productIdsBySkusStorage
+     * @param ProductSkusByIdsStorage $productSkusByIdsStorage
      * @param LegacyStockStatusCache $legacyStockStatusCache
      */
     public function __construct(
-        GetProductTypesBySkusCache $getProductTypesBySkus,
-        GetProductIdsBySkusCache $getProductIdsBySkus,
-        GetSkusByProductIdsCache $getSkusByProductIds,
+        ProductTypesBySkusStorage $productTypesBySkusStorage,
+        ProductIdsBySkusStorage $productIdsBySkusStorage,
+        ProductSkusByIdsStorage $productSkusByIdsStorage,
         LegacyStockStatusCache $legacyStockStatusCache
     ) {
-        $this->getProductTypesBySkus = $getProductTypesBySkus;
-        $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->productTypesBySkusStorage = $productTypesBySkusStorage;
+        $this->productIdsBySkusStorage = $productIdsBySkusStorage;
+        $this->productSkusByIdsStorage = $productSkusByIdsStorage;
         $this->legacyStockStatusCache = $legacyStockStatusCache;
     }
 
@@ -65,9 +65,9 @@ class PreloadCache implements ObserverInterface
         $productCollection = $observer->getData('collection');
         /** @var Product $product */
         foreach ($productCollection->getItems() as $product) {
-            $this->getProductTypesBySkus->save($product->getSku(), $product->getTypeId());
-            $this->getProductIdsBySkus->save($product->getSku(), (int) $product->getId());
-            $this->getSkusByProductIds->save((int) $product->getId(), $product->getSku());
+            $this->productTypesBySkusStorage->save((string) $product->getSku(), (string) $product->getTypeId());
+            $this->productIdsBySkusStorage->save((string) $product->getSku(), (int) $product->getId());
+            $this->productSkusByIdsStorage->save((int) $product->getId(), (string) $product->getSku());
         }
         $productIds = array_keys($productCollection->getItems());
         if ($productIds) {

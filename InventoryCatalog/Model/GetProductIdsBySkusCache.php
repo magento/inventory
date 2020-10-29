@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\InventoryCatalog\Model\Cache\ProductIdsBySkusStorage;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
-use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * @inheritdoc
@@ -19,27 +19,21 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
      * @var GetProductIdsBySkus
      */
     private $getProductIdsBySkus;
-
     /**
-     * @var Json
+     * @var ProductIdsBySkusStorage
      */
-    private $jsonSerializer;
-
-    /**
-     * @var array
-     */
-    private $cache = [];
+    private $cache;
 
     /**
      * @param GetProductIdsBySkus $getProductIdsBySkus
-     * @param Json $jsonSerializer
+     * @param ProductIdsBySkusStorage $cache
      */
     public function __construct(
         GetProductIdsBySkus $getProductIdsBySkus,
-        Json $jsonSerializer
+        ProductIdsBySkusStorage $cache
     ) {
         $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->jsonSerializer = $jsonSerializer;
+        $this->cache = $cache;
     }
 
     /**
@@ -50,9 +44,9 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
         $idsBySkus = [];
         $loadSkus = [];
         foreach ($skus as $sku) {
-            $nSku = $this->normalizeSku((string) $sku);
-            if (isset($this->cache[$nSku])) {
-                $idsBySkus[$sku] = $this->cache[$nSku];
+            $id = $this->cache->load((string) $sku);
+            if ($id !== null) {
+                $idsBySkus[$sku] = $id;
             } else {
                 $loadSkus[] = $sku;
                 $idsBySkus[$sku] = null;
@@ -61,34 +55,11 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
         if ($loadSkus) {
             $loadedIdsBySkus = $this->getProductIdsBySkus->execute($loadSkus);
             foreach ($loadedIdsBySkus as $sku => $id) {
-                $nSku = $this->normalizeSku((string) $sku);
-                $idsBySkus[$sku] = $id;
-                $this->cache[$nSku] = $id;
+                $idsBySkus[$sku] = (int) $id;
+                $this->cache->save((string) $sku, (int) $id);
             }
         }
 
         return $idsBySkus;
-    }
-
-    /**
-     * Saves sku/id pair into cache
-     *
-     * @param string $sku
-     * @param int $id
-     */
-    public function save(string $sku, int $id): void
-    {
-        $this->cache[$this->normalizeSku($sku)] = $id;
-    }
-
-    /**
-     * Normalize SKU by converting it to lowercase.
-     *
-     * @param string $sku
-     * @return string
-     */
-    private function normalizeSku(string $sku): string
-    {
-        return mb_convert_case($sku, MB_CASE_LOWER, 'UTF-8');
     }
 }
