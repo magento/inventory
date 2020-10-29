@@ -25,14 +25,17 @@ class PreloadCache implements ObserverInterface
      * @var ProductTypesBySkusStorage
      */
     private $productTypesBySkusStorage;
+
     /**
      * @var ProductIdsBySkusStorage
      */
     private $productIdsBySkusStorage;
+
     /**
      * @var ProductSkusByIdsStorage
      */
     private $productSkusByIdsStorage;
+
     /**
      * @var LegacyStockStatusCache
      */
@@ -65,13 +68,13 @@ class PreloadCache implements ObserverInterface
         $productCollection = $observer->getData('collection');
         /** @var Product $product */
         foreach ($productCollection->getItems() as $product) {
-            $this->productTypesBySkusStorage->save((string) $product->getSku(), (string) $product->getTypeId());
-            $this->productIdsBySkusStorage->save((string) $product->getSku(), (int) $product->getId());
-            $this->productSkusByIdsStorage->save((int) $product->getId(), (string) $product->getSku());
+            $this->productTypesBySkusStorage->set((string) $product->getSku(), (string) $product->getTypeId());
+            $this->productIdsBySkusStorage->set((string) $product->getSku(), (int) $product->getId());
+            $this->productSkusByIdsStorage->set((int) $product->getId(), (string) $product->getSku());
         }
         $productIds = array_keys($productCollection->getItems());
         if ($productIds) {
-            $this->legacyStockStatusCache->preload($productIds);
+            $this->legacyStockStatusCache->execute($productIds);
         }
     }
 }

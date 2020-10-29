@@ -26,7 +26,7 @@ class LegacyStockStatusStorage
      * @param int $scopeId
      * @return StockStatusInterface
      */
-    public function load(int $productId, int $scopeId): ?StockStatusInterface
+    public function get(int $productId, int $scopeId): ?StockStatusInterface
     {
         return $this->storage[$productId][$scopeId] ?? null;
     }
@@ -39,7 +39,7 @@ class LegacyStockStatusStorage
      * @param int $scopeId
      * @return void
      */
-    public function save(int $productId, StockStatusInterface $value, int $scopeId): void
+    public function set(int $productId, StockStatusInterface $value, int $scopeId): void
     {
         $this->storage[$productId][$scopeId] = $value;
     }

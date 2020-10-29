@@ -22,14 +22,17 @@ class LegacyStockStatusCache
      * @var StockStatusRepositoryInterface
      */
     private $stockStatusRepository;
+
     /**
      * @var StockStatusCriteriaInterfaceFactory
      */
     private $stockStatusCriteriaFactory;
+
     /**
      * @var StockConfigurationInterface
      */
     private $stockConfiguration;
+
     /**
      * @var LegacyStockStatusStorage
      */
@@ -59,7 +62,7 @@ class LegacyStockStatusCache
      * @param array $productIds
      * @return void
      */
-    public function preload(array $productIds): void
+    public function execute(array $productIds): void
     {
         $scopeId = $this->stockConfiguration->getDefaultScopeId();
         /** @var StockStatusCriteriaInterface $criteria */
@@ -68,7 +71,7 @@ class LegacyStockStatusCache
         $criteria->setScopeFilter($scopeId);
         $collection = $this->stockStatusRepository->getList($criteria);
         foreach ($collection->getItems() as $item) {
-            $this->legacyStockStatusStorage->save((int)$item->getProductId(), $item, $scopeId);
+            $this->legacyStockStatusStorage->set((int)$item->getProductId(), $item, $scopeId);
         }
     }
 }

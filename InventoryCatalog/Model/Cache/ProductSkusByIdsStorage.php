@@ -23,7 +23,7 @@ class ProductSkusByIdsStorage
      * @param int $id
      * @return string|null
      */
-    public function load(int $id): ?string
+    public function get(int $id): ?string
     {
         return $this->storage[$id] ?? null;
     }
@@ -34,7 +34,7 @@ class ProductSkusByIdsStorage
      * @param int $id
      * @param string $sku
      */
-    public function save(int $id, string $sku): void
+    public function set(int $id, string $sku): void
     {
         $this->storage[$id] = $sku;
     }

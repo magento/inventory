@@ -24,18 +24,22 @@ class GetLegacyStockStatusDataFromStockRegistry
      * @var GetStockItemData
      */
     private $getStockItemData;
+
     /**
      * @var StockConfigurationInterface
      */
     private $stockConfiguration;
+
     /**
      * @var GetProductIdsBySkusInterface
      */
     private $getProductIdsBySkus;
+
     /**
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
+
     /**
      * @var LegacyStockStatusStorage
      */
@@ -78,7 +82,7 @@ class GetLegacyStockStatusDataFromStockRegistry
         if ($this->defaultStockProvider->getId() === $stockId) {
             try {
                 $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
-                $stockItem = $this->legacyStockStatusStorage->load(
+                $stockItem = $this->legacyStockStatusStorage->get(
                     (int) $productId,
                     $this->stockConfiguration->getDefaultScopeId()
                 );

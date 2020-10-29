@@ -19,6 +19,7 @@ class GetSkusByProductIdsCache implements GetSkusByProductIdsInterface
      * @var GetSkusByProductIds
      */
     private $getSkusByProductIds;
+
     /**
      * @var ProductSkusByIdsStorage
      */
@@ -44,7 +45,7 @@ class GetSkusByProductIdsCache implements GetSkusByProductIdsInterface
         $skusByIds = [];
         $loadIds = [];
         foreach ($productIds as $productId) {
-            $sku = $this->cache->load((int) $productId);
+            $sku = $this->cache->get((int) $productId);
             if ($sku !== null) {
                 $skusByIds[$productId] = $sku;
             } else {
@@ -56,7 +57,7 @@ class GetSkusByProductIdsCache implements GetSkusByProductIdsInterface
             $loadedSkuByIds = $this->getSkusByProductIds->execute($loadIds);
             foreach ($loadedSkuByIds as $productId => $sku) {
                 $skusByIds[$productId] = (string) $sku;
-                $this->cache->save((int) $productId, (string) $sku);
+                $this->cache->set((int) $productId, (string) $sku);
             }
         }
 

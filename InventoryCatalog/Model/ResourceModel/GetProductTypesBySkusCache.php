@@ -19,6 +19,7 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
      * @var GetProductTypesBySkus
      */
     private $getProductTypesBySkus;
+
     /**
      * @var ProductTypesBySkusStorage
      */
@@ -44,7 +45,7 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
         $typesBySkus = [];
         $loadSkus = [];
         foreach ($skus as $sku) {
-            $type = $this->cache->load((string) $sku);
+            $type = $this->cache->get((string) $sku);
             if ($type !== null) {
                 $typesBySkus[$sku] = $type;
             } else {
@@ -56,7 +57,7 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
             $loadedTypesBySkus = $this->getProductTypesBySkus->execute($loadSkus);
             foreach ($loadedTypesBySkus as $sku => $type) {
                 $typesBySkus[$sku] = (string) $type;
-                $this->cache->save((string) $sku, (string) $type);
+                $this->cache->set((string) $sku, (string) $type);
             }
         }
 
