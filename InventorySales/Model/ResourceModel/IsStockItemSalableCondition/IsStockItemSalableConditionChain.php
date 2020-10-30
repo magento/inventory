@@ -57,15 +57,29 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
             return '1';
         }
 
-        $conditionStrings = [];
+        $orConditions = [];
+        $andConditions = [];
         foreach ($this->conditions as $condition) {
             $conditionString = $condition->execute($select);
             if ('' !== trim($conditionString)) {
-                $conditionStrings[] = $conditionString;
+                if ($condition instanceof RequiredSalableConditionInterface) {
+                    $andConditions[] = $conditionString;
+                } else {
+                    $orConditions[] = $conditionString;
+                }
             }
         }
 
-        $isSalableString = '(' . implode(') OR (', $conditionStrings) . ')';
+        if ($orConditions) {
+            $andConditions[] = '(' . implode(') OR (', $orConditions) . ')';
+        }
+
+        $isSalableString = implode(') AND (', $andConditions);
+
+        if (count($andConditions) > 1) {
+            $isSalableString = '(' . $isSalableString . ')';
+        }
+
         return (string)$this->resourceConnection->getConnection()->getCheckSql($isSalableString, 1, 0);
     }
 }

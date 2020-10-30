@@ -42,6 +42,7 @@
     <type name="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\IsStockItemSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
+                <item name="source_items_in_stock" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\IsAnySourceItemInStockCondition</item>
                 <item name="backorders" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\BackordersCondition</item>
                 <item name="manage_stock" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\ManageStockCondition</item>
                 <!-- min_qty condition includes source_item_status check (need to proper work of min_qty) -->
