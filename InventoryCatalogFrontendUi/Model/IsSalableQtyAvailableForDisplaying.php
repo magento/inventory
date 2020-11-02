@@ -39,7 +39,7 @@ class IsSalableQtyAvailableForDisplaying
         return ($this->stockItemConfig->getBackorders() === StockItemConfigurationInterface::BACKORDERS_NO
                 || $this->stockItemConfig->getBackorders() !== StockItemConfigurationInterface::BACKORDERS_NO
                 && $this->stockItemConfig->getMinQty() < 0)
-            && (float) $productSalableQty <= (float) $this->stockItemConfig->getStockThresholdQty()
+            && $productSalableQty <= (float) $this->stockItemConfig->getStockThresholdQty()
             && $productSalableQty > 0;
     }
 }
