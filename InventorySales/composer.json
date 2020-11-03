@@ -16,11 +16,11 @@
         "magento/module-inventory-source-selection-api": "*",
         "magento/module-sales-inventory": "*",
         "magento/module-store": "*",
-        "magento/module-sales": "*"
+        "magento/module-sales": "*",
+        "magento/module-quote": "*"
     },
     "suggest": {
-        "magento/module-inventory-catalog": "*",
-        "magento/module-quote": "*"
+        "magento/module-inventory-catalog": "*"
     },
     "require-dev": {
         "magento/module-inventory-indexer": "*"
