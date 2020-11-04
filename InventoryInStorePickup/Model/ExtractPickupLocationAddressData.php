@@ -29,6 +29,11 @@ class ExtractPickupLocationAddressData
     private $regionFactory;
 
     /**
+     * @var array
+     */
+    private $regions = [];
+
+    /**
      * @param Copy $copyService
      * @param RegionFactory|null $regionFactory
      */
@@ -69,11 +74,13 @@ class ExtractPickupLocationAddressData
      */
     private function retrieveRegion(PickupLocationInterface $pickupLocation, array $data): array
     {
-        $region = $this->regionFactory->create();
-        $region->loadByName($pickupLocation->getRegion(), $pickupLocation->getCountryId());
-        if ($region->getName()) {
-            $data[SourceInterface::REGION] = $region->getName();
+        if (!isset($this->regions[$pickupLocation->getRegionId()])) {
+            $region = $this->regionFactory->create();
+            $region->loadByName($pickupLocation->getRegion(), $pickupLocation->getCountryId());
+            $this->regions[$pickupLocation->getRegionId()] = $region->getName() ?: $pickupLocation->getRegion();
         }
+
+        $data[SourceInterface::REGION] = $this->regions[$pickupLocation->getRegionId()];
 
         return $data;
     }
