@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickup\Model;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject\Copy;
+use Magento\InventoryInStorePickup\Model\PickupLocation\DataResolver as PickupLocationDataResolver;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 
 /**
@@ -21,11 +23,21 @@ class ExtractPickupLocationAddressData
     private $objectCopyService;
 
     /**
-     * @param Copy $copyService
+     * @var PickupLocationDataResolver
      */
-    public function __construct(Copy $copyService)
-    {
+    private $pickupLocationDataResolver;
+
+    /**
+     * @param Copy $copyService
+     * @param PickupLocationDataResolver|null $pickupLocationDataResolver
+     */
+    public function __construct(
+        Copy $copyService,
+        ?PickupLocationDataResolver $pickupLocationDataResolver = null
+    ) {
         $this->objectCopyService = $copyService;
+        $this->pickupLocationDataResolver = $pickupLocationDataResolver ?:
+            ObjectManager::getInstance()->get(PickupLocationDataResolver::class);
     }
 
     /**
@@ -37,10 +49,13 @@ class ExtractPickupLocationAddressData
      */
     public function execute(PickupLocationInterface $pickupLocation): array
     {
-        return $this->objectCopyService->getDataFromFieldset(
+        $data = $this->objectCopyService->getDataFromFieldset(
             'inventory_convert_pickup_location',
             'to_in_store_pickup_shipping_address',
             $pickupLocation
         );
+        $data = $this->pickupLocationDataResolver->execute($pickupLocation, $data);
+
+        return $data;
     }
 }

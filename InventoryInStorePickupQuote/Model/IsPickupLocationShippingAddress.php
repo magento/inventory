@@ -7,9 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupQuote\Model;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\InventoryInStorePickup\Model\ExtractPickupLocationAddressData;
-use Magento\InventoryInStorePickup\Model\PickupLocation\DataResolver as PickupLocationDataResolver;
 use Magento\InventoryInStorePickupApi\Api\Data\PickupLocationInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 
@@ -34,27 +32,18 @@ class IsPickupLocationShippingAddress
     private $getShippingAddressData;
 
     /**
-     * @var PickupLocationDataResolver
-     */
-    private $pickupLocationDataResolver;
-
-    /**
      * @param ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData
      * @param ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData
      * @param GetShippingAddressData $getShippingAddressData
-     * @param PickupLocationDataResolver|null $pickupLocationDataResolver
      */
     public function __construct(
         ExtractPickupLocationAddressData $extractPickupLocationShippingAddressData,
         ExtractQuoteAddressShippingAddressData $extractQuoteAddressShippingAddressData,
-        GetShippingAddressData $getShippingAddressData,
-        ?PickupLocationDataResolver $pickupLocationDataResolver = null
+        GetShippingAddressData $getShippingAddressData
     ) {
         $this->extractPickupLocationShippingAddressData = $extractPickupLocationShippingAddressData;
         $this->extractQuoteAddressShippingAddressData = $extractQuoteAddressShippingAddressData;
         $this->getShippingAddressData = $getShippingAddressData;
-        $this->pickupLocationDataResolver = $pickupLocationDataResolver ?:
-            ObjectManager::getInstance()->get(PickupLocationDataResolver::class);
     }
 
     /**
@@ -69,7 +58,6 @@ class IsPickupLocationShippingAddress
     {
         $data = $this->getShippingAddressData->execute() +
             $this->extractPickupLocationShippingAddressData->execute($pickupLocation);
-        $data = $this->pickupLocationDataResolver->execute($pickupLocation, $data);
 
         if (!$shippingAddress->getExtensionAttributes() ||
             !$shippingAddress->getExtensionAttributes()->getPickupLocationCode()
