@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalogAdminUi\Observer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
@@ -177,7 +178,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
                 $source['status'] = (int) $source['source_status'];
                 $assignedSources[$key] = $source;
             }
-            if ($product['status'] === '2') {
+            if ((int)$product['status'] === Status::STATUS_DISABLED) {
                 $source['status'] = 0;
                 $assignedSources[$key] = $source;
             }
