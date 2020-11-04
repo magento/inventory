@@ -124,14 +124,14 @@
         <amOnPage url="{{AdminProductEditPage.url($$createFirstConfigChildProduct.id$$)}}" stepKey="openProductEditPageForDisablingProduct"/>
         <actionGroup ref="AdminSetProductDisabledActionGroup" stepKey="disableProduct"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="clickSaveProduct"/>
-        <!--Assign created source to product and set product sock status to out of stock.-->
+        <!--Open second child product and set product stock status to out of stock-->
         <amOnPage url="{{AdminProductEditPage.url($$createSecondConfigChildProduct.id$$)}}" stepKey="openProductEditPageForDisablingSource"/>
         <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setProductStatusToOutOfStock">
             <argument name="sourceCode" value="$createSource.source[source_code]$"/>
             <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
         </actionGroup>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
-        <!--Verify product is visible on storefront.-->
+        <!--Verify product is not visible on storefront.-->
         <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="doNotSeeProductOnCategoryPage">
             <argument name="categoryUrlKey" value="$$createCategory.name$$"/>
             <argument name="productName" value="$$createConfigProduct.name$$"/>
