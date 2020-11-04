@@ -5,30 +5,36 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryInStorePickup\Test\Unit\Model\PickupLocation;
+namespace Magento\InventoryInStorePickup\Test\Unit\Model;
 
 use Magento\Directory\Model\Region;
 use Magento\Directory\Model\RegionFactory;
+use Magento\Framework\DataObject\Copy;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magento\InventoryInStorePickup\Model\ExtractPickupLocationAddressData;
 use Magento\InventoryInStorePickup\Model\PickupLocation;
-use Magento\InventoryInStorePickup\Model\PickupLocation\DataResolver;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Provide tests for DataResolver
  */
-class DataResolverTest extends TestCase
+class ExtractPickupLocationAddressDataTest extends TestCase
 {
+    /**
+     * @var ExtractPickupLocationAddressData
+     */
+    private $model;
+
+    /**
+     * @var Copy|MockObject
+     */
+    private $objectCopyServiceMock;
+
     /**
      * @var Region|MockObject
      */
     private $regionMock;
-
-    /**
-     * @var DataResolver
-     */
-    private $model;
 
     /**
      * @inheritDoc
@@ -44,6 +50,11 @@ class DataResolverTest extends TestCase
             ->getMock();
         $this->regionMock->method('loadByName')->willReturnSelf();
 
+        $this->objectCopyServiceMock = $this->getMockBuilder(Copy::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getDataFromFieldset'])
+            ->getMockForAbstractClass();
+
         $regionFactoryMock = $this->getMockBuilder(RegionFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
@@ -53,8 +64,11 @@ class DataResolverTest extends TestCase
             ->method('create')->willReturn($this->regionMock);
 
         $this->model = $objectManagerHelper->getObject(
-            DataResolver::class,
-            ['regionFactory' => $regionFactoryMock]
+            ExtractPickupLocationAddressData::class,
+            [
+                'objectCopyService' => $this->objectCopyServiceMock,
+                'regionFactory' => $regionFactoryMock,
+            ]
         );
     }
 
@@ -68,11 +82,13 @@ class DataResolverTest extends TestCase
      */
     public function testExecute(string $translatedRegionName, string $expectedRegionName): void
     {
+        $this->objectCopyServiceMock->method('getDataFromFieldset')
+            ->willReturn(['region' => 'original_name']);
         $this->regionMock->method('getName')->willReturn($translatedRegionName);
 
         $pickupLocation = $this->createMock(PickupLocation::class);
 
-        $result = $this->model->execute($pickupLocation, ['region' => 'original_name']);
+        $result = $this->model->execute($pickupLocation);
 
         $this->assertEquals(
             ['region' => $expectedRegionName],
