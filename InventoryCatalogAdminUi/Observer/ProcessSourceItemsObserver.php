@@ -179,7 +179,7 @@ class ProcessSourceItemsObserver implements ObserverInterface
                 $assignedSources[$key] = $source;
             }
             if ((int)$product['status'] === Status::STATUS_DISABLED) {
-                $source['status'] = 0;
+                $source['status'] = SourceItemInterface::STATUS_OUT_OF_STOCK;
                 $assignedSources[$key] = $source;
             }
         }
