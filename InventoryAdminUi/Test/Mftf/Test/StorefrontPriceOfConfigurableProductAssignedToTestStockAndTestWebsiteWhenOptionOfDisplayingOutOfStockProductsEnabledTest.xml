@@ -108,10 +108,11 @@
         <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="fillCategory"/>
         <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToAdditionalWebsite" >
             <argument name="website" value="{{NewWebSiteData.name}}"/>
         </actionGroup>
+        <scrollToTopOfPage stepKey="scrollToTopOfAdminProductFormSection"/>
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="fillCategory"/>
         <actionGroup ref="createConfigurationsForTwoAttributeCustomSource" stepKey="createConfigurationsWithCustomStock">
             <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
