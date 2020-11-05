@@ -87,6 +87,7 @@ class ExtractPickupLocationAddressDataTest extends TestCase
         $this->regionMock->method('getName')->willReturn($translatedRegionName);
 
         $pickupLocation = $this->createMock(PickupLocation::class);
+        $pickupLocation->method('getCountryId')->willReturn('US');
         $pickupLocation->method('getRegionId')->willReturn(1);
         $pickupLocation->method('getRegion')->willReturn('original_name');
 

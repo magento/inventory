@@ -74,13 +74,15 @@ class ExtractPickupLocationAddressData
      */
     private function retrieveRegion(PickupLocationInterface $pickupLocation, array $data): array
     {
-        if (!isset($this->regions[$pickupLocation->getRegionId()])) {
+        $cacheKey = $pickupLocation->getCountryId() . '_' . $pickupLocation->getRegionId();
+
+        if (!isset($this->regions[$cacheKey])) {
             $region = $this->regionFactory->create();
             $region->loadByName($pickupLocation->getRegion(), $pickupLocation->getCountryId());
-            $this->regions[$pickupLocation->getRegionId()] = $region->getName() ?: $pickupLocation->getRegion();
+            $this->regions[$cacheKey] = $region->getName() ?: $pickupLocation->getRegion();
         }
 
-        $data[SourceInterface::REGION] = $this->regions[$pickupLocation->getRegionId()];
+        $data[SourceInterface::REGION] = $this->regions[$cacheKey];
 
         return $data;
     }
