@@ -74,8 +74,12 @@ class GetQty extends Action implements HttpGetActionInterface
             );
         } else {
             try {
-                $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
-                $qty = $this->productQty->execute($sku, (int)$stockId);
+                if ($salesChannel!==null && $salesChannelCode!==null) {
+                    $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
+                    $qty = $this->productQty->execute($sku, (int)$stockId);
+                } else {
+                    $qty = null;
+                }
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 $qty = null;
