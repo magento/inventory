@@ -17,14 +17,14 @@ use Magento\TestFramework\TestCase\GraphQlAbstract;
 class PickupLocationsNegativeCasesTest extends GraphQlAbstract
 {
     /**
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_addresses.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/source_pickup_location_attributes.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryInStorePickupApi/Test/_files/inventory_geoname.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_addresses.php
+     * @magentoApiDataFixture Magento_InventoryInStorePickupApi::Test/_files/source_pickup_location_attributes.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture Magento_InventoryInStorePickupApi::Test/_files/inventory_geoname.php
      *
      * @magentoConfigFixture cataloginventory/source_selection_distance_based/provider offline
      *

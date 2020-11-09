@@ -40,7 +40,6 @@
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
         <plugin name="update_source_item_at_legacy_stock_item_save"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin"/>
-        <plugin name="priceIndexUpdater" disabled="true"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Status">
         <plugin name="adapt_add_stock_data_to_collection"
@@ -164,5 +163,8 @@
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save">
         <plugin name="inventoryUpdate" type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save\ProcessInventoryPlugin"/>
         <plugin name="massAction" disabled="true"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
+        <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
     </type>
 </config>

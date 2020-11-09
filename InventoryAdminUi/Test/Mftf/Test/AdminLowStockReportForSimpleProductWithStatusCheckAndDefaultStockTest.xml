@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminLowStockReportForSimpleProductWithStatusCheckAndDefaultStockTest">
+        <annotations>
+            <stories value="Low Stock Product report contains Out Of Stock product"/>
+            <title value="Low Stock Product report contains Out Of Stock product"/>
+            <description value="Verify Low Stock Report does not contain out of stock product."/>
+            <testCaseId value="MC-35399"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create category and product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="firstProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="secondProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="thirdProduct">
+                <field key="status">0</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Enable Manage Stock in case it's been disabled in previous tests.-->
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <!--Set "Notify Quantity Below" configuration.-->
+            <magentoCLI command="config:set {{NotifyQuantityBelow.path}} {{NotifyQuantityBelow.value}}" stepKey="setNotifyQuantityBelow"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+        </before>
+        <after>
+            <deleteData createDataKey="firstProduct" stepKey="deleteFirstProduct"/>
+            <deleteData createDataKey="secondProduct" stepKey="deleteSecondProduct"/>
+            <deleteData createDataKey="thirdProduct" stepKey="deleteThirdProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Revert "Notify Quantity Below" configuration.-->
+            <magentoCLI command="config:set {{RevertNotifyQuantityBelow.path}} {{RevertNotifyQuantityBelow.value}}" stepKey="revertNotifyQtyBelow"/>
+            <!--Disable "Manage Stock" in configuration.-->
+            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Disable additional sources.-->
+        <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+        <!--Set first product qty to 4.-->
+        <amOnPage url="{{AdminProductEditPage.url($$firstProduct.id$$)}}" stepKey="openFirstProductEditPageToChangeQty4"/>
+        <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="4" stepKey="fillFirstProductQtyWith4"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectFirstProductInStockStatus"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveFirstProductWithChangedQuantity"/>
+        <waitForPageLoad time="60" stepKey="waitForFirstProductSave"/>
+
+        <!--Set second product qty to 6.-->
+        <amOnPage url="{{AdminProductEditPage.url($$secondProduct.id$$)}}" stepKey="openSecondProductEditPageToChangeQty6"/>
+        <fillField selector="{{AdminProductFormSection.productQuantity}}" userInput="6" stepKey="fillSecondProductQtyWith6"/>
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectSecondProductInStockStatus"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSecondProductWithChangedQuantity"/>
+        <waitForPageLoad time="60" stepKey="waitForSecondProductSave"/>
+        <!--Verify report is available with in stock product.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageWithZeroQuantity"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="searchFirstProduct">
+            <argument name="productSku" value="$$firstProduct.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminVerifyLowStockProductReportActionGroup" stepKey="verifyFirstProductInReport">
+            <argument name="product" value="$$firstProduct$$"/>
+            <argument name="productQty" value="4"/>
+            <argument name="source" value="_defaultSource"/>
+        </actionGroup>
+
+        <!--Verify report is not available with below notify stock quantity status.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageForSecondProduct"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmptyForSecondProduct">
+            <argument name="productSku" value="$$secondProduct.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyForSecondProduct"/>
+        <!--Verify report does not contain out of stock product.-->
+        <amOnPage url="{{LowStockReportPage.url}}" stepKey="navigateToLowStockReportPageForThirdProduct"/>
+        <actionGroup ref="AdminSearchLowStockReportByProductSkuAndSourceCodeActionGroup" stepKey="verifyLowStockReportIsEmpty">
+            <argument name="productSku" value="$$thirdProduct.sku$$"/>
+            <argument name="sourceCode" value="{{_defaultSource.source_code}}"/>
+        </actionGroup>
+        <see userInput="We couldn't find any records." stepKey="verifyRowsAreEmptyForThirdProduct"/>
+    </test>
+</tests>

@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateFullInvoiceForOrderWithVirtualProductOnCustomStockTest">
+    <test name="AdminCreateFullInvoiceForOrderWithVirtualProductOnCustomStockTest" deprecated="Use AdminCreateFullInvoiceForOrderWithVirtualProductOnOneCustomStockTest instead">
         <annotations>
             <stories value="Admin user create Full Invoice for order with Virtual product on Custom stock from Main Website"/>
             <title value="Admin user create Full Invoice for order with Virtual product on Custom stock from Main Website"/>
@@ -17,6 +17,9 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="DEPRECATED">Use AdminCreateFullInvoiceForOrderWithVirtualProductOnOneCustomStockTest instead</issueId>
+            </skip>
         </annotations>
 
         <before>

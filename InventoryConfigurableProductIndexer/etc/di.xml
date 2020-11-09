@@ -14,16 +14,25 @@
         <plugin name="configurable_product_full_index" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexFullPlugin"/>
         <plugin name="configurable_product_index_list" type="Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin"/>
     </type>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId">
+        <arguments>
+            <argument name="selectBuilders" xsi:type="array">
+                <item name="configurable" xsi:type="object">Magento\InventoryConfigurableProductIndexer\Indexer\SelectBuilder</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer">
         <arguments>
             <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
             <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
+            <argument name="batchSize" xsi:type="string">100</argument>
         </arguments>
     </type>
     <type name="Magento\InventoryConfigurableProductIndexer\Indexer\Stock\StockIndexer">
         <arguments>
             <argument name="indexHandler" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexHandler</argument>
             <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
+            <argument name="batchSize" xsi:type="string">100</argument>
         </arguments>
     </type>
     <type name="Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SiblingSkuListInStockProvider">

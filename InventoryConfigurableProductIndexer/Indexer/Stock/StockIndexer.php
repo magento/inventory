@@ -10,6 +10,7 @@ namespace Magento\InventoryConfigurableProductIndexer\Indexer\Stock;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
+use Magento\Framework\Indexer\SaveHandler\Batch;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
@@ -19,6 +20,7 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterface;
+use ArrayIterator;
 
 /**
  * Configurable product stock indexer class
@@ -27,6 +29,11 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexTableSwitcherInterfac
  */
 class StockIndexer
 {
+    /**
+     * Default batch size
+     */
+    private const BATCH_SIZE = 100;
+
     /**
      * @var GetAllStockIds
      */
@@ -68,6 +75,16 @@ class StockIndexer
     private $prepareIndexDataForClearingIndex;
 
     /**
+     * @var int
+     */
+    private $batchSize;
+
+    /**
+     * @var Batch
+     */
+    private $batch;
+
+    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -78,6 +95,9 @@ class StockIndexer
      * @param IndexTableSwitcherInterface $indexTableSwitcher
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param PrepareIndexDataForClearingIndex|null $prepareIndexDataForClearingIndex
+     * @param Batch|null $batch
+     * @param int|null $batchSize
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
@@ -87,7 +107,9 @@ class StockIndexer
         IndexDataByStockIdProvider $indexDataByStockIdProvider,
         IndexTableSwitcherInterface $indexTableSwitcher,
         DefaultStockProviderInterface $defaultStockProvider,
-        PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex = null
+        ?PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex = null,
+        ?Batch $batch = null,
+        ?int $batchSize = null
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructure;
@@ -98,6 +120,8 @@ class StockIndexer
         $this->defaultStockProvider = $defaultStockProvider;
         $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex ?: ObjectManager::getInstance()
             ->get(PrepareIndexDataForClearingIndex::class);
+        $this->batch = $batch ?: ObjectManager::getInstance()->get(Batch::class);
+        $this->batchSize = $batchSize ?? self::BATCH_SIZE;
     }
 
     /**
@@ -150,17 +174,20 @@ class StockIndexer
 
             $indexData = $this->indexDataByStockIdProvider->execute((int)$stockId);
 
-            $this->indexHandler->cleanIndex(
-                $mainIndexName,
-                $this->prepareIndexDataForClearingIndex->execute($indexData),
-                ResourceConnection::DEFAULT_CONNECTION
-            );
+            foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchData) {
+                $batchIndexData = new ArrayIterator($batchData);
+                $this->indexHandler->cleanIndex(
+                    $mainIndexName,
+                    $this->prepareIndexDataForClearingIndex->execute($batchIndexData),
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
 
-            $this->indexHandler->saveIndex(
-                $mainIndexName,
-                $indexData,
-                ResourceConnection::DEFAULT_CONNECTION
-            );
+                $this->indexHandler->saveIndex(
+                    $mainIndexName,
+                    $batchIndexData,
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
+            }
         }
     }
 }
