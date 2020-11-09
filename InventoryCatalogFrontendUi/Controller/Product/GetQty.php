@@ -74,7 +74,7 @@ class GetQty extends Action implements HttpGetActionInterface
             );
         } else {
             try {
-                if ($salesChannel!==null && $salesChannelCode!==null) {
+                if ($salesChannel !== null && $salesChannelCode !== null) {
                     $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
                     $qty = $this->productQty->execute($sku, (int)$stockId);
                 } else {
