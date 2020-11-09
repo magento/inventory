@@ -8,8 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use ArrayIterator;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryIndexer\Indexer\SelectBuilder;
+use Magento\InventoryIndexer\Indexer\SelectBuilderInterface;
 
 /**
  * Returns all data for the index
@@ -22,31 +23,48 @@ class IndexDataProviderByStockId
     private $resourceConnection;
 
     /**
-     * @var SelectBuilder
+     * @var SelectBuilderInterface[]
      */
-    private $selectBuilder;
+    private $selectBuilders;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param SelectBuilder $selectBuilder
+     * @param SelectBuilderInterface[] $selectBuilders
+     * @throws LocalizedException
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        SelectBuilder $selectBuilder
+        array $selectBuilders
     ) {
         $this->resourceConnection = $resourceConnection;
-        $this->selectBuilder = $selectBuilder;
+
+        foreach ($selectBuilders as $selectBuilder) {
+            if (!$selectBuilder instanceof SelectBuilderInterface) {
+                throw new LocalizedException(
+                    __('SelectBuilder must implement SelectBuilderInterface.')
+                );
+            }
+        }
+        $this->selectBuilders = $selectBuilders;
     }
 
     /**
+     * Returns selected data
+     *
      * @param int $stockId
+     * @throws \Exception
      * @return ArrayIterator
      */
     public function execute(int $stockId): ArrayIterator
     {
-        $select = $this->selectBuilder->execute($stockId);
-
+        $result = [];
         $connection = $this->resourceConnection->getConnection();
-        return new ArrayIterator($connection->fetchAll($select));
+
+        foreach ($this->selectBuilders as $selectBuilder) {
+            $select = $selectBuilder->execute($stockId);
+            $result[] = $connection->fetchAll($select);
+        }
+
+        return new ArrayIterator(array_merge([], ...$result));
     }
 }
