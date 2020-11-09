@@ -125,4 +125,18 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
         $items = reset($inconsistencies)->getItems();
         self::assertEquals(3, $items['simple_10']);
     }
+
+    /**
+     * Test inventory:reservations:list-inconsistencies will return correct result use pagination
+     *
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_orders_with_reservations.php
+     */
+    public function testExecuteEmptyWithPagination()
+    {
+        $bunchSize = 1;
+        for ($i = 1; $i <= 3; $i++) {
+            $inconsistencies = $this->getSalableQuantityInconsistencies->execute($bunchSize, $i);
+            self::assertEmpty($inconsistencies);
+        }
+    }
 }

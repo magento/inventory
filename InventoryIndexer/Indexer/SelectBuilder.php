@@ -18,9 +18,9 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
 
 /**
- * Select builder
+ * Prepare select for data provider
  */
-class SelectBuilder
+class SelectBuilder implements SelectBuilderInterface
 {
     /**
      * @var ResourceConnection
@@ -53,6 +53,8 @@ class SelectBuilder
     }
 
     /**
+     * Build select based on stockId
+     *
      * @param int $stockId
      * @return Select
      */
