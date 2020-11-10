@@ -74,6 +74,7 @@ class InventoryRequest extends AbstractExtensibleModel implements InventoryReque
         $this->stockId = $stockId;
 
         //TODO: Temporary fix for resolving issue with webApi (https://github.com/magento-engcom/msi/issues/1524)
+        $this->items = [];
         foreach ($items as $item) {
             if (false === $item instanceof ItemRequestInterface) {
                 $this->items[] = $this->itemRequestFactory->create([
