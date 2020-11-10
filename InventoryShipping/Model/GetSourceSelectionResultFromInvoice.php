@@ -110,7 +110,7 @@ class GetSourceSelectionResultFromInvoice
         $selectionRequestItems = [];
         foreach ($invoiceItems as $invoiceItem) {
             $orderItem = $invoiceItem->getOrderItem();
-            if (!$orderItem->getQtyToInvoice() > 0 && $orderItem->getLockedDoInvoice() || !$orderItem->getIsVirtual()) {
+            if ($orderItem->isDummy() || !$orderItem->getIsVirtual()) {
                 continue;
             }
 
