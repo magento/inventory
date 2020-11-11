@@ -19,6 +19,9 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class AddSalesQuoteItemOnDefaultStockTest extends TestCase
 {
     /**

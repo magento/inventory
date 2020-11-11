@@ -7,12 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -21,9 +19,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class AdaptGetProductStockStatusBySkuPlugin
 {
     /**
-     * @var AreProductsSalableInterface
+     * @var ProductRepositoryInterface
      */
-    private $areProductsSalable;
+    private $productRepository;
 
     /**
      * @var StoreManagerInterface
@@ -31,23 +29,15 @@ class AdaptGetProductStockStatusBySkuPlugin
     private $storeManager;
 
     /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @param AreProductsSalableInterface $areProductsSalable
+     * @param ProductRepositoryInterface $productRepository
      * @param StoreManagerInterface $storeManager
-     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        AreProductsSalableInterface $areProductsSalable,
-        StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        ProductRepositoryInterface $productRepository,
+        StoreManagerInterface $storeManager
     ) {
-        $this->areProductsSalable = $areProductsSalable;
+        $this->productRepository = $productRepository;
         $this->storeManager = $storeManager;
-        $this->stockResolver = $stockResolver;
     }
 
     /**
@@ -58,8 +48,7 @@ class AdaptGetProductStockStatusBySkuPlugin
      * @param string $productSku
      * @param int $scopeId
      * @return int
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityException|LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundGetProductStockStatusBySku(
@@ -68,14 +57,11 @@ class AdaptGetProductStockStatusBySkuPlugin
         $productSku,
         $scopeId = null
     ): int {
-        $websiteCode = null === $scopeId
-            ? $this->storeManager->getWebsite()->getCode()
-            : $this->storeManager->getWebsite($scopeId)->getCode();
-        $stockId = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)->getStockId();
+        $store = $this->storeManager->getWebsite($scopeId)->getDefaultStore();
+        $product = $store
+            ? $this->productRepository->get($productSku, false, (int)$store->getId())
+            : $this->productRepository->get($productSku);
 
-        $result = $this->areProductsSalable->execute([$productSku], $stockId);
-        $result = current($result);
-
-        return (int)$result->isSalable();
+        return (int)$product->isAvailable();
     }
 }

@@ -185,7 +185,7 @@ class BackorderConditionTest extends TestCase
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
             ['SKU-2', 10, null],
-            ['SKU-3', 10, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 1]],
+            ['SKU-3', 10, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
         ];
     }
 
@@ -230,7 +230,7 @@ class BackorderConditionTest extends TestCase
                 10,
                 StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY,
                 [
-                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 1
+                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0
                 ]
             ],
             [
@@ -238,7 +238,7 @@ class BackorderConditionTest extends TestCase
                 10,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 [
-                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 1
+                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0
                 ]
             ],
         ];
@@ -271,7 +271,6 @@ class BackorderConditionTest extends TestCase
         $stockItemSearchCriteria->setProductsFilter($product->getId());
         $stockItemsCollection = $this->stockItemRepository->getList($stockItemSearchCriteria);
 
-        /** @var StockItemInterface $legacyStockItem */
         $legacyStockItem = current($stockItemsCollection->getItems());
         $legacyStockItem->setBackorders($backordersStatus);
         $legacyStockItem->setUseConfigBackorders(false);

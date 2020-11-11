@@ -8,13 +8,15 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 
+/**
+ * Configurable product source item indexer.
+ */
 class SourceItemIndexer
 {
     /**
@@ -48,18 +50,12 @@ class SourceItemIndexer
     private $siblingSkuListInStockProvider;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexHandlerInterface $indexHandler
      * @param IndexStructureInterface $indexStructure
      * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param SiblingSkuListInStockProvider $siblingSkuListInStockProvider
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
@@ -67,8 +63,7 @@ class SourceItemIndexer
         IndexHandlerInterface $indexHandler,
         IndexStructureInterface $indexStructure,
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
-        SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
-        DefaultStockProviderInterface $defaultStockProvider
+        SiblingSkuListInStockProvider $siblingSkuListInStockProvider
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -76,10 +71,11 @@ class SourceItemIndexer
         $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexStructure = $indexStructure;
         $this->siblingSkuListInStockProvider = $siblingSkuListInStockProvider;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
+     * Reindex given source items.
+     *
      * @param array $sourceItemIds
      */
     public function executeList(array $sourceItemIds)
@@ -88,10 +84,6 @@ class SourceItemIndexer
 
         foreach ($skuListInStockList as $skuListInStock) {
             $stockId = $skuListInStock->getStockId();
-
-            if ($this->defaultStockProvider->getId() === $stockId) {
-                continue;
-            }
             $skuList = $skuListInStock->getSkuList();
 
             $mainIndexName = $this->indexNameBuilder

@@ -79,7 +79,6 @@ class SelectBuilder
             ->build();
 
         $indexTableName = $this->indexNameResolver->resolveName($indexName);
-
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
@@ -89,7 +88,6 @@ class SelectBuilder
                 [
                     IndexStructure::SKU => 'parent_product_entity.sku',
                     IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
                 ]
             )->joinInner(
                 ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],

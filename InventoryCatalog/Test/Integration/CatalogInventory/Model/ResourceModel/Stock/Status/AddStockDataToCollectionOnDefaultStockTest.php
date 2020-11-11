@@ -32,6 +32,7 @@ class AddStockDataToCollectionOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDbIsolation disabled
      *
      * @param int $expectedSize
      * @param bool $isFilterInStock
@@ -54,7 +55,7 @@ class AddStockDataToCollectionOnDefaultStockTest extends TestCase
     {
         return [
             [4, true],
-            [6, false],
+            [5, false],
         ];
     }
 }

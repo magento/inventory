@@ -40,6 +40,8 @@ class AdaptAddStockDataToCollectionPlugin
     }
 
     /**
+     * Adapt add stock data for collection for multi stock environment.
+     *
      * @param Status $stockStatus
      * @param callable $proceed
      * @param Collection $collection

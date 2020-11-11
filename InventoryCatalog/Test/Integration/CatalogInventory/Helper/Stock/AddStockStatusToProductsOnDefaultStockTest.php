@@ -33,6 +33,7 @@ class AddStockStatusToProductsOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDbIsolation disabled
      */
     public function testAddStockStatusToProducts()
     {

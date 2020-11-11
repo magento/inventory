@@ -6,14 +6,18 @@
         "magento/framework": "*",
         "magento/module-bundle": "*",
         "magento/module-catalog": "*",
+        "magento/module-catalog-inventory": "*",
         "magento/module-inventory-api": "*",
+        "magento/module-inventory-catalog": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-indexer": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-store": "*"
     },
     "suggest": {
-        "magento/module-catalog-inventory": "*"
+        "magento/module-catalog-inventory": "*",
+        "magento/module-inventory-sales": "*"
     },
     "type": "magento2-module",
     "license": [

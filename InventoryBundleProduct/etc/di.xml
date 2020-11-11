@@ -9,9 +9,6 @@
     <type name="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface">
         <plugin name="disable_bundle_type" type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
     </type>
-    <type name="Magento\Bundle\Model\Product\Type">
-        <plugin name="adapt_is_product_salable" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\Product\Type\AdaptIsSalablePlugin"/>
-    </type>
     <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
         <plugin name="adapt_add_quantity_filter" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection\AdaptAddQuantityFilterPlugin"/>
     </type>
@@ -26,7 +23,17 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\CatalogInventory\Helper\Stock">
-        <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
+    <type name="Magento\InventoryCatalog\Model\IsProductSalable">
+        <plugin name="is_bundle_product_salable" type="Magento\InventoryBundleProduct\Plugin\InventoryCatalog\Model\IsProductSalable\IsBundleProductSalablePlugin"/>
+    </type>
+    <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
+        <arguments>
+            <argument name="conditions" xsi:type="array">
+                <item name="bundle_product_options_in_stock" xsi:type="array">
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="object" xsi:type="object">Magento\InventoryBundleProduct\Model\IsProductSalableCondition\ProductOptionsCondition</item>
+                </item>
+            </argument>
+        </arguments>
     </type>
 </config>

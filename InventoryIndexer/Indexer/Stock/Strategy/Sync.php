@@ -7,7 +7,6 @@
 namespace Magento\InventoryIndexer\Indexer\Stock\Strategy;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
 use Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId;
@@ -53,11 +52,6 @@ class Sync
     private $indexTableSwitcher;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -66,7 +60,6 @@ class Sync
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexDataProviderByStockId $indexDataProviderByStockId
      * @param IndexTableSwitcherInterface $indexTableSwitcher
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
@@ -74,8 +67,7 @@ class Sync
         IndexHandlerInterface $indexHandler,
         IndexNameBuilder $indexNameBuilder,
         IndexDataProviderByStockId $indexDataProviderByStockId,
-        IndexTableSwitcherInterface $indexTableSwitcher,
-        DefaultStockProviderInterface $defaultStockProvider
+        IndexTableSwitcherInterface $indexTableSwitcher
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructureHandler;
@@ -83,7 +75,6 @@ class Sync
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexDataProviderByStockId = $indexDataProviderByStockId;
         $this->indexTableSwitcher = $indexTableSwitcher;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -117,10 +108,6 @@ class Sync
     public function executeList(array $stockIds): void
     {
         foreach ($stockIds as $stockId) {
-            if ($this->defaultStockProvider->getId() === (int)$stockId) {
-                continue;
-            }
-
             $replicaIndexName = $this->indexNameBuilder
                 ->setIndexId(InventoryIndexer::INDEXER_ID)
                 ->addDimension('stock_', (string)$stockId)

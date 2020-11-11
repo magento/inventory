@@ -21,6 +21,9 @@ use Magento\Quote\Model\Quote;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class AddSalesQuoteItemOnDefaultStockTest extends TestCase
 {
     /**

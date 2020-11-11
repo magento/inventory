@@ -18,7 +18,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface;
 
 /**
- * Select builder
+ * Inventory select builder.
  */
 class SelectBuilder
 {
@@ -53,6 +53,8 @@ class SelectBuilder
     }
 
     /**
+     * Build inventory select for given stock.
+     *
      * @param int $stockId
      * @return Select
      */
@@ -79,12 +81,13 @@ class SelectBuilder
             []
         );
 
+        $isSalableExpression = new \Zend_Db_Expr($this->getIsStockItemSalableCondition->execute($select));
         $select->from(
             ['source_item' => $sourceItemTable],
             [
                 SourceItemInterface::SKU,
                 IndexStructure::QUANTITY => 'SUM(' . $quantityExpression . ')',
-                IndexStructure::IS_SALABLE => $this->getIsStockItemSalableCondition->execute($select),
+                IndexStructure::IS_SALABLE => $isSalableExpression
             ]
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)

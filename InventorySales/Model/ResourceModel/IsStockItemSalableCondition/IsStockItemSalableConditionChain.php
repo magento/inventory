@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition;
 
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
@@ -27,13 +28,19 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
     private $resourceConnection;
 
     /**
+     * @var StockConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param ResourceConnection $resourceConnection
+     * @param StockConfigurationInterface $configuration
      * @param array $conditions
-     *
      * @throws LocalizedException
      */
     public function __construct(
         ResourceConnection $resourceConnection,
+        StockConfigurationInterface $configuration,
         array $conditions = []
     ) {
         foreach ($conditions as $getIsSalableCondition) {
@@ -45,15 +52,15 @@ class IsStockItemSalableConditionChain implements GetIsStockItemSalableCondition
         }
         $this->resourceConnection = $resourceConnection;
         $this->conditions = $conditions;
+        $this->configuration = $configuration;
     }
 
     /**
      * @inheritdoc
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function execute(Select $select): string
     {
-        if (empty($this->conditions)) {
+        if (empty($this->conditions) || !$this->configuration->getManageStock()) {
             return '1';
         }
 

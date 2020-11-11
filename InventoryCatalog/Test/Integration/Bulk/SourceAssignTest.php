@@ -62,7 +62,7 @@ class SourceAssignTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
-     * @magentoDbIsolation enabled
+     * @magentoDbIsolation disabled
      */
     public function testBulkSourceAssignment()
     {
@@ -121,7 +121,7 @@ class SourceAssignTest extends TestCase
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_all_types.php
-     * @magentoDbIsolation enabled
+     * @magentoDbIsolation disabled
      */
     public function testBulkSourceAssignmentOnMixedProducts()
     {

@@ -8,14 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryAdvancedCheckout\Plugin\Model;
 
 use Magento\AdvancedCheckout\Model\AreProductsSalableForRequestedQtyInterface;
-use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResult;
+use Magento\AdvancedCheckout\Model\Data\IsProductsSalableForRequestedQtyResultFactory;
+use Magento\AdvancedCheckout\Model\Data\ProductQuantity;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
  * Provides multi-sourcing capabilities for Advanced Checkout Order By SKU feature.
@@ -23,60 +19,35 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
 class AreProductsSalablePlugin
 {
     /**
-     * @var AreProductsSalableInterface
+     * @var ProductRepositoryInterface
      */
-    private $areProductsSalable;
+    private $productRepository;
 
     /**
-     * @var StockResolverInterface
+     * @var IsProductsSalableForRequestedQtyResultFactory
      */
-    private $stockResolver;
+    private $isProductsSalableForRequestedQtyResultFactory;
 
     /**
-     * @var WebsiteRepositoryInterface
-     */
-    private $websiteRepository;
-
-    /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
-
-    /**
-     * @param AreProductsSalableInterface $areProductsSalable
-     * @param StockResolverInterface $stockResolver
-     * @param WebsiteRepositoryInterface $websiteRepository
-     * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param ObjectManagerInterface $objectManager
+     * @param ProductRepositoryInterface $productRepository
+     * @param IsProductsSalableForRequestedQtyResultFactory $isProductsSalableForRequestedQtyResultFactory
      */
     public function __construct(
-        AreProductsSalableInterface $areProductsSalable,
-        StockResolverInterface $stockResolver,
-        WebsiteRepositoryInterface $websiteRepository,
-        DefaultStockProviderInterface $defaultStockProvider,
-        ObjectManagerInterface $objectManager
+        ProductRepositoryInterface $productRepository,
+        IsProductsSalableForRequestedQtyResultFactory $isProductsSalableForRequestedQtyResultFactory
     ) {
-        $this->areProductsSalable = $areProductsSalable;
-        $this->stockResolver = $stockResolver;
-        $this->websiteRepository = $websiteRepository;
-        $this->defaultStockProvider = $defaultStockProvider;
-        $this->objectManager = $objectManager;
+        $this->productRepository = $productRepository;
+        $this->isProductsSalableForRequestedQtyResultFactory = $isProductsSalableForRequestedQtyResultFactory;
     }
 
     /**
-     * Get is product out of stock for given Product id in a given Website id in MSI context.
+     * Get products salable status for given sku requests.
      *
      * @param AreProductsSalableForRequestedQtyInterface $subject
      * @param callable $proceed
-     * @param \Magento\AdvancedCheckout\Model\Data\ProductQuantity[] $productQuantities
+     * @param ProductQuantity[] $productQuantities
      * @param int $websiteId
      * @return array
-     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecute(
@@ -85,22 +56,18 @@ class AreProductsSalablePlugin
         array $productQuantities,
         int $websiteId
     ): array {
-        $website = $this->websiteRepository->getById($websiteId);
-        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-        if ($this->defaultStockProvider->getId() === $stock->getStockId()) {
-            return $proceed($productQuantities, $websiteId);
-        }
-
-        $skus = [];
-        foreach ($productQuantities as $productQuantity) {
-            $skus[] = $productQuantity->getSku();
-        }
         $result = [];
-        foreach ($this->areProductsSalable->execute($skus, $stock->getStockId()) as $productStock) {
-            $result[] = $this->objectManager->create(
-                IsProductsSalableForRequestedQtyResult::class,
-                ['sku' => $productStock->getSku(), 'isSalable' => $productStock->isSalable()]
-            );
+        foreach ($productQuantities as $productQuantity) {
+            try {
+                $product = $this->productRepository->get($productQuantity->getSku());
+                $result[] = $this->isProductsSalableForRequestedQtyResultFactory->create(
+                    ['sku' => $product->getSku(), 'isSalable' => $product->isSalable()]
+                );
+            } catch (NoSuchEntityException $e) {
+                $result[] = $this->isProductsSalableForRequestedQtyResultFactory->create(
+                    ['sku' => $productQuantity->getSku(), 'isSalable' => false]
+                );
+            }
         }
 
         return $result;

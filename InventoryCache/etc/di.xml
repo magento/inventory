@@ -12,12 +12,12 @@
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
         <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\CacheFlush"/>
     </type>
+    <type name="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus">
+        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Queue\Reservation\UpdateSalabilityStatus\CacheFlush" />
+    </type>
     <type name="Magento\InventoryCache\Model\FlushCacheByProductIds">
         <arguments>
             <argument name="productCacheTag" xsi:type="const">Magento\Catalog\Model\Product::CACHE_TAG</argument>
         </arguments>
-    </type>
-    <type name="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus">
-        <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Queue\Reservation\UpdateSalabilityStatus\CacheFlush" />
     </type>
 </config>

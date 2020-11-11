@@ -24,7 +24,7 @@ use Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInte
 class GetBundleProductStockStatus
 {
     /**
-     * @var GetProductSelection
+     * @var GetProductSelections
      */
     private $getProductSelection;
 
@@ -44,13 +44,13 @@ class GetBundleProductStockStatus
     private $getStockItemConfiguration;
 
     /**
-     * @param GetProductSelection $getProductSelection
+     * @param GetProductSelections $getProductSelection
      * @param AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty
      * @param IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
-        GetProductSelection $getProductSelection,
+        GetProductSelections $getProductSelection,
         AreProductsSalableForRequestedQtyInterface $areProductsSalableForRequestedQty,
         IsProductSalableForRequestedQtyRequestInterfaceFactory $isProductSalableForRequestedQtyRequestFactory,
         GetStockItemConfigurationInterface $getStockItemConfiguration

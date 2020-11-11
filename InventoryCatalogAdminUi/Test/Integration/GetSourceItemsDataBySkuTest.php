@@ -12,6 +12,9 @@ use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class GetSourceItemsDataBySkuTest extends TestCase
 {
     /**

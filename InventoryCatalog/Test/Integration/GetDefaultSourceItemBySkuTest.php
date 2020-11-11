@@ -11,6 +11,9 @@ use Magento\InventoryCatalog\Model\GetDefaultSourceItemBySku;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class GetDefaultSourceItemBySkuTest extends TestCase
 {
     /**

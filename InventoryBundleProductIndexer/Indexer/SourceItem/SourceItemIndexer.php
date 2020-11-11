@@ -9,8 +9,8 @@ namespace Magento\InventoryBundleProductIndexer\Indexer\SourceItem;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\PrepareIndexDataForClearingIndex;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -52,9 +52,9 @@ class SourceItemIndexer
     private $siblingSkuListInStockProvider;
 
     /**
-     * @var DefaultStockProviderInterface
+     * @var PrepareIndexDataForClearingIndex
      */
-    private $defaultStockProvider;
+    private $prepareIndexDataForClearingIndex;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -63,7 +63,7 @@ class SourceItemIndexer
      * @param IndexStructureInterface $indexStructure
      * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param SiblingSkuListInStockProvider $siblingSkuListInStockProvider
-     * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
      */
     public function __construct(
         ResourceConnection $resourceConnection,
@@ -72,7 +72,7 @@ class SourceItemIndexer
         IndexStructureInterface $indexStructure,
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
-        DefaultStockProviderInterface $defaultStockProvider
+        PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -80,7 +80,7 @@ class SourceItemIndexer
         $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexStructure = $indexStructure;
         $this->siblingSkuListInStockProvider = $siblingSkuListInStockProvider;
-        $this->defaultStockProvider = $defaultStockProvider;
+        $this->prepareIndexDataForClearingIndex = $prepareIndexDataForClearingIndex;
     }
 
     /**
@@ -97,10 +97,6 @@ class SourceItemIndexer
 
         foreach ($skuListInStockList as $skuListInStock) {
             $stockId = $skuListInStock->getStockId();
-
-            if ($this->defaultStockProvider->getId() === $stockId) {
-                continue;
-            }
             $skuList = $skuListInStock->getSkuList();
 
             $mainIndexName = $this->indexNameBuilder
@@ -117,7 +113,7 @@ class SourceItemIndexer
 
             $this->indexHandler->cleanIndex(
                 $mainIndexName,
-                $indexData,
+                $this->prepareIndexDataForClearingIndex->execute($indexData),
                 ResourceConnection::DEFAULT_CONNECTION
             );
 

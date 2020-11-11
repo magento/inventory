@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\SourceItem\Strategy;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
 use Magento\InventoryIndexer\Indexer\SourceItem\IndexDataBySkuListProvider;
@@ -54,11 +53,6 @@ class Sync
     private $stockIndexer;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
      * @param GetSkuListInStock $getSkuListInStockToUpdate
@@ -67,7 +61,6 @@ class Sync
      * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param IndexNameBuilder $indexNameBuilder
      * @param StockIndexer $stockIndexer
-     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         GetSkuListInStock $getSkuListInStockToUpdate,
@@ -75,8 +68,7 @@ class Sync
         IndexHandlerInterface $indexHandler,
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         IndexNameBuilder $indexNameBuilder,
-        StockIndexer $stockIndexer,
-        DefaultStockProviderInterface $defaultStockProvider
+        StockIndexer $stockIndexer
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -84,7 +76,6 @@ class Sync
         $this->indexDataBySkuListProvider = $indexDataBySkuListProvider;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->stockIndexer = $stockIndexer;
-        $this->defaultStockProvider = $defaultStockProvider;
     }
 
     /**
@@ -92,16 +83,12 @@ class Sync
      *
      * @param int[] $sourceItemIds
      */
-    public function executeList(array $sourceItemIds) : void
+    public function executeList(array $sourceItemIds): void
     {
         $skuListInStockList = $this->getSkuListInStock->execute($sourceItemIds);
 
         foreach ($skuListInStockList as $skuListInStock) {
             $stockId = $skuListInStock->getStockId();
-            if ($this->defaultStockProvider->getId() === $stockId) {
-                continue;
-            }
-
             $skuList = $skuListInStock->getSkuList();
 
             $mainIndexName = $this->indexNameBuilder
@@ -134,7 +121,7 @@ class Sync
      *
      * @return void
      */
-    public function executeFull() : void
+    public function executeFull(): void
     {
         $this->stockIndexer->executeFull();
     }
@@ -145,7 +132,7 @@ class Sync
      * @param int $sourceItemId
      * @return void
      */
-    public function executeRow(int $sourceItemId) : void
+    public function executeRow(int $sourceItemId): void
     {
         $this->executeList([$sourceItemId]);
     }

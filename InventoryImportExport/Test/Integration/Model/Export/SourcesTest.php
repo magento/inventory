@@ -13,6 +13,9 @@ use Magento\InventoryImportExport\Model\Export\Sources;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @magentoDbIsolation disabled
+ */
 class SourcesTest extends TestCase
 {
     /**

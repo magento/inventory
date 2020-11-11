@@ -71,15 +71,14 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
      */
     public function execute(string $sku, int $stockId): bool
     {
+        $productType = $this->getProductTypesBySkus->execute([$sku])[$sku];
+        if (false === $this->isSourceItemManagementAllowedForProductType->execute($productType)) {
+            return true;
+        }
         $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         if (null === $stockItemData) {
             // Sku is not assigned to Stock
             return false;
-        }
-
-        $productType = $this->getProductTypesBySkus->execute([$sku])[$sku];
-        if (false === $this->isSourceItemManagementAllowedForProductType->execute($productType)) {
-            return (bool)$stockItemData[GetStockItemDataInterface::IS_SALABLE];
         }
 
         /** @var StockItemConfigurationInterface $stockItemConfiguration */

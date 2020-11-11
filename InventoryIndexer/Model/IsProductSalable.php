@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
@@ -21,21 +22,30 @@ class IsProductSalable implements IsProductSalableInterface
      * @var GetStockItemDataInterface
      */
     private $getStockItemData;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $config;
+
+    /**
      * @param GetStockItemDataInterface $getStockItemData
+     * @param ScopeConfigInterface $config
      * @param LoggerInterface $logger
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
+        ScopeConfigInterface $config,
         LoggerInterface $logger
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->logger = $logger;
+        $this->config = $config;
     }
 
     /**
@@ -44,8 +54,9 @@ class IsProductSalable implements IsProductSalableInterface
     public function execute(string $sku, int $stockId): bool
     {
         try {
+            $showOutOfStock = (int)$this->config->getValue('cataloginventory/options/show_out_of_stock');
             $stockItem = $this->getStockItemData->execute($sku, $stockId);
-            $isSalable = (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
+            $isSalable = $showOutOfStock ? true : (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
         } catch (LocalizedException $exception) {
             $this->logger->warning(
                 sprintf(

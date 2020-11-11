@@ -25,9 +25,10 @@
             <argument name="indexStructure" xsi:type="object">Magento\InventoryIndexer\Indexer\IndexStructure</argument>
         </arguments>
     </type>
-    <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
-        <plugin name="reindex_source_items_after_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterAddBundleSelectionPlugin"/>
-        <plugin name="reindex_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>
-        <plugin name="reindex_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterRemoveBundleSelectionPlugin"/>
+    <type name="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor\GetDataForUpdate">
+        <plugin name="add_bundle_products_data" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Model\Queue\GetDataForUpdate\AddBundleProductDataPlugin"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="reindex_bundle_source_items_after_save" type="Magento\InventoryBundleProductIndexer\Plugin\Catalog\Model\Product\ReindexSourceItemsPlugin"/>
     </type>
 </config>

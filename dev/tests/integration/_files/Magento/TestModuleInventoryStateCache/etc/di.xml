@@ -19,4 +19,10 @@
     <preference for="Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface" type="Magento\InventoryReservations\Model\ResourceModel\GetReservationsQuantity"/>
     <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStock"/>
     <preference for="Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface" type="Magento\InventorySales\Model\GetStockBySalesChannel"/>
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="get_non_cached_products" type="Magento\TestModuleInventoryStateCache\Plugin\Catalog\Model\ProductRepository\GetNonCachedProductsPlugin"/>
+    </type>
+    <type name="Magento\InventoryCatalog\Model\IsProductSalable\IsProductSalableDataStorage">
+        <plugin name="disable_is_salable_cache" type="Magento\TestModuleInventoryStateCache\Plugin\InventoryCatalog\Model\IsProductSalableDataStorage\DisableStoragePlugin"/>
+    </type>
 </config>

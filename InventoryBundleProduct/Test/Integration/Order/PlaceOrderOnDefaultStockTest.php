@@ -32,6 +32,8 @@ use PHPUnit\Framework\TestCase;
  * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/source_items_for_bundle_options_on_default_source.php
  * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
  * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+ *
+ * @magentoDbIsolation disabled
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
 {
