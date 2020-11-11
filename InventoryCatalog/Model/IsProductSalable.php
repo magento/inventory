@@ -28,11 +28,6 @@ class IsProductSalable
     private $areProductsSalable;
 
     /**
-     * @var array
-     */
-    private $productStatusCache;
-
-    /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
      * @param AreProductsSalableInterface $areProductsSalable
      */
@@ -52,22 +47,17 @@ class IsProductSalable
      */
     public function execute(Product $product): bool
     {
-        if (null === $product->getSku() || (int)$product->getStatus() === Status::STATUS_DISABLED) {
+        if (null === $product->getSku() || !((int)$product->getStatus() === Status::STATUS_ENABLED)) {
             return false;
         }
-        if ($product->getData('is_salable') !== null) {
+        if ($product->hasData('is_salable')) {
             return (bool)$product->getData('is_salable');
         }
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        if (isset($this->productStatusCache[$stockId][$product->getSku()])) {
-            return $this->productStatusCache[$stockId][$product->getSku()];
-        }
-
-        $stockId = $this->getStockIdForCurrentWebsite->execute();
         $result = current($this->areProductsSalable->execute([$product->getSku()], $stockId));
-        $salabilityStatus = $result->isSalable();
-        $this->productStatusCache[$stockId][$product->getSku()] = $salabilityStatus;
+        $isSalable = $result->isSalable();
+        $product->setData('is_salable', $isSalable);
 
-        return $salabilityStatus;
+        return $isSalable;
     }
 }
