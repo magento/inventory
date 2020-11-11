@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="UpdateStockStatusGroupedProductTest">
+        <!--Run cron for start consumer -->
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="startMessageQueue" after="setProductToOutOfStock">
+            <argument name="consumerName" value="{{AdminInventoryMassUpdateConsumerData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryMassUpdateConsumerData.messageLimit}}"/>
+        </actionGroup>
+        <!--Run cron for start consumer second-->
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="startMessageQueueSecond" after="returnProductToInStock">
+            <argument name="consumerName" value="{{AdminInventoryMassUpdateConsumerData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryMassUpdateConsumerData.messageLimit}}"/>
+        </actionGroup>
+    </test>
+</tests>
