@@ -38,8 +38,8 @@ class GetOrderSendNotificationByOrderId
      */
     public function execute(int $orderId): ?int
     {
-        $connection = $this->connection->getConnection();
-        $table = $this->connection->getTableName('inventory_order_notification');
+        $connection = $this->connection->getConnection('sales');
+        $table = $this->connection->getTableName('inventory_order_notification', 'sales');
         $select = $connection->select()
             ->from($table, 'send_notification')
             ->where(self::ORDER_ID . '= ?', $orderId)
