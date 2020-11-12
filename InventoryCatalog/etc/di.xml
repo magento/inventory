@@ -11,6 +11,7 @@
     <preference for="Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface" type="Magento\InventoryCatalog\Model\GetProductIdsBySkusCache"/>
     <preference for="Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface" type="Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkusCache" />
     <preference for="Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface" type="Magento\InventoryCatalog\Model\GetSkusByProductIdsCache"/>
+    <preference for="Magento\InventoryCatalogApi\Model\GetParentSkusByChildrenSkusInterface" type="Magento\InventoryCatalog\Model\GetParentSkusByChildrenSkus"/>
     <preference for="Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface" type="Magento\InventoryCatalog\Model\IsSingleSourceMode"/>
     <preference for="Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface" type="Magento\InventoryCatalog\Model\SourceItemsProcessor"/>
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
