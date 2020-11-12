@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Model\IsProductSalableCondition;
 
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Inventory\Model\ResourceModel\SourceItem\Collection;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\GetSourcesAssignedToStockOrderedByPriorityInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForSkuInterface;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\Inventory\Model\ResourceModel\SourceItem\CollectionFactory;
 
 /**
  * Check if product has source items with the in stock status
@@ -45,24 +48,40 @@ class IsAnySourceItemInStockCondition implements IsProductSalableInterface
     private $manageStockCondition;
 
     /**
+     * @var CollectionProcessorInterface
+     */
+    private $collectionProcessor;
+
+    /**
+     * @var CollectionFactory
+     */
+    private $sourceItemCollectionFactory;
+
+    /**
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority
      * @param IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku
      * @param ManageStockCondition $manageStockCondition
+     * @param CollectionProcessorInterface $collectionProcessor
+     * @param CollectionFactory $sourceItemCollectionFactory
      */
     public function __construct(
         SourceItemRepositoryInterface $sourceItemRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
         IsSourceItemManagementAllowedForSkuInterface $isSourceItemManagementAllowedForSku,
-        ManageStockCondition $manageStockCondition
+        ManageStockCondition $manageStockCondition,
+        CollectionProcessorInterface $collectionProcessor,
+        CollectionFactory $sourceItemCollectionFactory
     ) {
         $this->sourceItemRepository = $sourceItemRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
         $this->isSourceItemManagementAllowedForSku = $isSourceItemManagementAllowedForSku;
         $this->manageStockCondition = $manageStockCondition;
+        $this->collectionProcessor = $collectionProcessor;
+        $this->sourceItemCollectionFactory = $sourceItemCollectionFactory;
     }
 
     /**
@@ -87,9 +106,11 @@ class IsAnySourceItemInStockCondition implements IsProductSalableInterface
             ->addFilter(SourceItemInterface::STATUS, SourceItemInterface::STATUS_IN_STOCK)
             ->create();
 
-        $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
+        /** @var Collection $collection */
+        $collection = $this->sourceItemCollectionFactory->create();
+        $this->collectionProcessor->process($searchCriteria, $collection);
 
-        return (bool)count($sourceItems);
+        return $collection->getSize() > 0;
     }
 
     /**
