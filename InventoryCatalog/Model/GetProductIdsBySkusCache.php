@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\InventoryCatalog\Model\Cache\ProductIdsBySkusStorage;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
-use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * @inheritdoc
@@ -21,25 +21,20 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
     private $getProductIdsBySkus;
 
     /**
-     * @var Json
+     * @var ProductIdsBySkusStorage
      */
-    private $jsonSerializer;
-
-    /**
-     * @var array
-     */
-    private $productIdsBySkus = [];
+    private $cache;
 
     /**
      * @param GetProductIdsBySkus $getProductIdsBySkus
-     * @param Json $jsonSerializer
+     * @param ProductIdsBySkusStorage $cache
      */
     public function __construct(
         GetProductIdsBySkus $getProductIdsBySkus,
-        Json $jsonSerializer
+        ProductIdsBySkusStorage $cache
     ) {
         $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->jsonSerializer = $jsonSerializer;
+        $this->cache = $cache;
     }
 
     /**
@@ -47,11 +42,25 @@ class GetProductIdsBySkusCache implements GetProductIdsBySkusInterface
      */
     public function execute(array $skus): array
     {
-        $cacheKey = $this->jsonSerializer->serialize($skus);
-        if (!isset($this->productIdsBySkus[$cacheKey])) {
-            $this->productIdsBySkus[$cacheKey] = $this->getProductIdsBySkus->execute($skus);
+        $idsBySkus = [];
+        $loadSkus = [];
+        foreach ($skus as $sku) {
+            $id = $this->cache->get((string) $sku);
+            if ($id !== null) {
+                $idsBySkus[$sku] = $id;
+            } else {
+                $loadSkus[] = $sku;
+                $idsBySkus[$sku] = null;
+            }
+        }
+        if ($loadSkus) {
+            $loadedIdsBySkus = $this->getProductIdsBySkus->execute($loadSkus);
+            foreach ($loadedIdsBySkus as $sku => $id) {
+                $idsBySkus[$sku] = (int) $id;
+                $this->cache->set((string) $sku, (int) $id);
+            }
         }
 
-        return $this->productIdsBySkus[$cacheKey];
+        return $idsBySkus;
     }
 }

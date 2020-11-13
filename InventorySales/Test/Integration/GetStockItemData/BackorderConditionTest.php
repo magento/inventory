@@ -185,7 +185,8 @@ class BackorderConditionTest extends TestCase
         return [
             ['SKU-1', 10, [GetStockItemDataInterface::QUANTITY => 8.5, GetStockItemDataInterface::IS_SALABLE => 1]],
             ['SKU-2', 10, null],
-            ['SKU-3', 10, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 1]],
+            // SKU-3 is assigned only to eu-2 with status out-of-stock
+            ['SKU-3', 10, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
         ];
     }
 
@@ -226,19 +227,21 @@ class BackorderConditionTest extends TestCase
                 null
             ],
             [
+                // SKU-3 is assigned only to eu-2 with status out-of-stock
                 'SKU-3',
                 10,
                 StockItemConfigurationInterface::BACKORDERS_YES_NONOTIFY,
                 [
-                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 1
+                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0
                 ]
             ],
             [
+                // SKU-3 is assigned only to eu-2 with status out-of-stock
                 'SKU-3',
                 10,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 [
-                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 1
+                    GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0
                 ]
             ],
         ];
