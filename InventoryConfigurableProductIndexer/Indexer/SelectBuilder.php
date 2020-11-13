@@ -134,7 +134,7 @@ class SelectBuilder implements SelectBuilderInterface
                 []
             )->joinInner(
                 ['product_status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
-                "product_entity.entity_id = product_status.$linkField"
+                "product_entity.$linkField = product_status.$linkField"
                 . " AND product_status.attribute_id = $statusAttributeId"
                 . ' AND product_status.value = ' . ProductStatus::STATUS_ENABLED,
                 []
