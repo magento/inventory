@@ -105,6 +105,7 @@ class SelectBuilder implements SelectBuilderInterface
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
+        $statusAttributeId = $this->getAttribute(ProductInterface::STATUS)->getId();
 
         $select = $connection->select()
             ->from(
@@ -132,14 +133,10 @@ class SelectBuilder implements SelectBuilderInterface
                 . ' AND inventory_stock_item.stock_id = ' . $this->defaultStockProvider->getId(),
                 []
             )->joinInner(
-                ['cpe' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'cpe.entity_id = product_entity.entity_id',
-                []
-            )->joinInner(
-                ['cpei' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
-                'cpe.' . $linkField . ' = cpei.row_id'
-                . ' AND cpei.attribute_id = ' . $this->getAttribute('status')->getId()
-                . ' AND cpei.value = ' . ProductStatus::STATUS_ENABLED,
+                ['product_status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
+                "product_entity.entity_id = product_status.$linkField"
+                . " AND product_status.attribute_id = $statusAttributeId"
+                . ' AND product_status.value = ' . ProductStatus::STATUS_ENABLED,
                 []
             )->group(['parent_product_entity.sku']);
 
