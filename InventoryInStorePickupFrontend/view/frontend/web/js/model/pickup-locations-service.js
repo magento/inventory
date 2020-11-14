@@ -50,7 +50,10 @@ define([
 
             return storage
                 .get(serviceUrl, {}, false)
-                .then(function (address) {
+                .then(function (result) {
+                    var addresses = result.items || [],
+                        address = addresses[0] || {};
+
                     return this.formatAddress(address);
                 }.bind(this))
                 .fail(function (response) {
