@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminBackordersEnabledSimpleProductOnOutOfStockCustomSourceTest">
+        <annotations>
+            <stories value="Simple product with backorder in custom source."/>
+            <title value="Simple product with backorder in custom source with status out-of-stock should be out-of-stock"/>
+            <description value="Simple product with backorder in custom source with status out-of-stock should be out-of-stock"/>
+            <severity value="AVERAGE"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create category-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <!--Create custom source-->
+            <createData entity="_minimalSource" stepKey="customSource"/>
+            <!--Create custom stock and assign it to main website-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="customStock"/>
+            <!--Create product-->
+            <createData entity="SimpleProduct" stepKey="simpleProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Assign custom stock to custom source-->
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
+                <requiredEntity createDataKey="customStock"/>
+                <requiredEntity createDataKey="customSource"/>
+            </createData>
+            <!--Reindex and flush cache-->
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Login to backend-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+        </before>
+        <after>
+            <!--Assign Default Stock to Main Website-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Disable custom source-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableThirdCreatedSource">
+                <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
+            </actionGroup>
+            <!--Logout from backend-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <!--Delete category-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Delete product-->
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+        </after>
+        <!--Open product edit page-->
+        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
+        <!--Unassign default source from the product-->
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+            <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+        </actionGroup>
+        <!--Assign created source to product with quantity 0-->
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToProduct">
+            <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
+            <argument name="sourceQty" value="0"/>
+        </actionGroup>
+        <!--Set custom source status to out-of-stock -->
+        <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setProductStatusToOutOfStock">
+            <argument name="sourceCode" value="$$customSource.source[source_code]$"/>
+            <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
+        </actionGroup>
+        <!--Enable backorders-->
+        <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
+        <!--Save product-->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        <!-- Go to storefront product page PDP-->
+        <amOnPage url="{{StorefrontProductPage.url($$simpleProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToProductPage"/>
+        <!-- Assert that "add to cart" button is not shown -->
+        <dontSee selector="{{StorefrontProductActionSection.addToCart}}" stepKey="assertAddToCartButtonIsNotPresent"/>
+        <grabTextFrom selector="{{StorefrontProductInfoMainSection.productStockStatus}}" stepKey="productStockStatus"/>
+        <!-- Assert that product is out of stock on product page PDP -->
+        <assertEquals stepKey="assertProductIsOutOfStock">
+            <expectedResult type="string">OUT OF STOCK</expectedResult>
+            <actualResult type="variable">productStockStatus</actualResult>
+        </assertEquals>
+    </test>
+</tests>

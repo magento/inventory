@@ -24,6 +24,13 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId">
+        <arguments>
+            <argument name="selectBuilders" xsi:type="array">
+                <item name="default" xsi:type="object">Magento\InventoryIndexer\Indexer\SelectBuilder</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryIndexer\Indexer\IndexHandler">
         <arguments>
             <argument name="batchSize" xsi:type="string">100</argument>
