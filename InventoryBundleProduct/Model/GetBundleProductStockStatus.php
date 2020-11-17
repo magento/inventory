@@ -10,7 +10,6 @@ namespace Magento\InventoryBundleProduct\Model;
 use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
@@ -136,14 +135,12 @@ class GetBundleProductStockStatus
         $bundleSelections = $this->getProductSelection->execute($product, $option);
         $skuRequests = [];
         foreach ($bundleSelections->getItems() as $selection) {
-            if ((int)$selection->getStatus() === Status::STATUS_ENABLED) {
-                $skuRequests[] = $this->isProductSalableForRequestedQtyRequestFactory->create(
-                    [
-                        'sku' => (string)$selection->getSku(),
-                        'qty' => $this->getRequestedQty($selection, $stockId),
-                    ]
-                );
-            }
+            $skuRequests[] = $this->isProductSalableForRequestedQtyRequestFactory->create(
+                [
+                    'sku' => (string)$selection->getSku(),
+                    'qty' => $this->getRequestedQty($selection, $stockId),
+                ]
+            );
         }
 
         return $this->areProductsSalableForRequestedQty->execute($skuRequests, $stockId);
