@@ -11,7 +11,7 @@ use Magento\Framework\Exception\StateException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
-use Magento\InventoryCatalogApi\Model\GetParentSkusByChildrenSkusInterface;
+use Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface;
 
 /**
  * Recalculates index items salability status.
@@ -33,26 +33,26 @@ class UpdateIndexSalabilityStatus
     private $updateLegacyStock;
 
     /**
-     * @var GetParentSkusByChildrenSkusInterface
+     * @var GetParentSkusOfChildrenSkusInterface
      */
-    private $getParentSkusByChildrenSkus;
+    private $getParentSkusOfChildrenSkus;
 
     /**
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param IndexProcessor $indexProcessor
      * @param UpdateLegacyStock $updateLegacyStock
-     * @param GetParentSkusByChildrenSkusInterface $getParentSkusByChildrenSkus
+     * @param GetParentSkusOfChildrenSkusInterface $getParentSkusByChildrenSkus
      */
     public function __construct(
         DefaultStockProviderInterface $defaultStockProvider,
         IndexProcessor $indexProcessor,
         UpdateLegacyStock $updateLegacyStock,
-        GetParentSkusByChildrenSkusInterface $getParentSkusByChildrenSkus
+        GetParentSkusOfChildrenSkusInterface $getParentSkusByChildrenSkus
     ) {
         $this->defaultStockProvider = $defaultStockProvider;
         $this->indexProcessor = $indexProcessor;
         $this->updateLegacyStock = $updateLegacyStock;
-        $this->getParentSkusByChildrenSkus = $getParentSkusByChildrenSkus;
+        $this->getParentSkusOfChildrenSkus = $getParentSkusByChildrenSkus;
     }
 
     /**
@@ -75,7 +75,9 @@ class UpdateIndexSalabilityStatus
             }
 
             if ($dataForUpdate) {
-                $parentSkus = $this->getParentSkusByChildrenSkus->execute(array_keys($dataForUpdate));
+                $parentSkusOfChildrenSkus = $this->getParentSkusOfChildrenSkus->execute(array_keys($dataForUpdate));
+                $parentSkus = call_user_func_array('array_merge', $parentSkusOfChildrenSkus);
+                $parentSkus = array_unique($parentSkus);
                 $parentSkusAffected = array_fill_keys($parentSkus, true);
                 $dataForUpdate = array_merge($dataForUpdate, $parentSkusAffected);
             }
