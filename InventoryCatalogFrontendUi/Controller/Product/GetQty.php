@@ -66,7 +66,7 @@ class GetQty extends Action implements HttpGetActionInterface
         $salesChannelCode = $this->getRequest()->getParam('salesChannelCode');
         $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
 
-        if (!$sku) {
+        if (!$sku || $salesChannel==null || $salesChannelCode==null) {
             $resultJson->setData(
                 [
                     'qty' => null
@@ -74,12 +74,8 @@ class GetQty extends Action implements HttpGetActionInterface
             );
         } else {
             try {
-                if ($salesChannel !== null && $salesChannelCode !== null) {
-                    $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
-                    $qty = $this->productQty->execute($sku, (int)$stockId);
-                } else {
-                    $qty = null;
-                }
+                $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
+                $qty = $this->productQty->execute($sku, (int)$stockId);
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 $qty = null;
