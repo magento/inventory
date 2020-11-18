@@ -54,7 +54,7 @@ class IsProductSalable
             return (bool)$product->getData('is_salable');
         }
         $stockId = $this->getStockIdForCurrentWebsite->execute();
-        $result = current($this->areProductsSalable->execute([$product->getSku()], $stockId));
+        $result = current($this->areProductsSalable->execute([$product->getData(Product::SKU)], $stockId));
         $isSalable = $result->isSalable();
         $product->setData('is_salable', $isSalable);
 
