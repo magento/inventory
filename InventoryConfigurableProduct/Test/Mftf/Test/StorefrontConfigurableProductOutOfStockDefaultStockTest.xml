@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontConfigurableProductOutOfStockDefaultStockTest">
+        <annotations>
+            <stories value="Configurable product Out of Stock in default Stock."/>
+            <title value="Storefront configurable product out of stock shows as out of stock in default stock"/>
+            <description value="Storefront configurable product out of stock shows as out of stock in default stock"/>
+            <useCaseId value="MC-34351"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create category-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <!-- Create first attribute with 2 options -->
+            <createData entity="productAttributeWithTwoOptionsNotVisible" stepKey="createFirstConfigProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="createConfigProductAttributeOptionOne">
+                <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="createConfigProductAttributeOptionTwo">
+                <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
+            </createData>
+            <!-- Reindex and flush cache -->
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Add store code to url.-->
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
+            <!-- Login to backend-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Display out of stock product -->
+            <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
+            <!--Disable all custom sources-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
+        </before>
+        <after>
+            <!--Disable 'add store code to url'-->
+            <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+            <!-- Don't display out of stock product -->
+            <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertDisplayOutOfStockProduct"/>
+            <!-- Delete configurable product -->
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
+                <argument name="product" value="ConfigurableMsiProduct"/>
+            </actionGroup>
+            <!-- Logout -->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <!-- Delete attribute -->
+            <deleteData createDataKey="createFirstConfigProductAttribute" stepKey="deleteFirstConfigProductAttribute"/>
+            <!-- Delete category-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+        </after>
+        <!-- Go to product grid  -->
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
+        <!-- Add new configuration product  -->
+        <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
+            <argument name="product" value="ConfigurableMsiProduct"/>
+        </actionGroup>
+        <!-- Fill product name, sku, ...  -->
+        <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
+            <argument name="product" value="ConfigurableMsiProduct"/>
+        </actionGroup>
+        <!-- Assign product to category  -->
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" stepKey="fillCategory"/>
+        <!-- Generate product options  -->
+        <actionGroup ref="GenerateConfigurationsByAttributeCodeActionGroup" stepKey="generateConfigurableOptions">
+            <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
+        </actionGroup>
+        <!-- Save product -->
+        <actionGroup ref="SaveConfiguredProductActionGroup" stepKey="saveProductForm"/>
+        <!--Set configurable product stock status.-->
+        <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="setProductStockStatus"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
+        <!-- Go to storefront category page PLP -->
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_path]$$)}}" stepKey="navigateToCategoryPage"/>
+        <!-- Assert that product is out of stock on category page PLP -->
+        <actionGroup ref="StorefrontCheckCategoryOutOfStockConfigurableProductActionGroup" stepKey="assertProductIsOutOfStockOnCategoryPage">
+            <argument name="product" value="ConfigurableMsiProduct"/>
+        </actionGroup>
+        <!-- Go to storefront product page PDP-->
+        <amOnPage url="{{StorefrontProductPage.url(ConfigurableMsiProduct.urlKey)}}" stepKey="navigateToProductPage"/>
+        <!-- Assert that product is out of stock on product page PDP -->
+        <dontSee selector="{{StorefrontProductActionSection.addToCart}}" stepKey="assertAddToCartButtonIsNotPresent"/>
+        <grabTextFrom selector="{{StorefrontProductInfoMainSection.productStockStatus}}" stepKey="productStockStatus"/>
+        <assertEquals stepKey="assertProductIsOutOfStock">
+            <expectedResult type="string">OUT OF STOCK</expectedResult>
+            <actualResult type="variable">productStockStatus</actualResult>
+        </assertEquals>
+    </test>
+</tests>
