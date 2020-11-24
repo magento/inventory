@@ -53,29 +53,28 @@ class GetParentSkusOfChildrenSkus implements GetParentSkusOfChildrenSkusInterfac
      */
     public function execute(array $skus): array
     {
-        // ['conf1-red', 'conf1-blue', 'conf2-red', 'simple1']
+        $childIdsOfSkus = $this->getProductIdsBySkus->execute($skus);
+        $parentIdsOfChildIds = $this->productRelationResource->getRelationsByChildren($childIdsOfSkus);
 
-        // ['conf1-red' => 12, 'conf1-blue' => 13, 'conf2-red' => 15, 'simple1' => 1]
-        $productIdsOfSku = $this->getProductIdsBySkus->execute($skus);
+        if (!$parentIdsOfChildIds) {
+            return [];
+        }
 
-        // [12 => 14, 12 => 20, 13 => 14, 15 => 17] values are parents
-        $parentIdsOfChildIds = $this->productRelationResource->getRelationsByChildren($productIdsOfSku);
+        $flatParentIds = call_user_func_array('array_merge', $parentIdsOfChildIds);
 
-        // [14 => 'conf1', 17 => 'conf2', 20 => 'conf3']
-        $parentSkusOfIds = $this->getSkusByProductIds->execute(array_unique($parentIdsOfChildIds));
-
-        // ['conf1-red' => [], ... 'simple1' => []] prepare resulting array
+        $parentSkusOfIds = $this->getSkusByProductIds->execute(array_unique($flatParentIds));
         $parentSkusOfChildSkus = array_fill_keys($skus, []);
-        foreach ($skus as $sku) {
-            $skuId = $productIdsOfSku[$sku];
 
-            if (isset($parentIdsOfChildIds[$skuId])) {
-                $parentId = $parentIdsOfChildIds[$skuId];
-                $parentSkusOfChildSkus[$sku][] = $parentSkusOfIds[$parentId];
+        foreach ($skus as $sku) {
+            $childId = $childIdsOfSkus[$sku];
+
+            if (isset($parentIdsOfChildIds[$childId])) {
+                foreach ($parentIdsOfChildIds[$childId] as $parentId) {
+                    $parentSkusOfChildSkus[$sku][] = $parentSkusOfIds[$parentId];
+                }
             }
         }
 
-        // ['conf-red' => ['conf1', 'conf3'], 'conf-blue' => ['conf1'], 'conf-2red' => ['conf2'], 'simple1' => []]
         return $parentSkusOfChildSkus;
     }
 }
