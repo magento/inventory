@@ -92,11 +92,6 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
         $item = $this->getBundleOrderItemByShipmentType($order, AbstractType::SHIPMENT_SEPARATELY);
 
         $items = [];
-        /** @var ShipmentItemCreationInterface $invoiceItemCreation */
-        $shipmentItemCreation = $this->shipmentItemCreationFactory->create();
-        $shipmentItemCreation->setOrderItemId($item->getId());
-        $shipmentItemCreation->setQty(1);
-        $items[] = $shipmentItemCreation;
         foreach ($item->getChildrenItems() as $childItem) {
             /** @var ShipmentItemCreationInterface $invoiceItemCreation */
             $shipmentItemCreation = $this->shipmentItemCreationFactory->create();
