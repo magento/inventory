@@ -10,4 +10,7 @@
         <plugin name="disable_grouped_type"
                 type="Magento\InventoryGroupedProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableGroupedTypePlugin"/>
     </type>
+    <type name="Magento\InventoryCatalog\Model\UpdateInventory">
+        <plugin name="updateParentLegacyStockStatus" type="Magento\InventoryGroupedProduct\Plugin\InventoryCatalog\Model\UpdateParentStockStatusPlugin"/>
+    </type>
 </config>

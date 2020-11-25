@@ -7,16 +7,29 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Indexer\SaveHandler\Batch;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use ArrayIterator;
 
+/**
+ * Configurable product source item indexer
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) Will be removed after deleting DefaultStockProviderInterface
+ */
 class SourceItemIndexer
 {
+    /**
+     * Default batch size
+     */
+    private const BATCH_SIZE = 100;
+
     /**
      * @var ResourceConnection
      */
@@ -53,6 +66,16 @@ class SourceItemIndexer
     private $defaultStockProvider;
 
     /**
+     * @var int
+     */
+    private $batchSize;
+
+    /**
+     * @var Batch
+     */
+    private $batch;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexHandlerInterface $indexHandler
@@ -60,6 +83,8 @@ class SourceItemIndexer
      * @param IndexDataBySkuListProvider $indexDataBySkuListProvider
      * @param SiblingSkuListInStockProvider $siblingSkuListInStockProvider
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param Batch|null $batch
+     * @param int|null $batchSize
      */
     public function __construct(
         ResourceConnection $resourceConnection,
@@ -68,7 +93,9 @@ class SourceItemIndexer
         IndexStructureInterface $indexStructure,
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ?Batch $batch = null,
+        ?int $batchSize = null
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -77,9 +104,13 @@ class SourceItemIndexer
         $this->indexStructure = $indexStructure;
         $this->siblingSkuListInStockProvider = $siblingSkuListInStockProvider;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->batch = $batch ?: ObjectManager::getInstance()->get(Batch::class);
+        $this->batchSize = $batchSize ?? self::BATCH_SIZE;
     }
 
     /**
+     * Executes index by list of stock ids
+     *
      * @param array $sourceItemIds
      */
     public function executeList(array $sourceItemIds)
@@ -106,17 +137,20 @@ class SourceItemIndexer
 
             $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
 
-            $this->indexHandler->cleanIndex(
-                $mainIndexName,
-                $indexData,
-                ResourceConnection::DEFAULT_CONNECTION
-            );
+            foreach ($this->batch->getItems($indexData, $this->batchSize) as $batchData) {
+                $batchIndexData = new ArrayIterator($batchData);
+                $this->indexHandler->cleanIndex(
+                    $mainIndexName,
+                    $batchIndexData,
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
 
-            $this->indexHandler->saveIndex(
-                $mainIndexName,
-                $indexData,
-                ResourceConnection::DEFAULT_CONNECTION
-            );
+                $this->indexHandler->saveIndex(
+                    $mainIndexName,
+                    $batchIndexData,
+                    ResourceConnection::DEFAULT_CONNECTION
+                );
+            }
         }
     }
 }

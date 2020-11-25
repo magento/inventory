@@ -127,7 +127,7 @@ class MapperTest extends TestCase
             $pickupLocation->getDescription()
         );
         $this->assertStringContainsString(
-            '/pub/media/test/location.png" alt="/"',
+            '/media/test/location.png" alt="/"',
             $pickupLocation->getDescription()
         );
         $this->assertNotEquals($source->getName(), $pickupLocation->getName());
