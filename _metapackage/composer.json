@@ -69,6 +69,9 @@
         "magento/module-inventory-source-deduction-api": "*",
         "magento/module-inventory-source-selection": "*",
         "magento/module-inventory-source-selection-api": "*",
-        "magento/module-inventory-visual-merchandiser": "*"
+        "magento/module-inventory-visual-merchandiser": "*",
+        "magento/module-inventory-swatches-frontend-ui": "*",
+        "magento/module-inventory-catalog-frontend-ui": "*",
+        "magento/module-inventory-configurable-product-frontend-ui": "*"
     }
 }
