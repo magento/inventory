@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="cataloginventory">
+            <group id="source_selection_default_for_country" translate="label" type="text" sortOrder="600" showInDefault="1"
+                   showInWebsite="1" showInStore="0">
+                <label>Default For Country SSA</label>
+                <field id="additional_algorithm" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0" canRestore="1">
+                    <label>Additional Algorithm</label>
+                    <source_model>Magento\InventoryDefaultForCountrySourceSelectionAdminUi\Model\Config\Source\AdditionalAlgorithms</source_model>
+                    <comment>Additional algorithm for cases when many countries available.</comment>
+                </field>
+                <field id="exclude_unmatched" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0" canRestore="1">
+                    <label>Exclude Unmatched Sources From List</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Sources which doesn't have assigned matched countries will be excluded from result list at all instead of pushing them to bottom of result list.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

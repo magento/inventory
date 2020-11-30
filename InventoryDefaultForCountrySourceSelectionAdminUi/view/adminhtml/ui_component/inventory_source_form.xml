@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="countries_selection">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Default For Countries</label>
+            <dataScope>general</dataScope>
+            <imports>
+                <link name="visible">true</link>
+            </imports>
+        </settings>
+        <field name="default_for_countries" formElement="multiselect" sortOrder="10">
+            <settings>
+                <dataType>text</dataType>
+                <dataScope>extension_attributes.default_for_countries</dataScope>
+                <label translate="true">Country</label>
+                <notice translate="true">Used in "based by country" algorithm selection.</notice>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">false</rule>
+                </validation>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\Directory\Model\Config\Source\Country"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+    </fieldset>
+</form>
