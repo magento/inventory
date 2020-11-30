@@ -11,7 +11,7 @@
         <cataloginventory>
             <source_selection_default_for_country>
                 <additional_algorithm>priority</additional_algorithm>
-                <exclude_unmatched>1</exclude_unmatched>
+                <exclude_unmatched>0</exclude_unmatched>
             </source_selection_default_for_country>
         </cataloginventory>
     </default>
