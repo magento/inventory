@@ -60,7 +60,7 @@ class GetParentSkusOfChildrenSkus implements GetParentSkusOfChildrenSkusInterfac
             return [];
         }
 
-        $flatParentIds = call_user_func_array('array_merge', $parentIdsOfChildIds);
+        $flatParentIds = array_merge(...$parentIdsOfChildIds);
 
         $parentSkusOfIds = $this->getSkusByProductIds->execute(array_unique($flatParentIds));
         $parentSkusOfChildSkus = array_fill_keys($skus, []);
