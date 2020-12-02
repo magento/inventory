@@ -76,10 +76,13 @@ class UpdateIndexSalabilityStatus
 
             if ($dataForUpdate) {
                 $parentSkusOfChildrenSkus = $this->getParentSkusOfChildrenSkus->execute(array_keys($dataForUpdate));
-                $parentSkus = array_merge(...$parentSkusOfChildrenSkus);
-                $parentSkus = array_unique($parentSkus);
-                $parentSkusAffected = array_fill_keys($parentSkus, true);
-                $dataForUpdate = array_merge($dataForUpdate, $parentSkusAffected);
+                if ($parentSkusOfChildrenSkus) {
+                    $parentSkus = array_values($parentSkusOfChildrenSkus);
+                    $parentSkus = array_merge(...$parentSkus);
+                    $parentSkus = array_unique($parentSkus);
+                    $parentSkusAffected = array_fill_keys($parentSkus, true);
+                    $dataForUpdate = array_merge($dataForUpdate, $parentSkusAffected);
+                }
             }
         }
 

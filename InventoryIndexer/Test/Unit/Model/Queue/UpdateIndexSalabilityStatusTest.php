@@ -12,7 +12,7 @@ use Magento\InventoryIndexer\Model\Queue\ReservationData;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
-use Magento\InventoryCatalogApi\Model\GetParentSkusByChildrenSkusInterface;
+use Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -37,9 +37,9 @@ class UpdateIndexSalabilityStatusTest extends TestCase
     private $updateLegacyStock;
 
     /**
-     * @var GetParentSkusByChildrenSkusInterface|MockObject
+     * @var GetParentSkusOfChildrenSkusInterface|MockObject
      */
-    private $getParentSkusByChildrenSkus;
+    private $getParentSkusOfChildrenSkus;
 
     /**
      * @var UpdateIndexSalabilityStatus
@@ -57,12 +57,12 @@ class UpdateIndexSalabilityStatusTest extends TestCase
             ->willReturn(1);
         $this->indexProcessor = $this->createMock(IndexProcessor::class);
         $this->updateLegacyStock = $this->createMock(UpdateLegacyStock::class);
-        $this->getParentSkusByChildrenSkus = $this->createMock(GetParentSkusByChildrenSkusInterface::class);
+        $this->getParentSkusOfChildrenSkus = $this->createMock(GetParentSkusOfChildrenSkusInterface::class);
         $this->model = new UpdateIndexSalabilityStatus(
             $this->defaultStockProvider,
             $this->indexProcessor,
             $this->updateLegacyStock,
-            $this->getParentSkusByChildrenSkus
+            $this->getParentSkusOfChildrenSkus
         );
     }
 
@@ -73,12 +73,14 @@ class UpdateIndexSalabilityStatusTest extends TestCase
      * @param int $updateLegacyStockInvokeCount
      * @param int $indexProcessorInvokeCount
      * @param array $parentSkus
+     * @param array $affectedParentSkus
      * @dataProvider executeDataProvider
      */
     public function testExecute(
         int $stockId,
         int $updateLegacyStockInvokeCount,
         int $indexProcessorInvokeCount,
+        array $parentSkusOfChildrenSkus,
         array $affectedParentSkus
     ): void {
         $skus = ['P1', 'P2'];
@@ -95,8 +97,8 @@ class UpdateIndexSalabilityStatusTest extends TestCase
             ->method('execute')
             ->with($reservation, $stockId)
             ->willReturn($changes);
-        $this->getParentSkusByChildrenSkus->method('execute')
-            ->willReturn($affectedParentSkus);
+        $this->getParentSkusOfChildrenSkus->method('execute')
+            ->willReturn($parentSkusOfChildrenSkus);
 
         $this->assertEquals($changes, $this->model->execute($reservation));
     }
@@ -111,19 +113,26 @@ class UpdateIndexSalabilityStatusTest extends TestCase
                 'stock_id' => 1,
                 'update_legacy_stock_invoke_count' => 1,
                 'index_processor_invoke_count' => 0,
-                'affected_parent_skus' => []
+                'parent_skus_of_children_skus' => [],
+                'affected_parent_skus' => [],
             ],
             [
                 'stock_id' => 2,
                 'update_legacy_stock_invoke_count' => 0,
                 'index_processor_invoke_count' => 1,
-                'affected_parent_skus' => ['PConf1', 'PConf2']
+                'parent_skus_of_children_skus' => [
+                    'P1' => ['PConf1', 'PConf2']
+                ],
+                'affected_parent_skus' => ['PConf1', 'PConf2'],
             ],
             [
                 'stock_id' => 3,
                 'update_legacy_stock_invoke_count' => 0,
                 'index_processor_invoke_count' => 1,
-                'affected_parent_skus' => ['PConf3']
+                'parent_skus_of_children_skus' => [
+                    'P1' => ['PConf3']
+                ],
+                'affected_parent_skus' => ['PConf3'],
             ],
         ];
     }
