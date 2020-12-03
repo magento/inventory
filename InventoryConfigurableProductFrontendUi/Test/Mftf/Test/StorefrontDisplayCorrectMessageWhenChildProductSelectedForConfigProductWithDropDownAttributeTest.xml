@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithDropDownAttributeTest">
+        <annotations>
+            <features value="ConfigurableProduct"/>
+            <stories value="Configurable Product Option Quantity"/>
+            <title value="Display 'Only X left' message when a drop-down option is selected on Configurable product page on the Storefront"/>
+            <description value="Display 'Only X left' message when a drop-down option is selected on Configurable product page on the Storefront"/>
+            <testCaseId value="MC-28741"/>
+            <useCaseId value="MC-17694"/>
+            <severity value="MAJOR"/>
+            <group value="catalog"/>
+            <group value="configurableProduct"/>
+        </annotations>
+
+        <before>
+            <!--Create configurable product-->
+            <createData entity="ApiConfigurableProductWithDescription" stepKey="createConfigurableProduct"/>
+            <!-- Create product attribute with 3 variations -->
+            <createData entity="productDropDownAttribute" stepKey="createProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="productAttributeFirstOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="productAttributeSecondOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption3" stepKey="productAttributeThirdOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyConfigData.value}}" stepKey="setThresholdQty"/>
+            <!-- Reindex invalidated indices after product attribute has been created -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes"/>
+
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+
+            <!--Open configurable product edit page-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openConfigurableProductEditPage">
+                <argument name="productId" value="$createConfigurableProduct.id$)"/>
+            </actionGroup>
+            <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
+            <!--Generate configurations for product-->
+            <actionGroup ref="AdminCreateConfigurationsByAttributeCodeAndNavigateToOptionsQuantityActionGroup" stepKey="generateConfigurationsByAttributeCode">
+                <argument name="attributeCode" value="$createProductAttribute.attribute_code$"/>
+            </actionGroup>
+            <!--Add quantity to product attribute options-->
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForFirstOption">
+                <argument name="frontend_label" value="$createProductAttribute.attribute[frontend_labels][0][label]$"/>
+                <argument name="label" value="$productAttributeFirstOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="2"/>
+            </actionGroup>
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForSecondOption">
+                <argument name="frontend_label" value="$createProductAttribute.attribute[frontend_labels][0][label]$"/>
+                <argument name="label" value="$productAttributeSecondOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="1"/>
+            </actionGroup>
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForThirdOption">
+                <argument name="frontend_label" value="$createProductAttribute.attribute[frontend_labels][0][label]$"/>
+                <argument name="label" value="$productAttributeThirdOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="3"/>
+            </actionGroup>
+            <actionGroup ref="GenerateAndSaveConfiguredProductAfterSettingOptionsActionGroup" stepKey="generateOptionsAndSaveProduct"/>
+        </before>
+
+        <after>
+            <!--Reset configs-->
+            <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultThresholdQty"/>
+            <!--Delete created data-->
+            <deleteData createDataKey="createConfigurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="createProductAttribute" stepKey="deleteProductAttribute"/>
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteConfigurableProductOptions">
+                <argument name="product" value="ApiConfigurableProductWithDescription"/>
+            </actionGroup>
+            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
+            <!-- Reindex invalidated indices after product attribute has been deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
+
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
+        </after>
+
+        <!--Check configurable product options on storefront-->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openConfigurableProductViewPage">
+            <argument name="productUrl" value="$createConfigurableProduct.custom_attributes[url_key]$"/>
+        </actionGroup>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="$productAttributeFirstOption.option[store_labels][0][label]$" stepKey="selectFirstOption"/>
+        <actionGroup ref="AssertStorefrontConfigurableProductOptionQtyMessageActionGroup" stepKey="seeFirstOptionQty">
+            <argument name="leftQtyMessage" value="{{ProductQtyLeft.only_two_left}}"/>
+        </actionGroup>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="$productAttributeSecondOption.option[store_labels][0][label]$" stepKey="selectSecondOption"/>
+        <actionGroup ref="AssertStorefrontConfigurableProductOptionQtyMessageActionGroup" stepKey="seeSecondOptionQty">
+            <argument name="leftQtyMessage" value="{{ProductQtyLeft.only_one_left}}"/>
+        </actionGroup>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="$productAttributeThirdOption.option[store_labels][0][label]$" stepKey="selectThirdOption"/>
+        <actionGroup ref="AssertStorefrontConfigurableProductOptionQtyMessageNotVisibleActionGroup" stepKey="dontSeeThirdOptionQty"/>
+        <!--Add configurable product third option to cart and place order-->
+        <actionGroup ref="StorefrontAddToCartCustomOptionsProductPageActionGroup" stepKey="addProductOptionToCart">
+            <argument name="productName" value="$createConfigurableProduct.name$"/>
+        </actionGroup>
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
+        <actionGroup ref="GuestCheckoutSelectPaymentAndFillNewBillingAddressActionGroup" stepKey="fillGuestBillingAddressOnCheckout">
+            <argument name="customerVar" value="Simple_US_Customer"/>
+            <argument name="customerAddressVar" value="CustomerAddressSimple"/>
+            <argument name="paymentMethod" value="Check / Money order"/>
+        </actionGroup>
+        <click selector="{{CheckoutPaymentSection.update}}" stepKey="clickUpdateButton"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForBillingAddressUpdate"/>
+        <actionGroup ref="CheckoutPlaceOrderActionGroup" stepKey="placeOrder">
+            <argument name="orderNumberMessage" value="CONST.successGuestCheckoutOrderNumberMessage"/>
+            <argument name="emailYouMessage" value="CONST.successCheckoutEmailYouMessage"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openConfigurableProductViewPageAgain">
+            <argument name="productUrl" value="$createConfigurableProduct.custom_attributes[url_key]$"/>
+        </actionGroup>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="$productAttributeThirdOption.option[store_labels][0][label]$" stepKey="selectThirdOptionAfterOrderCreated"/>
+        <actionGroup ref="AssertStorefrontConfigurableProductOptionQtyMessageActionGroup" stepKey="seeThirdOptionQty">
+            <argument name="leftQtyMessage" value="{{ProductQtyLeft.only_two_left}}"/>
+        </actionGroup>
+    </test>
+</tests>
