@@ -9,6 +9,7 @@ namespace Magento\InventoryCache\Model;
 
 use Magento\Framework\EntityManager\EventManager;
 use Magento\Framework\Indexer\CacheContextFactory;
+use Magento\Framework\App\CacheInterface;
 
 /**
  * Clean cache for given product ids.
@@ -31,18 +32,26 @@ class FlushCacheByProductIds
     private $productCacheTag;
 
     /**
+     * @var CacheInterface
+     */
+    private $appCache;
+
+    /**
      * @param CacheContextFactory $cacheContextFactory
      * @param EventManager $eventManager
      * @param string $productCacheTag
+     * @param CacheInterface $appCache
      */
     public function __construct(
         CacheContextFactory $cacheContextFactory,
         EventManager $eventManager,
-        string $productCacheTag
+        string $productCacheTag,
+        CacheInterface $appCache
     ) {
         $this->cacheContextFactory = $cacheContextFactory;
         $this->eventManager = $eventManager;
         $this->productCacheTag = $productCacheTag;
+        $this->appCache = $appCache;
     }
 
     /**
@@ -57,6 +66,7 @@ class FlushCacheByProductIds
             $cacheContext = $this->cacheContextFactory->create();
             $cacheContext->registerEntities($this->productCacheTag, $productIds);
             $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cacheContext]);
+            $this->appCache->clean($cacheContext->getIdentities());
         }
     }
 }
