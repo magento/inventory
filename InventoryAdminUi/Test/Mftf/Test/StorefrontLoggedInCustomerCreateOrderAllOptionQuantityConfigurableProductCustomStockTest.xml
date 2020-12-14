@@ -120,7 +120,7 @@
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <magentoCLI command="queue:consumers:start inventory.reservations.updateSalabilityStatus" stepKey="updateSalability"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <comment userInput="To not do BIC 'flushCache' step remained to be in the test but the cache:flush command was replaced with comment action" stepKey="flushCache"/>
         <!-- Assert out of stock option is absent on product page -->
         <amOnPage url="{{StorefrontProductPage.url($$configurableProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToConfigurablePDP"/>
         <waitForPageLoad stepKey="waitForConfigurablePDP"/>
