@@ -3,14 +3,8 @@
     "version": "1.2.0-dev",
     "description": "Metapackage with Magento Inventory modules for simple installation",
     "type": "metapackage",
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/magento-commerce/inventory-composer-installer"
-        }
-    ],
     "require": {
-        "magento/inventory-composer-installer": "MC-38768-dev",
+        "magento/inventory-composer-installer": "1.1.0",
         "magento/module-inventory": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-inventory-advanced-checkout": "*",
