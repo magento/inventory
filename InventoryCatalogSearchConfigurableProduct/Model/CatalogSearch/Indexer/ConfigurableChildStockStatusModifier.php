@@ -37,17 +37,17 @@ class ConfigurableChildStockStatusModifier implements SelectModifierInterface
     private $resourceConnection;
 
     /**
-     * @param Config $eavConfig
      * @param MetadataPool $metadataPool
+     * @param Config $eavConfig
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
-        Config $eavConfig,
         MetadataPool $metadataPool,
+        Config $eavConfig,
         ResourceConnection $resourceConnection
     ) {
-        $this->eavConfig = $eavConfig;
         $this->metadataPool = $metadataPool;
+        $this->eavConfig = $eavConfig;
         $this->resourceConnection = $resourceConnection;
     }
 
