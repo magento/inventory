@@ -40,9 +40,9 @@
         <checkOption selector="{{AdminEditSourceGeneralSection.isEnabled}}" stepKey="enableSource"/>
         <conditionalClick selector="{{AdminEditSourceAddressDataSection.closed}}" dependentSelector="{{AdminEditSourceAddressDataSection.opened}}" visible="false" stepKey="openSourceAddressTab"/>
         <waitForPageLoad time="5" stepKey="waitForAddressTabIsOpened"/>
-        <selectOption userInput="Albania" selector="{{AdminEditSourceAddressDataSection.country}}" stepKey="selectSourceCountry"/>
-        <fillField userInput="Ghegeria" selector="{{AdminEditSourceAddressDataSection.state_manual}}" stepKey="manuallyFillStateProvince"/>
-        <fillField userInput="6000" selector="{{AdminEditSourceAddressDataSection.postcode}}" stepKey="fillPostCode"/>
+        <selectOption userInput="Botswana" selector="{{AdminEditSourceAddressDataSection.country}}" stepKey="selectSourceCountry"/>
+        <fillField userInput="Gaborone" selector="{{AdminEditSourceAddressDataSection.state_manual}}" stepKey="manuallyFillStateProvince"/>
+        <fillField userInput="00000" selector="{{AdminEditSourceAddressDataSection.postcode}}" stepKey="fillPostCode"/>
         <click selector="{{AdminGridMainControls.saveArrow}}" stepKey="openSaveOptions"/>
         <click selector="{{AdminGridMainControls.saveAndClose}}" stepKey="saveCreatedSource"/>
 
@@ -53,7 +53,7 @@
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="findCreatedSource">
             <argument name="keyword" value="_minimalSource.name"/>
         </actionGroup>
-        <see userInput="Ghegeria" selector="{{AdminGridRow.rowOne}}" stepKey="verifyStateProvinceDisplayedCorrectly"/>
+        <see userInput="Gaborone" selector="{{AdminGridRow.rowOne}}" stepKey="verifyStateProvinceDisplayedCorrectly"/>
         <click selector="{{AdminDataGridHeaderSection.columnsToggle}}" stepKey="openSourceGridColumnOptionsToRevertGridColumns"/>
         <uncheckOption selector="{{AdminDataGridHeaderSection.columnCheckbox('State/Province')}}" stepKey="removeStateProvinceColumnToSourceGrid"/>
         <click selector="{{AdminDataGridHeaderSection.columnsToggle}}" stepKey="closeSourceGridColumnOptionsAfterRevertGridColumns"/>
