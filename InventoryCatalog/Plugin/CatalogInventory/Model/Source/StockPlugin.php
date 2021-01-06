@@ -26,18 +26,22 @@ class StockPlugin
      * @var StoreManagerInterface
      */
     private $storeManager;
+
     /**
      * @var StockResolverInterface
      */
     private $stockResolver;
+
     /**
      * @var DefaultStockProviderInterface
      */
     private $defaultStockProvider;
+
     /**
      * @var StockStatusFilter
      */
     private $stockStatusFilter;
+
     /**
      * @var AddSortByStockQtyToCollection
      */
