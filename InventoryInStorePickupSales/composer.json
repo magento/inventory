@@ -4,12 +4,12 @@
     "require": {
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-inventory-in-store-pickup-sales-api": "*",
-        "magento/module-inventory-in-store-pickup-api": "*",
-        "magento/module-inventory-api": "*",
+        "magento/module-inventory-in-store-pickup-sales-api": "1.1.*",
+        "magento/module-inventory-in-store-pickup-api": "1.1.*",
+        "magento/module-inventory-api": "1.2.*",
         "magento/module-sales": "*",
         "magento/module-store": "*",
-        "magento/module-inventory-source-selection-api": "*"
+        "magento/module-inventory-source-selection-api": "1.4.*"
     },
     "type": "magento2-module",
     "license": [
@@ -23,5 +23,6 @@
         "psr-4": {
             "Magento\\InventoryInStorePickupSales\\": ""
         }
-    }
+    },
+    "version": "1.1.0"
 }
