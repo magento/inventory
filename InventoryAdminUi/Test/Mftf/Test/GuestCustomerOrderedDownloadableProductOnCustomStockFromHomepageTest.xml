@@ -81,7 +81,7 @@
         <!-- Place Order -->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
 
-        <fillField selector="{{CheckoutShippingSection.email}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
+        <fillField selector="{{CheckoutShippingSection.emailAddress}}" userInput="{{MsiCustomer1.email}}" stepKey="enterEmail"/>
         <fillField selector="{{CheckoutPaymentSection.guestFirstName}}" userInput="{{MsiCustomer1.firstname}}" stepKey="enterFirstName"/>
         <fillField selector="{{CheckoutPaymentSection.guestLastName}}" userInput="{{MsiCustomer1.lastname}}" stepKey="enterLastName"/>
         <fillField selector="{{CheckoutPaymentSection.guestStreet}}" userInput="{{CustomerAddressSimple.street[0]}}" stepKey="enterStreet"/>
