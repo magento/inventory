@@ -100,7 +100,7 @@ class SourceDeductionProcessor implements ObserverInterface
         if (!empty($shipment->getExtensionAttributes())
             && !empty($shipment->getExtensionAttributes()->getSourceCode())) {
             $sourceCode = $shipment->getExtensionAttributes()->getSourceCode();
-        } elseif ($this->isSingleSourceMode->execute()) {
+        } else {
             $sourceCode = $this->defaultSourceProvider->getCode();
         }
 
