@@ -37,19 +37,19 @@ class GetProductQtyLeft
     }
 
     /**
-     * Get salable qty if it is possible. If it's not available then return null.
+     * Get salable qty if it is possible.
      *
      * @param string $productSku
      * @param int $stockId
-     * @return float|null
+     * @return float
      */
-    public function execute(string $productSku, int $stockId): ?float
+    public function execute(string $productSku, int $stockId): float
     {
         $productSalableQty = $this->getProductSalableQty->execute($productSku, $stockId);
         if ($this->qtyLeftChecker->execute((float)$productSalableQty)) {
             return $productSalableQty;
         }
 
-        return null;
+        return 0.0;
     }
 }
