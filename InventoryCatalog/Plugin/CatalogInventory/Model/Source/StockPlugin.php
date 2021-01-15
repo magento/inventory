@@ -38,11 +38,6 @@ class StockPlugin
     private $defaultStockProvider;
 
     /**
-     * @var StockStatusFilter
-     */
-    private $stockStatusFilter;
-
-    /**
      * @var AddSortByStockQtyToCollection
      */
     private $addSortByStockQtyToCollection;
@@ -58,13 +53,11 @@ class StockPlugin
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         DefaultStockProviderInterface $defaultStockProvider,
-        StockStatusFilter $stockStatusFilter,
         AddSortByStockQtyToCollection $addSortByStockQtyToCollection
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->stockStatusFilter = $stockStatusFilter;
         $this->addSortByStockQtyToCollection = $addSortByStockQtyToCollection;
     }
 
