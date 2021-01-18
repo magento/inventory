@@ -162,6 +162,7 @@ define([
             checkoutData.setSelectedShippingAddress(
                 quote.shippingAddress().getKey()
             );
+            checkoutData.setSelectedShippingRate(this.rate['carrier_code'] + '_' + this.rate['method_code']);
         },
 
         /**
@@ -265,6 +266,7 @@ define([
                         }
                     });
             }
+            this.convertAddressType(quote.shippingAddress());
         },
 
         /**
