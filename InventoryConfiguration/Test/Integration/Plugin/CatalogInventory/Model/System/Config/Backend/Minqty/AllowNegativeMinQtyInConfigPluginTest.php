@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Checks that min_qty config can be assigned a value below 0
+ *
+ * @magentoAppArea adminhtml
  */
 class AllowNegativeMinQtyInConfigPluginTest extends TestCase
 {
@@ -40,7 +42,7 @@ class AllowNegativeMinQtyInConfigPluginTest extends TestCase
         $this->minQty = $this->backendFactory->create(Minqty::class, [
             'data' => [
                 'path' => Configuration::XML_PATH_MIN_QTY,
-            ]
+            ],
         ]);
     }
 
