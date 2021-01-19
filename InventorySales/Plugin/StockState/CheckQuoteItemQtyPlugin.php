@@ -132,9 +132,7 @@ class CheckQuoteItemQtyPlugin
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
         
-        $websiteId = (int)$this->storeManager->getStore($scopeId)->getWebsiteId();
-        $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
-
+        $websiteCode = $this->storeManager->getWebsite()->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = $stock->getStockId();
 
