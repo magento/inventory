@@ -30,15 +30,15 @@ class IsAvailablePlugin
     }
 
     /**
-     * Fetches is salable status from multi-stock.
+     * Fetches is salable status from multi-stock and sets it to product is_salable flag.
      *
-     * @param Product $subject
-     * @param \Closure $proceed
-     * @return bool
+     * @param Product $product
+     *
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundIsAvailable(Product $subject, \Closure $proceed): bool
+    public function beforeIsAvailable(Product $product): void
     {
-        return $this->isProductSalable->execute($subject);
+        $product->setData('is_salable', $this->isProductSalable->execute($product));
     }
 }
