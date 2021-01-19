@@ -77,8 +77,8 @@ define(['jquery', 'Magento_Checkout/js/model/resource-url-manager'], function (
                 },
                 searchRequest = {
                     searchRequest: {
-                        filterSet: {
-                            pickupLocationCodeFilter: {
+                        filters: {
+                            pickupLocationCode: {
                                 value: pickupLocationCode
                             }
                         },

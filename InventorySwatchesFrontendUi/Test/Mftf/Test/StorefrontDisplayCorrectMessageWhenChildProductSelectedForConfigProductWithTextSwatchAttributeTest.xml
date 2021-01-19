@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithTextSwatchAttributeTest" extends="StorefrontDisplayCorrectMessageWhenChildProductSelectedForConfigProductWithDropDownAttributeTest">
+        <annotations>
+            <features value="ConfigurableProduct"/>
+            <stories value="Configurable Product Option Quantity"/>
+            <title value="Display 'Only X left' message when a Text Swatch option is selected on Configurable product page on the Storefront"/>
+            <description value="Display 'Only X left' message when a Text Swatch option is selected on Configurable product page on the Storefront"/>
+            <testCaseId value="MC-28741"/>
+            <useCaseId value="MC-17694"/>
+            <severity value="MAJOR"/>
+            <group value="catalog"/>
+            <group value="swatches"/>
+        </annotations>
+        <before>
+            <!-- Create product attribute with 3 variations -->
+            <createData entity="TextSwatchProductAttributeForm" stepKey="createProductAttribute"/>
+            <createData entity="SwatchProductAttributeOption1" stepKey="productAttributeFirstOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <createData entity="SwatchProductAttributeOption2" stepKey="productAttributeSecondOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <createData entity="SwatchProductAttributeOption3" stepKey="productAttributeThirdOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <!--Add quantity to product attribute options-->
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForFirstOption">
+                <argument name="frontend_label" value="$createProductAttribute.frontend_label[0]$"/>
+                <argument name="label" value="$productAttributeFirstOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="2"/>
+            </actionGroup>
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForSecondOption">
+                <argument name="frontend_label" value="$createProductAttribute.frontend_label[0]$"/>
+                <argument name="label" value="$productAttributeSecondOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="1"/>
+            </actionGroup>
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForThirdOption">
+                <argument name="frontend_label" value="$createProductAttribute.frontend_label[0]$"/>
+                <argument name="label" value="$productAttributeThirdOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="3"/>
+            </actionGroup>
+        </before>
+        <actionGroup ref="StorefrontSelectSwatchOptionOnProductPageActionGroup" stepKey="selectFirstOption">
+            <argument name="optionName" value="$productAttributeFirstOption.option[store_labels][0][label]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSelectSwatchOptionOnProductPageActionGroup" stepKey="selectSecondOption">
+            <argument name="optionName" value="$productAttributeSecondOption.option[store_labels][0][label]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSelectSwatchOptionOnProductPageActionGroup" stepKey="selectThirdOption">
+            <argument name="optionName" value="$productAttributeThirdOption.option[store_labels][0][label]$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontSelectSwatchOptionOnProductPageActionGroup" stepKey="selectThirdOptionAfterOrderCreated">
+            <argument name="optionName" value="$productAttributeThirdOption.option[store_labels][0][label]$"/>
+        </actionGroup>
+    </test>
+</tests>

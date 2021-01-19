@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontConfigurableProductNotVisibleAfterDisablingChildProductsTest">
+        <annotations>
+            <stories value="Configurable Product Custom Stock."/>
+            <title value="Configurable product should be not visible after disabling child products"/>
+            <description value="Verify, configurable product is not displayed on category page after disabling first child product and set out of stock to second"/>
+            <testCaseId value="MC-38896"/>
+            <useCaseId value="MC-38590"/>
+            <severity value="AVERAGE"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create test data.-->
+            <!-- Create the category to put the product in -->
+            <createData entity="ApiCategory" stepKey="createCategory"/>
+            <!-- Create the configurable product based on the data in the /data folder -->
+            <createData entity="ApiConfigurableProduct" stepKey="createConfigProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Make the configurable product have two options, that are children of the default attribute set -->
+            <createData entity="productAttributeWithTwoOptions" stepKey="createConfigProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="createFirstConfigProductAttributeOption">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="createSecondConfigProductAttributeOption">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </createData>
+            <createData entity="AddToDefaultSet" stepKey="createConfigAddToAttributeSet">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </createData>
+            <getData entity="ProductAttributeOptionGetter" index="1" stepKey="getFirstConfigAttributeOption">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </getData>
+            <getData entity="ProductAttributeOptionGetter" index="2" stepKey="getSecondConfigAttributeOption">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </getData>
+            <!-- Create the 2 children that will be a part of the configurable product -->
+            <createData entity="ApiSimpleOne" stepKey="createFirstConfigChildProduct">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+                <requiredEntity createDataKey="getFirstConfigAttributeOption"/>
+            </createData>
+            <createData entity="ApiSimpleTwo" stepKey="createSecondConfigChildProduct">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+                <requiredEntity createDataKey="getSecondConfigAttributeOption"/>
+            </createData>
+            <!-- Assign the two products to the configurable product -->
+            <createData entity="ConfigurableProductTwoOptions" stepKey="createConfigProductOption">
+                <requiredEntity createDataKey="createConfigProduct"/>
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+                <requiredEntity createDataKey="getFirstConfigAttributeOption"/>
+                <requiredEntity createDataKey="getSecondConfigAttributeOption"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="createFirstConfigProductAddChild">
+                <requiredEntity createDataKey="createConfigProduct"/>
+                <requiredEntity createDataKey="createFirstConfigChildProduct"/>
+            </createData>
+            <createData entity="ConfigurableProductAddChild" stepKey="createSecondConfigProductAddChild">
+                <requiredEntity createDataKey="createConfigProduct"/>
+                <requiredEntity createDataKey="createSecondConfigChildProduct"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <createData entity="_minimalSource" stepKey="createSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkStockAndSource">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="createSource"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <!--Assign additional source to configurable product.-->
+            <amOnPage url="{{AdminProductEditPage.url($createFirstConfigChildProduct.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
+                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveFirstChildProduct"/>
+            <!--Assign additional source to configurable product second.-->
+            <amOnPage url="{{AdminProductEditPage.url($createSecondConfigChildProduct.id$)}}" stepKey="openSecondProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromSecondProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToSecondChildProduct">
+                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSecondChildProduct"/>
+            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
+        </before>
+        <after>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createConfigProduct" stepKey="deleteConfigProduct"/>
+            <deleteData createDataKey="createFirstConfigChildProduct" stepKey="deleteFirstConfigChildProduct"/>
+            <deleteData createDataKey="createSecondConfigChildProduct" stepKey="deleteSecondConfigChildProduct"/>
+            <deleteData createDataKey="createConfigProductAttribute" stepKey="deleteConfigProductAttribute"/>
+            <!--Assign Default Stock to Main Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable source.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+        </after>
+        <!--Verify product is visible on storefront.-->
+        <actionGroup ref="StorefrontNavigateCategoryPageActionGroup" stepKey="openCategoryPageOnFrontend">
+            <argument name="category" value="$createCategory$"/>
+        </actionGroup>
+        <actionGroup ref="AssertStorefrontProductIsPresentOnCategoryPageActionGroup" stepKey="checkProductOnCategoryPage">
+            <argument name="productName" value="$$createConfigProduct.name$$"/>
+        </actionGroup>
+        <!--Open first child product in Admin. Make it disabled (Enable Product = No)-->
+        <amOnPage url="{{AdminProductEditPage.url($$createFirstConfigChildProduct.id$$)}}" stepKey="openProductEditPageForDisablingProduct"/>
+        <actionGroup ref="AdminSetProductDisabledActionGroup" stepKey="disableProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="clickSaveProduct"/>
+        <!--Open second child product and set product stock status to out of stock-->
+        <amOnPage url="{{AdminProductEditPage.url($$createSecondConfigChildProduct.id$$)}}" stepKey="openProductEditPageForDisablingSource"/>
+        <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setProductStatusToOutOfStock">
+            <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+            <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
+        <!--Verify product is not visible on storefront.-->
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="doNotSeeProductOnCategoryPage">
+            <argument name="categoryUrlKey" value="$$createCategory.name$$"/>
+            <argument name="productName" value="$$createConfigProduct.name$$"/>
+        </actionGroup>
+    </test>
+</tests>
