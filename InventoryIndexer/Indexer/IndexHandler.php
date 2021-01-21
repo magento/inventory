@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer;
 
+use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Indexer\SaveHandler\Batch;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
@@ -39,21 +41,36 @@ class IndexHandler implements IndexHandlerInterface
     private $batchSize;
 
     /**
+     * @var DeploymentConfig|null
+     */
+    private $deploymentConfig;
+
+    /**
+     * Deployment config path
+     *
+     * @var string
+     */
+    private const DEPLOYMENT_CONFIG_INDEXER_BATCHES = 'indexer/batch_size/';
+
+    /**
      * @param IndexNameResolverInterface $indexNameResolver
      * @param Batch $batch
      * @param ResourceConnection $resourceConnection
-     * @param int $batchSize
+     * @param $batchSize
+     * @param DeploymentConfig|null $deploymentConfig
      */
     public function __construct(
         IndexNameResolverInterface $indexNameResolver,
         Batch $batch,
         ResourceConnection $resourceConnection,
-        $batchSize
+        $batchSize,
+        ?DeploymentConfig $deploymentConfig = null
     ) {
         $this->indexNameResolver = $indexNameResolver;
         $this->batch = $batch;
         $this->resourceConnection = $resourceConnection;
         $this->batchSize = $batchSize;
+        $this->deploymentConfig = $deploymentConfig ?: ObjectManager::getInstance()->get(DeploymentConfig::class);
     }
 
     /**
@@ -65,6 +82,11 @@ class IndexHandler implements IndexHandlerInterface
         $tableName = $this->indexNameResolver->resolveName($indexName);
 
         $columns = [IndexStructure::SKU, IndexStructure::QUANTITY, IndexStructure::IS_SALABLE];
+
+        $this->batchSize = $this->deploymentConfig->get(
+            self::DEPLOYMENT_CONFIG_INDEXER_BATCHES . InventoryIndexer::INDEXER_ID . '/' . 'default'
+        ) ?? $this->batchSize;
+
         foreach ($this->batch->getItems($documents, $this->batchSize) as $batchDocuments) {
             $connection->insertOnDuplicate($tableName, $batchDocuments, $columns);
         }

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Indexer\Stock;
 
+use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\StateException;
@@ -85,6 +86,18 @@ class StockIndexer
     private $batch;
 
     /**
+     * @var DeploymentConfig|null
+     */
+    private $deploymentConfig;
+
+    /**
+     * Deployment config path
+     *
+     * @var string
+     */
+    private const DEPLOYMENT_CONFIG_INDEXER_BATCHES = 'indexer/batch_size/';
+
+    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -97,6 +110,7 @@ class StockIndexer
      * @param PrepareIndexDataForClearingIndex|null $prepareIndexDataForClearingIndex
      * @param Batch|null $batch
      * @param int|null $batchSize
+     * @param DeploymentConfig|null $deploymentConfig
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -109,7 +123,8 @@ class StockIndexer
         DefaultStockProviderInterface $defaultStockProvider,
         ?PrepareIndexDataForClearingIndex $prepareIndexDataForClearingIndex = null,
         ?Batch $batch = null,
-        ?int $batchSize = null
+        ?int $batchSize = null,
+        ?DeploymentConfig $deploymentConfig = null
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructure;
@@ -122,6 +137,7 @@ class StockIndexer
             ->get(PrepareIndexDataForClearingIndex::class);
         $this->batch = $batch ?: ObjectManager::getInstance()->get(Batch::class);
         $this->batchSize = $batchSize ?? self::BATCH_SIZE;
+        $this->deploymentConfig = $deploymentConfig ?: ObjectManager::getInstance()->get(DeploymentConfig::class);
     }
 
     /**
@@ -157,6 +173,14 @@ class StockIndexer
      */
     public function executeList(array $stockIds): void
     {
+        $this->batchSize = $this->deploymentConfig->get(
+            self::DEPLOYMENT_CONFIG_INDEXER_BATCHES . InventoryIndexer::INDEXER_ID . '/' . 'configurable'
+        ) ??
+            $this->deploymentConfig->get(
+                self::DEPLOYMENT_CONFIG_INDEXER_BATCHES . InventoryIndexer::INDEXER_ID . '/' . 'default'
+            )
+            ?? $this->batchSize;
+
         foreach ($stockIds as $stockId) {
             if ($this->defaultStockProvider->getId() === $stockId) {
                 continue;
