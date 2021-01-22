@@ -2,8 +2,8 @@
 
 The `InventorySalesAdminUi` module extends Magento's Admin UI with Inventory Management functionality.
 
-This module is part of the new inventory infrastructure. The 
-[Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
+This module is part of the new inventory infrastructure. The
+[Inventory Management overview](https://devdocs.magento.com/guides/v2.4/inventory/index.html)
 describes the MSI (Multi-Source Inventory) project in more detail.
 
 ## Installation details
