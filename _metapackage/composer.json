@@ -72,6 +72,9 @@
         "magento/module-inventory-visual-merchandiser": "*",
         "magento/module-inventory-swatches-frontend-ui": "*",
         "magento/module-inventory-catalog-frontend-ui": "*",
-        "magento/module-inventory-configurable-product-frontend-ui": "*"
+        "magento/module-inventory-configurable-product-frontend-ui": "*",
+        "magento/module-inventory-wishlist": "*",
+        "magento/module-inventory-catalog-search-bundle-product": "*",
+        "magento/module-inventory-catalog-search-configurable-product": "*"
     }
 }
