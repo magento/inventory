@@ -31,7 +31,7 @@ class LoadCountriesSelectionGetListPlugin
     }
 
     /**
-     * Enrich the given Source Objects with the countries selection attributes
+     * Add extension attribute object to source items
      *
      * @param SourceRepositoryInterface $subject
      * @param SourceSearchResultsInterface $sourceSearchResults

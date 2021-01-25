@@ -31,7 +31,7 @@ class LoadCountriesSelectionOnGetPlugin
     }
 
     /**
-     * Enrich the given Source Objects with the In-Store pickup attribute
+     * Add extension attribute object to source
      *
      * @param SourceRepositoryInterface $subject
      * @param SourceInterface $source
