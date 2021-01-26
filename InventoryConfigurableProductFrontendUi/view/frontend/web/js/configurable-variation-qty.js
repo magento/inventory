@@ -29,7 +29,7 @@ define([
                     'salesChannelCode': salesChannelCode
                 }
             }).done(function (response) {
-                if (response.qty !== null) {
+                if (response.qty !== null && response.qty > 0) {
                     productQtyInfo.text(response.qty);
                     productQtyInfoBlock.show();
                 } else {
