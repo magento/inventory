@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem;
 
+use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Indexer\SaveHandler\Batch;
@@ -76,6 +77,18 @@ class SourceItemIndexer
     private $batch;
 
     /**
+     * @var DeploymentConfig|null
+     */
+    private $deploymentConfig;
+
+    /**
+     * Deployment config path
+     *
+     * @var string
+     */
+    private const DEPLOYMENT_CONFIG_INDEXER_BATCHES = 'indexer/batch_size/';
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexHandlerInterface $indexHandler
@@ -85,6 +98,7 @@ class SourceItemIndexer
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param Batch|null $batch
      * @param int|null $batchSize
+     * @param DeploymentConfig|null $deploymentConfig
      */
     public function __construct(
         ResourceConnection $resourceConnection,
@@ -95,7 +109,8 @@ class SourceItemIndexer
         SiblingSkuListInStockProvider $siblingSkuListInStockProvider,
         DefaultStockProviderInterface $defaultStockProvider,
         ?Batch $batch = null,
-        ?int $batchSize = null
+        ?int $batchSize = null,
+        ?DeploymentConfig $deploymentConfig = null
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
@@ -106,6 +121,7 @@ class SourceItemIndexer
         $this->defaultStockProvider = $defaultStockProvider;
         $this->batch = $batch ?: ObjectManager::getInstance()->get(Batch::class);
         $this->batchSize = $batchSize ?? self::BATCH_SIZE;
+        $this->deploymentConfig = $deploymentConfig ?: ObjectManager::getInstance()->get(DeploymentConfig::class);
     }
 
     /**
@@ -116,6 +132,13 @@ class SourceItemIndexer
     public function executeList(array $sourceItemIds)
     {
         $skuListInStockList = $this->siblingSkuListInStockProvider->execute($sourceItemIds);
+        $this->batchSize = $this->deploymentConfig->get(
+            self::DEPLOYMENT_CONFIG_INDEXER_BATCHES . InventoryIndexer::INDEXER_ID . '/' . 'configurable'
+        ) ??
+            $this->deploymentConfig->get(
+                self::DEPLOYMENT_CONFIG_INDEXER_BATCHES . InventoryIndexer::INDEXER_ID . '/' . 'default'
+            )
+                ?? $this->batchSize;
 
         foreach ($skuListInStockList as $skuListInStock) {
             $stockId = $skuListInStock->getStockId();
