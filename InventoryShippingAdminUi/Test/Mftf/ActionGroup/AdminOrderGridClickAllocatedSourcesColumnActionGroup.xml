@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminOrderGridClickAllocatedSourcesColumnActionGroup">
+        <annotations>
+            <description>Click on Allocated sources column of Order Grid.</description>
+        </annotations>
+
+        <click selector="{{AdminOrdersGridSection.allocatedSourcesColumn}}" stepKey="clickAllocatedSourcesColumn"/>
+        <waitForPageLoad stepKey="waitForGridReload"/>
+    </actionGroup>
+</actionGroups>
