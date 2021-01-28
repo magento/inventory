@@ -60,12 +60,12 @@ class AppendReservationsTest extends TestCase
     public function testCompensateMissingReservationsConfigurableProductDefaultStock(): void
     {
         $stockId = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class)->getId();
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         $items = reset($inconsistencies)->getItems();
         $argument = '100000001:simple_10:-' . $items['simple_10'] . ':' . $stockId;
         $reservation = $this->getReservationFromCompensationArgument->execute($argument);
         $this->appendReservations->execute([$reservation]);
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();;
         self::assertCount(0, $inconsistencies);
     }
 
@@ -73,11 +73,11 @@ class AppendReservationsTest extends TestCase
      * Verify create-compensations will correctly compensate qty for configurable product custom stock.
      *
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
-     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
      * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDataFixture Magento_InventoryShipping::Test/_files/create_quote_on_us_website.php
@@ -96,12 +96,27 @@ class AppendReservationsTest extends TestCase
             ->addFilter('increment_id', 'created_order_for_test')
             ->create();
         $order = current($orderRepository->getList($searchCriteria)->getItems());
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         $items = reset($inconsistencies)->getItems();
         $argument = $order->getIncrementId() . ':simple_10:-' . $items['simple_10'] . ':20';
         $reservation = $this->getReservationFromCompensationArgument->execute($argument);
         $this->appendReservations->execute([$reservation]);
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(0, $inconsistencies);
+    }
+
+    /**
+     * Load current Inconsistencies
+     *
+     * @return array
+     */
+    private function getSalableQuantityInconsistencies(): array
+    {
+        $items = [];
+        foreach ($this->getSalableQuantityInconsistencies->execute() as $bunch) {
+            $items += $bunch;
+        }
+
+        return $items;
     }
 }
