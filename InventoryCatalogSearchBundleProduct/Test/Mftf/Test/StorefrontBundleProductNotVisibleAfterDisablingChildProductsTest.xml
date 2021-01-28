@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontBundleProductNotVisibleAfterDisablingChildProductsTest">
+        <annotations>
+            <stories value="Bundle Product Custom Stock."/>
+            <title value="Bundle product should be not visible after disabling child products"/>
+            <description value="Verify, bundle product is not displayed on category page after disabling first child product and set out of stock to second"/>
+            <testCaseId value="MC-39484"/>
+            <useCaseId value="MC-38590"/>
+            <severity value="AVERAGE"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!-- Create test data -->
+            <createData entity="_minimalSource" stepKey="createSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkStockAndSource">
+                <requiredEntity createDataKey="createStock"/>
+                <requiredEntity createDataKey="createSource"/>
+            </createData>
+            <!-- Create the category to put the product in -->
+            <createData entity="ApiCategory" stepKey="createCategory"/>
+            <!-- Create simple products for bundle option -->
+            <createData entity="SimpleProduct2" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProduct2" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Create the bundle product -->
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
+            <createData entity="MultipleSelectOption" stepKey="createBundleOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+                <field key="required">false</field>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="linkFirstProductToOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+                <requiredEntity createDataKey="createBundleOption"/>
+                <requiredEntity createDataKey="createFirstSimpleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="linkSecondProductToOption">
+                <requiredEntity createDataKey="createBundleProduct"/>
+                <requiredEntity createDataKey="createBundleOption"/>
+                <requiredEntity createDataKey="createSecondSimpleProduct"/>
+            </createData>
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <!--Assign bundle product to category.-->
+            <amOnPage url="{{AdminProductEditPage.url($$createBundleProduct.id$$)}}" stepKey="openProductEditPageToAssignCategory"/>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToBundleProduct">
+                <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <!-- Assign additional source to first simple product -->
+            <amOnPage url="{{AdminProductEditPage.url($createFirstSimpleProduct.id$)}}" stepKey="openProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
+                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveFirstChildProduct"/>
+            <!-- Assign additional source to second simple product -->
+            <amOnPage url="{{AdminProductEditPage.url($createSecondSimpleProduct.id$)}}" stepKey="openSecondProductEditPage"/>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromSecondProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToSecondChildProduct">
+                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSecondChildProduct"/>
+            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
+        </before>
+        <after>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstChildProduct"/>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondChildProduct"/>
+            <!-- Assign Default Stock to Main Website -->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <!-- Disable source -->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+        </after>
+        <!-- Verify product is visible on storefront -->
+        <actionGroup ref="StorefrontNavigateCategoryPageActionGroup" stepKey="openCategoryPageOnFrontend">
+            <argument name="category" value="$createCategory$"/>
+        </actionGroup>
+        <actionGroup ref="AssertStorefrontProductIsPresentOnCategoryPageActionGroup" stepKey="checkProductOnCategoryPage">
+            <argument name="productName" value="$$createBundleProduct.name$$"/>
+        </actionGroup>
+        <!-- Open first child product in Admin. Make it disabled (Enable Product = No) -->
+        <amOnPage url="{{AdminProductEditPage.url($$createFirstSimpleProduct.id$$)}}" stepKey="openProductEditPageForDisablingProduct"/>
+        <actionGroup ref="AdminSetProductDisabledActionGroup" stepKey="disableProduct"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="clickSaveProduct"/>
+        <!-- Open second child product and set product stock status to out of stock -->
+        <amOnPage url="{{AdminProductEditPage.url($$createSecondSimpleProduct.id$$)}}" stepKey="openProductEditPageForDisablingSource"/>
+        <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setProductStatusToOutOfStock">
+            <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+            <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
+        <!-- Verify product is not visible on storefront -->
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="doNotSeeProductOnCategoryPage">
+            <argument name="categoryUrlKey" value="$$createCategory.name$$"/>
+            <argument name="productName" value="$$createBundleProduct.name$$"/>
+        </actionGroup>
+    </test>
+</tests>

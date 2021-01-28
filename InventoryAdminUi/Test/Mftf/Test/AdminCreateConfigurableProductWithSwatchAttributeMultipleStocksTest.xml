@@ -157,6 +157,8 @@
         <amOnPage url="{{AdminProductEditPage.url($$configurableProduct.id$$)}}" stepKey="openProductEditPage"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="setProductStockStatus"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
         <!--Verify configurable product with red variation on main website.-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyConfigurableVisibleOnStoreFrontMainWebsite">
             <argument name="category" value="$$category$$"/>

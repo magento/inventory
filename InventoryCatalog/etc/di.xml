@@ -10,7 +10,8 @@
     <preference for="Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface" type="Magento\InventoryCatalog\Model\DefaultSourceProvider"/>
     <preference for="Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface" type="Magento\InventoryCatalog\Model\GetProductIdsBySkusCache"/>
     <preference for="Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface" type="Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkusCache" />
-    <preference for="Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface" type="Magento\InventoryCatalog\Model\GetSkusByProductIds"/>
+    <preference for="Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface" type="Magento\InventoryCatalog\Model\GetSkusByProductIdsCache"/>
+    <preference for="Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface" type="Magento\InventoryCatalog\Model\GetParentSkusOfChildrenSkus"/>
     <preference for="Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface" type="Magento\InventoryCatalog\Model\IsSingleSourceMode"/>
     <preference for="Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface" type="Magento\InventoryCatalog\Model\SourceItemsProcessor"/>
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
@@ -163,5 +164,12 @@
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save">
         <plugin name="inventoryUpdate" type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save\ProcessInventoryPlugin"/>
         <plugin name="massAction" disabled="true"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
+        <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\Source\Stock">
+        <plugin name="inventory_catalog_add_sort_by_stock_qty_to_collection"
+                type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Source\StockPlugin"/>
     </type>
 </config>
