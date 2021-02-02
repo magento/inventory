@@ -152,6 +152,7 @@ define([
 
             this.preselectLocation();
             this.selectShippingMethod(pickupShippingMethod);
+            checkoutData.setSelectedShippingRate(this.rate['carrier_code'] + '_' + this.rate['method_code']);
         },
 
         /**
@@ -265,6 +266,7 @@ define([
                         }
                     });
             }
+            this.convertAddressType(quote.shippingAddress());
         },
 
         /**
