@@ -9,6 +9,9 @@
             "latitude": true,
             "longitude": true,
             "postcode": true
+        },
+        "constraint": {
+            "PRIMARY": true
         }
     }
 }
