@@ -32,7 +32,7 @@ class OnlyXLeftTest extends GraphQlAbstract
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $preparedValueFactory = $this->objectManager->get(PreparedValueFactory::class);
@@ -232,7 +232,7 @@ QUERY;
     /**
      * @inheritDoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $resource = $this->objectManager->get(Data::class);
         $resource->clearScopeData('default', 0);

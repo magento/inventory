@@ -19,26 +19,26 @@ use PHPUnit\Framework\TestCase;
 class ReservationBuilderTest extends TestCase
 {
     /**
-     * @var ObjectManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var ObjectManager|\PHPUnit\Framework\MockObject\MockObject
      */
     private $objectManager;
 
     /**
-     * @var ReservationInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ReservationInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $reservation;
 
     /**
-     * @var ValidationResult|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidationResult|\PHPUnit\Framework\MockObject\MockObject
      */
     private $validationResult;
 
     /**
-     * @var SnakeToCamelCaseConverter|\PHPUnit_Framework_MockObject_MockObject
+     * @var SnakeToCamelCaseConverter|\PHPUnit\Framework\MockObject\MockObject
      */
     private $snakeToCamelCaseConverter;
 
-    /** @var  ValidationResultFactory|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var  ValidationResultFactory|\PHPUnit\Framework\MockObject\MockObject */
     private $validationResultFactory;
 
     /**
@@ -46,7 +46,7 @@ class ReservationBuilderTest extends TestCase
      */
     private $reservationBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = $this->getMockBuilder(ObjectManagerInterface::class)->getMock();
         $this->snakeToCamelCaseConverter = $this->getMockBuilder(SnakeToCamelCaseConverter::class)->getMock();
@@ -118,11 +118,12 @@ class ReservationBuilderTest extends TestCase
      * @param array $firstSetter
      * @param array $secondSetter
      * @dataProvider getSettersAndValues
-     * @expectedException \Magento\Framework\Validation\ValidationException
-     * @expectedExceptionMessage  Validation error
      */
     public function testThrowValidationException(array $firstSetter, array $secondSetter)
     {
+        $this->expectException(\Magento\Framework\Validation\ValidationException::class);
+        $this->expectExceptionMessage('Validation error');
+
         $this->validationResultFactory
             ->expects($this->once())
             ->method('create')

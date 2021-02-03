@@ -24,7 +24,7 @@ class InventoryTransferValidatorTest extends TestCase
      */
     private $defaultSourceProvider;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->bulkInventoryTransferValidator =

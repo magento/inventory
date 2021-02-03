@@ -18,7 +18,7 @@ class SourceUnassignValidatorTest extends TestCase
      */
     private $massUnassignValidator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->massUnassignValidator = Bootstrap::getObjectManager()->get(BulkSourceUnassignValidatorInterface::class);

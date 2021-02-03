@@ -18,7 +18,7 @@ class SourceAssignValidatorTest extends TestCase
      */
     private $massAssignValidator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->massAssignValidator = Bootstrap::getObjectManager()->get(BulkSourceAssignValidatorInterface::class);

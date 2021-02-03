@@ -23,7 +23,7 @@ class BundleProductShouldBeInStockOnCreateTest extends WebapiAbstract
     /**
      * Execute per test cleanup
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         $resourcePath = self::RESOURCE_PATH . '/' . self::BUNDLE_PRODUCT_SKU;
         $serviceInfo = [

@@ -48,7 +48,7 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -76,14 +76,14 @@ class ApplyStockConditionToSelectOnDefaultStockTest extends TestCase
         $this->applyStockConditionToSelect->execute('eav_index', 'eav_index_stock', $select);
 
         $result = $select->query()->fetchAll();
-        self::assertEquals(4, count($result));
+        self::assertCount(4, $result);
 
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter(SourceItemInterface::SKU, ['SKU-1', 'SKU-2', 'SKU-3', 'SKU-4', 'SKU-5', 'SKU-6'], 'in')
             ->addFilter(SourceItemInterface::SOURCE_CODE, $this->defaultSourceProvider->getCode())
             ->create();
         $sourceItems = $this->sourceItemRepository->getList($searchCriteria)->getItems();
-        self::assertEquals(5, count($sourceItems));
+        self::assertCount(5, $sourceItems);
 
         /**
          * For SKU-5 we should not have Source Item created

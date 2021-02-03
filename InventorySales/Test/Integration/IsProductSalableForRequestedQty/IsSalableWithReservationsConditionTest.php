@@ -52,7 +52,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -262,8 +262,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
             $this->reservationBuilder->setStockId($stockId)->setSku($sku )->setQuantity(-9.33)->build(),
         ]);
 
-        self::assertEquals(
-            true,
+        self::assertTrue(
             $this->isProductSalableForRequestedQty->execute($sku, $stockId, 0.17)->isSalable()
         );
 

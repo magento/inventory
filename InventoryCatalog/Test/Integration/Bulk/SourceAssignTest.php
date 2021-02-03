@@ -31,7 +31,7 @@ class SourceAssignTest extends TestCase
      */
     private $sourceItemRepository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->bulkSourceAssign = Bootstrap::getObjectManager()->get(BulkSourceAssignInterface::class);

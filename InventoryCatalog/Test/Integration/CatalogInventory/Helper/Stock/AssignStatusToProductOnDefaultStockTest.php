@@ -28,7 +28,7 @@ class AssignStatusToProductOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stockHelper = Bootstrap::getObjectManager()->get(Stock::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);

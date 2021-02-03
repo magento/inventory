@@ -18,7 +18,7 @@ class GetSourceCodesBySkusTest extends TestCase
      */
     private $getSourceCodesBySkus;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

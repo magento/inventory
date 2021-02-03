@@ -60,7 +60,7 @@ class ReservationPlacingDuringRevertProductsSaleTest extends TestCase
      */
     private $stockManagement;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getProductSalableQty = Bootstrap::getObjectManager()->get(GetProductSalableQtyInterface::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
@@ -75,7 +75,7 @@ class ReservationPlacingDuringRevertProductsSaleTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

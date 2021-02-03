@@ -62,7 +62,7 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
      */
     private $shipmentItemCreationFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
