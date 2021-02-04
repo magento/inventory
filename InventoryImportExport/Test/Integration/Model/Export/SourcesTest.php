@@ -65,7 +65,7 @@ class SourcesTest extends TestCase
         );
 
         foreach ($exportFullLines as $line) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $line,
                 file_get_contents($this->exportFilePath)
             );
