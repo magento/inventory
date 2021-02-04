@@ -9,6 +9,7 @@
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="ProductQtyLeft">
+        <data key="only_0_left">Only 0 left</data>
         <data key="only_one_left">Only 1 left</data>
         <data key="only_two_left">Only 2 left</data>
     </entity>
