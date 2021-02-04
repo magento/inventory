@@ -75,8 +75,8 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
             ->willReturnCallback(
                 function ($args) {
                     $mock = $this->getMockForAbstractClass(ProductSalabilityErrorInterface::class);
-                    $mock->method('getCode')->willReturn($args['code'] ?? null);
-                    $mock->method('getMessage')->willReturn((string)$args['message'] ?? null);
+                    $mock->method('getCode')->willReturn($args['code']);
+                    $mock->method('getMessage')->willReturn($args['message']->render());
                     return $mock;
                 }
             );
@@ -136,7 +136,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
         $this->stockItemConfiguration->method('getBackorders')
             ->willReturn($backOrders);
         $this->getProductSalableQty->method('execute')
-            ->willReturn($salableQty);
+            ->willReturn((float)$salableQty);
         $this->stockItemData = $stockData;
         $actualErrors = [];
         foreach ($this->model->execute('simple', 1, $reqQty)->getErrors() as $error) {
