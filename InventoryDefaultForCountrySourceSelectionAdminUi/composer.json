@@ -3,6 +3,7 @@
     "description": "N/A",
     "require": {
         "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
         "magento/module-inventory-default-for-country-source-selection": "*"
     },
     "type": "magento2-module",
