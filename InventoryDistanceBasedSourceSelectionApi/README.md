@@ -1,9 +1,9 @@
 # InventoryDistanceBasedSourceSelectionApi module
 
-The `InventoryDistanceBasedSourceSelectionApi` module provides service contracts for distance based source selection algorithm. 
+The `InventoryDistanceBasedSourceSelectionApi` module provides service contracts for distance based source selection algorithm.
 
 This module is part of the new inventory infrastructure. The
-[Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
+[Inventory Management overview](https://devdocs.magento.com/guides/v2.4/inventory/index.html)
 describes the MSI (Multi-Source Inventory) project in more detail.
 
 ## Installation details
