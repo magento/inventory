@@ -259,7 +259,7 @@ class IsSalableWithReservationsConditionTest extends TestCase
         $this->saveStockItemConfiguration->execute($sku, $stockId, $stockItemConfiguration);
 
         $this->appendReservations->execute([
-            $this->reservationBuilder->setStockId($stockId)->setSku($sku )->setQuantity(-9.33)->build(),
+            $this->reservationBuilder->setStockId($stockId)->setSku($sku )->setQuantity(-9.33)->build()
         ]);
 
         self::assertTrue(

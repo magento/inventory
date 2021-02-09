@@ -42,7 +42,9 @@ class GetProductIdsBySkusTest extends TestCase
     public function testExecuteWithNotExistedSkus()
     {
         $this->expectException(\Magento\Framework\Exception\NoSuchEntityException::class);
-        $this->expectExceptionMessage('Following products with requested skus were not found: not_existed_1, not_existed_2');
+        $this->expectExceptionMessage(
+            'Following products with requested skus were not found: not_existed_1, not_existed_2'
+        );
 
         $skus = ['not_existed_1', 'not_existed_2', 'search_product_2'];
 

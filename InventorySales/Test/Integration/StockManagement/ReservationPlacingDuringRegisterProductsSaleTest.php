@@ -40,6 +40,7 @@ use PHPUnit\Framework\TestCase;
  * @magentoAppIsolation enabled
  * @magentoDbIsolation enabled
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class ReservationPlacingDuringRegisterProductsSaleTest extends TestCase
 {
