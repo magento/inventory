@@ -56,7 +56,7 @@ class NameValidatorTest extends TestCase
         $errors = $result->getErrors();
         foreach ($errorStrings as $errorString) {
             $errorText = array_shift($errors);
-            $this->assertContains($errorString, (string)$errorText);
+            $this->assertStringContainsString($errorString, (string)$errorText);
         }
     }
 

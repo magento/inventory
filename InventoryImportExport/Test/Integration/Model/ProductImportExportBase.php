@@ -46,7 +46,7 @@ abstract class ProductImportExportBase extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }
