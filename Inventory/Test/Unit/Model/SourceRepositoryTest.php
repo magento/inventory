@@ -22,27 +22,27 @@ use PHPUnit\Framework\TestCase;
 class SourceRepositoryTest extends TestCase
 {
     /**
-     * @var SaveInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SaveInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $commandSave;
 
     /**
-     * @var GetInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var GetInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $commandGet;
 
     /**
-     * @var GetListInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var GetListInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $commandGetList;
 
     /**
-     * @var SourceInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SourceInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $source;
 
     /**
-     * @var SourceSearchResultsInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SourceSearchResultsInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $searchResult;
 
@@ -51,7 +51,7 @@ class SourceRepositoryTest extends TestCase
      */
     private $sourceRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->commandSave = $this->getMockBuilder(SaveInterface::class)->getMock();
         $this->commandGet = $this->getMockBuilder(GetInterface::class)->getMock();
@@ -83,11 +83,12 @@ class SourceRepositoryTest extends TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\Exception\CouldNotSaveException
-     * @expectedExceptionMessage Some error
      */
     public function testSaveWithCouldNotSaveException()
     {
+        $this->expectException(\Magento\Framework\Exception\CouldNotSaveException::class);
+        $this->expectExceptionMessage('Some error');
+
         $this->commandSave
             ->expects($this->once())
             ->method('execute')
@@ -111,11 +112,12 @@ class SourceRepositoryTest extends TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
-     * @expectedExceptionMessage Some error
      */
     public function testGetWithNoSuchEntityException()
     {
+        $this->expectException(\Magento\Framework\Exception\NoSuchEntityException::class);
+        $this->expectExceptionMessage('Some error');
+
         $sourceCode = 'source-code';
 
         $this->commandGet

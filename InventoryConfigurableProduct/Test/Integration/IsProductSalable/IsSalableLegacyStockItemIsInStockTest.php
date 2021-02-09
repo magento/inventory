@@ -42,7 +42,7 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
      */
     private $stockItemRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->isProductSalable = Bootstrap::getObjectManager()->get(IsProductSalableInterface::class);
         $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkus::class);
@@ -68,8 +68,7 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $stockId = 20;
         $this->setLegacyStockItemIsInStock($sku, 0);
 
-        self::assertEquals(
-            false,
+        self::assertFalse(
             $this->isProductSalable->execute($sku, $stockId)
         );
     }
@@ -91,8 +90,7 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $stockId = 20;
         $this->setLegacyStockItemIsInStock($sku, 1);
 
-        self::assertEquals(
-            true,
+        self::assertTrue(
             $this->isProductSalable->execute($sku, $stockId)
         );
     }

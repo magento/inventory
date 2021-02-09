@@ -28,7 +28,7 @@ class ApplyStockConditionToSelectWithDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -54,6 +54,6 @@ class ApplyStockConditionToSelectWithDefaultStockTest extends TestCase
         )->distinct();
 
         $this->applyStockConditionToSelect->execute($select);
-        self::assertEquals(4, count($select->query()->fetchAll()));
+        self::assertCount(4, $select->query()->fetchAll());
     }
 }

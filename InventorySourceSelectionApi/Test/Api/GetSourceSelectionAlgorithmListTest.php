@@ -39,7 +39,7 @@ class GetSourceSelectionAlgorithmListTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo);
 
-        self::assertInternalType('array', $sourceSelectionAlgorithmList);
+        self::assertIsArray($sourceSelectionAlgorithmList);
         self::assertNotEmpty($sourceSelectionAlgorithmList);
     }
 }

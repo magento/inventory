@@ -98,8 +98,8 @@ class StocksListingTest extends TestCase
         $resultBlock = $this->processUiComponent();
         $resultHtml = $resultBlock->toHtml();
 
-        $this->assertContains('"Delete"', $resultHtml);
-        $this->assertContains('"Edit","hidden":false', $resultHtml);
+        $this->assertStringContainsString('"Delete"', $resultHtml);
+        $this->assertStringContainsString('"Edit","hidden":false', $resultHtml);
     }
 
     /**
@@ -116,8 +116,8 @@ class StocksListingTest extends TestCase
         $resultBlock = $this->processUiComponent();
         $resultHtml = $resultBlock->toHtml();
 
-        $this->assertNotContains('"Delete"', $resultHtml);
-        $this->assertContains('"Edit","hidden":true', $resultHtml);
+        $this->assertStringNotContainsString('"Delete"', $resultHtml);
+        $this->assertStringContainsString('"Edit","hidden":true', $resultHtml);
     }
 
     /**

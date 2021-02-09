@@ -56,7 +56,7 @@ class BackorderConditionTest extends TestCase
      */
     private $stockItemCriteriaFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->stockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);

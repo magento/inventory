@@ -54,7 +54,7 @@ class ProductTest extends TestCase
     /**
      * Setup Test for Product Import
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(
             DefaultSourceProviderInterface::class

@@ -39,7 +39,7 @@ class GetDefaultSortedSourcesResultTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = Bootstrap::getObjectManager()->get(GetDefaultSortedSourcesResult::class);
         $this->inventoryRequestFactory = Bootstrap::getObjectManager()->get(InventoryRequestInterfaceFactory::class);

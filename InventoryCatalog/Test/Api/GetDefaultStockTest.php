@@ -20,7 +20,7 @@ class GetDefaultStockTest extends WebapiAbstract
      */
     private $defaultStockProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);

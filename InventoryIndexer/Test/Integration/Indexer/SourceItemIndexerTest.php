@@ -49,7 +49,7 @@ class SourceItemIndexerTest extends TestCase
      */
     private $searchCriteriaBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sourceItemIndexer = Bootstrap::getObjectManager()->get(SourceItemIndexer::class);
         $this->getStockItemData = Bootstrap::getObjectManager()->get(GetStockItemData::class);
@@ -63,7 +63,7 @@ class SourceItemIndexerTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->removeIndexData->execute([10, 20, 30]);
     }
