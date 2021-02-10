@@ -56,17 +56,17 @@ interface StockInterface extends \Magento\Framework\Api\ExtensibleDataInterface
     /**
      * Retrieve existing extension attributes object
      *
-     * @return \Magento\InventoryApi\Api\Data\StockExtensionInterface|null
+     * @return \Magento\Framework\Api\ExtensionAttributesInterface|null
      */
-    public function getExtensionAttributes(): ?\Magento\InventoryApi\Api\Data\StockExtensionInterface;
+    public function getExtensionAttributes(): ?\Magento\Framework\Api\ExtensionAttributesInterface;
 
     /**
      * Set an extension attributes object
      *
-     * @param \Magento\InventoryApi\Api\Data\StockExtensionInterface $extensionAttributes
+     * @param \Magento\Framework\Api\ExtensionAttributesInterface $extensionAttributes
      * @return void
      */
     public function setExtensionAttributes(
-        \Magento\InventoryApi\Api\Data\StockExtensionInterface $extensionAttributes
+        \Magento\Framework\Api\ExtensionAttributesInterface $extensionAttributes
     ): void;
 }

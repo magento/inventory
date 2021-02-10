@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\Inventory\Model;
 
 use Magento\Framework\Model\AbstractExtensibleModel;
+use Magento\Framework\Api\ExtensionAttributesInterface;
 use Magento\Inventory\Model\ResourceModel\Stock as StockResourceModel;
-use Magento\InventoryApi\Api\Data\StockExtensionInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
 
 /**
@@ -72,7 +72,7 @@ class Stock extends AbstractExtensibleModel implements StockInterface
     /**
      * @inheritdoc
      */
-    public function getExtensionAttributes(): ?StockExtensionInterface
+    public function getExtensionAttributes(): ?ExtensionAttributesInterface
     {
         $extensionAttributes = $this->_getExtensionAttributes();
         if (null === $extensionAttributes) {
@@ -85,7 +85,7 @@ class Stock extends AbstractExtensibleModel implements StockInterface
     /**
      * @inheritdoc
      */
-    public function setExtensionAttributes(StockExtensionInterface $extensionAttributes): void
+    public function setExtensionAttributes(ExtensionAttributesInterface $extensionAttributes): void
     {
         $this->_setExtensionAttributes($extensionAttributes);
     }
