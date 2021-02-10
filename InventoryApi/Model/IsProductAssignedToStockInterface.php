@@ -7,6 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryApi\Model;
 
+/**
+ * @api
+ * @since 103.0.2
+ */
 interface IsProductAssignedToStockInterface
 {
     /**

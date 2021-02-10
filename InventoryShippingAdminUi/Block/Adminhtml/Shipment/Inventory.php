@@ -17,6 +17,7 @@ use Magento\Sales\Model\Order\Shipment;
  * Display selected source on shipment creation page
  *
  * @api
+ * @since 103.0.2
  */
 class Inventory extends Template
 {

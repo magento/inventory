@@ -11,6 +11,9 @@ use Magento\InventoryInStorePickupApi\Model\SearchRequestBuilderInterface;
 
 /**
  * Resolve arguments for Search Request Builder.
+ *
+ * @api
+ * @since 103.0.2
  */
 interface ResolverInterface
 {

@@ -9,6 +9,9 @@ namespace Magento\InventoryCatalogApi\Model;
 
 /**
  * Process(save|delete|replace) source items for given product sku.
+ *
+ * @api
+ * @since 103.0.2
  */
 interface SourceItemsProcessorInterface
 {

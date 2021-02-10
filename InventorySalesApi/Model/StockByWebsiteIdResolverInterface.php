@@ -11,6 +11,9 @@ use Magento\InventoryApi\Api\Data\StockInterface;
 
 /**
  * Resolve Stock by Website ID
+ *
+ * @api
+ * @since 103.0.2
  */
 interface StockByWebsiteIdResolverInterface
 {

@@ -11,6 +11,8 @@ namespace Magento\InventorySalesApi\Model\ReturnProcessor\Request;
  * DTO used as the type for values of `$items` array passed to PlaceReservationsForSalesEventInterface::execute()
  * @see \Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface
  *
+ * @api
+ * @since 103.0.2
  */
 interface ItemsToRefundInterface
 {

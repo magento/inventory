@@ -18,6 +18,7 @@ use Magento\InventoryShippingAdminUi\Model\IsWebsiteInMultiSourceMode;
  * Update order_ship button to redirect to Source Selection page
  *
  * @api
+ * @since 103.0.2
  */
 class ShipButton extends Container
 {
