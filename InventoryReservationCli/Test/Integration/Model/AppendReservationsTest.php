@@ -40,7 +40,7 @@ class AppendReservationsTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getSalableQuantityInconsistencies = Bootstrap::getObjectManager()
             ->get(GetSalableQuantityInconsistencies::class);

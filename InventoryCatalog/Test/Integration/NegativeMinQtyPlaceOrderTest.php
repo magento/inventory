@@ -122,7 +122,7 @@ class NegativeMinQtyPlaceOrderTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->isProductSalableForRequestedQty = Bootstrap::getObjectManager()->get(
@@ -287,7 +287,7 @@ class NegativeMinQtyPlaceOrderTest extends TestCase
         return $cartItem;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

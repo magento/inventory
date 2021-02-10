@@ -98,7 +98,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
@@ -136,11 +136,12 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\Exception\LocalizedException
-     * @expectedExceptionMessage Product that you are trying to add is not available.
      */
     public function testPlaceOrderWithOutOfStockProduct()
     {
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $this->expectExceptionMessage('Product that you are trying to add is not available.');
+
         $bundleSku = 'bundle-product-out-of-stock';
         $qty = 3;
         $cart = $this->getCart();
@@ -262,7 +263,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

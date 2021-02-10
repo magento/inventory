@@ -59,7 +59,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -222,7 +222,7 @@ class AddSalesQuoteItemOnNotDefaultStockTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

@@ -31,7 +31,7 @@ class ReservationPlacingOnCanSubtractQtySetToZeroTest extends TestCase
      */
     private $getReservationQuantity;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->appendReservations = Bootstrap::getObjectManager()->get(AppendReservationsInterface::class);
         $this->reservationBuilder = Bootstrap::getObjectManager()->get(ReservationBuilderInterface::class);
@@ -41,7 +41,7 @@ class ReservationPlacingOnCanSubtractQtySetToZeroTest extends TestCase
     /**
      * We broke transaction during indexation so we need to clean db state manually
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class)->execute();
     }

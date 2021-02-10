@@ -93,10 +93,11 @@ class GetStockStatusOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testGetStatusIfNotExistedScopeIdIsPassed(): void
     {
+        $this->expectException(\Magento\Framework\Exception\NoSuchEntityException::class);
+
         $notExistedScopeId = 100;
         $sku = 'SKU-1';
         $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];

@@ -24,7 +24,7 @@ class BulkConfigurationUnassignTest extends TestCase
      */
     private $getSourceItemConfiguration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->bulkConfigurationUnassign = Bootstrap::getObjectManager()->get(BulkConfigurationUnassign::class);

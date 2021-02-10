@@ -42,7 +42,7 @@ class StockResolverTest extends TestCase
     /**
      * Create objects.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->stockRepository = $this->objectManager->get(StockRepositoryInterface::class);
@@ -66,7 +66,7 @@ class StockResolverTest extends TestCase
         $this->assertEquals(10, $stock->getStockId());
         $this->assertEquals('EU-stock', $stock->getName());
         $salesChannels = $stock->getExtensionAttributes()->getSalesChannels();
-        $this->assertEquals(1, count($salesChannels));
+        $this->assertCount(1, $salesChannels);
         /** @var SalesChannelInterface $salesChannel */
         $salesChannel = $salesChannels[0];
         $this->assertEquals('website', $salesChannel->getType());
@@ -90,7 +90,7 @@ class StockResolverTest extends TestCase
         $this->assertEquals($stockId, $stock->getStockId());
         $this->assertEquals('US-stock', $stock->getName());
         $salesChannels = $stock->getExtensionAttributes()->getSalesChannels();
-        $this->assertEquals(1, count($salesChannels));
+        $this->assertCount(1, $salesChannels);
         /** @var SalesChannelInterface $salesChannel */
         $salesChannel = $salesChannels[0];
         $this->assertEquals('website', $salesChannel->getType());
@@ -108,7 +108,7 @@ class StockResolverTest extends TestCase
         $this->assertEquals($stockId, $stock->getStockId());
         $this->assertEquals('US-stock', $stock->getName());
         $salesChannels = $stock->getExtensionAttributes()->getSalesChannels();
-        $this->assertEquals(1, count($salesChannels));
+        $this->assertCount(1, $salesChannels);
         /** @var SalesChannelInterface $salesChannel */
         $salesChannel = $salesChannels[0];
         $this->assertEquals('website', $salesChannel->getType());

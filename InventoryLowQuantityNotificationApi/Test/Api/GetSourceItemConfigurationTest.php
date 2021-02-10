@@ -30,7 +30,7 @@ class GetSourceItemConfigurationTest extends WebapiAbstract
 
         $sourceItemConfiguration = $this->getSourceItemConfiguration($sourceCode, $sku);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         self::assertEquals($sourceCode, $sourceItemConfiguration[SourceItemConfigurationInterface::SOURCE_CODE]);
@@ -52,7 +52,7 @@ class GetSourceItemConfigurationTest extends WebapiAbstract
 
         $sourceItemConfiguration = $this->getSourceItemConfiguration($sourceCode, $sku);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         self::assertEquals($sourceCode, $sourceItemConfiguration[SourceItemConfigurationInterface::SOURCE_CODE]);
@@ -109,7 +109,7 @@ class GetSourceItemConfigurationTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo, ['sourceCode' => $sourceCode, 'sku' => $sku]);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         return $sourceItemConfiguration;
