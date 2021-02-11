@@ -86,7 +86,7 @@ class DeleteSourceItemsConfigurationTest extends WebapiAbstract
             ? $this->_webApiCall($serviceInfo)
             : $this->_webApiCall($serviceInfo, ['sourceCode' => $sourceCode, 'sku' => $sku]);
 
-        self::assertInternalType('array', $sourceItemConfiguration);
+        self::assertIsArray($sourceItemConfiguration);
         self::assertNotEmpty($sourceItemConfiguration);
 
         return $sourceItemConfiguration;

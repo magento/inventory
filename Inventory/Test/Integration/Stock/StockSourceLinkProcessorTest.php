@@ -51,7 +51,7 @@ class StockSourceLinkProcessorTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);
@@ -61,7 +61,7 @@ class StockSourceLinkProcessorTest extends TestCase
         $this->auth = $objectManager->get(Auth::class);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->auth->logout();
         parent::tearDown();

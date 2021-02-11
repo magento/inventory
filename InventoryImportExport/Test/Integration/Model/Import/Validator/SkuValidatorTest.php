@@ -20,14 +20,14 @@ class SkuValidatorTest extends TestCase
     private $importer;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $importDataMock;
 
     /**
      * Setup for Sku Validator Integration Test Class
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->importDataMock = $this->getMockBuilder(ImportData::class)
             ->disableOriginalConstructor()

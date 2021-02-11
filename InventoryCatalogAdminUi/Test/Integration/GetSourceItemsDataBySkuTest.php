@@ -19,7 +19,7 @@ class GetSourceItemsDataBySkuTest extends TestCase
      */
     private $getSourceItemsDataBySku;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->getSourceItemsDataBySku = Bootstrap::getObjectManager()->get(GetSourceItemsDataBySku::class);

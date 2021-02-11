@@ -22,7 +22,7 @@ class GetSourceItemsBySkuAndSourceCodesTest extends TestCase
     {
         $getSourceItems = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuAndSourceCodes::class);
         $items = $getSourceItems->execute('SKU-1', ['eu-1', 'eu-2']);
-        $this->assertEquals(2, count($items));
+        $this->assertCount(2, $items);
     }
 
     /**
