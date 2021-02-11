@@ -1,10 +1,10 @@
 # InventorySwatchesFrontendUi module
 
-The `InventorySwatchesFrontendUi` adds info about salable quantity to configurable product in case a user choose some 
+The `InventorySwatchesFrontendUi` adds info about salable quantity to configurable product in case a user choose some
 specific product variation.
 
 This module is a part of the new inventory infrastructure. The
-[Inventory Management overview](https://devdocs.magento.com/guides/v2.3/inventory/index.html)
+[Inventory Management overview](https://devdocs.magento.com/guides/v2.4/inventory/index.html)
 describes the MSI (Multi-Source Inventory) project in more detail.
 
 ## Installation details
