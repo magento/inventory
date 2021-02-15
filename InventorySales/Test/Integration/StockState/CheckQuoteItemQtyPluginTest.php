@@ -71,5 +71,6 @@ class CheckQuoteItemQtyPluginTest extends TestCase
         self::assertEquals('The requested sku is not assigned to given stock.', $result->getMessage());
         self::assertEquals('The requested sku is not assigned to given stock.', $result->getQuoteMessage());
         self::assertEquals('qty', $result->getQuoteMessageIndex());
+        self::assertEquals('requested-sku-is-not-assigned-to-given-stock', $result->getErrorCode());
     }
 }

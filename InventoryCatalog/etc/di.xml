@@ -168,4 +168,8 @@
     <type name="Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface">
         <plugin name="inventory_catalog_stock_status_filter" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel\StockStatusFilterPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\Source\Stock">
+        <plugin name="inventory_catalog_add_sort_by_stock_qty_to_collection"
+                type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Source\StockPlugin"/>
+    </type>
 </config>
