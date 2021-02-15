@@ -12,6 +12,7 @@
                 component="Magento_InventoryShippingAdminUi/js/order/grid/cell/allocated-sources">
             <settings>
                 <filter>false</filter>
+                <sortable>false</sortable>
                 <label translate="true">Allocated sources</label>
             </settings>
         </column>

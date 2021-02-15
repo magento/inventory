@@ -44,7 +44,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      */
     public function testIncompleteOrderWithExistingReservation(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertSame([], $inconsistencies);
     }
 
@@ -54,7 +54,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      */
     public function testIncompleteOrderWithoutReservation(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(1, $inconsistencies);
     }
 
@@ -64,18 +64,18 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      */
     public function testIncompleteOrderWithoutReservationVirtualProduct(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(1, $inconsistencies);
     }
 
     /**
-     * Verify GetSalableQuantityInconsistencies::execute() won't throw error in case product sku is numeric.
+     * Verify GetSalableQuantityInconsistencies::executeAll() won't throw error in case product sku is numeric.
      *
      * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_order_without_reservation_numeric_sku.php
      */
     public function testIncompleteOrderWithoutReservationNumericSku(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(1, $inconsistencies);
     }
 
@@ -85,7 +85,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      */
     public function testCompletedOrderWithReservations(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertSame([], $inconsistencies);
     }
 
@@ -96,7 +96,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      */
     public function testCompletedOrderWithMissingReservations(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         self::assertCount(1, $inconsistencies);
     }
 
@@ -121,9 +121,22 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      */
     public function testFindMissingReservationConfigurableProductCustomStock(): void
     {
-        $inconsistencies = $this->getSalableQuantityInconsistencies->execute();
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
         $items = reset($inconsistencies)->getItems();
         self::assertEquals(3, $items['simple_10']);
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_incomplete_order_without_reservation.php
+     * @throws \Magento\Framework\Validation\ValidationException
+     */
+    public function testExecuteWithPagination(): void
+    {
+        $items = [];
+        foreach($this->getSalableQuantityInconsistencies->execute() as $inconsistencies) {
+            $items += $inconsistencies;
+        }
+        self::assertCount(1, $items);
     }
 
     /**
@@ -134,9 +147,23 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     public function testExecuteEmptyWithPagination()
     {
         $bunchSize = 1;
-        for ($i = 1; $i <= 3; $i++) {
-            $inconsistencies = $this->getSalableQuantityInconsistencies->execute($bunchSize, $i);
+        foreach($this->getSalableQuantityInconsistencies->execute($bunchSize) as $inconsistencies) {
             self::assertEmpty($inconsistencies);
         }
+    }
+
+    /**
+     * Load current Inconsistencies
+     *
+     * @return array
+     */
+    private function getSalableQuantityInconsistencies(): array
+    {
+        $items = [];
+        foreach ($this->getSalableQuantityInconsistencies->execute() as $bunch) {
+            $items += $bunch;
+        }
+
+        return $items;
     }
 }
