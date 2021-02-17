@@ -116,7 +116,7 @@ class IndexProcessor
     {
         $data = [];
         foreach ($salabilityData as $sku => $isSalable) {
-            $currentStatus = $this->getIndexSalabilityStatus($sku, $stockId);
+            $currentStatus = $this->getIndexSalabilityStatus((string)$sku, $stockId);
             if ($isSalable != $currentStatus && $currentStatus !== null) {
                 $data[$sku] = $isSalable;
             }
