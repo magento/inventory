@@ -4,7 +4,8 @@
     "require": {
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-inventory-default-for-country-source-selection": "*"
+        "magento/module-inventory-default-for-country-source-selection": "*",
+        "magento/module-inventory-source-selection-api": "*"
     },
     "type": "magento2-module",
     "license": [
