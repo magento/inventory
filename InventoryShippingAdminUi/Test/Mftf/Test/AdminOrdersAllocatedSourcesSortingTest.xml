@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminOrdersAllocatedSourcesSortingTest">
+        <annotations>
+            <features value="Sales"/>
+            <stories value="Admin order grid"/>
+            <title value="Sorting by Allocated sources in Orders grid throws an error"/>
+            <description value="Sorting by Allocated sources in Orders grid throws an error"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="MC-40433"/>
+            <useCaseId value="MC-40263"/>
+            <group value="sales"/>
+        </annotations>
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="LoginAsAdmin"/>
+
+            <!-- Create Data -->
+            <createData entity="Simple_US_Customer" stepKey="createCustomer"/>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="defaultSimpleProduct" stepKey="createProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+        </before>
+        <after>
+            <!-- Delete data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+
+        <!-- Create order -->
+        <actionGroup ref="CreateOrderActionGroup" stepKey="createFirstOrder">
+            <argument name="product" value="$$createProduct$$"/>
+            <argument name="customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
+        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty" after="getOrderId">
+			<actualResult type="const">$getOrderId</actualResult>
+        </assertNotEmpty>
+
+        <!-- Navigate to backend: Go to Sales > Orders -->
+        <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="onOrderPage"/>
+        <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearFilters"/>
+
+        <!-- Click on Allocated sources column -->
+        <actionGroup ref="AdminOrderGridClickAllocatedSourcesColumnActionGroup" stepKey="clickAllocatedSources"/>
+
+        <!-- Check that orders grid page successfully loaded -->
+        <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="onOrderPageSecond"/>
+    </test>
+</tests>
