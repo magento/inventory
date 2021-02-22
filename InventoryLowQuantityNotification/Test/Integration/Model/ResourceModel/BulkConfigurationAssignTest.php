@@ -24,7 +24,7 @@ class BulkConfigurationAssignTest extends TestCase
      */
     private $getSourceItemConfiguration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->bulkConfigurationAssign = Bootstrap::getObjectManager()->get(BulkConfigurationAssign::class);

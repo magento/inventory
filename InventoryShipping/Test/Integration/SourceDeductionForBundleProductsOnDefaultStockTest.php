@@ -62,7 +62,7 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
      */
     private $shipmentItemCreationFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
@@ -168,12 +168,13 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
      * @param int $type
      * @return OrderItem
      */
-    private function getBundleOrderItemByShipmentType(OrderInterface $order, int $type): OrderItem
+    private function getBundleOrderItemByShipmentType(OrderInterface $order, int $type): ?OrderItem
     {
         foreach ($order->getAllVisibleItems() as $item) {
             if ($item->getProduct()->getShipmentType() == $type) {
                 return $item;
             }
         }
+        return null;
     }
 }

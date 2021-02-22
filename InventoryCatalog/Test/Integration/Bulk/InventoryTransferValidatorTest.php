@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright :copyright: Magento, Inc. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);
@@ -24,7 +24,7 @@ class InventoryTransferValidatorTest extends TestCase
      */
     private $defaultSourceProvider;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->bulkInventoryTransferValidator =

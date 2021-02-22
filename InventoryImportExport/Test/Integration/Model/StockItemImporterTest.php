@@ -48,7 +48,7 @@ class StockItemImporterTest extends TestCase
     /**
      * Setup Test for Stock Item Importer
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(
             DefaultSourceProviderInterface::class

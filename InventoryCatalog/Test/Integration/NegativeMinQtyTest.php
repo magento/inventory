@@ -34,7 +34,7 @@ class NegativeMinQtyTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->isProductSalableForRequestedQty = Bootstrap::getObjectManager()->get(

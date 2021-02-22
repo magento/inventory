@@ -31,7 +31,7 @@ class AddStockStatusToSelectTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -91,22 +91,24 @@ class AddStockStatusToSelectTest extends TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\Exception\LocalizedException
-     * @expectedExceptionMessage Website code is empty
      */
     public function testAddStockStatusToSelectWithEmptyWebsiteCode()
     {
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $this->expectExceptionMessage('Website code is empty');
+
         /** @var Collection $collection */
         $collection = Bootstrap::getObjectManager()->create(Collection::class);
         $this->stockStatus->addStockStatusToSelect($collection->getSelect(), $this->website);
     }
 
     /**
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
-     * @expectedExceptionMessage No linked stock found
      */
     public function testAddStockStatusToSelectWithNotExistedWebsiteCode()
     {
+        $this->expectException(\Magento\Framework\Exception\NoSuchEntityException::class);
+        $this->expectExceptionMessage('No linked stock found');
+
         /** @var Collection $collection */
         $collection = Bootstrap::getObjectManager()->create(Collection::class);
         $this->website->setCode('not_existed_code');
