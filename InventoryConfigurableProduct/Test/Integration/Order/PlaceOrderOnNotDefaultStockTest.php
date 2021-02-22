@@ -86,7 +86,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      */
     private $searchCriteriaBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
         $this->storeRepository = Bootstrap::getObjectManager()->get(StoreRepositoryInterface::class);
@@ -286,7 +286,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $this->registry->register('isSecureArea', false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->cleanupReservations->execute();
     }

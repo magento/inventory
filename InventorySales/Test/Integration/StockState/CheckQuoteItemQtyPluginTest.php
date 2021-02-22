@@ -28,7 +28,7 @@ class CheckQuoteItemQtyPluginTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stockState = Bootstrap::getObjectManager()->get(StockStateInterface::class);
     }

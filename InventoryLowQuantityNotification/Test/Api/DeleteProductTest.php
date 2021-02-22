@@ -42,7 +42,7 @@ class DeleteProductTest extends WebapiAbstract
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->getBySku = Bootstrap::getObjectManager()->get(GetBySku::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);

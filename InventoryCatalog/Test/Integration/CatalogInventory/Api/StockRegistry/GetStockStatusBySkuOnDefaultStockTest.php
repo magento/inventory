@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Test\Integration\CatalogInventory\Api\StockRe
 
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +30,6 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     protected function setUp(): void
     {
         $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
-        $this->getProductIdsBySkus = Bootstrap::getObjectManager()->get(GetProductIdsBySkusInterface::class);
         $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
     }
 
@@ -86,10 +84,11 @@ class GetStockStatusBySkuOnDefaultStockTest extends TestCase
     /**
      * @magentoDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
      * @magentoDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testGetStatusIfNotExistedScopeIdIsPassed(): void
     {
+        $this->expectException(\Magento\Framework\Exception\NoSuchEntityException::class);
+
         $notExistedScopeId = 100;
         $this->stockRegistry->getStockStatusBySku('SKU-1', $notExistedScopeId);
     }

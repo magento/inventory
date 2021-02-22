@@ -49,7 +49,7 @@ class ProductAlertTest extends TestCase
     /**
      * @inheritdoc
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->observer = Bootstrap::getObjectManager()->create(Observer::class);
         $this->sourceItemRepository = Bootstrap::getObjectManager()->get(SourceItemRepositoryInterface::class);

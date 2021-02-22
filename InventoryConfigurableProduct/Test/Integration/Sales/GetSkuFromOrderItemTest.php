@@ -14,7 +14,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class GetSkuFromOrderItemTest
+ * Test for GetSkuFromOrderItem
  */
 class GetSkuFromOrderItemTest extends TestCase
 {
@@ -36,7 +36,7 @@ class GetSkuFromOrderItemTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

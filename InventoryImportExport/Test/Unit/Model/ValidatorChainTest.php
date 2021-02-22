@@ -16,17 +16,17 @@ use PHPUnit\Framework\TestCase;
 class ValidatorChainTest extends TestCase
 {
     /**
-     * @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $qtyValidator;
 
     /**
-     * @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $skuValidator;
 
     /**
-     * @var ValidationResultFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var ValidationResultFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     private $validationResultFactory;
 
@@ -38,7 +38,7 @@ class ValidatorChainTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->validationResultFactory = $this->createMock(ValidationResultFactory::class);
         $this->qtyValidator = $this->getMockBuilder(ValidatorInterface::class)->getMock();

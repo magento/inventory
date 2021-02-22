@@ -53,7 +53,7 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <actionGroup ref="AssertAdminNotifyQtyActionGroup" stepKey="AssertNotifyQty">
-            <argument name="qty" value="10"/>
+            <argument name="qty" value="10.0000"/>
             <argument name="rowIndex" value="0"/>
         </actionGroup>
     </test>

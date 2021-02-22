@@ -21,42 +21,42 @@ use PHPUnit\Framework\TestCase;
 class IndexTableSwitcherTest extends TestCase
 {
     /**
-     * @var IndexTableSwitcher|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexTableSwitcher|\PHPUnit\Framework\MockObject\MockObject
      */
     private $indexTableSwitcher;
 
     /**
-     * @var IndexName|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexName|\PHPUnit\Framework\MockObject\MockObject
      */
     private $indexName;
 
     /**
-     * @var ResourceConnection|\PHPUnit_Framework_MockObject_MockObject
+     * @var ResourceConnection|\PHPUnit\Framework\MockObject\MockObject
      */
     private $resourceConnection;
 
     /**
-     * @var IndexNameResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var IndexNameResolverInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $indexNameResolver;
 
     /**
-     * @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AdapterInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $adapter;
 
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $objectManager = new ObjectManager($this);
         $this->indexName = $this->createMock(IndexName::class);
         $this->resourceConnection = $this->createMock(ResourceConnection::class);
-        $this->indexNameResolver = $this->createMock(IndexNameResolverInterface::class);
-        $this->adapter = $this->createMock(AdapterInterface::class);
+        $this->indexNameResolver = $this->getMockForAbstractClass(IndexNameResolverInterface::class);
+        $this->adapter = $this->getMockForAbstractClass(AdapterInterface::class);
 
         $this->indexTableSwitcher = $objectManager->getObject(
             IndexTableSwitcher::class,
