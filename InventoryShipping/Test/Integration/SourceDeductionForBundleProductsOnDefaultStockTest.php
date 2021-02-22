@@ -175,6 +175,6 @@ class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
                 return $item;
             }
         }
-        return nil;
+        return null;
     }
 }
