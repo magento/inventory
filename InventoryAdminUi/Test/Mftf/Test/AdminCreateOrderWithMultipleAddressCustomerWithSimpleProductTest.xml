@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminCreateOrderWithMultipleAddressCustomerWithSimpleProductTest">
+        <annotations>
+            <stories value="Simple Product Single Stock."/>
+            <title value="Admin Create Order With Multiple Addresses Customer"/>
+            <description value="Verify admin able to create order for customer with multiple addresses on default stock."/>
+            <testCaseId value="MC-40634"/>
+            <useCaseId value="MC-40541"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
+        </annotations>
+
+        <before>
+            <!--Create test data.-->
+            <createData entity="SimpleProduct2" stepKey="product"/>
+            <createData entity="Simple_US_Customer_With_Different_Billing_Shipping_Addresses" stepKey="customer"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <magentoCron stepKey="runCronIndex" groups="index"/>
+        </before>
+        <after>
+            <!--Delete test data.-->
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        </after>
+
+        <!--Create order with simple product quantity.-->
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
+            <argument name="customer" value="$customer$"/>
+        </actionGroup>
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">
+            <argument name="product" value="$product$"/>
+            <argument name="productQty" value="{{defaultProductQty.value}}"/>
+        </actionGroup>
+        <!--Change customer billing address.-->
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="changeBillingAddress">
+            <argument name="customer" value="$customer$"/>
+            <argument name="address" value="US_Address_TX"/>
+        </actionGroup>
+        <!--Verify shipping address didn't change.-->
+        <actionGroup ref="AssertAdminCreateOrderFormShippingAddressActionGroup" stepKey="verifyShippingAddress">
+            <argument name="prefix" value=""/>
+            <argument name="firstname" value="$customer.firstname$"/>
+            <argument name="middleName" value=""/>
+            <argument name="lastname" value="$customer.lastname$"/>
+            <argument name="suffix" value=""/>
+            <argument name="company" value="{{US_Address_NY_Default_Shipping.company}}"/>
+            <argument name="streetLine1" value="{{US_Address_NY_Default_Shipping.street[0]}}"/>
+            <argument name="streetLine2" value="{{US_Address_NY_Default_Shipping.street[1]}}"/>
+            <argument name="city" value="{{US_Address_NY_Default_Shipping.city}}"/>
+            <argument name="country_id" value="{{US_Address_NY_Default_Shipping.country_id}}"/>
+            <argument name="state" value="{{US_Address_NY_Default_Shipping.state}}"/>
+            <argument name="postcode" value="{{US_Address_NY_Default_Shipping.postcode}}"/>
+            <argument name="telephone" value="{{US_Address_NY_Default_Shipping.telephone}}"/>
+            <argument name="fax" value=""/>
+            <argument name="vatNumber" value=""/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
+        <actionGroup ref="SelectCheckMoneyPaymentMethodActionGroup" stepKey="selectCheckMoneyPayment"/>
+        <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
+        <actionGroup ref="VerifyCreatedOrderInformationActionGroup" stepKey="verifyCreatedOrderInformation"/>
+        <!--Verify addresses are different.-->
+        <actionGroup ref="AssertOrderAddressInformationActionGroup" stepKey="verifyAddressInformation">
+            <argument name="customer" value="$customer$"/>
+            <argument name="shippingAddress" value="US_Address_NY_Default_Shipping"/>
+            <argument name="billingAddress" value="US_Address_TX"/>
+            <argument name="customerGroup" value=""/>
+        </actionGroup>
+    </test>
+</tests>
