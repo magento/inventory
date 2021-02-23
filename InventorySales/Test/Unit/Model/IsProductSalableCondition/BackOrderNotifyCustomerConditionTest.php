@@ -117,7 +117,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
      * @dataProvider executeDataProvider
      * @param array|null $stockData
      * @param int $reqQty
-     * @param int $salableQty
+     * @param float $salableQty
      * @param int $backOrders
      * @param bool $manageStock
      * @param array $errors
@@ -126,7 +126,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
     public function testExecute(
         ?array $stockData,
         int $reqQty,
-        int $salableQty,
+        float $salableQty,
         int $backOrders,
         bool $manageStock,
         array $errors
