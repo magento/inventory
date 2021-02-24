@@ -81,11 +81,12 @@
         <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrderToCreateInvoice">
             <argument name="orderId" value="{$orderNumber}"/>
         </actionGroup>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="getOrderIdFromUrl"/>
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Admin Area Create Full Credit Memo-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="startToCreateCreditMemo">
-            <argument name="orderId" value="{$orderNumber}"/>
+            <argument name="orderId" value="{$getOrderIdFromUrl}"/>
         </actionGroup>
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
         <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
