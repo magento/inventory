@@ -69,6 +69,8 @@ class ApplyStatusAttributeJoin
     }
 
     /**
+     * Add status attribute to join.
+     *
      * @param Select $select
      *
      * @return void
@@ -101,6 +103,8 @@ class ApplyStatusAttributeJoin
     }
 
     /**
+     * Get additional condition for provided alias and store id.
+     *
      * @param int $storeId
      * @param string $alias
      *

@@ -60,6 +60,8 @@ class ApplyNameAttributeJoin
     }
 
     /**
+     * Add name attribute to join.
+     *
      * @param Select $select
      *
      * @return void
@@ -92,6 +94,8 @@ class ApplyNameAttributeJoin
     }
 
     /**
+     * Get additional condition for provided alias and store id.
+     *
      * @param int $storeId
      * @param string $alias
      *
