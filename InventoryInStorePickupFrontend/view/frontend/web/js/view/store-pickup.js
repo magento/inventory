@@ -105,10 +105,12 @@ define([
                 code: 'shipping'
             });
 
-            shippingStep.isVisible.subscribe(function (isShippingVisible) {
-                this.isVisible(this.isAvailable && isShippingVisible);
-            }, this);
-            this.isVisible(this.isAvailable && shippingStep.isVisible());
+            if (shippingStep) {
+                shippingStep.isVisible.subscribe(function (isShippingVisible) {
+                    this.isVisible(this.isAvailable && isShippingVisible);
+                }, this);
+                this.isVisible(this.isAvailable && shippingStep.isVisible());
+            }
         },
 
         /**
