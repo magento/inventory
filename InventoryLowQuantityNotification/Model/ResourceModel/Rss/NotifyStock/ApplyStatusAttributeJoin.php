@@ -69,6 +69,8 @@ class ApplyStatusAttributeJoin
     }
 
     /**
+     * Add status attribute to join.
+     *
      * @param Select $select
      *
      * @return void
@@ -101,6 +103,8 @@ class ApplyStatusAttributeJoin
     }
 
     /**
+     * Get additional condition for provided alias and store id.
+     *
      * @param int $storeId
      * @param string $alias
      *
@@ -118,13 +122,13 @@ class ApplyStatusAttributeJoin
         );
 
         return implode(
+            ' ' . Select::SQL_AND . ' ',
             [
                 $alias . '.' . $linkField . ' = product.' . $linkField,
                 $statusVisibilityCondition,
                 $connection->prepareSqlCondition($alias . '.store_id', $storeId),
                 $connection->prepareSqlCondition($alias . '.attribute_id', $attributeId),
-            ],
-            ' ' . Select::SQL_AND . ' '
+            ]
         );
     }
 }
