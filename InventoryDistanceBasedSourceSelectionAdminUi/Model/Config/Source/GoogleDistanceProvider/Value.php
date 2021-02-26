@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelectionAdminUi\Model\Config\Source\GoogleDistanceProvider;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class Value implements ArrayInterface
+class Value implements OptionSourceInterface
 {
     private const MODE_DISTANCE = 'distance';
     private const MODE_TIME = 'time';
