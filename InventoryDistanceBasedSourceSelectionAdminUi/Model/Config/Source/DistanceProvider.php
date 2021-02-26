@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelectionAdminUi\Model\Config\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class DistanceProvider implements ArrayInterface
+class DistanceProvider implements OptionSourceInterface
 {
     /**
      * @var array|string[]
