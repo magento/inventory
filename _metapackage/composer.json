@@ -4,7 +4,7 @@
     "description": "Metapackage with Magento Inventory modules for simple installation",
     "type": "metapackage",
     "require": {
-        "magento/inventory-composer-installer": "1.1.0",
+        "magento/inventory-composer-installer": "1.2.0",
         "magento/module-inventory": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-inventory-advanced-checkout": "*",
@@ -72,6 +72,9 @@
         "magento/module-inventory-visual-merchandiser": "*",
         "magento/module-inventory-swatches-frontend-ui": "*",
         "magento/module-inventory-catalog-frontend-ui": "*",
-        "magento/module-inventory-configurable-product-frontend-ui": "*"
+        "magento/module-inventory-configurable-product-frontend-ui": "*",
+        "magento/module-inventory-wishlist": "*",
+        "magento/module-inventory-catalog-search-bundle-product": "*",
+        "magento/module-inventory-catalog-search-configurable-product": "*"
     }
 }

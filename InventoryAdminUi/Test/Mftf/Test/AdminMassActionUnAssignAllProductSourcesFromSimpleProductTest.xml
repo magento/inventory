@@ -17,6 +17,9 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <skip>
+                <issueId value="MC-41048"/>
+            </skip>
         </annotations>
 
         <before>
@@ -168,4 +171,3 @@
         <dontSee selector="{{AdminProductGridSection.productQtyPerSource('4', $$createFourthCustomSource.source[name]$$)}}" userInput="0" stepKey="checkSourceQtyForFourthCreatedProductForFourthSourceUnassined"/>
     </test>
 </tests>
-

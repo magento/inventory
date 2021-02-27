@@ -148,8 +148,11 @@ class CheckQuoteItemQtyPlugin
         if ($productsSalableResult->isSalable() === false) {
             /** @var ProductSalabilityError $error */
             foreach ($productsSalableResult->getErrors() as $error) {
-                $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
-                    ->setQuoteMessageIndex('qty');
+                $result->setHasError(true)
+                    ->setMessage($error->getMessage())
+                    ->setQuoteMessage($error->getMessage())
+                    ->setQuoteMessageIndex('qty')
+                    ->setErrorCode($error->getCode());
             }
         } else {
             $productSalableResult = $this->backOrderNotifyCustomerCondition->execute($productSku, (int)$stockId, $qty);

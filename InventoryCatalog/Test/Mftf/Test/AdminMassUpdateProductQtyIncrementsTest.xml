@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminMassUpdateProductQtyIncrementsTest">
+        <!-- Start message queue for inventory attributes update consumer -->
+        <actionGroup ref="CliConsumerStartActionGroup" after="updateQtyIncrements" stepKey="startMessageQueue">
+            <argument name="consumerName" value="{{AdminInventoryMassUpdateConsumerData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AdminInventoryMassUpdateConsumerData.messageLimit}}"/>
+        </actionGroup>
+    </test>
+</tests>

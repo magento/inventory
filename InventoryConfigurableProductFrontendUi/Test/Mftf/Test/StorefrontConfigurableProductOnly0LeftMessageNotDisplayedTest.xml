@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontConfigurableProductOnly0LeftMessageNotDisplayedTest">
+        <annotations>
+            <features value="ConfigurableProduct"/>
+            <stories value="Configurable Product Option Quantity"/>
+            <title value="Only 0 Left message should not appear on Configurable product page after option selection"/>
+            <description value="Only 0 Left message should not appear on Configurable product page after option selection"/>
+            <testCaseId value="MC-40415"/>
+            <useCaseId value="MC-40374"/>
+            <severity value="MAJOR"/>
+            <group value="catalog"/>
+            <group value="configurableProduct"/>
+        </annotations>
+
+        <before>
+            <!--Create configurable product-->
+            <createData entity="ApiConfigurableProductWithDescription" stepKey="createConfigurableProduct"/>
+            <!-- Create product attribute with 3 variations -->
+            <createData entity="productDropDownAttribute" stepKey="createProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="productAttributeFirstOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="productAttributeSecondOption">
+                <requiredEntity createDataKey="createProductAttribute"/>
+            </createData>
+            <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultThresholdQty"/>
+            <!-- Reindex invalidated indices after product attribute has been created -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes"/>
+
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+
+            <!--Open configurable product edit page-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openConfigurableProductEditPage">
+                <argument name="productId" value="$createConfigurableProduct.id$)"/>
+            </actionGroup>
+            <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
+            <!--Generate configurations for product-->
+            <actionGroup ref="AdminCreateConfigurationsByAttributeCodeAndNavigateToOptionsQuantityActionGroup" stepKey="generateConfigurationsByAttributeCode">
+                <argument name="attributeCode" value="$createProductAttribute.attribute_code$"/>
+            </actionGroup>
+            <!--Add quantity to product attribute options-->
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForFirstOption">
+                <argument name="frontend_label" value="$createProductAttribute.attribute[frontend_labels][0][label]$"/>
+                <argument name="label" value="$productAttributeFirstOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="2"/>
+            </actionGroup>
+            <actionGroup ref="AddUniqueQuantityToConfigurableProductOptionActionGroup" stepKey="addUniqueQtyForSecondOption">
+                <argument name="frontend_label" value="$createProductAttribute.attribute[frontend_labels][0][label]$"/>
+                <argument name="label" value="$productAttributeSecondOption.option[store_labels][0][label]$"/>
+                <argument name="quantity" value="1"/>
+            </actionGroup>
+            <actionGroup ref="GenerateAndSaveConfiguredProductAfterSettingOptionsActionGroup" stepKey="generateOptionsAndSaveProduct"/>
+        </before>
+
+        <after>
+            <!--Reset configs-->
+            <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyDefaultConfigData.value}}" stepKey="setDefaultThresholdQty"/>
+            <!--Delete created data-->
+            <deleteData createDataKey="createConfigurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="createProductAttribute" stepKey="deleteProductAttribute"/>
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteConfigurableProductOptions">
+                <argument name="product" value="ApiConfigurableProductWithDescription"/>
+            </actionGroup>
+            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
+            <!-- Reindex invalidated indices after product attribute has been deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
+
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
+        </after>
+
+        <!--Check configurable product options on storefront-->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openConfigurableProductViewPage">
+            <argument name="productUrl" value="$createConfigurableProduct.custom_attributes[url_key]$"/>
+        </actionGroup>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="$productAttributeFirstOption.option[store_labels][0][label]$" stepKey="selectFirstOption"/>
+        <waitForPageLoad stepKey="waitForPagePerformAllActions"/>
+        <actionGroup ref="AssertStorefrontConfigurableProductOptionQtyMessageNotVisibleActionGroup" stepKey="dontSeeOnly0LeftMessage">
+            <argument name="leftQtyMessage" value="{{ProductQtyLeft.only_0_left}}"/>
+        </actionGroup>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="$productAttributeSecondOption.option[store_labels][0][label]$" stepKey="selectSecondOption"/>
+        <waitForPageLoad stepKey="waitForPagePerformAllActionsAgain"/>
+        <actionGroup ref="AssertStorefrontConfigurableProductOptionQtyMessageNotVisibleActionGroup" stepKey="dontSeeOnly0LeftMessageAgain">
+            <argument name="leftQtyMessage" value="{{ProductQtyLeft.only_0_left}}"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddToCartCustomOptionsProductPageActionGroup" stepKey="addProductOptionToCart">
+            <argument name="productName" value="$createConfigurableProduct.name$"/>
+        </actionGroup>
+    </test>
+</tests>
