@@ -20,6 +20,7 @@
         </annotations>
 
         <before>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
             <!--Create test data.-->
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <createData entity="FullSource1" stepKey="additionalSource"/>
@@ -37,6 +38,7 @@
             <createData entity="VirtualProduct" stepKey="virtualProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -91,7 +93,7 @@
         <dontSee selector="{{StorefrontCatalogSearchMainSection.searchResults}}" userInput="$groupedProduct.name$" stepKey="verifyProductNotPresentOnStorefront"/>
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="manageStockToNo"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <magentoCLI command="c:c" stepKey="flushCache"/>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage2"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName2">
