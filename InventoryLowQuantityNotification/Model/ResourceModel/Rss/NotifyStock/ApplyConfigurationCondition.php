@@ -11,6 +11,9 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 
+/**
+ * Add configuration condition to select
+ */
 class ApplyConfigurationCondition
 {
     /**
@@ -36,6 +39,8 @@ class ApplyConfigurationCondition
     }
 
     /**
+     * Add additional condition to the select.
+     *
      * @param Select $select
      * @return void
      */
@@ -51,28 +56,28 @@ class ApplyConfigurationCondition
         );
 
         $globalManageStockEnabledCondition = implode(
+            ' ' . Select::SQL_AND . ' ',
             [
                 $connection->prepareSqlCondition('legacy_stock_item.use_config_manage_stock', 1),
                 $connection->prepareSqlCondition($configManageStock, 1),
                 $connection->prepareSqlCondition('main_table.quantity', ['lt' => $qtyCondition]),
-            ],
-            ' ' . Select::SQL_AND . ' '
+            ]
         );
         $globalManageStockDisabledCondition = implode(
+            ' ' . Select::SQL_AND . ' ',
             [
                 $connection->prepareSqlCondition('legacy_stock_item.use_config_manage_stock', 0),
                 $connection->prepareSqlCondition('legacy_stock_item.manage_stock', 1),
                 $connection->prepareSqlCondition('main_table.quantity', ['lt' => $qtyCondition]),
-            ],
-            ' ' . Select::SQL_AND . ' '
+            ]
         );
 
         $condition = implode(
+            ') ' . Select::SQL_OR . ' (',
             [
                 $globalManageStockEnabledCondition,
                 $globalManageStockDisabledCondition,
-            ],
-            ') ' . Select::SQL_OR . ' ('
+            ]
         );
 
         $select->where('(' . $condition . ')');

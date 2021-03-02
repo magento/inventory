@@ -60,6 +60,8 @@ class ApplyNameAttributeJoin
     }
 
     /**
+     * Add name attribute to join.
+     *
      * @param Select $select
      *
      * @return void
@@ -92,6 +94,8 @@ class ApplyNameAttributeJoin
     }
 
     /**
+     * Get additional condition for provided alias and store id.
+     *
      * @param int $storeId
      * @param string $alias
      *
@@ -105,12 +109,12 @@ class ApplyNameAttributeJoin
         $connection = $this->resourceConnection->getConnection();
 
         return implode(
+            ' ' . Select::SQL_AND . ' ',
             [
                 $alias . '.' . $linkField . ' = product.' . $linkField,
                 $connection->prepareSqlCondition($alias . '.store_id', $storeId),
                 $connection->prepareSqlCondition($alias . '.attribute_id', $attributeId),
-            ],
-            ' ' . Select::SQL_AND . ' '
+            ]
         );
     }
 }
