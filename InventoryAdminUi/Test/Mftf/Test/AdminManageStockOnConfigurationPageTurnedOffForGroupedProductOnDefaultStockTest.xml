@@ -39,7 +39,9 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -94,7 +96,9 @@
         <dontSee selector="{{StorefrontCatalogSearchMainSection.searchResults}}" userInput="$groupedProduct.name$" stepKey="verifyProductNotPresentOnStorefront"/>
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="manageStockToNo"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage2"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName2">
