@@ -195,7 +195,9 @@ define([
         preselectLocation: function () {
             var selectedLocation,
                 shippingAddress,
+                selectedPickupAddress,
                 customAttributes,
+                selectedSource,
                 selectedSourceCode,
                 nearestLocation,
                 productsInfo = [],
@@ -215,22 +217,26 @@ define([
 
             shippingAddress = quote.shippingAddress();
             customAttributes = shippingAddress.customAttributes || [];
-            selectedSourceCode = _.findWhere(customAttributes, {
+            selectedSource = _.findWhere(customAttributes, {
                 'attribute_code': 'sourceCode'
             });
 
-            if (!selectedSourceCode &&
-                !_.isEmpty(shippingAddress.extensionAttributes) &&
-                shippingAddress.extensionAttributes['pickup_location_code']
-            ) {
-                selectedSourceCode = {
-                    value: shippingAddress.extensionAttributes['pickup_location_code']
-                };
+            if (selectedSource) {
+                selectedSourceCode = selectedSource.value;
+            }
+
+            if (!selectedSourceCode) {
+                selectedSourceCode = this.getPickupLocationCodeFromAddress(shippingAddress);
+            }
+
+            if (!selectedSourceCode) {
+                selectedPickupAddress = pickupLocationsService.getSelectedPickupAddress();
+                selectedSourceCode = this.getPickupLocationCodeFromAddress(selectedPickupAddress);
             }
 
             if (selectedSourceCode) {
                 pickupLocationsService
-                    .getLocation(selectedSourceCode.value)
+                    .getLocation(selectedSourceCode)
                     .then(function (location) {
                         pickupLocationsService.selectForShipping(location);
                     });
@@ -274,6 +280,21 @@ define([
          */
         isStorePickupAddress: function (address) {
             return address.getType() === 'store-pickup-address';
+        },
+
+        /**
+         * @param {Object} address
+         * @returns {String|null}
+         */
+        getPickupLocationCodeFromAddress: function (address) {
+            if (address &&
+                !_.isEmpty(address.extensionAttributes) &&
+                address.extensionAttributes['pickup_location_code']
+            ) {
+                return address.extensionAttributes['pickup_location_code'];
+            }
+
+            return null;
         }
     });
 });

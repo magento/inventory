@@ -224,6 +224,29 @@ define([
                     return error.parameters.shift();
                 });
             }
+        },
+
+        /**
+         * Returns selected pick up address from local storage
+         *
+         * @returns {Object|null}
+         */
+        getSelectedPickupAddress: function () {
+            var shippingAddress,
+                pickUpAddress;
+
+            if (checkoutData.getSelectedPickupAddress()) {
+                shippingAddress = addressConverter.formAddressDataToQuoteAddress(
+                    checkoutData.getSelectedPickupAddress()
+                );
+                pickUpAddress = pickupAddressConverter.formatAddressToPickupAddress(
+                    shippingAddress
+                );
+
+                return pickUpAddress;
+            }
+
+            return null;
         }
     };
 });

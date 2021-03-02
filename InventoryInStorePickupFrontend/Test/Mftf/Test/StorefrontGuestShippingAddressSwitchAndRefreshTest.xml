@@ -8,12 +8,12 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontGuestBillingAddressPreselectedTest">
+    <test name="StorefrontGuestShippingAddressSwitchAndRefreshTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Billing address should be pre-selected after refreshing checkout page with store pickup delivery method if billing address was provided before"/>
-            <description value="Billing address should be pre-selected after refreshing checkout page with store pickup delivery method if billing address was provided before"/>
-            <testCaseId value="MC-40820"/>
+            <title value="Store should be pre-selected after refreshing shipping page with store pickup delivery method"/>
+            <description value="Store should be pre-selected after refreshing shipping page with store pickup delivery method"/>
+            <testCaseId value="MC-41125"/>
             <useCaseId value="MC-40772"/>
             <severity value="MAJOR"/>
             <group value="msi"/>
@@ -80,41 +80,30 @@
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
-        <!--Navigate to checkout from minicart-->
+        <!--Navigate to checkout-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <!--Filling shipping information and click next-->
-        <actionGroup ref="GuestCheckoutFillingShippingSectionActionGroup" stepKey="guestCheckoutFillingShipping">
-            <argument name="shippingMethod" value="Flat Rate"/>
-            <argument name="customerVar" value="Simple_US_Customer_NY"/>
-            <argument name="customerAddressVar" value="US_Address_NY"/>
+        <!--Fill shipping information-->
+        <actionGroup ref="FillGuestCheckoutShippingAddressWithCountryAndStateActionGroup" stepKey="guestCheckoutFillingShipping">
+            <argument name="customer" value="Simple_US_Customer_NY"/>
+            <argument name="customerAddress" value="US_Address_NY"/>
         </actionGroup>
-        <!--Go back to shipping step and choose Pick In Store and fill all info about pick in store and click next-->
-        <click selector="{{CheckoutHeaderSection.shippingMethodStep}}" stepKey="goToShipping"/>
+        <!--Select flat rate shipping method-->
+        <actionGroup ref="CheckoutSelectFlatRateShippingMethodActionGroup" stepKey="selectFlatRate"/>
+        <!--Switch to In Pick In Store-->
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <!--Click 'Select Store'-->
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <!--Select store-->
         <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
             <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
             <argument name="sourceName" value="$culverSource.source[name]$"/>
         </actionGroup>
-        <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
-        <actionGroup ref="CheckBillingAddressInCheckoutWithBillingAddressOnPaymentPageActionGroup" stepKey="assertBillingAddress1">
-            <argument name="customerVar" value="Simple_US_Customer_NY"/>
-            <argument name="customerAddressVar" value="US_Address_NY"/>
-        </actionGroup>
-        <!--Refresh Page-->
-        <reloadPage stepKey="reloadCheckoutPage"/>
-        <waitForPageLoad stepKey="waitForCheckoutPage"/>
-        <!--Check that billing address is pre-selected-->
-        <dontSeeElement selector="{{CheckoutPaymentSection.billingAddressNotSameCheckbox}}" stepKey="shippingAndBillingAddressAreTheSameIsNotVisible"/>
-        <actionGroup ref="CheckBillingAddressInCheckoutWithBillingAddressOnPaymentPageActionGroup" stepKey="assertBillingAddress2">
-            <argument name="customerVar" value="Simple_US_Customer_NY"/>
-            <argument name="customerAddressVar" value="US_Address_NY"/>
-        </actionGroup>
-        <!--Check that shipping address is "Pick In Store"-->
-        <actionGroup ref="StorefrontAssertShippingInformationActionGroup" stepKey="verifyShippingInformation">
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelected">
             <argument name="sourceName" value="$culverSource.source[name]$"/>
         </actionGroup>
-        <click selector="{{CheckoutHeaderSection.shippingMethodStep}}" stepKey="goToShippingAfterPageRefresh"/>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage"/>
         <!--Verify that store is pre-selected-->
         <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterPageRefresh">
             <argument name="sourceName" value="$culverSource.source[name]$"/>
@@ -125,6 +114,14 @@
         <actionGroup ref="AssertStorefrontGuestCheckoutShippingAddressFormPrefilledActionGroup" stepKey="verifyThatShippingAddressFormIsPrefilledAfterPageRefresh">
             <argument name="customer" value="Simple_US_Customer_NY"/>
             <argument name="address" value="US_Address_NY"/>
+        </actionGroup>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage2"/>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore2"/>
+        <!--Verify that store is pre-selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterPageRefresh2">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
         </actionGroup>
     </test>
 </tests>
