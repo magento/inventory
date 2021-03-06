@@ -71,7 +71,7 @@
         <!--Quick search created product.-->
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToStorefront"/>
         <actionGroup ref="StorefrontCheckQuickSearchActionGroup" stepKey="searchForProduct">
-            <argument name="phrase" value="$$simpleProduct1.name$$"/>
+            <argument name="phrase" value="$$simpleProduct1.sku$$"/>
         </actionGroup>
         <!--Verify searched product.-->
         <actionGroup ref="StorefrontOpenProductFromQuickSearchActionGroup" stepKey="verifyFoundProduct">
@@ -81,7 +81,7 @@
         <!--Advanced search crated product.-->
         <actionGroup ref="GoToStoreViewAdvancedCatalogSearchActionGroup" stepKey="goToStoreViewAdvancedCatalogSearchActionGroup"/>
         <actionGroup ref="StorefrontAdvancedCatalogSearchByProductNameActionGroup" stepKey="searchSecondProduct">
-            <argument name="name" value="$$simpleProduct2.name$$"/>
+            <argument name="name" value="$$simpleProduct2.sku$$"/>
         </actionGroup>
         <!--Verify searched product.-->
         <actionGroup ref="StorefrontCheckAdvancedSearchResultActionGroup" stepKey="storefrontCheckAdvancedSearchResult"/>
