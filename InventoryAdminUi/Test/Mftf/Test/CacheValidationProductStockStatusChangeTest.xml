@@ -73,7 +73,7 @@
         </after>
 
         <!--Verify product is not visible in storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsNotVisible"/>
         <dontSee userInput="$$simpleProduct.name$$" stepKey="verifyProductIsNotVisible"/>
 
@@ -84,7 +84,7 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
 
         <!--Verify product is visible on storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsVisible"/>
         <see userInput="$$simpleProduct.name$$" stepKey="verifyProductIsVisible"/>
     </test>

@@ -113,7 +113,7 @@
         <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setConfigurableOptionToOutOfStock"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}"  stepKey="clickOnSaveButton"/>
         <!--Verify configurable product is not visible on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <dontSee userInput="{{ConfigurableMsiProduct.name}}" stepKey="verifyProductIsNotPresentOnStorefront"/>
         <!--Verify configurable product has 'Out Of Stock' status on PDP.-->

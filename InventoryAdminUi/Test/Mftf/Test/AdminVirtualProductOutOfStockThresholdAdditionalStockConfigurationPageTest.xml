@@ -73,7 +73,7 @@
         <magentoCLI command="indexer:reindex" stepKey="reindexAfterOutOfStockThresholdSet"/>
         <magentoCLI command="cache:flush" stepKey="flushCacheAfterOutOfStockThresholdSet"/>
         <!--Verify product is not visible on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <dontSee userInput="$$product.name$$" stepKey="verifyProductIsNotPresentOnStorefront"/>
         <!--Change 'Out of Stock' Threshold.-->

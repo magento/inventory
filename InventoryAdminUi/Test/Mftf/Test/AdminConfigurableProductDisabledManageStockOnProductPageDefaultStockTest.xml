@@ -136,7 +136,7 @@
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkRedConfigurableVariationSaveMessage"/>
 
         <comment userInput="Check, configurable product is absent on category page and has 'Out of Stock' status" stepKey="checkConfigurableProductIsAbsentOnCategoryPageAndHasOutOfStockStatusOnViewPageComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateBackToConfigurableCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateBackToConfigurableCategoryPage"/>
         <waitForPageLoad stepKey="waitForPageLoad7"/>
         <dontSee userInput="{{ConfigurableMsiProduct.name}}" stepKey="checkConfigurableProductIsAbsentOnCategoryPage"/>
         <comment userInput="Set 'Manage Stock' to no for configurable children" stepKey="setManageStockToNoForConfigurableChildrenComment"/>

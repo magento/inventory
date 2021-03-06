@@ -105,7 +105,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$downloadableProduct1.product[name]$$)}}" stepKey="openProductPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
@@ -151,7 +151,7 @@
         <waitForPageLoad stepKey="waitForPageLoad24"/>
         <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="Complete" stepKey="checkOrderStatus"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategoryPage2"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage2"/>
         <see selector=".empty" userInput="We can't find products matching the selection." stepKey="seeErrorMessage1"/>
     </test>
 </tests>
