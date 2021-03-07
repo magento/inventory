@@ -94,7 +94,7 @@
         <!--Advanced search crated product.-->
         <actionGroup ref="GoToStoreViewAdvancedCatalogSearchActionGroup" stepKey="goToStoreViewAdvancedCatalogSearchActionGroup"/>
         <actionGroup ref="StorefrontAdvancedCatalogSearchByProductNameActionGroup" stepKey="searchSecondProduct">
-            <argument name="name" value="$$simpleProduct2.name$$"/>
+            <argument name="name" value="$$simpleProduct2.sku$$"/>
         </actionGroup>
         <!--Verify searched product.-->
         <actionGroup ref="StorefrontCheckAdvancedSearchResultActionGroup" stepKey="storefrontCheckAdvancedSearchResult"/>
