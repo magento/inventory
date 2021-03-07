@@ -37,7 +37,7 @@
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
-            <createData entity="_defaultProduct" stepKey="simpleProduct2">
+            <createData entity="SimpleProduct" stepKey="simpleProduct2">
                 <field key="price">40.00</field>
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
@@ -71,21 +71,21 @@
         <!--Quick search created product.-->
         <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToStorefront"/>
         <actionGroup ref="StorefrontCheckQuickSearchActionGroup" stepKey="searchForProduct">
-            <argument name="phrase" value="$$simpleProduct1.sku$$"/>
+            <argument name="phrase" value="$$simpleProduct1.name$$"/>
         </actionGroup>
         <!--Verify searched product.-->
         <actionGroup ref="StorefrontOpenProductFromQuickSearchActionGroup" stepKey="verifyFoundProduct">
             <argument name="productName" value="$$simpleProduct1.name$$"/>
             <argument name="productUrlKey" value="$$simpleProduct1.custom_attributes[url_key]$$"/>
         </actionGroup>
-        <!--Advanced search crated product.-->
+        <!--Advanced search created product.-->
         <actionGroup ref="GoToStoreViewAdvancedCatalogSearchActionGroup" stepKey="goToStoreViewAdvancedCatalogSearchActionGroup"/>
         <actionGroup ref="StorefrontAdvancedCatalogSearchByProductNameActionGroup" stepKey="searchSecondProduct">
-            <argument name="name" value="$$simpleProduct2.sku$$"/>
+            <argument name="name" value="$$simpleProduct2.name$$"/>
         </actionGroup>
         <!--Verify searched product.-->
         <actionGroup ref="StorefrontCheckAdvancedSearchResultActionGroup" stepKey="storefrontCheckAdvancedSearchResult"/>
-        <see userInput="1 item" selector="{{StorefrontCatalogSearchAdvancedResultMainSection.itemFound}}" stepKey="verifyProductCount"/>
+        <see userInput="2 items" selector="{{StorefrontCatalogSearchAdvancedResultMainSection.itemFound}}" stepKey="verifyProductCount"/>
         <see userInput="$$simpleProduct2.name$$" selector="{{StorefrontCatalogSearchAdvancedResultMainSection.productName}}" stepKey="verifyProductName"/>
     </test>
 </tests>
