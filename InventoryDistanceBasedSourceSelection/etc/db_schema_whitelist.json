@@ -1,6 +1,7 @@
 {
     "inventory_geoname": {
         "column": {
+            "entity_id": true,
             "country_code": true,
             "zip_code": true,
             "city": true,
@@ -9,6 +10,9 @@
             "latitude": true,
             "longitude": true,
             "postcode": true
+        },
+        "constraint": {
+            "PRIMARY": true
         }
     }
 }
