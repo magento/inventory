@@ -104,7 +104,6 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
      * Verify inventory:reservations:list-inconsistencies will return correct items qty for a partially shipped order.
      *
      * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/create_partially_shipped_order.php
-     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservations.php
      * @throws \Magento\Framework\Validation\ValidationException
      */
     public function testPartiallyShippedOrderWithMissingReservations(): void
