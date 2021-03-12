@@ -11,9 +11,9 @@ use Exception;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
-use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\Framework\Model\ResourceModel\PredefinedId;
+use Magento\InventoryApi\Api\Data\SourceInterface;
+use Magento\InventoryApi\Model\SourceCarrierLinkManagementInterface;
 
 /**
  * Implementation of basic operations for Source entity for specific db layer
@@ -63,6 +63,12 @@ class Source extends AbstractDb
     protected function _construct()
     {
         $this->_init(self::TABLE_NAME_SOURCE, SourceInterface::SOURCE_CODE);
+        $this->addUniqueField(
+            [
+                'field' => SourceInterface::NAME,
+                'title' => 'Name'
+            ]
+        );
     }
 
     /**
@@ -84,6 +90,7 @@ class Source extends AbstractDb
         $connection = $this->getConnection();
         $connection->beginTransaction();
         try {
+            $object->isObjectNew(!$this->isObjectNotNew($object));
             parent::save($object);
             /** @var SourceInterface $object */
             $this->sourceCarrierLinkManagement->saveCarrierLinksBySource($object);
