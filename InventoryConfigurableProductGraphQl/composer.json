@@ -1,0 +1,31 @@
+{
+    "name": "magento/module-inventory-configurable-product-graph-ql",
+    "description": "N/A",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/module-catalog": "*",
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-inventory-catalog-api": "*",
+        "magento/module-inventory-indexer": "*",
+        "magento/module-store": "*",
+        "magento/module-catalog-inventory": "*",
+        "magento/module-sales": "*",
+        "magento/module-inventory-configurable-product": "*",
+        "magento/module-configurable-product": "*",
+        "magento/module-configurable-product-graph-ql": "*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventoryConfigurableProductGraphQl\\": ""
+        }
+    }
+}
