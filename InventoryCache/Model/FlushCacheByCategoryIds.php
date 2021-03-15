@@ -8,14 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryCache\Model;
 
 /**
- * Clean cache for given product ids.
+ * Clean cache for given category ids.
  */
-class FlushCacheByProductIds
+class FlushCacheByCategoryIds
 {
     /**
      * @var string
      */
-    private $productCacheTag;
+    private $categoryCacheTag;
 
     /**
      * @var FlushCacheByCacheTag
@@ -23,25 +23,25 @@ class FlushCacheByProductIds
     private $flushCacheByCacheTag;
 
     /**
-     * @param string $productCacheTag
+     * @param string $categoryCacheTag
      * @param FlushCacheByCacheTag $flushCacheByCacheTag
      */
     public function __construct(
-        string $productCacheTag,
+        string $categoryCacheTag,
         FlushCacheByCacheTag $flushCacheByCacheTag
     ) {
-        $this->productCacheTag = $productCacheTag;
+        $this->categoryCacheTag = $categoryCacheTag;
         $this->flushCacheByCacheTag = $flushCacheByCacheTag;
     }
 
     /**
-     * Clean cache for given product ids.
+     * Clean cache for given category ids.
      *
-     * @param array $productIds
+     * @param array $categoryIds
      * @return void
      */
-    public function execute(array $productIds): void
+    public function execute(array $categoryIds): void
     {
-        $this->flushCacheByCacheTag->execute($this->productCacheTag, $productIds);
+        $this->flushCacheByCacheTag->execute($this->categoryCacheTag, $categoryIds);
     }
 }
