@@ -98,7 +98,7 @@
         </actionGroup>
         <!--Verify searched product.-->
         <actionGroup ref="StorefrontCheckAdvancedSearchResultActionGroup" stepKey="storefrontCheckAdvancedSearchResult"/>
-        <see userInput="2 items" selector="{{StorefrontCatalogSearchAdvancedResultMainSection.itemFound}}" stepKey="verifyProductCount"/>
+        <see userInput="1 item" selector="{{StorefrontCatalogSearchAdvancedResultMainSection.itemFound}}" stepKey="verifyProductCount"/>
         <see userInput="$$simpleProduct2.name$$" selector="{{StorefrontCatalogSearchAdvancedResultMainSection.productName}}" stepKey="verifyProductName"/>
     </test>
 </tests>
