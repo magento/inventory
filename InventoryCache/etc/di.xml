@@ -17,6 +17,11 @@
             <argument name="productCacheTag" xsi:type="const">Magento\Catalog\Model\Product::CACHE_TAG</argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryCache\Model\FlushCacheByCategoryIds">
+        <arguments>
+            <argument name="categoryCacheTag" xsi:type="const">Magento\Catalog\Model\Product::CACHE_PRODUCT_CATEGORY_TAG</argument>
+        </arguments>
+    </type>
     <type name="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus">
         <plugin name="invalidate_products_cache" type="Magento\InventoryCache\Plugin\InventoryIndexer\Queue\Reservation\UpdateSalabilityStatus\CacheFlush" />
     </type>
