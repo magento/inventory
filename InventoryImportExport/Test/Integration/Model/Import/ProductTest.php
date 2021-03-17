@@ -17,6 +17,7 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\MessageQueue\MessageEncoder;
+use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
@@ -111,9 +112,9 @@ class ProductTest extends TestCase
         $this->productImporterFactory = $this->objectManager->get(ProductFactory::class);
         $this->searchCriteriaBuilderFactory = $this->objectManager->get(SearchCriteriaBuilderFactory::class);
         $this->sourceItemRepository = $this->objectManager->get(SourceItemRepositoryInterface::class);
-        $this->queue = $this->objectManager->create(
-            Queue::class,
-            ['queueName' => 'inventory.source.items.cleanup']
+        $this->queue = $this->objectManager->get(QueueFactoryInterface::class)->create(
+            'inventory.source.items.cleanup',
+            'db'
         );
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
         $this->consumer = $this->objectManager->get(DeleteSourceItemsBySkus::class);
