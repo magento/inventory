@@ -93,27 +93,12 @@ class OutStockBottomSortingPlugin
         $stockId = (int)$stock->getStockId();
 
         if ($stockId === $this->defaultStockProvider->getId()) {
-            if (!$this->moduleManager->isEnabled('Magento_CatalogInventory')) {
-                return $collection;
-            }
-
-            $collection->joinField(
-                'is_in_stock',
-                'cataloginventory_stock_item',
-                'is_in_stock',
-                'product_id=entity_id',
-                ['stock_id' => $this->getStockId()],
-                'left'
-            );
-
-            $collection->getSelect()
-                ->reset(Select::ORDER)
-                ->order('is_in_stock '.$collection::SORT_ORDER_DESC);
-        } else {
-            $collection->getSelect()
-                ->reset(Select::ORDER)
-                ->order('inventory_stock.is_salable '.$collection::SORT_ORDER_DESC);
+            return $proceed($collection);
         }
+
+        $collection->getSelect()
+            ->reset(Select::ORDER)
+            ->order('inventory_stock.is_salable '.$collection::SORT_ORDER_DESC);
 
         return $collection;
     }
