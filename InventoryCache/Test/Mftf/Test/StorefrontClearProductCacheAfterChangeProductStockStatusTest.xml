@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontClearProductCacheAfterChangeProductStockStatusTest">
+        <annotations>
+            <stories value="Bundle Product Custom Stock."/>
+            <title value="The product cache should be cleared after changing the stock status of a product"/>
+            <description value="The product cache should be cleared after changing the stock status of a product"/>
+            <testCaseId value="MC-41038"/>
+            <useCaseId value="MC-40889"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create test data.-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="source"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="bundleProduct"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="DropDownBundleOption" stepKey="bundleOption">
+                <requiredEntity createDataKey="bundleProduct"/>
+            </createData>
+            <createData entity="ApiBundleLink" stepKey="bundleLink">
+                <requiredEntity createDataKey="bundleProduct"/>
+                <requiredEntity createDataKey="bundleOption"/>
+                <requiredEntity createDataKey="product"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign source and set quantity-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openSimpleProductEditPage">
+                <argument name="productId" value="$product.id$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
+                <argument name="sourceQty" value="{{minimalProductQty.value}}"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductWithSource"/>
+            <!--Assign bundle product to category.-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openBundleProductEditPage">
+                <argument name="productId" value="$bundleProduct.id$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignCategoryToProduct">
+                <argument name="categoryName" value="$category.name$"/>
+            </actionGroup>
+            <magentoCLI command="indexer:set-mode" arguments="schedule" stepKey="setIndexerMode"/>
+            <magentoCLI command="cron:run" arguments="--group index" stepKey="cronRun"/>
+            <magentoCLI command="cron:run" arguments="--group index" stepKey="cronRunToStartReindex"/>
+        </before>
+        <after>
+            <!-- Change indexers to "Update on Save" mode -->
+            <magentoCLI command="indexer:set-mode" arguments="realtime" stepKey="setRealtimeMode"/>
+            <!--Delete test data.-->
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Disable created sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+        <!--1. Assert simple and bundle products are visible on category page -->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertSimpleProductPresentOnCategory">
+            <argument name="category" value="$category$"/>
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertBundleProductPresentOnCategory">
+            <argument name="category" value="$category$"/>
+            <argument name="product" value="$bundleProduct$"/>
+        </actionGroup>
+        <!--2. Set child product stock status to "Out of Stock" -->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openSimpleProductEdit">
+            <argument name="productId" value="$product.id$"/>
+        </actionGroup>
+        <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setSimpleProductStatusToOutOfStock">
+            <argument name="sourceCode" value="$source.source[source_code]$"/>
+            <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveChildProductOutOfStockStatus"/>
+        <!--3. Assert products are not visible on category page -->
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="assertSimpleProductAbsentOnCategory">
+            <argument name="categoryUrlKey" value="$category.name$"/>
+            <argument name="productName" value="$product.name$"/>
+        </actionGroup>
+        <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="assertBundleProductAbsentOnCategory">
+            <argument name="categoryUrlKey" value="$category.name$"/>
+            <argument name="productName" value="$bundleProduct.name$"/>
+        </actionGroup>
+        <!--4. Set child product stock status to "In Stock" -->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="editSimpleProduct">
+            <argument name="productId" value="$product.id$"/>
+        </actionGroup>
+        <actionGroup ref="AdminChangeSourceStockStatusActionGroup" stepKey="setSimpleProductStatusToInStock">
+            <argument name="sourceCode" value="$source.source[source_code]$"/>
+            <argument name="sourceStatus" value="{{SourceStatusInStock.value}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveSimpleProductInStockStatus"/>
+        <!--5. Assert simple and bundle products are visible on category page -->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="simpleProductPresentOnCategory">
+            <argument name="category" value="$category$"/>
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="bundleProductPresentOnCategory">
+            <argument name="category" value="$category$"/>
+            <argument name="product" value="$bundleProduct$"/>
+        </actionGroup>
+    </test>
+</tests>
