@@ -18,7 +18,7 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/419537/scenarios/1620162
      */
-    public function testPlaceOrderWithInStockProduct()
+    public function testPlaceOrderWithInStockProduct(): void
     {
         $groupedSku = 'grouped_in_stock';
         $simpleSku = 'simple_11';
@@ -48,7 +48,7 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      */
-    public function testPlaceOrderWithOutOffStockProduct()
+    public function testPlaceOrderWithOutOffStockProduct(): void
     {
         $groupedSku = 'grouped_out_of_stock';
         $simpleSku = 'simple_11';
@@ -77,7 +77,7 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
      */
-    public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn()
+    public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn(): void
     {
         $groupedSku = 'grouped_out_of_stock';
         $simpleSku = 'simple_11';
@@ -109,7 +109,7 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
      */
-    public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
+    public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff(): void
     {
         $groupedSku = 'grouped_out_of_stock';
         $simpleSku = 'simple_11';
