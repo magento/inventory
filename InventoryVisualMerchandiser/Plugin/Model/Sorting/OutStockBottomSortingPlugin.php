@@ -98,7 +98,7 @@ class OutStockBottomSortingPlugin
 
         $collection->getSelect()
             ->reset(Select::ORDER)
-            ->order('inventory_stock.is_salable '.$collection::SORT_ORDER_DESC);
+            ->order('inventory_stock.is_salable ' . Select::SQL_DESC);
 
         return $collection;
     }
