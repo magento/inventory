@@ -101,16 +101,24 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     private $handler;
 
-    /** @var Queue */
+    /**
+     * @var Queue
+     */
     private $queue;
 
-    /** @var MessageEncoder */
+    /**
+     * @var MessageEncoder
+     */
     private $messageEncoder;
 
-    /** @var ResourceConnection */
+    /**
+     * @var ResourceConnection
+     */
     private $resource;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $orderIdToDelete;
 
     /**
@@ -370,6 +378,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
+     * Get product reservation by the sku
+     *
      * @param string $sku
      * @return array
      */
