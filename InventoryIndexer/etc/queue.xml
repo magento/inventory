@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/queue.xsd">
+    <broker topic="inventory.reservations.updateSalabilityStatus" exchange="magento-db" type="db">
+        <queue name="inventory.reservations.updateSalabilityStatus" consumer="inventory.reservations.updateSalabilityStatus" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus::execute"/>
+    </broker>
+    <broker topic="inventory.indexer.sourceItem" exchange="magento-db" type="db">
+        <queue name="inventory.indexer.sourceItem" consumer="inventory.indexer.sourceItem" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync::executeList"/>
+    </broker>
+    <broker topic="inventory.indexer.stock" exchange="magento-db" type="db">
+        <queue name="inventory.indexer.stock" consumer="inventory.indexer.stock" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync::executeList"/>
+    </broker>
+</config>
