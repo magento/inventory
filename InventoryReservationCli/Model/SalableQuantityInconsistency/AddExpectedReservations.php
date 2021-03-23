@@ -72,7 +72,7 @@ class AddExpectedReservations
 
             $reservation = $this->reservationBuilder
                 ->setSku($data['sku'])
-                ->setQuantity((float)$data['qty_ordered'])
+                ->setQuantity($this->calculateReservationQty($data))
                 ->setStockId($stockId)
                 ->setMetadata($this->serializer->serialize(
                     [
@@ -85,5 +85,21 @@ class AddExpectedReservations
             $collector->addReservation($reservation);
             $collector->addOrderData($data);
         }
+    }
+
+    /**
+     * Return reservation qty amount
+     *
+     * @param array $data
+     * @return float
+     */
+    private function calculateReservationQty(array $data): float
+    {
+        $qty = $data['qty_ordered'];
+        $qty -= $data['qty_canceled'];
+        $qty -= $data['qty_refunded'];
+        $qty -= $data['is_virtual'] ? $data['qty_invoiced'] : $data['qty_shipped'];
+
+        return (float)$qty;
     }
 }
