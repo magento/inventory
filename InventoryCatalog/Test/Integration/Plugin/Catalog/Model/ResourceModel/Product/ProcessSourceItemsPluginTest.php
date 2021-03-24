@@ -7,17 +7,20 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration\Plugin\Catalog\Model\ResourceModel\Product;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\ResourceModel\Product as ResourceProduct;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\MessageQueue\QueueInterface;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
+use Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\ProcessSourceItemsPlugin;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\Interception\PluginList;
 use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +44,7 @@ class ProcessSourceItemsPluginTest extends TestCase
     private $messageEncoder;
 
     /** @var DeleteSourceItemsBySkus */
-    private $consumer;
+    private $handler;
 
     /** @var string */
     private $currentSku;
@@ -58,11 +61,16 @@ class ProcessSourceItemsPluginTest extends TestCase
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
+    /** @var Registry */
+    private $registry;
+
     /**
      * @inheritDoc
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->objectManager = Bootstrap::getObjectManager();
         $this->deleteTopicMessages = $this->objectManager->get(DeleteTopicRelatedMessages::class);
         $this->queue = $this->objectManager->get(QueueFactoryInterface::class)->create(
@@ -70,11 +78,12 @@ class ProcessSourceItemsPluginTest extends TestCase
             'db'
         );
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
-        $this->consumer = $this->objectManager->get(DeleteSourceItemsBySkus::class);
+        $this->handler = $this->objectManager->get(DeleteSourceItemsBySkus::class);
         $this->getSourceItemsBySku = $this->objectManager->get(GetSourceItemsBySkuInterface::class);
         $this->getSourceItemConfigurationsBySku = $this->objectManager->get(GetBySku::class);
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
         $this->productRepository->cleanCache();
+        $this->registry = $this->objectManager->get(Registry::class);
     }
 
     /**
@@ -82,11 +91,23 @@ class ProcessSourceItemsPluginTest extends TestCase
      */
     protected function tearDown(): void
     {
-        if ($this->getName() == 'testUpdateProductSkuSynchronizeWithCatalog') {
-            $this->clearNewSku($this->newSku, $this->currentSku);
+        if ($this->newSku) {
+            $this->deleteProductBySku($this->newSku);
         }
 
         parent::tearDown();
+    }
+
+    /**
+     * @return void
+     */
+    public function testProcessSourceItemsPluginIsRegistered(): void
+    {
+        $pluginInfo = $this->objectManager->get(PluginList::class)->get(ResourceProduct::class);
+        $this->assertSame(
+            ProcessSourceItemsPlugin::class,
+            $pluginInfo['process_source_items_after_product_save']['instance']
+        );
     }
 
     /**
@@ -96,7 +117,7 @@ class ProcessSourceItemsPluginTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryLowQuantityNotificationApi::Test/_files/source_item_configuration.php
-     * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
+     * @magentoConfigFixture default/cataloginventory/options/synchronize_with_catalog 1
      * @magentoDbIsolation disabled
      * @return void
      */
@@ -104,8 +125,8 @@ class ProcessSourceItemsPluginTest extends TestCase
     {
         $this->deleteTopicMessages->execute('inventory.source.items.cleanup');
         $this->currentSku = 'SKU-1';
-        $this->newSku = 'SKU-1' . '-new';
-        $this->updateProduct($this->currentSku, ['sku' => $this->newSku]);
+        $this->newSku = 'SKU-1-new';
+        $this->updateProductSku($this->currentSku, $this->newSku);
         $this->processMessages('inventory.source.items.cleanup');
         self::assertEmpty($this->getSourceItemsBySku->execute($this->currentSku));
         self::assertEmpty($this->getSourceItemConfigurationsBySku->execute($this->currentSku));
@@ -121,39 +142,42 @@ class ProcessSourceItemsPluginTest extends TestCase
     {
         $envelope = $this->queue->dequeue();
         $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
-        $this->consumer->execute($decodedMessage);
+        $this->handler->execute($decodedMessage);
     }
 
     /**
-     * Update product
+     * Update product sku
      *
      * @param string $productSku
-     * @param array $data
-     * @return ProductInterface
+     * @param string $newSku
+     * @return void
      */
-    private function updateProduct(string $productSku, array $data): ProductInterface
+    private function updateProductSku(string $productSku, string $newSku): void
     {
         $product = $this->productRepository->get($productSku);
-        $product->addData($data);
-
-        return $this->productRepository->save($product);
+        $product->setSku($newSku);
+        $this->productRepository->save($product);
     }
 
     /**
-     * Returns the old product sku
+     * Delete product by sku in secure area
      *
-     * @param string $newSku
-     * @param string $previousSku
+     * @param string $sku
      * @return void
      */
-    private function clearNewSku(string $newSku, string $previousSku): void
+    private function deleteProductBySku(string $sku): void
     {
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', true);
+
         try {
-            $product = $this->productRepository->get($newSku);
-            $product->setSku($previousSku);
-            $this->productRepository->save($product);
+            $product = $this->productRepository->get($sku);
+            $this->productRepository->delete($product);
         } catch (NoSuchEntityException $exception) {
             // product doesn't exist;
         }
+
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', false);
     }
 }

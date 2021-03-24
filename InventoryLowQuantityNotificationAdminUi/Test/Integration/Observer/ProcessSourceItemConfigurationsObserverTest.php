@@ -10,10 +10,11 @@ namespace Magento\InventoryLowQuantityNotificationAdminUi\Test\Integration\Obser
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Save;
-use Magento\Framework\DataObject;
+use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Registry;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\DeleteMultiple;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\InventoryLowQuantityNotificationAdminUi\Observer\ProcessSourceItemConfigurationsObserver;
@@ -54,6 +55,12 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
     /** @var DeleteMultiple */
     private $deleteSourceItemConfigurations;
 
+    /** @var DataObjectFactory */
+    private $dataObjectFactory;
+
+    /** @var Registry */
+    private $registry;
+
     /**
      * @inheritdoc
      */
@@ -68,6 +75,8 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
         $this->adminProductSaveController = $this->objectManager->get(Save::class);
         $this->getSourceItemConfigurationsBySku = $this->objectManager->get(GetBySku::class);
         $this->deleteSourceItemConfigurations = $this->objectManager->get(DeleteMultiple::class);
+        $this->dataObjectFactory = $this->objectManager->get(DataObjectFactory::class);
+        $this->registry = $this->objectManager->get(Registry::class);
     }
 
     /**
@@ -75,8 +84,8 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
      */
     protected function tearDown(): void
     {
-        if ($this->getName() == 'testUpdateProductSkuInMultipleSourceMode') {
-            $this->clearNewSku($this->newSku, $this->currentSku);
+        if ($this->newSku) {
+            $this->deleteProductBySku($this->newSku);
             $this->clearLowStockNotificationBySku($this->newSku);
         }
 
@@ -90,18 +99,18 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryLowQuantityNotificationApi::Test/_files/source_item_configuration.php
-     * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
+     * @magentoConfigFixture default/cataloginventory/options/synchronize_with_catalog 1
      * @magentoDbIsolation disabled
      * @return void
      */
     public function testUpdateProductSkuInMultipleSourceMode(): void
     {
         $this->currentSku = 'SKU-1';
-        $this->newSku = 'SKU-1' . '-new';
+        $this->newSku = 'SKU-1-new';
         $product = $this->productRepository->get($this->currentSku);
         $assignedSources = $this->prepareAssignedSources($product->getSku());
 
-        $product = $this->updateProduct($this->currentSku, ['sku' => $this->newSku]);
+        $product = $this->updateProductSku($this->currentSku, $this->newSku);
         $this->prepareAdminProductSaveController($product, $assignedSources);
         $this->observer->execute($this->getEventObserver($product));
 
@@ -131,8 +140,7 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
      */
     private function getEventObserver(ProductInterface $product): Observer
     {
-        /** @var DataObject $event */
-        $event = $this->objectManager->create(DataObject::class);
+        $event = $this->dataObjectFactory->create();
         $event->setController($this->adminProductSaveController)
             ->setProduct($product);
 
@@ -144,16 +152,16 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
     }
 
     /**
-     * Update product
+     * Update product sku
      *
      * @param string $productSku
-     * @param array $data
+     * @param string $newSku
      * @return ProductInterface
      */
-    private function updateProduct(string $productSku, array $data): ProductInterface
+    private function updateProductSku(string $productSku, string $newSku): ProductInterface
     {
         $product = $this->productRepository->get($productSku);
-        $product->addData($data);
+        $product->setSku($newSku);
 
         return $this->productRepository->save($product);
     }
@@ -176,21 +184,25 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
     }
 
     /**
-     * Returns the old product sku
+     * Delete product by sku in secure area
      *
-     * @param string $newSku
-     * @param string $previousSku
+     * @param string $sku
      * @return void
      */
-    private function clearNewSku(string $newSku, string $previousSku): void
+    private function deleteProductBySku(string $sku): void
     {
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', true);
+
         try {
-            $product = $this->productRepository->get($newSku);
-            $product->setSku($previousSku);
-            $this->productRepository->save($product);
+            $product = $this->productRepository->get($sku);
+            $this->productRepository->delete($product);
         } catch (NoSuchEntityException $exception) {
             // product doesn't exist;
         }
+
+        $this->registry->unregister('isSecureArea');
+        $this->registry->register('isSecureArea', false);
     }
 
     /**
@@ -202,6 +214,7 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
     private function prepareAssignedSources(string $sku): array
     {
         $sourceItemsConfigurations = $this->getSourceItemConfigurationsBySku->execute($sku);
+        $assignedSourceCodes = [];
         foreach ($sourceItemsConfigurations as $sourceNotifyQty) {
             $assignedSourceCodes[] = [
                 SourceItemConfigurationInterface::SKU => $sourceNotifyQty->getSku(),
@@ -211,7 +224,7 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
             ];
         }
 
-        return $assignedSourceCodes ?: [];
+        return $assignedSourceCodes;
     }
 
     /**
