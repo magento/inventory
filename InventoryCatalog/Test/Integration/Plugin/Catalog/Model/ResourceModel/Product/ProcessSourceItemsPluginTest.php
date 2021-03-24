@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Test\Api;
+namespace Magento\InventoryCatalog\Test\Integration\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -97,6 +97,7 @@ class ProcessSourceItemsPluginTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryLowQuantityNotificationApi::Test/_files/source_item_configuration.php
      * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
+     * @magentoDbIsolation disabled
      * @return void
      */
     public function testUpdateProductSkuSynchronizeWithCatalog(): void

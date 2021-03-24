@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalogAdminUi\Observer;
+namespace Magento\InventoryCatalogAdminUi\Test\Integration\Observer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -17,6 +17,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalog\Model\GetSourceItemsBySkuAndSourceCodes;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
+use Magento\InventoryCatalogAdminUi\Observer\ProcessSourceItemsObserver;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -88,6 +89,7 @@ class ProcessSourceItemsObserverTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
+     * @magentoDbIsolation disabled
      * @return void
      */
     public function testUpdateProductSkuInMultipleSourceMode(): void

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryLowQuantityNotificationAdminUi\Observer;
+namespace Magento\InventoryLowQuantityNotificationAdminUi\Test\Integration\Observer;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -16,6 +16,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\DeleteMultiple;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
+use Magento\InventoryLowQuantityNotificationAdminUi\Observer\ProcessSourceItemConfigurationsObserver;
 use Magento\InventoryLowQuantityNotificationApi\Api\Data\SourceItemConfigurationInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -90,6 +91,7 @@ class ProcessSourceItemConfigurationsObserverTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryLowQuantityNotificationApi::Test/_files/source_item_configuration.php
      * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
+     * @magentoDbIsolation disabled
      * @return void
      */
     public function testUpdateProductSkuInMultipleSourceMode(): void
