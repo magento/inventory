@@ -17,6 +17,15 @@ define(['underscore'], function (_) {
                 'attribute_code': 'sourceCode'
             });
 
+            if (!sourceCode &&
+                !_.isEmpty(address.extensionAttributes) &&
+                address.extensionAttributes['pickup_location_code']
+            ) {
+                sourceCode = {
+                    value: address.extensionAttributes['pickup_location_code']
+                };
+            }
+
             if (sourceCode && address.getType() !== 'store-pickup-address') {
                 address = _.extend({}, address, {
                     saveInAddressBook: 0,
