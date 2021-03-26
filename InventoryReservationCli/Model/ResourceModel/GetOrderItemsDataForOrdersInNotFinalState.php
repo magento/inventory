@@ -85,7 +85,15 @@ class GetOrderItemsDataForOrdersInNotFinalState
             ->join(
                 ['item' => $orderItemTableName],
                 'item.order_id = main_table.entity_id',
-                ['item.sku', 'item.qty_ordered']
+                [
+                    'item.sku',
+                    'item.is_virtual',
+                    'item.qty_ordered',
+                    'item.qty_canceled',
+                    'item.qty_invoiced',
+                    'item.qty_refunded',
+                    'item.qty_shipped'
+                ]
             )
             ->where('main_table.entity_id IN (?)', $entityIds)
             ->where('item.product_type IN (?)', $this->allowedProductTypesForSourceItemManagement->execute());
