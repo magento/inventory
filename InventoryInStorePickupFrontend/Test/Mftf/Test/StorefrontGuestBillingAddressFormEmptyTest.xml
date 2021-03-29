@@ -8,19 +8,15 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontBillingAddressClearFieldsAfterRefreshingPageTest">
+    <test name="StorefrontGuestBillingAddressFormEmptyTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Billing address fields should be cleared after refreshing checkout page with store pickup delivery method"/>
-            <description value="Verify billing address checkout fields will be cleared after refreshing page with store pickup and simple product on custom source"/>
-            <testCaseId value="MC-40489"/>
-            <useCaseId value="MC-40303"/>
-            <severity value="CRITICAL"/>
+            <title value="Billing address form should be empty after refreshing checkout page with store pickup delivery method if billing address was not provided before"/>
+            <description value="Billing address form should be empty after refreshing checkout page with store pickup delivery method if billing address was not provided before"/>
+            <testCaseId value="MC-40821"/>
+            <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="store_pickup"/>
-            <skip>
-                <issueId value="DEPRECATED">Use StorefrontGuestBillingAddressFormEmptyTest</issueId>
-            </skip>
         </annotations>
         <before>
             <!--Set Distance Provider for Distance Based SSA to offline-->
@@ -83,29 +79,31 @@
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$product$"/>
         </actionGroup>
-        <!--Navigate to checkout from minicart-->
-        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <!--Filling shipping information and click next-->
-        <actionGroup ref="GuestCheckoutFillingShippingSectionActionGroup" stepKey="guestCheckoutFillingShipping">
-            <argument name="shippingMethod" value="Flat Rate"/>
-        </actionGroup>
-        <!--Go back to shipping step and choose Pick In Store and fill all info about pick in store and click next-->
-        <click selector="{{CheckoutHeaderSection.shippingMethodStep}}" stepKey="goToShipping"/>
+        <!--Navigate to Review & Payment page.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
         <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <actionGroup ref="StorefrontPickInStoreFillCustomerEmail" stepKey="fillCustomerEmail"/>
         <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
         <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
             <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
             <argument name="sourceName" value="$culverSource.source[name]$"/>
         </actionGroup>
         <actionGroup ref="StorefrontPickInStoreNavigateToPaymentActionGroup" stepKey="navigateToPaymentStep"/>
+        <!--Grab value from first name field and assert this field is empty-->
+        <dontSeeElement selector="{{CheckoutPaymentSection.billingAddressNotSameCheckbox}}" stepKey="shippingAndBillingAddressAreTheSameIsNotVisible1"/>
+        <grabValueFrom selector="{{CheckoutPaymentSection.guestFirstName}}" stepKey="grabGuestFirstName1"/>
+        <assertEmpty stepKey="verifyEmptyGuestFirstName1">
+            <actualResult type="const">$grabGuestFirstName1</actualResult>
+        </assertEmpty>
         <!--Refresh Page-->
         <reloadPage stepKey="reloadCheckoutPage"/>
         <waitForPageLoad stepKey="waitForCheckoutPage"/>
         <!--Grab value from first name field and assert this field is empty-->
-        <dontSeeElement selector="{{CheckoutPaymentSection.billingAddressNotSameCheckbox}}" stepKey="shippingAndBillingAddressAreTheSameIsNotVisible"/>
-        <grabValueFrom selector="{{CheckoutPaymentSection.guestFirstName}}"  stepKey="grabGuestFirstName"/>
-        <assertEmpty after="grabGuestFirstName" stepKey="verifyEmptyGuestFirstName">
-            <actualResult type="const">$grabGuestFirstName</actualResult>
+        <waitForElement selector="{{CheckoutPaymentSection.guestFirstName}}" stepKey="waitForBillingAddressForm"/>
+        <dontSeeElement selector="{{CheckoutPaymentSection.billingAddressNotSameCheckbox}}" stepKey="shippingAndBillingAddressAreTheSameIsNotVisible2"/>
+        <grabValueFrom selector="{{CheckoutPaymentSection.guestFirstName}}" stepKey="grabGuestFirstName2"/>
+        <assertEmpty stepKey="verifyEmptyGuestFirstName2">
+            <actualResult type="const">$grabGuestFirstName2</actualResult>
         </assertEmpty>
     </test>
 </tests>
