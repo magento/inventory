@@ -172,6 +172,7 @@
         <waitForPageLoad stepKey="waitForAddToCart" after="addProductsToCart"/>
         <waitForText selector="{{StorefrontProductPageSection.successMsg}}" userInput="You added 1 item(s) to your shopping cart." stepKey="verifyProductsHaveBeenAddedToCart" after="waitForAddToCart"/>
         <!--Place order from storefront.-->
+        <comment userInput="BIC workaround" stepKey="openMiniCart" after="verifyProductsHaveBeenAddedToCart"/>
         <actionGroup ref="StorefrontOpenCustomStoreCheckoutPageActionGroup" stepKey="goToCheckout">
             <argument name="storeCode" value="{{customStore.code}}"/>
         </actionGroup>
