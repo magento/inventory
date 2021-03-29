@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
  * Test getRssData with different configuration on multi source inventory.
  *
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/446482/scenarios/1651852
+ * @magentoDbIsolation disabled
  */
 class RssFeedTest extends TestCase
 {
