@@ -101,7 +101,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
         <!-- Check Product is visible on Storefront-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsPresentOnCategoryPage"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsPresentOnCategoryPage"/>
@@ -120,7 +120,7 @@
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkMessageAfterProductSave"/>
 
         <!-- Check Product is not visible on storefront-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}"
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}"
                   stepKey="navigateToEditedProductCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryLoad"/>
         <see selector=".empty" userInput="We can't find products matching the selection." stepKey="verifyProductIsAbsentOnCategoryPage"/>
@@ -140,7 +140,7 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProductManageStockTurnedOff"/>
 
         <!-- Check Product is visible on Storefront-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryPageManageStockTurnedOff"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageManageStockTurnedOff"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoadManageStockTurnedOff"/>
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsPresentOnCategoryPageManageStockTurnedOff"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsPresentOnCategoryPageManageStockTurnedOff"/>

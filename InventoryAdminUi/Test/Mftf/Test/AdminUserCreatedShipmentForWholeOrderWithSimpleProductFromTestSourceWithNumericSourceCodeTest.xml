@@ -83,7 +83,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Open the Product Page and add the product to shopping cart-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"
                   after="loginToStorefrontAccount"/>
         <waitForPageLoad stepKey="waitForStoreFrontCategoryPageLoad"/>
 

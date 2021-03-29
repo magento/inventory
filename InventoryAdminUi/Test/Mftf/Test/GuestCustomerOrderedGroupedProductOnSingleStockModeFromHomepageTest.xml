@@ -84,7 +84,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedGroupedProduct"/>
 
         <comment userInput="Go to category, add grouped product to cart and go to checkout" stepKey="addGroupedProductToCartAndGoToCheckout"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForStoreFrontCategoryPageLoad"/>
 
         <moveMouseOver selector="{{StorefrontCategoryProductSection.ProductInfoByName($$groupedProduct.name$$)}}" stepKey="moveMouseOverProduct" />

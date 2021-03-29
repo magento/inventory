@@ -91,7 +91,7 @@
             <argument name="productName" value="$$simpleProduct1.name$$"/>
             <argument name="productUrlKey" value="$$simpleProduct1.custom_attributes[url_key]$$"/>
         </actionGroup>
-        <!--Advanced search crated product.-->
+        <!--Advanced search created product.-->
         <actionGroup ref="GoToStoreViewAdvancedCatalogSearchActionGroup" stepKey="goToStoreViewAdvancedCatalogSearchActionGroup"/>
         <actionGroup ref="StorefrontAdvancedCatalogSearchByProductNameActionGroup" stepKey="searchSecondProduct">
             <argument name="name" value="$$simpleProduct2.name$$"/>

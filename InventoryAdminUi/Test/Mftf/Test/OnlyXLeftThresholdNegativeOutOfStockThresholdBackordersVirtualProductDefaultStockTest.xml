@@ -66,7 +66,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Add virtual product to shopping cart -->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="15" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <!--Place order.-->
@@ -78,7 +78,7 @@
         <!--flash cache-->
         <magentoCLI command="cache:flush" stepKey="flushCache"/>
         <!--Verify 'Only X Left' message.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToProductDetailsPage"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToProductDetailsPage"/>
         <waitForPageLoad time="30" stepKey="waitForProductPageLoadToVerifyMessage"/>
         <see selector=".availability.only" userInput="Only 5 left" stepKey="verifyMessage"/>
     </test>

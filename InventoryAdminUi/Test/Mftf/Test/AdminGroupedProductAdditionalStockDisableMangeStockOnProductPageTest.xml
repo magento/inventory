@@ -86,7 +86,7 @@
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
         <!--Verify grouped product on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPage"/>
         <see userInput="$$groupedProduct.name$$" stepKey="assertProductPresent"/>
         <see userInput="$$simpleProduct.price$$" stepKey="assertProductPricePresent"/>
