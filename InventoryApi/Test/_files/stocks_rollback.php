@@ -11,9 +11,11 @@ use Magento\InventoryIndexer\Test\Integration\Indexer\RemoveIndexData;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\TestFramework\Helper\Bootstrap;
 
+$stockIds = [10, 20, 30];
+
 /** @var StockRepositoryInterface $stockRepository */
 $stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);
-foreach ([10, 20, 30] as $stockId) {
+foreach ($stockIds as $stockId) {
     try {
         //Unassign sales channels from stocks in order to delete given stocks.
         $stockRepository = Bootstrap::getObjectManager()->get(StockRepositoryInterface::class);
@@ -31,4 +33,10 @@ foreach ([10, 20, 30] as $stockId) {
 }
 
 $removeIndexData = Bootstrap::getObjectManager()->get(RemoveIndexData::class);
-$removeIndexData->execute([10, 20, 30]);
+foreach ($stockIds as $stockId) {
+    try {
+        $removeIndexData->execute([$stockId]);
+    } catch (\Zend_Db_Exception $e) {
+        //Index already removed
+    }
+}
