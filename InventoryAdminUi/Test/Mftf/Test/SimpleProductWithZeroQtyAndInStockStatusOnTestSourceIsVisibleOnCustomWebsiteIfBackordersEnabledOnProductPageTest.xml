@@ -81,7 +81,7 @@
         <remove keyForRemoval="openProductFromSubCategory1"/>
 
         <!-- Simple product visible on Test website  with status 'In stock' -->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$simpleProduct.name$$.html" stepKey="navigateToPDP1" after="assignProductToAdditionalWebsite"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$simpleProduct.custom_attributes[url_key]$$.html" stepKey="navigateToPDP1" after="assignProductToAdditionalWebsite"/>
         <waitForPageLoad after="navigateToPDP1" stepKey="waitForProductPage1"/>
 
         <remove keyForRemoval="setConfigAllowBackordersNotifyCustomer"/>
@@ -95,7 +95,7 @@
         <waitForPageLoad stepKey="waitForSimpleProductSaved2" after="clickSaveButton2"/>
         <!-- Simple product visible on Test website  with status 'In stock' -->
         <remove keyForRemoval="openProductFromSubCategory2"/>
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$simpleProduct.name$$.html" stepKey="navigateToPDP2" before="seeProductDisplayedAsInOfStock2"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$simpleProduct.custom_attributes[url_key]$$.html" stepKey="navigateToPDP2" before="seeProductDisplayedAsInOfStock2"/>
         <waitForPageLoad after="navigateToPDP2" stepKey="waitForProductPage2"/>
     </test>
 </tests>

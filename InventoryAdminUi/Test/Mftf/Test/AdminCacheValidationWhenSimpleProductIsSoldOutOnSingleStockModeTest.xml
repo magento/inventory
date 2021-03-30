@@ -47,7 +47,7 @@
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$simpleCategory1.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$simpleProduct1.product[name]$$)}}" stepKey="openProductPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
@@ -103,7 +103,7 @@
         <waitForPageLoad stepKey="waitForPageLoad30"/>
         <seeElement selector="{{AdminOrderShipmentsTabSection.gridRow('1')}}" stepKey="seeShipmentInGrid"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategoryPage2"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage2"/>
         <see selector=".empty" userInput="We can't find products matching the selection." stepKey="seeErrorMessage1"/>
     </test>
 </tests>

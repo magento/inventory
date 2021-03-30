@@ -63,7 +63,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedBundleProduct"/>
 
         <!-- Go to storefront category page, assert product visibility -->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToStorefrontCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToStorefrontCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
         <see userInput="{{BundleProduct.name}}" stepKey="assertProductPresentOnCategoryPage"/>
         <see userInput="$615.00" stepKey="assertProductPricePresentOnCategoryPage"/>

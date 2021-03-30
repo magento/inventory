@@ -94,7 +94,7 @@
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <magentoCLI command="cache:flush" stepKey="flushCache"/>
         <!--Verify product on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPageAgain"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($category.custom_attributes[url_key]$)}}" stepKey="navigateToCategoryPageAgain"/>
         <see userInput="$groupedProduct.name$" stepKey="assertProductPresent"/>
         <see userInput="$product.price$" stepKey="assertProductPricePresent"/>
     </test>

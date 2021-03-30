@@ -83,7 +83,7 @@
             <argument name="categoryName" value="$$category.name$$"/>
         </actionGroup>
         <!--Verify product on storefront.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.name$$.html" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$category.custom_attributes[url_key]$$.html" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <see userInput="$$virtualProduct.name$$" stepKey="assertProductPresent"/>
         <see userInput="$$virtualProduct.price$$" stepKey="assertProductPricePresent"/>

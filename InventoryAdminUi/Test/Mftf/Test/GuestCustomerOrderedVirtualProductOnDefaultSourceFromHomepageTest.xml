@@ -80,7 +80,7 @@
 
         <comment userInput="Buy fifty pieces of virtual product on storefront." stepKey="buyVirtualProductComment"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
 
         <actionGroup ref="StorefrontAddCategoryProductToCartWithQuantityActionGroup" stepKey="addVirtualProductToCart">
             <argument name="product" value="$$product$$"/>

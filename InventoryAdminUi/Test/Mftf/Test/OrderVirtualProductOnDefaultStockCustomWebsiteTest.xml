@@ -71,7 +71,7 @@
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$product.name$$.html" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$product.custom_attributes[url_key]$$.html" stepKey="navigateToPDP"/>
         <waitForPageLoad stepKey="waitForProductPage"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <waitForPageLoad stepKey="waitForPageLoad"/>

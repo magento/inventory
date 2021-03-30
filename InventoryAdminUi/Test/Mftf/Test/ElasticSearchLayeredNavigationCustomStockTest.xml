@@ -102,7 +102,7 @@
         </after>
 
         <!--Verify products are visible on storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryToVerifyProductsAreVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductsAreVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsNotVisible"/>
         <see userInput="$$simpleProduct.name$$" stepKey="verifyProduct1IsVisible"/>
         <see userInput="$$simpleProduct2.name$$" stepKey="verifyProduct2IsVisible"/>

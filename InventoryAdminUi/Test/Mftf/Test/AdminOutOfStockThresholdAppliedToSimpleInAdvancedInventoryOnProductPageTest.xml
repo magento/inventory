@@ -63,7 +63,7 @@
 
         <!-- Go to storefront category page, assert product isn't visible. -->
         <waitForPageLoad time="30" stepKey="waitForPageLoadToNotSeeTheProduct1"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
         <dontSee userInput="$$simpleProduct.product[name]$$" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
         <dontSee userInput="$$simpleProduct.product[price]$$" stepKey="assertProductPriceNotPresentOnCategoryPageOnStorefront"/>
 
@@ -76,7 +76,7 @@
 
         <!-- Go to storefront category page, assert product visibility. -->
         <reloadPage stepKey="reloadPage1"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageOnStorefront"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefront"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoadOnStorefront"/>
         <see userInput="$$simpleProduct.product[name]$$" stepKey="assertProductPresentOnCategoryPageOnStorefront"/>
         <see userInput="$$simpleProduct.product[price]$$" stepKey="assertProductPricePresentOnCategoryPageOnStorefront"/>

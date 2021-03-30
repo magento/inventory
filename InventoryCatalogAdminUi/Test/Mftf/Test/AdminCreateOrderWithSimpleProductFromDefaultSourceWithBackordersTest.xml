@@ -78,7 +78,7 @@
         </after>
 
         <!-- add Product to Cart-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo(SimpleProduct.name)}}" stepKey="openProductPage"/>
         <waitForAjaxLoad stepKey="waitForImageLoader"/>

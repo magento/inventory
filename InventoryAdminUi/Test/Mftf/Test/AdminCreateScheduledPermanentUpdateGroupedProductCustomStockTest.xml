@@ -75,7 +75,7 @@
         </after>
 
         <!--Verify grouped product on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($createCategory.name$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($createCategory.custom_attributes[url_key]$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategory"/>
         <see userInput="$groupedProduct.name$" stepKey="assertProductPresent"/>
         <see userInput="$product.price$" stepKey="assertProductPricePresent"/>

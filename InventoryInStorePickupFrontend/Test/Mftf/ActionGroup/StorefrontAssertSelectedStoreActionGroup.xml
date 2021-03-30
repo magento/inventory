@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="StorefrontAssertSelectedStoreActionGroup">
+        <annotations>
+            <description>Verify that store is selected.</description>
+        </annotations>
+        <arguments>
+            <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
+        </arguments>
+        <waitForElement selector="{{StorefrontSelectStoreSection.selectedStoreName}}" stepKey="waitForDomElement"/>
+        <grabTextFrom selector="{{StorefrontSelectStoreSection.selectedStoreName}}" stepKey="storeName"/>
+        <assertEquals stepKey="assertThatProvidedStoreIsSelected">
+            <expectedResult type="string">{{sourceName}}</expectedResult>
+            <actualResult type="variable">storeName</actualResult>
+        </assertEquals>
+    </actionGroup>
+</actionGroups>
