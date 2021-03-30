@@ -16,9 +16,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MC-29184"/>
-            </skip>
         </annotations>
 
         <before>
@@ -35,8 +32,13 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
+            <!--Reindex and flush cache-->
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cacheFlush">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
 
         <after>
