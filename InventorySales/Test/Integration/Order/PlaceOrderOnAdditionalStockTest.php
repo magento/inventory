@@ -14,7 +14,6 @@ use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\MessageEncoder;
-use Magento\Framework\Registry;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus;
@@ -73,11 +72,6 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     private $orderRepository;
 
     /**
-     * @var Registry
-     */
-    private $registry;
-
-    /**
      * @var OrderManagementInterface
      */
     private $orderManagement;
@@ -134,7 +128,6 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     {
         parent::setUp();
 
-        $this->registry = $this->_objectManager->get(Registry::class);
         $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
         $this->cartManagement = $this->_objectManager->get(CartManagementInterface::class);
         $this->cartRepository = $this->_objectManager->get(CartRepositoryInterface::class);
@@ -218,12 +211,8 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     private function deleteOrderById(int $orderId): void
     {
-        $this->registry->unregister('isSecureArea');
-        $this->registry->register('isSecureArea', true);
         $this->orderManagement->cancel($orderId);
         $this->orderRepository->delete($this->orderRepository->get($orderId));
-        $this->registry->unregister('isSecureArea');
-        $this->registry->register('isSecureArea', false);
     }
 
     /**
