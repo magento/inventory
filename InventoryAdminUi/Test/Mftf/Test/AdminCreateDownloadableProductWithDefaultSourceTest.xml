@@ -101,7 +101,7 @@
         <see selector="{{AdminGridRow.rowOne}}" userInput="Main Website" stepKey="seeWebsiteInFirstRow"/>
 
         <!-- Go to storefront category page, assert product visibility -->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToStorefrontCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToStorefrontCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
         <see userInput="{{DownloadableMsiProduct.name}}" stepKey="assertProductPresentOnCategoryPage"/>
         <see userInput="{{DownloadableMsiProduct.price}}" stepKey="assertProductPricePresentOnCategoryPage"/>

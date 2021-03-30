@@ -67,7 +67,7 @@
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="navigateToProductEditPage"/>
         <see selector="{{AdminProductSourcesGrid.rowStatusBySourceCode(_defaultSource.source_code)}}" userInput="{{SourceStatusOutOfStock.value}}" stepKey="verifyStockStatus"/>
         <!--Verify product is not visible on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($category.custom_attributes[url_key]$)}}" stepKey="navigateToCategoryPage"/>
         <see selector="{{StorefrontCategoryMainSection.emptyProductMessage}}" userInput="We can't find products matching the selection." stepKey="seeEmptyProductMessage"/>
     </test>
 </tests>

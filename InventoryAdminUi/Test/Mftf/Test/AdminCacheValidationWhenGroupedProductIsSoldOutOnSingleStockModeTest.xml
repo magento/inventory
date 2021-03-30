@@ -76,7 +76,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedGroupedProduct"/>
 
         <!--Verify Grouped product presents on Category page on frontend-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToSeeTheProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoadCategoryPage"/>
         <see userInput="{{GroupedProduct.name}}" stepKey="assertProductPresentOnCategoryPageOnStorefront"/>
 
@@ -129,7 +129,7 @@
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The invoice has been created." stepKey="checkSuccessMessage"/>
 
         <!--Verify Grouped product is not visible on Category page on frontend-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoadCategoryPageWhenProductIsSold"/>
         <dontSee userInput="{{GroupedProduct.name}}" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
     </test>

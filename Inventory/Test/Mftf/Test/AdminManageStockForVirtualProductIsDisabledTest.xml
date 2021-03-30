@@ -93,7 +93,7 @@
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveButton1"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="seeSaveProductMessage1"/>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.name$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory1.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <dontSee userInput="{{SimpleMsiProduct.name}}" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
         <dontSee userInput="{{SimpleMsiProduct.price}}" stepKey="assertProductPriceNotPresentOnCategoryPageOnStorefront"/>

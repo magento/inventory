@@ -80,7 +80,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$groupedProduct.name$$)}}" stepKey="navigateToGroupedPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$groupedProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToGroupedPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInputWithProduct($$product.name$$)}}" userInput="10" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <!--Place order.-->
