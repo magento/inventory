@@ -13,5 +13,6 @@
         <element name="rowSourceCode" type="text" selector=".data-row[data-repeat-index='{{arg1}}'] span[data-index='code']" parameterized="true"/>
         <element name="rowSourceName" type="text" selector=".data-row[data-repeat-index='{{arg1}}'] span[data-index='name']" parameterized="true"/>
         <element name="rowSourceDelete" type="button" selector=".data-row[data-repeat-index='{{arg1}}'] .action-delete" parameterized="true"/>
+        <element name="tableRow" type="block" selector=".admin__dynamic-rows[data-index='assigned_sources'] tbody > tr.data-row"/>
     </section>
 </sections>
