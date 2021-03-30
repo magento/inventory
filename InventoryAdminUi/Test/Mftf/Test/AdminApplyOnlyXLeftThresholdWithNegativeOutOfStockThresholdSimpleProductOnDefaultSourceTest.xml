@@ -87,7 +87,7 @@
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <magentoCLI command="cache:flush" stepKey="performCacheFlush"/>
         <!--Verify 'Only 5 left' appears on PDP.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDPToVerifyMessage"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDPToVerifyMessage"/>
         <see selector=".availability.only" userInput="Only 5 left" stepKey="checkMessage"/>
     </test>
 </tests>

@@ -117,7 +117,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add Product to Cart.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <actionGroup ref="StorefrontAddCategoryProductToCartWithQuantityActionGroup" stepKey="addSimpleProductToCart">
             <argument name="product" value="$$simpleProduct$$"/>
             <argument name="quantity" value="50"/>

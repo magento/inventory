@@ -33,11 +33,11 @@
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
             <!--Create Simple Products.-->
             <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
-            <createData entity="SimpleProduct" stepKey="simpleProduct1">
+            <createData entity="SimpleProduct_NoSpaces" stepKey="simpleProduct1">
                 <field key="price">10.00</field>
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
-            <createData entity="SimpleProduct" stepKey="simpleProduct2">
+            <createData entity="SimpleProduct_NoSpaces" stepKey="simpleProduct2">
                 <field key="price">40.00</field>
                 <requiredEntity createDataKey="simpleCategory"/>
             </createData>
@@ -78,7 +78,7 @@
             <argument name="productName" value="$$simpleProduct1.name$$"/>
             <argument name="productUrlKey" value="$$simpleProduct1.custom_attributes[url_key]$$"/>
         </actionGroup>
-        <!--Advanced search crated product.-->
+        <!--Advanced search created product.-->
         <actionGroup ref="GoToStoreViewAdvancedCatalogSearchActionGroup" stepKey="goToStoreViewAdvancedCatalogSearchActionGroup"/>
         <actionGroup ref="StorefrontAdvancedCatalogSearchByProductNameActionGroup" stepKey="searchSecondProduct">
             <argument name="name" value="$$simpleProduct2.name$$"/>

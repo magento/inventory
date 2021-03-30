@@ -95,7 +95,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedSimpleProduct"/>
 
         <comment userInput="Check, created product is present on category page." stepKey="checkProductIsPresentOnCategoryPageComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToSimpleProductCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToSimpleProductCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsPresentOnCategoryPage"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsPresentOnCategoryPage"/>
@@ -114,7 +114,7 @@
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkMessageAfterProductSave"/>
 
         <comment userInput="Check, modified product is absent on category page" stepKey="checkProductIsAbsentOnCategoryPageComment" />
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToEditedProductCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToEditedProductCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryLoad"/>
         <dontSee userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsAbsentOnCategoryPage"/>
         <dontSee userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsAbsentOnCategoryPage"/>
@@ -127,7 +127,7 @@
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfterConfigurationIsSaved"/>
 
         <comment userInput="Check, product presents on category page after 'Manage Stock' has been disabled." stepKey="checkProductIsBackToCategoryPageComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToProductCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToProductCategoryPage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryViewPageLoadToCheckProductIsBack"/>
         <see userInput="{{SimpleMsiProduct.name}}" stepKey="checkProductNameIsBackToCategoryPage"/>
         <see userInput="{{SimpleMsiProduct.price}}" stepKey="checkProductPriceIsBackToCategoryPage"/>

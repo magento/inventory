@@ -159,19 +159,23 @@
             <argument name="Customer" value="Simple_US_Customer"/>
             <argument name="storeCode" value="customStore.code"/>
         </actionGroup>
-        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$configurableProduct.sku$$.html" stepKey="goToDetailProductPageOnStorefront" before="selectOption"/>
+        <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/$$configurableProduct.custom_attributes[url_key]$$.html" stepKey="goToDetailProductPageOnStorefront" before="waitForOptions"/>
+        <waitForElement selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" stepKey="waitForOptions" before="selectOption"/>
         <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeOptionsSelectButton}}" userInput="option1" stepKey="selectOption" before="clickAddToRequisitionListButton"/>
         <waitForPageLoad stepKey="waitForOptionSelected"/>
-        <see selector="{{StorefrontProductPageSection.successMsg}}" userInput="Product $$configurableProduct.name$$ has been added to the requisition list RL {{SimpleProduct.name}}." stepKey="seeSuccessMessage" after="clickSaveButton"/>
+        <waitForText selector="{{StorefrontProductPageSection.successMsg}}" userInput="Product $$configurableProduct.name$$ has been added to the requisition list RL {{SimpleProduct.name}}." stepKey="seeSuccessMessage" after="clickSaveButton"/>
         <!--Add product from requisition list to cart.-->
         <amOnPage url="{{StorefrontHomePage.url}}/{{customStore.code}}/requisition_list/requisition/index" stepKey="navigateToCustomerRequisitionLists" after="seeSuccessMessage"/>
         <click selector="{{StorefrontRequisitionListGridSection.requesitionListViewLink(SimpleProduct.name)}}" stepKey="clickViewButton" after="navigateToCustomerRequisitionLists"/>
         <checkOption selector="{{StorefrontRequisitionListViewSection.itemCheckbox($$configurableProduct.name$$)}}"  stepKey="selectProduct" after="clickViewButton"/>
         <click selector="{{StorefrontRequisitionListViewSection.addToCartButton}}" stepKey="addProductsToCart" after="selectProduct"/>
-        <see selector="{{StorefrontProductPageSection.successMsg}}" userInput="You added 1 item(s) to your shopping cart." stepKey="verifyProductsHaveBeenAddedToCart" after="addProductsToCart"/>
+        <waitForPageLoad stepKey="waitForAddToCart" after="addProductsToCart"/>
+        <waitForText selector="{{StorefrontProductPageSection.successMsg}}" userInput="You added 1 item(s) to your shopping cart." stepKey="verifyProductsHaveBeenAddedToCart" after="waitForAddToCart"/>
         <!--Place order from storefront.-->
-        <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart" after="addProductsToCart"/>
-        <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
+        <comment userInput="BIC workaround" stepKey="openMiniCart" after="verifyProductsHaveBeenAddedToCart"/>
+        <actionGroup ref="StorefrontOpenCustomStoreCheckoutPageActionGroup" stepKey="goToCheckout">
+            <argument name="storeCode" value="{{customStore.code}}"/>
+        </actionGroup>
         <!-- Fill customer new shipping address -->
         <actionGroup ref="CustomerCheckoutFillNewShippingAddressActionGroup" stepKey="fillShippingAddress">
             <argument name="address" value="US_Address_TX"/>
@@ -180,7 +184,7 @@
         <waitForPageLoad stepKey="waitForShipmentPageLoad"/>
         <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
         <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
-        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
+        <waitForText selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Verify first product variation quantity-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProduct1"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct1">

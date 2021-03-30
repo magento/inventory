@@ -82,7 +82,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$bundleProduct.sku$$)}}" stepKey="navigateToGroupedPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$bundleProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToGroupedPDP"/>
         <click selector="{{StorefrontBundledSection.addToCart}}" stepKey="clickCustomize"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="waitForAddToCartButton"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="2" stepKey="fillQuantity"/>

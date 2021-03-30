@@ -61,14 +61,14 @@
 
         <!--Frontend Start-->
         <comment userInput="Verify that message 'Only 1000 left' do appeared on product page on frontend." stepKey="verifyMessageIsDisplayedComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryForVerifyMessage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryForVerifyMessage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad10"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createSimpleProductForEnabledManageStock.name$$)}}" stepKey="openProductPageForVerifyMessage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad11"/>
         <see selector=".availability.only" userInput="Only 1000 left" stepKey="checkProductsLeftMessage"/>
 
         <comment userInput="Verify that message 'Only 1000 left' do not appeared on product page on frontend." stepKey="verifyMessageIsNotDisplayedComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryForNotVerifyMessage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryForNotVerifyMessage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad10ToNotVerifyMessage"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createSimpleProductForDisabledManageStock.name$$)}}" stepKey="openProductPageForNotVerifyMessage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad11ToNotVerifyMessage"/>

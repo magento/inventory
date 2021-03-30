@@ -51,7 +51,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!-- Add virtual product to shopping cart -->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
             <argument name="product" value="$$product$$"/>
             <argument name="productCount" value="1"/>

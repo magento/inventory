@@ -97,11 +97,11 @@
         <remove keyForRemoval="attachValidFile"/>
         <remove keyForRemoval="fillRequisitionListNameField"/>
         <remove keyForRemoval="seeSuccessMessage"/>
-        <amOnPage url="{{StorefrontProductPage.url($$product1.name$$)}}" stepKey="goToDetailProduct1PageOnStorefront" after="customerLogin1"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product1.custom_attributes[url_key]$$)}}" stepKey="goToDetailProduct1PageOnStorefront" after="customerLogin1"/>
         <fillField selector="{{StorefrontProductPageSection.requisitionListName}}" userInput="RL $$product1.name$$" stepKey="fillRequisitionListProduct1NameField" after="waitForNameInputElementVisible"/>
         <see selector="{{StorefrontProductPageSection.successMsg}}" userInput="Product $$product1.name$$ has been added to the requisition list RL $$product1.name$$." stepKey="seeSuccessMessageForProduct1" after="clickSaveButton"/>
         <!--Add second product to requisition list.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product2.name$$)}}" stepKey="goToDetailProduct2PageOnStorefront" after="seeSuccessMessageForProduct1"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product2.custom_attributes[url_key]$$)}}" stepKey="goToDetailProduct2PageOnStorefront" after="seeSuccessMessageForProduct1"/>
         <click selector="{{StorefrontProductPageSection.addToRequisitionListButton}}" stepKey="clickAddToRequisitionListProduct2"/>
         <click selector="{{StorefrontProductPageSection.selectRequisitionListName($$product1.name$$)}}" stepKey="addSecondProductToRequisitionList"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.successMsg}}" stepKey="waitForProductAddedToList"/>
