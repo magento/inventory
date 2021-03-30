@@ -14,7 +14,6 @@ use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalog\Model\GetSourceItemsBySkuAndSourceCodes;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
@@ -58,9 +57,6 @@ class ProcessSourceItemsObserverTest extends TestCase
     /** @var DataObjectFactory */
     private $dataObjectFactory;
 
-    /** @var Registry */
-    private $registry;
-
     /**
      * @inheritdoc
      */
@@ -76,7 +72,6 @@ class ProcessSourceItemsObserverTest extends TestCase
         $this->getSourceItemsDataBySku = $this->objectManager->get(GetSourceItemsDataBySku::class);
         $this->getSourceItemsBySkuAndSourceCodes = $this->objectManager->get(GetSourceItemsBySkuAndSourceCodes::class);
         $this->dataObjectFactory = $this->objectManager->get(DataObjectFactory::class);
-        $this->registry = $this->objectManager->get(Registry::class);
     }
 
     /**
@@ -184,17 +179,11 @@ class ProcessSourceItemsObserverTest extends TestCase
      */
     private function deleteProductBySku(string $sku): void
     {
-        $this->registry->unregister('isSecureArea');
-        $this->registry->register('isSecureArea', true);
-
         try {
             $product = $this->productRepository->get($sku);
             $this->productRepository->delete($product);
         } catch (NoSuchEntityException $exception) {
             // product doesn't exist;
         }
-
-        $this->registry->unregister('isSecureArea');
-        $this->registry->register('isSecureArea', false);
     }
 }

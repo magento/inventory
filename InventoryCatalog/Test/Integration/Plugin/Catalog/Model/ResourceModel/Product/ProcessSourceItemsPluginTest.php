@@ -14,7 +14,6 @@ use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\MessageQueue\QueueInterface;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\ProcessSourceItemsPlugin;
@@ -28,6 +27,7 @@ use PHPUnit\Framework\TestCase;
  * Checks that source items and low stock quantity notification will be removed after product sku has been updated.
  *
  * @see \Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\ProcessSourceItemsPlugin
+ * @magentoAppArea adminhtml
  */
 class ProcessSourceItemsPluginTest extends TestCase
 {
@@ -61,9 +61,6 @@ class ProcessSourceItemsPluginTest extends TestCase
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var Registry */
-    private $registry;
-
     /**
      * @inheritDoc
      */
@@ -83,7 +80,6 @@ class ProcessSourceItemsPluginTest extends TestCase
         $this->getSourceItemConfigurationsBySku = $this->objectManager->get(GetBySku::class);
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
         $this->productRepository->cleanCache();
-        $this->registry = $this->objectManager->get(Registry::class);
     }
 
     /**
@@ -167,17 +163,11 @@ class ProcessSourceItemsPluginTest extends TestCase
      */
     private function deleteProductBySku(string $sku): void
     {
-        $this->registry->unregister('isSecureArea');
-        $this->registry->register('isSecureArea', true);
-
         try {
             $product = $this->productRepository->get($sku);
             $this->productRepository->delete($product);
         } catch (NoSuchEntityException $exception) {
             // product doesn't exist;
         }
-
-        $this->registry->unregister('isSecureArea');
-        $this->registry->register('isSecureArea', false);
     }
 }
