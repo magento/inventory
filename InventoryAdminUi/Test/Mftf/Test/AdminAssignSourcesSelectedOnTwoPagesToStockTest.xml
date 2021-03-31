@@ -10,6 +10,7 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminAssignSourcesSelectedOnTwoPagesToStockTest">
         <annotations>
+            <features value="InventoryAdminUi"/>
             <stories value="Assign Sources to Stocks"/>
             <title value="Create automated test for: '22 Sources assigned to the Stock by Admin user'"/>
             <description value="Create automated test for: '22 Sources assigned to the Stock by Admin user'"/>
@@ -19,7 +20,7 @@
             <group value="multi_mode"/>
         </annotations>
         <before>
-            <createData entity="BasicMsiStock1" stepKey="createStock1"/>
+            <createData entity="BasicMsiStock1" stepKey="createStock"/>
             <createData entity="FullSourceTwoPages" stepKey="createSource1"/>
             <createData entity="FullSourceTwoPages" stepKey="createSource2"/>
             <createData entity="FullSourceTwoPages" stepKey="createSource3"/>
@@ -45,17 +46,17 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <deleteData createDataKey="createStock1" stepKey="deleteStock1"/>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
             <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="clearSourceFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
-        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToAdminEditStock1">
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToEditStockPage">
             <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
-            <argument name="filter_value" value="$createStock1.stock[name]$"/>
+            <argument name="filter_value" value="$createStock.stock[name]$"/>
         </actionGroup>
         <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources"/>
-        <click selector="{{AdminGridDefaultViewControls.defaultView}}" stepKey="clickOnDefaultView"/>
-        <click selector="{{AdminGridDefaultViewControls.viewByName('Default View')}}" stepKey="clickOnDefaultViewMenuOption"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetAdminDataGridToDefaultView"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSourceByCode">
             <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
             <argument name="value" value="source_two_pages_"/>
@@ -64,20 +65,18 @@
         <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDone"/>
 
         <!-- Check the number of assigned sources after done -->
-        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="20" stepKey="checkNumberIsTwentyAfterDone"/>
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="20" stepKey="checkSourcesCountOnFirstPage"/>
         <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="clickNextPageAfterDone"/>
-        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="2" stepKey="checkNumberIsTwoAfterDone"/>
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="2" stepKey="checkSourcesCountOnSecondPage"/>
 
-        <click selector="{{AdminEditStockActionsSection.saveAndContinue}}" stepKey="clickOnSaveAndContinue"/>
-        <waitForElementVisible selector="{{AdminMessagesSection.success}}" stepKey="waitSuccessMessageAppears"/>
-        <see selector="{{AdminMessagesSection.successMessage}}" userInput="The Stock has been saved." stepKey="seeStockSaveSuccess"/>
+        <actionGroup ref="AdminSaveAndContinueEditStockPageActionGroup" stepKey="saveAndContinueEditStockPage"/>
 
         <!-- Check the number of assigned sources after save -->
-        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="20" stepKey="checkNumberIsTwentyAfterSave"/>
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="20" stepKey="checkSourcesCountOnFirstPageAfterSave"/>
         <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="clickNextPageAfterSave"/>
-        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="2" stepKey="checkNumberIsTwoAfterSave"/>
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="2" stepKey="checkSourcesCountOnSecondPageAfterSave"/>
 
-        <click selector="{{AdminEditStockActionsSection.backButton}}" stepKey="clickBackToManageStock"/>
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
         <moveMouseOver selector="{{AdminManageStockGridBody.assignedSourceContent}}" stepKey="moveOnAssignedSource"/>
 
         <!-- Check for assigned source codes -->
