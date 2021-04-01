@@ -17,9 +17,6 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2583"/>
-            </skip>
         </annotations>
 
         <before>
@@ -65,6 +62,6 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         <!--Verify Notify Quantity has changed.-->
         <dontSeeCheckboxIsChecked selector="{{AdminProductSourcesGrid.rowNotifyQuantityUseDefault('0')}}" stepKey="verifyNotifyQuantityUseDefaultIsNotUsed"/>
-        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="{{RevertNotifyQuantityBelow.value}}" stepKey="verifyNotifyQuantityValue"/>
+        <seeInField selector="{{AdminProductSourcesGrid.rowNotifyQuantity('0')}}" userInput="{{NotifyQuantityBelow.value}}.0000" stepKey="verifyNotifyQuantityValue"/>
     </test>
 </tests>
