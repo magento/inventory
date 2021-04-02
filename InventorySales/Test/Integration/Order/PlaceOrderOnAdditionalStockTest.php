@@ -33,6 +33,7 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
  * Class to test place order to additional stock
  *
  * @magentoAppArea adminhtml
+ * @magentoAppIsolation enabled
  */
 class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
 {
@@ -192,8 +193,12 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
         $oldSku = 'SKU-1';
         $newSku = 'new-sku';
 
-        $this->executeInStoreContext
-            ->execute('store_for_eu_website', [$this, 'placeOrder'], $oldSku, 4);
+        $this->orderIdToDelete = $this->executeInStoreContext->execute(
+            'store_for_eu_website',
+            [$this, 'placeOrder'],
+            $oldSku,
+            4
+        );
 
         $this->updateProductSku($oldSku, $newSku);
         $this->productSkuToDelete = $newSku;
