@@ -49,6 +49,7 @@
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
             <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="clearSourceFilters"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToEditStockPage">

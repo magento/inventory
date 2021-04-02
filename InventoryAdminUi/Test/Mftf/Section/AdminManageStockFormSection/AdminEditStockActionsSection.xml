@@ -12,6 +12,5 @@
         <element name="delete" type="button" selector="#delete" timeout="30"/>
         <element name="resetButton" type="button" selector="#reset" timeout="30"/>
         <element name="saveButton" type="button" selector="#save" timeout="30"/>
-        <element name="saveAndContinue" type="button" selector="#save-button" timeout="30"/>
     </section>
 </sections>

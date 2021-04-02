@@ -14,7 +14,7 @@
         </annotations>
 
         <scrollToTopOfPage stepKey="scrollToTopOfThePage"/>
-        <click selector="{{AdminEditStockActionsSection.saveAndContinue}}" stepKey="clickOnSaveAndContinue"/>
+        <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="clickOnSaveAndContinue"/>
         <waitForElementVisible selector="{{AdminMessagesSection.success}}" stepKey="waitSuccessMessageAppears"/>
         <see selector="{{AdminMessagesSection.successMessage}}" userInput="The Stock has been saved." stepKey="seeStockSaveSuccess"/>
     </actionGroup>
