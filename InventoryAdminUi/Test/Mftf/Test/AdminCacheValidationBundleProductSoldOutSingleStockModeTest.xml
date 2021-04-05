@@ -62,7 +62,7 @@
         </actionGroup>
         <!--Add product to cart.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="StorefrontAddCategoryBundleProductToCartActionGroup" stepKey="addBundleProductToCart">
+        <actionGroup ref="StorefrontAddCategoryBundleProductWithSingleChoiceToCartActionGroup" stepKey="addBundleProductToCart">
             <argument name="product" value="$bundleProduct$"/>
             <argument name="quantity" value="{{minimalProductQty.value}}"/>
         </actionGroup>
