@@ -16,7 +16,6 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Validation\ValidationException;
-use Magento\Inventory\Model\Source;
 use Magento\InventoryAdminUi\Model\Source\SourceHydrator;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceInterfaceFactory;
@@ -67,6 +66,7 @@ class Save extends Action implements HttpPostActionInterface
 
     /**
      * @inheritdoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(): ResultInterface
     {
@@ -91,24 +91,30 @@ class Save extends Action implements HttpPostActionInterface
         } catch (NoSuchEntityException $e) {
             $source = $this->sourceFactory->create();
         }
-        try {
-            $this->processSave($source, $requestData);
-            $this->messageManager->addSuccessMessage(__('The Source has been saved.'));
-            $this->processRedirectAfterSuccessSave($resultRedirect, $source->getSourceCode());
-        } catch (ValidationException $e) {
-            foreach ($e->getErrors() as $localizedError) {
-                $this->messageManager->addErrorMessage($localizedError->getMessage());
-            }
-            $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $source);
-        } catch (CouldNotSaveException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
-            $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $source);
-        } catch (Exception $e) {
+        if (!$source->isObjectNew() && !isset($requestData['general']['id_field_name'])) {
             $this->messageManager->addErrorMessage(__('Could not save Source.'));
             $this->_session->setSourceFormData($requestData);
-            $this->processRedirectAfterFailureSave($resultRedirect, $source);
+            $this->processRedirectAfterFailureSave($resultRedirect, $source, $requestData);
+        } else {
+            try {
+                $this->processSave($source, $requestData);
+                $this->messageManager->addSuccessMessage(__('The Source has been saved.'));
+                $this->processRedirectAfterSuccessSave($resultRedirect, $source->getSourceCode());
+            } catch (ValidationException $e) {
+                foreach ($e->getErrors() as $localizedError) {
+                    $this->messageManager->addErrorMessage($localizedError->getMessage());
+                }
+                $this->_session->setSourceFormData($requestData);
+                $this->processRedirectAfterFailureSave($resultRedirect, $source);
+            } catch (CouldNotSaveException $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                $this->_session->setSourceFormData($requestData);
+                $this->processRedirectAfterFailureSave($resultRedirect, $source);
+            } catch (Exception $e) {
+                $this->messageManager->addErrorMessage(__('Could not save Source.'));
+                $this->_session->setSourceFormData($requestData);
+                $this->processRedirectAfterFailureSave($resultRedirect, $source);
+            }
         }
         return $resultRedirect;
     }
@@ -179,11 +185,18 @@ class Save extends Action implements HttpPostActionInterface
      *
      * @param Redirect $resultRedirect
      * @param null|SourceInterface $source
+     * @param array $requestData
      * @return void
      */
-    private function processRedirectAfterFailureSave(Redirect $resultRedirect, ?SourceInterface $source = null)
-    {
-        if (!$source || $source->isObjectNew()) {
+    private function processRedirectAfterFailureSave(
+        Redirect $resultRedirect,
+        ?SourceInterface $source = null,
+        array $requestData = []
+    ) {
+        if (!$source
+            || $source->isObjectNew()
+            || !$source->isObjectNew() && !isset($requestData['general']['id_field_name'])
+        ) {
             $resultRedirect->setPath('*/*/new');
         } else {
             $resultRedirect->setPath(
