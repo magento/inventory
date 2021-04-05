@@ -24,6 +24,7 @@ use Magento\Sales\Model\Order\Item as OrderItem;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @magentoAppIsolation enabled
  */
 class SourceDeductionForBundleProductsOnDefaultStockTest extends TestCase
 {
