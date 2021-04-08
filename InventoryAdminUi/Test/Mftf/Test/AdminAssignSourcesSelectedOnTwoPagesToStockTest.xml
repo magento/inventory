@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminAssignSourcesSelectedOnTwoPagesToStockTest">
+        <annotations>
+            <features value="InventoryAdminUi"/>
+            <stories value="Assign Sources to Stocks"/>
+            <title value="Create automated test for: '22 Sources assigned to the Stock by Admin user'"/>
+            <description value="Create automated test for: '22 Sources assigned to the Stock by Admin user'"/>
+            <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/910527/scenarios/3564735"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <createData entity="BasicMsiStock1" stepKey="createStock"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource1"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource2"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource3"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource4"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource5"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource6"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource7"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource8"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource9"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource10"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource11"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource12"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource13"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource14"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource15"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource16"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource17"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource18"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource19"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource20"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource21"/>
+            <createData entity="FullSourceTwoPages" stepKey="createSource22"/>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
+            <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="clearSourceFilters"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToEditStockPage">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$createStock.stock[name]$"/>
+        </actionGroup>
+        <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetAdminDataGridToDefaultView"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSourceByCode">
+            <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="value" value="source_two_pages_"/>
+        </actionGroup>
+        <actionGroup ref="AdminGridSelectAllActionGroup" stepKey="selectAllSources"/>
+        <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickOnDone"/>
+
+        <!-- Check the number of assigned sources after done -->
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="20" stepKey="checkSourcesCountOnFirstPage"/>
+        <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="clickNextPageAfterDone"/>
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="2" stepKey="checkSourcesCountOnSecondPage"/>
+
+        <actionGroup ref="AdminSaveAndContinueEditStockPageActionGroup" stepKey="saveAndContinueEditStockPage"/>
+
+        <!-- Check the number of assigned sources after save -->
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="20" stepKey="checkSourcesCountOnFirstPageAfterSave"/>
+        <click selector="{{AdminDataGridPaginationSection.nextPage}}" stepKey="clickNextPageAfterSave"/>
+        <seeNumberOfElements selector="{{AdminEditStockSourcesSection.tableRow}}" userInput="2" stepKey="checkSourcesCountOnSecondPageAfterSave"/>
+
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnStockListPage"/>
+        <moveMouseOver selector="{{AdminManageStockGridBody.assignedSourceContent}}" stepKey="moveOnAssignedSource"/>
+
+        <!-- Check for assigned source codes -->
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource1.source[source_code]$)}}" stepKey="checkSource1"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource2.source[source_code]$)}}" stepKey="checkSource2"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource3.source[source_code]$)}}" stepKey="checkSource3"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource4.source[source_code]$)}}" stepKey="checkSource4"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource5.source[source_code]$)}}" stepKey="checkSource5"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource6.source[source_code]$)}}" stepKey="checkSource6"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource7.source[source_code]$)}}" stepKey="checkSource7"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource8.source[source_code]$)}}" stepKey="checkSource8"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource9.source[source_code]$)}}" stepKey="checkSource9"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource10.source[source_code]$)}}" stepKey="checkSource10"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource11.source[source_code]$)}}" stepKey="checkSource11"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource12.source[source_code]$)}}" stepKey="checkSource12"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource13.source[source_code]$)}}" stepKey="checkSource13"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource14.source[source_code]$)}}" stepKey="checkSource14"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource15.source[source_code]$)}}" stepKey="checkSource15"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource16.source[source_code]$)}}" stepKey="checkSource16"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource17.source[source_code]$)}}" stepKey="checkSource17"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource18.source[source_code]$)}}" stepKey="checkSource18"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource19.source[source_code]$)}}" stepKey="checkSource19"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource20.source[source_code]$)}}" stepKey="checkSource20"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource21.source[source_code]$)}}" stepKey="checkSource21"/>
+        <seeElement selector="{{AdminManageStockGridBody.tooltipAssignedSource($createSource22.source[source_code]$)}}" stepKey="checkSource22"/>
+    </test>
+</tests>
