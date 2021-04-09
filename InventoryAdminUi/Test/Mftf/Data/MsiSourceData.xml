@@ -586,4 +586,9 @@
         <data key="postcode">90230</data>
         <data key="use_default_carrier_config">1</data>
     </entity>
+    <entity name="FullSourceTwoPages" type="source" extends="FullSource1">
+        <data key="name" unique="suffix">Test Source Two Pages</data>
+        <data key="source_code" unique="suffix">source_two_pages_</data>
+        <data key="description">Test Source Two Pages</data>
+    </entity>
 </entities>
