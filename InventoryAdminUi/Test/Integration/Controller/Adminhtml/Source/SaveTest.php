@@ -102,4 +102,23 @@ class SaveTest extends AbstractBackendController
             ],
         ];
     }
+
+    /**
+     * Verify, source will not be saved with source code that already exists in database.
+     *
+     * @return void
+     */
+    public function testValidateUniqueCode(): void
+    {
+        $requestData = $this->getRequestData();
+        $this->getRequest()->setMethod(HttpRequest::METHOD_POST);
+        $this->getRequest()->setPostValue($requestData);
+        $this->dispatch('backend/inventory/source/save');
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+        $requestData['general']['name'] .= '_new';
+        $this->getRequest()->setPostValue($requestData);
+        $this->dispatch('backend/inventory/source/save');
+        $this->assertSessionMessages($this->equalTo(['Could not save Source.']), MessageInterface::TYPE_ERROR);
+        $this->assertRedirect($this->stringContains('inventory/source/new'));
+    }
 }

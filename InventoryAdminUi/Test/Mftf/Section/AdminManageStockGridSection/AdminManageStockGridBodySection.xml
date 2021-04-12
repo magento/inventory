@@ -10,5 +10,7 @@
     <section name="AdminManageStockGridBody">
         <element name="dataRows" type="input" selector=".data-row"/>
         <element name="stockSelectedCheckbox" type="checkbox" selector="#idscheck{{id}}" parameterized="true"/>
+        <element name="assignedSourceContent" type="text" selector="table[data-role='grid'] ul[data-bind*='assignedSource']"/>
+        <element name="tooltipAssignedSource" type="text" selector="//div[contains(@class, 'data-tooltip-title') and contains(text(), 'Assigned Sources:')]/..//span[text()='{{source_code}}']" parameterized="true"/>
     </section>
 </sections>

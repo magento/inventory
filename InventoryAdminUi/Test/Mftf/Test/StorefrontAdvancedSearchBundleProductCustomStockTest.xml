@@ -16,9 +16,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="https://github.com/magento/inventory/issues/2836"/>
-            </skip>
         </annotations>
 
         <before>
@@ -36,7 +33,7 @@
             </createData>
             <!--Assign created source to product.-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
-            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProduct1EditPageToAssignSource"/>
+            <amOnPage url="{{AdminProductEditPage.url($product.id$)}}" stepKey="openProduct1EditPageToAssignSource"/>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
@@ -45,7 +42,7 @@
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
             <!--Add simple product to bundle.-->
-            <amOnPage url="{{AdminProductEditPage.url($$bundleProduct.id$$)}}" stepKey="openProductEditPageToAssignOption"/>
+            <amOnPage url="{{AdminProductEditPage.url($bundleProduct.id$)}}" stepKey="openProductEditPageToAssignOption"/>
             <conditionalClick selector="{{AdminProductFormBundleSection.bundleItemsToggle}}" dependentSelector="{{AdminProductFormBundleSection.bundleItemsToggle}}" visible="false" stepKey="conditionallyOpenSectionBundleItems"/>
             <click selector="{{AdminProductFormBundleSection.addOption}}" stepKey="clickAddOption"/>
             <waitForElementVisible selector="{{AdminProductFormBundleSection.bundleOptionXTitle('0')}}" stepKey="waitForBundleOptions"/>
@@ -55,7 +52,7 @@
             <click selector="{{AdminProductFormBundleSection.addProductsToOption}}" stepKey="clickAddProductsToOption"/>
             <waitForPageLoad stepKey="waitForPageLoadAfterBundleProducts"/>
             <actionGroup ref="FilterProductGridBySkuActionGroup" stepKey="filterBundleProductOptions">
-                <argument name="product" value="$$product$$"/>
+                <argument name="product" value="$product$"/>
             </actionGroup>
             <checkOption selector="{{AdminAddProductsToOptionPanel.firstCheckbox}}" stepKey="selectFirstGridRow"/>
             <click selector="{{AdminAddProductsToOptionPanel.addSelectedProducts}}" stepKey="clickAddSelectedBundleProducts"/>
@@ -67,16 +64,24 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Clear Admin Products Grid Filter -->
+            <actionGroup ref="ClearProductsFilterActionGroup" stepKey="clearProductFilter"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Clear stock grid filter -->
+            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockList"/>
+            <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="resetStockGridFilter"/>
             <!--Disable created source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+            <!--Clear source grid filter -->
+            <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
+            <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="resetSourceGridFilter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
