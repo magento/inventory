@@ -15,6 +15,7 @@ use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryImportExport\Model\Export\ColumnProviderInterface;
 use Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface;
 use Magento\ImportExport\Model\Export;
+use Magento\InventoryImportExport\Model\ResourceModel\Export\GetWebsiteCodesByWebsiteIds;
 
 /**
  * @inheritdoc
@@ -42,18 +43,34 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
     private $columnProvider;
 
     /**
+     * @var SourceItemCollectionWebsiteFilter
+     */
+    private $sourceItemCollectionWebsiteFilter;
+
+    /**
+     * @var GetWebsiteCodesByWebsiteIds
+     */
+    private $getWebsiteCodesByWebsiteIds;
+
+    /**
      * @param ObjectManagerInterface $objectManager
      * @param FilterProcessorAggregator $filterProcessor
      * @param ColumnProviderInterface $columnProvider
+     * @param SourceItemCollectionWebsiteFilter $sourceItemCollectionWebsiteFilter
+     * @param GetWebsiteCodesByWebsiteIds $getWebsiteCodesByWebsiteIds
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
         FilterProcessorAggregator $filterProcessor,
-        ColumnProviderInterface $columnProvider
+        ColumnProviderInterface $columnProvider,
+        SourceItemCollectionWebsiteFilter $sourceItemCollectionWebsiteFilter,
+        GetWebsiteCodesByWebsiteIds $getWebsiteCodesByWebsiteIds
     ) {
         $this->objectManager = $objectManager;
         $this->filterProcessor = $filterProcessor;
         $this->columnProvider = $columnProvider;
+        $this->sourceItemCollectionWebsiteFilter = $sourceItemCollectionWebsiteFilter;
+        $this->getWebsiteCodesByWebsiteIds = $getWebsiteCodesByWebsiteIds;
     }
 
     /**
@@ -70,6 +87,12 @@ class SourceItemCollectionFactory implements SourceItemCollectionFactoryInterfac
         $collection->addFieldToSelect($columns);
 
         foreach ($this->retrieveFilterData($filters) as $columnName => $value) {
+            if ($columnName === 'website_id') {
+                $websiteCodes = $this->getWebsiteCodesByWebsiteIds->execute($value);
+                $collection = $this->sourceItemCollectionWebsiteFilter
+                    ->filterByWebsiteCodes($collection, $websiteCodes);
+                continue;
+            }
             $attributeDefinition = $attributeCollection->getItemById($columnName);
             if (!$attributeDefinition) {
                 throw new LocalizedException(__(
