@@ -62,6 +62,9 @@
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
         <plugin name="reindex_after_source_items_save" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceItemsSavePlugin"/>
     </type>
+    <type name="Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty">
+        <plugin name="reindex_after_decrement_source_item_quantity" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterDecrementSourceItemQty"/>
+    </type>
     <type name="Magento\InventoryApi\Api\SourceItemsDeleteInterface">
         <plugin name="reindex_after_source_items_delete" type="Magento\InventoryIndexer\Plugin\InventoryApi\ReindexAfterSourceItemsDeletePlugin"/>
     </type>
