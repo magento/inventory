@@ -29,7 +29,7 @@ class IsSingleSourceModeTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->isSingleSourceMode = Bootstrap::getObjectManager()->get(IsSingleSourceModeInterface::class);
+        $this->isSingleSourceMode = Bootstrap::getObjectManager()->create(IsSingleSourceModeInterface::class);
         $this->sourceRepository = Bootstrap::getObjectManager()->get(SourceRepositoryInterface::class);
     }
 
