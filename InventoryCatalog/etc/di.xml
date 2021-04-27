@@ -12,7 +12,7 @@
     <preference for="Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface" type="Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkusCache" />
     <preference for="Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface" type="Magento\InventoryCatalog\Model\GetSkusByProductIdsCache"/>
     <preference for="Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface" type="Magento\InventoryCatalog\Model\GetParentSkusOfChildrenSkus"/>
-    <preference for="Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface" type="Magento\InventoryCatalog\Model\IsSingleSourceMode"/>
+    <preference for="Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface" type="Magento\InventoryCatalog\Model\IsSingleSourceModeCache"/>
     <preference for="Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface" type="Magento\InventoryCatalog\Model\SourceItemsProcessor"/>
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
         <plugin name="prevent_default_stock_deleting"
