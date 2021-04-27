@@ -1,0 +1,6 @@
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+
+type Mutation {
+    mergeCarts(source_cart_id: String!, destination_cart_id: String): Cart! @doc(description:"Merges the source cart into the destination cart") @resolver(class: "Magento\\InventoryQuoteGraphQl\\Model\\Resolver\\MergeCarts")
+}
