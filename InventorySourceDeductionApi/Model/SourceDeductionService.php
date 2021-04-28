@@ -120,8 +120,11 @@ class SourceDeductionService implements SourceDeductionServiceInterface
         SourceItemInterface $sourceItem
     ): int {
         $sourceItemQty = $sourceItem->getQuantity() ?: self::ZERO_STOCK_QUANTITY;
-        return $sourceItemQty === $stockItemConfiguration->getMinQty() && !$stockItemConfiguration->getBackorders()
+        $currentStatus = (int)$stockItemConfiguration->getExtensionAttributes()->getIsInStock();
+        $calculatedStatus = $sourceItemQty === $stockItemConfiguration->getMinQty() && !$stockItemConfiguration->getBackorders()
             ? SourceItemInterface::STATUS_OUT_OF_STOCK
             : SourceItemInterface::STATUS_IN_STOCK;
+
+        return $currentStatus === SourceItemInterface::STATUS_OUT_OF_STOCK ? $currentStatus : $calculatedStatus;
     }
 }
