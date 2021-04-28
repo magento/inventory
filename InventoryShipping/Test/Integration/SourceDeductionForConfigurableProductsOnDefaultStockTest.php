@@ -73,6 +73,8 @@ class SourceDeductionForConfigurableProductsOnDefaultStockTest extends TestCase
     }
 
     /**
+     * Check that source item deduction don't change stock status from "Out of stock" to "In stock"
+     *
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
@@ -96,23 +98,25 @@ class SourceDeductionForConfigurableProductsOnDefaultStockTest extends TestCase
         $order = current($this->orderRepository->getList($searchCriteria)->getItems());
 
         $items = [];
+        $sourceItems = [];
         foreach ($order->getItems() as $orderItem) {
             /** @var ShipmentItemCreationInterface $invoiceItemCreation */
             $shipmentItemCreation = $this->shipmentItemCreationFactory->create();
             $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
             $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
             $items[] = $shipmentItemCreation;
+            /** @var SourceItemInterface $sourceItem */
+            $sourceItem = current($this->getSourceItemBySku->execute($orderItem->getSku()));
+            $sourceItem->setStatus(SourceItemInterface::STATUS_OUT_OF_STOCK);
+            $sourceItems[] = $sourceItem;
         }
-
-        /** @var SourceItemInterface $sourceItem */
-        $sourceItem = current($this->getSourceItemBySku->execute('SKU-1'));
-        $sourceItem->setStatus(SourceItemInterface::STATUS_OUT_OF_STOCK);
-        $this->sourceItemsSaveHandler->execute([$sourceItem]);
+        $this->sourceItemsSaveHandler->execute($sourceItems);
 
         $this->shipOrder->execute($order->getEntityId(), $items);
 
-        /** @var SourceItemInterface $sourceItem */
-        $sourceItem = current($this->getSourceItemBySku->execute('SKU-1'));
-        self::assertEquals(SourceItemInterface::STATUS_OUT_OF_STOCK, $sourceItem->getStatus());
+        foreach ($sourceItems as $sourceItem) {
+            $sourceItemResult = current($this->getSourceItemBySku->execute($sourceItem->getSku()));
+            self::assertEquals(SourceItemInterface::STATUS_OUT_OF_STOCK, $sourceItemResult->getStatus());
+        }
     }
 }
