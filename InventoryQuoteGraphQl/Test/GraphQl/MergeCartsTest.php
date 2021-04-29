@@ -5,10 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryGraphQl\Test\GraphQl;
+namespace Magento\InventoryQuoteGraphQl\Test\GraphQl;
 
 use Exception;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Config\Model\ResourceModel\Config\Data;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Integration\Api\CustomerTokenServiceInterface;
@@ -18,7 +17,6 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
-use Magento\Store\Api\WebsiteRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
@@ -59,38 +57,6 @@ class MergeCartsTest extends GraphQlAbstract
         $this->quoteFactory = $this->objectManager->get(QuoteFactory::class);
         $this->quoteIdToMaskedId = $this->objectManager->get(QuoteIdToMaskedQuoteIdInterface::class);
         $this->customerTokenService = $this->objectManager->get(CustomerTokenServiceInterface::class);
-    }
-
-    /**
-     * @magentoApiDataFixture Magento/Catalog/_files/products_new.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryShipping/Test/_files/source_items_for_simple_on_multi_source.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function testMergingCartsWithAdditionalStockMainWebsite(): void
-    {
-        $this->assignWebsiteToStock(10, 'base');
-        $productSku = 'simple';
-        $query = <<<QUERY
-        {
-            products(filter: { sku: { eq: "{$productSku}"}})
-          {
-            items {
-              only_x_left_in_stock
-            }
-          }
-        }
-QUERY;
-
-        $response = $this->graphQlQuery($query);
-
-        $this->assertArrayHasKey(0, $response['products']['items']);
-        $this->assertEquals('14', $response['products']['items'][0]['only_x_left_in_stock']);
     }
 
     /**

@@ -3,24 +3,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-/** @var \Magento\Framework\ObjectManagerInterface $objectManager */
-$objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
+declare(strict_types=1);
 
-/** @var \Magento\Framework\Registry $registry */
-$registry = $objectManager->get(\Magento\Framework\Registry::class);
+use Magento\TestFramework\Workaround\Override\Fixture\Resolver;
 
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', true);
-
-/** @var \Magento\Catalog\Api\ProductRepositoryInterface $productRepository */
-$productRepository = $objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
-
-try {
-    $product = $productRepository->get('simple', false, null, true);
-    $productRepository->delete($product);
-} catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
-    //Product already removed
-}
-
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', false);
+Resolver::getInstance()->requireDataFixture(
+    'Magento/Catalog/_files/product_simple_rollback.php'
+);
