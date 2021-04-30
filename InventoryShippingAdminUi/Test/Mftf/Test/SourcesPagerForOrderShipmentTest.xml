@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SourcesPagerForOrderShipmentTest">
+        <annotations>
+            <stories value="Sources pagination in Admin during shipping"/>
+            <title value="Sources pagination does not work in Admin during shipping"/>
+            <description value="Sources pagination does not work in Admin during shipping"/>
+            <testCaseId value="MC-41990"/>
+            <useCaseId value="MC-40541"/>
+            <severity value="AVERAGE"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create Category and Simple Product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="simpleProduct">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Create US Sources.-->
+            <createData entity="USSource" stepKey="USSource1"/>
+            <createData entity="USSource" stepKey="USSource2"/>
+            <createData entity="USSource" stepKey="USSource3"/>
+            <createData entity="USSource" stepKey="USSource4"/>
+            <createData entity="USSource" stepKey="USSource5"/>
+            <createData entity="USSource" stepKey="USSource6"/>
+            <createData entity="USSource" stepKey="USSource7"/>
+            <createData entity="USSource" stepKey="USSource8"/>
+            <createData entity="USSource" stepKey="USSource9"/>
+            <createData entity="USSource" stepKey="USSource10"/>
+            <createData entity="USSource" stepKey="USSource11"/>
+            <createData entity="USSource" stepKey="USSource12"/>
+            <createData entity="USSource" stepKey="USSource13"/>
+            <createData entity="USSource" stepKey="USSource14"/>
+            <createData entity="USSource" stepKey="USSource15"/>
+            <createData entity="USSource" stepKey="USSource16"/>
+            <createData entity="USSource" stepKey="USSource17"/>
+            <createData entity="USSource" stepKey="USSource18"/>
+            <createData entity="USSource" stepKey="USSource19"/>
+            <createData entity="USSource" stepKey="USSource20"/>
+            <createData entity="USSource" stepKey="USSource21"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
+            <createData entity="SourceStockLinked1" stepKey="usSource1StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource1"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource2StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource2"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource3StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource3"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource4StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource4"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource5StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource5"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource6StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource6"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource7StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource7"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource8StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource8"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource9StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource9"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource10StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource10"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource11StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource11"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource12StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource12"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource13StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource13"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource14StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource14"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource15StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource15"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource16StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource16"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource17StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource17"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource18StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource18"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource19StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource19"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource20StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource20"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="usSource21StockLink">
+                <requiredEntity createDataKey="additionalStock"/>
+                <requiredEntity createDataKey="USSource21"/>
+            </createData>
+            <!--Create Customer.-->
+            <createData entity="Simple_US_Customer" stepKey="customer"/>
+            <!--Assign sources to product.-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
+            <!--Assign multiple sources to product.-->
+            <waitForPageLoad time="60" stepKey="waitForAssignSourcesToProduct"/>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource1ToProduct">
+                <argument name="sourceCode" value="$$USSource1.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource2ToProduct">
+                <argument name="sourceCode" value="$$USSource2.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource3ToProduct">
+                <argument name="sourceCode" value="$$USSource3.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource4ToProduct">
+                <argument name="sourceCode" value="$$USSource4.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource5ToProduct">
+                <argument name="sourceCode" value="$$USSource5.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource6ToProduct">
+                <argument name="sourceCode" value="$$USSource6.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource7ToProduct">
+                <argument name="sourceCode" value="$$USSource7.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource8ToProduct">
+                <argument name="sourceCode" value="$$USSource8.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource9ToProduct">
+                <argument name="sourceCode" value="$$USSource9.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource10ToProduct">
+                <argument name="sourceCode" value="$$USSource10.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource11ToProduct">
+                <argument name="sourceCode" value="$$USSource11.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource12ToProduct">
+                <argument name="sourceCode" value="$$USSource12.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource13ToProduct">
+                <argument name="sourceCode" value="$$USSource13.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource14ToProduct">
+                <argument name="sourceCode" value="$$USSource14.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource15ToProduct">
+                <argument name="sourceCode" value="$$USSource15.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource16ToProduct">
+                <argument name="sourceCode" value="$$USSource16.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource17ToProduct">
+                <argument name="sourceCode" value="$$USSource17.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource18ToProduct">
+                <argument name="sourceCode" value="$$USSource18.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource19ToProduct">
+                <argument name="sourceCode" value="$$USSource19.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource20ToProduct">
+                <argument name="sourceCode" value="$$USSource20.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource21ToProduct">
+                <argument name="sourceCode" value="$$USSource21.source[source_code]$$"/>
+            </actionGroup>
+            <click selector="{{AdminProductSourcesGrid.nextPage}}" stepKey="clickNextPageProductSourceGrid"/>
+            <fillField selector="{{AdminProductSourcesGrid.rowQtyBySourceCode($$USSource21.source[source_code]$$)}}" userInput="100" stepKey="setUSSourceQuantity"/>
+            <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
+        </before>
+        <after>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <!--Remove category, product, customer and additional stock.-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
+        </after>
+        <!--Login Customer.-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!--Add Product to Cart.-->
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
+        <actionGroup ref="StorefrontAddCategoryProductToCartWithQuantityActionGroup" stepKey="addSimpleProductToCart">
+            <argument name="product" value="$$simpleProduct$$"/>
+            <argument name="quantity" value="50"/>
+            <argument name="checkQuantity" value="1"/>
+        </actionGroup>
+        <!--Place Order.-->
+        <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+        <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
+        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
+        <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
+        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
+        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
+        <!--Create Shipment-->
+        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
+            <argument name="orderId" value="{$grabOrderNumber}"/>
+        </actionGroup>
+        <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
+        <!--Select source and proceed to shipment.-->
+        <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="$$USSource21.source[name]$$" stepKey="selectSourceToCreateShipment"/>
+        <scrollTo selector="{{AdminShipmentInventorySection.nextPageActive}}" stepKey="pagerSource"/>
+        <click selector="{{AdminShipmentInventorySection.nextPageActive}}" stepKey="clickNextPage"/>
+        <click selector="{{AdminSourceSelectionFormSection.proceedToShipment}}" stepKey="createShipment"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad9"/>
+        <see selector="{{AdminShipmentOrderInformationSection.orderStatus}}" userInput="Pending" stepKey="seeShipmentOrderStatus"/>
+        <actionGroup ref="SeeProductInShipmentItemsActionGroup" stepKey="checkProductInShipment">
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+        <see selector="{{AdminShipmentInventorySection.sourceList}}" userInput="$$USSource21.source[name]$$" stepKey="checkSourceNameOnShipmentPage"/>
+        <!--Submit and verify shipment.-->
+        <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="clickSubmitShipment"/>
+        <seeInCurrentUrl url="{{AdminOrderDetailsPage.url}}" stepKey="seeViewOrderPageShipping"/>
+        <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="checkShipmentCreateSuccessMessage"/>
+        <see selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="Processing" stepKey="checkOrderStatus"/>
+        <see selector="{{AdminOrderItemsOrderedSection.itemQty('1')}}" userInput="Shipped 50" stepKey="checkShippedQuantity"/>
+    </test>
+</tests>
