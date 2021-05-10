@@ -60,7 +60,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <selectOption selector="//select[contains(@class,' required product-custom-option admin__control-select')]" userInput="{{ProductOptionValueDropdown1.title}} +${{ProductOptionValueDropdown1.price}}" stepKey="selectOption"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="10" stepKey="fillProductQty"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>

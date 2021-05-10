@@ -28,6 +28,7 @@
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         </before>
         <after>
+            <actionGroup ref="AdminClearFiltersActionGroup" stepKey="clearProductsGridFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
@@ -38,22 +39,22 @@
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForEditProduct"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSimpleProductBySku">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$$product.sku$$"/>
+            <argument name="value" value="$product.sku$"/>
         </actionGroup>
         <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage"/>
 
-        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
+        <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$category.name$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <comment userInput="Login and buy fifty pieces of virtual product on storefront." stepKey="buyVirtualProductComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
-            <argument name="Customer" value="$$customer$$"/>
+            <argument name="Customer" value="$customer$"/>
         </actionGroup>
 
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($category.custom_attributes[url_key]$)}}" stepKey="navigateToCategoryPage"/>
         <actionGroup ref="StorefrontAddCategoryProductToCartWithQuantityActionGroup" stepKey="addSimpleProductToCart">
-            <argument name="product" value="$$product$$"/>
+            <argument name="product" value="$product$"/>
             <argument name="quantity" value="50"/>
             <argument name="checkQuantity" value="1"/>
         </actionGroup>
@@ -80,7 +81,7 @@
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSimpleProductBySkuToCheckQtyAfterPlaceOrder">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$$product.sku$$"/>
+            <argument name="value" value="$product.sku$"/>
         </actionGroup>
         <see selector="{{AdminGridRow.rowOne}}" userInput="1000" stepKey="checkProductSourceQtyAfterPlaceOrder"/>
         <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="950" stepKey="checkSalableQtyAfterPlaceOrder"/>
@@ -105,7 +106,7 @@
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexPageForCheckProductQtyAfterInvoiceCreated"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSimpleProductBySkuToCheckQtyAfterInvoiceCreated">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value" value="$$product.sku$$"/>
+            <argument name="value" value="$product.sku$"/>
         </actionGroup>
         <see selector="{{AdminGridRow.rowOne}}" userInput="950" stepKey="checkProductSourceQtyInvoiceCreated"/>
         <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="950" stepKey="checkSalableQtyAfterInvoiceCreated"/>

@@ -59,7 +59,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product.name$$)}}" stepKey="navigateToPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <actionGroup ref="StorefrontProductPageSelectDropDownOptionValueActionGroup" stepKey="selectOption">
             <argument name="attributeLabel" value="{{ProductOptionDropDown.title}}"/>
             <argument name="optionLabel" value="{{ProductOptionValueDropdown1.title}}"/>

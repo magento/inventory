@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontGuestShippingAddressSwitchAndRefreshTest">
+        <annotations>
+            <stories value="Simple Product Custom Stock."/>
+            <title value="Store should be pre-selected after refreshing shipping page with store pickup delivery method"/>
+            <description value="Store should be pre-selected after refreshing shipping page with store pickup delivery method"/>
+            <testCaseId value="MC-41125"/>
+            <useCaseId value="MC-40772"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="store_pickup"/>
+        </annotations>
+        <before>
+            <!--Set Distance Provider for Distance Based SSA to offline-->
+            <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Enable 'In Store Pickup' shipping method-->
+            <magentoCLI command="config:set {{EnableInStorePickup.path}} {{EnableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <!--Download tables for 'US'-->
+            <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <!--Create test data-->
+            <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="culverSource"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Assign product to sources-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
+            </actionGroup>
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCulverSourceAndSetQty">
+                <argument name="sourceCode" value="$culverSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignAustinSourceAndSetQty">
+                <argument name="sourceCode" value="$austinSource.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Revert Distance Provider for Distance Based SSA to online-->
+            <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
+            <!--Disable 'In Store Pickup' shipping method-->
+            <magentoCLI command="config:set {{DisableInStorePickup.path}} {{DisableInStorePickup.value}}" stepKey="enableInStorePickupMethod"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Assign Default Stock to Default Website-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <!--Add product to cart-->
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$product$"/>
+        </actionGroup>
+        <!--Navigate to checkout-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
+        <!--Fill shipping information-->
+        <actionGroup ref="FillGuestCheckoutShippingAddressWithCountryAndStateActionGroup" stepKey="guestCheckoutFillingShipping">
+            <argument name="customer" value="Simple_US_Customer_NY"/>
+            <argument name="customerAddress" value="US_Address_NY"/>
+        </actionGroup>
+        <!--Select flat rate shipping method-->
+        <actionGroup ref="CheckoutSelectFlatRateShippingMethodActionGroup" stepKey="selectFlatRate"/>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore"/>
+        <!--Click 'Select Store'-->
+        <actionGroup ref="StorefrontPickInStoreNavigateToSelectStoreActionGroup" stepKey="navigateToSelectStores"/>
+        <!--Select store-->
+        <actionGroup ref="StorefrontPickInStoreSelectSourceActionGroup" stepKey="selectSource">
+            <argument name="searchString" value="{{CulverStorePickupEnabledSource.city}}"/>
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <!--Verify that store is selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelected">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage"/>
+        <!--Verify that store is pre-selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterPageRefresh">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+        <!--Click 'Shipping'-->
+        <actionGroup ref="StorefrontSelectShippingActionGroup" stepKey="switchToShipping"/>
+        <!--Verify that shipping address form is pre-filled-->
+        <actionGroup ref="AssertStorefrontGuestCheckoutShippingAddressFormPrefilledActionGroup" stepKey="verifyThatShippingAddressFormIsPrefilledAfterPageRefresh">
+            <argument name="customer" value="Simple_US_Customer_NY"/>
+            <argument name="address" value="US_Address_NY"/>
+        </actionGroup>
+        <!--Refresh Page-->
+        <actionGroup ref="ReloadPageActionGroup" stepKey="refreshPage2"/>
+        <!--Switch to In Pick In Store-->
+        <actionGroup ref="StorefrontPickInStoreActionGroup" stepKey="pickInStore2"/>
+        <!--Verify that store is pre-selected-->
+        <actionGroup ref="StorefrontAssertSelectedStoreActionGroup" stepKey="verifyThatStoreIsSelectedAfterPageRefresh2">
+            <argument name="sourceName" value="$culverSource.source[name]$"/>
+        </actionGroup>
+    </test>
+</tests>

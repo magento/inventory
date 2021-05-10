@@ -102,8 +102,8 @@
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="StorefrontAddCategoryBundleProductToCartActionGroup" stepKey="addBundleProductToCart">
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
+        <actionGroup ref="StorefrontAddCategoryBundleProductWithSingleChoiceToCartActionGroup" stepKey="addBundleProductToCart">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>

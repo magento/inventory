@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventorySourceDeductionApi\Model;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface;
@@ -23,11 +23,6 @@ class SourceDeductionService implements SourceDeductionServiceInterface
      * Constant for zero stock quantity value.
      */
     private const ZERO_STOCK_QUANTITY = 0.0;
-
-    /**
-     * @var SourceItemsSaveInterface
-     */
-    private $sourceItemsSave;
 
     /**
      * @var GetSourceItemBySourceCodeAndSku
@@ -45,21 +40,26 @@ class SourceDeductionService implements SourceDeductionServiceInterface
     private $getStockBySalesChannel;
 
     /**
-     * @param SourceItemsSaveInterface $sourceItemsSave
+     * @var DecrementSourceItemQty
+     */
+    private $decrementSourceItem;
+
+    /**
      * @param GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param GetStockBySalesChannelInterface $getStockBySalesChannel
+     * @param DecrementSourceItemQty $decrementSourceItem
      */
     public function __construct(
-        SourceItemsSaveInterface $sourceItemsSave,
         GetSourceItemBySourceCodeAndSku $getSourceItemBySourceCodeAndSku,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
-        GetStockBySalesChannelInterface $getStockBySalesChannel
+        GetStockBySalesChannelInterface $getStockBySalesChannel,
+        DecrementSourceItemQty $decrementSourceItem
     ) {
-        $this->sourceItemsSave = $sourceItemsSave;
         $this->getSourceItemBySourceCodeAndSku = $getSourceItemBySourceCodeAndSku;
         $this->getStockItemConfiguration = $getStockItemConfiguration;
         $this->getStockBySalesChannel = $getStockBySalesChannel;
+        $this->decrementSourceItem = $decrementSourceItem;
     }
 
     /**
@@ -67,11 +67,10 @@ class SourceDeductionService implements SourceDeductionServiceInterface
      */
     public function execute(SourceDeductionRequestInterface $sourceDeductionRequest): void
     {
-        $sourceItems = [];
         $sourceCode = $sourceDeductionRequest->getSourceCode();
         $salesChannel = $sourceDeductionRequest->getSalesChannel();
-
         $stockId = $this->getStockBySalesChannel->execute($salesChannel)->getStockId();
+        $sourceItemDecrementData = [];
         foreach ($sourceDeductionRequest->getItems() as $item) {
             $itemSku = $item->getSku();
             $qty = $item->getQty();
@@ -93,7 +92,10 @@ class SourceDeductionService implements SourceDeductionServiceInterface
                     $sourceItem
                 );
                 $sourceItem->setStatus($stockStatus);
-                $sourceItems[] = $sourceItem;
+                $sourceItemDecrementData[] = [
+                    'source_item' => $sourceItem,
+                    'qty_to_decrement' => $qty
+                ];
             } else {
                 throw new LocalizedException(
                     __('Not all of your products are available in the requested quantity.')
@@ -101,8 +103,8 @@ class SourceDeductionService implements SourceDeductionServiceInterface
             }
         }
 
-        if (!empty($sourceItems)) {
-            $this->sourceItemsSave->execute($sourceItems);
+        if (!empty($sourceItemDecrementData)) {
+            $this->decrementSourceItem->execute($sourceItemDecrementData);
         }
     }
 

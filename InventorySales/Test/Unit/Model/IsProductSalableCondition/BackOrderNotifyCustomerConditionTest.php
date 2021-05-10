@@ -75,8 +75,8 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
             ->willReturnCallback(
                 function ($args) {
                     $mock = $this->getMockForAbstractClass(ProductSalabilityErrorInterface::class);
-                    $mock->method('getCode')->willReturn($args['code'] ?? null);
-                    $mock->method('getMessage')->willReturn($args['message'] ?? null);
+                    $mock->method('getCode')->willReturn($args['code']);
+                    $mock->method('getMessage')->willReturn($args['message']->render());
                     return $mock;
                 }
             );
@@ -117,7 +117,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
      * @dataProvider executeDataProvider
      * @param array|null $stockData
      * @param int $reqQty
-     * @param int $salableQty
+     * @param float $salableQty
      * @param int $backOrders
      * @param bool $manageStock
      * @param array $errors
@@ -126,7 +126,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
     public function testExecute(
         ?array $stockData,
         int $reqQty,
-        int $salableQty,
+        float $salableQty,
         int $backOrders,
         bool $manageStock,
         array $errors
@@ -136,7 +136,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
         $this->stockItemConfiguration->method('getBackorders')
             ->willReturn($backOrders);
         $this->getProductSalableQty->method('execute')
-            ->willReturn($salableQty);
+            ->willReturn((float)$salableQty);
         $this->stockItemData = $stockData;
         $actualErrors = [];
         foreach ($this->model->execute('simple', 1, $reqQty)->getErrors() as $error) {

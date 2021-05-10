@@ -65,7 +65,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontProductPage.url($$groupedProduct.name$$)}}" stepKey="navigateToGroupedPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$groupedProduct.custom_attributes[url_key]$$)}}" stepKey="navigateToGroupedPDP"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>
         <!--Place order.-->
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>

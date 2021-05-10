@@ -85,8 +85,8 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedBundleProduct"/>
 
         <comment userInput="Navigate to storefront and buy one piece of bundle product as guest customer." stepKey="buyBundleProductComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="StorefrontAddCategoryBundleProductToCartActionGroup" stepKey="addBundleProductToCart">
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
+        <actionGroup ref="StorefrontAddCategoryBundleProductWithSingleChoiceToCartActionGroup" stepKey="addBundleProductToCart">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>

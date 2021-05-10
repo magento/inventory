@@ -18,6 +18,9 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="store_pickup"/>
+            <skip>
+                <issueId value="DEPRECATED">Use StorefrontGuestBillingAddressFormEmptyTest</issueId>
+            </skip>
         </annotations>
         <before>
             <!--Set Distance Provider for Distance Based SSA to offline-->

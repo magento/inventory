@@ -51,7 +51,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Try to buy product wit decimal quantity from storefront.-->
-        <amOnPage url="{{StorefrontProductPage.url($$product.sku$$)}}" stepKey="navigateToProductPDP"/>
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToProductPDP"/>
         <waitForElementVisible selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="waitForAddToCartButton"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1.5" stepKey="fillQuantity"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCart"/>

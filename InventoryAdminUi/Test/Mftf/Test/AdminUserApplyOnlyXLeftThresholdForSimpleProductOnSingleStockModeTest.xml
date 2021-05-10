@@ -67,7 +67,7 @@
         </actionGroup>
 
         <comment userInput="Add product to cart" stepKey="addProductToCartComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoad"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createSimpleProduct.product[name]$$)}}" stepKey="openProductPage"/>
         <waitForAjaxLoad stepKey="waitForImageLoader"/>
@@ -93,7 +93,7 @@
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
 
         <comment userInput="Verify that message 'Only 500 left' appeared on product page on frontend." stepKey="verifyMessageIsDisplayedComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategoryForVerifyMessage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryForVerifyMessage"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageLoadForVerifyMessage"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo(SimpleProduct.name)}}" stepKey="openProductPageForVerifyMessage"/>
         <waitForAjaxLoad stepKey="waitForImageLoaderForVerifyMessage"/>

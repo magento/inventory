@@ -61,8 +61,8 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add product to cart.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
-        <actionGroup ref="StorefrontAddCategoryBundleProductToCartActionGroup" stepKey="addBundleProductToCart">
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
+        <actionGroup ref="StorefrontAddCategoryBundleProductWithSingleChoiceToCartActionGroup" stepKey="addBundleProductToCart">
             <argument name="product" value="$bundleProduct$"/>
             <argument name="quantity" value="{{minimalProductQty.value}}"/>
         </actionGroup>
@@ -76,7 +76,7 @@
         </actionGroup>
         <actionGroup ref="AdminCreateInvoiceActionGroup" stepKey="createInvoice"/>
         <!--Verify Grouped product is not visible on category page on frontend-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageToVerifyProduct"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyProduct"/>
         <see selector=".empty" userInput="We can't find products matching the selection." stepKey="verifyProductIsAbsentOnCategoryPage"/>
     </test>
 </tests>

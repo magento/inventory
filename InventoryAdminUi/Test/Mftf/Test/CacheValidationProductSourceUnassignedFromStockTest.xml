@@ -68,7 +68,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
         <!--Verify product is visible in storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsNotVisible"/>
         <see userInput="$$simpleProduct.name$$" stepKey="verifyProductIsVisible"/>
 
@@ -80,7 +80,7 @@
         <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
 
         <!--Verify product is not visible on storefront page.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
         <waitForPageLoad time="30" stepKey="waitForCategoryPageIsLoadToVerifyProductIsVisible"/>
         <dontSee userInput="$$simpleProduct.name$$" stepKey="verifyProductIsNotVisible"/>
     </test>

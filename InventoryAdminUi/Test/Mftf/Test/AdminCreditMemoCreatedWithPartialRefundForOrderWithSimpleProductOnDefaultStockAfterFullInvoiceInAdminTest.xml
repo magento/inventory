@@ -65,7 +65,7 @@
 
         <!--Purchase product once logged in-->
         <comment userInput="Purchase 5 simple product" stepKey="purchaseSimpleProductComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <moveMouseOver selector="{{StorefrontCategoryProductSection.ProductInfoByName($$simpleProduct.name$$)}}" stepKey="moveMouseOverProduct" />
         <click selector="{{StorefrontCategoryProductSection.ProductAddToCartByName($$simpleProduct.name$$)}}" stepKey="clickAddToCart" />
         <waitForElement selector="{{StorefrontMessagesSection.messageProductAddedToCart($$simpleProduct.name$$)}}" time="30" stepKey="assertMessage"/>

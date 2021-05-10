@@ -16,13 +16,21 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
+use Magento\Framework\MessageQueue\MessageEncoder;
+use Magento\Framework\MessageQueue\QueueFactoryInterface;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
+use Magento\ImportExport\Model\Import\Source\CsvFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
+use Magento\MysqlMq\Model\Driver\Queue;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,6 +41,11 @@ use PHPUnit\Framework\TestCase;
  */
 class ProductTest extends TestCase
 {
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
     /**
      * @var DefaultSourceProviderInterface
      */
@@ -64,25 +77,49 @@ class ProductTest extends TestCase
     private $importedProducts;
 
     /**
+     * @var Queue
+     */
+    private $queue;
+
+    /**
+     * @var MessageEncoder
+     */
+    private $messageEncoder;
+
+    /**
+     * @var DeleteSourceItemsBySkus
+     */
+    private $consumer;
+
+    /**
+     * @var DeleteTopicRelatedMessages
+     */
+    private $deleteTopicMessages;
+
+    /**
+     * @var GetBySku
+     */
+    private $getBySku;
+
+    /**
      * Setup Test for Product Import
      */
     public function setUp(): void
     {
-        $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(
-            DefaultSourceProviderInterface::class
+        $this->objectManager = Bootstrap::getObjectManager();
+        $this->defaultSourceProvider = $this->objectManager->get(DefaultSourceProviderInterface::class);
+        $this->filesystem = $this->objectManager->get(Filesystem::class);
+        $this->productImporterFactory = $this->objectManager->get(ProductFactory::class);
+        $this->searchCriteriaBuilderFactory = $this->objectManager->get(SearchCriteriaBuilderFactory::class);
+        $this->sourceItemRepository = $this->objectManager->get(SourceItemRepositoryInterface::class);
+        $this->queue = $this->objectManager->get(QueueFactoryInterface::class)->create(
+            'inventory.source.items.cleanup',
+            'db'
         );
-        $this->filesystem = Bootstrap::getObjectManager()->get(
-            Filesystem::class
-        );
-        $this->productImporterFactory = Bootstrap::getObjectManager()->get(
-            ProductFactory::class
-        );
-        $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
-            SearchCriteriaBuilderFactory::class
-        );
-        $this->sourceItemRepository = Bootstrap::getObjectManager()->get(
-            SourceItemRepositoryInterface::class
-        );
+        $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
+        $this->consumer = $this->objectManager->get(DeleteSourceItemsBySkus::class);
+        $this->deleteTopicMessages = $this->objectManager->get(DeleteTopicRelatedMessages::class);
+        $this->getBySku = $this->objectManager->get(GetBySku::class);
     }
 
     /**
@@ -100,7 +137,7 @@ class ProductTest extends TestCase
         $productImporterModel->importData();
         $sku = 'example_simple_for_source_item';
         $compareData = $this->buildDataArray(
-            $this->getSourceItemList()->getItems()
+            $this->getSourceItemList('example_simple_for_source_item')->getItems()
         );
         $expectedData = [
             SourceItemInterface::SKU => $sku,
@@ -134,7 +171,7 @@ class ProductTest extends TestCase
         $productImporterModel->importData();
         $sku = 'example_simple_for_source_item';
         $compareData = $this->buildDataArray(
-            $this->getSourceItemList()->getItems()
+            $this->getSourceItemList('example_simple_for_source_item')->getItems()
         );
         $expectedData = [
             SourceItemInterface::SKU => $sku,
@@ -154,18 +191,58 @@ class ProductTest extends TestCase
     }
 
     /**
+     * @magentoConfigFixture default/cataloginventory/options/synchronize_with_catalog 1
+     *
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryLowQuantityNotificationApi::Test/_files/source_item_configuration.php
+     *
+     * @return void
+     */
+    public function testSourceItemDeletedOnProductImport(): void
+    {
+        $this->deleteTopicMessages->execute('inventory.source.items.cleanup');
+        $pathToFile = __DIR__ . '/_files/product_import_SKU-1.csv';
+        $productSku = 'SKU-1';
+        $productImporterModel = $this->getProductImporterModel($pathToFile, Import::BEHAVIOR_DELETE);
+        $errors = $productImporterModel->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+        $productImporterModel->importData();
+        $this->importedProducts[] = $productSku;
+        $this->processMessages('inventory.source.items.cleanup');
+
+        $this->assertEmpty($this->getSourceItemList($productSku)->getItems());
+        $this->assertEmpty($this->getBySku->execute($productSku));
+    }
+
+    /**
+     * Process topic messages
+     *
+     * @param string $topicName
+     * @return void
+     */
+    private function processMessages(string $topicName): void
+    {
+        $envelope = $this->queue->dequeue();
+        $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
+        $this->consumer->execute($decodedMessage);
+    }
+
+    /**
      * Get List of Source Items which match SKU and Source ID of dummy data
      *
+     * @param string $sku
      * @return SourceItemSearchResultsInterface
      */
-    private function getSourceItemList(): SourceItemSearchResultsInterface
+    private function getSourceItemList(string $sku): SourceItemSearchResultsInterface
     {
         /** @var SearchCriteriaBuilder $searchCriteria */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
 
         $searchCriteriaBuilder->addFilter(
             SourceItemInterface::SKU,
-            'example_simple_for_source_item'
+            $sku
         );
 
         $searchCriteriaBuilder->addFilter(
@@ -206,15 +283,14 @@ class ProductTest extends TestCase
      * @return Product
      */
     private function getProductImporterModel(
-        $pathToFile,
-        $behavior = Import::BEHAVIOR_ADD_UPDATE
+        string $pathToFile,
+        string $behavior = Import::BEHAVIOR_ADD_UPDATE
     ): Product {
         /** @var Filesystem\Directory\WriteInterface $directory */
         $directory = $this->filesystem
             ->getDirectoryWrite(DirectoryList::ROOT);
         /** @var Csv $source */
-        $source = Bootstrap::getObjectManager()->create(
-            Csv::class,
+        $source = $this->objectManager->get(CsvFactory::class)->create(
             [
                 'file' => $pathToFile,
                 'directory' => $directory
@@ -234,7 +310,6 @@ class ProductTest extends TestCase
     /**
      * Cleanup test by removing products.
      *
-     * @param string[] $skus
      * @return void
      */
     protected function tearDown(): void

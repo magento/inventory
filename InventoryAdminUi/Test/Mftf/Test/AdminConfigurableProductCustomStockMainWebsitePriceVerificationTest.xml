@@ -144,7 +144,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="fillBlueVariationQuantity"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveTextSwatch2Variation"/>
         <!--Verify configurable product price on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoad"/>
         <see userInput="{{ConfigurableMsiProduct.name}}" stepKey="assertProductPresent"/>
         <see userInput="As low as $10.00" stepKey="assertAsLowAsPrice"/>
@@ -156,7 +156,7 @@
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
         <magentoCLI command="cache:flush" stepKey="flushCache"/>
         <!--Verify configurable product price on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.name$$)}}" stepKey="navigateToCategoryPageToVerifyPriceChanged"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyPriceChanged"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyPriceChanged"/>
         <see userInput="As low as $20.00" stepKey="assertAsLowAsPriceChanged"/>
     </test>

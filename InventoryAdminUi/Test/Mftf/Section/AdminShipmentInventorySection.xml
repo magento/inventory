@@ -10,5 +10,6 @@
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminShipmentInventorySection">
         <element name="sourceList" type="text" selector=".inventory div.admin__page-section-content"/>
+        <element name="nextPageActive" type="button" selector=".admin__dynamic-rows div.admin__data-grid-pager > button.action-next:not(.disabled)" timeout="30"/>
     </section>
 </sections>

@@ -14,7 +14,8 @@ define([
     'Magento_Checkout/js/action/select-shipping-address',
     'underscore',
     'mage/translate',
-    'mage/url'
+    'mage/url',
+    'Magento_InventoryInStorePickupFrontend/js/model/pickup-address-converter'
 ], function (
     $,
     ko,
@@ -26,7 +27,8 @@ define([
     selectShippingAddressAction,
     _,
     $t,
-    url
+    url,
+    pickupAddressConverter
 ) {
     'use strict';
 
@@ -119,35 +121,19 @@ define([
                     'country_id': location['country_id'],
                     telephone: location.telephone,
                     'region_id': location['region_id'],
-                    'save_in_address_book': 0
-                }),
-                {
-                    /**
-                     * Is address can be used for billing
-                     *
-                     * @return {Boolean}
-                     */
-                    canUseForBilling: function () {
-                        return false;
-                    },
-
-                    /**
-                     * Returns address type
-                     *
-                     * @return {String}
-                     */
-                    getType: function () {
-                        return 'store-pickup-address';
-                    },
+                    'save_in_address_book': 0,
                     'extension_attributes': {
                         'pickup_location_code': location['pickup_location_code']
                     }
-                }
-            );
+                }));
 
+            address = pickupAddressConverter.formatAddressToPickupAddress(address);
             this.selectedLocation(location);
             selectShippingAddressAction(address);
             checkoutData.setSelectedShippingAddress(address.getKey());
+            checkoutData.setSelectedPickupAddress(
+                addressConverter.quoteAddressToFormAddressData(address)
+            );
         },
 
         /**
@@ -238,6 +224,29 @@ define([
                     return error.parameters.shift();
                 });
             }
+        },
+
+        /**
+         * Returns selected pick up address from local storage
+         *
+         * @returns {Object|null}
+         */
+        getSelectedPickupAddress: function () {
+            var shippingAddress,
+                pickUpAddress;
+
+            if (checkoutData.getSelectedPickupAddress()) {
+                shippingAddress = addressConverter.formAddressDataToQuoteAddress(
+                    checkoutData.getSelectedPickupAddress()
+                );
+                pickUpAddress = pickupAddressConverter.formatAddressToPickupAddress(
+                    shippingAddress
+                );
+
+                return pickUpAddress;
+            }
+
+            return null;
         }
     };
 });

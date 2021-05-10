@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
+use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
+use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
 
 /**
@@ -27,15 +29,31 @@ class CacheFlush
     private $getProductIdsBySourceItemIds;
 
     /**
+     * @var GetCategoryIdsByProductIds
+     */
+    private $getCategoryIdsByProductIds;
+
+    /**
+     * @var FlushCacheByCategoryIds
+     */
+    private $flushCategoryByCategoryIds;
+
+    /**
      * @param FlushCacheByProductIds $flushCacheByIds
      * @param GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
+     * @param GetCategoryIdsByProductIds $getCategoryIdsByProductIds
+     * @param FlushCacheByCategoryIds $flushCategoryByCategoryIds
      */
     public function __construct(
         FlushCacheByProductIds $flushCacheByIds,
-        GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
+        GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds,
+        GetCategoryIdsByProductIds $getCategoryIdsByProductIds,
+        FlushCacheByCategoryIds $flushCategoryByCategoryIds
     ) {
         $this->flushCacheByIds = $flushCacheByIds;
         $this->getProductIdsBySourceItemIds = $getProductIdsBySourceItemIds;
+        $this->getCategoryIdsByProductIds = $getCategoryIdsByProductIds;
+        $this->flushCategoryByCategoryIds = $flushCategoryByCategoryIds;
     }
 
     /**
@@ -50,6 +68,8 @@ class CacheFlush
     public function afterExecuteList(Sync $subject, $result, array $sourceItemIds)
     {
         $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
+        $categoryIds = $this->getCategoryIdsByProductIds->execute($productIds);
+        $this->flushCategoryByCategoryIds->execute($categoryIds);
         $this->flushCacheByIds->execute($productIds);
     }
 }

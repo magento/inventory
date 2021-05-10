@@ -65,7 +65,7 @@
         </actionGroup>
 
         <comment userInput="Add product to cart." stepKey="addProductToCartComment"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.name$$)}}" stepKey="navigateToCategory"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategory"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <click selector="{{StorefrontCategoryMainSection.specifiedProductItemInfo($$createProduct.product[name]$$)}}" stepKey="openProductPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>

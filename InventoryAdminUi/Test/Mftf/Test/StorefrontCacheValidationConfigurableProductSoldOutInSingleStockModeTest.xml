@@ -80,7 +80,7 @@
         </actionGroup>
         <actionGroup ref="AdminShipThePendingOrderActionGroup" stepKey="shipOrder"/>
         <!--Verify product is not visible on storefront.-->
-        <amOnPage url="{{StorefrontCategoryPage.url($category.name$)}}" stepKey="navigateToCategoryPage"/>
+        <amOnPage url="{{StorefrontCategoryPage.url($category.custom_attributes[url_key]$)}}" stepKey="navigateToCategoryPage"/>
         <see selector="{{StorefrontCategoryMainSection.emptyProductMessage}}" userInput="We can't find products matching the selection." stepKey="seeEmptyProductMessage"/>
     </test>
 </tests>
