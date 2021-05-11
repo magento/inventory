@@ -145,6 +145,31 @@ class SourcesTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @dataProvider exportWithWebsiteFilterDataProvider
+     * @param int $websiteId
+     * @param string $expectedOutput
+     */
+    public function testExportWithWebsiteFilter(int $websiteId, string $expectedOutput)
+    {
+        $this->exporter->setParameters([
+            Export::FILTER_ELEMENT_GROUP => [
+                'website_id' => [$websiteId]
+            ]
+        ]);
+        $this->exporter->export();
+
+        $this->assertEquals(
+            file_get_contents(implode(DIRECTORY_SEPARATOR, [__DIR__, '_files', $expectedOutput])),
+            file_get_contents($this->exportFilePath)
+        );
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      */
     public function testExportFilteredWithoutStatusColumn()
     {
@@ -167,5 +192,12 @@ class SourcesTest extends TestCase
             ])),
             file_get_contents($this->exportFilePath)
         );
+    }
+
+    public function exportWithWebsiteFilterDataProvider()
+    {
+        return [
+            [0, 'export_empty.csv'],
+        ];
     }
 }
