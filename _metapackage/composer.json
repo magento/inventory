@@ -55,6 +55,7 @@
         "magento/module-inventory-low-quantity-notification-api": "*",
         "magento/module-inventory-multi-dimensional-indexer-api": "*",
         "magento/module-inventory-product-alert": "*",
+        "magento/module-inventory-quote-graph-ql": "*",
         "magento/module-inventory-requisition-list": "*",
         "magento/module-inventory-reservation-cli": "*",
         "magento/module-inventory-reservations": "*",
