@@ -9,9 +9,6 @@
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminCreateDownloadableProductWithInvalidDomainLinkUrlTest">
         <annotations>
-            <skip>
-                <issueId value="MSI-2423"/>
-            </skip>
         </annotations>
     </test>
 </tests>
