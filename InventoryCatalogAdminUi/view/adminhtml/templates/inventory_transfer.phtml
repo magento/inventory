@@ -132,7 +132,7 @@ $destinationSources = $viewModel->getSources();
         });
 
         $('#bulk-operation').click(function () {
-           $('#bulk-operation-form').submit();
+           $('#bulk-operation-form').trigger('submit');
         });
     })
 </script>
