@@ -51,18 +51,12 @@ class DeductSourceItemQuantityOnRefundPlugin
     private $orderRepository;
 
     /**
-     * @var CreditmemoRepositoryInterface
-     */
-    private $creditmemoRepository;
-
-    /**
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
      * @param ItemsToRefundInterfaceFactory $itemsToRefundFactory
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param DeductSourceItemQuantityOnRefund $deductSourceItemQuantityOnRefund
      * @param OrderRepositoryInterface $orderRepository
-     * @param CreditmemoRepositoryInterface $creditmemoRepository
      */
     public function __construct(
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
@@ -70,8 +64,7 @@ class DeductSourceItemQuantityOnRefundPlugin
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         DeductSourceItemQuantityOnRefund $deductSourceItemQuantityOnRefund,
-        OrderRepositoryInterface $orderRepository,
-        CreditmemoRepositoryInterface $creditmemoRepository
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
         $this->itemsToRefundFactory = $itemsToRefundFactory;
@@ -79,7 +72,6 @@ class DeductSourceItemQuantityOnRefundPlugin
         $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->deductSourceItemQuantityOnRefund = $deductSourceItemQuantityOnRefund;
         $this->orderRepository = $orderRepository;
-        $this->creditmemoRepository = $creditmemoRepository;
     }
 
     public function aroundSave(
@@ -88,49 +80,42 @@ class DeductSourceItemQuantityOnRefundPlugin
         CreditmemoInterface $creditmemo
     )
     {
-        $order = $this->orderRepository->get($creditmemo->getOrderId());
-        $itemsToRefund = $refundedOrderItemIds = [];
-        /** @var CreditmemoItem $item */
-        foreach ($creditmemo->getItems() as $item) {
-            /** @var OrderItemInterface $orderItem */
-            $orderItem = $item->getOrderItem();
-            $sku = $this->getSkuFromOrderItem->execute($orderItem);
+        if ($creditmemo->isObjectNew()) {
+            $order = $this->orderRepository->get($creditmemo->getOrderId());
+            $itemsToRefund = $refundedOrderItemIds = [];
+            /** @var CreditmemoItem $item */
+            foreach ($creditmemo->getItems() as $item) {
+                /** @var OrderItemInterface $orderItem */
+                $orderItem = $item->getOrderItem();
+                $sku = $this->getSkuFromOrderItem->execute($orderItem);
 
-            if ($this->isValidItem($sku, $item)) {
-                $refundedOrderItemIds[] = $item->getOrderItemId();
-                $qty = (float)$item->getQty();
-                $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
-                $itemsToRefund[$sku] = [
-                    'qty' => ($itemsToRefund[$sku]['qty'] ?? 0) + $qty,
-                    'processedQty' => ($itemsToRefund[$sku]['processedQty'] ?? 0) + (float)$processedQty
-                ];
+                if ($this->isValidItem($sku, $item)) {
+                    $refundedOrderItemIds[] = $item->getOrderItemId();
+                    $qty = (float)$item->getQty();
+                    $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
+                    $itemsToRefund[$sku] = [
+                        'qty' => ($itemsToRefund[$sku]['qty'] ?? 0) + $qty,
+                        'processedQty' => ($itemsToRefund[$sku]['processedQty'] ?? 0) + (float)$processedQty
+                    ];
+                }
             }
-        }
 
-        // get the credit memo data before save
-        // $oldCreditMemo = $this->creditmemoRepository->get($creditmemo->getEntityId());
+            $itemsToDeductFromSource = [];
+            foreach ($itemsToRefund as $sku => $data) {
+                $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
+                    'sku' => $sku,
+                    'qty' => $data['qty'],
+                    'processedQty' => $data['processedQty']
+                ]);
+            }
 
-        // get items
-        // $oldCreditMemo->getItems();
-
-        // compare if quantities changed
-        // if so, calculate the difference and compensate for it in the `inventory_reservations`
-
-        $itemsToDeductFromSource = [];
-        foreach ($itemsToRefund as $sku => $data) {
-            $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
-                'sku' => $sku,
-                'qty' => $data['qty'],
-                'processedQty' => $data['processedQty']
-            ]);
-        }
-
-        if (!empty($itemsToDeductFromSource)) {
-            $this->deductSourceItemQuantityOnRefund->execute(
-                $order,
-                $itemsToDeductFromSource,
-                $refundedOrderItemIds
-            );
+            if (!empty($itemsToDeductFromSource)) {
+                $this->deductSourceItemQuantityOnRefund->execute(
+                    $order,
+                    $itemsToDeductFromSource,
+                    $refundedOrderItemIds
+                );
+            }
         }
 
         return $proceed($creditmemo);
