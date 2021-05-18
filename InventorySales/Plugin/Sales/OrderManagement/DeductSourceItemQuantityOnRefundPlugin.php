@@ -74,13 +74,12 @@ class DeductSourceItemQuantityOnRefundPlugin
         $this->orderRepository = $orderRepository;
     }
 
-    public function aroundSave(
+    public function beforeSave(
         CreditmemoRepositoryInterface $subject,
-        callable $proceed,
         CreditmemoInterface $creditmemo
     )
     {
-        if ($creditmemo->isObjectNew()) {
+        if (!$creditmemo->getEntityId()) {
             $order = $this->orderRepository->get($creditmemo->getOrderId());
             $itemsToRefund = $refundedOrderItemIds = [];
             /** @var CreditmemoItem $item */
@@ -117,8 +116,6 @@ class DeductSourceItemQuantityOnRefundPlugin
                 );
             }
         }
-
-        return $proceed($creditmemo);
     }
 
     /**
