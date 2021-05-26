@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Command;
 
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Validation\ValidationException;
@@ -44,19 +46,27 @@ class CreateCompensations extends Command
     private $appendReservations;
 
     /**
+     * @var State
+     */
+    private $appState;
+
+    /**
      * @param GetCommandlineStandardInput $getCommandlineStandardInput
      * @param GetReservationFromCompensationArgument $getReservationFromCompensationArgument
      * @param AppendReservationsInterface $appendReservations
+     * @param State $appState
      */
     public function __construct(
         GetCommandlineStandardInput $getCommandlineStandardInput,
         GetReservationFromCompensationArgument $getReservationFromCompensationArgument,
-        AppendReservationsInterface $appendReservations
+        AppendReservationsInterface $appendReservations,
+        State $appState
     ) {
         parent::__construct();
         $this->getCommandlineStandardInput = $getCommandlineStandardInput;
         $this->getReservationFromCompensationArgument = $getReservationFromCompensationArgument;
         $this->appendReservations = $appendReservations;
+        $this->appState = $appState;
     }
 
     /**
@@ -115,6 +125,8 @@ class CreateCompensations extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->appState->setAreaCode(Area::AREA_GLOBAL);
+
         $output->writeln('<info>Following reservations were created:</info>');
 
         $hasErrors = false;

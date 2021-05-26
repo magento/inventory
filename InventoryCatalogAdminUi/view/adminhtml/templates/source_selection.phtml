@@ -109,7 +109,7 @@ if ($block->getData('show_only_assigned_sources')) {
         });
 
         $('#bulk-operation').click(function () {
-           $('#bulk-operation-form').submit();
+           $('#bulk-operation-form').trigger('submit');
         });
     })
 </script>
