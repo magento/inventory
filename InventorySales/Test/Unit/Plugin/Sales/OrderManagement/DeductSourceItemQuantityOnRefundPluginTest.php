@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace MagentoInventorySales\Test\Unit\Plugin\Sales\OrderManagement;
+namespace Magento\InventorySales\Test\Unit\Plugin\Sales\OrderManagement;
 
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
@@ -66,12 +66,24 @@ class DeductSourceItemQuantityOnRefundPluginTest extends TestCase
     {
         parent::setUp();
 
-        $this->getSkuFromOrderItem = $this->createMock(GetSkuFromOrderItemInterface::class);
-        $this->itemsToRefundFactory = $this->createMock(ItemsToRefundInterfaceFactory::class);
-        $this->isSourceItemManagementAllowedForProductType = $this->createMock(IsSourceItemManagementAllowedForProductTypeInterface::class);
-        $this->getProductTypesBySkus = $this->createMock(GetProductTypesBySkusInterface::class);
-        $this->deductSourceItemQuantityOnRefund = $this->createMock(DeductSourceItemQuantityOnRefund::class);
-        $this->orderRepository = $this->createMock(OrderRepositoryInterface::class);
+        $this->getSkuFromOrderItem = $this->createMock(
+            GetSkuFromOrderItemInterface::class
+        );
+        $this->itemsToRefundFactory = $this->createMock(
+            ItemsToRefundInterfaceFactory::class
+        );
+        $this->isSourceItemManagementAllowedForProductType = $this->createMock(
+            IsSourceItemManagementAllowedForProductTypeInterface::class
+        );
+        $this->getProductTypesBySkus = $this->createMock(
+            GetProductTypesBySkusInterface::class
+        );
+        $this->deductSourceItemQuantityOnRefund = $this->createMock(
+            DeductSourceItemQuantityOnRefund::class
+        );
+        $this->orderRepository = $this->createMock(
+            OrderRepositoryInterface::class
+        );
 
         $this->deductSourcePlugin = new DeductSourceItemQuantityOnRefundPlugin(
             $this->getSkuFromOrderItem,
