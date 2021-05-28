@@ -20,10 +20,10 @@
                       '_changed': changed,
                       '_loading': loading,
                       '_error': error">
-            <span translate="label"/>
+            <span translate="label"></span>
             <div class="admin__field-saleable-qty admin__field-tooltip">
-                <a class="admin__field-tooltip-action action-help" target="_blank" tabindex="1" attr="href: tooltip.link"/>
-                <div class="admin__field-tooltip-content" data-bind="text: tooltip.description"/>
+                <a class="admin__field-tooltip-action action-help" target="_blank" tabindex="1" attr="href: tooltip.link"></a>
+                <div class="admin__field-tooltip-content" data-bind="text: tooltip.description"></div>
             </div>
             <span class="admin__page-nav-item-messages" if="collapsible">
                 <span class="admin__page-nav-item-message _changed">
@@ -40,7 +40,7 @@
                 </span>
                 <span class="admin__page-nav-item-message-loader">
                     <span class="spinner">
-                       <span repeat="8"/>
+                       <span repeat="8"></span>
                     </span>
                </span>
             </span>
@@ -52,6 +52,6 @@
         <fieldset
             if="opened() || _wasOpened || initializeFieldsetDataByDefault"
             class="admin__fieldset"
-            each="data: elems, as: 'element'" render=""/>
+            each="data: elems, as: 'element'" render=""></fieldset>
     </div>
 </div>

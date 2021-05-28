@@ -13,5 +13,9 @@
             }
         ">
     <span translate="$parent.deleteButtonLabel"></span>
-    <small if="$data.notice" html="notice" />
+    <!-- ko if: $data.notice -->
+        <!-- ko with: {noticeUnsanitizedHtml: notice} -->
+            <small html="noticeUnsanitizedHtml"></small>
+        <!-- /ko -->
+    <!-- /ko -->
 </button>

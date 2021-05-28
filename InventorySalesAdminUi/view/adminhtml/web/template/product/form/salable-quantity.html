@@ -8,9 +8,9 @@
     <div class="admin__field-complex-content">
         <div repeat="foreach: $data.salable_quantity || [], item: '$salableQuantityData'">
             <div>
-                <strong text="$salableQuantityData().stock_name" />
+                <strong text="$salableQuantityData().stock_name"></strong>
                 :
-                <span text="$salableQuantityData().qty" />
+                <span text="$salableQuantityData().qty"></span>
             </div>
         </div>
     </div>
