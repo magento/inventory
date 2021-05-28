@@ -109,8 +109,8 @@ class SiblingSkuListInStockProvider
                 []
             )->joinInner(
                 ['sibling_link' => $this->resourceConnection->getTableName('catalog_product_link')],
-                'sibling_link.product_id = parent_link.product_id 
-                    AND parent_link.link_type_id = ' . Link::LINK_TYPE_GROUPED,
+                'sibling_link.product_id = parent_link.product_id
+                    AND sibling_link.link_type_id = ' . Link::LINK_TYPE_GROUPED,
                 []
             )->joinInner(
                 ['sibling_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],

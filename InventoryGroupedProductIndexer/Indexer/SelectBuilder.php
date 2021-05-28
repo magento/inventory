@@ -19,6 +19,9 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 
+/**
+ * Class to prepare select for partial reindex
+ */
 class SelectBuilder
 {
     /**
@@ -60,7 +63,7 @@ class SelectBuilder
     }
 
     /**
-     * Prepare select.
+     * Prepare select
      *
      * @param int $stockId
      * @return Select
@@ -81,29 +84,40 @@ class SelectBuilder
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
 
-        $select = $connection->select()
-            ->from(
-                ['stock' => $indexTableName],
-                [
-                    IndexStructure::SKU => 'parent_product_entity.sku',
-                    IndexStructure::QUANTITY => 'SUM(stock.quantity)',
-                    IndexStructure::IS_SALABLE => 'MAX(stock.is_salable)',
-                ]
-            )->joinInner(
-                ['product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'product_entity.sku = stock.sku',
-                []
-            )->joinInner(
-                ['parent_link' => $this->resourceConnection->getTableName('catalog_product_link')],
-                'parent_link.linked_product_id = product_entity.entity_id 
-                AND parent_link.link_type_id = ' . Link::LINK_TYPE_GROUPED,
-                []
-            )->joinInner(
-                ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
-                'parent_product_entity.' . $linkField . ' = parent_link.product_id',
-                []
-            )
-            ->group(['parent_product_entity.sku']);
+        $select = $connection->select();
+        $select->from(
+            ['parent_link' => $this->resourceConnection->getTableName('catalog_product_link')],
+            []
+        )->joinInner(
+            ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+            "parent_product_entity.{$linkField} = parent_link.product_id",
+            [
+                IndexStructure::SKU => 'parent_product_entity.sku'
+            ]
+        )->joinInner(
+            ['child_link' => $this->resourceConnection->getTableName('catalog_product_link')],
+            'child_link.product_id = parent_link.product_id AND child_link.link_type_id = ' . Link::LINK_TYPE_GROUPED,
+            []
+        )->joinInner(
+            ['child_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+            "child_product_entity.entity_id = child_link.linked_product_id",
+            []
+        )->joinInner(
+            ['child_stock' => $indexTableName],
+            'child_stock.sku = child_product_entity.sku',
+            [
+                IndexStructure::QUANTITY => 'SUM(child_stock.quantity)',
+                IndexStructure::IS_SALABLE => 'MAX(child_stock.is_salable)',
+            ]
+        )->joinInner(
+            ['child_filter_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
+            "child_filter_product_entity.entity_id = parent_link.linked_product_id",
+            []
+        )->where(
+            'parent_link.link_type_id = ' . Link::LINK_TYPE_GROUPED
+        )->group(
+            ['parent_product_entity.sku']
+        );
 
         return $select;
     }

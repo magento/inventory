@@ -39,7 +39,6 @@ $dataObjectHelper->populateWithArray(
         SourceInterface::PHONE => 'source-phone',
         SourceInterface::FAX => 'source-fax',
         SourceInterface::USE_DEFAULT_CARRIER_CONFIG => 0,
-        SourceInterface::USE_DEFAULT_CARRIER_CONFIG => false,
         SourceInterface::CARRIER_LINKS => [],
     ],
     SourceInterface::class
