@@ -23,5 +23,7 @@
            text="selectedLocation().telephone"
         ></a>
     </p>
-    <p class="location-description" html="selectedLocation().description"></p>
+    <!-- ko with: {locationDescriptionUnsanitizedHtml: selectedLocation().description} -->
+    <p class="location-description" html="locationDescriptionUnsanitizedHtml"></p>
+    <!-- /ko -->
 </div>
