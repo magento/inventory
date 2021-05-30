@@ -15,7 +15,7 @@ Multi-Source Inventory (MSI) project is designed to enable stock management in m
 
 ## Community Engineering Slack
 
-To connect with Magento team and the Community, join us on the [Magento Community Engineering Slack](https://magentocommeng.slack.com). 
+To connect with Adobe Commerce team and the Community, join us on the [Magento Community Engineering Slack](https://magentocommeng.slack.com). 
 If you are interested in joining Slack, or a specific channel, use our [self signup](https://opensource.magento.com/slack) link.
 
 MSI project slack channel: [#msi](https://magentocommeng.slack.com/archives/C5FU5E2HY)
