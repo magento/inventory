@@ -15,7 +15,11 @@
             <text args="location.country"/><br/>
             <a if="location.telephone" attr="'href': 'tel:' + location.telephone" text="location.telephone"></a>
         </p>
-        <p if="location.description" class="location-description" html="location.description"></p>
+        <!-- ko if: location.description -->
+            <!-- ko with: {locationDescriptionUnsanitizedHtml: location.description} -->
+                <p class="location-description" html="locationDescriptionUnsanitizedHtml"></p>
+            <!-- /ko -->
+        <!-- /ko -->
     </td>
     <td class="col col-location-actions">
         <div class="select-location" ifnot="$parent.isPickupLocationSelected($data)">
@@ -27,7 +31,7 @@
         </div>
         <div class="location-selected" if="$parent.isPickupLocationSelected($data)">
             <button type="button" class="action secondary" disabled>
-                <span translate="'Selected'"/>
+                <span translate="'Selected'"></span>
             </button>
         </div>
     </td>
