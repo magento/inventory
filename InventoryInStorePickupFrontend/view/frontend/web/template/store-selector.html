@@ -5,7 +5,7 @@
  */
 -->
 <div id="store-selector" data-bind="blockLoader: $parent.isLoading" css="'store-selected': $parent.selectedLocation">
-    <each if="!quoteIsVirtual()" args="getRegion('customer-email')" render="" />
+    <each if="!quoteIsVirtual()" args="getRegion('customer-email')" render=""/>
     <div class="step-title" data-role="title">
         <translate args="'Store'"/>
     </div>
@@ -41,4 +41,4 @@
         </form>
     </div>
 </div>
-<div id="opc-store-selector-popup" render="storeSelectorPopupTemplate" />
+<div id="opc-store-selector-popup" render="storeSelectorPopupTemplate"></div>

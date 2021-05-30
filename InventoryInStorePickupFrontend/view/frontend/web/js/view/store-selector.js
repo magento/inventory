@@ -213,7 +213,7 @@ define([
                 emailValidationResult = $(loginFormSelector + ' input[name=username]').valid() ? true : false;
 
                 if (!emailValidationResult) {
-                    $(this.loginFormSelector + ' input[name=username]').focus();
+                    $(this.loginFormSelector + ' input[name=username]').trigger('focus');
 
                     return false;
                 }
