@@ -11,9 +11,13 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\MysqlMq\Model\QueueManagement;
 use Magento\ProductAlert\Model\Observer;
 use Magento\ProductAlert\Model\ResourceModel\Stock\CollectionFactory as StockCollectionFactory;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\MessageQueue\EnvironmentPreconditionException;
+use Magento\TestFramework\MessageQueue\PreconditionFailedException;
+use Magento\TestFramework\MessageQueue\PublisherConsumerController;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -45,6 +49,11 @@ class ProductAlertTest extends TestCase
      * @var StockCollectionFactory
      */
     private $stockCollectionFactory;
+
+    /**
+     * @var PublisherConsumerController
+     */
+    private $publisherConsumerController;
 
     /**
      * @inheritdoc
@@ -80,6 +89,8 @@ class ProductAlertTest extends TestCase
     public function testAlertsBothSourceItemsOutOfStock()
     {
         $this->observer->process();
+        $this->waitingForProcessAlertsByConsumer(2);
+
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
         /** @var \Magento\ProductAlert\Model\Stock $stock */
@@ -122,6 +133,7 @@ class ProductAlertTest extends TestCase
 
         $this->changeProductIsInStock('eu-2', 1);
         $this->observer->process();
+        $this->waitingForProcessAlertsByConsumer(4);
 
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
@@ -157,6 +169,7 @@ class ProductAlertTest extends TestCase
         $this->changeProductIsInStock('eu-2', 1);
         $this->changeProductIsInStock('default', 1);
         $this->observer->process();
+        $this->waitingForProcessAlertsByConsumer(2);
 
         $stockCollection = $this->stockCollectionFactory->create();
         $count = 0;
@@ -188,5 +201,80 @@ class ProductAlertTest extends TestCase
             $sourceItem->setQuantity($sourceItem->getQuantity() ?: 1.0);
         }
         $this->sourceItemsSaveInterface->execute([$sourceItem]);
+    }
+
+    /**
+     * Run consumer
+     *
+     * @param int $maxMessageCount
+     */
+    private function startConsumer(int $maxMessageCount): void
+    {
+        $this->publisherConsumerController = Bootstrap::getObjectManager()->create(
+            PublisherConsumerController::class,
+            [
+                'consumers' => ['product_alert'],
+                'logFilePath' => TESTS_TEMP_DIR . "/MessageQueueTestLog.txt",
+                'maxMessages' => $maxMessageCount,
+                'appInitParams' => Bootstrap::getInstance()->getAppInitParams()
+            ]
+        );
+        try {
+            $this->publisherConsumerController->startConsumers();
+        } catch (EnvironmentPreconditionException $e) {
+            $this->markTestSkipped($e->getMessage());
+        } catch (PreconditionFailedException $e) {
+            $this->fail(
+                $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Waiting for execute consumer
+     *
+     * @param int $maxMessageCount
+     * @return void
+     * @throws PreconditionFailedException
+     */
+    private function waitingForProcessAlertsByConsumer(int $maxMessageCount): void
+    {
+        $this->startConsumer($maxMessageCount);
+
+        sleep(15); // timeout to processing Magento queue
+
+        $this->publisherConsumerController->waitForAsynchronousResult(
+            function () {
+                return $this->isProcessedStockAlerts();
+            },
+            []
+        );
+    }
+
+    /**
+     * Is has been already processed stock alerts
+     *
+     * @return bool
+     */
+    private function isProcessedStockAlerts(): bool
+    {
+        $collection = $this->stockCollectionFactory->create();
+        $connection = $collection->getConnection();
+        $select = $connection->select();
+        $select->from(
+            ['status_table' => $connection->getTableName('queue_message_status')],
+            [new \Zend_Db_Expr('1')]
+        )->join(
+            ['queue_table' => $connection->getTableName('queue')],
+            'status_table.queue_id = queue_table.id',
+            []
+        )->where(
+            "queue_table.name = 'product_alert.queue'"
+        )->where(
+            'status_table.status IN (?)',
+            [QueueManagement::MESSAGE_STATUS_NEW, QueueManagement::MESSAGE_STATUS_IN_PROGRESS]
+        )->limit(1);
+
+        return !(bool)$connection->fetchOne($select);
     }
 }
