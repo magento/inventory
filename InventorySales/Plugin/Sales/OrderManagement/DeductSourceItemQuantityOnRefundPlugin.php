@@ -78,53 +78,64 @@ class DeductSourceItemQuantityOnRefundPlugin
      * On Credit Memo create, issues the reservation compensation record.
      *
      * Before saving the credit memo, validates if the credit memo object was created or updated.
-     * beforeSave is required in order to properly check if the credit memo is the new or updated object,
-     * since with afterSave, the credit memo entity ID is already published in the model.
+     * If the credit memo was updates, we should not compensate the reservation.
      *
      * @param CreditmemoRepositoryInterface $subject
-     * @param CreditmemoInterface $creditmemo
+     * @param callable $proceed
+     * @param CreditmemoInterface $entity
+     * @return mixed
      */
-    public function beforeSave(
+    public function aroundSave(
         CreditmemoRepositoryInterface $subject,
-        CreditmemoInterface $creditmemo
+        callable $proceed,
+        CreditmemoInterface $entity
     )
     {
-        if (!$creditmemo->getEntityId()) {
-            $order = $this->orderRepository->get($creditmemo->getOrderId());
-            $itemsToRefund = $refundedOrderItemIds = [];
-            /** @var CreditmemoItem $item */
-            foreach ($creditmemo->getItems() as $item) {
-                /** @var OrderItemInterface $orderItem */
-                $orderItem = $item->getOrderItem();
-                $sku = $this->getSkuFromOrderItem->execute($orderItem);
+        $isNewCreditMemo = !(bool)$entity->getEntityId();
+        $result = $proceed($entity);
 
-                if ($this->isValidItem($sku, $item)) {
-                    $refundedOrderItemIds[] = $item->getOrderItemId();
-                    $qty = (float)$item->getQty();
-                    $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
-                    $itemsToRefund[$sku] = [
-                        'qty' => ($itemsToRefund[$sku]['qty'] ?? 0) + $qty,
-                        'processedQty' => ($itemsToRefund[$sku]['processedQty'] ?? 0) + (float)$processedQty
-                    ];
-                }
-            }
+        if ($isNewCreditMemo) {
+            $this->compensateReservation($entity);
+        }
 
-            $itemsToDeductFromSource = [];
-            foreach ($itemsToRefund as $sku => $data) {
-                $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
-                    'sku' => $sku,
-                    'qty' => $data['qty'],
-                    'processedQty' => $data['processedQty']
-                ]);
-            }
+        return $result;
+    }
 
-            if (!empty($itemsToDeductFromSource)) {
-                $this->deductSourceItemQuantityOnRefund->execute(
-                    $order,
-                    $itemsToDeductFromSource,
-                    $refundedOrderItemIds
-                );
+    private function compensateReservation(CreditmemoInterface $creditMemo) {
+        $order = $this->orderRepository->get($creditMemo->getOrderId());
+        $itemsToRefund = $refundedOrderItemIds = [];
+        /** @var CreditmemoItem $item */
+        foreach ($creditMemo->getItems() as $item) {
+            /** @var OrderItemInterface $orderItem */
+            $orderItem = $item->getOrderItem();
+            $sku = $this->getSkuFromOrderItem->execute($orderItem);
+
+            if ($this->isValidItem($sku, $item)) {
+                $refundedOrderItemIds[] = $item->getOrderItemId();
+                $qty = (float)$item->getQty();
+                $processedQty = $orderItem->getQtyInvoiced() - $orderItem->getQtyRefunded() + $qty;
+                $itemsToRefund[$sku] = [
+                    'qty' => ($itemsToRefund[$sku]['qty'] ?? 0) + $qty,
+                    'processedQty' => ($itemsToRefund[$sku]['processedQty'] ?? 0) + (float)$processedQty
+                ];
             }
+        }
+
+        $itemsToDeductFromSource = [];
+        foreach ($itemsToRefund as $sku => $data) {
+            $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
+                'sku' => $sku,
+                'qty' => $data['qty'],
+                'processedQty' => $data['processedQty']
+            ]);
+        }
+
+        if (!empty($itemsToDeductFromSource)) {
+            $this->deductSourceItemQuantityOnRefund->execute(
+                $order,
+                $itemsToDeductFromSource,
+                $refundedOrderItemIds
+            );
         }
     }
 
