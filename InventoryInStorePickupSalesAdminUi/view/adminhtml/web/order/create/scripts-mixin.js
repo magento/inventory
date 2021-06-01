@@ -30,7 +30,7 @@ define(
                     shippingAddressSaveInAddressBook = jQuery(CUSTOMER_ADDRESS_SAVE_IN_ADDRESS_BOOK_SELECTOR);
 
                 if (isStorePickup) {
-                    shippingAddressSaveInAddressBook.removeAttr('checked');
+                    shippingAddressSaveInAddressBook.prop('checked', false);
                     sourcesInput.show();
 
                     return;

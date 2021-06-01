@@ -8,7 +8,7 @@ define([
 ], function ($) {
     'use strict';
 
-    $('[data-role=toggle-editability]').change(function () {
+    $('[data-role=toggle-editability]').on('change', function () {
         var useConfigSettings = $(this),
             field = useConfigSettings.parents('.field'),
             someEditable = $('input[type!="checkbox"], select, textarea', field);
