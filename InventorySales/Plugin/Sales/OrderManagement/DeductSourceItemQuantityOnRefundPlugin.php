@@ -74,6 +74,16 @@ class DeductSourceItemQuantityOnRefundPlugin
         $this->orderRepository = $orderRepository;
     }
 
+    /**
+     * On Credit Memo create, issues the reservation compensation record.
+     *
+     * Before saving the credit memo, validates if the credit memo object was created or updated.
+     * beforeSave is required in order to properly check if the credit memo is the new or updated object,
+     * since with afterSave, the credit memo entity ID is already published in the model.
+     *
+     * @param CreditmemoRepositoryInterface $subject
+     * @param CreditmemoInterface $creditmemo
+     */
     public function beforeSave(
         CreditmemoRepositoryInterface $subject,
         CreditmemoInterface $creditmemo
