@@ -31,13 +31,13 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class to test if credit memo updates does not add affect reservations
+ * Class to test credit memo updates of the reservations
  *
  * @magentoAppArea adminhtml
  * @magentoAppIsolation enabled
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class CreditMemoEditsDoesNotAffectReservationsTest extends TestCase
+class CreditMemoUpdateReservationsTest extends TestCase
 {
     /**
      * @var ObjectManagerInterface
@@ -162,7 +162,7 @@ class CreditMemoEditsDoesNotAffectReservationsTest extends TestCase
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function testReservationIsNotUpdatedOnCreditMemoEdit(): void
+    public function testReservationShouldNotBeUpdatedOnCreditMemoEdit(): void
     {
         $productSKU = 'SKU-1';
 
