@@ -84,6 +84,7 @@ class DeductSourceItemQuantityOnRefundPlugin
      * @param callable $proceed
      * @param CreditmemoInterface $entity
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundSave(
         CreditmemoRepositoryInterface $subject,
@@ -101,7 +102,12 @@ class DeductSourceItemQuantityOnRefundPlugin
         return $result;
     }
 
-    private function compensateReservation(CreditmemoInterface $creditMemo) {
+    /**
+     * @param CreditmemoInterface $creditMemo
+     * @return void
+     */
+    private function compensateReservation(CreditmemoInterface $creditMemo): void
+    {
         $order = $this->orderRepository->get($creditMemo->getOrderId());
         $itemsToRefund = $refundedOrderItemIds = [];
         /** @var CreditmemoItem $item */
