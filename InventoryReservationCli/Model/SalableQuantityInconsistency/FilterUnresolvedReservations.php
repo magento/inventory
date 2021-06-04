@@ -25,7 +25,6 @@ class FilterUnresolvedReservations
         foreach ($inconsistencies as $inconsistency) {
             $inconsistency->setItems(array_filter($inconsistency->getItems()));
         }
-
         return array_filter(
             $inconsistencies,
             function (SalableQuantityInconsistency $inconsistency) {
