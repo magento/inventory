@@ -61,7 +61,7 @@ class Button extends Container
         $stockId = (int) $this->context->getRequestParam(StockInterface::STOCK_ID);
         if ($stockId === $this->defaultStockProvider->getId()) {
             $config['disabled'] = true;
-            $config['notice'] = __("<strong>NOTE</strong>: Assign sources is disabled for default stock");
+            $config['notice'] = __('Assign sources is disabled for default stock');
         }
         // Hide assign sources button according to ACL resource.
         $config['visible'] = $this->authorization->isAllowed('Magento_InventoryApi::stock_source_link');

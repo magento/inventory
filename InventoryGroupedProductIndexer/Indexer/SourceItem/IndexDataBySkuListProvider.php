@@ -48,7 +48,7 @@ class IndexDataBySkuListProvider
     {
         $select = $this->selectBuilder->execute($stockId);
         if (count($skuList)) {
-            $select->where('stock.' . IndexStructure::SKU . ' IN (?)', $skuList);
+            $select->where('child_filter_product_entity.' . IndexStructure::SKU . ' IN (?)', $skuList);
         }
         $connection = $this->resourceConnection->getConnection();
 
