@@ -26,7 +26,6 @@
     <preference for="Magento\InventoryInStorePickupApi\Api\GetPickupLocationsInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocations" />
     <preference for="Magento\InventoryInStorePickupApi\Model\GetPickupLocationInterface" type="Magento\InventoryInStorePickup\Model\GetPickupLocation"/>
     <preference for="Magento\InventoryInStorePickupApi\Api\Data\SearchResultInterface" type="Magento\InventoryInStorePickup\Model\SearchResult"/>
-    <preference for="Magento\InventoryInStorePickupApi\Model\SearchResult\ExtractStrategyInterface" type="Magento\InventoryInStorePickup\Model\SearchResult\ExtractStrategy" />
     <type name="Magento\InventoryInStorePickupApi\Model\SearchCriteriaResolverInterface">
         <arguments>
             <argument name="resolvers" xsi:type="array">
