@@ -169,6 +169,9 @@
         <plugin name="delete_website_to_stock_link" type="Magento\InventorySales\Plugin\Store\Model\ResourceModel\Website\DeleteWebsiteToStockLinkPlugin"/>
         <plugin name="update_sales_channel_website_code" type="Magento\InventorySales\Plugin\Store\Model\ResourceModel\Website\UpdateSalesChannelWebsiteCodePlugin"/>
     </type>
+    <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
+        <plugin name="deduct_source_item_quantity_on_refund" type="Magento\InventorySales\Plugin\Sales\OrderManagement\DeductSourceItemQuantityOnRefundPlugin"/>
+    </type>
     <type name="Magento\InventoryApi\Model\StockValidatorChain">
         <arguments>
             <argument name="validators" xsi:type="array">
