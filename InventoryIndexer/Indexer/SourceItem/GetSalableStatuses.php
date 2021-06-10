@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem;
 
-use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
@@ -21,27 +20,19 @@ class GetSalableStatuses
     private $getSkuListInStock;
 
     /**
-     * @var DefaultStockProviderInterface
-     */
-    private $defaultStockProvider;
-
-    /**
      * @var AreProductsSalableInterface
      */
     private $areProductsSalable;
 
     /**
      * @param GetSkuListInStock $getSkuListInStockToUpdate
-     * @param DefaultStockProviderInterface $defaultStockProvider
      * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
         GetSkuListInStock $getSkuListInStockToUpdate,
-        DefaultStockProviderInterface $defaultStockProvider,
         AreProductsSalableInterface $areProductsSalable
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
-        $this->defaultStockProvider = $defaultStockProvider;
         $this->areProductsSalable = $areProductsSalable;
     }
 
