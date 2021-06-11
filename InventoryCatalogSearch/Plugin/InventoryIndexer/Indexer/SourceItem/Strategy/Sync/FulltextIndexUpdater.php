@@ -99,15 +99,4 @@ class FulltextIndexUpdater
             $this->fulltextIndexProcessor->reindexList($productsIdsToProcess, true);
         }
     }
-
-    /**
-     * Reindex fulltext index
-     *
-     * @param Sync $subject
-     * @param void $result
-     */
-    public function afterExecuteFull(Sync $subject, $result)
-    {
-        $this->fulltextIndexProcessor->reindexAll();
-    }
 }
