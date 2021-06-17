@@ -10,11 +10,12 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="StorefrontCategoryMultipleSourcesNonSellableProductCountTest">
         <annotations>
-            <stories value="xxx"/>
-            <title value="xxx"/>
-            <description value="xxx"/>
-            <testCaseId value="xxx"/>
-            <severity value="CRITICAL"/>
+            <stories value="Reindex fulltext cache on sellable status change."/>
+            <title value="When the product becomes not sellable in all sources, the total category products count must update on the frontend"/>
+            <description value="When the product becomes not sellable in all sources, the total category products count must update on the frontend"/>
+            <testCaseId value="MC-42664"/>
+            <useCaseId value="MC-42287"/>
+            <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
