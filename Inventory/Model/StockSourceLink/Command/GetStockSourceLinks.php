@@ -43,9 +43,9 @@ class GetStockSourceLinks implements GetStockSourceLinksInterface
     private $searchCriteriaBuilder;
 
     /**
-     * @var JoinProcessorInterface
+     * @var StockSourceLinksExtensionAttributes
      */
-    private $extensionAttributesJoinProcessor;
+    private $stockSourceLinksExtensionAttributes;
 
     /**
      * @param CollectionProcessorInterface $collectionProcessor
@@ -58,13 +58,13 @@ class GetStockSourceLinks implements GetStockSourceLinksInterface
         StockSourceLinkCollectionFactory $stockSourceLinkCollectionFactory,
         StockSourceLinkSearchResultsInterfaceFactory $stockSourceLinkSearchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        JoinProcessorInterface $extensionAttributesJoinProcessor
+        StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes
     ) {
         $this->collectionProcessor = $collectionProcessor;
         $this->stockSourceLinkCollectionFactory = $stockSourceLinkCollectionFactory;
         $this->stockSourceLinkSearchResultsFactory = $stockSourceLinkSearchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
+        $this->stockSourceLinksExtensionAttributes = $stockSourceLinksExtensionAttributes;
     }
 
     /**
@@ -76,7 +76,7 @@ class GetStockSourceLinks implements GetStockSourceLinksInterface
         $collection = $this->stockSourceLinkCollectionFactory->create();
 
         $this->collectionProcessor->process($searchCriteria, $collection);
-        $this->extensionAttributesJoinProcessor->process($collection);
+        $this->stockSourceLinksExtensionAttributes->process($collection);
 
         /** @var StockSourceLinkSearchResultsInterface $searchResult */
         $searchResult = $this->stockSourceLinkSearchResultsFactory->create();

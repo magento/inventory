@@ -11,7 +11,7 @@
         <attribute code="source_name" type="string">
             <join reference_table="inventory_source" reference_field="source_code"
                   join_on_field="source_code">
-                <field>name</field>
+                <field column="name">source_name</field>
             </join>
         </attribute>
     </extension_attributes>

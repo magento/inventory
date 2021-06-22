@@ -14,6 +14,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
+use Magento\Inventory\Model\StockSourceLink\Command\StockSourceLinksExtensionAttributes;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
@@ -84,6 +85,11 @@ class StockDataProvider extends DataProvider
     private $logger;
 
     /**
+     * @var StockSourceLinksExtensionAttributes
+     */
+    private $stockSourceLinksExtensionAttributes;
+
+    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -102,6 +108,7 @@ class StockDataProvider extends DataProvider
      * @param array $data
      * @param PoolInterface|null $pool
      * @param LoggerInterface $logger
+     * @param StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes
      * @param int|null $assignedSourcesLimit
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
@@ -123,7 +130,8 @@ class StockDataProvider extends DataProvider
         array $meta = [],
         array $data = [],
         PoolInterface $pool = null,
-        LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null,
+        ?StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes = null,
         ?int $assignedSourcesLimit = 100
     ) {
         parent::__construct(
@@ -145,6 +153,8 @@ class StockDataProvider extends DataProvider
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->pool = $pool ?: ObjectManager::getInstance()->get(PoolInterface::class);
         $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
+        $this->stockSourceLinksExtensionAttributes = $stockSourceLinksExtensionAttributes
+            ?: ObjectManager::getInstance()->get(StockSourceLinksExtensionAttributes::class);
         $this->assignedSourcesLimit = $assignedSourcesLimit;
     }
 
@@ -219,6 +229,7 @@ class StockDataProvider extends DataProvider
             ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
             ->addSortOrder($sortOrder)
             ->create();
+        $this->stockSourceLinksExtensionAttributes->joinExtensionAttributes(true);
         $searchResult = $this->getStockSourceLinks->execute($searchCriteria);
         if ($searchResult->getTotalCount() === 0) {
             return [];
