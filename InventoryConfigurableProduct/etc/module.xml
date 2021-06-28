@@ -9,6 +9,7 @@
     <module name="Magento_InventoryConfigurableProduct" >
         <sequence>
             <module name="Magento_ConfigurableProduct"/>
+            <module name="Magento_ConfigurableProductGraphQl"/>
         </sequence>
     </module>
 </config>
