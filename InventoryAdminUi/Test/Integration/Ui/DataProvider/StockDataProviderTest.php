@@ -89,7 +89,7 @@ class StockDataProviderTest extends TestCase
         $data = $stockDataProvider->getData();
         $data = array_pop($data);
         $this->assertEquals(
-            StockInterface::NAME,
+            'Default Stock',
             $data['general']['name']
         );
         $this->assertEquals(
