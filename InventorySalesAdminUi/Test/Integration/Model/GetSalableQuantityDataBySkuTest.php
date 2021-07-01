@@ -75,4 +75,24 @@ class GetSalableQuantityDataBySkuTest extends TestCase
         $salableData = $this->getSalableQuantityDataBySku->execute($sku);
         $this->assertEquals($expectedSalableData, $salableData);
     }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products_with_amp_sku.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteWithAmpSkuProducts(): void
+    {
+        $sku = 'Test &Sku';
+        $expectedSalableData = [
+            [
+                'stock_name' => 'Default Stock',
+                'qty' => 10,
+                'manage_stock' => true,
+            ]
+        ];
+
+        $salableData = $this->getSalableQuantityDataBySku->execute($sku);
+        $this->assertEquals($expectedSalableData, $salableData);
+    }
 }
