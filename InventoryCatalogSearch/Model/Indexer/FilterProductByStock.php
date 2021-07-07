@@ -94,17 +94,17 @@ class FilterProductByStock
 
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
 
-        return $this->getStockStatusesFromCustomStock($select, $stockTable);
+        return $this->filterSelectForStockStatusesFromCustomStock($select, $stockTable);
     }
 
     /**
-     * Get product stock statuses on custom stock.
+     * Filter the select for product stock statuses on custom stock.
      *
      * @param Select $select
      * @param string $stockTable
      * @return Select
      */
-    private function getStockStatusesFromCustomStock(Select $select, string $stockTable): Select
+    private function filterSelectForStockStatusesFromCustomStock(Select $select, string $stockTable): Select
     {
         $connection = $this->resourceConnection->getConnection();
         if (!$connection->isTableExists($stockTable)) {
