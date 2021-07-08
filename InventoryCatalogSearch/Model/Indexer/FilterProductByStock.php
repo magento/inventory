@@ -85,17 +85,19 @@ class FilterProductByStock
      */
     public function execute(Select $select, int $storeId): Select
     {
-        return $select;
         $store = $this->storeRepository->getById($storeId);
-        $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
+        $stock = $this->stockByWebsiteIdResolver->execute($store->getWebsiteId());
         $stockId = $stock->getStockId();
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-        $connection = $this->resourceConnection->getConnection();
+//        $connection = $this->resourceConnection->getConnection();
 
-        if ($this->defaultStockProvider->getId() === $stockId ||
-            !$connection->isTableExists($stockTable)) {
+        if ($this->defaultStockProvider->getId() === $stockId) {
             return $select;
         }
+//        if ($this->defaultStockProvider->getId() === $stockId ||
+//            !$connection->isTableExists($stockTable)) {
+//            return $select;
+//        }
 
         $select->joinInner(
             ['stock' => $stockTable],
