@@ -85,10 +85,6 @@ class FilterProductByStock
      */
     public function execute(Select $select, int $storeId): Select
     {
-        $select->where('stock.is_salable = ?', 1);
-
-        return $select;
-
         $store = $this->storeRepository->getById($storeId);
         $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
         $stockId = $stock->getStockId();
