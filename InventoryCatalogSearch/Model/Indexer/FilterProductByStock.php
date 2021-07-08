@@ -65,7 +65,8 @@ class FilterProductByStock
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         StoreRepositoryInterface $storeRepository,
         array $selectModifiersPool = []
-    ) {
+    )
+    {
         $this->defaultStockProvider = $defaultStockProvider;
         $this->resourceConnection = $resourceConnection;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
@@ -87,27 +88,11 @@ class FilterProductByStock
         $store = $this->storeRepository->getById($storeId);
         $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
         $stockId = $stock->getStockId();
-
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            return $select;
-        }
-
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-
-        return $this->filterSelectForStockStatusesFromCustomStock($select, $stockTable);
-    }
-
-    /**
-     * Filter the select for product stock statuses on custom stock.
-     *
-     * @param Select $select
-     * @param string $stockTable
-     * @return Select
-     */
-    private function filterSelectForStockStatusesFromCustomStock(Select $select, string $stockTable): Select
-    {
         $connection = $this->resourceConnection->getConnection();
-        if (!$connection->isTableExists($stockTable)) {
+
+        if ($this->defaultStockProvider->getId() === $stockId ||
+            !$connection->isTableExists($stockTable)) {
             return $select;
         }
 
@@ -116,8 +101,9 @@ class FilterProductByStock
             'e.sku = stock.sku',
             []
         );
+
         $select->where('stock.is_salable = ?', 1);
-        $this->applySelectModifiers($select, $stockTable);
+//        $this->applySelectModifiers($select, $stockTable);
 
         return $select;
     }
