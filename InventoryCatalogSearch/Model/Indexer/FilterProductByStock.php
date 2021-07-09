@@ -86,7 +86,12 @@ class FilterProductByStock
     public function execute(Select $select, int $storeId): Select
     {
         $store = $this->storeRepository->getById($storeId);
-        $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
+        try {
+            $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
+        } catch (NoSuchEntityException $exception) {
+            return $select;
+        }
+
         $stockId = $stock->getStockId();
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
         $connection = $this->resourceConnection->getConnection();

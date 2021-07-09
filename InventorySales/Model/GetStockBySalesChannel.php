@@ -52,12 +52,7 @@ class GetStockBySalesChannel implements GetStockBySalesChannelInterface
         );
 
         if (null === $stockId) {
-            throw NoSuchEntityException::doubleField(
-                SalesChannelInterface::TYPE,
-                $salesChannel->getType(),
-                SalesChannelInterface::CODE,
-                $salesChannel->getCode()
-            );
+            throw new NoSuchEntityException(__('No linked stock found'));
         }
         return $this->stockRepository->get($stockId);
     }
