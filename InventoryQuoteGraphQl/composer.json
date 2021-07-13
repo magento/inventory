@@ -7,8 +7,8 @@
         "magento/framework": "*",
         "magento/module-quote": "*",
         "magento/module-quote-graph-ql": "*",
-        "magento/module-inventory-catalog": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/module-inventory-catalog": "1.2.*",
+        "magento/module-inventory-sales-api": "1.2.*"
     },
     "license": [
         "OSL-3.0",
@@ -21,5 +21,6 @@
         "psr-4": {
             "Magento\\InventoryQuoteGraphQl\\": ""
         }
-    }
+    },
+    "version": "1.0.0"
 }

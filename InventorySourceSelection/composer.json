@@ -4,8 +4,8 @@
     "require": {
         "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-inventory-source-selection-api": "*",
-        "magento/module-inventory-api": "*"
+        "magento/module-inventory-source-selection-api": "1.4.*",
+        "magento/module-inventory-api": "1.2.*"
     },
     "type": "magento2-module",
     "license": [
@@ -19,5 +19,6 @@
         "psr-4": {
             "Magento\\InventorySourceSelection\\": ""
         }
-    }
+    },
+    "version": "1.2.0"
 }

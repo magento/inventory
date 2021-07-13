@@ -1,25 +1,26 @@
 {
-  "name": "magento/module-inventory-swatches-frontend-ui",
-  "description": "N/A",
-  "require": {
-    "php": "~7.3.0||~7.4.0",
-    "magento/framework": "*"
-  },
-  "suggest": {
-    "magento/module-swatches": "*",
-    "magento/module-inventory-configurable-product-frontend-ui": "*"
-  },
-  "type": "magento2-module",
-  "license": [
-    "OSL-3.0",
-    "AFL-3.0"
-  ],
-  "autoload": {
-    "files": [
-      "registration.php"
+    "name": "magento/module-inventory-swatches-frontend-ui",
+    "description": "N/A",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*"
+    },
+    "suggest": {
+        "magento/module-swatches": "*",
+        "magento/module-inventory-configurable-product-frontend-ui": "1.0.*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
     ],
-    "psr-4": {
-      "Magento\\InventorySwatchesFrontendUi\\": ""
-    }
-  }
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventorySwatchesFrontendUi\\": ""
+        }
+    },
+    "version": "1.0.0"
 }
