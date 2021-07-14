@@ -68,6 +68,7 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 ['main_table.entity_id']
             )
             ->where('main_table.state NOT IN (?)', $this->getCompleteOrderStateList->execute())
+            ->where('main_table.store_id IS NOT NULL')
             ->limitPage($page, $bunchSize);
         $entityIds = $connection->fetchCol($orderEntityIdSelectQuery);
 

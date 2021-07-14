@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\InventoryApi\Api\Data\StockSourceLinkInterface">
+        <attribute code="source_name" type="string">
+            <join reference_table="inventory_source" reference_field="source_code"
+                  join_on_field="source_code">
+                <field column="name">source_name</field>
+            </join>
+        </attribute>
+    </extension_attributes>
+</config>
