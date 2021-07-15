@@ -119,8 +119,8 @@ class FulltextIndexerBatchTest extends TestCase
     }
 
     /**
-     * Test fulltext reindex in case when first batch will only contain saleable products,
-     * second batch will only contain non-saleable products, the rest of the batches should
+     * Test fulltext reindex in case when first batch will only contain salable products,
+     * second batch will only contain non-salable products, the rest of the batches should
      * be correctly indexed and not ignored
      *
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
@@ -184,8 +184,6 @@ class FulltextIndexerBatchTest extends TestCase
     }
 
     /**
-     * Creates source item.
-     *
      * @param string $sourceCode
      * @param array $itemsData
      * @throws CouldNotSaveException
