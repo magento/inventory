@@ -12,7 +12,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
 use Magento\InventoryApi\Api\StockRepositoryInterface;
-use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 
@@ -37,7 +36,6 @@ class GetIsManageStockForProduct
     private $getStockItemConfiguration;
 
     /**
-     * @param GetProductSalableQtyInterface $getProductSalableQty
      * @param StockRepositoryInterface $stockRepository
      * @param GetAssignedStockIdsBySku $getAssignedStockIdsBySku
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration

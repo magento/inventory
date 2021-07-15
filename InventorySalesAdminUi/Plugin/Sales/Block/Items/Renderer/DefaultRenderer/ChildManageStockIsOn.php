@@ -39,7 +39,7 @@ class ChildManageStockIsOn
      * Manage Stock configuration of child product should override configuration of parent configurable product
      *
      * @param DefaultRenderer $subject
-     * @param $result
+     * @param bool|mixed $result
      * @param Item $item
      * @return bool|mixed
      * @throws \Magento\Framework\Exception\LocalizedException
