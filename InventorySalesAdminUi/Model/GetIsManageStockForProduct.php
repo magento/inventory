@@ -36,8 +36,8 @@ class GetIsManageStockForProduct
     private $getStockItemConfiguration;
 
     /**
+     * @param GetSalableQuantityDataBySku $getSalableQuantityDataBySku
      * @param StockRepositoryInterface $stockRepository
-     * @param GetAssignedStockIdsBySku $getAssignedStockIdsBySku
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      */
     public function __construct(
