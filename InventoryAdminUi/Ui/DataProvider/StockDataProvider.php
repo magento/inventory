@@ -14,6 +14,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
+use Magento\Inventory\Model\StockSourceLink\Command\StockSourceLinksExtensionAttributes;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\StockInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
@@ -25,6 +26,10 @@ use Magento\Ui\DataProvider\SearchResultFactory;
 use Magento\Framework\App\ObjectManager;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
+use Psr\Log\LoggerInterface;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Provider of data to stock
@@ -65,14 +70,24 @@ class StockDataProvider extends DataProvider
     private $sortOrderBuilder;
 
     /**
-     * @var GetSourcesAssignedToStockOrderedByPriorityInterface
-     */
-    private $getSourcesAssignedToStockOrderedByPriority;
-
-    /**
      * @var PoolInterface
      */
     private $pool;
+
+    /**
+     * @var int|null
+     */
+    private $assignedSourcesLimit = null;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var StockSourceLinksExtensionAttributes
+     */
+    private $stockSourceLinksExtensionAttributes;
 
     /**
      * @param string $name
@@ -92,6 +107,9 @@ class StockDataProvider extends DataProvider
      * @param array $meta
      * @param array $data
      * @param PoolInterface|null $pool
+     * @param LoggerInterface $logger
+     * @param StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes
+     * @param int|null $assignedSourcesLimit
      * @SuppressWarnings(PHPMD.ExcessiveParameterList) All parameters are needed for backward compatibility
      */
     public function __construct(
@@ -111,7 +129,10 @@ class StockDataProvider extends DataProvider
         GetSourcesAssignedToStockOrderedByPriorityInterface $getSourcesAssignedToStockOrderedByPriority,
         array $meta = [],
         array $data = [],
-        PoolInterface $pool = null
+        PoolInterface $pool = null,
+        ?LoggerInterface $logger = null,
+        ?StockSourceLinksExtensionAttributes $stockSourceLinksExtensionAttributes = null,
+        ?int $assignedSourcesLimit = 100
     ) {
         parent::__construct(
             $name,
@@ -130,8 +151,11 @@ class StockDataProvider extends DataProvider
         $this->sourceRepository = $sourceRepository;
         $this->apiSearchCriteriaBuilder = $apiSearchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
-        $this->getSourcesAssignedToStockOrderedByPriority = $getSourcesAssignedToStockOrderedByPriority;
         $this->pool = $pool ?: ObjectManager::getInstance()->get(PoolInterface::class);
+        $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
+        $this->stockSourceLinksExtensionAttributes = $stockSourceLinksExtensionAttributes
+            ?: ObjectManager::getInstance()->get(StockSourceLinksExtensionAttributes::class);
+        $this->assignedSourcesLimit = $assignedSourcesLimit;
     }
 
     /**
@@ -205,19 +229,17 @@ class StockDataProvider extends DataProvider
             ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
             ->addSortOrder($sortOrder)
             ->create();
-
+        $this->stockSourceLinksExtensionAttributes->joinExtensionAttributes(true);
         $searchResult = $this->getStockSourceLinks->execute($searchCriteria);
-
         if ($searchResult->getTotalCount() === 0) {
             return [];
         }
 
+        $stockSourceLinks = $searchResult->getItems();
         $assignedSourcesData = [];
-        foreach ($searchResult->getItems() as $link) {
-            $source = $this->sourceRepository->get($link->getSourceCode());
-
+        foreach ($stockSourceLinks as $link) {
             $assignedSourcesData[] = [
-                SourceInterface::NAME => $source->getName(),
+                SourceInterface::NAME => $link->getExtensionAttributes()->getSourceName(),
                 StockSourceLinkInterface::SOURCE_CODE => $link->getSourceCode(),
                 StockSourceLinkInterface::STOCK_ID => $link->getStockId(),
                 StockSourceLinkInterface::PRIORITY => $link->getPriority(),
@@ -231,20 +253,36 @@ class StockDataProvider extends DataProvider
      *
      * @param int $stockId
      * @return array
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     private function getAssignedSourcesById(int $stockId): array
     {
-        $sources = $this->getSourcesAssignedToStockOrderedByPriority->execute($stockId);
-        $sourcesData = [];
-        foreach ($sources as $source) {
-            $sourcesData[] = [
-                'sourceCode' => $source->getSourceCode(),
-                'name' => $source->getName()
-            ];
+        try {
+            $sortOrder = $this->sortOrderBuilder
+                ->setField(StockSourceLinkInterface::PRIORITY)
+                ->setAscendingDirection()
+                ->create();
+            $searchCriteria = $this->apiSearchCriteriaBuilder
+                ->addFilter(StockSourceLinkInterface::STOCK_ID, $stockId)
+                ->addSortOrder($sortOrder)
+                ->setPageSize($this->assignedSourcesLimit)
+                ->create();
+            $searchResult = $this->getStockSourceLinks->execute($searchCriteria);
+            $stockSourceLinks =  $searchResult->getItems();
+            $sources = [];
+            foreach ($stockSourceLinks as $link) {
+                $source = $this->sourceRepository->get($link->getSourceCode());
+                $sources[] = [
+                    'sourceCode' => $source->getSourceCode(),
+                    'name' => $source->getName()
+                ];
+            }
+            return $sources;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new LocalizedException(__('Could not load Sources for Stock'), $e);
         }
-
-        return $sourcesData;
     }
 }

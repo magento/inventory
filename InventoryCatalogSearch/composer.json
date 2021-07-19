@@ -8,9 +8,7 @@
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-indexer": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-store": "*"
-    },
-    "suggest": {
+        "magento/module-store": "*",
         "magento/module-catalog-search": "*"
     },
     "type": "magento2-module",

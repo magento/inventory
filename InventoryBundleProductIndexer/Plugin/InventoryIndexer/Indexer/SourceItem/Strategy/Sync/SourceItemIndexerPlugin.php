@@ -34,18 +34,17 @@ class SourceItemIndexerPlugin
      * Reindex source items list for bundle products.
      *
      * @param Sync $subject
-     * @param void $result
+     * @param callable $proceed
      * @param array $sourceItemIds
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws StateException
      */
-    public function afterExecuteList(
+    public function aroundExecuteList(
         Sync $subject,
-        $result,
+        callable $proceed,
         array $sourceItemIds
-    ): void {
+    ) {
+        $proceed($sourceItemIds);
         $this->bundleProductsSourceItemIndexer->executeList($sourceItemIds);
     }
 }
