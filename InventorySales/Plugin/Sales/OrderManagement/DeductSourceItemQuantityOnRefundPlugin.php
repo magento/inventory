@@ -5,20 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Observer\SalesInventory;
+namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\ReturnProcessor\DeductSourceItemQuantityOnRefund;
 use Magento\InventorySalesApi\Model\GetSkuFromOrderItemInterface;
 use Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterfaceFactory;
+use Magento\Sales\Api\CreditmemoRepositoryInterface;
+use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\CreditmemoItemInterface as CreditmemoItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
-class DeductSourceItemQuantityOnRefundObserver implements ObserverInterface
+class DeductSourceItemQuantityOnRefundPlugin
 {
     /**
      * @var GetSkuFromOrderItemInterface
@@ -75,17 +75,43 @@ class DeductSourceItemQuantityOnRefundObserver implements ObserverInterface
     }
 
     /**
-     * @param Observer $observer
+     * On Credit Memo create, issues the reservation compensation record.
+     *
+     * Before saving the credit memo, validates if the credit memo object was created or updated.
+     * If the credit memo was updates, we should not compensate the reservation.
+     *
+     * @param CreditmemoRepositoryInterface $subject
+     * @param callable $proceed
+     * @param CreditmemoInterface $entity
+     * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function aroundSave(
+        CreditmemoRepositoryInterface $subject,
+        callable $proceed,
+        CreditmemoInterface $entity
+    )
+    {
+        $isNewCreditMemo = !(bool)$entity->getEntityId();
+        $result = $proceed($entity);
+
+        if ($isNewCreditMemo) {
+            $this->compensateReservation($entity);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param CreditmemoInterface $creditMemo
      * @return void
      */
-    public function execute(Observer $observer)
+    private function compensateReservation(CreditmemoInterface $creditMemo): void
     {
-        /* @var $creditmemo \Magento\Sales\Model\Order\Creditmemo */
-        $creditmemo = $observer->getEvent()->getCreditmemo();
-        $order = $this->orderRepository->get($creditmemo->getOrderId());
+        $order = $this->orderRepository->get($creditMemo->getOrderId());
         $itemsToRefund = $refundedOrderItemIds = [];
         /** @var CreditmemoItem $item */
-        foreach ($creditmemo->getItems() as $item) {
+        foreach ($creditMemo->getItems() as $item) {
             /** @var OrderItemInterface $orderItem */
             $orderItem = $item->getOrderItem();
             $sku = $this->getSkuFromOrderItem->execute($orderItem);

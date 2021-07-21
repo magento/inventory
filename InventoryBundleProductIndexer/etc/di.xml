@@ -11,7 +11,7 @@
         <plugin name="bundle_product_index_list" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\ReindexListPlugin"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="bundle_product_index" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin"/>
+        <plugin name="bundle_product_index" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\SourceItemIndexerPlugin" sortOrder="20"/>
     </type>
     <type name="Magento\InventoryBundleProductIndexer\Indexer\Stock\StockIndexer">
         <arguments>
