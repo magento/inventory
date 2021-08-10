@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogSearch\Plugin\CatalogSearch\Model\Indexer;
 
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider;
+use Magento\CatalogSearch\Model\Indexer\Fulltext\Action\GetSearchableProductsSelect;
+use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogSearch\Model\Indexer\FilterProductByStock;
 
 /**
@@ -41,20 +43,22 @@ class ChildProductFilterByInventoryStockPlugin
     /**
      * Filter out of stock options for composite products.
      *
-     * @param DataProvider $subject
-     * @param array $result
-     * @param string $storeId
-     * @return array
+     * @param GetSearchableProductsSelect $subject
+     * @param Select $result
+     * @param int $storeId
+     * @return Select
+     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetSearchableProducts(
-        DataProvider $subject,
-        array $result,
-        string $storeId
-    ) {
+    public function afterExecute(
+        GetSearchableProductsSelect $subject,
+        Select $result,
+        int $storeId
+    ): Select
+    {
         if ($this->stockConfiguration->isShowOutOfStock($storeId) || empty($result)) {
             return $result;
         }
-        return $this->filterProductByStock->execute($result, (int)$storeId);
+        return $this->filterProductByStock->execute($result, $storeId);
     }
 }

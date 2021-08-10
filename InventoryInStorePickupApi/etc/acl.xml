@@ -10,8 +10,12 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Magento_Backend::stores">
-                    <resource id="Magento_InventoryApi::inventory">
-                        <resource id="Magento_InventoryInStorePickupApi::inStorePickup" title="In-Store Pickup" translate="title" sortOrder="20"/>
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magento_Shipping::carriers">
+                                <resource id="Magento_InventoryInStorePickupApi::inStorePickup" title="In-Store Pickup" translate="title" sortOrder="20"/>
+                            </resource>
+                        </resource>
                     </resource>
                 </resource>
             </resource>
