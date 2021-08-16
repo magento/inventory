@@ -68,7 +68,7 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             ['product_link_bundle' => $this->resourceConnection->getTableName('catalog_product_bundle_selection')],
             [new \Zend_Db_Expr('1')]
         )->where(
-            "product_link_bundle.parent_product_id = product.{$linkField}"
+            "product_link_bundle.parent_product_id = e.{$linkField}"
         );
         $existsSelect->join(
             ['bundle_product_child' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -90,7 +90,7 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
         )->where('stock_status_index_child.is_salable = 1');
         $typeBundle = Type::TYPE_CODE;
         $select->where(
-            "product.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
+            "e.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
         );
     }
 }

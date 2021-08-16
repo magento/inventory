@@ -68,7 +68,7 @@ class ConfigurableChildStockStatusModifier implements SelectModifierInterface
             ['product_link_configurable' => $this->resourceConnection->getTableName('catalog_product_super_link')],
             [new \Zend_Db_Expr('1')]
         )->where(
-            "product_link_configurable.parent_id = product.{$linkField}"
+            "product_link_configurable.parent_id = e.{$linkField}"
         );
         $existsSelect->join(
             ['product_child' => $this->resourceConnection->getTableName('catalog_product_entity')],
@@ -90,7 +90,7 @@ class ConfigurableChildStockStatusModifier implements SelectModifierInterface
         )->where('stock_status_index_child.is_salable = 1');
         $typeConfigurable = Configurable::TYPE_CODE;
         $select->where(
-            "product.type_id != '{$typeConfigurable}' OR EXISTS ({$existsSelect->assemble()})"
+            "e.type_id != '{$typeConfigurable}' OR EXISTS ({$existsSelect->assemble()})"
         );
     }
 }
