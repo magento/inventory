@@ -7,6 +7,7 @@
 namespace Magento\InventoryShippingAdminUi\Plugin;
 
 use Magento\InventoryShippingAdminUi\Model\ResourceModel\GetAllocatedSourcesForOrder;
+use Magento\Ui\Model\Export\MetadataProvider;
 
 /**
  * Set the value of Allocated Source column in sales order export csv Plugin Class
@@ -41,7 +42,7 @@ class SetAllocatedSourceValueInExportCsv
     /**
      * Set the allocated source value to the allocated source column in export csv.
      *
-     * @param $subject
+     * @param MetadataProvider $subject
      * @param $result
      * @param $document
      * @param $fields
@@ -49,7 +50,7 @@ class SetAllocatedSourceValueInExportCsv
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetRowData($subject, $result, $document, $fields, $options)
+    public function afterGetRowData(MetadataProvider $subject, $result, $document, $fields, $options)
     {
         $i = 0;
         foreach ($fields as $column) {
