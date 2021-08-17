@@ -43,10 +43,10 @@ class SetAllocatedSourceValueInExportCsv
      * Set the allocated source value to the allocated source column in export csv.
      *
      * @param MetadataProvider $subject
-     * @param $result
-     * @param $document
-     * @param $fields
-     * @param $options
+     * @param array $result
+     * @param object $document
+     * @param array $fields
+     * @param array $options
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -57,10 +57,9 @@ class SetAllocatedSourceValueInExportCsv
             if ($column === self::$allocateSourcesAttributeCode) {
                 $allocated_sources = $this->getAllocatedSourcesForOrder->execute((int)$document['entity_id']);
                 if(count($allocated_sources) > 0)
-                    $result[$i] = $allocated_sources[0];
+                    $result[$i] = implode("\n",$allocated_sources);
             }
             $i++;
-            continue;
         }
         return $result;
     }
