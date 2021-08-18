@@ -8,6 +8,8 @@ namespace Magento\InventoryShippingAdminUi\Plugin;
 
 use Magento\InventoryShippingAdminUi\Model\ResourceModel\GetAllocatedSourcesForOrder;
 use Magento\Ui\Model\Export\MetadataProvider;
+use Magento\Ui\Component\MassAction\Filter;
+use Magento\Framework\View\Element\UiComponentInterface;
 
 /**
  * Set the value of Allocated Source column in sales order export csv Plugin Class
@@ -15,11 +17,23 @@ use Magento\Ui\Model\Export\MetadataProvider;
 class SetAllocatedSourceValueInExportCsv
 {
     /**
+     * @var Filter
+     */
+    protected $filter;
+
+    /**
      * Allocate Sources Attribute code
      *
      * @var string
      */
     private static $allocateSourcesAttributeCode = 'allocated_sources';
+
+    /**
+     * Sales Order Component Name
+     *
+     * @var string
+     */
+    private static $salesOrderComponentName = 'sales_order_grid';
 
     /**
      * Allocated Sources for order resources
@@ -34,9 +48,11 @@ class SetAllocatedSourceValueInExportCsv
      * @param GetAllocatedSourcesForOrder $getAllocatedSourcesForOrder
      */
     public function __construct(
-        GetAllocatedSourcesForOrder $getAllocatedSourcesForOrder
+        GetAllocatedSourcesForOrder $getAllocatedSourcesForOrder,
+        Filter $filter
     ) {
         $this->getAllocatedSourcesForOrder = $getAllocatedSourcesForOrder;
+        $this->filter = $filter;
     }
 
     /**
@@ -52,14 +68,18 @@ class SetAllocatedSourceValueInExportCsv
      */
     public function afterGetRowData(MetadataProvider $subject, $result, $document, $fields, $options)
     {
-        $i = 0;
-        foreach ($fields as $column) {
-            if ($column === self::$allocateSourcesAttributeCode) {
-                $allocated_sources = $this->getAllocatedSourcesForOrder->execute((int)$document['entity_id']);
-                if(count($allocated_sources) > 0)
-                    $result[$i] = implode(", ", $allocated_sources);
+        $component = $this->filter->getComponent();
+        if (!$component instanceof UiComponentInterface) {
+            return $result;
+        }
+        if ($component->getName() === self::$salesOrderComponentName) {
+            foreach ($fields as $key => $column) {
+                if ($column === self::$allocateSourcesAttributeCode) {
+                    $allocated_sources = $this->getAllocatedSourcesForOrder->execute((int)$document['entity_id']);
+                    if(count($allocated_sources) > 0)
+                        $result[$key] = implode(",", $allocated_sources);
+                }
             }
-            $i++;
         }
         return $result;
     }

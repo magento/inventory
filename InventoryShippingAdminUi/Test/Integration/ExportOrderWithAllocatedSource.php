@@ -119,7 +119,7 @@ class ExportOrderWithAllocatedSource extends ExportBase
         $this->saveShipmentSource->execute((int)$shipId2, 'eu-2');
 
         $allocated_sources = $this->getAllocatedSourcesForOrder->execute((int)$order->getEntityId());
-        $allocated_sources = implode(", ", $allocated_sources);
+        $allocated_sources = implode(",", $allocated_sources);
 
         $url = $this->getExportUrl($format, null);
         $response = $this->dispatchExport(
