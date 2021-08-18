@@ -46,6 +46,7 @@ class SetAllocatedSourceValueInExportCsv
      * Construct Method for SetAllocatedSourceValueInExportCsv Plugin
      *
      * @param GetAllocatedSourcesForOrder $getAllocatedSourcesForOrder
+     * @param Filter $filter
      */
     public function __construct(
         GetAllocatedSourcesForOrder $getAllocatedSourcesForOrder,
