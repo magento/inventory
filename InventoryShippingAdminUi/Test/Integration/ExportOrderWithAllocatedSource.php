@@ -21,7 +21,6 @@ use Magento\Sales\Controller\Adminhtml\Order\ExportBase;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @magentoAppIsolation enabled
  */
-
 class ExportOrderWithAllocatedSource extends ExportBase
 {
     /**
