@@ -57,7 +57,7 @@ class SetAllocatedSourceValueInExportCsv
             if ($column === self::$allocateSourcesAttributeCode) {
                 $allocated_sources = $this->getAllocatedSourcesForOrder->execute((int)$document['entity_id']);
                 if(count($allocated_sources) > 0)
-                    $result[$i] = implode("\n",$allocated_sources);
+                    $result[$i] = implode(", ", $allocated_sources);
             }
             $i++;
         }
