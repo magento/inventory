@@ -19,7 +19,7 @@ class SetAllocatedSourceValueInExportCsv
     /**
      * @var Filter
      */
-    protected $filter;
+    private $filter;
 
     /**
      * Allocate Sources Attribute code
