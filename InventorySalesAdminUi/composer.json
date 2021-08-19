@@ -15,6 +15,9 @@
         "magento/module-store": "*",
         "magento/module-ui": "*"
     },
+    "suggest": {
+        "magento/module-sales": "*"
+    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
