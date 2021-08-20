@@ -66,7 +66,7 @@ class SelectBuilder implements SelectBuilderInterface
         $quantityExpression = (string)$this->resourceConnection->getConnection()->getCheckSql(
             'source_item.' . SourceItemInterface::STATUS . ' = ' . SourceItemInterface::STATUS_OUT_OF_STOCK,
             0,
-            SourceItemInterface::QUANTITY
+            'source_item.' . SourceItemInterface::QUANTITY
         );
         $sourceCodes = $this->getSourceCodes($stockId);
 
