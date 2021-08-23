@@ -103,7 +103,6 @@ class SelectBuilder implements SelectBuilderInterface
             ['type' => AdapterInterface::INDEX_TYPE_INDEX]
         );
         $connection->createTemporaryTable($table);
-        $connection->truncateTable($reservationsTableName);
 
         $reservationsData = $connection->select();
         $reservationsData->from(
