@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\DB\Select;
 use Magento\Inventory\Model\ResourceModel\Source as SourceResourceModel;
 use Magento\Inventory\Model\ResourceModel\SourceItem as SourceItemResourceModel;
@@ -70,6 +72,20 @@ class SelectBuilder implements SelectBuilderInterface
         );
         $sourceCodes = $this->getSourceCodes($stockId);
 
+        $reservationsTableName = 'reservations_temp_for_stock_' . $stockId;
+        $reservationsData = $connection->select();
+        $reservationsData->from(
+            ['reservations' => $this->resourceConnection->getTableName('inventory_reservation')],
+            [
+                'sku',
+                'reservation_qty' => 'SUM(reservations.quantity)'
+            ]
+        );
+        $reservationsData->group(['sku', 'stock_id']);
+
+        $insRes = $connection->insertFromSelect($reservationsData, $reservationsTableName);
+        $connection->query($insRes);
+
         $select = $connection->select();
         $select->joinLeft(
             ['product' => $this->resourceConnection->getTableName($this->productTableName)],
@@ -78,6 +94,10 @@ class SelectBuilder implements SelectBuilderInterface
         )->joinLeft(
             ['legacy_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
             'product.entity_id = legacy_stock_item.product_id',
+            []
+        )->joinLeft(
+            ['reservations_qty' => $this->resourceConnection->getTableName($reservationsTableName)],
+            ' source_item.' . SourceItemInterface::SKU . ' = reservations_qty.sku',
             []
         );
 
@@ -90,7 +110,7 @@ class SelectBuilder implements SelectBuilderInterface
             ]
         )
             ->where('source_item.' . SourceItemInterface::SOURCE_CODE . ' IN (?)', $sourceCodes)
-            ->group([SourceItemInterface::SKU]);
+            ->group(['source_item.' .SourceItemInterface::SKU]);
 
         return $select;
     }

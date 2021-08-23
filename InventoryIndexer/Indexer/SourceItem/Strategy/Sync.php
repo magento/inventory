@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\SourceItem\Strategy;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\DB\Ddl\Table;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
@@ -59,6 +61,11 @@ class Sync
     private $defaultStockProvider;
 
     /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
      * @param GetSkuListInStock $getSkuListInStockToUpdate
@@ -76,7 +83,8 @@ class Sync
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         IndexNameBuilder $indexNameBuilder,
         StockIndexer $stockIndexer,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ResourceConnection $resourceConnection
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -85,6 +93,7 @@ class Sync
         $this->indexNameBuilder = $indexNameBuilder;
         $this->stockIndexer = $stockIndexer;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -120,12 +129,46 @@ class Sync
                 ResourceConnection::DEFAULT_CONNECTION
             );
 
+            $reservationsTableName = 'reservations_temp_for_stock_' . $stockId;
+            $connection = $this->resourceConnection->getConnection();
+            $table = $connection->newTable($reservationsTableName);
+            $table->addColumn(
+                'sku',
+                Table::TYPE_TEXT,
+                64,
+                [
+                    Table::OPTION_PRIMARY => true,
+                    Table::OPTION_NULLABLE => false,
+                ],
+                'Sku'
+            );
+            $table->addColumn(
+                'reservation_qty',
+                Table::TYPE_DECIMAL,
+                null,
+                [
+                    Table::OPTION_UNSIGNED => false,
+                    Table::OPTION_NULLABLE => false,
+                    Table::OPTION_DEFAULT => 0,
+                    Table::OPTION_PRECISION => 10,
+                    Table::OPTION_SCALE => 4,
+                ],
+                'Reservation Qty'
+            );
+            $table->addIndex(
+                'index_sku_qty',
+                ['sku'],
+                ['type' => AdapterInterface::INDEX_TYPE_INDEX]
+            );
+            $connection->createTemporaryTable($table);
+
             $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
             $this->indexHandler->saveIndex(
                 $mainIndexName,
                 $indexData,
                 ResourceConnection::DEFAULT_CONNECTION
             );
+            $connection->dropTemporaryTable($reservationsTableName);
         }
     }
 
