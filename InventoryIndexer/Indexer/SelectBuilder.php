@@ -73,6 +73,38 @@ class SelectBuilder implements SelectBuilderInterface
         $sourceCodes = $this->getSourceCodes($stockId);
 
         $reservationsTableName = 'reservations_temp_for_stock_' . $stockId;
+        $table = $connection->newTable($reservationsTableName);
+        $table->addColumn(
+            'sku',
+            Table::TYPE_TEXT,
+            64,
+            [
+                Table::OPTION_PRIMARY => true,
+                Table::OPTION_NULLABLE => false,
+            ],
+            'Sku'
+        );
+        $table->addColumn(
+            'reservation_qty',
+            Table::TYPE_DECIMAL,
+            null,
+            [
+                Table::OPTION_UNSIGNED => false,
+                Table::OPTION_NULLABLE => false,
+                Table::OPTION_DEFAULT => 0,
+                Table::OPTION_PRECISION => 10,
+                Table::OPTION_SCALE => 4,
+            ],
+            'Reservation Qty'
+        );
+        $table->addIndex(
+            'index_sku_qty',
+            ['sku'],
+            ['type' => AdapterInterface::INDEX_TYPE_INDEX]
+        );
+        $connection->createTemporaryTable($table);
+        $connection->truncateTable($reservationsTableName);
+
         $reservationsData = $connection->select();
         $reservationsData->from(
             ['reservations' => $this->resourceConnection->getTableName('inventory_reservation')],
