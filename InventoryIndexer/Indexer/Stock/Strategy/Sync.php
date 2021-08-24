@@ -58,6 +58,11 @@ class Sync
     private $defaultStockProvider;
 
     /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -75,7 +80,8 @@ class Sync
         IndexNameBuilder $indexNameBuilder,
         IndexDataProviderByStockId $indexDataProviderByStockId,
         IndexTableSwitcherInterface $indexTableSwitcher,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ResourceConnection $resourceConnection
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructureHandler;
@@ -84,6 +90,7 @@ class Sync
         $this->indexDataProviderByStockId = $indexDataProviderByStockId;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -147,6 +154,10 @@ class Sync
             );
             $this->indexTableSwitcher->switch($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             $this->indexStructure->delete($replicaIndexName, ResourceConnection::DEFAULT_CONNECTION);
+
+            $reservationsTableName = 'reservations_temp_for_stock_' . $stockId;
+            $connection = $this->resourceConnection->getConnection();
+            $connection->dropTemporaryTable($reservationsTableName);
         }
     }
 }

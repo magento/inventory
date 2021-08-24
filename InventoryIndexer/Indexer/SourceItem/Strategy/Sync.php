@@ -61,6 +61,11 @@ class Sync
     private $defaultStockProvider;
 
     /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
      * @param GetSkuListInStock $getSkuListInStockToUpdate
@@ -78,7 +83,8 @@ class Sync
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         IndexNameBuilder $indexNameBuilder,
         StockIndexer $stockIndexer,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ResourceConnection $resourceConnection
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -87,6 +93,7 @@ class Sync
         $this->indexNameBuilder = $indexNameBuilder;
         $this->stockIndexer = $stockIndexer;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -128,6 +135,10 @@ class Sync
                 $indexData,
                 ResourceConnection::DEFAULT_CONNECTION
             );
+
+            $reservationsTableName = 'reservations_temp_for_stock_' . $stockId;
+            $connection = $this->resourceConnection->getConnection();
+            $connection->dropTemporaryTable($reservationsTableName);
         }
     }
 
