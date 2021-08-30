@@ -81,7 +81,7 @@
         <dontSee selector="{{AdminGridHeaders.headerByName('Action')}}" userInput="Action" stepKey="dontSeeActionColumnHeader2"/>
 
         <click selector="{{AdminGridDefaultViewControls.defaultView}}" stepKey="clickOnDefaultView3"/>
-        <click selector="{{AdminGridDefaultViewControls.viewByName('Default View')}}" stepKey="clickOnDefaultViewMenuOption1"/>
+        <click selector="{{AdminGridDefaultViewControls.viewByName(DefaultGridView.name)}}" stepKey="clickOnDefaultViewMenuOption1"/>
 
         <see selector="{{AdminGridHeaders.headerByName('Code')}}" userInput="Code" stepKey="seeCodeHeader3"/>
         <see selector="{{AdminGridHeaders.headerByName('Is Enabled')}}" userInput="Is Enabled" stepKey="seeIsEnabledHeader3"/>

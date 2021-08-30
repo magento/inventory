@@ -58,7 +58,7 @@
         <dontSee selector="{{AdminGridHeaders.headerByName('Sales Channels')}}" userInput="Sales Channels" stepKey="dontSeeSalesChannelColumn2"/>
 
         <click selector="{{AdminGridDefaultViewControls.defaultView}}" stepKey="clickOnDefaultView3"/>
-        <click selector="{{AdminGridDefaultViewControls.viewByName('Default View')}}" stepKey="clickOnDefaultViewMenuOption1"/>
+        <click selector="{{AdminGridDefaultViewControls.viewByName(DefaultGridView.name)}}" stepKey="clickOnDefaultViewMenuOption1"/>
 
         <see selector="{{AdminGridHeaders.headerByName('ID')}}" userInput="ID" stepKey="seeTheHeaderId3"/>
         <see selector="{{AdminGridHeaders.headerByName('Name')}}" userInput="Name" stepKey="seeTheHeaderName3"/>
