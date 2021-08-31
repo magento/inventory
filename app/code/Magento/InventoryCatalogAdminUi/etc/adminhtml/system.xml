@@ -10,6 +10,13 @@
 
     <system>
         <section id="cataloginventory">
+            <group id="options" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="synchronize_with_catalog" translate="label" type="select" sortOrder="100" showInDefault="1" canRestore="1">
+                    <label>Synchronize with Catalog</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically synchronize inventory data according to the catalog changes.</comment>
+                </field>
+            </group>
             <group id="bulk_operations" translate="label" type="text" sortOrder="600" showInDefault="1"
                    showInWebsite="1" showInStore="1">
                 <label>Admin bulk operations</label>
