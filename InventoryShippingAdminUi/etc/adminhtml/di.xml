@@ -37,4 +37,7 @@
             <argument name="getSourcesByStockIdSkuAndQty" xsi:type="null"/>
         </arguments>
     </type>
+    <type name="Magento\Ui\Model\Export\MetadataProvider">
+        <plugin name="setAllocatedSourceData" type="Magento\InventoryShippingAdminUi\Plugin\SetAllocatedSourceValueInExportCsv" sortOrder="1"/>
+    </type>
 </config>

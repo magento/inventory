@@ -167,7 +167,9 @@ define([
          */
         selectShippingMethod: function (shippingMethod) {
             selectShippingMethodAction(shippingMethod);
-            checkoutData.setSelectedShippingRate(shippingMethod['carrier_code'] + '_' + shippingMethod['method_code']);
+            checkoutData.setSelectedShippingRate(
+                shippingMethod ? shippingMethod['carrier_code'] + '_' + shippingMethod['method_code'] : null
+            );
         },
 
         /**
