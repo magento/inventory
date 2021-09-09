@@ -29,4 +29,7 @@
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
         <plugin name="add_notice_for_unassigned_sales_channels" type="Magento\InventorySalesAdminUi\Plugin\InventoryApi\StockRepository\AddNoticeForUnassignedSalesChannels" sortOrder="10"/>
     </type>
+    <type name="Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer">
+        <plugin name="can_return_item_to_stock_child_manage_stock_is_on" type="Magento\InventorySalesAdminUi\Plugin\Sales\Block\Items\Renderer\DefaultRenderer\ChildManageStockIsOn"/>
+    </type>
 </config>

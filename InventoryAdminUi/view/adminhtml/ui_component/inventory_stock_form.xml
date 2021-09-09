@@ -97,7 +97,7 @@
                 </argument>
             </button>
         </container>
-        <dynamicRows name="assigned_sources" component="Magento_Ui/js/dynamic-rows/dynamic-rows-grid" sortOrder="20">
+        <dynamicRows name="assigned_sources" component="Magento_InventoryAdminUi/js/stock/grid/dynamic-rows/assigned-sources" sortOrder="20">
             <argument name="data" xsi:type="array">
                 <item name="js_config" xsi:type="array">
                     <item name="dataProvider" xsi:type="string">data.sources.assign_sources_grid</item>

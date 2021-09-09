@@ -9,6 +9,7 @@
     <module name="Magento_InventorySalesAdminUi">
         <sequence>
             <module name="Magento_InventorySales"/>
+            <module name="Magento_Sales"/>
         </sequence>
     </module>
 </config>
