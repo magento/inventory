@@ -50,13 +50,17 @@ class GetIsAnySourceItemInStock
             'issl.source_code = isi.source_code',
             []
         )->where(
-            'issl.stock_id = ?', $stockId
+            'issl.stock_id = ?',
+            $stockId
         )->where(
-            'is.enabled = ?', 1
+            'is.enabled = ?',
+            1
         )->where(
-            'isi.sku = ?', $sku
+            'isi.sku = ?',
+            $sku
         )->where(
-            'isi.status = ?', SourceItemInterface::STATUS_IN_STOCK
+            'isi.status = ?',
+            SourceItemInterface::STATUS_IN_STOCK
         )->columns(
             ['count' => new \Zend_Db_Expr('COUNT(*)')]
         );
