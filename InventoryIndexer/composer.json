@@ -1,26 +1,27 @@
 {
     "name": "magento/module-inventory-indexer",
     "description": "N/A",
-    "require": {
-        "php": "~7.3.0||~7.4.0",
-        "magento/framework": "*",
-        "magento/framework-message-queue": "*",
-        "magento/module-inventory-multi-dimensional-indexer-api": "*",
-        "magento/module-inventory": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-configuration-api": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-sales": "*"
-    },
-    "suggest": {
-        "magento/module-catalog": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "2.1.1-p1",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/framework-message-queue": "*",
+        "magento/module-inventory-multi-dimensional-indexer-api": "1.2.0-p1",
+        "magento/module-inventory": "1.2.1-p1",
+        "magento/module-inventory-api": "1.2.1-p1",
+        "magento/module-inventory-catalog-api": "1.3.1-p1",
+        "magento/module-inventory-configuration-api": "1.2.0-p1",
+        "magento/module-inventory-sales-api": "1.2.0-p1",
+        "magento/module-inventory-sales": "1.2.1-p1"
+    },
+    "suggest": {
+        "magento/module-catalog": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -30,3 +31,4 @@
         }
     }
 }
+

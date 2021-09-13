@@ -1,24 +1,25 @@
 {
     "name": "magento/module-inventory-bundle-product-indexer",
     "description": "N/A",
-    "require": {
-        "php": "~7.3.0||~7.4.0",
-        "magento/framework": "*",
-        "magento/module-bundle": "*",
-        "magento/module-catalog": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-indexer": "*",
-        "magento/module-inventory-multi-dimensional-indexer-api": "*"
-    },
-    "suggest": {
-        "magento/module-inventory": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.1.0-p1",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/module-bundle": "*",
+        "magento/module-catalog": "*",
+        "magento/module-inventory-api": "1.2.1-p1",
+        "magento/module-inventory-catalog-api": "1.3.1-p1",
+        "magento/module-inventory-indexer": "2.1.1-p1",
+        "magento/module-inventory-multi-dimensional-indexer-api": "1.2.0-p1"
+    },
+    "suggest": {
+        "magento/module-inventory": "1.2.1-p1"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -28,3 +29,4 @@
         }
     }
 }
+
