@@ -9,7 +9,7 @@ namespace Magento\InventoryCatalogSearch\Model\Indexer;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
-use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
@@ -46,11 +46,6 @@ class FilterProductByStock
     private $storeRepository;
 
     /**
-     * @var MetadataPool
-     */
-    private $metadataPool;
-
-    /**
      * @var array
      */
     private $selectModifiersPool;
@@ -61,7 +56,6 @@ class FilterProductByStock
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param StoreRepositoryInterface $storeRepository
-     * @param MetadataPool $metadataPool
      * @param array $selectModifiersPool
      */
     public function __construct(
@@ -70,70 +64,53 @@ class FilterProductByStock
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         StoreRepositoryInterface $storeRepository,
-        MetadataPool $metadataPool,
         array $selectModifiersPool = []
-    ) {
+    )
+    {
         $this->defaultStockProvider = $defaultStockProvider;
         $this->resourceConnection = $resourceConnection;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->storeRepository = $storeRepository;
-        $this->metadataPool = $metadataPool;
         $this->selectModifiersPool = $selectModifiersPool;
     }
 
     /**
      * Return filtered product by stock status for product indexer
      *
-     * @param array $products
+     * @param Select $select
      * @param int $storeId
-     * @return array
+     * @return Select
+     * @throws NoSuchEntityException
      */
-    public function execute(array $products, int $storeId): array
+    public function execute(Select $select, int $storeId): Select
     {
         $store = $this->storeRepository->getById($storeId);
-        $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
+        try {
+            $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
+        } catch (NoSuchEntityException $exception) {
+            return $select;
+        }
+
         $stockId = $stock->getStockId();
-        if ($this->defaultStockProvider->getId() === $stockId) {
-            return $products;
-        }
-
         $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-        $productIds = array_column($products, 'entity_id');
-        $filteredProductIds = $this->getStockStatusesFromCustomStock($productIds, $stockTable);
-        return array_filter($products, function ($product) use ($filteredProductIds) {
-            return in_array($product['entity_id'], $filteredProductIds);
-        });
-    }
-
-    /**
-     * Get product stock statuses on custom stock.
-     *
-     * @param array $productIds
-     * @param string $stockTable
-     * @return array
-     */
-    private function getStockStatusesFromCustomStock(array $productIds, string $stockTable): array
-    {
         $connection = $this->resourceConnection->getConnection();
-        if (!$connection->isTableExists($stockTable)) {
-            return [];
+
+        if ($this->defaultStockProvider->getId() === $stockId ||
+            !$connection->isTableExists($stockTable)) {
+            return $select;
         }
 
-        $select = $connection->select();
-        $select->from(
-            ['product' => $this->resourceConnection->getTableName('catalog_product_entity')],
-            ['entity_id']
-        );
         $select->joinInner(
             ['stock' => $stockTable],
-            'product.sku = stock.sku',
+            'e.sku = stock.sku',
             []
         );
-        $select->where('product.entity_id IN (?)', $productIds);
+
         $select->where('stock.is_salable = ?', 1);
         $this->applySelectModifiers($select, $stockTable);
-        return $connection->fetchCol($select);
+
+        return $select;
     }
 
     /**

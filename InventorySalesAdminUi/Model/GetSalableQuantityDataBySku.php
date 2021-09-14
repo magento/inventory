@@ -79,6 +79,7 @@ class GetSalableQuantityDataBySku
                 $stockItemConfiguration = $this->getStockItemConfiguration->execute($sku, $stockId);
                 $isManageStock = $stockItemConfiguration->isManageStock();
                 $stockInfo[] = [
+                    'stock_id' => $stockId,
                     'stock_name' => $stock->getName(),
                     'qty' => $isManageStock ? $this->getProductSalableQty->execute($sku, $stockId) : null,
                     'manage_stock' => $isManageStock,
