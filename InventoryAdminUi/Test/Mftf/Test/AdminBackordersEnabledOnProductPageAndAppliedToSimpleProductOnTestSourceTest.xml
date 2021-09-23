@@ -46,7 +46,7 @@
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="1000" stepKey="fillTestSourceQtyField"/>
             <!--Enable backorders.-->
             <actionGroup ref="AdminEnableBackordersOnProductEditPageActionGroup" stepKey="enableBackorders"/>
-            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProductForm"/>
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveAndCloseProductForm"/>
         </before>
         <after>
             <!--Assign Default Stock to Main Website.-->
