@@ -28,12 +28,12 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations simple product types - default stock, default website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoApiDataFixture Magento/Catalog/_files/product_virtual.php
      * @magentoApiDataFixture Magento/Downloadable/_files/product_downloadable_with_files.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/source_items_on_default_source.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @dataProvider simpleProductTypesDataProvider()
      * @param array $filters
@@ -118,18 +118,18 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations simple product types - additional stock, additional website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
      * @magentoApiDataFixture Magento/Catalog/_files/product_virtual.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_virtual_source_item_on_additional_source.php
+     * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_virtual_source_item_on_additional_source.php
      * @magentoApiDataFixture Magento/Downloadable/_files/product_downloadable_with_files.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryCatalog/Test/_files/product_downloadable_source_item_on_additional_source.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoApiDataFixture Magento_InventoryCatalog::Test/_files/product_downloadable_source_item_on_additional_source.php
+     * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @dataProvider simpleProductTypesDataProvider()
      * @param array $filters
@@ -245,8 +245,8 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations configurable product - default stock, default website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/default_stock_configurable_products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      *
      * @return void
      */
@@ -347,13 +347,13 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations configurable product - additional stock, additional website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoApiDataFixture Magento/ConfigurableProduct/_files/product_configurable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryConfigurableProduct/Test/_files/source_items_configurable.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoApiDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
+     * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @return void
      */
@@ -455,8 +455,8 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations grouped product - default stock, default website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryGroupedProduct/Test/_files/default_stock_grouped_products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
      *
      * @return void
      */
@@ -557,14 +557,14 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations grouped product - additional stock, additional website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/websites_with_stores.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryGroupedProductIndexer/Test/_files/custom_stock_with_eu_website_grouped_products.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryGroupedProductIndexer/Test/_files/source_items_grouped_multiple.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventorySalesApi/Test/_files/stock_website_sales_channels.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryIndexer/Test/_files/reindex_inventory.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventoryGroupedProductIndexer::Test/_files/custom_stock_with_eu_website_grouped_products.php
+     * @magentoApiDataFixture Magento_InventoryGroupedProductIndexer::Test/_files/source_items_grouped_multiple.php
+     * @magentoApiDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      *
      * @return void
      */
@@ -666,7 +666,7 @@ class ExportStockSalableQtyTest extends OrderPlacementBase
     /**
      * Verify salable qty export with reservations bundle product - default stock, default website.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoApiDataFixture Magento/Bundle/_files/product.php
      *
      * @return void

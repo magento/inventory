@@ -41,6 +41,7 @@ class SelectBuilderTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoDataFixture Magento_InventoryConfigurableProductIndexer::Test/_files/source_items_configurable_multiple.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/create_reservations_index_table.php
      * @return void
      *
      * @magentoDbIsolation disabled
