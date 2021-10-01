@@ -9,6 +9,7 @@ namespace Magento\InventoryConfiguration\Plugin\InventoryConfiguration\Model;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
+use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 
 /**
  * Caching plugin for GetLegacyStockItem service.
@@ -16,9 +17,17 @@ use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 class GetLegacyStockItemCache
 {
     /**
-     * @var array
+     * @var CacheStorage
      */
-    private $legacyStockItemsBySku = [];
+    private $cacheStorage;
+
+    /**
+     * @param CacheStorage $cacheStorage
+     */
+    public function __construct(CacheStorage $cacheStorage)
+    {
+        $this->cacheStorage = $cacheStorage;
+    }
 
     /**
      * Cache the result of service to avoid duplicate queries to the database.
@@ -31,15 +40,15 @@ class GetLegacyStockItemCache
      */
     public function aroundExecute(GetLegacyStockItem $subject, callable $proceed, string $sku): StockItemInterface
     {
-        if (isset($this->legacyStockItemsBySku[$sku])) {
-            return $this->legacyStockItemsBySku[$sku];
+        if ($this->cacheStorage->get($sku)) {
+            return $this->cacheStorage->get($sku);
         }
 
         /** @var StockItemInterface $item */
         $item = $proceed($sku);
         /* Avoid add to cache a new item */
         if ($item->getItemId()) {
-            $this->legacyStockItemsBySku[$sku] = $item;
+            $this->cacheStorage->set($sku, $item);
         }
 
         return $item;
