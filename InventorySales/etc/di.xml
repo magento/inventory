@@ -48,6 +48,9 @@
                 <item name="min_qty" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\MinQtyStockCondition</item>
                 <item name="non_existing_legacy_sku" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\SkuIsAbsentInCatalogCondition</item>
             </argument>
+            <argument name="requiredConditions" xsi:type="array">
+                <item name="reservations" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\ReservationsCondition</item>
+            </argument>
         </arguments>
     </type>
     <!-- AreProductsSalable -->

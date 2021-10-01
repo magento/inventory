@@ -11,6 +11,8 @@ use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
 use Magento\InventoryIndexer\Indexer\Stock\IndexDataProviderByStockId;
+use Magento\InventoryIndexer\Indexer\Stock\PrepareReservationsIndexData;
+use Magento\InventoryIndexer\Indexer\Stock\ReservationsIndexTable;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
@@ -58,6 +60,16 @@ class Sync
     private $defaultStockProvider;
 
     /**
+     * @var ReservationsIndexTable
+     */
+    private $reservationsIndexTable;
+
+    /**
+     * @var PrepareReservationsIndexData
+     */
+    private $prepareReservationsIndexData;
+
+    /**
      * $indexStructure is reserved name for construct variable in index internal mechanism
      *
      * @param GetAllStockIds $getAllStockIds
@@ -67,6 +79,8 @@ class Sync
      * @param IndexDataProviderByStockId $indexDataProviderByStockId
      * @param IndexTableSwitcherInterface $indexTableSwitcher
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param ReservationsIndexTable $reservationsIndexTable
+     * @param PrepareReservationsIndexData $prepareReservationsIndexData
      */
     public function __construct(
         GetAllStockIds $getAllStockIds,
@@ -75,7 +89,9 @@ class Sync
         IndexNameBuilder $indexNameBuilder,
         IndexDataProviderByStockId $indexDataProviderByStockId,
         IndexTableSwitcherInterface $indexTableSwitcher,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ReservationsIndexTable $reservationsIndexTable,
+        PrepareReservationsIndexData $prepareReservationsIndexData
     ) {
         $this->getAllStockIds = $getAllStockIds;
         $this->indexStructure = $indexStructureHandler;
@@ -84,6 +100,8 @@ class Sync
         $this->indexDataProviderByStockId = $indexDataProviderByStockId;
         $this->indexTableSwitcher = $indexTableSwitcher;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->reservationsIndexTable = $reservationsIndexTable;
+        $this->prepareReservationsIndexData = $prepareReservationsIndexData;
     }
 
     /**
@@ -140,6 +158,9 @@ class Sync
                 $this->indexStructure->create($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             }
 
+            $this->reservationsIndexTable->createTable($stockId);
+            $this->prepareReservationsIndexData->execute($stockId);
+
             $this->indexHandler->saveIndex(
                 $replicaIndexName,
                 $this->indexDataProviderByStockId->execute((int)$stockId),
@@ -147,6 +168,8 @@ class Sync
             );
             $this->indexTableSwitcher->switch($mainIndexName, ResourceConnection::DEFAULT_CONNECTION);
             $this->indexStructure->delete($replicaIndexName, ResourceConnection::DEFAULT_CONNECTION);
+
+            $this->reservationsIndexTable->dropTable($stockId);
         }
     }
 }

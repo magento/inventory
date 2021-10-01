@@ -31,4 +31,8 @@
             <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
         </arguments>
     </type>
+    <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
+        <plugin name="inventory_catalog_add_qty_to_legacy_stock_configurable"
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock"/>
+    </type>
 </config>
