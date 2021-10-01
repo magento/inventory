@@ -50,7 +50,7 @@ class MinQtyStockCondition implements GetIsStockItemSalableConditionInterface
         $quantityExpression = (string)$this->resourceConnection->getConnection()->getCheckSql(
             'source_item.' . SourceItemInterface::STATUS . ' = ' . SourceItemInterface::STATUS_OUT_OF_STOCK,
             0,
-            SourceItemInterface::QUANTITY
+            'source_item.' . SourceItemInterface::QUANTITY
         );
         $quantityExpression = 'SUM(' . $quantityExpression . ')';
 

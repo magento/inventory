@@ -100,6 +100,8 @@
         <plugin name="adapt_get_stock_status_by_sku" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetStockStatusBySkuPlugin"/>
         <plugin name="adapt_get_product_stock_status" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetProductStockStatusPlugin"/>
         <plugin name="adapt_get_product_stock_status_by_sku" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetProductStockStatusBySkuPlugin"/>
+        <plugin name="adapt_update_product_stock_status_by_sku" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptUpdateStockStatusBySkuPlugin"/>
+        <plugin name="inventory_catalog_add_qty_to_legacy_stock" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock"/>
     </type>
     <!-- Mass Source Assignment -->
     <preference for="Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface"
@@ -175,5 +177,14 @@
     <type name="Magento\CatalogInventory\Model\Source\Stock">
         <plugin name="inventory_catalog_add_sort_by_stock_qty_to_collection"
                 type="Magento\InventoryCatalog\Plugin\CatalogInventory\Model\Source\StockPlugin"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\GetStatusExpression">
+        <arguments>
+            <argument name="statusExpressions" xsi:type="array">
+                <item name="default" xsi:type="object">Magento\InventoryCatalog\Model\ResourceModel\StockStatusExpressionForDefaultStock</item>
+                <item name="bundle" xsi:type="object">Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\StatusExpression\DefaultExpression</item>
+                <item name="grouped" xsi:type="object">Magento\CatalogInventory\Model\ResourceModel\Indexer\Stock\StatusExpression\DefaultExpression</item>
+            </argument>
+        </arguments>
     </type>
 </config>
