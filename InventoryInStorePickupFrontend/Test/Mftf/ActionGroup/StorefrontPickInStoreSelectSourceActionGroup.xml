@@ -16,6 +16,7 @@
             <argument name="sourceName" type="string" defaultValue="{{_defaultSource.name}}"/>
         </arguments>
         <fillField selector="{{StorefrontPickInStoreModalSection.search}}" userInput="{{searchString}}" stepKey="fillSearchField"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
         <waitForElement selector="{{StorefrontPickInStoreModalSection.shipBtn(sourceName)}}" stepKey="waitForResult"/>
         <click selector="{{StorefrontPickInStoreModalSection.shipBtn(sourceName)}}" stepKey="clickShipBtn"/>
         <waitForPageLoad stepKey="waitForSourceSelection"/>
