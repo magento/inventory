@@ -42,9 +42,10 @@
             <argument name="product" value="$$createProduct$$"/>
             <argument name="customer" value="$$createCustomer$$"/>
         </actionGroup>
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
+        <comment userInput="BIC workaround" stepKey="getOrderId"/>
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
         <assertNotEmpty stepKey="assertOrderIdIsNotEmpty" after="getOrderId">
-			<actualResult type="const">$getOrderId</actualResult>
+			<actualResult type="const">{$orderNumber}</actualResult>
         </assertNotEmpty>
 
         <!-- Navigate to backend: Go to Sales > Orders -->
