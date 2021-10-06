@@ -70,10 +70,11 @@
         <click selector=".continue" stepKey="clickOnNextPaymentPage"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
-        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderNumber"/>
+        <comment userInput="BIC workaround" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <!--Cancel order-->
         <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder">
-            <argument name="entityId" value="{$orderNumber}"/>
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelOrder"/>
         <!--Add simple product to cart with improper quantity.-->

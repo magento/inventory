@@ -55,10 +55,11 @@
         <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickOnNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
-        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderNumber"/>
+        <comment userInput="BIC workaround" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <!--Create Partial Shipment-->
         <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrderToCreateShipment">
-            <argument name="entityId" value="{$orderNumber}"/>
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <actionGroup ref="AdminCreateShipmentFromOrderPage" stepKey="shipOrder">
             <argument name="Qty" value="{{fivePiecesAddToCart.value}}"/>
@@ -80,13 +81,13 @@
         </actionGroup>
         <!--Admin Area Process Full Invoice-->
         <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrderToCreateInvoice">
-            <argument name="entityId" value="{$orderNumber}"/>
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <actionGroup ref="StartCreateInvoiceFromOrderPageActionGroup" stepKey="startCreateInvoice"/>
         <actionGroup ref="SubmitInvoiceActionGroup" stepKey="submitInvoice"/>
         <!--Admin Area Create Full Credit Memo-->
         <actionGroup ref="StartToCreateCreditMemoActionGroup" stepKey="startToCreateCreditMemo">
-            <argument name="orderId" value="{$orderNumber}"/>
+            <argument name="orderId" value="{$orderId}"/>
         </actionGroup>
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
         <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo"/>
