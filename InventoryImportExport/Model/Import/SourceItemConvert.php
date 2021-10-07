@@ -40,9 +40,10 @@ class SourceItemConvert
             $sourceItem->setSku($rowData[Sources::COL_SKU]);
             $sourceItem->setQuantity((float)$rowData[Sources::COL_QTY]);
 
-            $status = (int)($rowData[Sources::COL_QTY] > 0);
             if (isset($rowData[Sources::COL_STATUS])) {
                 $status = (int)$rowData[Sources::COL_STATUS];
+            } else {
+                $status = 1;
             }
             $sourceItem->setStatus($status);
 
