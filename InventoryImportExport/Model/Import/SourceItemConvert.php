@@ -27,6 +27,7 @@ class SourceItemConvert
 
     /**
      * Converts a data in sourceItem list.
+     *
      * @param array $bunch
      * @return SourceItemInterface[]
      */
