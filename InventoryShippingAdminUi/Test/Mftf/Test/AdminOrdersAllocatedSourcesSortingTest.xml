@@ -44,8 +44,8 @@
         </actionGroup>
         <comment userInput="BIC workaround" stepKey="getOrderId"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
-        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty" after="getOrderId">
-			<actualResult type="const">{$orderNumber}</actualResult>
+        <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
+			<actualResult type="const">$orderNumber</actualResult>
         </assertNotEmpty>
 
         <!-- Navigate to backend: Go to Sales > Orders -->
