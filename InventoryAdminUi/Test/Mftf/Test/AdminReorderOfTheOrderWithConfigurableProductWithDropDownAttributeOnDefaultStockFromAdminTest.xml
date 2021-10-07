@@ -124,7 +124,7 @@
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
         <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
-			<actualResult type="const">{$orderNumber}</actualResult>
+			<actualResult type="const">$orderNumber</actualResult>
         </assertNotEmpty>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
