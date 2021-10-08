@@ -147,7 +147,7 @@
 
         <!-- Filter Order using orderId -->
         <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById1">
-            <argument name="orderId" value="$getOrderId"/>
+            <argument name="orderId" value="$orderId"/>
         </actionGroup>
         <click selector="{{AdminOrdersGridSection.rowViewAction('1')}}" stepKey="clickOnViewAction1"/>
         <waitForPageLoad stepKey="waitForOrderPageToLoad"/>
