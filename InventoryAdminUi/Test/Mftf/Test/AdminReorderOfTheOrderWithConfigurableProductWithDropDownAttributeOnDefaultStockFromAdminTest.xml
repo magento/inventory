@@ -141,16 +141,15 @@
         <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}"
              userInput="95" stepKey="checkSalableQty"/>
 
-        <!-- Open Order Index Page -->
-        <amOnPage url="{{AdminOrdersPage.url}}" stepKey="goToOrders1"/>
-        <waitForPageLoad stepKey="waitForPageLoad6"/>
-
-        <!-- Filter Order using orderId -->
-        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById1">
-            <argument name="orderId" value="$orderId"/>
+        <!-- Open Order -->
+        <comment userInput="BIC workaround" stepKey="goToOrders1"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad6"/>
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="goToOrderInAdmin">
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
-        <click selector="{{AdminOrdersGridSection.rowViewAction('1')}}" stepKey="clickOnViewAction1"/>
-        <waitForPageLoad stepKey="waitForOrderPageToLoad"/>
+        <comment userInput="BIC workaround" stepKey="filterOrderGridById1"/>
+        <comment userInput="BIC workaround" stepKey="clickOnViewAction1"/>
+        <comment userInput="BIC workaround" stepKey="waitForOrderPageToLoad"/>
 
         <!-- Reorder the product -->
         <click selector="{{AdminOrderDetailsMainActionsSection.reorder}}" stepKey="clickOnReorderButton"/>
