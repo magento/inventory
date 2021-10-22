@@ -9,6 +9,7 @@ namespace Magento\InventoryConfigurableProduct\Test\Integration\Price;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Model\Configuration;
+use Magento\Customer\Model\Group;
 use Magento\Framework\App\Config\MutableScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ScopeInterface;
@@ -87,7 +88,7 @@ class IndexPriceTest extends TestCase
      *
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
      * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
-     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
@@ -112,12 +113,54 @@ class IndexPriceTest extends TestCase
             ['price_index' => $resource->getTableName('catalog_product_index_price')],
             ['entity_id', 'min_price', 'max_price']
         );
-        $select->where("price_index.entity_id IN (?)", 1);
-        $select->where('price_index.min_price = ?', 10);
-        $select->where('price_index.max_price = ?', 20);
-        $result = $select->query()->fetchAll();
+        $select->where("price_index.website_id = ?", $this->storeManager->getWebsite('base')->getId());
+        $select->where("price_index.customer_group_id = ?", Group::NOT_LOGGED_IN_ID);
+        $select->where("price_index.entity_id = ?", 1);
+        $result = $select->query()->fetch();
 
-        self::assertNotEquals(0, count($result));
+        self::assertNotNull($result);
+        self::assertEquals(10, $result['min_price']);
+        self::assertEquals(20, $result['max_price']);
+    }
+
+    /**
+     * Test index price when out of stock in custom stock
+     *
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/set_product_configurable_out_of_stock_all.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     * @magentoConfigFixture cataloginventory/options/show_out_of_stock 1
+     * @return void
+     */
+    public function testIndexPriceWhenOutOfStockInCustomStock(): void
+    {
+        $this->updateConfigShowOutOfStockFlag(1);
+        $this->indexerProcessor->reindexAll();
+
+        /** @var ResourceConnection $resource */
+        $resource = $this->objectManager->get(ResourceConnection::class);
+        /** @var Select $select */
+        $select = $resource->getConnection()->select();
+        $select->from(
+            ['price_index' => $resource->getTableName('catalog_product_index_price')],
+            ['entity_id', 'min_price', 'max_price']
+        );
+        $select->where("price_index.website_id = ?", $this->storeManager->getWebsite('us_website')->getId());
+        $select->where("price_index.customer_group_id = ?", Group::NOT_LOGGED_IN_ID);
+        $select->where("price_index.entity_id = ?", 1);
+        $result = $select->query()->fetch();
+
+        self::assertNotNull($result);
+        self::assertEquals(10, $result['min_price']);
+        self::assertEquals(20, $result['max_price']);
     }
 
     /**

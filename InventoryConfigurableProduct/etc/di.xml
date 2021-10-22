@@ -29,6 +29,7 @@
     <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
         <arguments>
             <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
+            <argument name="populateOptionsIndexTable" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\PopulateOptionsIndexTable</argument>
         </arguments>
     </type>
     <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
