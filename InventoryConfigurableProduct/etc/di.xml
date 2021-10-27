@@ -7,6 +7,7 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\OptionsIndexerInterface" type="Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\OptionsIndexer" />
     <type name="Magento\Catalog\Model\ResourceModel\Product\CompositeBaseSelectProcessor">
         <arguments>
             <argument name="baseSelectProcessors" xsi:type="array">
@@ -26,10 +27,9 @@
     <type name="Magento\CatalogInventory\Observer\ParentItemProcessorInterface">
         <plugin name="adapt_parent_stock_processor" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Observer\ParentItemProcessor\AdaptParentItemProcessorPlugin"/>
     </type>
-    <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
+    <type name="Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\OptionsSelectBuilder">
         <arguments>
-            <argument name="baseSelectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
-            <argument name="populateOptionsIndexTable" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\PopulateOptionsIndexTable</argument>
+            <argument name="selectProcessor" xsi:type="object">Magento\InventoryConfigurableProduct\Pricing\Price\Indexer\BaseStockStatusSelectProcessor</argument>
         </arguments>
     </type>
     <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
