@@ -2,7 +2,7 @@
     "name": "magento/module-inventory-indexer",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.0.0",
+        "php": "~7.4.0||~8.0.0||~8.1.0",
         "magento/framework": "*",
         "magento/framework-message-queue": "*",
         "magento/module-inventory-multi-dimensional-indexer-api": "*",
