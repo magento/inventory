@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Test\Integration\Model\Export;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem;
 use Magento\ImportExport\Model\Export;
 use Magento\ImportExport\Model\Export\Adapter\Csv;
 use Magento\InventoryImportExport\Model\Export\Sources;
@@ -25,17 +27,19 @@ class SourcesTest extends TestCase
      */
     private $exportFilePath;
 
+    /**
+     * @var Filesystem\Directory\WriteInterface
+     */
+    private $directory;
+
     protected function setUp(): void
     {
-        $sandboxDir = Bootstrap::getInstance()->getBootstrap()->getApplication()->getTempDir();
-        $this->exportFilePath = implode(DIRECTORY_SEPARATOR, [
-            $sandboxDir,
-            'var',
-            uniqid('test-export_', false) . '.csv'
-        ]);
+        $objectManager = Bootstrap::getObjectManager();
+        $this->exportFilePath = uniqid('test-export_', false) . '.csv';
 
-        $this->exporter = Bootstrap::getObjectManager()->create(Sources::class);
-        $this->exporter->setWriter(Bootstrap::getObjectManager()->create(
+        $this->directory = $objectManager->get(Filesystem::class)->getDirectoryWrite(DirectoryList::VAR_IMPORT_EXPORT);
+        $this->exporter = $objectManager->create(Sources::class);
+        $this->exporter->setWriter($objectManager->create(
             Csv::class,
             ['destination' => $this->exportFilePath]
         ));
@@ -43,7 +47,7 @@ class SourcesTest extends TestCase
 
     protected function tearDown(): void
     {
-        unlink($this->exportFilePath);
+        $this->directory->delete($this->exportFilePath);
     }
 
     /**
@@ -64,11 +68,9 @@ class SourcesTest extends TestCase
             FILE_IGNORE_NEW_LINES
         );
 
-        foreach ($exportFullLines as $line) {
-            $this->assertStringContainsString(
-                $line,
-                file_get_contents($this->exportFilePath)
-            );
+        $exportContent = $this->directory->readFile($this->exportFilePath);
+        foreach ($exportFullLines as $expectedLine) {
+            $this->assertStringContainsString($expectedLine, $exportContent);
         }
     }
 
@@ -91,7 +93,7 @@ class SourcesTest extends TestCase
 
         $this->assertEquals(
             file_get_contents(implode(DIRECTORY_SEPARATOR, [__DIR__, '_files', 'export_filtered_by_sku.csv'])),
-            file_get_contents($this->exportFilePath)
+            $this->directory->readFile($this->exportFilePath)
         );
     }
 
@@ -113,7 +115,7 @@ class SourcesTest extends TestCase
 
         $this->assertEquals(
             file_get_contents(implode(DIRECTORY_SEPARATOR, [__DIR__, '_files', 'export_filtered_by_sku.csv'])),
-            file_get_contents($this->exportFilePath)
+            $this->directory->readFile($this->exportFilePath)
         );
     }
 
@@ -135,7 +137,7 @@ class SourcesTest extends TestCase
 
         $this->assertEquals(
             file_get_contents(implode(DIRECTORY_SEPARATOR, [__DIR__, '_files', 'export_filtered_by_source.csv'])),
-            file_get_contents($this->exportFilePath)
+            $this->directory->readFile($this->exportFilePath)
         );
     }
 
@@ -160,7 +162,7 @@ class SourcesTest extends TestCase
 
         $this->assertEquals(
             file_get_contents(implode(DIRECTORY_SEPARATOR, [__DIR__, '_files', $expectedOutput])),
-            file_get_contents($this->exportFilePath)
+            $this->directory->readFile($this->exportFilePath)
         );
     }
 
@@ -190,7 +192,7 @@ class SourcesTest extends TestCase
                 '_files',
                 'export_filtered_without_status_column.csv'
             ])),
-            file_get_contents($this->exportFilePath)
+            $this->directory->readFile($this->exportFilePath)
         );
     }
 
