@@ -263,6 +263,16 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                             . ' but we\'ll back order the remaining 8.'
                     ]
                 ],
+            ],
+            'StockQty=3, ReqQty=3, SalableQty=13, Backorders=YesNotify, ManageStock=Yes' => [
+                [
+                    GetStockItemDataInterface::QUANTITY => 3,
+                ],
+                3,
+                13,
+                StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
+                false,
+                [],
             ]
         ];
     }
