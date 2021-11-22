@@ -164,7 +164,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                     [
                         'code' => 'back_order-not-enough',
                         'message' => 'We don\'t have as many quantity as you requested,'
-                            . ' but we\'ll back order the remaining 1.'
+                            . ' but we\'ll back order the remaining 2.'
                     ]
                 ],
             ],
@@ -196,7 +196,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                     [
                         'code' => 'back_order-not-enough',
                         'message' => 'We don\'t have as many quantity as you requested,'
-                            . ' but we\'ll back order the remaining 5.'
+                            . ' but we\'ll back order the remaining 20.'
                     ]
                 ],
             ],
@@ -247,7 +247,23 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 false,
                 [],
+            ],
+            'StockQty=3, ReqQty=5, SalableQty=13, Backorders=YesNotify, ManageStock=Yes' => [
+        [
+            GetStockItemDataInterface::QUANTITY => 3,
+        ],
+        5,
+        13,
+        StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
+        true,
+        [
+            [
+                'code' => 'back_order-not-enough',
+                'message' => 'We don\'t have as many quantity as you requested,'
+                    . ' but we\'ll back order the remaining 8.'
             ]
+        ],
+    ]
         ];
     }
 }
