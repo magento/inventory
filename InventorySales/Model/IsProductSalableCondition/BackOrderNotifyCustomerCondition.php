@@ -89,7 +89,7 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             $backOrderQty = $salableQty - $requestedQty;
             $displayQty = $this->getDisplayQty($backOrderQty, $salableQty, $requestedQty);
 
-            if ($requestedQty > $stockItemData[GetStockItemDataInterface::QUANTITY]) {
+            if ($requestedQty > $stockItemData[GetStockItemDataInterface::QUANTITY] && $backOrderQty > 0) {
                 $errors = [
                     $this->productSalabilityErrorFactory->create([
                             'code' => 'back_order-not-enough',

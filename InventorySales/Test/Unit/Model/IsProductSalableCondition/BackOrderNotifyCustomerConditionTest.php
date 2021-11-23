@@ -160,13 +160,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                 1,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 true,
-                [
-                    [
-                        'code' => 'back_order-not-enough',
-                        'message' => 'We don\'t have as many quantity as you requested,'
-                            . ' but we\'ll back order the remaining 2.'
-                    ]
-                ],
+                [],
             ],
             'StockQty=10, ReqQty=20, SalableQty=0, Backorders=YesNotify, ManageStock=Yes' => [
                 [
@@ -176,13 +170,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                 0,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 true,
-                [
-                    [
-                        'code' => 'back_order-not-enough',
-                        'message' => 'We don\'t have as many quantity as you requested,'
-                            . ' but we\'ll back order the remaining 20.'
-                    ]
-                ],
+                [],
             ],
             'StockQty=10, ReqQty=20, SalableQty=15, Backorders=YesNotify, ManageStock=Yes' => [
                 [
@@ -192,13 +180,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                 15,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
                 true,
-                [
-                    [
-                        'code' => 'back_order-not-enough',
-                        'message' => 'We don\'t have as many quantity as you requested,'
-                            . ' but we\'ll back order the remaining 20.'
-                    ]
-                ],
+                [],
             ],
             'StockQty=1, ReqQty=1, SalableQty=1, Backorders=YesNotify, ManageStock=Yes' => [
                 [
@@ -271,7 +253,7 @@ class BackOrderNotifyCustomerConditionTest extends TestCase
                 3,
                 13,
                 StockItemConfigurationInterface::BACKORDERS_YES_NOTIFY,
-                false,
+                true,
                 [],
             ]
         ];
