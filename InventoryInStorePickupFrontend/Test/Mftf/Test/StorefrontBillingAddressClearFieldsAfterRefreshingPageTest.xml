@@ -21,6 +21,7 @@
             <skip>
                 <issueId value="DEPRECATED">Use StorefrontGuestBillingAddressFormEmptyTest</issueId>
             </skip>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <!--Set Distance Provider for Distance Based SSA to offline-->
