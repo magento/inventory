@@ -13,7 +13,9 @@
         "magento/module-store": "*"
     },
     "suggest": {
-        "magento/module-catalog-inventory": "*"
+        "magento/module-catalog-inventory": "*",
+        "magento/module-inventory-sales": "*",
+        "magento/module-inventory-catalog": "*"
     },
     "type": "magento2-module",
     "license": [
