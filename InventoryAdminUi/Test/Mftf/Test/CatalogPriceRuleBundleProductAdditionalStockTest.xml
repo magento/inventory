@@ -13,7 +13,7 @@
             <stories value="Bundle Product Additional Stock."/>
             <title value="Catalog price rule with bundle product and additional stock."/>
             <description value="Verify catalog price rule applied correctly for bundle product on additional stock."/>
-            <testCaseId value=" https://app.hiptest.com/projects/69435/test-plan/folders/444060/scenarios/1522394"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/444060/scenarios/1522394"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
