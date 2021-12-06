@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Inventory;
 
 use Magento\Backend\App\Action;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Bulk\BulkPageProcessor;
@@ -15,12 +16,12 @@ use Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Bulk\BulkPageProcessor;
 /**
  * Mass transfer sources between products.
  */
-class BulkTransfer extends Action
+class BulkTransfer extends Action implements HttpPostActionInterface
 {
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Catalog::products';
+    public const ADMIN_RESOURCE = 'Magento_Catalog::products';
 
     /**
      * @var BulkPageProcessor
@@ -41,6 +42,8 @@ class BulkTransfer extends Action
     }
 
     /**
+     * Bulk Inventory Transfer
+     *
      * @return ResponseInterface|ResultInterface
      */
     public function execute()
