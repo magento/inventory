@@ -19,6 +19,7 @@
             <severity value="MAJOR"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <!--Create additional stock ans source.-->
