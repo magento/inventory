@@ -39,7 +39,7 @@ class UpdateConfigurableProductsPlugin
      * Update configurable products stock item status based on children products stock status after import
      *
      * @param StockItemImporterInterface $subject
-     * @param null $result
+     * @param void $result
      * @param array $stockData
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
