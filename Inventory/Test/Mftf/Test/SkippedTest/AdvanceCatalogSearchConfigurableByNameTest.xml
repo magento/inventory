@@ -12,6 +12,7 @@
             <skip>
                 <issueId value="MSI-1631"/>
             </skip>
+            <group value="pr_exclude"/>
         </annotations>
     </test>
 </tests>
