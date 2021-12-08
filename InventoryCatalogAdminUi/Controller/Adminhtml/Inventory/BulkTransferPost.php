@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Inventory;
 use Magento\AsynchronousOperations\Model\MassSchedule;
 use Magento\Backend\App\Action;
 use Magento\Backend\Model\Auth;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalogAdminUi\Model\BulkOperationsConfig;
@@ -17,7 +18,7 @@ use Magento\InventoryCatalogAdminUi\Model\BulkSessionProductsStorage;
 use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
 use Psr\Log\LoggerInterface;
 
-class BulkTransferPost extends Action
+class BulkTransferPost extends Action implements HttpPostActionInterface
 {
     /**
      * @see _isAllowed()
