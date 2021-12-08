@@ -9,7 +9,8 @@
         "magento/module-inventory-api": "*",
         "magento/module-inventory": "*",
         "magento/module-inventory-catalog-api": "*",
-        "magento/module-store": "*"
+        "magento/module-store": "*",
+        "magento/module-configurable-product": "*"
     },
     "suggest": {
         "magento/module-catalog-import-export": "*"
