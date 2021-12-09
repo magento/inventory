@@ -14,16 +14,20 @@ use Magento\Catalog\Setup\CategorySetup;
 use Magento\ConfigurableProduct\Helper\Product\Options\Factory;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Eav\Api\Data\AttributeOptionInterface;
+use Magento\TestFramework\Workaround\Override\Fixture\Resolver;
+use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 \Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
-// @codingStandardsIgnoreStart
-require __DIR__ . '/../../../../../../dev/tests/integration/testsuite/Magento/ConfigurableProduct/_files/configurable_attribute.php';
-// @codingStandardsIgnoreEnd
-
+Resolver::getInstance()->requireDataFixture(
+    'Magento/ConfigurableProduct/_files/configurable_attribute.php'
+);
 /** @var ProductRepositoryInterface $productRepository */
 $productRepository = Bootstrap::getObjectManager()
     ->get(ProductRepositoryInterface::class);
+/** @var ProductAttributeRepositoryInterface $attributeRepository */
+$attributeRepository = Bootstrap::getObjectManager()->get(ProductAttributeRepositoryInterface::class);
+$attribute = $attributeRepository->get('test_configurable');
 
 /** @var $installer CategorySetup */
 $installer = Bootstrap::getObjectManager()->create(CategorySetup::class);

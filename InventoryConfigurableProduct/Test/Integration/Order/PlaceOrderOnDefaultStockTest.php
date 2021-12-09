@@ -22,6 +22,12 @@ use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\Sales\Api\Data\ShipmentItemCreationInterface;
+use Magento\Sales\Api\Data\ShipmentItemCreationInterfaceFactory;
+use Magento\Sales\Api\ShipOrderInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -69,6 +75,26 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     private $orderManagement;
 
     /**
+     * @var ShipOrderInterface
+     */
+    private $shipOrder;
+
+    /**
+     * @var ShipmentItemCreationInterfaceFactory
+     */
+    private $shipmentItemCreationFactory;
+
+    /**
+     * @var StockRegistryInterface
+     */
+    private $stockRegistry;
+
+    /**
+     * @var DefaultStockProviderInterface
+     */
+    private $defaultStockProvider;
+
+    /**
      * @var DataObjectFactory
      */
     private $dataObjectFactory;
@@ -84,6 +110,11 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
         $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
         $this->dataObjectFactory = Bootstrap::getObjectManager()->get(DataObjectFactory::class);
+        $this->shipOrder = Bootstrap::getObjectManager()->get(ShipOrderInterface::class);
+        $this->shipmentItemCreationFactory = Bootstrap::getObjectManager()
+            ->get(ShipmentItemCreationInterfaceFactory::class);
+        $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
+        $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
         $this->cleanupReservations->execute();
     }
 
@@ -170,6 +201,51 @@ class PlaceOrderOnDefaultStockTest extends TestCase
 
         self::assertNotNull($orderId);
 
+        //cleanup
+        $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/default_stock_configurable_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     *
+     * @return void
+     */
+    public function testPlaceOrderToMakeConfigurableProductOutOfStock(): void
+    {
+        $skuConfigurable = ['configurable_in_stock'];
+        $skuConfigurableChildren = ['simple_10', 'simple_20'];
+        $qty = 100;
+        $items = [];
+        $quote = $this->getQuote();
+        foreach ($skuConfigurableChildren as $sku) {
+            $product = $this->productRepository->get($sku);
+            $byRequest = $this->dataObjectFactory->create(
+                [
+                    'product' => $product->getId(),
+                    'qty' => $qty
+                ]
+            );
+            $quote->addProduct($product, $byRequest);
+        }
+        $this->cartRepository->save($quote);
+        $orderId = $this->cartManagement->placeOrder($quote->getId());
+        $order = $this->orderRepository->get($orderId);
+        foreach ($order->getItems() as $orderItem) {
+            /** @var ShipmentItemCreationInterface $invoiceItemCreation */
+            $shipmentItemCreation = $this->shipmentItemCreationFactory->create();
+            $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
+            $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
+            $items[] = $shipmentItemCreation;
+        }
+        $this->shipOrder->execute($order->getEntityId(), $items);
+        foreach (array_merge($skuConfigurable, $skuConfigurableChildren) as $sku) {
+            $productsStockStatus = $this->stockRegistry->getProductStockStatusBySku(
+                $sku,
+                $this->defaultStockProvider->getId()
+            );
+            self::assertEquals(SourceItemInterface::STATUS_OUT_OF_STOCK, $productsStockStatus);
+        }
         //cleanup
         $this->deleteOrderById((int)$orderId);
     }
