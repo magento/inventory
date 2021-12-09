@@ -13,6 +13,10 @@
         "magento/module-sales": "*",
         "magento/module-configurable-product": "*"
     },
+    "suggest": {
+        "magento/module-inventory": "*",
+        "magento/module-inventory-api": "*"
+    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
