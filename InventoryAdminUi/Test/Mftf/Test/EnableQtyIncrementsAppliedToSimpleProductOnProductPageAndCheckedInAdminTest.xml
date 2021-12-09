@@ -19,6 +19,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <createData entity="MsiCustomer1" stepKey="customer"/>
