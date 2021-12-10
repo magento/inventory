@@ -92,6 +92,7 @@
         <click selector="{{AdminNewAttributePanel.saveAttribute}}" stepKey="saveAttribute"/>
         <switchToIFrame stepKey="switchOutOfIFrame1"/>
         <waitForPageLoad stepKey="waitForPageLoad6"/>
+        <waitForElementNotVisible selector="{{AdminNewAttributePanel.container}}" time="30" stepKey="waitForNewAttributePanelClose" />
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findAttributeForVariations">
             <argument name="selector" value="AdminAssignProductAttributeSlideOutSection.attributeLabel"/>
             <argument name="value" value="{{visualSwatchAttribute.name}}"/>
