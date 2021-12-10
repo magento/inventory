@@ -26,10 +26,10 @@
             </argument>
         </arguments>
     </type>
-
-    <!-- Source Item Import Plugin -->
     <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
+        <plugin name="updateConfigurableProductsStockItemStatusInventory" type="Magento\InventoryImportExport\Plugin\Import\UpdateConfigurableProductsPlugin" sortOrder="100" />
         <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter" />
+        <plugin name="update_configurable_products_stock_item_status" disabled="true"/>
     </type>
     <!-- Prevent stock indexer to execute twice as it is run by default -->
     <type name="Magento\CatalogImportExport\Model\Import\Product\StockProcessor">
@@ -42,7 +42,7 @@
 
     <!-- Export -->
     <preference for="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactoryInterface" type="Magento\InventoryImportExport\Model\Export\SourceItemCollectionFactory"/>
-    <preference for="Magento\InventoryImportExport\Model\Export\ColumnProviderInterface" type="\Magento\InventoryImportExport\Model\Export\ColumnProvider"/>
+    <preference for="Magento\InventoryImportExport\Model\Export\ColumnProviderInterface" type="Magento\InventoryImportExport\Model\Export\ColumnProvider"/>
     <type name="Magento\InventoryImportExport\Model\Export\FilterProcessorAggregator">
         <arguments>
             <argument name="handler" xsi:type="array">
