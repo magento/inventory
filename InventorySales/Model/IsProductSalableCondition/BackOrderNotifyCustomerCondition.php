@@ -85,12 +85,11 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
             if (null === $stockItemData) {
                 return $this->productSalableResultFactory->create(['errors' => []]);
             }
-
             $salableQty = $this->getProductSalableQty->execute($sku, $stockId);
-            $backOrderQty = $requestedQty - $salableQty;
-            $displayQty = $this->getDisplayQty($backOrderQty, $salableQty, $requestedQty);
+            $remainingQty = ($salableQty > $requestedQty) ? $salableQty - $requestedQty : $requestedQty - $salableQty;
+            $displayQty = $this->getDisplayQty($remainingQty, $salableQty, $requestedQty);
 
-            if ($displayQty > 0) {
+            if ($requestedQty > $stockItemData[GetStockItemDataInterface::QUANTITY] && $displayQty >= 0) {
                 $errors = [
                     $this->productSalabilityErrorFactory->create([
                             'code' => 'back_order-not-enough',
@@ -110,16 +109,16 @@ class BackOrderNotifyCustomerCondition implements IsProductSalableForRequestedQt
     /**
      * Get display quantity to show the number of quantity customer can backorder
      *
-     * @param float $backOrderQty
+     * @param float $remainingQty
      * @param float $salableQty
      * @param float $requestedQty
      * @return float
      */
-    private function getDisplayQty(float $backOrderQty, float $salableQty, float $requestedQty): float
+    private function getDisplayQty(float $remainingQty, float $salableQty, float $requestedQty): float
     {
         $displayQty = 0;
-        if ($backOrderQty > 0 && $salableQty > 0) {
-            $displayQty = $backOrderQty;
+        if ($remainingQty > 0 && $salableQty > 0) {
+            $displayQty = $remainingQty;
         } elseif ($requestedQty > $salableQty) {
             $displayQty = $requestedQty;
         }
