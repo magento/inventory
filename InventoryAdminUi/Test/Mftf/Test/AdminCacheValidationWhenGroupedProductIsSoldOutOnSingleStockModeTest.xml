@@ -108,11 +108,12 @@
         <seeElement selector="{{AdminOrderDetailsMessagesSection.successMessage}}" stepKey="seeSuccessMessage"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." stepKey="seeSuccessMessageForShipping"/>
         <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="grabOrderId"/>
 
         <!--Admin create full Shipment -->
         <comment userInput="Admin - Ship order" stepKey="AdminShipOrder"/>
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
-            <argument name="orderId" value="{$orderNumber}"/>
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder">
+            <argument name="entityId" value="{$grabOrderId}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
         <waitForLoadingMaskToDisappear stepKey="waitForShipLoadingMask"/>

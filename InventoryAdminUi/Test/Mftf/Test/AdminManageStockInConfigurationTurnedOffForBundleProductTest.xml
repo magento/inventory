@@ -63,7 +63,7 @@
         </before>
         <after>
             <!--Turn on Manage Stock.-->
-            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
             <magentoCLI command="cache:flush" stepKey="flushCache"/>
             <!--Delete test data.-->
