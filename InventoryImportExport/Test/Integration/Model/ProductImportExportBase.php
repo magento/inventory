@@ -68,7 +68,10 @@ abstract class ProductImportExportBase extends TestCase
                 uniqid('test-export_', false) . '.csv'
             ]
         );
-        $writer = $this->objectManager->create(ExportCsv::class, ['destination' => $this->exportFilePath]);
+        $writer = $this->objectManager->create(ExportCsv::class, [
+            'destination' => $this->exportFilePath,
+            'destinationDirectoryCode' => DirectoryList::ROOT
+        ]);
         $productExporter = $this->objectManager->get(ProductExporter::class);
         $productExporter->setWriter($writer);
         $productExporter->setParameters([]);
