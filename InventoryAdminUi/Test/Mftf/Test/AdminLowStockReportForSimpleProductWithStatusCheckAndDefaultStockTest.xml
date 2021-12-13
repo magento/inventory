@@ -17,6 +17,7 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -48,7 +49,7 @@
             <!--Revert "Notify Quantity Below" configuration.-->
             <magentoCLI command="config:set {{RevertNotifyQuantityBelow.path}} {{RevertNotifyQuantityBelow.value}}" stepKey="revertNotifyQtyBelow"/>
             <!--Disable "Manage Stock" in configuration.-->
-            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="disableManageStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 

@@ -20,10 +20,11 @@
         </annotations>
 
         <!--Get order Id.-->
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderId" after="clickSubmitOrder" />
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber" after="clickSubmitOrder"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId" after="orderNumber"/>
         <!--Cancel order.-->
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder" after="checkSimpleProductSalableQtyAfterPlaceOrder">
-            <argument name="orderId" value="{$orderId}"/>
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder" after="checkSimpleProductSalableQtyAfterPlaceOrder">
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.cancel}}" stepKey="clickCancelOrder"/>
         <waitForElement selector="{{AdminConfirmationModalSection.message}}" stepKey="waitForCancelConfirmation"/>
