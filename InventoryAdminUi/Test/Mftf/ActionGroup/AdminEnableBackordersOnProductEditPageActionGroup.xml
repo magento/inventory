@@ -13,7 +13,9 @@
         <click selector="{{AdminProductSourcesSection.advancedInventory}}" stepKey="goToAdvancedInventory"/>
         <waitForElement selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="waitTillBackOrderIsFound"/>
         <uncheckOption selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="clickOnUseDefaultBackorders"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
         <selectOption selector="{{AdminAdvancedInventorySection.backorders}}" userInput="{{backOrders}}" stepKey="selectBackordersType"/>
         <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDone"/>
+        <waitForPageLoad stepKey="waitForPageLoad2"/>
     </actionGroup>
 </actionGroups>

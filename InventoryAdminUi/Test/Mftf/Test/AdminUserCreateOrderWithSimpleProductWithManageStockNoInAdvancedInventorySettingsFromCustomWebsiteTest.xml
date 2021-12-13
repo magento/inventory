@@ -23,7 +23,7 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="setAutoReturnOn"/>
         </before>
         <after>
-            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="setAutoReturnOff"/>
+            <comment userInput="BIC workaround" stepKey="setAutoReturnOff"/>
         </after>
         <remove keyForRemoval="navigateToCategoryPage"/>
         <remove keyForRemoval="waitForCategoryPageLoad"/>
