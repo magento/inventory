@@ -17,6 +17,7 @@
                 <url path="*/*/new"/>
                 <class>primary</class>
                 <label translate="true">Add New Source</label>
+                <aclResource>Magento_InventoryApi::source_edit</aclResource>
             </button>
         </buttons>
         <spinner>inventory_source_listing_columns</spinner>
