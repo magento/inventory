@@ -86,6 +86,8 @@
         <switchToIFrame stepKey="switchToParentPage" after="clickSaveAttribute"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
         <!--Find new attribute in grid and select-->
+        <waitForElementNotVisible selector="{{AdminNewAttributePanel.container}}" time="30" stepKey="waitForNewAttributePanelClose" />
+        <waitForPageLoad stepKey="waitLoadingLoadPageWithFilters"/>
         <conditionalClick selector="(//div[@class='admin__data-grid-header']//button[@data-action='grid-filter-reset'])[last()]" dependentSelector="(//div[@class='admin__data-grid-header']//button[@data-action='grid-filter-reset'])[last()]" visible="true" stepKey="clickClearFilters1"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.filters}}" stepKey="openFilterPanel"/>
         <waitForPageLoad stepKey="waitForPageLoad12" time="10"/>
@@ -136,6 +138,7 @@
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <!-- Assert product text swatch -->
+        <waitForPageLoad stepKey="waitForPageLoadProductSwatchAssert" />
         <seeElement selector="{{StorefrontProductInfoMainSection.productSwatchText(textSwatchProductAttribute1.adminSwatch)}}" stepKey="assertSwatch1"/>
         <seeElement selector="{{StorefrontProductInfoMainSection.productSwatchText(textSwatchProductAttribute2.adminSwatch)}}" stepKey="assertSwatch2"/>
 
