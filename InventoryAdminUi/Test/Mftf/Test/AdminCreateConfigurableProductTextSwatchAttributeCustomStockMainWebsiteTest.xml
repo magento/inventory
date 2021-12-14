@@ -91,6 +91,8 @@
         <fillField selector="input[name='optiontext[value][option_1][1]']" userInput="{{textSwatch2.name}}" stepKey="fillSecondOptionDefaultStoreViewDescription"/>
         <click selector="{{AdminNewAttributePanel.saveAttribute}}" stepKey="saveAttribute"/>
         <switchToIFrame stepKey="switchOutOfIFrame1"/>
+        <waitForPageLoad stepKey="waitForPageLoad6"/>
+        <waitForElementNotVisible selector="{{AdminNewAttributePanel.container}}" time="30" stepKey="waitForNewAttributePanelClose" />
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findAttributeForVariations">
             <argument name="selector" value="AdminAssignProductAttributeSlideOutSection.attributeLabel"/>
             <argument name="value" value="{{visualSwatchAttribute.name}}"/>
@@ -101,6 +103,7 @@
         <!--Assign additional source.-->
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToThirdStep"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="applySingleQuantityToVariations"/>
+        <waitForPageLoad stepKey="waitForPageLoad7"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="clickOnAssignSources"/>
         <conditionalClick selector="(//div[@class='admin__data-grid-header']//*[@data-action='grid-filter-reset'])[1]" dependentSelector="(//div[@class='admin__data-grid-header']//*[@data-action='grid-filter-reset'])[1]" visible="true" stepKey="clickClearFilters1"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="searchAdditionalSource">
