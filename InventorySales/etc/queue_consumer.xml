@@ -6,6 +6,6 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/consumer.xsd">
-    <consumer name="inventory.reservations.update" queue="inventory.reservations.update" connection="db" handler="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus::execute"/>
-    <consumer name="inventory.reservations.cleanup" queue="inventory.reservations.cleanup" connection="db" handler="Magento\InventorySales\Model\ResourceModel\DeleteReservationsBySkus::execute"/>
+    <consumer name="inventory.reservations.update" queue="inventory.reservations.update" handler="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus::execute"/>
+    <consumer name="inventory.reservations.cleanup" queue="inventory.reservations.cleanup" handler="Magento\InventorySales\Model\ResourceModel\DeleteReservationsBySkus::execute"/>
 </config>

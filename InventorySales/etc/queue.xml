@@ -6,10 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/queue.xsd">
-    <broker topic="inventory.reservations.cleanup" exchange="magento-db" type="db">
-        <queue name="inventory.reservations.cleanup" consumer="inventory.reservations.cleanup" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventorySales\Model\ResourceModel\DeleteReservationsBySkus::execute"/>
+    <broker topic="inventory.reservations.cleanup" exchange="magento">
+        <queue name="inventory.reservations.cleanup" consumer="inventory.reservations.cleanup" handler="Magento\InventorySales\Model\ResourceModel\DeleteReservationsBySkus::execute"/>
     </broker>
-    <broker topic="inventory.reservations.update" exchange="magento-db" type="db">
-        <queue name="inventory.reservations.update" consumer="inventory.reservations.update" consumerInstance="Magento\Framework\MessageQueue\Consumer" handler="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus::execute"/>
+    <broker topic="inventory.reservations.update" exchange="magento">
+        <queue name="inventory.reservations.update" consumer="inventory.reservations.update" handler="Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus::execute"/>
     </broker>
 </config>
