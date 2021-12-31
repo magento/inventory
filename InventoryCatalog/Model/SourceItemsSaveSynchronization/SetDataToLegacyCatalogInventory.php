@@ -18,6 +18,7 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\SourceItemsSaveSynchronizationInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Information tables.
@@ -60,6 +61,11 @@ class SetDataToLegacyCatalogInventory
     private $indexerProcessor;
 
     /**
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
@@ -67,6 +73,7 @@ class SetDataToLegacyCatalogInventory
      * @param StockStateProviderInterface $stockStateProvider
      * @param Processor $indexerProcessor
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+     * @param AreProductsSalableInterface $areProductsSalable
      */
     public function __construct(
         SetDataToLegacyStockItem $setDataToLegacyStockItem,
@@ -75,7 +82,8 @@ class SetDataToLegacyCatalogInventory
         GetProductIdsBySkusInterface $getProductIdsBySkus,
         StockStateProviderInterface $stockStateProvider,
         Processor $indexerProcessor,
-        SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+        SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
+        AreProductsSalableInterface $areProductsSalable
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
@@ -84,6 +92,7 @@ class SetDataToLegacyCatalogInventory
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->stockStateProvider = $stockStateProvider;
         $this->indexerProcessor = $indexerProcessor;
+        $this->areProductsSalable = $areProductsSalable;
     }
 
     /**
@@ -94,6 +103,12 @@ class SetDataToLegacyCatalogInventory
      */
     public function execute(array $sourceItems): void
     {
+        $skus = [];
+        foreach ($sourceItems as $sourceItem) {
+            $skus[] = $sourceItem->getSku();
+        }
+
+        $stockStatuses = $this->getStockStatuses($skus);
         $productIds = [];
         foreach ($sourceItems as $sourceItem) {
             $sku = $sourceItem->getSku();
@@ -129,7 +144,7 @@ class SetDataToLegacyCatalogInventory
             $this->setDataToLegacyStockStatus->execute(
                 (string)$sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
-                $isInStock
+                (int)$stockStatuses[(string)$sourceItem->getSku()]
             );
             $productIds[] = $productId;
         }
@@ -137,6 +152,21 @@ class SetDataToLegacyCatalogInventory
         if ($productIds) {
             $this->indexerProcessor->reindexList($productIds);
         }
+    }
+
+    /**
+     * Returns items stock statuses.
+     *
+     * @param array $skus
+     * @return array
+     */
+    private function getStockStatuses(array $skus): array
+    {
+        $stockStatuses = [];
+        foreach ($this->areProductsSalable->execute($skus, Stock::DEFAULT_STOCK_ID) as $productSalable) {
+            $stockStatuses[$productSalable->getSku()] = $productSalable->isSalable();
+        }
+        return $stockStatuses;
     }
 
     /**

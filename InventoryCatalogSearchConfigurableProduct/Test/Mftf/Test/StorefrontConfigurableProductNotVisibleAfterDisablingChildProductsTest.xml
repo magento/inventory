@@ -18,6 +18,7 @@
             <severity value="AVERAGE"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <!--Create test data.-->
