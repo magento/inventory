@@ -15,7 +15,6 @@
         <buttons>
             <button name="add" class="Magento\InventoryAdminUi\Ui\Component\Listing\Stock\Buttons\NewButton"/>
         </buttons>
-        <aclResource>Magento_InventoryApi::stock_edit</aclResource>
         <spinner>inventory_stock_listing_columns</spinner>
         <deps>
             <dep>inventory_stock_listing.inventory_stock_listing_data_stock</dep>
