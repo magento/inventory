@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::stores">
+                        <resource id="Magento_InventoryApi::inventory">
+                            <resource id="Magento_InventoryApi::source">
+                                <resource id="Magento_InventorySourceSelectionApi::source_selection_algorithm"
+                                          title="Inventory Source Selection"
+                                          translate="title"
+                                          sortOrder="20">
+                                    <resource id="Magento_InventorySourceSelectionApi::source_selection_algorithm_post"
+                                              title="Source selection algorithm result"
+                                              translate="title"
+                                              sortOrder="30"/>
+                                </resource>
+                            </resource>
+                        </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
