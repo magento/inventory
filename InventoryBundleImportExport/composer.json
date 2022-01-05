@@ -5,7 +5,9 @@
         "php": "~7.4.0||~8.0.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-bundle-import-export": "*",
-        "magento/module-inventory-catalog-api": "*"
+        "magento/module-inventory-catalog-api": "*",
+        "magento/module-bundle": "*",
+        "magento/module-catalog-import-export": "*"
     },
     "type": "magento2-module",
     "license": [
