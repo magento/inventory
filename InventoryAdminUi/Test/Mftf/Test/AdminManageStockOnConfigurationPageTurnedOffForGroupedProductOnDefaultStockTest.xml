@@ -90,6 +90,8 @@
             <argument name="categoryName" value="$category.name$"/>
         </actionGroup>
 
+        <magentoCLI command="indexer:reindex" stepKey="reindexBeforeQuickSearch"/>
+
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="openStoreFrontHomePage"/>
         <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">
             <argument name="phrase" value="$groupedProduct.name$"/>
