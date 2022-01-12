@@ -45,6 +45,10 @@
             <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
         </before>
         <after>
+            <!--Disable additional source.-->
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableAdditionalSource">
+                <argument name="sourceCode" value="$$customSource.source[source_code]$"/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
         </after>
