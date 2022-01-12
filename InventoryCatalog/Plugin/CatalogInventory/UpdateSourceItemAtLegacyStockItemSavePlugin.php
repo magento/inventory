@@ -72,6 +72,16 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     private $setDataToLegacyStockStatus;
 
     /**
+     * @var ProductIdsBySkusStorage
+     */
+    private $productIdsBySkusStorage;
+
+    /**
+     * @var CacheStorage
+     */
+    private $itemCacheStorage;
+
+    /**
      * @param UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem
      * @param ResourceConnection $resourceConnection
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
@@ -80,6 +90,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param GetDefaultSourceItemBySku $getDefaultSourceItemBySku
      * @param AreProductsSalableInterface $areProductsSalable
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+     * @param ProductIdsBySkusStorage $productIdsBySkusStorage
+     * @param CacheStorage $itemCacheStorage
      */
     public function __construct(
         UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem,
