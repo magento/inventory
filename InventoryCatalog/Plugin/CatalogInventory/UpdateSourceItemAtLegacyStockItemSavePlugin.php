@@ -21,6 +21,8 @@ use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryCatalog\Model\UpdateSourceItemBasedOnLegacyStockItem;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventoryCatalog\Model\Cache\ProductIdsBySkusStorage;
+use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 
 /**
  * Class provides around Plugin on \Magento\CatalogInventory\Model\ResourceModel\Stock\Item::save
@@ -87,7 +89,9 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         GetSkusByProductIdsInterface $getSkusByProductIds,
         GetDefaultSourceItemBySku $getDefaultSourceItemBySku,
         AreProductsSalableInterface $areProductsSalable,
-        SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+        SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
+        ProductIdsBySkusStorage $productIdsBySkusStorage,
+        CacheStorage $itemCacheStorage
     ) {
         $this->updateSourceItemBasedOnLegacyStockItem = $updateSourceItemBasedOnLegacyStockItem;
         $this->resourceConnection = $resourceConnection;
@@ -97,6 +101,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $this->getDefaultSourceItemBySku = $getDefaultSourceItemBySku;
         $this->areProductsSalable = $areProductsSalable;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
+        $this->productIdsBySkusStorage = $productIdsBySkusStorage;
+        $this->itemCacheStorage = $itemCacheStorage;
     }
 
     /**
@@ -126,6 +132,9 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
 
                 $productSku = $this->getSkusByProductIds
                     ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];
+
+                $this->productIdsBySkusStorage->set($productSku, (int)$legacyStockItem->getProductId());
+                $this->itemCacheStorage->set($productSku, $legacyStockItem);
                 $stockStatuses = [];
                 $areSalableResults = $this->areProductsSalable->execute([$productSku], Stock::DEFAULT_STOCK_ID);
                 foreach ($areSalableResults as $productSalable) {
