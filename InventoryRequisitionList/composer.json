@@ -9,7 +9,7 @@
         "magento/module-catalog": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-inventory-configuration-api": "*",
-        "php": "~7.4.0||~8.0.0||~8.1.0"
+        "php": "~7.4.0||~8.1.0"
     },
     "suggest": {
         "magento/module-requisition-list": "*"
