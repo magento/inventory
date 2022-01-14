@@ -99,6 +99,7 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param ProductIdsBySkusStorage $productIdsBySkusStorage
      * @param ProductSkusByIdsStorage $productSkusByIdsStorage
      * @param CacheStorage $itemCacheStorage
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem,
