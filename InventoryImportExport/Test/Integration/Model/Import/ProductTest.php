@@ -225,8 +225,10 @@ class ProductTest extends TestCase
     private function processMessages(string $topicName): void
     {
         $envelope = $this->queue->dequeue();
-        $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
-        $this->consumer->execute($decodedMessage);
+        if (isset($envelope)) {
+            $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
+            $this->consumer->execute($decodedMessage);
+        }
     }
 
     /**
