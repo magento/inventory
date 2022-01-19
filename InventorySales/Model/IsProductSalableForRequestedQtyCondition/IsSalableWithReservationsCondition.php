@@ -15,6 +15,7 @@ use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterfaceFactory;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
+use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 
 /**
  * @inheritdoc
@@ -22,7 +23,7 @@ use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 class IsSalableWithReservationsCondition implements IsProductSalableForRequestedQtyInterface
 {
     /**
-     * @var GetStockItemDataInterface
+     * @var GetStockItemData
      */
     private $getStockItemData;
 
@@ -54,7 +55,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableForRequested
      * @param ProductSalableResultInterfaceFactory $productSalableResultFactory
      */
     public function __construct(
-        GetStockItemDataInterface $getStockItemData,
+        GetStockItemData $getStockItemData,
         GetReservationsQuantityInterface $getReservationsQuantity,
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         ProductSalabilityErrorInterfaceFactory $productSalabilityErrorFactory,
