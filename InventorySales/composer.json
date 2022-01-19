@@ -16,13 +16,13 @@
         "magento/module-inventory-source-selection-api": "*",
         "magento/module-sales-inventory": "*",
         "magento/module-store": "*",
-        "magento/module-sales": "*",
-        "magento/module-inventory-indexer": "*"
+        "magento/module-sales": "*"
     },
     "suggest": {
         "magento/module-inventory-catalog": "*"
     },
     "require-dev": {
+        "magento/module-inventory-indexer": "*"
     },
     "type": "magento2-module",
     "license": [
