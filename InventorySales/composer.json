@@ -22,6 +22,8 @@
     "suggest": {
         "magento/module-inventory-catalog": "*"
     },
+    "require-dev": {
+    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
