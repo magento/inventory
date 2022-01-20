@@ -41,6 +41,7 @@ class GetStockItemDataCachePlugin
      * @param GetStockItemDataCache $subject
      * @param callable $proceed
      * @param string $sku
+     * @param int $stockId
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
