@@ -8,10 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryLowQuantityNotification\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\QueueFactoryInterface;
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -37,22 +35,12 @@ class DeleteProductTest extends WebapiAbstract
     private $productRepository;
 
     /**
-     * @var DeploymentConfig|null
-     */
-    private $deploymentConfig;
-
-    /** @var ObjectManagerInterface */
-    private $objectManager;
-
-    /**
      * @inheritDoc
      */
     protected function setUp(): void
     {
-        $this->objectManager = Bootstrap::getObjectManager();
         $this->getBySku = Bootstrap::getObjectManager()->get(GetBySku::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
-        $this->deploymentConfig =  $this->objectManager->get(DeploymentConfig::class);
         $this->rejectMessages();
     }
 
@@ -70,8 +58,6 @@ class DeleteProductTest extends WebapiAbstract
      */
     public function testDeleteProduct(): void
     {
-        echo "Deployment config for queue is: " . json_encode($this->deploymentConfig->get('queue'));
-
         $serviceInfo = [
             'rest' => [
                 'resourcePath' => self::RESOURCE_PATH . '/SKU-1',

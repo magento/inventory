@@ -9,8 +9,6 @@
     <publisher topic="async.V1.inventory.bulk-product-source-assign.POST"/>
     <publisher topic="async.V1.inventory.bulk-product-source-unassign.POST"/>
     <publisher topic="async.V1.inventory.bulk-product-source-transfer.POST"/>
-    <publisher topic="inventory.source.items.cleanup">
-        <connection name="db" exchange="magento-db" disabled="false" />
-    </publisher>
+    <publisher topic="inventory.source.items.cleanup"/>
     <publisher topic="inventory.mass.update"/>
 </config>
