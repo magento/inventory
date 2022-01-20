@@ -95,4 +95,8 @@
             <argument name="productTableName" xsi:type="string">catalog_product_entity</argument>
         </arguments>
     </type>
+    <type name="Magento\InventoryIndexer\Model\ResourceModel\GetStockItemDataCache">
+        <plugin name="cache_stock_item_data"
+                type="Magento\InventoryIndexer\Plugin\GetStockItemDataCachePlugin"/>
+    </type>
 </config>
