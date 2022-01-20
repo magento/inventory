@@ -20,7 +20,13 @@ class GetStockItemDataCachePlugin
     private $cacheStorage;
 
     /**
+     * @var GetStockItemData
+     */
+    private $getStockItemData;
+
+    /**
      * @param CacheStorage $cacheStorage
+     * @param GetStockItemData $getStockItemData
      */
     public function __construct(
         CacheStorage $cacheStorage,
