@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Plugin;
 
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemDataCache;
 use Magento\InventoryIndexer\Model\GetStockItemData\CacheStorage;
@@ -55,9 +54,9 @@ class GetStockItemDataCachePlugin
             return $this->cacheStorage->get($stockId, $sku);
         }
 
-        /** @var StockItemInterface $item */
+        /** @var array $stockItemData */
         $stockItemData =  $this->getStockItemData->execute($sku, $stockId);
-        /* Avoid add to cache a new item */
+        /* Add to cache a new item */
         if (!empty($stockItemData)) {
             $this->cacheStorage->set($stockId, $sku, $stockItemData);
         }
