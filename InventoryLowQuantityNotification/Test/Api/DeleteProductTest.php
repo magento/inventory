@@ -70,11 +70,7 @@ class DeleteProductTest extends WebapiAbstract
      */
     public function testDeleteProduct(): void
     {
-        if (is_array($this->deploymentConfig->get('queue/amqp'))) {
-            echo('Amqp config ' . implode(" ", $this->deploymentConfig->get('queue/amqp')));
-        } else {
-            echo('Amqp config ' . $this->deploymentConfig->get('queue/amqp'));
-        }
+        echo "Deployment config for queue is: " . json_encode($this->deploymentConfig->get('queue'));
 
         $serviceInfo = [
             'rest' => [
