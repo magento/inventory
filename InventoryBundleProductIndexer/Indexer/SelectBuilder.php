@@ -9,6 +9,10 @@ namespace Magento\InventoryBundleProductIndexer\Indexer;
 
 use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
@@ -20,6 +24,8 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface
 
 /**
  * Get bundle product for given stock select builder.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SelectBuilder
 {
@@ -44,21 +50,29 @@ class SelectBuilder
     private $metadataPool;
 
     /**
+     * @var Config
+     */
+    private $eavConfig;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
+     * @param Config $eavConfig
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool
+        MetadataPool $metadataPool,
+        Config $eavConfig
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
+        $this->eavConfig = $eavConfig;
     }
 
     /**
@@ -82,6 +96,7 @@ class SelectBuilder
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
+        $statusAttributeId = $this->getAttribute(ProductInterface::STATUS)->getId();
 
         $select = $connection->select()
             ->from(
@@ -103,9 +118,25 @@ class SelectBuilder
                 ['parent_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
                 'parent_product_entity.' . $linkField . ' = parent_link.parent_product_id',
                 []
-            )
-            ->group(['parent_product_entity.sku']);
+            )->joinInner(
+                ['product_status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
+                "product_entity.$linkField = product_status.$linkField"
+                . " AND product_status.attribute_id = $statusAttributeId"
+                . ' AND product_status.value = ' . ProductStatus::STATUS_ENABLED,
+                []
+            )->group(['parent_product_entity.sku']);
 
         return $select;
+    }
+
+    /**
+     * Retrieve catalog_product attribute instance by attribute code
+     *
+     * @param string $attributeCode
+     * @return Attribute
+     */
+    private function getAttribute($attributeCode): Attribute
+    {
+        return $this->eavConfig->getAttribute(Product::ENTITY, $attributeCode);
     }
 }

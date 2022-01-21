@@ -9,6 +9,10 @@ namespace Magento\InventoryConfigurableProductIndexer\Indexer;
 
 use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
@@ -20,6 +24,11 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
 use Magento\InventoryIndexer\Indexer\SelectBuilderInterface;
 
+/**
+ * Get configurable product for given stock select builder
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SelectBuilder implements SelectBuilderInterface
 {
     /**
@@ -47,24 +56,32 @@ class SelectBuilder implements SelectBuilderInterface
     private $defaultStockProvider;
 
     /**
+     * @var Config
+     */
+    private $eavConfig;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param Config $eavConfig
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
         MetadataPool $metadataPool,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        Config $eavConfig
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->eavConfig = $eavConfig;
     }
 
     /**
@@ -88,6 +105,7 @@ class SelectBuilder implements SelectBuilderInterface
 
         $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
         $linkField = $metadata->getLinkField();
+        $statusAttributeId = $this->getAttribute(ProductInterface::STATUS)->getId();
 
         $select = $connection->select()
             ->from(
@@ -114,9 +132,25 @@ class SelectBuilder implements SelectBuilderInterface
                 'inventory_stock_item.product_id = parent_product_entity.entity_id'
                 . ' AND inventory_stock_item.stock_id = ' . $this->defaultStockProvider->getId(),
                 []
-            )
-            ->group(['parent_product_entity.sku']);
+            )->joinInner(
+                ['product_status' => $this->resourceConnection->getTableName('catalog_product_entity_int')],
+                "product_entity.$linkField = product_status.$linkField"
+                . " AND product_status.attribute_id = $statusAttributeId"
+                . ' AND product_status.value = ' . ProductStatus::STATUS_ENABLED,
+                []
+            )->group(['parent_product_entity.sku']);
 
         return $select;
+    }
+
+    /**
+     * Retrieve catalog_product attribute instance by attribute code
+     *
+     * @param string $attributeCode
+     * @return Attribute
+     */
+    private function getAttribute($attributeCode): Attribute
+    {
+        return $this->eavConfig->getAttribute(Product::ENTITY, $attributeCode);
     }
 }
