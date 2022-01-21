@@ -28,6 +28,7 @@ class GetStockItemDataCache implements GetStockItemDataInterface
 
     /**
      * @param GetStockItemData $getStockItemData
+     * @param CacheStorage|null $cacheStorage
      */
     public function __construct(
         GetStockItemData $getStockItemData,
