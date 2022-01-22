@@ -78,7 +78,12 @@
             <argument name="stockName" value="$$additionalStock.stock[name]$$"/>
             <argument name="sourceNumInGrid" value="0"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanFullPageCache">
+            <argument name="tags" value="full_page"/>
+        </actionGroup>
 
         <!--Verify product is not visible on storefront page.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsNotVisible"/>
