@@ -70,7 +70,7 @@ class GetSalableQuantityDataBySku
     public function execute(string $sku): array
     {
         $stockInfo = [];
-        $sku = htmlspecialchars_decode($sku, ENT_NOQUOTES);
+        $sku = htmlspecialchars_decode($sku, ENT_QUOTES | ENT_SUBSTITUTE);
         $stockIds = $this->getAssignedStockIdsBySku->execute($sku);
         if (count($stockIds)) {
             foreach ($stockIds as $stockId) {
