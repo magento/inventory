@@ -21,6 +21,8 @@ use Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface;
 use Psr\Log\LoggerInterface;
 
 /**
+ * Bulk assign post action
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BulkAssignPost extends Action implements HttpPostActionInterface

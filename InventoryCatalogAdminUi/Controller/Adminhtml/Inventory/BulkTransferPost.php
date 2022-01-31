@@ -19,6 +19,8 @@ use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
 use Psr\Log\LoggerInterface;
 
 /**
+ * Bulk transfer post action
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BulkTransferPost extends Action implements HttpPostActionInterface

@@ -21,6 +21,8 @@ use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
 use Psr\Log\LoggerInterface;
 
 /**
+ * Bulk unassign post action
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BulkUnassignPost extends Action implements HttpPostActionInterface
