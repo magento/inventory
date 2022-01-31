@@ -10,6 +10,7 @@ namespace Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Inventory;
 use Magento\AsynchronousOperations\Model\MassSchedule;
 use Magento\Backend\App\Action;
 use Magento\Backend\Model\Auth;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalogAdminUi\Model\BulkOperationsConfig;
@@ -17,12 +18,15 @@ use Magento\InventoryCatalogAdminUi\Model\BulkSessionProductsStorage;
 use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
 use Psr\Log\LoggerInterface;
 
-class BulkTransferPost extends Action
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class BulkTransferPost extends Action implements HttpPostActionInterface
 {
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Catalog::products';
+    public const ADMIN_RESOURCE = 'Magento_Catalog::products';
 
     /**
      * @var BulkSessionProductsStorage
@@ -82,6 +86,8 @@ class BulkTransferPost extends Action
     }
 
     /**
+     * Synchronous operation for bulk transfer
+     *
      * @param array $skus
      * @param string $originSource
      * @param string $destinationSource
@@ -102,6 +108,8 @@ class BulkTransferPost extends Action
     }
 
     /**
+     * Asynchronous operation for bulk transfer
+     *
      * @param array $skus
      * @param string $originSource
      * @param string $destinationSource
@@ -141,6 +149,8 @@ class BulkTransferPost extends Action
     }
 
     /**
+     * Bulk Inventory Transfer post
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
@@ -161,7 +171,7 @@ class BulkTransferPost extends Action
             }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->messageManager->addErrorMessage(__('Something went wrong during the operation.'));
+            $this->messageManager->addErrorMessage($e->getMessage());
         }
 
         $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
