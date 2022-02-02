@@ -6,9 +6,9 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
-    <exchange name="magento-db" type="topic" connection="db" >
-        <binding id="InventorySourceItemIndexer" topic="inventory.indexer.sourceItem" destinationType="queue" destination="inventory.indexer.sourceItem"/>
-        <binding id="InventoryStockIndexer" topic="inventory.indexer.stock" destinationType="queue" destination="inventory.indexer.stock"/>
-        <binding id="InventoryReservationUpdateSalabilityStatus" topic="inventory.reservations.updateSalabilityStatus" destinationType="queue" destination="inventory.reservations.updateSalabilityStatus"/>
+    <exchange name="magento">
+        <binding id="InventorySourceItemIndexer" topic="inventory.indexer.sourceItem" destination="inventory.indexer.sourceItem"/>
+        <binding id="InventoryStockIndexer" topic="inventory.indexer.stock" destination="inventory.indexer.stock"/>
+        <binding id="InventoryReservationUpdateSalabilityStatus" topic="inventory.reservations.updateSalabilityStatus" destination="inventory.reservations.updateSalabilityStatus"/>
     </exchange>
 </config>
