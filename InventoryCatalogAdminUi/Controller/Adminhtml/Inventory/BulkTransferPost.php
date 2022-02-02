@@ -173,7 +173,7 @@ class BulkTransferPost extends Action implements HttpPostActionInterface
             }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->messageManager->addErrorMessage(__('Something went wrong during the operation.'));
         }
 
         $result = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
