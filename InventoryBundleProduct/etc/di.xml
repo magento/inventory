@@ -29,4 +29,8 @@
     <type name="Magento\CatalogInventory\Helper\Stock">
         <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
+    <type name="Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty">
+        <plugin name="update_parent_bundle_product_stock_status_in_legacy_stock"
+                type="Magento\InventoryBundleProduct\Plugin\InventoryApi\UpdateParentStockStatusInLegacyStockPlugin" sortOrder="100"/>
+    </type>
 </config>

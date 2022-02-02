@@ -27,11 +27,13 @@ use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/419534/scenarios/2587535
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
@@ -44,7 +46,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @var DefaultStockProviderInterface
      */
-    private $defaultStockProvider;
+    protected $defaultStockProvider;
 
     /**
      * @var CleanupReservationsInterface
@@ -79,7 +81,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * @var OrderRepositoryInterface
      */
-    private $orderRepository;
+    protected $orderRepository;
 
     /**
      * @var Registry
@@ -122,6 +124,11 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     private $orderIdToDelete;
 
     /**
+     * @var StockRegistryInterface
+     */
+    protected $stockRegistry;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -140,6 +147,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->getReservationsQuantity = $this->objectManager->get(GetReservationsQuantityInterface::class);
         $this->handler = $this->objectManager->get(UpdateReservationsBySkus::class);
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
+        $this->stockRegistry = $this->objectManager->get(StockRegistryInterface::class);
         $this->queue = $this->objectManager->create(Queue::class, ['queueName' => 'inventory.reservations.update']);
         $this->resource = $this->objectManager->get(ResourceConnection::class);
     }
