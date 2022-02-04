@@ -82,9 +82,10 @@ class StockStatusFilterPlugin
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
+        $searchResultApplier = $subject->hasSearchResultApplier();
 
         if ($this->defaultStockProvider->getId() === $stockId) {
-            if ($subject->getSearchResultApplier()) {
+            if ($searchResultApplier) {
                 $select->columns(["{$stockStatusTableAlias}.stock_status AS is_salable"]);
             }
             $select = $proceed(
@@ -94,7 +95,7 @@ class StockStatusFilterPlugin
                 $websiteId
             );
         } else {
-            if ($subject->getSearchResultApplier()) {
+            if ($searchResultApplier) {
                 $select->columns(["{$stockStatusTableAlias}.is_salable"]);
             }
             $select = $this->stockStatusFilter->execute(
@@ -102,7 +103,7 @@ class StockStatusFilterPlugin
                 $productTableAlias,
                 $stockStatusTableAlias,
                 $stockId,
-                $subject->getSearchResultApplier()
+                $searchResultApplier
             );
         }
         return $select;
