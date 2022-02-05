@@ -85,9 +85,6 @@ class StockStatusFilterPlugin
         $searchResultApplier = $subject->hasSearchResultApplier();
 
         if ($this->defaultStockProvider->getId() === $stockId) {
-            if ($searchResultApplier) {
-                $select->columns(["{$stockStatusTableAlias}.stock_status AS is_salable"]);
-            }
             $select = $proceed(
                 $select,
                 $productTableAlias,
