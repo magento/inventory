@@ -36,7 +36,7 @@ define([
                      * @param {String|Boolean} value
                      */
                     write: function (value) {
-                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 0));
+                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 10));
 
                         if (required() !== value) {
                             required(value);
