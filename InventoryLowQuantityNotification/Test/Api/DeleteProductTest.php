@@ -99,7 +99,7 @@ class DeleteProductTest extends WebapiAbstract
     private function rejectMessages()
     {
         $queueFactory = Bootstrap::getObjectManager()->get(QueueFactoryInterface::class);
-        $queue = $queueFactory->create('inventory.source.items.cleanup', 'db');
+        $queue = $queueFactory->create('inventory.source.items.cleanup', 'amqp');
         while ($envelope = $queue->dequeue()) {
             $queue->reject($envelope, false);
         }
