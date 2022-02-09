@@ -8,8 +8,14 @@ declare(strict_types=1);
 namespace Magento\InventoryGroupedProduct\Test\Integration\Order;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventorySales\Test\Integration\Order\PlaceOrderOnDefaultStockTest as PlaceOrderTest;
 
+/**
+ * Place Order On Default Stock For Grouped Product Test
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
 {
     /**
@@ -39,6 +45,45 @@ class PlaceOrderOnDefaultStockTest extends PlaceOrderTest
 
         self::assertNotNull($orderId);
 
+        //cleanup
+        $this->deleteOrderById((int)$orderId);
+    }
+
+    /**
+     * Test to place order and check the status of grouped products as out of stock product
+     *
+     * @magentoDataFixture Magento_InventoryGroupedProduct::Test/_files/default_stock_grouped_products.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     */
+    public function testPlaceOrderToMakeGroupedProductOutOfStock(): void
+    {
+        $groupedSku = 'grouped_in_stock';
+        $simpleSku = 'simple_11';
+        $quoteItemQty = 100;
+        $cart = $this->getCart();
+
+        $groupedProduct = $this->productRepository->get($groupedSku);
+        $cartItem = $this->getCartItem($groupedProduct, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+
+        $simpleProduct = $this->productRepository->get($simpleSku);
+        $cartItem = $this->getCartItem($simpleProduct, $quoteItemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+
+        $this->cartRepository->save($cart);
+
+        $orderId = $this->cartManagement->placeOrder($cart->getId());
+
+        self::assertNotNull($orderId);
+
+        $this->orderRepository->get($orderId);
+
+        $productsStockStatus = $this->stockRegistry->getProductStockStatusBySku(
+            $simpleSku,
+            $this->defaultStockProvider->getId()
+        );
+        self::assertEquals(SourceItemInterface::STATUS_OUT_OF_STOCK, $productsStockStatus);
         //cleanup
         $this->deleteOrderById((int)$orderId);
     }
