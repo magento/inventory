@@ -47,12 +47,12 @@ class DeleteProductTest extends WebapiAbstract
     /**
      * Verify, delete product will delete product source items configurations.
      *
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryApi/Test/_files/stock_source_links.php
-     * @magentoApiDataFixture ../../../../ext/magento/inventory/InventoryLowQuantityNotificationApi/Test/_files/source_item_configuration.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryLowQuantityNotificationApi/Test/_files/source_item_configuration.php
      *
      * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
      */
