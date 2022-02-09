@@ -105,6 +105,7 @@ class QuantityPerSource extends AbstractModifier
 
         foreach ($dataItems as $key => $item) {
             if (in_array($item['type_id'], $allowedProductTypes)) {
+                $item['sku'] = htmlspecialchars_decode($item['sku'], ENT_QUOTES | ENT_SUBSTITUTE);
                 $itemsBySkus[$item['sku']] = $key;
                 continue;
             }
