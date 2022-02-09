@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel;
 
+use Magento\CatalogInventory\Model\ResourceModel\StockStatusApplierInterface;
 use Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -40,21 +42,30 @@ class StockStatusFilterPlugin
     private $stockStatusFilter;
 
     /**
+     * @var StockStatusApplierInterface
+     */
+    private $stockStatusApplier;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param StockStatusFilter $stockStatusFilter
+     * @param StockStatusApplierInterface|null $stockStatusApplier
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         DefaultStockProviderInterface $defaultStockProvider,
-        StockStatusFilter $stockStatusFilter
+        StockStatusFilter $stockStatusFilter,
+        ?StockStatusApplierInterface $stockStatusApplier = null
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->stockStatusFilter = $stockStatusFilter;
+        $this->stockStatusApplier = $stockStatusApplier
+            ?? ObjectManager::getInstance()->get(StockStatusApplierInterface::class);
     }
 
     /**
@@ -82,7 +93,7 @@ class StockStatusFilterPlugin
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
-        $searchResultApplier = $subject->hasSearchResultApplier();
+        $searchResultApplier = $this->stockStatusApplier->hasSearchResultApplier();
 
         if ($this->defaultStockProvider->getId() === $stockId) {
             $select = $proceed(
