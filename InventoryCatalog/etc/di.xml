@@ -14,7 +14,7 @@
     <preference for="Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface" type="Magento\InventoryCatalog\Model\GetParentSkusOfChildrenSkus"/>
     <preference for="Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface" type="Magento\InventoryCatalog\Model\IsSingleSourceModeCache"/>
     <preference for="Magento\InventoryCatalogApi\Model\SourceItemsProcessorInterface" type="Magento\InventoryCatalog\Model\SourceItemsProcessor"/>
-    <preference for="Magento\CatalogInventory\Model\ResourceModel\StockStatusApplierInterface" type="Magento\InventoryCatalog\Model\ResourceModel\StockStatusApplier" />
+    <preference for="Magento\CatalogInventory\Model\StockStatusApplierInterface" type="Magento\InventoryCatalog\Model\StockStatusApplier" />
     <type name="Magento\InventoryApi\Api\StockRepositoryInterface">
         <plugin name="prevent_default_stock_deleting"
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\StockRepository\PreventDeleting\DefaultStockPlugin"/>

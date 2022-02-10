@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Model\ResourceModel;
 
-use Magento\CatalogInventory\Model\ResourceModel\StockStatusApplierInterface;
+use Magento\CatalogInventory\Model\StockStatusApplierInterface;
 use Magento\CatalogInventory\Model\ResourceModel\StockStatusFilterInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Select;
