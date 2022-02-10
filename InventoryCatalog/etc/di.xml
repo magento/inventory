@@ -25,7 +25,7 @@
     </type>
     <type name="Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty">
         <plugin name="synchronize_legacy_catalog_inventory_at_source_item_decrement_quantity"
-                type="Magento\InventoryCatalog\Plugin\InventoryApi\SynchronizeLegacyStockAfterDecrementStockPlugin"/>
+                type="Magento\InventoryCatalog\Plugin\InventoryApi\SynchronizeLegacyStockAfterDecrementStockPlugin" sortOrder="50"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
         <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater"/>
