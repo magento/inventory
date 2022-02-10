@@ -13,4 +13,8 @@
     <type name="Magento\InventoryCatalog\Model\UpdateInventory">
         <plugin name="updateParentLegacyStockStatus" type="Magento\InventoryGroupedProduct\Plugin\InventoryCatalog\Model\UpdateParentStockStatusPlugin"/>
     </type>
+    <type name="Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty">
+        <plugin name="update_parent_grouped_product_stock_status_in_legacy_stock"
+                type="Magento\InventoryGroupedProduct\Plugin\InventoryApi\UpdateParentStockStatusInLegacyStockPlugin" sortOrder="101"/>
+    </type>
 </config>
