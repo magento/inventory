@@ -111,8 +111,8 @@
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="updateCustomerBillingAddress"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad20"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder1"/>
-        <waitForPageLoad stepKey="waitForPageLoad21"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder1"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad21"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber1"/>
     </test>
 </tests>
