@@ -146,6 +146,9 @@
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigProduct"/>
             <deleteData createDataKey="configurableProductAttribute" stepKey="deleteConfigProductAttribute"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Revert "Add Store Code To URL" configuration.-->
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
         </after>
