@@ -13,11 +13,11 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus;
-use Magento\MysqlMq\Model\Driver\Queue;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
@@ -88,11 +88,6 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     private $handler;
 
     /**
-     * @var Queue
-     */
-    private $queue;
-
-    /**
      * @var MessageEncoder
      */
     private $messageEncoder;
@@ -122,6 +117,9 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     private $executeInStoreContext;
 
+    /** @var ConsumerFactory */
+    private $consumerFactory;
+
     /**
      * @inheritdoc
      */
@@ -141,10 +139,10 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
         $this->orderManagement = $this->_objectManager->get(OrderManagementInterface::class);
         $this->handler = $this->_objectManager->get(UpdateReservationsBySkus::class);
         $this->messageEncoder = $this->_objectManager->get(MessageEncoder::class);
-        $this->queue = $this->_objectManager->create(Queue::class, ['queueName' => 'inventory.reservations.update']);
         $this->resourceConnection = $this->_objectManager->get(ResourceConnection::class);
         $this->getSourceItemsDataBySku = $this->_objectManager->get(GetSourceItemsDataBySku::class);
         $this->executeInStoreContext = $this->_objectManager->get(ExecuteInStoreContext::class);
+        $this->consumerFactory = $this->_objectManager->get(ConsumerFactory::class);
     }
 
     /**
@@ -203,7 +201,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
         $this->updateProductSku($oldSku, $newSku);
         $this->productSkuToDelete = $newSku;
 
-        $this->processMessages('inventory.reservations.update');
+        $this->processMessages();
         $this->assertEmpty($this->getReservationBySku($oldSku));
         $this->assertNotEmpty($this->getReservationBySku($newSku));
     }
@@ -245,16 +243,14 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     }
 
     /**
-     * Process topic messages
+     * Process messages
      *
-     * @param string $topicName
      * @return void
      */
-    private function processMessages(string $topicName): void
+    private function processMessages(): void
     {
-        $envelope = $this->queue->dequeue();
-        $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
-        $this->handler->execute($decodedMessage);
+        $consumer = $this->consumerFactory->get('inventory.reservations.update');
+        $consumer->process(1);
     }
 
     /**

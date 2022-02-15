@@ -12,6 +12,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Registry;
@@ -19,7 +20,6 @@ use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 use Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus;
-use Magento\MysqlMq\Model\Driver\Queue;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
@@ -104,11 +104,6 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     private $handler;
 
     /**
-     * @var Queue
-     */
-    private $queue;
-
-    /**
      * @var MessageEncoder
      */
     private $messageEncoder;
@@ -127,6 +122,9 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @var StockRegistryInterface
      */
     protected $stockRegistry;
+
+    /** @var ConsumerFactory */
+    private $consumerFactory;
 
     /**
      * @inheritdoc
@@ -148,8 +146,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->handler = $this->objectManager->get(UpdateReservationsBySkus::class);
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
         $this->stockRegistry = $this->objectManager->get(StockRegistryInterface::class);
-        $this->queue = $this->objectManager->create(Queue::class, ['queueName' => 'inventory.reservations.update']);
         $this->resource = $this->objectManager->get(ResourceConnection::class);
+        $this->consumerFactory = $this->objectManager->get(ConsumerFactory::class);
     }
 
     /**
@@ -220,7 +218,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $this->orderIdToDelete = $this->placeOrder($oldSku, 4);
         $this->updateProductSku($oldSku, $newSku);
 
-        $this->processMessages('inventory.reservations.update');
+        $this->processMessages();
         $this->assertEmpty($this->getReservationBySku($oldSku));
         $this->assertNotEmpty($this->getReservationBySku($newSku));
     }
@@ -373,16 +371,14 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
-     * Process topic messages
+     * Process messages
      *
-     * @param string $topicName
      * @return void
      */
-    private function processMessages(string $topicName): void
+    private function processMessages(): void
     {
-        $envelope = $this->queue->dequeue();
-        $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
-        $this->handler->execute($decodedMessage);
+        $consumer = $this->consumerFactory->get('inventory.reservations.update');
+        $consumer->process(1);
     }
 
     /**
