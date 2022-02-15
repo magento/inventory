@@ -14,7 +14,6 @@ use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\ProcessSourceItemsPlugin;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -33,32 +32,14 @@ class ProcessSourceItemsPluginTest extends TestCase
     /** @var ObjectManagerInterface */
     private $objectManager;
 
-    /** @var DeleteTopicRelatedMessages */
-    private $deleteTopicMessages;
-
-    /** @var MessageEncoder */
-    private $messageEncoder;
-
-    /** @var DeleteSourceItemsBySkus */
-    private $handler;
-
     /** @var string */
     private $currentSku;
 
     /** @var string */
     private $newSku;
 
-    /** @var GetSourceItemsBySkuInterface */
-    private $getSourceItemsBySku;
-
-    /** @var GetBySku */
-    private $getSourceItemConfigurationsBySku;
-
     /** @var ProductRepositoryInterface */
     private $productRepository;
-
-    /** @var ConsumerFactory */
-    private $consumerFactory;
 
     /**
      * @inheritDoc
@@ -68,14 +49,8 @@ class ProcessSourceItemsPluginTest extends TestCase
         parent::setUp();
 
         $this->objectManager = Bootstrap::getObjectManager();
-        $this->deleteTopicMessages = $this->objectManager->get(DeleteTopicRelatedMessages::class);
-        $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
-        $this->handler = $this->objectManager->get(DeleteSourceItemsBySkus::class);
-        $this->getSourceItemsBySku = $this->objectManager->get(GetSourceItemsBySkuInterface::class);
-        $this->getSourceItemConfigurationsBySku = $this->objectManager->get(GetBySku::class);
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
         $this->productRepository->cleanCache();
-        $this->consumerFactory = $this->objectManager->get(ConsumerFactory::class);
     }
 
     /**
@@ -115,13 +90,13 @@ class ProcessSourceItemsPluginTest extends TestCase
      */
     public function testUpdateProductSkuSynchronizeWithCatalog(): void
     {
-        $this->deleteTopicMessages->execute('inventory.source.items.cleanup');
+        $this->objectManager->get(DeleteTopicRelatedMessages::class)->execute('inventory.source.items.cleanup');
         $this->currentSku = 'SKU-1';
         $this->newSku = 'SKU-1-new';
         $this->updateProductSku($this->currentSku, $this->newSku);
         $this->processMessages();
-        self::assertEmpty($this->getSourceItemsBySku->execute($this->currentSku));
-        self::assertEmpty($this->getSourceItemConfigurationsBySku->execute($this->currentSku));
+        self::assertEmpty($this->objectManager->get(GetSourceItemsBySkuInterface::class)->execute($this->currentSku));
+        self::assertEmpty($this->objectManager->get(GetBySku::class)->execute($this->currentSku));
     }
 
     /**
@@ -131,7 +106,8 @@ class ProcessSourceItemsPluginTest extends TestCase
      */
     private function processMessages(): void
     {
-        $consumer = $this->consumerFactory->get('inventory.source.items.cleanup');
+        $consumerFactory = $this->objectManager->get(ConsumerFactory::class);
+        $consumer = $consumerFactory->get('inventory.source.items.cleanup');
         $consumer->process(1);
     }
 

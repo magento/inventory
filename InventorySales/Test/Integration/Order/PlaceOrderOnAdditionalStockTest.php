@@ -17,7 +17,6 @@ use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
-use Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
@@ -38,64 +37,14 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
 class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
 {
     /**
-     * @var CleanupReservationsInterface
-     */
-    private $cleanupReservations;
-
-    /**
      * @var ProductRepositoryInterface
      */
     private $productRepository;
 
     /**
-     * @var CartManagementInterface
-     */
-    private $cartManagement;
-
-    /**
      * @var CartRepositoryInterface
      */
     private $cartRepository;
-
-    /**
-     * @var CartItemInterfaceFactory
-     */
-    private $cartItemFactory;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    private $searchCriteriaBuilder;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    private $orderRepository;
-
-    /**
-     * @var OrderManagementInterface
-     */
-    private $orderManagement;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var UpdateReservationsBySkus
-     */
-    private $handler;
-
-    /**
-     * @var MessageEncoder
-     */
-    private $messageEncoder;
-
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
 
     /**
      * @var int
@@ -108,41 +57,15 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     private $productSkuToDelete;
 
     /**
-     * @var GetSourceItemsDataBySku
-     */
-    private $getSourceItemsDataBySku;
-
-    /**
-     * @var ExecuteInStoreContext
-     */
-    private $executeInStoreContext;
-
-    /** @var ConsumerFactory */
-    private $consumerFactory;
-
-    /**
      * @inheritdoc
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->storeManager = $this->_objectManager->get(StoreManagerInterface::class);
-        $this->cartManagement = $this->_objectManager->get(CartManagementInterface::class);
         $this->cartRepository = $this->_objectManager->get(CartRepositoryInterface::class);
         $this->productRepository = $this->_objectManager->get(ProductRepositoryInterface::class);
         $this->productRepository->cleanCache();
-        $this->searchCriteriaBuilder = $this->_objectManager->get(SearchCriteriaBuilder::class);
-        $this->cartItemFactory = $this->_objectManager->get(CartItemInterfaceFactory::class);
-        $this->cleanupReservations = $this->_objectManager->get(CleanupReservationsInterface::class);
-        $this->orderRepository = $this->_objectManager->get(OrderRepositoryInterface::class);
-        $this->orderManagement = $this->_objectManager->get(OrderManagementInterface::class);
-        $this->handler = $this->_objectManager->get(UpdateReservationsBySkus::class);
-        $this->messageEncoder = $this->_objectManager->get(MessageEncoder::class);
-        $this->resourceConnection = $this->_objectManager->get(ResourceConnection::class);
-        $this->getSourceItemsDataBySku = $this->_objectManager->get(GetSourceItemsDataBySku::class);
-        $this->executeInStoreContext = $this->_objectManager->get(ExecuteInStoreContext::class);
-        $this->consumerFactory = $this->_objectManager->get(ConsumerFactory::class);
     }
 
     /**
@@ -162,7 +85,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
             }
         }
 
-        $this->cleanupReservations->execute();
+        $this->_objectManager->get(CleanupReservationsInterface::class)->execute();
 
         parent::tearDown();
     }
@@ -191,7 +114,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
         $oldSku = 'SKU-1';
         $newSku = 'new-sku';
 
-        $this->orderIdToDelete = $this->executeInStoreContext->execute(
+        $this->orderIdToDelete = $this->_objectManager->get(ExecuteInStoreContext::class)->execute(
             'store_for_eu_website',
             [$this, 'placeOrder'],
             $oldSku,
@@ -214,8 +137,9 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     private function deleteOrderById(int $orderId): void
     {
-        $this->orderManagement->cancel($orderId);
-        $this->orderRepository->delete($this->orderRepository->get($orderId));
+        $this->_objectManager->get(OrderManagementInterface::class)->cancel($orderId);
+        $orderRepository = $this->_objectManager->get(OrderRepositoryInterface::class);
+        $orderRepository->delete($orderRepository->get($orderId));
     }
 
     /**
@@ -229,7 +153,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     private function getCartItem(ProductInterface $product, float $quoteItemQty, int $cartId): CartItemInterface
     {
         /** @var CartItemInterface $cartItem */
-        $cartItem = $this->cartItemFactory->create([
+        $cartItem = $this->_objectManager->get(CartItemInterfaceFactory::class)->create([
             'data' => [
                 CartItemInterface::KEY_SKU => $product->getSku(),
                 CartItemInterface::KEY_QTY => $quoteItemQty,
@@ -249,7 +173,8 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     private function processMessages(): void
     {
-        $consumer = $this->consumerFactory->get('inventory.reservations.update');
+        $consumerFactory = $this->_objectManager->get(ConsumerFactory::class);
+        $consumer = $consumerFactory->get('inventory.reservations.update');
         $consumer->process(1);
     }
 
@@ -261,7 +186,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     private function getReservationBySku(string $sku): array
     {
-        $connect = $this->resourceConnection->getConnection();
+        $connect = $this->_objectManager->get(ResourceConnection::class)->getConnection();
         $select = $connect->select()->from('inventory_reservation')->where('sku = ?', $sku);
         $result = $connect->fetchRow($select);
 
@@ -275,12 +200,12 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     protected function getCart(): CartInterface
     {
-        $searchCriteria = $this->searchCriteriaBuilder
+        $searchCriteria = $this->_objectManager->get(SearchCriteriaBuilder::class)
             ->addFilter('reserved_order_id', 'test_order_1')
             ->create();
         /** @var CartInterface $cart */
         $cart = current($this->cartRepository->getList($searchCriteria)->getItems());
-        $cart->setStoreId($this->storeManager->getStore()->getId());
+        $cart->setStoreId($this->_objectManager->get(StoreManagerInterface::class)->getStore()->getId());
 
         return $cart;
     }
@@ -300,7 +225,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
 
-        return (int)$this->cartManagement->placeOrder($cart->getId());
+        return (int)$this->_objectManager->get(CartManagementInterface::class)->placeOrder($cart->getId());
     }
 
     /**
@@ -313,7 +238,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     private function updateProductSku(string $sku, string $newSku): void
     {
         $product = $this->productRepository->get($sku);
-        $sourceData = $this->getSourceItemsDataBySku->execute($sku);
+        $sourceData = $this->_objectManager->get(GetSourceItemsDataBySku::class)->execute($sku);
         $postData = [
             'product' => [
                 'sku' => $newSku,
