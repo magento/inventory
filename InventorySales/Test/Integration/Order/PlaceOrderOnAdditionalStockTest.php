@@ -14,7 +14,6 @@ use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\ConsumerFactory;
-use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\InventoryCatalogAdminUi\Model\GetSourceItemsDataBySku;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\Quote\Api\CartManagementInterface;
@@ -33,6 +32,7 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
  *
  * @magentoAppArea adminhtml
  * @magentoAppIsolation enabled
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
 {
