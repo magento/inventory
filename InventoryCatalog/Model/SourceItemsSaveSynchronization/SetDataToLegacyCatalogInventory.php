@@ -13,11 +13,12 @@ use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\CatalogInventory\Model\Stock;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Event\ManagerInterface as EventManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
-use Magento\InventoryCatalogApi\Model\SourceItemsSaveSynchronizationInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
@@ -66,6 +67,11 @@ class SetDataToLegacyCatalogInventory
     private $areProductsSalable;
 
     /**
+     * @var EventManager
+     */
+    private $eventManager;
+
+    /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
@@ -74,6 +80,8 @@ class SetDataToLegacyCatalogInventory
      * @param Processor $indexerProcessor
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param EventManager|null $eventManager
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         SetDataToLegacyStockItem $setDataToLegacyStockItem,
@@ -83,7 +91,8 @@ class SetDataToLegacyCatalogInventory
         StockStateProviderInterface $stockStateProvider,
         Processor $indexerProcessor,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
-        AreProductsSalableInterface $areProductsSalable
+        AreProductsSalableInterface $areProductsSalable,
+        ?EventManager $eventManager = null
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
@@ -93,6 +102,7 @@ class SetDataToLegacyCatalogInventory
         $this->stockStateProvider = $stockStateProvider;
         $this->indexerProcessor = $indexerProcessor;
         $this->areProductsSalable = $areProductsSalable;
+        $this->eventManager = $eventManager ?? ObjectManager::getInstance()->get(EventManager::class);
     }
 
     /**
@@ -150,6 +160,7 @@ class SetDataToLegacyCatalogInventory
         }
 
         if ($productIds) {
+            $this->eventManager->dispatch('source_items_save_event_after', ['entity_ids' => $productIds]);
             $this->indexerProcessor->reindexList($productIds);
         }
     }
