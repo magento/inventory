@@ -29,6 +29,7 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -212,13 +213,15 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      */
     public function testReservationUpdatedAfterSkuChanged(): void
     {
+        $consumerName = 'inventory.reservations.update';
+        $this->objectManager->get(ClearQueueProcessor::class)->execute($consumerName);
         $oldSku = 'SKU-1';
         $newSku = 'new-sku';
 
         $this->orderIdToDelete = $this->placeOrder($oldSku, 4);
         $this->updateProductSku($oldSku, $newSku);
 
-        $this->processMessages();
+        $this->processMessages($consumerName);
         $this->assertEmpty($this->getReservationBySku($oldSku));
         $this->assertNotEmpty($this->getReservationBySku($newSku));
     }
@@ -373,11 +376,12 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     /**
      * Process messages
      *
+     * @param string $consumerName
      * @return void
      */
-    private function processMessages(): void
+    private function processMessages(string $consumerName): void
     {
-        $consumer = $this->consumerFactory->get('inventory.reservations.update');
+        $consumer = $this->consumerFactory->get($consumerName);
         $consumer->process(1);
     }
 

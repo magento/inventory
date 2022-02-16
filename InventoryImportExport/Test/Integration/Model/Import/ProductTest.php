@@ -18,7 +18,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\MessageEncoder;
-use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
@@ -30,7 +29,7 @@ use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -87,11 +86,6 @@ class ProductTest extends TestCase
     private $consumer;
 
     /**
-     * @var DeleteTopicRelatedMessages
-     */
-    private $deleteTopicMessages;
-
-    /**
      * @var GetBySku
      */
     private $getBySku;
@@ -112,7 +106,6 @@ class ProductTest extends TestCase
         $this->sourceItemRepository = $this->objectManager->get(SourceItemRepositoryInterface::class);
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
         $this->consumer = $this->objectManager->get(DeleteSourceItemsBySkus::class);
-        $this->deleteTopicMessages = $this->objectManager->get(DeleteTopicRelatedMessages::class);
         $this->getBySku = $this->objectManager->get(GetBySku::class);
         $this->consumerFactory = $this->objectManager->get(ConsumerFactory::class);
     }
@@ -197,7 +190,7 @@ class ProductTest extends TestCase
      */
     public function testSourceItemDeletedOnProductImport(): void
     {
-        $this->deleteTopicMessages->execute('inventory.source.items.cleanup');
+        $this->objectManager->get(ClearQueueProcessor::class)->execute('inventory.source.items.cleanup');
         $pathToFile = __DIR__ . '/_files/product_import_SKU-1.csv';
         $productSku = 'SKU-1';
         $productImporterModel = $this->getProductImporterModel($pathToFile, Import::BEHAVIOR_DELETE);

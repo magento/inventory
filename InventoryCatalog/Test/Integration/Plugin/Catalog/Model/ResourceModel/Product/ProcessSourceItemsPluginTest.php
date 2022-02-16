@@ -11,14 +11,13 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\ResourceModel\Product as ResourceProduct;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\MessageQueue\ConsumerFactory;
-use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\ProcessSourceItemsPlugin;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\Interception\PluginList;
-use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -90,7 +89,7 @@ class ProcessSourceItemsPluginTest extends TestCase
      */
     public function testUpdateProductSkuSynchronizeWithCatalog(): void
     {
-        $this->objectManager->get(DeleteTopicRelatedMessages::class)->execute('inventory.source.items.cleanup');
+        $this->objectManager->get(ClearQueueProcessor::class)->execute('inventory.source.items.cleanup');
         $this->currentSku = 'SKU-1';
         $this->newSku = 'SKU-1-new';
         $this->updateProductSku($this->currentSku, $this->newSku);

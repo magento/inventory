@@ -13,7 +13,7 @@ use Magento\Framework\MessageQueue\MessageEncoder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
@@ -41,9 +41,9 @@ class DeleteProductTest extends TestCase
     private $handler;
 
     /**
-     * @var DeleteTopicRelatedMessages
+     * @var ClearQueueProcessor
      */
-    private $deleteTopicMessages;
+    private $clearQueueProcessor;
 
     /**
      * @var GetBySku
@@ -73,7 +73,7 @@ class DeleteProductTest extends TestCase
         $this->objectManager = Bootstrap::getObjectManager();
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
         $this->handler = $this->objectManager->get(DeleteSourceItemsBySkus::class);
-        $this->deleteTopicMessages = $this->objectManager->get(DeleteTopicRelatedMessages::class);
+        $this->clearQueueProcessor = $this->objectManager->get(ClearQueueProcessor::class);
         $this->getBySku = $this->objectManager->get(GetBySku::class);
         $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
         $this->productRepository->cleanCache();
@@ -93,7 +93,7 @@ class DeleteProductTest extends TestCase
      */
     public function testSourceItemDeletedOnProductImport(): void
     {
-        $this->deleteTopicMessages->execute('inventory.source.items.cleanup');
+        $this->clearQueueProcessor->execute('inventory.source.items.cleanup');
         $productSku = 'SKU-1';
         $this->productRepository->deleteById($productSku);
         $this->processMessages();
