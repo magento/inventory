@@ -23,6 +23,7 @@ use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Information tables.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SetDataToLegacyCatalogInventory
