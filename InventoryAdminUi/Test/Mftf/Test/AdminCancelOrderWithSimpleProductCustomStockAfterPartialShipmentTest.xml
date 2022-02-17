@@ -30,7 +30,7 @@
                 <requiredEntity createDataKey="customSource"/>
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
-            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToCustomStock">
                 <argument name="stockName" value="$$customStock.stock[name]$$"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
