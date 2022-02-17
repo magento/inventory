@@ -24,6 +24,7 @@ use Magento\Quote\Api\Data\CartItemInterfaceFactory;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use Magento\TestFramework\Store\ExecuteInStoreContext;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
@@ -111,6 +112,8 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
      */
     public function testReservationUpdatedAfterSkuChanged(): void
     {
+        $consumerName = 'inventory.reservations.update';
+        $this->_objectManager->get(ClearQueueProcessor::class)->execute($consumerName);
         $oldSku = 'SKU-1';
         $newSku = 'new-sku';
 
@@ -124,7 +127,7 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
         $this->updateProductSku($oldSku, $newSku);
         $this->productSkuToDelete = $newSku;
 
-        $this->processMessages();
+        $this->processMessages($consumerName);
         $this->assertEmpty($this->getReservationBySku($oldSku));
         $this->assertNotEmpty($this->getReservationBySku($newSku));
     }
@@ -169,12 +172,13 @@ class PlaceOrderOnAdditionalStockTest extends AbstractBackendController
     /**
      * Process messages
      *
+     * @param string $consumerName
      * @return void
      */
-    private function processMessages(): void
+    private function processMessages(string $consumerName): void
     {
         $consumerFactory = $this->_objectManager->get(ConsumerFactory::class);
-        $consumer = $consumerFactory->get('inventory.reservations.update');
+        $consumer = $consumerFactory->get($consumerName);
         $consumer->process(1);
     }
 
