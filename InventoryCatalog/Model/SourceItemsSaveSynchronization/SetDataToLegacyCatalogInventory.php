@@ -140,6 +140,7 @@ class SetDataToLegacyCatalogInventory
      *
      * @param array $sourceItems
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(array $sourceItems): void
     {
@@ -194,7 +195,9 @@ class SetDataToLegacyCatalogInventory
 
             if (!$stockStatusChanged) {
                 $statusAfter = $this->getProductStockStatus($productId);
-                $stockStatusChanged = !($statusBefore['stock_status'] === $statusAfter['stock_status']);
+                if (isset($statusBefore['stock_status']) && isset($statusAfter['stock_status'])){
+                    $stockStatusChanged = !($statusBefore['stock_status'] === $statusAfter['stock_status']);
+                }
             }
             $productIds[] = $productId;
         }
@@ -202,7 +205,7 @@ class SetDataToLegacyCatalogInventory
         if ($productIds) {
             $this->indexerProcessor->reindexList($productIds);
 
-            if ($stockStatusChanged){
+            if ($stockStatusChanged) {
                 $this->cacheClean($productIds);
             }
         }
@@ -249,8 +252,8 @@ class SetDataToLegacyCatalogInventory
     /**
      * Clean products cache by product cache tag id
      *
-     * @param $productIds
-     *  @return void
+     * @param array $productIds
+     * @return void
      */
     private function cacheClean($productIds) : void
     {
@@ -264,7 +267,7 @@ class SetDataToLegacyCatalogInventory
     /**
      * Get product stock details
      *
-     * @param $productId
+     * @param int $productId
      * @return mixed
      */
     private function getProductStockStatus($productId)
