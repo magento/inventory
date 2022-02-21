@@ -99,4 +99,25 @@ class GetSalableQuantityDataBySkuTest extends TestCase
         $salableData = $this->getSalableQuantityDataBySku->execute($sku);
         $this->assertEquals($expectedSalableData, $salableData);
     }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products_with_special_char_sku.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     */
+    public function testExecuteWithSpecialCharSkuProduct(): void
+    {
+        $sku = htmlspecialchars('Test-Sku-&`!@$#%^*+="', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+        $expectedSalableData = [
+            [
+                'stock_name' => 'Default Stock',
+                'qty' => 10,
+                'manage_stock' => true,
+                'stock_id' => 1
+            ]
+        ];
+
+        $salableData = $this->getSalableQuantityDataBySku->execute($sku);
+        $this->assertEquals($expectedSalableData, $salableData);
+    }
 }
