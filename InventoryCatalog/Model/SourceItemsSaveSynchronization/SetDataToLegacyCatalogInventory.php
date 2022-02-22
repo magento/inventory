@@ -7,19 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization;
 
-use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\ResourceModel\Product\Relation;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
-use Magento\Framework\App\ResourceConnection;
+use Magento\CatalogInventory\Model\Indexer\Stock\CacheCleaner;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Event\ManagerInterface as EventManager;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Indexer\CacheContext;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
@@ -73,24 +69,9 @@ class SetDataToLegacyCatalogInventory
     private $areProductsSalable;
 
     /**
-     * @var EventManager
+     * @var CacheCleaner|mixed
      */
-    private $eventManager;
-
-    /**
-     * @var CacheContext
-     */
-    private $cacheContext;
-
-    /**
-     * @var Relation
-     */
-    private $productRelationResource;
-
-    /**
-     * @var ResourceConnection
-     */
-    private $resource;
+    private CacheCleaner $cacheCleaner;
 
     /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
@@ -101,10 +82,7 @@ class SetDataToLegacyCatalogInventory
      * @param Processor $indexerProcessor
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param AreProductsSalableInterface $areProductsSalable
-     * @param EventManager|null $eventManager
-     * @param CacheContext|null $cacheContext
-     * @param Relation|null $productRelationResource
-     * @param ResourceConnection|null $resource
+     * @param CacheCleaner|null $cacheCleaner
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -116,10 +94,7 @@ class SetDataToLegacyCatalogInventory
         Processor $indexerProcessor,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         AreProductsSalableInterface $areProductsSalable,
-        ?EventManager $eventManager = null,
-        ?CacheContext $cacheContext = null,
-        ?Relation $productRelationResource = null,
-        ?ResourceConnection $resource = null
+        ?CacheCleaner $cacheCleaner = null
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
@@ -129,10 +104,35 @@ class SetDataToLegacyCatalogInventory
         $this->stockStateProvider = $stockStateProvider;
         $this->indexerProcessor = $indexerProcessor;
         $this->areProductsSalable = $areProductsSalable;
-        $this->eventManager = $eventManager ?? ObjectManager::getInstance()->get(EventManager::class);
-        $this->cacheContext = $cacheContext ?? ObjectManager::getInstance()->get(CacheContext::class);
-        $this->productRelationResource = $productRelationResource ?? ObjectManager::getInstance()->get(Relation::class);
-        $this->resource = $resource ?? ObjectManager::getInstance()->get(ResourceConnection::class);
+        $this->cacheCleaner = $cacheCleaner ?? ObjectManager::getInstance()->get(CacheCleaner::class);
+    }
+
+    /**
+     * Callback for cache clean
+     *
+     * @param array $sourceItems
+     */
+    public function execute(array $sourceItems): void
+    {
+        $productIds = [];
+        foreach ($sourceItems as $sourceItem) {
+            $sku = $sourceItem->getSku();
+
+            try {
+                $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
+            } catch (NoSuchEntityException $e) {
+                // Skip synchronization of for not existed product
+                continue;
+            }
+        }
+        if (count($productIds) > 0) {
+            $this->cacheCleaner->clean(
+                $productIds,
+                function () use ($sourceItems) {
+                    $this->updateSourceItems($sourceItems);
+                }
+            );
+        }
     }
 
     /**
@@ -140,10 +140,8 @@ class SetDataToLegacyCatalogInventory
      *
      * @param array $sourceItems
      * @return void
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function execute(array $sourceItems): void
+    private function updateSourceItems(array $sourceItems): void
     {
         $skus = [];
         foreach ($sourceItems as $sourceItem) {
@@ -152,7 +150,6 @@ class SetDataToLegacyCatalogInventory
 
         $stockStatuses = $this->getStockStatuses($skus);
         $productIds = [];
-        $stockStatusChanged = false;
         foreach ($sourceItems as $sourceItem) {
             $sku = $sourceItem->getSku();
 
@@ -185,30 +182,16 @@ class SetDataToLegacyCatalogInventory
                 $isInStock
             );
 
-            if (!$stockStatusChanged) {
-                $statusBefore = $this->getProductStockStatus($productId);
-            }
             $this->setDataToLegacyStockStatus->execute(
                 (string)$sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
                 (int)$stockStatuses[(string)$sourceItem->getSku()]
             );
-
-            if (!$stockStatusChanged) {
-                $statusAfter = $this->getProductStockStatus($productId);
-                if (isset($statusBefore['stock_status']) && isset($statusAfter['stock_status'])) {
-                    $stockStatusChanged = !($statusBefore['stock_status'] === $statusAfter['stock_status']);
-                }
-            }
             $productIds[] = $productId;
         }
 
         if ($productIds) {
             $this->indexerProcessor->reindexList($productIds);
-
-            if ($stockStatusChanged) {
-                $this->cacheClean($productIds);
-            }
         }
     }
 
@@ -248,34 +231,5 @@ class SetDataToLegacyCatalogInventory
         $stockItems = $stockItemCollection->getItems();
         $stockItem = reset($stockItems);
         return $stockItem;
-    }
-
-    /**
-     * Clean products cache by product cache tag id
-     *
-     * @param array $productIds
-     * @return void
-     */
-    private function cacheClean($productIds) : void
-    {
-        $parentIds = array_merge(...$this->productRelationResource->getRelationsByChildren($productIds));
-        $productIds = $parentIds ? array_unique(array_merge($parentIds, $productIds)) : $productIds;
-
-        $this->cacheContext->registerEntities(Product::CACHE_TAG, array_unique($productIds));
-        $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $this->cacheContext]);
-    }
-
-    /**
-     * Get product stock details
-     *
-     * @param int $productId
-     * @return mixed
-     */
-    private function getProductStockStatus($productId)
-    {
-        $select = $this->resource->getConnection()->select();
-        $select->from($this->resource->getTableName('cataloginventory_stock_status'))
-            ->where('product_id = ?', $productId, \Zend_Db::INT_TYPE);
-        return $this->resource->getConnection()->fetchRow($select);
     }
 }
