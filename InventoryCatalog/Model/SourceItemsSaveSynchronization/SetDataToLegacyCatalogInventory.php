@@ -69,9 +69,9 @@ class SetDataToLegacyCatalogInventory
     private $areProductsSalable;
 
     /**
-     * @var CacheCleaner|mixed
+     * @var CacheCleaner
      */
-    private CacheCleaner $cacheCleaner;
+    private $cacheCleaner;
 
     /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
@@ -108,7 +108,7 @@ class SetDataToLegacyCatalogInventory
     }
 
     /**
-     * Callback for cache clean
+     * Updates Stock information in legacy inventory.
      *
      * @param array $sourceItems
      */

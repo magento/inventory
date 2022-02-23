@@ -77,17 +77,10 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
     /**
      * @var CacheCleaner|MockObject
      */
-    private CacheCleaner $cacheCleaner;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private $cacheCleaner;
 
     protected function setUp(): void
     {
-        $this->objectManager = new ObjectManager($this);
-
         $this->setDataToLegacyStockItem = $this->getMockBuilder(SetDataToLegacyStockItem::class)
             ->disableOriginalConstructor()
             ->setMethods(['execute'])
@@ -134,7 +127,7 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
             ->setMethods(['clean'])
             ->getMock();
 
-        $this->model = $this->objectManager->getObject(
+        $this->model = (new ObjectManager($this))->getObject(
             SetDataToLegacyCatalogInventory::class,
             [
                 'setDataToLegacyStockItem' => $this->setDataToLegacyStockItem,
@@ -154,14 +147,14 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
      * @dataProvider getDataProvider
      * @return void
      */
-    public function testExecute($productId, $sku, $quantity, $stock_status): void
+    public function testExecute($productId, $sku, $quantity, $stockStatus): void
     {
         $skus = [$sku];
 
         $this->sourceItem->setSku($sku);
         $this->sourceItem->setSourceCode('default');
         $this->sourceItem->setQuantity($quantity);
-        $this->sourceItem->setStatus($stock_status);
+        $this->sourceItem->setStatus($stockStatus);
 
         $this->sourceItem->expects($this->atLeastOnce())
             ->method('getSku')
@@ -175,8 +168,8 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
         $this->areProductsSalable->expects($this->atLeastOnce())
             ->method('execute')
             ->with($skus)
-            ->willReturn([$sku => (bool)$stock_status]);
-        $this->assertEquals([$sku => $stock_status], $this->areProductsSalable->execute($skus, 1));
+            ->willReturn([$sku => (bool)$stockStatus]);
+        $this->assertEquals([$sku => $stockStatus], $this->areProductsSalable->execute($skus, 1));
 
         $callback = function () {
         };
