@@ -183,7 +183,7 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
         $this->cacheCleaner->expects($this->atLeastOnce())
             ->method('clean')
             ->with([$productId], $callback)
-            ->willReturnCallback( function () {
+            ->willReturnCallback(function () {
                 $this->sourceItem;
             });
 
