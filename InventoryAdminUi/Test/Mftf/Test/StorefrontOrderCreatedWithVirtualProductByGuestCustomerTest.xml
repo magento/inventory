@@ -74,6 +74,7 @@
             <argument name="product" value="VirtualMsiProduct"/>
         </actionGroup>
 
+        <waitForElementClickable selector="{{StorefrontProductActionSection.addToCart}}" stepKey="waitForAddToCartButton"/>
         <click selector="{{StorefrontProductActionSection.addToCart}}" stepKey="clickOnAddToCart1"/>
         <waitForPageLoad stepKey="waitForPageLoad9"/>
         <waitForElementVisible selector="{{StorefrontMessagesSection.success}}" stepKey="waitForSuccessMessage"/>
