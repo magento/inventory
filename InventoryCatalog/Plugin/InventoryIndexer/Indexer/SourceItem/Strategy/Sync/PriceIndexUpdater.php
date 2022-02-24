@@ -53,7 +53,10 @@ class PriceIndexUpdater
     ): void {
         $productIds = $this->productIdsBySourceItemIds->execute($sourceItemIds);
         if (!empty($productIds)) {
-            $this->priceIndexProcessor->reindexList($productIds);
+            // force price reindex regardless of indexer mode.
+            // price indexer cannot subscribe to source item changes (in scheduled mode)
+            // because inventory_source_item does not have product id
+            $this->priceIndexProcessor->reindexList($productIds, true);
         }
     }
 }
