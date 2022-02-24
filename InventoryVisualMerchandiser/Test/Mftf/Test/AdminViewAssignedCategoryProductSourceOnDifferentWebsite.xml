@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminViewAssignedCategoryProductSourceOnDifferentWebsite">
+        <annotations>
+            <stories value="Admin view assigned category product source on different website"/>
+            <title value="Admin view assigned category product source on different website"/>
+            <description value="Admin view assigned category product source on different website"/>
+            <testCaseId value="ACP2E-217"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+        </annotations>
+        <before>
+            <!-- Login to backend-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!--Create website-->
+            <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+                <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+                <argument name="websiteCode" value="{{customWebsite.code}}"/>
+            </actionGroup>
+            <!--Create store and assign to website-->
+            <actionGroup ref="AdminCreateNewStoreGroupActionGroup" stepKey="createStore">
+                <argument name="website" value="{{customWebsite.name}}"/>
+                <argument name="storeGroupName" value="{{customStoreGroup.name}}"/>
+                <argument name="storeGroupCode" value="{{customStoreGroup.code}}"/>
+            </actionGroup>
+            <!--Create store view and assign to store-->
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createStoreView">
+                <argument name="StoreGroup" value="customStoreGroup"/>
+                <argument name="customStore" value="customStore"/>
+            </actionGroup>
+            <!--Create source -->
+            <createData entity="AustinStorePickupEnabledSource" stepKey="austinSource"/>
+            <!--Create stock -->
+            <createData entity="BasicMsiStock1" stepKey="stock"/>
+            <!--Link stock to source-->
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink2">
+                <requiredEntity createDataKey="stock"/>
+                <requiredEntity createDataKey="austinSource"/>
+            </createData>
+            <!--Assign stock to website-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignStockToAdditionalWebsite">
+                <argument name="stockName" value="$stock.stock[name]$"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Create category-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <!--Create product and assign to category-->
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+
+            <!--Open product edit page-->
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
+            </actionGroup>
+            <!--Assign product to website-->
+            <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToSecondWebsite">
+                <argument name="website" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Save product-->
+            <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        </before>
+        <after>
+            <!--Delete created website.-->
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <!--Delete category-->
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Delete product-->
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <!--Delete stock.-->
+            <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <!--Disable all sources.-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <!--Logout from backend-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
+            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="filter_value" value="$$product.product[sku]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToProduct">
+            <argument name="sourceCode" value="$$austinSource.source[source_code]$$"/>
+            <argument name="sourceQty" value="50"/>
+        </actionGroup>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        <waitForPageLoad stepKey="waitForProductSave"/>
+        <actionGroup ref="AdminOpenCategoryPageActionGroup" stepKey="openCategoryPage"/>
+        <actionGroup ref="AdminCategoriesOpenCategoryActionGroup" stepKey="openCategory">
+            <argument name="category" value="$$category$$"/>
+        </actionGroup>
+        <scrollTo selector="{{AdminCategoryBasicFieldSection.productsInCategory}}" x="0" y="-80" stepKey="scrollToProductInCategory"/>
+        <click selector="{{AdminCategoryBasicFieldSection.productsInCategory}}" stepKey="clickOnProductInCategory"/>
+        <waitForPageLoad stepKey="waitForProductsToLoad"/>
+        <grabTextFrom selector="{{AdminCategoryProductsGridStockSection.rowStock('1')}}" stepKey="grabProductStockFromGrid"/>
+        <assertEquals stepKey="assertProductPriceInGrid" message="Sock quantity in grid should be equal 1000" after="grabProductStockFromGrid">
+            <expectedResult type="string">1000</expectedResult>
+            <actualResult type="variable">grabProductStockFromGrid</actualResult>
+        </assertEquals>
+        <scrollToTopOfPage stepKey="scrollToTopOfPage1"/>
+        <actionGroup ref="AdminSwitchStoreViewActionGroup" stepKey="switchToDefaultStoreView">
+            <argument name="storeView" value="customStore.name"/>
+        </actionGroup>
+        <scrollTo selector="{{AdminCategoryBasicFieldSection.productsInCategory}}" x="0" y="-80" stepKey="scrollToProductInCategory1"/>
+        <click selector="{{AdminCategoryBasicFieldSection.productsInCategory}}" stepKey="clickOnProductInCategory1"/>
+        <waitForPageLoad stepKey="waitForProductsToLoad1"/>
+        <grabTextFrom selector="{{AdminCategoryProductsGridStockSection.rowStock('1')}}" stepKey="grabProductStockFromGrid1"/>
+        <assertEquals stepKey="assertProductPriceInGrid1" message="Sock quantity in grid should be equal 50" after="grabProductStockFromGrid1">
+            <expectedResult type="string">50</expectedResult>
+            <actualResult type="variable">grabProductStockFromGrid1</actualResult>
+        </assertEquals>
+    </test>
+</tests>
