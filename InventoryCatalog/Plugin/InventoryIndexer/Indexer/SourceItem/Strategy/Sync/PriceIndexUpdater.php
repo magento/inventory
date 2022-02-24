@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
+use Magento\InventoryIndexer\Model\ResourceModel\GetSourceCodesBySourceItemIds;
 
 /**
  * Reindex price after source item has reindexed.
@@ -33,18 +35,34 @@ class PriceIndexUpdater
     private $getProductsIdsToProcess;
 
     /**
+     * @var GetSourceCodesBySourceItemIds
+     */
+    private $getSourceCodesBySourceItemIds;
+
+    /**
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
+    /**
      * @param Processor $priceIndexProcessor
      * @param GetSalableStatuses $getSalableStatuses
      * @param GetProductsIdsToProcess $getProductsIdsToProcess
+     * @param GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         Processor $priceIndexProcessor,
         GetSalableStatuses $getSalableStatuses,
-        GetProductsIdsToProcess $getProductsIdsToProcess
+        GetProductsIdsToProcess $getProductsIdsToProcess,
+        GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds,
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->priceIndexProcessor = $priceIndexProcessor;
         $this->getSalableStatuses = $getSalableStatuses;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
+        $this->getSourceCodesBySourceItemIds = $getSourceCodesBySourceItemIds;
+        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -88,15 +106,27 @@ class PriceIndexUpdater
      */
     private function reindex(array $sourceItemIds, callable $callback): void
     {
-        $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
-        $callback($sourceItemIds);
-        $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
-        $productsIdsToProcess = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
-        if (!empty($productsIdsToProcess)) {
-            // force price reindex regardless of indexer mode.
-            // price indexer cannot subscribe to source item changes (in scheduled mode)
-            // because inventory_source_item does not have product id
-            $this->priceIndexProcessor->reindexList($productsIdsToProcess, true);
+        $customSourceItemIds = [];
+        $defaultSourceCode = $this->defaultSourceProvider->getCode();
+        foreach ($this->getSourceCodesBySourceItemIds->execute($sourceItemIds) as $sourceItemId => $sourceCode) {
+            if ($sourceCode !== $defaultSourceCode) {
+                $customSourceItemIds[] = $sourceItemId;
+            }
+        }
+        // in the case the source item is default source, the price indexer is executed according to indexer config
+        if ($customSourceItemIds) {
+            $beforeSalableList = $this->getSalableStatuses->execute($customSourceItemIds);
+            $callback($sourceItemIds);
+            $afterSalableList = $this->getSalableStatuses->execute($customSourceItemIds);
+            $productsIdsToProcess = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
+            if (!empty($productsIdsToProcess)) {
+                // force price reindex regardless of indexer mode.
+                // price indexer cannot subscribe to source item changes (in scheduled mode)
+                // because inventory_source_item does not have product id
+                $this->priceIndexProcessor->reindexList($productsIdsToProcess, true);
+            }
+        } else {
+            $callback($sourceItemIds);
         }
     }
 }
