@@ -9,7 +9,8 @@ namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\St
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
-use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
+use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 
 /**
  * Reindex price after source item has reindexed.
@@ -22,41 +23,80 @@ class PriceIndexUpdater
     private $priceIndexProcessor;
 
     /**
-     * @var GetProductIdsBySourceItemIds
+     * @var GetSalableStatuses
      */
-    private $productIdsBySourceItemIds;
+    private $getSalableStatuses;
+
+    /**
+     * @var GetProductsIdsToProcess
+     */
+    private $getProductsIdsToProcess;
 
     /**
      * @param Processor $priceIndexProcessor
-     * @param GetProductIdsBySourceItemIds $productIdsBySourceItemIds
+     * @param GetSalableStatuses $getSalableStatuses
+     * @param GetProductsIdsToProcess $getProductsIdsToProcess
      */
     public function __construct(
         Processor $priceIndexProcessor,
-        GetProductIdsBySourceItemIds $productIdsBySourceItemIds
+        GetSalableStatuses $getSalableStatuses,
+        GetProductsIdsToProcess $getProductsIdsToProcess
     ) {
         $this->priceIndexProcessor = $priceIndexProcessor;
-        $this->productIdsBySourceItemIds = $productIdsBySourceItemIds;
+        $this->getSalableStatuses = $getSalableStatuses;
+        $this->getProductsIdsToProcess = $getProductsIdsToProcess;
     }
 
     /**
      * Reindex product prices.
      *
      * @param Sync $subject
-     * @param void $result
+     * @param callable $proceed
      * @param array $sourceItemIds
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(
+    public function aroundExecuteList(
         Sync $subject,
-        $result,
+        callable $proceed,
         array $sourceItemIds
     ): void {
-        $productIds = $this->productIdsBySourceItemIds->execute($sourceItemIds);
-        if (!empty($productIds)) {
+        $this->reindex($sourceItemIds, $proceed);
+    }
+
+    /**
+     * Reindex product price
+     *
+     * @param Sync $subject
+     * @param callable $proceed
+     * @param int $sourceItemId
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function aroundExecuteRow(
+        Sync $subject,
+        callable $proceed,
+        int $sourceItemId
+    ) {
+        $this->reindex([$sourceItemId], $proceed);
+    }
+
+    /**
+     * Reindex prices after executing source item indexer
+     *
+     * @param array $sourceItemIds
+     * @param callable $callback
+     * @return void
+     */
+    private function reindex(array $sourceItemIds, callable $callback): void
+    {
+        $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $callback($sourceItemIds);
+        $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $productsIdsToProcess = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
+        if (!empty($productsIdsToProcess)) {
             // force price reindex regardless of indexer mode.
             // price indexer cannot subscribe to source item changes (in scheduled mode)
             // because inventory_source_item does not have product id
-            $this->priceIndexProcessor->reindexList($productIds, true);
+            $this->priceIndexProcessor->reindexList($productsIdsToProcess, true);
         }
     }
 }

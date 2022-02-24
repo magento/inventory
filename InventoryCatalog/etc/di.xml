@@ -27,7 +27,7 @@
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SynchronizeLegacyStockAfterDecrementStockPlugin" sortOrder="50"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
-        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater"/>
+        <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater" sortOrder="20"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\Stock\Strategy\Sync">
         <plugin name="update_product_prices_plugin" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\Stock\Strategy\Sync\PriceIndexUpdatePlugin"/>
