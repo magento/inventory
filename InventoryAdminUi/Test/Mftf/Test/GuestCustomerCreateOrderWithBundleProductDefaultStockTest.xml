@@ -68,6 +68,7 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteBundleProduct">
                 <argument name="product" value="BundleProduct"/>
             </actionGroup>
+            <actionGroup ref="AdminClearFiltersActionGroup" stepKey="clearFilters"/>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>

@@ -80,6 +80,7 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteCreatedProduct">
                 <argument name="product" value="VirtualMsiProduct"/>
             </actionGroup>
+            <actionGroup ref="AdminClearFiltersActionGroup" stepKey="clearFilters"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
 
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
