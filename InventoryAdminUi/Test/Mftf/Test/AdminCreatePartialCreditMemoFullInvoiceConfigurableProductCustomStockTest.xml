@@ -117,8 +117,9 @@
         <waitForPageLoad stepKey="updateQuantityLoadingMask"/>
         <click selector="{{AdminCreditMemoTotalSection.submitRefundOffline}}" stepKey="clickSubmit"/>
         <!--Verify product quantity.-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridAfterCreditMemo"/>
-        <waitForPageLoad time="30" stepKey="waitForGridLoadAfterCreditMemo"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductGridAfterCreditMemo"/>
+        <comment userInput="BIC workaround" stepKey="waitForGridLoadAfterCreditMemo"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductForQuantityCheckAfterCreditMemo">
             <argument name="selector" value="AdminProductGridFilterSection.nameFilter"/>
             <argument name="value" value="{{colorProductAttribute1.name}}"/>

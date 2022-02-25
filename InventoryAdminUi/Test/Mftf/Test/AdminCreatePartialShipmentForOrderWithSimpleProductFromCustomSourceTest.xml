@@ -130,8 +130,9 @@
         <seeElement selector="{{AdminOrderShipmentsTabSection.gridRow('1')}}" stepKey="seeShipmentInGrid"/>
 
         <!-- Verify Source Quantities and Salable Quantity are Correct-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndexToFinalCheck"/>
-        <waitForPageLoad time="30" stepKey="waitFoProductIndexPageLoad"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexToFinalCheck"/>
+        <comment userInput="BIC workaround" stepKey="waitFoProductIndexPageLoad"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
 
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsToFinalCheck">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>

@@ -110,9 +110,12 @@
         <see selector="{{AdminGridRow.rowOne}}" userInput="{{MsiCustomer1.lastname}}" stepKey="seeLastName"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="Pending" stepKey="seePending"/>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInput">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$downloadableProduct.product[sku]$$"/>
+
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexPage"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="goToProductGridFilterResultsByInput">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$downloadableProduct.product[sku]$$"/>
         </actionGroup>
 
         <see selector="{{AdminGridRow.rowOne}}" userInput="$100.00" stepKey="seeProductPriceInGrid"/>
