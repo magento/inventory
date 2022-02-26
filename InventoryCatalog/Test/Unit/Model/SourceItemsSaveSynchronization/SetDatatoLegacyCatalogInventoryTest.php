@@ -87,56 +87,33 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->setDataToLegacyStockItem = $this
-            ->getMockBuilder(SetDataToLegacyStockItem::class)
-            ->onlyMethods(['execute'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->setDataToLegacyStockItem = $this->getMockBuilder(SetDataToLegacyStockItem::class)
+            ->onlyMethods(['execute'])->disableOriginalConstructor()->getMock();
 
-        $this->setDataToLegacyStockStatus = $this
-            ->getMockBuilder(SetDataToLegacyStockStatus::class)
-            ->onlyMethods(['execute'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->setDataToLegacyStockStatus = $this->getMockBuilder(SetDataToLegacyStockStatus::class)
+            ->onlyMethods(['execute'])->disableOriginalConstructor()->getMock();
 
         $this->legacyStockItemCriteriaFactory = $this
             ->getMockBuilder(StockItemCriteriaInterfaceFactory::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['create'])->getMock();
+            ->disableOriginalConstructor()->onlyMethods(['create'])->getMock();
 
-        $this->legacyStockItemRepository = $this
-            ->getMockBuilder(StockItemRepositoryInterface::class)
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+        $this->legacyStockItemRepository = $this->getMockBuilder(StockItemRepositoryInterface::class)
+            ->disableOriginalConstructor()->getMockForAbstractClass();
 
-        $this->getProductIdsBySkus = $this
-            ->getMockBuilder(GetProductIdsBySkusInterface::class)
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+        $this->getProductIdsBySkus = $this->getMockBuilder(GetProductIdsBySkusInterface::class)
+            ->disableOriginalConstructor()->getMockForAbstractClass();
 
-        $this->stockStateProvider = $this
-            ->getMockBuilder(StockStateProviderInterface::class)
-            ->onlyMethods(['verifyStock'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+        $this->stockStateProvider = $this->getMockBuilder(StockStateProviderInterface::class)
+            ->onlyMethods(['verifyStock'])->disableOriginalConstructor()->getMockForAbstractClass();
 
-        $this->indexerProcessor = $this
-            ->getMockBuilder(Processor::class)
-            ->onlyMethods(['reindexList'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->indexerProcessor = $this->getMockBuilder(Processor::class)
+            ->onlyMethods(['reindexList'])->disableOriginalConstructor()->getMock();
 
-        $this->areProductsSalable = $this
-            ->getMockBuilder(AreProductsSalableInterface::class)
-            ->onlyMethods(['execute'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+        $this->areProductsSalable = $this->getMockBuilder(AreProductsSalableInterface::class)
+            ->onlyMethods(['execute'])->disableOriginalConstructor()->getMockForAbstractClass();
 
-        $this->cacheCleaner = $this
-            ->getMockBuilder(CacheCleaner::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['clean'])
-            ->getMock();
+        $this->cacheCleaner = $this->getMockBuilder(CacheCleaner::class)
+            ->disableOriginalConstructor()->setMethods(['clean'])->getMock();
 
         $this->model = (new ObjectManager($this))->getObject(
             SetDataToLegacyCatalogInventory::class,
@@ -162,58 +139,44 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
     {
         $skus = [$sku];
 
-        $sourceItemMock = $this
-            ->getMockBuilder(SourceItem::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getSku', 'getSourceCode', 'getQuantity', 'getStatus', 'getData'])
-            ->getMock();
+        $sourceItemMock = $this->getMockBuilder(SourceItem::class)->disableOriginalConstructor()
+            ->onlyMethods(['getSku', 'getSourceCode', 'getQuantity', 'getStatus', 'getData'])->getMock();
 
         $sourceItemMock->expects($this->atLeastOnce())->method('getSku')->willReturn($sku);
         $sourceItemMock->expects($this->atLeastOnce())->method('getQuantity')->willReturn((float)$quantity);
         $sourceItemMock->expects($this->atLeastOnce())->method('getStatus')->willReturn($stockStatus);
 
         $isProductSalableMock = $this->getMockBuilder(IsProductSalableResultInterface::class)
-            ->onlyMethods(['getSku', 'isSalable'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->onlyMethods(['getSku', 'isSalable'])->disableOriginalConstructor()->getMockForAbstractClass();
 
         $isProductSalableMock->expects($this->atLeastOnce())->method('getSku')->willReturn($sku);
-        $isProductSalableMock->expects($this->atLeastOnce())->method('isSalable')->willReturn((bool)$stockStatus);
+        $isProductSalableMock->expects($this->atLeastOnce())->method('isSalable')
+            ->willReturn((bool)$stockStatus);
 
-        $this->areProductsSalable->expects($this->atLeastOnce())
-            ->method('execute')
-            ->with($skus, Stock::DEFAULT_STOCK_ID)
-            ->willReturn([$isProductSalableMock]);
+        $this->areProductsSalable->expects($this->atLeastOnce())->method('execute')
+            ->with($skus, Stock::DEFAULT_STOCK_ID)->willReturn([$isProductSalableMock]);
 
-        $this->getProductIdsBySkus->expects($this->atLeastOnce())
-            ->method('execute')
-            ->with($skus)
+        $this->getProductIdsBySkus->expects($this->atLeastOnce())->method('execute')->with($skus)
             ->willReturn([$sku => $productId]);
 
         $searchCriteriaMock = $this->getMockBuilder(StockItemCriteriaInterface::class)
-            ->onlyMethods(['addFilter'])
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->onlyMethods(['addFilter'])->disableOriginalConstructor()->getMockForAbstractClass();
 
-        $searchCriteriaMock->expects($this->exactly(2))
-            ->method('addFilter')
+        $searchCriteriaMock->expects($this->exactly(2))->method('addFilter')
             ->withConsecutive(
                 [StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId],
                 [StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID]
             );
 
-        $this->legacyStockItemCriteriaFactory->expects($this->once())
-            ->method('create')
+        $this->legacyStockItemCriteriaFactory->expects($this->once())->method('create')
             ->willReturn($searchCriteriaMock);
 
         $stockItemCollectionMock = $this->getMockBuilder(StockItemCollectionInterface::class)
-            ->onlyMethods(['getTotalCount', 'getItems'])
-            ->disableOriginalConstructor()
+            ->onlyMethods(['getTotalCount', 'getItems'])->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
         $stockItemMock = $this->getMockBuilder(StockItemInterface::class)
-            ->onlyMethods(['getManageStock', 'setIsInStock', 'setQty'])
-            ->disableOriginalConstructor()
+            ->onlyMethods(['getManageStock', 'setIsInStock', 'setQty'])->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
         $stockItemMock->expects($this->once())->method('getManageStock')->willReturn(true);
@@ -223,34 +186,24 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
         $stockItemCollectionMock->expects($this->once())->method('getTotalCount')->willReturn(1);
         $stockItemCollectionMock->expects($this->once())->method('getItems')->willReturn([$stockItemMock]);
 
-        $this->legacyStockItemRepository->expects($this->once())
-            ->method('getList')
-            ->with($searchCriteriaMock)
+        $this->legacyStockItemRepository->expects($this->once())->method('getList')->with($searchCriteriaMock)
             ->willReturn($stockItemCollectionMock);
 
-        $this->stockStateProvider->expects($this->once())
-            ->method('verifyStock')
-            ->with($stockItemMock)
+        $this->stockStateProvider->expects($this->once())->method('verifyStock')->with($stockItemMock)
             ->willReturn(true);
 
-        $this->setDataToLegacyStockItem->expects($this->once())
-            ->method('execute')
+        $this->setDataToLegacyStockItem->expects($this->once())->method('execute')
             ->with($sku, $quantity, $stockStatus);
 
-        $this->setDataToLegacyStockStatus->expects($this->once())
-            ->method('execute')
+        $this->setDataToLegacyStockStatus->expects($this->once())->method('execute')
             ->with($sku, $quantity, $stockStatus);
 
-        $this->indexerProcessor->expects($this->once())
-            ->method('reindexList')
-            ->with([$productId]);
+        $this->indexerProcessor->expects($this->once())->method('reindexList')->with([$productId]);
 
         $this->cacheCleaner->expects($this->once())
             ->method('clean')
-            ->with(
-                [$productId],
-                $this->callback(
-                    function (callable $callback) {
+            ->with([$productId],
+                $this->callback(function (callable $callback) {
                         $callback();
                         return true;
                     }
