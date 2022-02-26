@@ -204,11 +204,13 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
             ->method('clean')
             ->with(
                 [$productId],
-                $this->callback(function (callable $callback) {
+                $this->callback(
+                    function (callable $callback) {
                         $callback();
                         return true;
-                }
-            ));
+                    }
+                )
+            );
         $this->model->execute([$sourceItemMock]);
     }
 
