@@ -80,6 +80,7 @@
             <magentoCLI
                 command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}"
                 stepKey="addStoreCodeToUrlDisable" />
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Assign product to custom website -->
