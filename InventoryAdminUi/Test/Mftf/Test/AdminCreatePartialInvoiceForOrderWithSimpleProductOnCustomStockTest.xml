@@ -84,6 +84,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Create Order with 3 items of Simple product from Admin-->

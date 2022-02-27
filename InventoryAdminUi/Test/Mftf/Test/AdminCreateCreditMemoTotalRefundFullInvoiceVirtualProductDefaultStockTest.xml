@@ -43,6 +43,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <comment userInput="BIC workaround" stepKey="deleteCustomer"/>
             <comment userInput="BIC workaround" stepKey="deleteProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Set product default source quantity.-->

@@ -52,6 +52,7 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">

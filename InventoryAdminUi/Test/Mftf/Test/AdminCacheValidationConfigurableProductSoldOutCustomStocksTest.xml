@@ -49,6 +49,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurable"/>
             <deleteData createDataKey="additionalStockMainWebsite" stepKey="deleteMainWebsiteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign category and create configurable variations.-->

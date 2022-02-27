@@ -72,6 +72,7 @@
                 <argument name="sourceCode" value="$source2.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Quick order second simple product.-->

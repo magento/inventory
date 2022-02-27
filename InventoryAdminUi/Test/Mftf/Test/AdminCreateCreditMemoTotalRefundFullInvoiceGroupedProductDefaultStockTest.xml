@@ -40,6 +40,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Set default source product quantity.-->

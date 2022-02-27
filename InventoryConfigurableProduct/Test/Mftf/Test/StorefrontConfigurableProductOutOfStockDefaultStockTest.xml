@@ -31,9 +31,8 @@
             <createData entity="productAttributeOption2" stepKey="createConfigProductAttributeOptionTwo">
                 <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
             </createData>
-            <!-- Reindex and flush cache -->
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <comment userInput="BIC workaround" stepKey="performReindex"/>
+            <comment userInput="BIC workaround" stepKey="cleanCache"/>
             <!--Add store code to url.-->
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
             <!-- Login to backend-->
@@ -42,6 +41,12 @@
             <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
             <!--Disable all custom sources-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache1">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </before>
         <after>
             <!--Disable 'add store code to url'-->
@@ -60,7 +65,12 @@
             <!-- Delete category-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </after>
         <!-- Go to product grid  -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>

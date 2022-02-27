@@ -99,6 +99,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Assign sources to products.-->
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>

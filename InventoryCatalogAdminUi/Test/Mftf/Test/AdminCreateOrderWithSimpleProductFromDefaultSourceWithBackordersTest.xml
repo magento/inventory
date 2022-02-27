@@ -76,6 +76,7 @@
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- add Product to Cart-->

@@ -99,6 +99,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Create Order with Virtual product from Admin-->

@@ -58,6 +58,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign created product 1 to sources 1 -->

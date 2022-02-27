@@ -64,6 +64,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Assign category to created virtual product." stepKey="assignCategoryToProductComment"/>

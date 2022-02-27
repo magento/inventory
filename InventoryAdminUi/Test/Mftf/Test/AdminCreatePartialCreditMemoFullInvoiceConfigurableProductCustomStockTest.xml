@@ -74,6 +74,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Login as Customer and add Product to Cart-->

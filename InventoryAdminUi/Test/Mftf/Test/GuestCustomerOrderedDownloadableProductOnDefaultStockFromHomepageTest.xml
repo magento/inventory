@@ -50,6 +50,7 @@
             <magentoCLI stepKey="disableShareableDownloadableItems" command="config:set catalog/downloadable/shareable 0" />
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Add product to cart.-->

@@ -40,6 +40,7 @@
             <!--Clean up created data.-->
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Set product quantity.-->

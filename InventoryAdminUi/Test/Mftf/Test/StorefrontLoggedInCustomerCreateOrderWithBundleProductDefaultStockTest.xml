@@ -73,6 +73,7 @@
             <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Create bundle product." stepKey="createBundleProductComment"/>

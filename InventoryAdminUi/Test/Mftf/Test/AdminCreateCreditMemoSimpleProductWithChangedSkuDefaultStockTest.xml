@@ -51,6 +51,7 @@
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex1"/>
         </after>
 
         <!--Add product to cart.-->

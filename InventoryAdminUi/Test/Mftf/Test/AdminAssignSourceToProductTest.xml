@@ -36,6 +36,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign source to product and set source quantity.-->

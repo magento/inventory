@@ -61,6 +61,7 @@
             <deleteData stepKey="deleteCategory" createDataKey="simpleCategory"/>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify product is visible on storefront page.-->

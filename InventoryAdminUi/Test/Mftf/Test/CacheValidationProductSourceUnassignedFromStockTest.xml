@@ -70,6 +70,7 @@
             <deleteData stepKey="deleteCategory" createDataKey="simpleCategory"/>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Verify product is visible in storefront page.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$simpleCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryToVerifyProductIsVisible"/>

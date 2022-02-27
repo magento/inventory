@@ -48,6 +48,7 @@
             <!-- Delete Created Data -->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Create configurable product.-->
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToAdminProductGrid"/>

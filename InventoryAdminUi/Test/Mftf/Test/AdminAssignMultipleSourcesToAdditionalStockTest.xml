@@ -46,6 +46,7 @@
             <!--Delete created additional stock.-->
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign another one source to stock.-->

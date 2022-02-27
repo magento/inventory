@@ -62,6 +62,7 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="createStock1" stepKey="deleteCustomStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>

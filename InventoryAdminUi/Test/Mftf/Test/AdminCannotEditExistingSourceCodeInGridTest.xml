@@ -30,6 +30,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify Test Source code is not editable in Source Grid.-->

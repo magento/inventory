@@ -53,6 +53,7 @@
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Create order -->

@@ -58,6 +58,7 @@
                 <argument name="sourceCode" value="$$additionalSource2.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign simple product to additional sources.-->

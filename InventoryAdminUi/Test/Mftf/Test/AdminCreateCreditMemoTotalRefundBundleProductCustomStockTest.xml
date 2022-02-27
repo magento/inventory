@@ -48,6 +48,7 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign virtual product to additional source.-->

@@ -61,6 +61,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct2"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid2"/>

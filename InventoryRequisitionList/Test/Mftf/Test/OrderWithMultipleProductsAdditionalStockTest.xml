@@ -90,6 +90,7 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" after="logout"/>
             <deleteData  createDataKey="product1" stepKey="deleteProduct1" after="deleteStock"/>
             <deleteData  createDataKey="product2" stepKey="deleteProduct2" after="deleteProduct1"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Add first product to requisition list.-->

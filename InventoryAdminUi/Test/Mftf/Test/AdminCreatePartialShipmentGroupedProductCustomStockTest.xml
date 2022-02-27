@@ -51,6 +51,7 @@
             <deleteData createDataKey="groupedProduct" stepKey="deleteGroupedProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign simple product to additional source.-->

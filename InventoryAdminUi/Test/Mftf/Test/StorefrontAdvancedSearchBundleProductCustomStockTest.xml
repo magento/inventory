@@ -85,6 +85,7 @@
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
             <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="resetSourceGridFilter"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Advanced search product by name.-->

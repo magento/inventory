@@ -56,6 +56,7 @@
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
             <magentoCLI command="config:set {{TurnOffOutOfStockConfig.path}} {{TurnOnOutOfStockConfig.value}}"
                         stepKey="displayOutOfStockNo"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">

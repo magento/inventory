@@ -38,6 +38,7 @@
                 <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Assign created product to additional sources-->
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct1.id$$)}}" stepKey="openProductEditPageToAssignSource"/>

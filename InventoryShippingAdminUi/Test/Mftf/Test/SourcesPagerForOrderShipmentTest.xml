@@ -219,6 +219,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Login Customer.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">

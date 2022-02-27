@@ -44,6 +44,7 @@
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">

@@ -40,6 +40,7 @@
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Login To storefront as Customer-->

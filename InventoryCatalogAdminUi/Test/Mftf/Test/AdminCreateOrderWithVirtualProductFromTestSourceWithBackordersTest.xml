@@ -99,6 +99,7 @@
 
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- add Product to Cart-->

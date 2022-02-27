@@ -85,6 +85,7 @@
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Customer login to storefront." stepKey="customerLoginToStorefrontComment"/>

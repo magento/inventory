@@ -71,6 +71,7 @@
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{StorefrontProductPage.url($$downloadableProduct.custom_attributes[url_key]$$)}}" stepKey="openProductPage"/>
