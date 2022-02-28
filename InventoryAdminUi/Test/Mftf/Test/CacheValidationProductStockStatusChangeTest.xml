@@ -28,10 +28,12 @@
                 <requiredEntity createDataKey="additionalStock"/>
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="magentoCLI"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="magentoCLI"/>
             <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlush"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <magentoCron groups="index" stepKey="performReindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
             <!--Create product and category.-->
             <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">

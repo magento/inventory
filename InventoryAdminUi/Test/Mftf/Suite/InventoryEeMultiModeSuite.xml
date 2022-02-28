@@ -10,10 +10,8 @@
     <suite name="InventoryEeMultiModeSuite">
         <before>
             <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG"/>
-            <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
-            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
-                <argument name="indices" value=""/>
-            </actionGroup>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="config full_page"/>
             </actionGroup>
@@ -27,6 +25,8 @@
         </exclude>
         <after>
             <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG"/>
+            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableStockManagement"/>
+            <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
                 <argument name="tags" value="config full_page"/>
             </actionGroup>
