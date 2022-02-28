@@ -59,6 +59,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
@@ -81,10 +82,14 @@
             <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
             <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
                 <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
             </actionGroup>
         </after>
 

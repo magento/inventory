@@ -38,6 +38,9 @@
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="config:set {{EnableInventorySynchronization.path}} {{EnableInventorySynchronization.value}}" stepKey="enableInventorySynchronization"/>
             <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete test data.-->
@@ -52,6 +55,9 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <magentoCron groups="index" stepKey="reindex1"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </after>
 
         <!--Add product to cart.-->
