@@ -94,12 +94,13 @@ class QuantityAndStockPlugin
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
+            $defaultCode = $this->defaultSourceProvider->getCode();
             $collection->joinField(
                 'parent_stock',
                 $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
                 null,
                 'sku = sku',
-                ['source_code' => $this->defaultSourceProvider->getCode()],
+                ['source_code' => $defaultCode],
                 'left'
             );
             $collection->joinField(
@@ -118,7 +119,8 @@ class QuantityAndStockPlugin
                 )
                 ->joinLeft(
                     ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
-                    'child_stock.sku = child_product.sku',
+                    'child_stock.sku = child_product.sku'.
+                    " AND child_stock.source_code = '{$defaultCode}'",
                     []
                 )
                 ->columns(
