@@ -38,11 +38,11 @@
             </actionGroup>
         </before>
         <after>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
-            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <magentoCron groups="index" stepKey="reindex"/>
         </after>
 

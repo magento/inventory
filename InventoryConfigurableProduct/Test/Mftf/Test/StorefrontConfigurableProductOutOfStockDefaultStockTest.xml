@@ -93,14 +93,19 @@
         <!--Set configurable product stock status.-->
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="setProductStockStatus"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
+        <magentoCron groups="index" stepKey="reindex"/>
         <!-- Go to storefront category page PLP -->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_path]$$)}}" stepKey="navigateToCategoryPage"/>
+        <actionGroup ref="StorefrontNavigateToCategoryUrlActionGroup" stepKey="navigateToCategoryPage">
+            <argument name="categoryUrl" value="$$category.custom_attributes[url_key]$$"/>
+        </actionGroup>
         <!-- Assert that product is out of stock on category page PLP -->
         <actionGroup ref="StorefrontCheckCategoryOutOfStockConfigurableProductActionGroup" stepKey="assertProductIsOutOfStockOnCategoryPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <!-- Go to storefront product page PDP-->
-        <amOnPage url="{{StorefrontProductPage.url(ConfigurableMsiProduct.urlKey)}}" stepKey="navigateToProductPage"/>
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="navigateToProductPage">
+            <argument name="productUrl" value="{{ConfigurableMsiProduct.urlKey}}"/>
+        </actionGroup>
         <!-- Assert that product is out of stock on product page PDP -->
         <dontSee selector="{{StorefrontProductActionSection.addToCart}}" stepKey="assertAddToCartButtonIsNotPresent"/>
         <grabTextFrom selector="{{StorefrontProductInfoMainSection.productStockStatus}}" stepKey="productStockStatus"/>
