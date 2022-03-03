@@ -12,6 +12,9 @@ use Magento\Ui\Component\Control\Container;
 use Magento\InventorySourceSelectionApi\Api\GetSourceSelectionAlgorithmListInterface;
 use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
 
+/**
+ * UI class for Button Algorithm
+ */
 class AlgorithmSelectionButton implements ButtonProviderInterface
 {
     /**
@@ -76,6 +79,7 @@ class AlgorithmSelectionButton implements ButtonProviderInterface
             'class_name' => Container::SPLIT_BUTTON,
             'options' => $this->getAlgorithmsListOptions(),
             'sort_order' => 10,
+            'aclResource' => 'Magento_InventoryApi::ship_source_selection',
         ];
     }
 
