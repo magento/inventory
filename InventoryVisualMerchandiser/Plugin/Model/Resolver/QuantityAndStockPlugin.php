@@ -119,8 +119,8 @@ class QuantityAndStockPlugin
                 )
                 ->joinLeft(
                     ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
-                    'child_stock.sku = child_product.sku'.
-                    " AND child_stock.source_code = '{$defaultCode}'",
+                    'child_stock.sku = child_product.sku'
+                    . $collection->getConnection()->quoteInto(' AND child_stock.source_code = ?', $defaultCode),
                     []
                 )
                 ->columns(
