@@ -12,6 +12,9 @@ use Magento\Ui\Component\Control\Container;
 use Magento\InventorySourceSelectionApi\Api\GetSourceSelectionAlgorithmListInterface;
 use Magento\InventorySourceSelectionApi\Api\GetDefaultSourceSelectionAlgorithmCodeInterface;
 
+/**
+ * UI class for Button Algorithm
+ */
 class AlgorithmSelectionButton implements ButtonProviderInterface
 {
     /**
