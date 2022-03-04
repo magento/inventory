@@ -73,7 +73,7 @@ class ValidateSourceItemsBeforeAddBundleSelectionPlugin
                 __(
                     'Product "%1" cannot be added to bundle product as '
                     . 'bundle product has "Ship Bundle Items Together" and "%1" product assigned to multiple sources'
-                    . ' or has different source then rest of bundle items',
+                    . ' or has a different source than the rest of the bundle items',
                     [$link->getSku()]
                 )
             );
