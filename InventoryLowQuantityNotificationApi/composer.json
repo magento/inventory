@@ -1,15 +1,16 @@
 {
     "name": "magento/module-inventory-low-quantity-notification-api",
     "description": "N/A",
-    "require": {
-        "php": "~7.4.0||~8.1.0",
-        "magento/framework": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.2.1",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -19,3 +20,4 @@
         }
     }
 }
+

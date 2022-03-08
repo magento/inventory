@@ -1,20 +1,21 @@
 {
     "name": "magento/module-inventory-reservation-cli",
     "description": "N/A",
-    "require": {
-        "php": "~7.4.0||~8.1.0",
-        "magento/framework": "*",
-        "magento/module-sales": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-reservations-api": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-configuration-api": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.2.2",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "*",
+        "magento/module-sales": "*",
+        "magento/module-inventory-api": "1.2.*",
+        "magento/module-inventory-reservations-api": "1.2.*",
+        "magento/module-inventory-sales-api": "1.2.*",
+        "magento/module-inventory-configuration-api": "1.2.*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -24,3 +25,4 @@
         }
     }
 }
+
