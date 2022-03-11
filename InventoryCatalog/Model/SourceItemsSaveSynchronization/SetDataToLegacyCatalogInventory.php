@@ -10,18 +10,21 @@ namespace Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
+use Magento\CatalogInventory\Model\Indexer\Stock\CacheCleaner;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\CatalogInventory\Model\Stock;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
-use Magento\InventoryCatalogApi\Model\SourceItemsSaveSynchronizationInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Information tables.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SetDataToLegacyCatalogInventory
 {
@@ -66,6 +69,11 @@ class SetDataToLegacyCatalogInventory
     private $areProductsSalable;
 
     /**
+     * @var CacheCleaner
+     */
+    private $cacheCleaner;
+
+    /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
@@ -74,6 +82,8 @@ class SetDataToLegacyCatalogInventory
      * @param Processor $indexerProcessor
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param CacheCleaner|null $cacheCleaner
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         SetDataToLegacyStockItem $setDataToLegacyStockItem,
@@ -83,7 +93,8 @@ class SetDataToLegacyCatalogInventory
         StockStateProviderInterface $stockStateProvider,
         Processor $indexerProcessor,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
-        AreProductsSalableInterface $areProductsSalable
+        AreProductsSalableInterface $areProductsSalable,
+        ?CacheCleaner $cacheCleaner = null
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
@@ -93,6 +104,35 @@ class SetDataToLegacyCatalogInventory
         $this->stockStateProvider = $stockStateProvider;
         $this->indexerProcessor = $indexerProcessor;
         $this->areProductsSalable = $areProductsSalable;
+        $this->cacheCleaner = $cacheCleaner ?? ObjectManager::getInstance()->get(CacheCleaner::class);
+    }
+
+    /**
+     * Updates Stock information in legacy inventory.
+     *
+     * @param array $sourceItems
+     */
+    public function execute(array $sourceItems): void
+    {
+        $productIds = [];
+        foreach ($sourceItems as $sourceItem) {
+            $sku = $sourceItem->getSku();
+
+            try {
+                $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
+            } catch (NoSuchEntityException $e) {
+                // Skip synchronization of for not existed product
+                continue;
+            }
+        }
+        if (count($productIds) > 0) {
+            $this->cacheCleaner->clean(
+                $productIds,
+                function () use ($sourceItems) {
+                    $this->updateSourceItems($sourceItems);
+                }
+            );
+        }
     }
 
     /**
@@ -101,7 +141,7 @@ class SetDataToLegacyCatalogInventory
      * @param array $sourceItems
      * @return void
      */
-    public function execute(array $sourceItems): void
+    private function updateSourceItems(array $sourceItems): void
     {
         $skus = [];
         foreach ($sourceItems as $sourceItem) {
@@ -141,6 +181,7 @@ class SetDataToLegacyCatalogInventory
                 (float)$sourceItem->getQuantity(),
                 $isInStock
             );
+
             $this->setDataToLegacyStockStatus->execute(
                 (string)$sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
