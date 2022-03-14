@@ -66,9 +66,10 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
             <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFilter"/>
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
-            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrderFilters"/>
+            <comment userInput="BIC workaround" stepKey="amOnProductGridPage"/>
+            <comment userInput="BIC workaround" stepKey="clearOrderFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="createFirstConfigProductAttribute" stepKey="deleteFirstConfigProductAttribute"/>
             <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
@@ -108,7 +109,7 @@
         </actionGroup>
 
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMiniCart"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder"/>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid1"/>

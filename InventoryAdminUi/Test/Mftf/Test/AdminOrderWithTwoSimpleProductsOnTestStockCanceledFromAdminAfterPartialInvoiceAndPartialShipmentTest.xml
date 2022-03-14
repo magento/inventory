@@ -52,6 +52,7 @@
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- assign first simple product to custom source -->

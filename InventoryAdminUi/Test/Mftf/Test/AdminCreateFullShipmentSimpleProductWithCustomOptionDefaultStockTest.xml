@@ -42,6 +42,7 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Add custom option to product.-->
@@ -68,11 +69,11 @@
         <actionGroup ref="StorefrontAddToTheCartActionGroup" stepKey="addProductToCart"/>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPage"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPayment"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextPaymentPage"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoadCheckoutSelectPayment"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Process full shipment.-->

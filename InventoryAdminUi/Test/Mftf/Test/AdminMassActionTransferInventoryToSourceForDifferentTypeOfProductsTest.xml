@@ -126,6 +126,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCreatedCategory"/>
             <deleteData createDataKey="createStock" stepKey="deleteCreatedStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckAssignThatTheDefaultSourceAssignedToProducts"/>

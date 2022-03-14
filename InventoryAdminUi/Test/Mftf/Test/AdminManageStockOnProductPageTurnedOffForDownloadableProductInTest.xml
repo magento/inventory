@@ -52,6 +52,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">

@@ -69,7 +69,7 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteConfigurableProductOptions">
                 <argument name="product" value="ApiConfigurableProductWithDescription"/>
             </actionGroup>
-            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
             <!-- Reindex invalidated indices after product attribute has been deleted -->
             <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
 

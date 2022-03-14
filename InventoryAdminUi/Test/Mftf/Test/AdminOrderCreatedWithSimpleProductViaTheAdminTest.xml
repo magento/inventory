@@ -33,9 +33,18 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+            <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer1"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="createStock1" stepKey="deleteStock1"/>
+            <comment userInput="BIC workaround" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
             <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToStockGridFilterResultsByInputEditStock1">
