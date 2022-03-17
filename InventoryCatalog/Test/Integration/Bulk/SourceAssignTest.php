@@ -120,6 +120,33 @@ class SourceAssignTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_with_numeric_sku.php
+     * @magentoDbIsolation enabled
+     */
+    public function testBulkSourceAssignmentOfProductsWithNumericSku(): void
+    {
+        $skus = ['01234', '1234'];
+        $sources = ['eu-1'];
+        $count = $this->bulkSourceAssign->execute($skus, $sources);
+
+        self::assertEquals(
+            2,
+            $count,
+            'Products source assignment count do not match'
+        );
+
+        foreach ($skus as $sku) {
+            $sourceItemCodes = $this->getSourceItemCodesBySku($sku);
+            self::assertContains(
+                $sources,
+                $sourceItemCodes,
+                'Mass source assignment failed with a single source item'
+            );
+        }
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_all_types.php
      * @magentoDbIsolation enabled
      */
