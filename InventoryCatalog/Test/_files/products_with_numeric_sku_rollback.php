@@ -12,7 +12,6 @@ use Magento\CatalogInventory\Api\StockStatusRepositoryInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Indexer\IndexerRegistry;
-use Magento\Framework\Registry;
 use Magento\TestFramework\Helper\Bootstrap;
 
 $objectManager = Bootstrap::getObjectManager();
@@ -22,10 +21,6 @@ $productRepository = $objectManager->create(ProductRepositoryInterface::class);
 $stockStatusRepository = $objectManager->create(StockStatusRepositoryInterface::class);
 /** @var StockStatusCriteriaInterfaceFactory $stockStatusCriteriaFactory */
 $stockStatusCriteriaFactory = $objectManager->create(StockStatusCriteriaInterfaceFactory::class);
-/** @var Registry $registry */
-$registry = $objectManager->get(Registry::class);
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', true);
 $skus = ['01234', '1234'];
 foreach ($skus as $sku) {
     try {
@@ -49,6 +44,3 @@ foreach ($skus as $sku) {
 $objectManager->get(IndexerRegistry::class)
     ->get(Processor::INDEXER_ID)
     ->reindexAll();
-
-$registry->unregister('isSecureArea');
-$registry->register('isSecureArea', false);
