@@ -110,19 +110,11 @@ class SourceUnassignTest extends TestCase
         $sources = ['eu-1'];
         $count = $this->bulkSourceUnassign->execute($skus, $sources);
 
-        self::assertEquals(
-            2, // Overall 2 deletions
-            $count,
-            'Products source un-assignment count do not match'
-        );
+        $this->assertEquals(2, $count, 'Products source un-assignment count do not match');
 
         foreach ($skus as $sku) {
             $sourceItemCodes = $this->getSourceItemCodesBySku($sku);
-            self::assertNotContains(
-                $sources,
-                $sourceItemCodes,
-                'Mass source un-assignment failed'
-            );
+            $this->assertNotContains($sources, $sourceItemCodes, 'Mass source un-assignment failed');
         }
     }
 }

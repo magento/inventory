@@ -5,30 +5,27 @@
  */
 declare(strict_types=1);
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockStatusCriteriaInterfaceFactory;
 use Magento\CatalogInventory\Api\StockStatusRepositoryInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\Framework\Registry;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Indexer\IndexerRegistry;
 
 $objectManager = Bootstrap::getObjectManager();
 /** @var ProductRepositoryInterface $productRepository */
 $productRepository = $objectManager->create(ProductRepositoryInterface::class);
-/** @var Registry $registry */
-$registry = $objectManager->get(Registry::class);
 /** @var StockStatusRepositoryInterface $stockStatusRepository */
 $stockStatusRepository = $objectManager->create(StockStatusRepositoryInterface::class);
 /** @var StockStatusCriteriaInterfaceFactory $stockStatusCriteriaFactory */
 $stockStatusCriteriaFactory = $objectManager->create(StockStatusCriteriaInterfaceFactory::class);
-
-$currentArea = $registry->registry('isSecureArea');
+/** @var Registry $registry */
+$registry = $objectManager->get(Registry::class);
 $registry->unregister('isSecureArea');
 $registry->register('isSecureArea', true);
-
 $skus = ['01234', '1234'];
 foreach ($skus as $sku) {
     try {
@@ -41,8 +38,8 @@ foreach ($skus as $sku) {
 
     $criteria = $stockStatusCriteriaFactory->create();
     $criteria->setProductsFilter($product->getId());
-
     $result = $stockStatusRepository->getList($criteria);
+
     if ($result->getTotalCount()) {
         $stockStatus = current($result->getItems());
         $stockStatusRepository->delete($stockStatus);
@@ -54,4 +51,4 @@ $objectManager->get(IndexerRegistry::class)
     ->reindexAll();
 
 $registry->unregister('isSecureArea');
-$registry->register('isSecureArea', $currentArea);
+$registry->register('isSecureArea', false);
