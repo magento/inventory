@@ -18,6 +18,7 @@ use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel
 use Magento\Framework\Model\AbstractModel as StockItem;
 use Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 
 /**
  * Unit test for
@@ -91,6 +92,8 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
             'sku' => 'conf_1',
             'qty' => 0
         ];
+        $childIds = [2,3];
+        $childSkus = ['sku2', 'sku3'];
 
         $itemResourceModelMock = $this->getMockBuilder(ItemResourceModel::class)
             ->disableOriginalConstructor()
@@ -101,19 +104,12 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
                 'getQty',
                 'getIsInStock',
                 'getProductId',
-                'hasDataChanges',
-                'dataHasChangedFor',
                 'getStockStatusChangedAuto'
             ])
             ->getMock();
         $stockItemMock->expects(self::once())->method('getQty')->willReturn($product['qty']);
-        $stockItemMock->expects(self::once())->method('hasDataChanges')->willReturn(true);
-        $stockItemMock->expects(self::once())
-            ->method('dataHasChangedFor')
-            ->with('is_in_stock')
-            ->willReturn(true);
         $stockItemMock->expects(self::once())->method('getIsInStock')->willReturn(Stock::STOCK_IN_STOCK);
-        $stockItemMock->expects($this->exactly(3))->method('getProductId')->willReturn($product['id']);
+        $stockItemMock->expects($this->exactly(4))->method('getProductId')->willReturn($product['id']);
         $stockItemMock->expects(self::once())
             ->method('getStockStatusChangedAuto')
             ->willReturn(true);
@@ -121,32 +117,56 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
             ->method('execute')
             ->with($product['id'])
             ->willReturn($product['type']);
-        $this->getSkusByProductIdsMock->expects(self::once())
+        $this->getSkusByProductIdsMock->expects($this->at(0))
+            ->method('execute')
+            ->with($childIds)
+            ->willReturn($childSkus);
+        $this->getSkusByProductIdsMock->expects($this->at(1))
             ->method('execute')
             ->willReturn([$product['id'] => $product['sku']]);
+        $this->configurableTypeMock->expects($this->once())->method('getChildrenIds')->willReturn([$childIds]);
+        $isProductSalableMock = $this->getMockForAbstractClass(IsProductSalableResultInterface::class);
+        $isProductSalableMock->expects($this->once())->method('isSalable')->willReturn(true);
+        $this->areProductsSalableMock->expects($this->once())
+            ->method('execute')
+            ->with($childSkus, Stock::DEFAULT_STOCK_ID)
+            ->willReturn([$isProductSalableMock]);
         $this->setDataToLegacyStockStatusMock->expects(self::once())
             ->method('execute')
             ->with($product['sku'], (float) $product['qty'], Stock::STOCK_IN_STOCK);
         $this->plugin->afterSave($itemResourceModelMock, $itemResourceModelMock, $stockItemMock);
     }
 
-    public function testConfigurableStockAfterLegacySockItemSaveNoChanges()
+    public function testConfigurableStockAfterLegacySockItemSaveNegativeScenario()
     {
-        $itemResourceModelMock = $this->getMockBuilder(ItemResourceModel::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $product = [
+            'id' => 1,
+            'type' => Configurable::TYPE_CODE,
+            'sku' => 'conf_1',
+            'qty' => 0
+        ];
         $itemResourceModelMock = $this->getMockBuilder(ItemResourceModel::class)
             ->disableOriginalConstructor()
             ->getMock();
         $stockItemMock = $this->getMockBuilder(StockItem::class)
             ->disableOriginalConstructor()
             ->setMethods([
-                'hasDataChanges',
+                'getQty',
+                'getIsInStock',
+                'getProductId',
                 'getStockStatusChangedAuto'
             ])
             ->getMock();
-        $stockItemMock->expects(self::once())->method('hasDataChanges')->willReturn(false);
-        $stockItemMock->expects(self::never())->method('getStockStatusChangedAuto');
+        $stockItemMock->expects(self::once())->method('getIsInStock')->willReturn(true);
+        $stockItemMock->expects(self::once())->method('getProductId')->willReturn($product['id']);
+        $this->getProductTypeByIdMock->expects(self::once())
+            ->method('execute')
+            ->with($product['id'])
+            ->willReturn($product['type']);
+        $stockItemMock->expects(self::once())
+            ->method('getStockStatusChangedAuto')
+            ->willReturn(false);
+        $stockItemMock->expects($this->never())->method('getQty');
         $this->plugin->afterSave($itemResourceModelMock, $itemResourceModelMock, $stockItemMock);
     }
 }

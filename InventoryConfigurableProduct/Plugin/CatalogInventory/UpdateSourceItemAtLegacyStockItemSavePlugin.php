@@ -81,12 +81,10 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      */
     public function afterSave(ItemResourceModel $subject, ItemResourceModel $result, StockItem $stockItem): void
     {
-        if ($stockItem->hasDataChanges() &&
-            $stockItem->dataHasChangedFor('is_in_stock') &&
-            $stockItem->getIsInStock() &&
+        if ($stockItem->getIsInStock() &&
             $this->getProductTypeById->execute($stockItem->getProductId()) === Configurable::TYPE_CODE
         ) {
-            if ($stockItem->getStockStatusChangedAuto() || $this->hasChildrenInStock($stockItem->getProductId())) {
+            if ($stockItem->getStockStatusChangedAuto() && $this->hasChildrenInStock($stockItem->getProductId())) {
                 $productSku = $this->getSkusByProductIds
                     ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
                 $this->setDataToLegacyStockStatus->execute(
@@ -107,6 +105,9 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     private function hasChildrenInStock(int $productId): bool
     {
         $childrenIds = $this->configurableType->getChildrenIds($productId);
+        if (empty($childrenIds)) {
+            return false;
+        }
         $skus = $this->getSkusByProductIds->execute(array_shift($childrenIds));
         $areSalableResults = $this->areProductsSalable->execute($skus, Stock::DEFAULT_STOCK_ID);
         foreach ($areSalableResults as $productSalable) {
