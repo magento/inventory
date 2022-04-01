@@ -11,6 +11,7 @@ use Magento\Catalog\Model\Indexer\Product\Price\Processor as PriceIndexProcessor
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
+use Magento\CatalogInventory\Model\Indexer\Stock\CacheCleaner;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\CatalogInventory\Model\Stock;
@@ -70,6 +71,11 @@ class SetDataToLegacyCatalogInventory
     private $areProductsSalable;
 
     /**
+     * @var CacheCleaner
+     */
+    private $cacheCleaner;
+
+    /**
      * @var GetStockItemDataInterface
      */
     private $getStockItemData;
@@ -88,6 +94,7 @@ class SetDataToLegacyCatalogInventory
      * @param Processor $indexerProcessor
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param CacheCleaner|null $cacheCleaner
      * @param GetStockItemDataInterface|null $getStockItemData
      * @param PriceIndexProcessor|null $priceIndexProcessor
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -101,6 +108,7 @@ class SetDataToLegacyCatalogInventory
         Processor $indexerProcessor,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         AreProductsSalableInterface $areProductsSalable,
+        ?CacheCleaner $cacheCleaner = null,
         ?GetStockItemDataInterface $getStockItemData = null,
         ?PriceIndexProcessor $priceIndexProcessor = null
     ) {
@@ -112,6 +120,7 @@ class SetDataToLegacyCatalogInventory
         $this->stockStateProvider = $stockStateProvider;
         $this->indexerProcessor = $indexerProcessor;
         $this->areProductsSalable = $areProductsSalable;
+        $this->cacheCleaner = $cacheCleaner ?? ObjectManager::getInstance()->get(CacheCleaner::class);
         $this->getStockItemData = $getStockItemData
             ?: ObjectManager::getInstance()->get(GetStockItemDataInterface::class);
         $this->priceIndexProcessor = $priceIndexProcessor
@@ -122,9 +131,37 @@ class SetDataToLegacyCatalogInventory
      * Updates Stock information in legacy inventory.
      *
      * @param array $sourceItems
-     * @return void
      */
     public function execute(array $sourceItems): void
+    {
+        $productIds = [];
+        foreach ($sourceItems as $sourceItem) {
+            $sku = $sourceItem->getSku();
+
+            try {
+                $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
+            } catch (NoSuchEntityException $e) {
+                // Skip synchronization of for not existed product
+                continue;
+            }
+        }
+        if (count($productIds) > 0) {
+            $this->cacheCleaner->clean(
+                $productIds,
+                function () use ($sourceItems) {
+                    $this->updateSourceItems($sourceItems);
+                }
+            );
+        }
+    }
+
+    /**
+     * Updates Stock information in legacy inventory.
+     *
+     * @param array $sourceItems
+     * @return void
+     */
+    private function updateSourceItems(array $sourceItems): void
     {
         $stockStatuses = $this->getStockStatuses($sourceItems);
         $productIds = [];
@@ -164,6 +201,7 @@ class SetDataToLegacyCatalogInventory
                 (float)$sourceItem->getQuantity(),
                 $isInStock
             );
+
             $this->setDataToLegacyStockStatus->execute(
                 (string)$sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
