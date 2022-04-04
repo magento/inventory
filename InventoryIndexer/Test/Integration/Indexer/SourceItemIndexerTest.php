@@ -10,7 +10,6 @@ namespace Magento\InventoryIndexer\Test\Integration\Indexer;
 use Magento\Catalog\Model\Indexer\Product\Price\Processor as PriceIndexProcessor;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Sql\Expression;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
@@ -22,6 +21,9 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SourceItemIndexerTest extends TestCase
 {
     /**
