@@ -81,19 +81,15 @@
                                stepKey="waitForShippingMethodsLoad" after="GoToCheckoutFromMinicartActionGroup"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"
                after="waitForShippingMethodsLoad"/>
-        <waitForElement selector="{{CheckoutShippingMethodsSection.next}}" time="30"
-                        stepKey="waitForNextButtonVisible" after="selectShippingMethod"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"
-               after="waitForNextButtonVisible"/>
-        <waitForPageLoad stepKey="waitFroPaymentSelectionPageLoad" after="navigateToSecondCheckoutStep"/>
-        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"
-                     after="waitFroPaymentSelectionPageLoad"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30"
-                        stepKey="waitForPlaceOrderButtonVisible" after="selectCheckMoneyOrderPayment"/>
+        <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible" after="selectShippingMethod"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep" after="waitForNextButtonVisible"/>
+        <comment userInput="BIC workaround" stepKey="waitFroPaymentSelectionPageLoad" after="navigateToSecondCheckoutStep"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment" after="waitFroPaymentSelectionPageLoad"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible" after="selectCheckMoneyOrderPayment"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}"
              stepKey="chooseBillingAddress" after="waitForPlaceOrderButtonVisible"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder" after="chooseBillingAddress"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced" after="placeOrder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder" after="chooseBillingAddress"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced" after="placeOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"
                       after="placeOrder"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:"

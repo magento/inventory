@@ -16,8 +16,8 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
+use Magento\Framework\MessageQueue\ConsumerFactory;
 use Magento\Framework\MessageQueue\MessageEncoder;
-use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
@@ -28,9 +28,8 @@ use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
-use Magento\MysqlMq\Model\Driver\Queue;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -77,11 +76,6 @@ class ProductTest extends TestCase
     private $importedProducts;
 
     /**
-     * @var Queue
-     */
-    private $queue;
-
-    /**
      * @var MessageEncoder
      */
     private $messageEncoder;
@@ -92,14 +86,12 @@ class ProductTest extends TestCase
     private $consumer;
 
     /**
-     * @var DeleteTopicRelatedMessages
-     */
-    private $deleteTopicMessages;
-
-    /**
      * @var GetBySku
      */
     private $getBySku;
+
+    /** @var ConsumerFactory */
+    private $consumerFactory;
 
     /**
      * Setup Test for Product Import
@@ -112,14 +104,10 @@ class ProductTest extends TestCase
         $this->productImporterFactory = $this->objectManager->get(ProductFactory::class);
         $this->searchCriteriaBuilderFactory = $this->objectManager->get(SearchCriteriaBuilderFactory::class);
         $this->sourceItemRepository = $this->objectManager->get(SourceItemRepositoryInterface::class);
-        $this->queue = $this->objectManager->get(QueueFactoryInterface::class)->create(
-            'inventory.source.items.cleanup',
-            'db'
-        );
         $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
         $this->consumer = $this->objectManager->get(DeleteSourceItemsBySkus::class);
-        $this->deleteTopicMessages = $this->objectManager->get(DeleteTopicRelatedMessages::class);
         $this->getBySku = $this->objectManager->get(GetBySku::class);
+        $this->consumerFactory = $this->objectManager->get(ConsumerFactory::class);
     }
 
     /**
@@ -202,7 +190,7 @@ class ProductTest extends TestCase
      */
     public function testSourceItemDeletedOnProductImport(): void
     {
-        $this->deleteTopicMessages->execute('inventory.source.items.cleanup');
+        $this->objectManager->get(ClearQueueProcessor::class)->execute('inventory.source.items.cleanup');
         $pathToFile = __DIR__ . '/_files/product_import_SKU-1.csv';
         $productSku = 'SKU-1';
         $productImporterModel = $this->getProductImporterModel($pathToFile, Import::BEHAVIOR_DELETE);
@@ -210,23 +198,21 @@ class ProductTest extends TestCase
         $this->assertTrue($errors->getErrorsCount() == 0);
         $productImporterModel->importData();
         $this->importedProducts[] = $productSku;
-        $this->processMessages('inventory.source.items.cleanup');
+        $this->processMessages();
 
         $this->assertEmpty($this->getSourceItemList($productSku)->getItems());
         $this->assertEmpty($this->getBySku->execute($productSku));
     }
 
     /**
-     * Process topic messages
+     * Process messages
      *
-     * @param string $topicName
      * @return void
      */
-    private function processMessages(string $topicName): void
+    private function processMessages(): void
     {
-        $envelope = $this->queue->dequeue();
-        $decodedMessage = $this->messageEncoder->decode($topicName, $envelope->getBody());
-        $this->consumer->execute($decodedMessage);
+        $consumer = $this->consumerFactory->get('inventory.source.items.cleanup');
+        $consumer->process(1);
     }
 
     /**
