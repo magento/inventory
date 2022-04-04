@@ -20,7 +20,7 @@ use Zend_Db_Expr;
 /**
  * Service which returns aggregated quantity of a product across all active sources in the provided stock
  */
-class GetProductAvailableQty implements GetProductAvailableQtyInterface
+class GetProductAvailableQty
 {
     /**
      * @var ResourceConnection

@@ -11,7 +11,7 @@ use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventoryConfigurationApi\Api\Data\StockItemConfigurationInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
-use Magento\InventorySalesApi\Model\GetProductAvailableQtyInterface;
+use Magento\InventorySales\Model\GetProductAvailableQty;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
@@ -47,7 +47,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
     private $getProductTypesBySkus;
 
     /**
-     * @var GetProductAvailableQtyInterface
+     * @var GetProductAvailableQty
      */
     private $getProductAvailableQty;
 
@@ -57,7 +57,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
      * @param GetStockItemConfigurationInterface $getStockItemConfiguration
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
-     * @param GetProductAvailableQtyInterface $getProductAvailableQty
+     * @param GetProductAvailableQty $getProductAvailableQty
      */
     public function __construct(
         GetStockItemDataInterface $getStockItemData,
@@ -65,7 +65,7 @@ class IsSalableWithReservationsCondition implements IsProductSalableInterface
         GetStockItemConfigurationInterface $getStockItemConfiguration,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         GetProductTypesBySkusInterface $getProductTypesBySkus,
-        GetProductAvailableQtyInterface $getProductAvailableQty
+        GetProductAvailableQty $getProductAvailableQty
     ) {
         $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
