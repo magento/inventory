@@ -14,7 +14,6 @@ use Magento\Inventory\Model\ResourceModel\Source;
 use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\StockSourceLinkInterface;
-use Magento\InventorySalesApi\Model\GetProductAvailableQtyInterface;
 use Zend_Db_Expr;
 
 /**
@@ -36,7 +35,11 @@ class GetProductAvailableQty
     }
 
     /**
-     * @inheritdoc
+     * Get available quantity for given SKU and Stock
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @return float
      */
     public function execute(string $sku, int $stockId): float
     {
