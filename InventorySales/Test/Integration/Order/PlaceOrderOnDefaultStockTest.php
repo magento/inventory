@@ -10,11 +10,16 @@ namespace Magento\InventorySales\Test\Integration\Order;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\MessageQueue\ConsumerFactory;
+use Magento\Framework\MessageQueue\MessageEncoder;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Registry;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
+use Magento\InventorySales\Model\ResourceModel\UpdateReservationsBySkus;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
@@ -24,6 +29,7 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\TestFramework\MessageQueue\ClearQueueProcessor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,6 +39,11 @@ use PHPUnit\Framework\TestCase;
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
 {
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
     /**
      * @var DefaultStockProviderInterface
      */
@@ -89,24 +100,67 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     private $getReservationsQuantity;
 
     /**
+     * @var UpdateReservationsBySkus
+     */
+    private $handler;
+
+    /**
+     * @var MessageEncoder
+     */
+    private $messageEncoder;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resource;
+
+    /**
+     * @var int
+     */
+    private $orderIdToDelete;
+
+    /**
      * @var StockRegistryInterface
      */
     protected $stockRegistry;
 
+    /** @var ConsumerFactory */
+    private $consumerFactory;
+
+    /**
+     * @inheritdoc
+     */
     protected function setUp(): void
     {
-        $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
-        $this->cartManagement = Bootstrap::getObjectManager()->get(CartManagementInterface::class);
-        $this->cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
-        $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
-        $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
-        $this->cartItemFactory = Bootstrap::getObjectManager()->get(CartItemInterfaceFactory::class);
-        $this->defaultStockProvider = Bootstrap::getObjectManager()->get(DefaultStockProviderInterface::class);
-        $this->cleanupReservations = Bootstrap::getObjectManager()->get(CleanupReservationsInterface::class);
-        $this->orderRepository = Bootstrap::getObjectManager()->get(OrderRepositoryInterface::class);
-        $this->orderManagement = Bootstrap::getObjectManager()->get(OrderManagementInterface::class);
-        $this->getReservationsQuantity = Bootstrap::getObjectManager()->get(GetReservationsQuantityInterface::class);
-        $this->stockRegistry = Bootstrap::getObjectManager()->get(StockRegistryInterface::class);
+        $this->objectManager = Bootstrap::getObjectManager();
+        $this->registry = $this->objectManager->get(Registry::class);
+        $this->cartManagement = $this->objectManager->get(CartManagementInterface::class);
+        $this->cartRepository = $this->objectManager->get(CartRepositoryInterface::class);
+        $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
+        $this->searchCriteriaBuilder = $this->objectManager->get(SearchCriteriaBuilder::class);
+        $this->cartItemFactory = $this->objectManager->get(CartItemInterfaceFactory::class);
+        $this->defaultStockProvider = $this->objectManager->get(DefaultStockProviderInterface::class);
+        $this->cleanupReservations = $this->objectManager->get(CleanupReservationsInterface::class);
+        $this->orderRepository = $this->objectManager->get(OrderRepositoryInterface::class);
+        $this->orderManagement = $this->objectManager->get(OrderManagementInterface::class);
+        $this->getReservationsQuantity = $this->objectManager->get(GetReservationsQuantityInterface::class);
+        $this->handler = $this->objectManager->get(UpdateReservationsBySkus::class);
+        $this->messageEncoder = $this->objectManager->get(MessageEncoder::class);
+        $this->stockRegistry = $this->objectManager->get(StockRegistryInterface::class);
+        $this->resource = $this->objectManager->get(ResourceConnection::class);
+        $this->consumerFactory = $this->objectManager->get(ConsumerFactory::class);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function tearDown(): void
+    {
+        $this->cleanupReservations->execute();
+
+        if ($this->orderIdToDelete) {
+            $this->deleteOrderById((int)$this->orderIdToDelete);
+        }
     }
 
     /**
@@ -114,25 +168,17 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     *
+     * @return void
      */
-    public function testPlaceOrderWithInStockProduct()
+    public function testPlaceOrderWithInStockProduct(): void
     {
         $sku = 'SKU-1';
         $quoteItemQty = 4;
 
-        $cart = $this->getCart();
-        $product = $this->productRepository->get($sku);
-        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
-        $cart->addItem($cartItem);
-        $this->cartRepository->save($cart);
+        $this->orderIdToDelete = $this->placeOrder($sku, $quoteItemQty);
 
-        $orderId = $this->cartManagement->placeOrder($cart->getId());
-
-        self::assertNotNull($orderId);
-        self::assertNull($this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
-
-        //cleanup
-        $this->deleteOrderById((int)$orderId);
+        self::assertNotNull($this->orderIdToDelete);
     }
 
     /**
@@ -140,22 +186,44 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     *
+     * @return void
      */
-    public function testPlaceOrderWithOutOffStockProduct()
+    public function testPlaceOrderWithOutOffStockProduct(): void
     {
         $sku = 'SKU-1';
-        $quoteItemQty = 9.5;
-
-        $cart = $this->getCart();
-        $product = $this->productRepository->get($sku);
-        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
-        $cart->addItem($cartItem);
-        $this->cartRepository->save($cart);
-
+        $quoteItemQty = 8.5;
         self::expectException(LocalizedException::class);
-        $orderId = $this->cartManagement->placeOrder($cart->getId());
+        $this->orderIdToDelete = $this->placeOrder($sku, $quoteItemQty);
 
-        self::assertNull($orderId);
+        self::assertNull($this->orderIdToDelete);
+    }
+
+    /**
+     * @see https://studio.cucumber.io/projects/69435/test-plan/folders/735125/scenarios/4286905
+     *
+     * @magentoConfigFixture default/cataloginventory/options/synchronize_with_catalog 1
+     *
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     *
+     * @return void
+     */
+    public function testReservationUpdatedAfterSkuChanged(): void
+    {
+        $consumerName = 'inventory.reservations.update';
+        $this->objectManager->get(ClearQueueProcessor::class)->execute($consumerName);
+        $oldSku = 'SKU-1';
+        $newSku = 'new-sku';
+
+        $this->orderIdToDelete = $this->placeOrder($oldSku, 4);
+        $this->updateProductSku($oldSku, $newSku);
+
+        $this->processMessages($consumerName);
+        $this->assertEmpty($this->getReservationBySku($oldSku));
+        $this->assertNotEmpty($this->getReservationBySku($newSku));
     }
 
     /**
@@ -164,30 +232,17 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/backorders 1
+     *
+     * @return void
      */
-    public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn()
+    public function testPlaceOrderWithOutOffStockProductAndBackOrdersTurnedOn(): void
     {
         $sku = 'SKU-1';
         $quoteItemQty = 8.5;
 
-        $cart = $this->getCart();
-        $product = $this->productRepository->get($sku);
-        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
-        $cart->addItem($cartItem);
-        $this->cartRepository->save($cart);
+        $this->orderIdToDelete = $this->placeOrder($sku, $quoteItemQty);
 
-        $orderId = $this->cartManagement->placeOrder($cart->getId());
-
-        self::assertNotNull($orderId);
-
-        /**
-         * This assert can be introduced once https://github.com/magento/magento2/pull/29881
-         * has been merged
-         */
-        //self::assertEquals($this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered(), 3);
-
-        //cleanup
-        $this->deleteOrderById((int)$orderId);
+        self::assertNotNull($this->orderIdToDelete);
     }
 
     /**
@@ -196,24 +251,17 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
+     *
+     * @return void
      */
-    public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
+    public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff(): void
     {
         $sku = 'SKU-1';
         $quoteItemQty = 8;
 
-        $cart = $this->getCart();
-        $product = $this->productRepository->get($sku);
-        $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
-        $cart->addItem($cartItem);
-        $this->cartRepository->save($cart);
+        $this->orderIdToDelete = $this->placeOrder($sku, $quoteItemQty);
 
-        $orderId = $this->cartManagement->placeOrder($cart->getId());
-
-        self::assertNotNull($orderId);
-
-        //cleanup
-        $this->deleteOrderById((int)$orderId);
+        self::assertNotNull($this->orderIdToDelete);
     }
 
     /**
@@ -221,8 +269,10 @@ class PlaceOrderOnDefaultStockTest extends TestCase
      * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     *
+     * @return void
      */
-    public function testPlaceOrderWithException()
+    public function testPlaceOrderWithException(): void
     {
         $sku = 'SKU-2';
         $stockId = 30;
@@ -254,7 +304,7 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         $cartId = $cart->getId();
         $this->cartRepository->save($cart);
 
-        $orderId = $this->cartManagement->placeOrder($cartId);
+        $this->orderIdToDelete = $this->cartManagement->placeOrder($cartId);
         $salableQtyBefore = $this->getReservationsQuantity->execute($sku, $stockId);
 
         self::expectException(\Exception::class);
@@ -262,12 +312,11 @@ class PlaceOrderOnDefaultStockTest extends TestCase
 
         $salableQtyAfter = $this->getReservationsQuantity->execute($sku, $stockId);
         self::assertSame($salableQtyBefore, $salableQtyAfter);
-
-        //cleanup
-        $this->deleteOrderById((int)$orderId);
     }
 
     /**
+     * Get cart
+     *
      * @return CartInterface
      */
     protected function getCart(): CartInterface
@@ -283,9 +332,12 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
+     * Delete order by id
+     *
      * @param int $orderId
+     * @return void
      */
-    protected function deleteOrderById(int $orderId)
+    protected function deleteOrderById(int $orderId): void
     {
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', true);
@@ -296,6 +348,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     }
 
     /**
+     * Get cart item
+     *
      * @param ProductInterface $product
      * @param float $quoteItemQty
      * @param int $cartId
@@ -319,8 +373,62 @@ class PlaceOrderOnDefaultStockTest extends TestCase
         return $cartItem;
     }
 
-    protected function tearDown(): void
+    /**
+     * Process messages
+     *
+     * @param string $consumerName
+     * @return void
+     */
+    private function processMessages(string $consumerName): void
     {
-        $this->cleanupReservations->execute();
+        $consumer = $this->consumerFactory->get($consumerName);
+        $consumer->process(1);
+    }
+
+    /**
+     * Get product reservation by the sku
+     *
+     * @param string $sku
+     * @return array
+     */
+    private function getReservationBySku(string $sku): array
+    {
+        $connect = $this->resource->getConnection();
+        $select = $connect->select()->from('inventory_reservation')->where('sku = ?', $sku);
+        $result = $connect->fetchRow($select);
+
+        return $result ? $result : [];
+    }
+
+    /**
+     * Place order
+     *
+     * @param string $sku
+     * @param float $itemQty
+     * @return int
+     */
+    private function placeOrder(string $sku, float $itemQty): int
+    {
+        $cart = $this->getCart();
+        $product = $this->productRepository->get($sku);
+        $cartItem = $this->getCartItem($product, $itemQty, (int)$cart->getId());
+        $cart->addItem($cartItem);
+        $this->cartRepository->save($cart);
+
+        return (int)$this->cartManagement->placeOrder($cart->getId());
+    }
+
+    /**
+     * Update product sku
+     *
+     * @param string $sku
+     * @param string $newSku
+     * @return void
+     */
+    private function updateProductSku(string $sku, string $newSku): void
+    {
+        $product = $this->productRepository->get($sku);
+        $product->setSku($newSku);
+        $this->productRepository->save($product);
     }
 }

@@ -69,6 +69,7 @@
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Login to storefront as customer-->
@@ -82,7 +83,7 @@
         </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <!--Cancel order.-->
@@ -91,7 +92,7 @@
         </actionGroup>
         <actionGroup ref="CancelPendingOrderActionGroup" stepKey="cancelPendingOrder"/>
         <!--Admin area check quantities after order placement.-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridToVerifyQuantity"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductGridToVerifyQuantity"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductInGridToVerifyQuantity">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="$product.sku$"/>

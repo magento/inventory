@@ -50,6 +50,7 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex1"/>
         </after>
         <!--Verify product is not visible on storefront.-->
         <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductNotVisibleOnStorefront">

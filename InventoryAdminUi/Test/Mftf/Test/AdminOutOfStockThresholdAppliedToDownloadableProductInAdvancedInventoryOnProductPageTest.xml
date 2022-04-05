@@ -33,6 +33,7 @@
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
+            <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -49,6 +50,7 @@
             <!--Clean up created data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">

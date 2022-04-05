@@ -30,19 +30,25 @@
                 <requiredEntity createDataKey="customSource"/>
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
-            <waitForPageLoad time="20" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
-                <argument name="keyword" value="$$customStock.stock[name]$$"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToCustomStock">
+                <argument name="stockName" value="$$customStock.stock[name]$$"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickOnEditForCustomStock"/>
-            <waitForPageLoad time="20" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
+            <comment userInput="BIC workaround" stepKey="amOnTheStockGridPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockGridPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchCustomStockByKeyword"/>
+            <comment userInput="BIC workaround" stepKey="clickOnEditForCustomStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectWebsiteAsSalesChannel"/>
+            <comment userInput="BIC workaround" stepKey="saveCustomStock"/>
+            <comment userInput="BIC workaround" stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
 
-            <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
 
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="category"/>
@@ -59,16 +65,19 @@
         </before>
 
         <after>
-            <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
-            <waitForPageLoad time="20" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="20" stepKey="waitFroDefaultStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="assignDefaultStockToMainWebsiteComment"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockListPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockListPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByName"/>
+            <comment userInput="BIC workaround" stepKey="clickEditDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitFroDefaultStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
+
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
@@ -78,6 +87,7 @@
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Login as Customer and add Product to Cart-->
@@ -94,12 +104,14 @@
 
         <!-- Place Order -->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <conditionalClick selector="{{CheckoutPaymentSection.cartItemsArea}}" dependentSelector="{{CheckoutPaymentSection.cartItemsArea}}" visible="true" stepKey="exposeMiniCart"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForCartItem"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
+        <waitForElementClickable selector="{{CheckoutPaymentSection.cartItemsArea}}" stepKey="waitForCartItemsClickable"/>
+        <waitForElementNotVisible selector="{{CheckoutPaymentSection.cartItemsAreaActive}}" stepKey="waitForCartItemsActive"/>
+        <click selector="{{CheckoutPaymentSection.cartItemsArea}}" stepKey="exposeMiniCart"/>
+        <waitForPageLoad stepKey="waitForLoadingMaskForCartItem"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="checkMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="20" stepKey="waitForPlaceOrderButton"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
 
         <!--Admin Area Process and Verify Partial Invoice-->
@@ -108,7 +120,7 @@
             <argument name="orderId" value="{$grabOrderNumber}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.invoice}}" stepKey="clickInvoice"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForInvoicePage"/>
+        <waitForPageLoad stepKey="waitForInvoicePage"/>
         <scrollTo selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="scrollToQty"/>
         <fillField selector="{{AdminInvoiceItemsSection.itemQtyToInvoice('1')}}" userInput="4" stepKey="InvoiceQuantityPartial" />
         <click selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="clickUpdateQty" />
@@ -120,7 +132,7 @@
 
         <!-- Creating Partial Shipment from Admin -->
         <click selector="{{AdminOrderDetailsMainActionsSection.ship}}" stepKey="clickShip"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForShipmentPageLoaded"/>
+        <waitForPageLoad stepKey="waitForShipmentPageLoaded"/>
         <fillField selector="{{AdminShipmentItemsSection.itemQtyToShip('1')}}" userInput="2" stepKey="ship3Items"/>
         <click selector="{{AdminShipmentMainActionsSection.submitShipment}}" stepKey="submitShipment"/>
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="The shipment has been created." stepKey="seeShipmentCreateSuccess"/>
@@ -130,7 +142,7 @@
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
         <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="3" stepKey="partialRefund"/>
         <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>
-        <waitForLoadingMaskToDisappear stepKey="updateQuantityLoadingMask"/>
+        <waitForPageLoad stepKey="updateQuantityLoadingMask"/>
         <click selector="{{AdminCreditMemoTotalSection.submitRefundOffline}}" stepKey="clickSubmit"/>
 
         <!-- Verify Order status after cancellation -->

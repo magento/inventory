@@ -74,6 +74,7 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Assign simple product to grouped product.-->
         <amOnPage url="{{AdminProductEditPage.url($$groupedProduct.id$$)}}" stepKey="openGroupedProductEditPage"/>
