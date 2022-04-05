@@ -39,11 +39,12 @@
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox"/>
         <fillField selector="{{AdminCreditMemoItemsSection.itemQtyToRefund('1')}}" userInput="1" stepKey="partialRefund"/>
         <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>
-        <waitForLoadingMaskToDisappear stepKey="updateQuantityLoadingMask"/>
+        <waitForPageLoad stepKey="updateQuantityLoadingMask"/>
         <click selector="{{AdminCreditMemoTotalSection.submitRefundOffline}}" stepKey="clickSubmit"/>
         <!--Verify product quantity.-->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductGridAfterCreditMemo"/>
-        <waitForPageLoad time="30" stepKey="waitForGridLoadAfterCreditMemo"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductGridAfterCreditMemo"/>
+        <comment userInput="BIC workaround" stepKey="waitForGridLoadAfterCreditMemo"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductForQuantityCheckAfterCreditMemo">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
             <argument name="value" value="{{ConfigurableMsiProduct.sku}}"/>

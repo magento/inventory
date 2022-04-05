@@ -22,11 +22,9 @@
 
         <before>
             <comment userInput="Turn on 'out of stock' config" stepKey="onOutOfStockConfig"/>
-            <magentoCLI command="config:set {{TurnOnOutOfStockConfig.path}} {{TurnOnOutOfStockConfig.value}}"
-                        stepKey="displayOutOfStockYes"/>
+            <magentoCLI command="config:set {{TurnOnOutOfStockConfig.path}} {{TurnOnOutOfStockConfig.value}}" stepKey="displayOutOfStockYes"/>
             <comment userInput="Fill config 'Only X left Threshold'." stepKey="fillConfigComment"/>
-            <magentoCLI command="config:set {{SetOnlyXLeftThreshold.path}} {{SetOnlyXLeftThreshold.value}}"
-                        stepKey="fillConfigValue"/>
+            <magentoCLI command="config:set {{SetOnlyXLeftThreshold.path}} {{SetOnlyXLeftThreshold.value}}" stepKey="fillConfigValue"/>
             <createData entity="SimpleMsiProduct" stepKey="createSimpleProduct">
                 <field key="quantity">1</field>
             </createData>
@@ -44,7 +42,10 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
             <seeElement selector=".success" stepKey="seeSuccessMessage"/>
-            <magentoCLI command="indexer:reindex" stepKey="doReindex"/>
+            <magentoCron groups="index" stepKey="doReindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </before>
 
         <after>
@@ -54,8 +55,11 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
-            <magentoCLI command="config:set {{TurnOffOutOfStockConfig.path}} {{TurnOnOutOfStockConfig.value}}"
-                        stepKey="displayOutOfStockNo"/>
+            <magentoCLI command="config:set {{TurnOffOutOfStockConfig.path}} {{TurnOffOutOfStockConfig.value}}" stepKey="displayOutOfStockNo"/>
+            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToProduct1">

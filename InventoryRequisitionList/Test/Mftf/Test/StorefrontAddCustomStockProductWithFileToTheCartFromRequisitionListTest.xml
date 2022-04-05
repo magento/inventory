@@ -51,6 +51,7 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" after="logout"/>
+            <magentoCron groups="index" stepKey="reindex" after="deleteStock"/>
         </after>
     </test>
 </tests>

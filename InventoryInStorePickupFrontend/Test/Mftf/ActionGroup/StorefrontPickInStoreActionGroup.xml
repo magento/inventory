@@ -12,6 +12,7 @@
             <description>Clicks on the 'In Store Pickup' Button on the Storefront Checkout page.</description>
         </annotations>
         <scrollTo selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="scrollPickInStoreBtn"/>
+        <waitForElementClickable selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="waitForPickInStoreBtnClickable"/>
         <click selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="clickPickInStoreBtn"/>
         <waitForElement selector="{{StorefrontPickInStoreModalSection.search}}" stepKey="waitForPickInStoreTabLoad"/>
     </actionGroup>
