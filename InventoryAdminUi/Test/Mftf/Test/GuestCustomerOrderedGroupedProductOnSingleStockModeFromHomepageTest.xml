@@ -72,7 +72,7 @@
         </actionGroup>
         <checkOption selector="{{AdminAddProductsToGroupPanel.firstCheckbox}}" stepKey="checkVirtualProductFilterResult"/>
         <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
+        <waitForPageLoad stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
         <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForSimpleProduct">
             <argument name="productName" value="$$simpleProduct.name$$"/>
             <argument name="qty" value="2"/>
@@ -117,12 +117,11 @@
         <waitForPageLoad stepKey="waitAfterEnterTelephone"/>
 
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectFirstShippingMethod"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForShippingMethodSelected"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNextStep"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForNextStep"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
-
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <waitForPageLoad stepKey="waitForShippingMethodSelected"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNextStep"/>
+        <comment userInput="BIC workaround" stepKey="waitForNextStep"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToSimpleProductIndexPageForCheckProductQtyAfterPlaceOrder"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findSimpleProductBySkuToCheckQtyAfterPlaceOrder">

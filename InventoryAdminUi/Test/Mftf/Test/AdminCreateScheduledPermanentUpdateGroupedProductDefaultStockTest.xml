@@ -57,6 +57,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify grouped product on storefront.-->

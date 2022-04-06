@@ -51,6 +51,7 @@
             <actionGroup ref="AdminGridFilterResetActionGroup" stepKey="clearSourceFilters"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToEditStockPage">
             <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>

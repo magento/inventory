@@ -30,9 +30,14 @@
             <createData entity="_defaultCategory" stepKey="category"/>
         </before>
         <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="DeleteProductBySkuActionGroup" stepKey="deleteCreatedConfigurableProduct">
                 <argument name="sku" value="{{ConfigurableMsiProduct.sku}}"/>
             </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
             <!--Disable additional source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
@@ -41,6 +46,7 @@
             <!-- Delete Created Data -->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Create configurable product.-->
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>

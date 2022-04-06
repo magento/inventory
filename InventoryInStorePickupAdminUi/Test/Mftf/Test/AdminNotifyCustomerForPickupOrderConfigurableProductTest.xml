@@ -88,6 +88,9 @@
             </actionGroup>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
         <!--Add configurable product to cart.-->

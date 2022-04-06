@@ -44,20 +44,24 @@
 
         <after>
             <!-- Assign Sales Channel to Default Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockIndexPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickOnEditForDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockIndexPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockGridPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByKeyword"/>
+            <comment userInput="BIC workaround" stepKey="clickOnEditForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectWebsiteAsSalesChannel"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
+
             <!--Remove created product, stock and category.-->
             <deleteData stepKey="deleteProduct" createDataKey="simpleProduct"/>
             <deleteData stepKey="deleteCategory" createDataKey="simpleCategory"/>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify product is visible on storefront page.-->
