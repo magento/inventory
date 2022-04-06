@@ -22,7 +22,7 @@
         <before>
             <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
             <magentoCLI stepKey="enableGuestCheckoutForDownloadable" command="config:set catalog/downloadable/disable_guest_checkout 0" />
-            <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
             <createData entity="FullSource1" stepKey="createSource"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
             <createData entity="SourceStockLinked1" stepKey="linkSourceStock">
@@ -52,17 +52,17 @@
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
             <magentoCLI stepKey="disableGuestCheckoutForDownloadable" command="config:set catalog/downloadable/disable_guest_checkout 1" />
             <!-- Assign Sales Channel to Default Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByKeyword">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}"
-                   stepKey="clickOnEditForDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website"
-                          stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="amOnTheStockGridPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockGridPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByKeyword"/>
+            <comment userInput="BIC workaround" stepKey="clickOnEditForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectWebsiteAsSalesChannel"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
 
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
@@ -71,6 +71,7 @@
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <deleteData createDataKey="downloadableProduct" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{StorefrontProductPage.url($$downloadableProduct.custom_attributes[url_key]$$)}}" stepKey="openProductPage"/>
@@ -93,7 +94,7 @@
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="clickUpdate"/>
         <waitForPageLoad stepKey="waitForPageLoad"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber"/>
 
@@ -110,9 +111,12 @@
         <see selector="{{AdminGridRow.rowOne}}" userInput="{{MsiCustomer1.lastname}}" stepKey="seeLastName"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="Pending" stepKey="seePending"/>
 
-        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInput">
-            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="filter_value" value="$$downloadableProduct.product[sku]$$"/>
+
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexPage"/>
+        <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="goToProductGridFilterResultsByInput">
+            <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="value" value="$$downloadableProduct.product[sku]$$"/>
         </actionGroup>
 
         <see selector="{{AdminGridRow.rowOne}}" userInput="$100.00" stepKey="seeProductPriceInGrid"/>

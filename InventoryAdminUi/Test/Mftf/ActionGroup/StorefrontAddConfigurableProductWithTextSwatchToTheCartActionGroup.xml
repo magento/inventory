@@ -12,7 +12,9 @@
         <annotations>
             <description>Goes to the provided Storefront URL. Selects the provided Product Option under the Product Attribute. Fills in the provided Quantity. Clicks Add to Cart. Validates that the Success Message is present.</description>
         </annotations>
-        <click selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(productOption)}}" stepKey="clickSwatchOption" after="waitForProductFrontPageToLoad"/>
+        <waitForElementVisible selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(productOption)}}" stepKey="waitForSwatchOption" after="waitForProductFrontPageToLoad"/>
+        <click selector="{{StorefrontProductInfoMainSection.swatchOptionByLabel(productOption)}}" stepKey="clickSwatchOption" after="waitForSwatchOption"/>
+        <comment userInput="BIC workaround" stepKey="waitForOptions"/>
         <remove keyForRemoval="selectOption1"/>
     </actionGroup>
 </actionGroups>

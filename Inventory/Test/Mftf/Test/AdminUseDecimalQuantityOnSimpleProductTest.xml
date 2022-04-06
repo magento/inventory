@@ -82,6 +82,7 @@
 
         <fillField selector="#qty" userInput="1.25" stepKey="fillQtyField1"/>
 
+        <waitForElementClickable selector="{{StorefrontProductActionSection.addToCart}}" stepKey="waitForAddToCartButton"/>
         <click selector="{{StorefrontProductActionSection.addToCart}}" stepKey="clickOnAddToCart1"/>
         <waitForPageLoad stepKey="waitForPageLoad9"/>
         <waitForElementVisible selector="{{StorefrontMessagesSection.success}}" stepKey="waitForSuccessMessage"/>
@@ -103,7 +104,7 @@
         <click selector=".action.continue" stepKey="clickOnUpdate1"/>
         <waitForPageLoad stepKey="waitForPageLoad19"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder1"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder1"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber1"/>
     </test>
 </tests>

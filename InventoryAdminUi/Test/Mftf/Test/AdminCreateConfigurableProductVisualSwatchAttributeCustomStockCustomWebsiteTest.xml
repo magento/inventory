@@ -52,6 +52,7 @@
                 <argument name="stockName" value="$$additionalStockAdditionalWebsite.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete configurable product.-->
@@ -81,6 +82,7 @@
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStockAdditionalWebsite" stepKey="deleteAdditionalWebsiteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Start creating configurable product.-->

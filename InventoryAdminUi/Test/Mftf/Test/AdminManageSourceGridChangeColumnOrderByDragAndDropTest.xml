@@ -23,28 +23,29 @@
         <before>
             <createData entity="_minimalSource" stepKey="createCustomSource"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
-            <waitForPageLoad stepKey="waitForPageLoadAfterLogin"/>
+            <comment userInput="BIC workaround" stepKey="waitForPageLoadAfterLogin"/>
 
             <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheSourcesGridPage"/>
             <waitForPageLoad stepKey="waitForTheSourcesGridPageLoad"/>
-            <click selector="{{AdminGridColumnsControls.columns}}" stepKey="clickOnTheColumnsButton"/>
-            <click selector="{{AdminGridColumnsControls.reset}}" stepKey="clickOnResetToRestoreDefaultColumns"/>
-            <click selector="{{AdminGridColumnsControls.cancel}}" stepKey="clickOnCancelToCloseDropdownMenu"/>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetAdminDataGridToDefaultView"/>
+            <comment userInput="BIC workaround" stepKey="clickOnTheColumnsButton"/>
+            <comment userInput="BIC workaround" stepKey="clickOnResetToRestoreDefaultColumns"/>
+            <comment userInput="BIC workaround" stepKey="clickOnCancelToCloseDropdownMenu"/>
         </before>
         <after>
-            <dragAndDrop selector1="{{AdminGridHeaders.headerByName('Is Enabled')}}"
-                         selector2="{{AdminGridHeaders.headerByName('Name')}}"
-                         stepKey="dragAndDropIsEnabledColumnToDefaultPosition"/>
-            <waitForPageLoad time="30" stepKey="waitForMoveConfirmationAfterMoveIsEnabledColumnToDefaultPosition"/>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetAdminDataGridToDefaultView"/>
+            <comment userInput="BIC workaround" stepKey="dragAndDropIsEnabledColumnToDefaultPosition"/>
+            <comment userInput="BIC workaround" stepKey="waitForMoveConfirmationAfterMoveIsEnabledColumnToDefaultPosition"/>
+            <comment userInput="BIC workaround" stepKey="clickClearFiltersForSource"/>
 
             <!-- Disable source as it can broke single source mode tests. -->
-            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFiltersForSource"/>
             <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResultsForSources">
                 <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
                 <argument name="value" value="$$createCustomSource.source[source_code]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$createCustomSource.source[source_code]$$)}}" stepKey="clickOnEditCustomSource"/>
             <waitForPageLoad time="30" stepKey="waitForSourceEditPageLoad"/>
+            <waitForElementVisible selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="waitForEnableButton"/>
             <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="clickIsEnabledToDisable"/>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCustomSource"/>
 

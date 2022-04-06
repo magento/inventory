@@ -51,6 +51,7 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Create Configurable product with two options 'In Stock' on 'Custom' stock" stepKey="CreateConfigurableProductComment"/>

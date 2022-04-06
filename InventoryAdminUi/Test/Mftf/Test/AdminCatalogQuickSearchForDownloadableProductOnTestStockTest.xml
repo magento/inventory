@@ -31,6 +31,7 @@
             <createData entity="MsiDownloadableProduct" stepKey="product">
                 <requiredEntity createDataKey="simpleCategory1"/>
             </createData>
+            <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
@@ -46,6 +47,7 @@
                 <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign source to product.-->

@@ -48,6 +48,7 @@
             </actionGroup>
             <deleteData stepKey="deleteAdditionalStock" createDataKey="additionalStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Change Code for Main Website.-->

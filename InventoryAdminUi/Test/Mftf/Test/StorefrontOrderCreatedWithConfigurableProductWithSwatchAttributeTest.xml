@@ -128,6 +128,7 @@
 
         <fillField selector="#qty" userInput="5" stepKey="fillQtyField1"/>
 
+        <waitForElementClickable selector="{{StorefrontProductActionSection.addToCart}}" stepKey="waitForAddToCartButton"/>
         <click selector="{{StorefrontProductActionSection.addToCart}}" stepKey="clickOnAddToCart1"/>
         <waitForPageLoad stepKey="waitForPageLoad12"/>
         <waitForElementVisible selector="{{StorefrontMessagesSection.success}}" stepKey="waitForSuccessMessage"/>
@@ -154,10 +155,10 @@
         <fillField selector="#shipping-new-address-form input[name=telephone]" userInput="{{CustomerAddressSimple.telephone}}" stepKey="enterTelephone"/>
         <waitForPageLoad stepKey="waitForPageLoad21"/>
 
-        <click selector=".continue" stepKey="clickOnNext1"/>
-        <waitForPageLoad stepKey="waitForPageLoad22"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNext1"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad22"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder1"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder1"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber1"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber1"/>
 
