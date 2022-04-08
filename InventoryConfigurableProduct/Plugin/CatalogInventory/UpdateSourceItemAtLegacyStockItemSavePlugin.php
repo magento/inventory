@@ -84,7 +84,10 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         if ($stockItem->getIsInStock() &&
             $this->getProductTypeById->execute($stockItem->getProductId()) === Configurable::TYPE_CODE
         ) {
-            if ($stockItem->getStockStatusChangedAuto() && $this->hasChildrenInStock($stockItem->getProductId())) {
+            if ($stockItem->getStockStatusChangedAuto() ||
+                ($stockItem->getOrigData('is_in_stock') == Stock::STOCK_OUT_OF_STOCK &&
+                    $this->hasChildrenInStock($stockItem->getProductId()))
+            ) {
                 $productSku = $this->getSkusByProductIds
                     ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
                 $this->setDataToLegacyStockStatus->execute(

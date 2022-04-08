@@ -104,7 +104,8 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
                 'getQty',
                 'getIsInStock',
                 'getProductId',
-                'getStockStatusChangedAuto'
+                'getStockStatusChangedAuto',
+                'getOrigData'
             ])
             ->getMock();
         $stockItemMock->expects(self::once())->method('getQty')->willReturn($product['qty']);
@@ -112,7 +113,11 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
         $stockItemMock->expects($this->exactly(4))->method('getProductId')->willReturn($product['id']);
         $stockItemMock->expects(self::once())
             ->method('getStockStatusChangedAuto')
-            ->willReturn(true);
+            ->willReturn(false);
+        $stockItemMock->expects(self::once()) //detected stock change event
+            ->method('getOrigData')
+            ->with('is_in_stock')
+            ->willReturn(Stock::STOCK_OUT_OF_STOCK);
         $this->getProductTypeByIdMock->expects(self::once())
             ->method('execute')
             ->with($product['id'])
@@ -154,7 +159,8 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
                 'getQty',
                 'getIsInStock',
                 'getProductId',
-                'getStockStatusChangedAuto'
+                'getStockStatusChangedAuto',
+                'getOrigData'
             ])
             ->getMock();
         $stockItemMock->expects(self::once())->method('getIsInStock')->willReturn(true);
@@ -166,6 +172,10 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
         $stockItemMock->expects(self::once())
             ->method('getStockStatusChangedAuto')
             ->willReturn(false);
+        $stockItemMock->expects(self::once()) // stock status wa not changed
+        ->method('getOrigData')
+            ->with('is_in_stock')
+            ->willReturn(Stock::STOCK_IN_STOCK);
         $stockItemMock->expects($this->never())->method('getQty');
         $this->plugin->afterSave($itemResourceModelMock, $itemResourceModelMock, $stockItemMock);
     }
