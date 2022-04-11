@@ -15,6 +15,7 @@ use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\CatalogInventory\Model\Stock;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
 /**
  * Class provides after Plugin on Magento\CatalogInventory\Model\ResourceModel\Stock\Item::save
@@ -48,6 +49,11 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     private $areProductsSalable;
 
     /**
+     * @var GetLegacyStockItem
+     */
+    private $getLegacyStockItem;
+
+    /**
      * @param GetProductTypeById $getProductTypeById
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
@@ -59,13 +65,15 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         GetSkusByProductIdsInterface $getSkusByProductIds,
         Configurable $configurableType,
-        AreProductsSalableInterface $areProductsSalable
+        AreProductsSalableInterface $areProductsSalable,
+        GetLegacyStockItem $getLegacyStockItem
     ) {
         $this->getProductTypeById = $getProductTypeById;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
         $this->getSkusByProductIds = $getSkusByProductIds;
         $this->configurableType = $configurableType;
         $this->areProductsSalable = $areProductsSalable;
+        $this->getLegacyStockItem = $getLegacyStockItem;
     }
 
     /**
@@ -84,12 +92,12 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         if ($stockItem->getIsInStock() &&
             $this->getProductTypeById->execute($stockItem->getProductId()) === Configurable::TYPE_CODE
         ) {
+            $productSku = $this->getSkusByProductIds
+                ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
+
             if ($stockItem->getStockStatusChangedAuto() ||
-                ($stockItem->getOrigData('is_in_stock') == Stock::STOCK_OUT_OF_STOCK &&
-                    $this->hasChildrenInStock($stockItem->getProductId()))
+                ($this->stockStatusChange($productSku) && $this->hasChildrenInStock($stockItem->getProductId()))
             ) {
-                $productSku = $this->getSkusByProductIds
-                    ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
                 $this->setDataToLegacyStockStatus->execute(
                     $productSku,
                     (float) $stockItem->getQty(),
@@ -97,6 +105,17 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
                 );
             }
         }
+    }
+
+    /**
+     * Checks if configurable product stock item status was changed
+     *
+     * @param string $sku
+     * @return bool
+     */
+    private function stockStatusChange(string $sku): bool
+    {
+        return $this->getLegacyStockItem->execute($sku)->getIsInStock() == Stock::STOCK_OUT_OF_STOCK;
     }
 
     /**
