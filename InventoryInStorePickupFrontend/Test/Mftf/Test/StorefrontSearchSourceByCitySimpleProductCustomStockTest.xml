@@ -16,6 +16,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="store_pickup"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -72,6 +73,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">

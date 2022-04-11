@@ -2,7 +2,7 @@
     "name": "magento/module-inventory-grouped-product-admin-ui",
     "description": "N/A",
     "require": {
-        "php": "~7.3.0||~7.4.0",
+        "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-catalog": "*",
         "magento/module-grouped-product": "*",
@@ -12,7 +12,7 @@
         "magento/module-inventory-catalog-admin-ui": "*"
     },
     "suggest": {
-      "magento/module-inventory-configuration-api": "*"
+        "magento/module-inventory-configuration-api": "*"
     },
     "type": "magento2-module",
     "license": [

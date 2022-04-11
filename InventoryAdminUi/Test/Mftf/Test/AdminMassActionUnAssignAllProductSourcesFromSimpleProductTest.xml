@@ -20,6 +20,7 @@
             <skip>
                 <issueId value="MC-41048"/>
             </skip>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -74,6 +75,10 @@
         <after>
             <comment userInput="Disable created sources." stepKey="disableCreatedSourcesComment"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
@@ -81,6 +86,7 @@
             <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondProduct"/>
             <deleteData createDataKey="createThirdSimpleProduct" stepKey="deleteThirdProduct"/>
             <deleteData createDataKey="createFourthSimpleProduct" stepKey="deleteFourthProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckAssignThatTheDefaultSourceAssignedToProducts"/>

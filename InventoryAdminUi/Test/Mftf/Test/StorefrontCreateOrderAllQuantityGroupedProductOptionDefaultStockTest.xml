@@ -79,7 +79,7 @@
         </actionGroup>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckoutPage"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextButton"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNextButton"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <!--Run queue consumer.-->
         <magentoCLI command="queue:consumers:start" arguments="inventory.reservations.updateSalabilityStatus" stepKey="startSalabilityUpdate" timeout="30"/>

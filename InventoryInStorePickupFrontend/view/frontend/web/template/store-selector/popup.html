@@ -8,7 +8,7 @@
     <div class="block block-search store-selector-search">
         <div class="field search">
             <label class="label" for="store-selector-search-input">
-                <translate args="'Search'"/>
+                <translate args="'Search'"></translate>
             </label>
             <div class="control">
                 <input id="store-selector-search-input"
@@ -27,15 +27,15 @@
                     class="action search"
                     aria-label="Search"
             >
-                <translate args="'Search'"/>
+                <translate args="'Search'"></translate>
             </button>
         </div>
     </div>
     <p class="store-selector-popup-no-locations" if="searchQuery() && nearbyLocations() && !nearbyLocations().length">
-        <translate args="'We were unable to find nearby locations for provided search query.'"/>
+        <translate args="'We were unable to find nearby locations for provided search query.'"></translate>
     </p>
     <p class="store-selector-popup-empty-query" ifnot="searchQuery()">
-        <translate args="'Please provide postcode or city name to find nearest pickup locations.'"/>
+        <translate args="'Please provide postcode or city name to find nearest pickup locations.'"></translate>
     </p>
     <table class="store-selector-popup-table" data-bind="blockLoader: isLoading, visible: nearbyLocations() && nearbyLocations().length">
         <thead>

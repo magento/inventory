@@ -17,6 +17,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="sort_order_test"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -75,7 +76,7 @@
         <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheManageStockPage"/>
         <waitForPageLoad time="30" stepKey="waitForAdminManageStockPageLoad"/>
         <click selector="{{AdminGridDefaultViewControls.defaultView}}" stepKey="clickOnDefaultView3"/>
-        <click selector="{{AdminGridDefaultViewControls.viewByName('Default View')}}" stepKey="clickOnDefaultViewMenuOption1"/>
+        <click selector="{{AdminGridDefaultViewControls.viewByName(DefaultGridView.name)}}" stepKey="clickOnDefaultViewMenuOption1"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
         <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20StocksPerPage">

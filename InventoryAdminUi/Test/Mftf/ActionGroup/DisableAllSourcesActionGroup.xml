@@ -11,7 +11,7 @@
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="amOnTheManageSourcePage"/>
         <waitForPageLoad time="30" stepKey="waitForAdminManageSourcePageLoad"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearFilters"/>
-        <waitForLoadingMaskToDisappear stepKey="waitFilterCleared"/>
+        <waitForPageLoad stepKey="waitFilterCleared"/>
         <click selector="{{AdminProductGridSection.multicheckDropdown}}" stepKey="openMulticheckDropdown"/>
         <click selector="{{AdminProductGridSection.multicheckOption('Select All')}}" stepKey="selectAllSources"/>
         <click selector="{{AdminManageSourcesGridMassAction.actionsButton}}" stepKey="clickActionsButton"/>

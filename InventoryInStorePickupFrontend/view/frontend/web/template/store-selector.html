@@ -5,22 +5,22 @@
  */
 -->
 <div id="store-selector" data-bind="blockLoader: $parent.isLoading" css="'store-selected': $parent.selectedLocation">
-    <each if="!quoteIsVirtual()" args="getRegion('customer-email')" render=""/>
+    <each if="!quoteIsVirtual()" args="getRegion('customer-email')" render=""></each>
     <div class="step-title" data-role="title">
-        <translate args="'Store'"/>
+        <translate args="'Store'"></translate>
     </div>
     <div id="checkout-step-store-selector" class="step-content" data-role="content">
-        <render args="selectedLocationTemplate"/>
-        <each args="getRegion('after-selected-location')" render=""/>
+        <render args="selectedLocationTemplate"></render>
+        <each args="getRegion('after-selected-location')" render=""></each>
         <form class="form-continue" submit="setPickupInformation" novalidate="novalidate">
             <div class="actions-toolbar">
                 <div class="secondary">
                     <button type="button" class="button action" click="openPopup">
                         <span if="selectedLocation">
-                            <translate args="'Select Other'"/>
+                            <translate args="'Select Other'"></translate>
                         </span>
                         <span ifnot="selectedLocation">
-                            <translate args="'Select Store'"/>
+                            <translate args="'Select Store'"></translate>
                         </span>
                     </button>
                 </div>
@@ -33,7 +33,7 @@
                             disabled
                     >
                         <span>
-                            <translate args="'Next'"/>
+                            <translate args="'Next'"></translate>
                         </span>
                     </button>
                 </div>

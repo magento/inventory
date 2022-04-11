@@ -1,28 +1,28 @@
 {
-  "name": "magento/module-inventory-configurable-product-frontend-ui",
-  "description": "N/A",
-  "require": {
-    "php": "~7.3.0||~7.4.0",
-    "magento/framework": "*",
-    "magento/module-inventory-sales-api": "*",
-    "magento/module-store": "*",
-    "magento/module-configurable-product": "*"
-  },
-  "suggest": {
-    "magento/module-inventory-catalog": "*",
-    "magento/module-inventory-configurable-product": "*"
-  },
-  "type": "magento2-module",
-  "license": [
-    "OSL-3.0",
-    "AFL-3.0"
-  ],
-  "autoload": {
-    "files": [
-      "registration.php"
+    "name": "magento/module-inventory-configurable-product-frontend-ui",
+    "description": "N/A",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "*",
+        "magento/module-inventory-sales-api": "*",
+        "magento/module-store": "*",
+        "magento/module-configurable-product": "*"
+    },
+    "suggest": {
+        "magento/module-inventory-catalog": "*",
+        "magento/module-inventory-configurable-product": "*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
     ],
-    "psr-4": {
-      "Magento\\InventoryConfigurableProductFrontendUi\\": ""
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventoryConfigurableProductFrontendUi\\": ""
+        }
     }
-  }
 }

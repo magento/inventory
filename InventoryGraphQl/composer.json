@@ -1,25 +1,25 @@
 {
-  "name": "magento/module-inventory-graph-ql",
-  "description": "N/A",
-  "type": "magento2-module",
-  "require": {
-    "php": "~7.3.0||~7.4.0",
-    "magento/framework": "*",
-    "magento/module-catalog": "*",
-    "magento/module-inventory-catalog": "*",
-    "magento/module-inventory-configuration-api": "*",
-    "magento/module-inventory-sales-api": "*"
-  },
-  "license": [
-    "OSL-3.0",
-    "AFL-3.0"
-  ],
-  "autoload": {
-    "files": [
-      "registration.php"
+    "name": "magento/module-inventory-graph-ql",
+    "description": "N/A",
+    "type": "magento2-module",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "*",
+        "magento/module-catalog": "*",
+        "magento/module-inventory-catalog": "*",
+        "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-sales-api": "*"
+    },
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
     ],
-    "psr-4": {
-      "Magento\\InventoryGraphQl\\": ""
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventoryGraphQl\\": ""
+        }
     }
-  }
 }

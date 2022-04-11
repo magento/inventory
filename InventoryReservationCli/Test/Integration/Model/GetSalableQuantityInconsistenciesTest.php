@@ -169,6 +169,21 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     }
 
     /**
+     * Test inconsistencies when order is cancelled and compensation reservation deleted
+     *
+     * @magentoDataFixture Magento/Sales/_files/order_canceled.php
+     * @magentoDataFixture Magento_InventoryReservationCli::Test/Integration/_files/delete_reservation_canceled_order.php
+     * @magentoDbIsolation disabled
+     */
+    public function testCanceledOrderWithExistingReservation(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
+        $item = reset($inconsistencies)->getItems();
+        self::assertCount(1, $inconsistencies);
+        self::assertEquals(-2, $item['simple']);
+    }
+
+    /**
      * Load current Inconsistencies
      *
      * @return array

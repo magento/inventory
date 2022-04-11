@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontCategoryMultipleSourcesNonSellableProductCountTest">
+        <annotations>
+            <stories value="Reindex fulltext cache on sellable status change."/>
+            <title value="When the product becomes not sellable in all sources, the total category products count must update on the frontend"/>
+            <description value="When the product becomes not sellable in all sources, the total category products count must update on the frontend"/>
+            <testCaseId value="MC-42664"/>
+            <useCaseId value="MC-42287"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <magentoCLI command="indexer:set-mode" arguments="schedule" stepKey="setIndexerMode"/>
+            <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
+            <createData entity="SimpleProduct" stepKey="simpleProduct1">
+                <requiredEntity createDataKey="simpleCategory"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="simpleProduct2">
+                <requiredEntity createDataKey="simpleCategory"/>
+            </createData>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock1"/>
+            <createData entity="FullSource1" stepKey="createSource1"/>
+            <createData entity="FullSource2" stepKey="createSource2"/>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock1">
+                <requiredEntity createDataKey="createStock1"/>
+                <requiredEntity createDataKey="createSource1"/>
+            </createData>
+            <createData entity="SourceStockLinked1" stepKey="linkSourceStock2">
+                <requiredEntity createDataKey="createStock1"/>
+                <requiredEntity createDataKey="createSource2"/>
+            </createData>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <magentoCLI command="indexer:set-mode" arguments="realtime" stepKey="setRealtimeMode"/>
+            <deleteData createDataKey="simpleProduct1" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
+            <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
+                <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
+                <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
+        </after>
+
+        <!--Assign created product 1 to sources 1 -->
+        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct1.id$$)}}" stepKey="openProduct1EditPageToAssignSource1"/>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource1ToCreatedProduct1">
+            <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource2ToCreatedProduct1">
+            <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
+        </actionGroup>
+        <!--Unassign default source from product 1-->
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProd1">
+            <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+        </actionGroup>
+        <!--Set positive quantities for product 1 for source 1-->
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setSource1QtyForCreatedProduct1">
+            <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+            <argument name="qty" value="10"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setSource2QtyForCreatedProduct1">
+            <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
+            <argument name="qty" value="10"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct1"/>
+
+        <!--Assign created product 2 to additional sources-->
+        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct2.id$$)}}" stepKey="openProduct2EditPageToAssignSource"/>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource1ToCreatedProduct2">
+            <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource2ToCreatedProduct2">
+            <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
+        </actionGroup>
+        <!--Unassign default source from product 2-->
+        <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProd2">
+            <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+        </actionGroup>
+        <!--Set positive quantities for product 1 for source 1-->
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setSource1QtyForCreatedProduct2">
+            <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+            <argument name="qty" value="10"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setSource2QtyForCreatedProduct2">
+            <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
+            <argument name="qty" value="10"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct2"/>
+
+        <!--Verify assigned sources assigned for product 1-->
+        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct1.id$$)}}" stepKey="openProduct1EditPageToVerifySources"/>
+        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSourceIdInGrid2Prod1"/>
+        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceIdInGrid3Prod1"/>
+
+        <!--Verify assigned sources assigned for product 2-->
+        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct2.id$$)}}" stepKey="openProduct2EditPageToVerifySources"/>
+        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$createSource1.source[name]$$" stepKey="seeSourceIdInGrid2Prod2"/>
+        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$createSource2.source[name]$$" stepKey="seeSourceIdInGrid3Prod2"/>
+
+        <!--Execute reindex-->
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+
+        <!--Verify the total product count on the storefront category page with both products being saleable-->
+        <amOnPage url="{{StorefrontCategoryPage.url($simpleCategory.custom_attributes[url_key]$)}}" stepKey="goToCatPageWithBothProdAvail"/>
+        <actionGroup ref="StorefrontCheckCategoryActionGroup" stepKey="assertProdCountInCatMatch2">
+            <argument name="category" value="$$simpleCategory$$"/>
+            <argument name="productCount" value="2"/>
+        </actionGroup>
+
+        <!--Set the product 1 qty to 0 for both sources to make it not saleable-->
+        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct1.id$$)}}" stepKey="openProduct1EditPageToSetQtyToZero"/>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setSource1QtyToZero">
+            <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
+            <argument name="qty" value="0"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="setSource2QtyToZero">
+            <argument name="sourceCode" value="$$createSource2.source[source_code]$$"/>
+            <argument name="qty" value="0"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveNonSaleableProduct"/>
+
+        <!--Verify that the total product count reflect the availability of just one product-->
+        <amOnPage url="{{StorefrontCategoryPage.url($simpleCategory.custom_attributes[url_key]$)}}" stepKey="goToCatPageWithOneProdAvail"/>
+        <actionGroup ref="StorefrontCheckCategoryActionGroup" stepKey="assertProdCountInCatMatch1">
+            <argument name="category" value="$$simpleCategory$$"/>
+            <argument name="productCount" value="1"/>
+        </actionGroup>
+    </test>
+</tests>

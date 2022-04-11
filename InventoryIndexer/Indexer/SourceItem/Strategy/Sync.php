@@ -7,11 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Indexer\SourceItem\Strategy;
 
+use ArrayIterator;
 use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSkuListInStock;
 use Magento\InventoryIndexer\Indexer\SourceItem\IndexDataBySkuListProvider;
+use Magento\InventoryIndexer\Indexer\Stock\PrepareReservationsIndexData;
+use Magento\InventoryIndexer\Indexer\Stock\ReservationsIndexTable;
 use Magento\InventoryIndexer\Indexer\Stock\StockIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexHandlerInterface;
@@ -20,6 +23,7 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexStructureInterface;
 
 /**
  * Reindex source items synchronously.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Sync
 {
@@ -59,6 +63,16 @@ class Sync
     private $defaultStockProvider;
 
     /**
+     * @var ReservationsIndexTable
+     */
+    private $reservationsIndexTable;
+
+    /**
+     * @var PrepareReservationsIndexData
+     */
+    private $prepareReservationsIndexData;
+
+    /**
      * $indexStructure is reserved name for construct variable (in index internal mechanism)
      *
      * @param GetSkuListInStock $getSkuListInStockToUpdate
@@ -68,6 +82,8 @@ class Sync
      * @param IndexNameBuilder $indexNameBuilder
      * @param StockIndexer $stockIndexer
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param ReservationsIndexTable $reservationsIndexTable
+     * @param PrepareReservationsIndexData $prepareReservationsIndexData
      */
     public function __construct(
         GetSkuListInStock $getSkuListInStockToUpdate,
@@ -76,7 +92,9 @@ class Sync
         IndexDataBySkuListProvider $indexDataBySkuListProvider,
         IndexNameBuilder $indexNameBuilder,
         StockIndexer $stockIndexer,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        ReservationsIndexTable $reservationsIndexTable,
+        PrepareReservationsIndexData $prepareReservationsIndexData
     ) {
         $this->getSkuListInStock = $getSkuListInStockToUpdate;
         $this->indexStructure = $indexStructureHandler;
@@ -85,6 +103,8 @@ class Sync
         $this->indexNameBuilder = $indexNameBuilder;
         $this->stockIndexer = $stockIndexer;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->reservationsIndexTable = $reservationsIndexTable;
+        $this->prepareReservationsIndexData = $prepareReservationsIndexData;
     }
 
     /**
@@ -116,9 +136,12 @@ class Sync
 
             $this->indexHandler->cleanIndex(
                 $mainIndexName,
-                new \ArrayIterator($skuList),
+                new ArrayIterator($skuList),
                 ResourceConnection::DEFAULT_CONNECTION
             );
+
+            $this->reservationsIndexTable->createTable($stockId);
+            $this->prepareReservationsIndexData->execute($stockId);
 
             $indexData = $this->indexDataBySkuListProvider->execute($stockId, $skuList);
             $this->indexHandler->saveIndex(
@@ -126,6 +149,8 @@ class Sync
                 $indexData,
                 ResourceConnection::DEFAULT_CONNECTION
             );
+
+            $this->reservationsIndexTable->dropTable($stockId);
         }
     }
 

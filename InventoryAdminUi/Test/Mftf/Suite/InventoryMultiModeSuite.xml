@@ -9,8 +9,12 @@
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
     <suite name="InventoryMultiModeSuite">
         <before>
-            <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG" />
-            <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
+            <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
+            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </before>
         <include>
             <group name="multi_mode"/>
@@ -20,7 +24,12 @@
             <group name="single_mode"/>
         </exclude>
         <after>
-            <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG" />
+            <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG"/>
+            <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableStockManagement"/>
+            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </after>
     </suite>
 </suites>

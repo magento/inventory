@@ -17,6 +17,7 @@
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/566629/scenarios/1936386"/>
             <group value="msi_ee"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <!--Create stock and source.-->
@@ -56,6 +57,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock" before="amOnLogoutPage"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify product on storefront.-->

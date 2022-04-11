@@ -9,13 +9,17 @@ namespace Magento\InventoryBundleProduct\Model\SourceItem\Validator;
 
 use Magento\Bundle\Model\Product\Type;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
-use Magento\InventoryBundleProduct\Model\SourceItem\Validator\ShipmentTypeValidator\GetBundleProductsByChildSku;
+use Magento\InventoryBundleProduct\Model\GetBundleProductIdsByChildSku;
+use Magento\InventoryBundleProduct\Model\GetChidrenSkusByParentIds;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
@@ -44,29 +48,53 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
     private $url;
 
     /**
-     * @var GetBundleProductsByChildSku
+     * @var GetBundleProductIdsByChildSku
      */
-    private $bundleProductsByChildSku;
+    private $getBundleProductIdsByChildSku;
+
+    /**
+     * @var CollectionFactory
+     */
+    private $productCollectionFactory;
+
+    /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
+     * @var GetChidrenSkusByParentIds
+     */
+    private $getChidrenSkusByParentIds;
 
     /**
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param ValidationResultFactory $validationResultFactory
      * @param GetSourceCodesBySkusInterface $getSourceCodesBySkus
      * @param UrlInterface $url
-     * @param GetBundleProductsByChildSku $bundleProductsByChildSku
+     * @param GetBundleProductIdsByChildSku $getBundleProductIdsByChildSku
+     * @param CollectionFactory $productCollectionFactory
+     * @param MetadataPool $metadataPool
+     * @param GetChidrenSkusByParentIds $getChidrenSkusByParentIds
      */
     public function __construct(
         IsSingleSourceModeInterface $isSingleSourceMode,
         ValidationResultFactory $validationResultFactory,
         GetSourceCodesBySkusInterface $getSourceCodesBySkus,
         UrlInterface $url,
-        GetBundleProductsByChildSku $bundleProductsByChildSku
+        GetBundleProductIdsByChildSku $getBundleProductIdsByChildSku,
+        CollectionFactory $productCollectionFactory,
+        MetadataPool $metadataPool,
+        GetChidrenSkusByParentIds $getChidrenSkusByParentIds
     ) {
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->validationResultFactory = $validationResultFactory;
         $this->getSourceCodesBySkus = $getSourceCodesBySkus;
         $this->url = $url;
-        $this->bundleProductsByChildSku = $bundleProductsByChildSku;
+        $this->getBundleProductIdsByChildSku = $getBundleProductIdsByChildSku;
+        $this->productCollectionFactory = $productCollectionFactory;
+        $this->metadataPool = $metadataPool;
+        $this->getChidrenSkusByParentIds = $getChidrenSkusByParentIds;
     }
 
     /**
@@ -81,13 +109,19 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
         if ($this->isSingleSourceMode->execute()) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }
-        $products = $this->bundleProductsByChildSku->execute((string)$sourceItem->getSku());
-        if (!$products) {
+        $bundleProductIds = $this->getBundleProductIdsByChildSku->execute((string) $sourceItem->getSku());
+        if (!$bundleProductIds) {
             return $this->validationResultFactory->create(['errors' => $errors]);
         }
-        foreach ($products as $bundleProduct) {
-            $sourceCodes = $this->getBundleProductSourceCodes($bundleProduct);
+        $collection = $this->getBundleProductsCollection($bundleProductIds);
+        $shipTogetherBundleProductIdsByLinkId = $this->getShipTogetherBundleProductIdsByLinkId($collection);
+        $chidrenSkusByParentId = $shipTogetherBundleProductIdsByLinkId
+            ? $this->getChidrenSkusByParentIds->execute(array_keys($shipTogetherBundleProductIdsByLinkId))
+            : [];
+        foreach ($chidrenSkusByParentId as $bundleProductLinkId => $skus) {
+            $sourceCodes = $this->getSourceCodesBySkus->execute($skus);
             if ($sourceCodes && !in_array($sourceItem->getSourceCode(), $sourceCodes)) {
+                $bundleProduct = $collection->getItemById($shipTogetherBundleProductIdsByLinkId[$bundleProductLinkId]);
                 $url = $this->url->getUrl('catalog/product/edit', ['id' => $bundleProduct->getId()]);
                 $errors[] = __(
                     'Not able to assign "%1" to product "%2", as it is part of bundle product'
@@ -106,24 +140,36 @@ class ShipmentTypeValidator implements SourceItemValidatorInterface
     }
 
     /**
-     * Get bundle product selections source codes.
+     * Return bundle products collection
      *
-     * @param ProductInterface $bundleProduct
+     * @param array $bundleProductIds
+     * @return Collection
+     */
+    private function getBundleProductsCollection(array $bundleProductIds): Collection
+    {
+        /** @var Collection $collection */
+        $collection = $this->productCollectionFactory->create();
+        $collection->addAttributeToFilter('entity_id', ['in' => $bundleProductIds])
+            ->addAttributeToFilter('type_id', ['eq' => \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE])
+            ->addAttributeToSelect('shipment_type');
+        return $collection;
+    }
+
+    /**
+     * Return bundle product IDs with shipment type "Ship Together"
+     *
+     * @param Collection $collection
      * @return array
      */
-    private function getBundleProductSourceCodes(ProductInterface $bundleProduct): array
+    private function getShipTogetherBundleProductIdsByLinkId(Collection $collection): array
     {
-        if ((int)$bundleProduct->getShipmentType() === Type::SHIPMENT_SEPARATELY) {
-            return [];
-        }
-        $options = $bundleProduct->getExtensionAttributes()->getBundleProductOptions();
-        $skus = [];
-        foreach ($options as $option) {
-            foreach ($option->getProductLinks() as $link) {
-                $skus[] = $link->getSku();
+        $metadata = $this->metadataPool->getMetadata(ProductInterface::class);
+        $shipTogetherBundleProductIdsByLinkId = [];
+        foreach ($collection as $product) {
+            if ((int)$product->getShipmentType() !== Type::SHIPMENT_SEPARATELY) {
+                $shipTogetherBundleProductIdsByLinkId[$product->getData($metadata->getLinkField())] = $product->getId();
             }
         }
-
-        return $this->getSourceCodesBySkus->execute(array_unique($skus));
+        return $shipTogetherBundleProductIdsByLinkId;
     }
 }

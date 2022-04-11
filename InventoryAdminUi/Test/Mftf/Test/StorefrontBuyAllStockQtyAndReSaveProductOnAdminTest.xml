@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontBuyAllStockQtyAndReSaveProductOnAdminTest">
+        <annotations>
+            <stories value="Stock status resets to saleable when the product is saved from Admin"/>
+            <title value="Verify product will not change stock status after order placed for full stock qty and product re-saved in admin."/>
+            <description value="Verify product will not change stock status after order placed for full stock qty and product re-saved in admin."/>
+            <testCaseId value="https://jira.corp.magento.com/browse/MC-41862"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!--Create test data.-->
+            <createData entity="MsiCustomer1" stepKey="customer"/>
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+        </before>
+        <after>
+            <!--Clean up created data.-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+        </after>
+        <!-- Login as customer -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
+            <argument name="Customer" value="$$customer$$"/>
+        </actionGroup>
+        <!-- Add simple product to shopping cart -->
+        <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="$$product$$"/>
+            <argument name="quantity" value="1000"/>
+        </actionGroup>
+        <!--Place order.-->
+        <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextPaymentPage"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoadCheckoutSelectPayment"/>
+        <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
+        <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
+        <!-- Start Message Queue for Export Consumer -->
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="startMessageQueue">
+            <argument name="consumerName" value="inventory.reservations.updateSalabilityStatus"/>
+            <argument name="maxMessages" value="100"/>
+        </actionGroup>
+        <wait time="30" stepKey="waitForSalabilityUpdate"/>
+        <!-- Navigate to product on store front -->
+        <actionGroup ref="OpenStoreFrontProductPageActionGroup" stepKey="goToProductPage">
+            <argument name="productUrlKey" value="$product.custom_attributes[url_key]$"/>
+        </actionGroup>
+        <see selector="{{StorefrontProductInfoMainSection.productStockStatus}}" userInput="Out Of Stock" stepKey="seeProductDisplayedAsOutOfStock"/>
+        <!-- Go to admin panel and save product -->
+        <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToEditProduct">
+            <argument name="productId" value="$$product.id$$"/>
+        </actionGroup>
+        <waitForPageLoad stepKey="waitForProductPage"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+        <!-- Navigate to product on store front -->
+        <actionGroup ref="OpenStoreFrontProductPageActionGroup" stepKey="goToProductPageOnceAgain">
+            <argument name="productUrlKey" value="$product.custom_attributes[url_key]$"/>
+        </actionGroup>
+        <see selector="{{StorefrontProductInfoMainSection.productStockStatus}}" userInput="Out Of Stock" stepKey="seeProductDisplayedAsOutOfStockAfterSave"/>
+    </test>
+</tests>

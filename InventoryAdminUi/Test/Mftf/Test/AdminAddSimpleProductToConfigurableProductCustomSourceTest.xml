@@ -50,6 +50,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurableProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Create configurable variation.-->

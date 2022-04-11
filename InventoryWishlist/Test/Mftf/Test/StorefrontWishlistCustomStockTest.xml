@@ -16,6 +16,7 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
         <before>
             <createData entity="SimpleMsiProduct" stepKey="product"/>
@@ -46,6 +47,7 @@
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Login as customer -->

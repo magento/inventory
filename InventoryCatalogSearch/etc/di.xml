@@ -6,7 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider">
+    <type name="Magento\CatalogSearch\Model\Indexer\Fulltext\Action\GetSearchableProductsSelect">
         <plugin name="stock_filters_by_child_products" type="Magento\InventoryCatalogSearch\Plugin\CatalogSearch\Model\Indexer\ChildProductFilterByInventoryStockPlugin"/>
+    </type>
+    <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
+        <plugin name="fulltextIndexUpdater" type="Magento\InventoryCatalogSearch\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\FulltextIndexUpdater" sortOrder="10" />
     </type>
 </config>

@@ -20,6 +20,7 @@
             <skip>
                 <issueId value="https://github.com/magento/inventory/issues/1821"/>
             </skip>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -61,6 +62,7 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex1"/>
         </after>
 
         <!--Assign simple product to source.-->

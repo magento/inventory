@@ -17,13 +17,15 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <!--Get order Id.-->
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderId" after="clickSubmitOrder" />
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber" after="clickSubmitOrder"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId" after="orderNumber"/>
         <!--Admin Area Total Refund Credit Memo-->
-        <actionGroup ref="OpenOrderByIdActionGroup" stepKey="openOrder">
-            <argument name="orderId" value="{$orderId}"/>
+        <actionGroup ref="AdminOpenOrderByEntityIdActionGroup" stepKey="openOrder">
+            <argument name="entityId" value="{$orderId}"/>
         </actionGroup>
         <click selector="{{AdminOrderDetailsMainActionsSection.creditMemo}}" stepKey="clickCreditMemo" after="openOrder"/>
         <click selector="{{AdminCreditMemoItemsSection.itemReturnToStock('1')}}" stepKey="returnToStockCheckbox" after="clickCreditMemo"/>

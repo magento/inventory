@@ -10,6 +10,8 @@ namespace Magento\InventoryCatalog\Model;
 use Magento\CatalogInventory\Model\Indexer\Stock as LegacyIndexer;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryCatalog\Model\ResourceModel\BulkInventoryTransfer as BulkInventoryTransferResource;
+use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
+use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Api\BulkInventoryTransferInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\BulkInventoryTransferValidatorInterface;
@@ -52,12 +54,30 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
     private $sourceIndexer;
 
     /**
+     * @var GetSourceItemsBySkuAndSourceCodes
+     */
+    private $getSourceItemsBySkuAndSourceCodes;
+
+    /**
+     * @var SetDataToLegacyStockStatus
+     */
+    private $setDataToLegacyStockStatus;
+
+    /**
+     * @var SetDataToLegacyStockItem
+     */
+    private $setDataToLegacyStockItem;
+
+    /**
      * @param BulkInventoryTransferValidatorInterface $inventoryTransferValidator
      * @param BulkInventoryTransferResource $bulkInventoryTransfer
      * @param SourceIndexer $sourceIndexer
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param LegacyIndexer $legacyIndexer
+     * @param GetSourceItemsBySkuAndSourceCodes $getSourceItemsBySkuAndSourceCodes
+     * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+     * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(
@@ -66,7 +86,10 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
         SourceIndexer $sourceIndexer,
         DefaultSourceProviderInterface $defaultSourceProvider,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        LegacyIndexer $legacyIndexer
+        LegacyIndexer $legacyIndexer,
+        GetSourceItemsBySkuAndSourceCodes $getSourceItemsBySkuAndSourceCodes,
+        SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
+        SetDataToLegacyStockItem $setDataToLegacyStockItem
     ) {
         $this->bulkInventoryTransferValidator = $inventoryTransferValidator;
         $this->bulkInventoryTransfer = $bulkInventoryTransfer;
@@ -74,6 +97,9 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
         $this->legacyIndexer = $legacyIndexer;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->sourceIndexer = $sourceIndexer;
+        $this->getSourceItemsBySkuAndSourceCodes = $getSourceItemsBySkuAndSourceCodes;
+        $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
+        $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
     }
 
     /**
@@ -111,11 +137,40 @@ class BulkInventoryTransfer implements BulkInventoryTransferInterface
 
         if (($this->defaultSourceProvider->getCode() === $originSource) ||
             ($this->defaultSourceProvider->getCode() === $destinationSource)) {
+            $this->updateStockInfoForLegacyStock($skus);
             $productIds = array_values($this->getProductIdsBySkus->execute($skus));
             $this->reindexLegacy($productIds);
         }
 
         return true;
+    }
+
+    /**
+     * Update legacy stock status and stock item
+     *
+     * @param array $skus
+     * @return void
+     */
+    private function updateStockInfoForLegacyStock(array $skus): void
+    {
+        foreach ($skus as $sku) {
+            $sourceItems = $this->getSourceItemsBySkuAndSourceCodes->execute(
+                $sku,
+                [$this->defaultSourceProvider->getCode()]
+            );
+            foreach ($sourceItems as $sourceItem) {
+                $this->setDataToLegacyStockItem->execute(
+                    (string)$sourceItem->getSku(),
+                    (float)$sourceItem->getQuantity(),
+                    (int)$sourceItem->getStatus()
+                );
+                $this->setDataToLegacyStockStatus->execute(
+                    (string)$sourceItem->getSku(),
+                    (float)$sourceItem->getQuantity(),
+                    (int)$sourceItem->getStatus()
+                );
+            }
+        }
     }
 
     /**

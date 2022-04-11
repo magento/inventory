@@ -17,6 +17,7 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+            <group value="pr_exclude"/>
         </annotations>
 
         <before>
@@ -51,6 +52,7 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!-- Add product to shopping cart -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">

@@ -41,6 +41,10 @@
             </createData>
         </before>
         <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
@@ -49,6 +53,7 @@
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Create order -->
@@ -61,9 +66,11 @@
         </actionGroup>
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
+        <comment userInput="BIC workaround" stepKey="getOrderId"/>
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
-			<actualResult type="const">$getOrderId</actualResult>
+			<actualResult type="const">$orderNumber</actualResult>
         </assertNotEmpty>
 
         <!-- Cancel whole  order from admin -->

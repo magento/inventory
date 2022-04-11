@@ -52,6 +52,7 @@
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- assign first simple product to custom source -->
@@ -92,9 +93,11 @@
         </actionGroup>
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
-        <grabTextFrom selector="|Order # (\d+)|" stepKey="getOrderId"/>
+        <comment userInput="BIC workaround" stepKey="getOrderId"/>
+        <grabTextFrom selector="|Order # (\d+)|" stepKey="orderNumber"/>
+        <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
         <assertNotEmpty stepKey="assertOrderIdIsNotEmpty">
-			<actualResult type="const">$getOrderId</actualResult>
+			<actualResult type="const">$orderNumber</actualResult>
         </assertNotEmpty>
 
         <!-- Invoice the order -->

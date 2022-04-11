@@ -154,6 +154,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNotNull($orderId);
+        self::assertNull($this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
 
         $this->deleteOrderById((int)$orderId);
     }
@@ -220,6 +221,12 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNotNull($orderId);
+
+        /**
+         * This assert can be introduced once https://github.com/magento/magento2/pull/29881
+         * has been merged
+         */
+        //self::assertEquals($this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered(), 1.5);
 
         //cleanup
         $this->deleteOrderById((int)$orderId);

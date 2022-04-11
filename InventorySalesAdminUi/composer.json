@@ -2,7 +2,7 @@
     "name": "magento/module-inventory-sales-admin-ui",
     "description": "N/A",
     "require": {
-        "php": "~7.3.0||~7.4.0",
+        "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-backend": "*",
         "magento/module-catalog-inventory": "*",
@@ -14,6 +14,9 @@
         "magento/module-catalog": "*",
         "magento/module-store": "*",
         "magento/module-ui": "*"
+    },
+    "suggest": {
+        "magento/module-sales": "*"
     },
     "type": "magento2-module",
     "license": [
