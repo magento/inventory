@@ -134,13 +134,12 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
             ->method('execute')
             ->with($product['id'])
             ->willReturn($product['type']);
-        $this->getSkusByProductIdsMock->expects($this->at(0))
+        $this->getSkusByProductIdsMock->expects($this->atLeastOnce())
             ->method('execute')
-            ->willReturn([$product['id'] => $product['sku']]);
-        $this->getSkusByProductIdsMock->expects($this->at(1))
-            ->method('execute')
-            ->with($childIds)
-            ->willReturn($childSkus);
+            ->willReturnMap([
+                [[$product['id']], [$product['id'] => $product['sku']]],
+                [$childIds, $childSkus]
+            ]);
         $this->configurableTypeMock->expects($this->once())->method('getChildrenIds')->willReturn([$childIds]);
         $isProductSalableMock = $this->getMockForAbstractClass(IsProductSalableResultInterface::class);
         $isProductSalableMock->expects($this->once())->method('isSalable')->willReturn(true);
@@ -189,7 +188,7 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
             ->method('execute')
             ->with($product['sku'])
             ->willReturn($stockItemDBMock);
-        $this->getSkusByProductIdsMock->expects($this->at(0))
+        $this->getSkusByProductIdsMock->expects($this->once())
             ->method('execute')
             ->willReturn([$product['id'] => $product['sku']]);
         $stockItemMock->expects($this->never())->method('getQty');
