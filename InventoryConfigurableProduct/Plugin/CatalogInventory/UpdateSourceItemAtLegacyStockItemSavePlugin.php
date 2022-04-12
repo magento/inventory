@@ -59,6 +59,7 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param Configurable $configurableType
      * @param AreProductsSalableInterface $areProductsSalable
+     * @param GetLegacyStockItem $getLegacyStockItem
      */
     public function __construct(
         GetProductTypeById $getProductTypeById,
