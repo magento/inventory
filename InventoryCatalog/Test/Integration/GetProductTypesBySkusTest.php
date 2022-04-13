@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration;
 
+use Magento\InventoryCatalog\Model\Cache\ProductTypesBySkusStorage;
+use Magento\InventoryCatalog\Model\ResourceModel\GetProductTypesBySkus;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +24,11 @@ class GetProductTypesBySkusTest extends TestCase
     private $getProductTypesBySkus;
 
     /**
+     * @var ProductTypesBySkusStorage
+     */
+    private $productTypesBySkuCacheStorage;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -29,6 +36,7 @@ class GetProductTypesBySkusTest extends TestCase
         parent::setUp();
 
         $this->getProductTypesBySkus = Bootstrap::getObjectManager()->get(GetProductTypesBySkusInterface::class);
+        $this->productTypesBySkuCacheStorage = Bootstrap::getObjectManager()->get(ProductTypesBySkusStorage::class);
     }
 
     /**
@@ -56,5 +64,24 @@ class GetProductTypesBySkusTest extends TestCase
         $skus = ['not_existed_1', 'not_existed_2', 'simple_sku'];
 
         self::assertEquals(['simple_sku' => 'simple'], $this->getProductTypesBySkus->execute($skus));
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_types_numeric_skus.php
+     */
+    public function testExecuteWithSimilairNumericSkus()
+    {
+        $skus = ['35.420', '35.4200', '35.42000'];
+
+        $expectedOutput = [
+            '35.420' => 'bundle',
+            '35.4200' => 'configurable',
+            '35.42000' => 'downloadable'
+        ];
+
+        // Clean cache so the product types come from GetProductTypesBySkus directly
+        $this->productTypesBySkuCacheStorage->clean();
+
+        self::assertEquals($expectedOutput, $this->getProductTypesBySkus->execute($skus));
     }
 }
