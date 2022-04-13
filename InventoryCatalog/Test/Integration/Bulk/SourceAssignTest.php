@@ -135,4 +135,23 @@ class SourceAssignTest extends TestCase
             'Products source assignment count do not match with mixed product types'
         );
     }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/products_with_numeric_sku.php
+     * @magentoDbIsolation enabled
+     */
+    public function testBulkSourceAssignmentOfProductsWithNumericSku(): void
+    {
+        $skus = ['01234', '1234'];
+        $sources = ['eu-1'];
+        $count = $this->bulkSourceAssign->execute($skus, $sources);
+
+        $this->assertEquals(2, $count, 'Products source assignment count do not match');
+
+        foreach ($skus as $sku) {
+            $sourceItemCodes = $this->getSourceItemCodesBySku($sku);
+            $this->assertEquals($sources, $sourceItemCodes, 'Mass source un-assignment failed');
+        }
+    }
 }
