@@ -71,6 +71,45 @@ class CheckQuoteItemQtyPluginTest extends TestCase
         self::assertEquals('The requested sku is not assigned to given stock.', $result->getMessage());
         self::assertEquals('The requested sku is not assigned to given stock.', $result->getQuoteMessage());
         self::assertEquals('qty', $result->getQuoteMessageIndex());
-        self::assertEquals('requested-sku-is-not-assigned-to-given-stock', $result->getErrorCode());
+    }
+
+    /**
+     * Verify, CheckQuoteItemQtyPlugin does not indicated backordered for an in stock item with backorders on.
+     *
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 2
+     *
+     * @return void
+     */
+    public function testCheckQuoteItemQtyPluginBackorderQtyWithInStockItem(): void
+    {
+        $itemQty = $qtyToCheck = $origQty = 1;
+        $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
+        $websiteId = $storeManager->getDefaultStoreView()->getWebsiteId();
+        $product = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class)->get('SKU-1');
+        $result = $this->stockState->checkQuoteItemQty($product->getId(), $itemQty, $qtyToCheck, $origQty, $websiteId);
+        self::assertFalse($result->getHasError());
+        self::assertNull($result->getItemBackorders());
+    }
+
+    /**
+     * Verify, CheckQuoteItemQtyPlugin indicates backordered for an out of stock item with backorders on.
+     *
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryCatalog::Test/_files/source_items_on_default_source.php
+     * @magentoConfigFixture current_store cataloginventory/item_options/backorders 2
+     *
+     * @return void
+     */
+    public function testCheckQuoteItemQtyPluginBackorderQtyWithOutOfStockItem(): void
+    {
+        $itemQty = $qtyToCheck = $origQty = 10;
+        $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
+        $websiteId = $storeManager->getDefaultStoreView()->getWebsiteId();
+        $product = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class)->get('SKU-1');
+        $result = $this->stockState->checkQuoteItemQty($product->getId(), $itemQty, $qtyToCheck, $origQty, $websiteId);
+        self::assertFalse($result->getHasError());
+        self::assertEquals($result->getItemBackorders(), 4.5);
     }
 }

@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model\ResourceModel;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
+use Magento\InventoryIndexer\Model\GetStockItemData\CacheStorage;
 
 /**
  * @inheritdoc
@@ -20,17 +22,21 @@ class GetStockItemDataCache implements GetStockItemDataInterface
     private $getStockItemData;
 
     /**
-     * @var array
+     * @var CacheStorage
      */
-    private $stockItemData = [[]];
+    private $cacheStorage;
 
     /**
      * @param GetStockItemData $getStockItemData
+     * @param CacheStorage|null $cacheStorage
      */
     public function __construct(
-        GetStockItemData $getStockItemData
+        GetStockItemData $getStockItemData,
+        CacheStorage $cacheStorage = null
     ) {
         $this->getStockItemData = $getStockItemData;
+        $this->cacheStorage = $cacheStorage ?: ObjectManager::getInstance()
+            ->get(CacheStorage::class);
     }
 
     /**
@@ -38,10 +44,16 @@ class GetStockItemDataCache implements GetStockItemDataInterface
      */
     public function execute(string $sku, int $stockId): ?array
     {
-        if (!isset($this->stockItemData[$stockId][$sku])) {
-            $this->stockItemData[$stockId][$sku] = $this->getStockItemData->execute($sku, $stockId);
+        if ($this->cacheStorage->get($stockId, $sku)) {
+            return $this->cacheStorage->get($stockId, $sku);
+        }
+        /** @var array $stockItemData */
+        $stockItemData =  $this->getStockItemData->execute($sku, $stockId);
+        /* Add to cache a new item */
+        if (!empty($stockItemData)) {
+            $this->cacheStorage->set($stockId, $sku, $stockItemData);
         }
 
-        return $this->stockItemData[$stockId][$sku];
+        return $stockItemData;
     }
 }
