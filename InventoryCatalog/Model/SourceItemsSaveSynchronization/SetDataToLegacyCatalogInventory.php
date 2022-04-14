@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization;
 
+use Magento\Catalog\Model\Indexer\Product\Price\Processor as PriceIndexProcessor;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
@@ -20,6 +21,7 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
 /**
  * Set Qty and status for legacy CatalogInventory Stock Information tables.
@@ -74,6 +76,16 @@ class SetDataToLegacyCatalogInventory
     private $cacheCleaner;
 
     /**
+     * @var GetStockItemDataInterface
+     */
+    private $getStockItemData;
+
+    /**
+     * @var PriceIndexProcessor
+     */
+    private $priceIndexProcessor;
+
+    /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
@@ -83,6 +95,8 @@ class SetDataToLegacyCatalogInventory
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param AreProductsSalableInterface $areProductsSalable
      * @param CacheCleaner|null $cacheCleaner
+     * @param GetStockItemDataInterface|null $getStockItemData
+     * @param PriceIndexProcessor|null $priceIndexProcessor
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -94,7 +108,9 @@ class SetDataToLegacyCatalogInventory
         Processor $indexerProcessor,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         AreProductsSalableInterface $areProductsSalable,
-        ?CacheCleaner $cacheCleaner = null
+        ?CacheCleaner $cacheCleaner = null,
+        ?GetStockItemDataInterface $getStockItemData = null,
+        ?PriceIndexProcessor $priceIndexProcessor = null
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
@@ -105,6 +121,10 @@ class SetDataToLegacyCatalogInventory
         $this->indexerProcessor = $indexerProcessor;
         $this->areProductsSalable = $areProductsSalable;
         $this->cacheCleaner = $cacheCleaner ?? ObjectManager::getInstance()->get(CacheCleaner::class);
+        $this->getStockItemData = $getStockItemData
+            ?: ObjectManager::getInstance()->get(GetStockItemDataInterface::class);
+        $this->priceIndexProcessor = $priceIndexProcessor
+            ?: ObjectManager::getInstance()->get(PriceIndexProcessor::class);
     }
 
     /**
@@ -143,13 +163,9 @@ class SetDataToLegacyCatalogInventory
      */
     private function updateSourceItems(array $sourceItems): void
     {
-        $skus = [];
-        foreach ($sourceItems as $sourceItem) {
-            $skus[] = $sourceItem->getSku();
-        }
-
-        $stockStatuses = $this->getStockStatuses($skus);
+        $stockStatuses = $this->getStockStatuses($sourceItems);
         $productIds = [];
+        $productIdsForPriceReindex = [];
         foreach ($sourceItems as $sourceItem) {
             $sku = $sourceItem->getSku();
 
@@ -166,6 +182,10 @@ class SetDataToLegacyCatalogInventory
             }
 
             $isInStock = (int)$sourceItem->getStatus();
+
+            if ($this->hasStockDataChangedFor($sku, (int) $stockStatuses[(string)$sourceItem->getSku()])) {
+                $productIdsForPriceReindex[] = $productId;
+            }
 
             if ($legacyStockItem->getManageStock()) {
                 $legacyStockItem->setIsInStock($isInStock);
@@ -193,16 +213,40 @@ class SetDataToLegacyCatalogInventory
         if ($productIds) {
             $this->indexerProcessor->reindexList($productIds);
         }
+
+        if ($productIdsForPriceReindex) {
+            $this->priceIndexProcessor->reindexList($productIdsForPriceReindex);
+        }
+    }
+
+    /**
+     * Check whether the product stock status has changed
+     *
+     * @param string $sku
+     * @param int $currentStatus
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function hasStockDataChangedFor(string $sku, int $currentStatus): bool
+    {
+        $stockItemData = $this->getStockItemData->execute($sku, Stock::DEFAULT_STOCK_ID);
+        return $stockItemData !== null
+            && (int) $stockItemData[GetStockItemDataInterface::IS_SALABLE] !== $currentStatus;
     }
 
     /**
      * Returns items stock statuses.
      *
-     * @param array $skus
+     * @param array $sourceItems
      * @return array
      */
-    private function getStockStatuses(array $skus): array
+    private function getStockStatuses(array $sourceItems): array
     {
+        $skus = [];
+        foreach ($sourceItems as $sourceItem) {
+            $skus[] = $sourceItem->getSku();
+        }
+
         $stockStatuses = [];
         foreach ($this->areProductsSalable->execute($skus, Stock::DEFAULT_STOCK_ID) as $productSalable) {
             $stockStatuses[$productSalable->getSku()] = $productSalable->isSalable();
