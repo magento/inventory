@@ -54,11 +54,11 @@ class UpdateProductSkuTest extends WebapiAbstract
     /**
      * Verify, update product sku will update product source items.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      *
      * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
      */

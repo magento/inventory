@@ -12,6 +12,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -49,24 +50,32 @@ class QuantityAndStockPlugin
     private $defaultStockProvider;
 
     /**
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
+    /**
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         ResourceConnection $resource,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -85,12 +94,13 @@ class QuantityAndStockPlugin
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
+            $defaultCode = $this->defaultSourceProvider->getCode();
             $collection->joinField(
                 'parent_stock',
                 $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
                 null,
                 'sku = sku',
-                null,
+                ['source_code' => $defaultCode],
                 'left'
             );
             $collection->joinField(
@@ -109,7 +119,8 @@ class QuantityAndStockPlugin
                 )
                 ->joinLeft(
                     ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
-                    'child_stock.sku = child_product.sku',
+                    'child_stock.sku = child_product.sku'
+                    . $collection->getConnection()->quoteInto(' AND child_stock.source_code = ?', $defaultCode),
                     []
                 )
                 ->columns(
