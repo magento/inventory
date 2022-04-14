@@ -9,6 +9,6 @@ return [
     // the following modules must be disabled when Live Search is used
     // so core modules must not be dependent on them
     'Magento\LiveSearch' => [
-        'Magento\InventoryElasticSearch',
+        'Magento\InventoryElasticsearch',
     ],
 ];
