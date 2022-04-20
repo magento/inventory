@@ -52,6 +52,7 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!-- Add product to shopping cart -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">

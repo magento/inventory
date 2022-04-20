@@ -35,18 +35,22 @@
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
-        <!--Assign created product to additional sources-->
-        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
+        <!-- Assign created product to additional sources -->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPageToAssignSource">
+            <argument name="productId" value="$$simpleProduct.id$$"/>
+        </actionGroup>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSource1ToCreatedProduct">
             <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
         </actionGroup>
-        <!--Unassign default source and reassign it again-->
+        <!-- Unassign default source and reassign it again -->
         <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignSource">
             <argument name="sourceCode" value="{{_defaultSource.name}}"/>
         </actionGroup>
-        <comment userInput="Reassign of the same source should be possible." stepKey="reassignShouldBePossible"/>
+        <!-- Reassign of the same source should be possible -->
+        <comment userInput="BIC workaround" stepKey="reassignShouldBePossible"/>
         <actionGroup ref="AssignSourceToProductActionGroup" stepKey="reassignSource">
             <argument name="sourceCode" value="{{_defaultSource.name}}"/>
         </actionGroup>

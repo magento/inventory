@@ -40,16 +40,18 @@
         </before>
         <after>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
-            <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
-            <waitForPageLoad time="20" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="20" stepKey="waitFroDefaultStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="assignDefaultStockToMainWebsiteComment"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockListPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockListPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByName"/>
+            <comment userInput="BIC workaround" stepKey="clickEditDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitFroDefaultStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
             </actionGroup>
@@ -58,6 +60,7 @@
             <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <deleteData createDataKey="createStock1" stepKey="deleteCustomStock"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="adminProductIndexPageAdd"/>
@@ -126,8 +129,8 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad11"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
 
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="clickPlaceOrder3"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad17"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder3"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad17"/>
         <see selector="{{CheckoutSuccessMainSection.successTitle}}" userInput="Thank you for your purchase!" stepKey="waitForLoadSuccessPage3"/>
         <grabTextFrom selector=".checkout-success .order-number strong" stepKey="grabOrderNumber"/>
 

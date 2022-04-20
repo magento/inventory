@@ -129,9 +129,8 @@ class StockStatusBaseSelectProcessor implements BaseSelectProcessorInterface
                 []
             );
         }
-        if (!$this->stockConfig->isShowOutOfStock()) {
-            $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
-        }
+
+        $select->where(sprintf('stock.%1s = ?', $isSalableColumnName), 1);
 
         return $select;
     }

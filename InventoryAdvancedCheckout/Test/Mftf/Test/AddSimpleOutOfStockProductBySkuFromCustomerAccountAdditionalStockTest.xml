@@ -22,13 +22,21 @@
             <createData entity="_minimalSource" stepKey="additionalSource" before="additionalStock"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" before="stockSourceLink"/>
             <!--Link additional source with stock.-->
-            <createData entity="SourceStockLinked1" stepKey="stockSourceLink" before="createSimpleProduct">
+            <createData entity="SourceStockLinked1" stepKey="stockSourceLink" before="reindex">
                 <requiredEntity createDataKey="additionalStock"/>
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" before="cleanCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache" before="createSimpleProduct">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
             <!--Assign create product to additional stock and set qty.-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel" after="createSimpleProduct"/>
-            <amOnPage url="{{AdminProductEditPage.url($$createSimpleProduct.id$$)}}" stepKey="openProductEditPageToSetQty" after="loginToAdminPanel"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPageToSetQty" after="loginToAdminPanel">
+                <argument name="productId" value="$$createSimpleProduct.id$$"/>
+            </actionGroup>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToCreatedProduct" after="openProductEditPageToSetQty">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
@@ -46,7 +54,13 @@
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
-            <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteSimpleProduct"/>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" before="cleanCache">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache" before="deleteSimpleProduct">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </after>
     </test>
 </tests>

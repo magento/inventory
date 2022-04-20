@@ -7,16 +7,23 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Test\Integration\Indexer;
 
+use Magento\Catalog\Model\Indexer\Product\Price\Processor as PriceIndexProcessor;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\ResourceConnection;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
 use Magento\InventoryIndexer\Indexer\SourceItem\SourceItemIndexer;
 use Magento\InventoryIndexer\Model\ResourceModel\GetStockItemData;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SourceItemIndexerTest extends TestCase
 {
     /**
@@ -204,6 +211,98 @@ class SourceItemIndexerTest extends TestCase
             ['SKU-3', 20, null],
             ['SKU-3', 30, [GetStockItemDataInterface::QUANTITY => 0, GetStockItemDataInterface::IS_SALABLE => 0]],
         ];
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/assign_products_to_websites.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     */
+    public function testShouldTriggerPriceReindex(): void
+    {
+        $sku = 'SKU-2';
+        $sourceCode = 'us-1';
+        $websiteCode = 'us_website';
+        $objectManager = Bootstrap::getObjectManager();
+        /** @var $sourceItemsSave SourceItemsSaveInterface */
+        $sourceItemsSave = $objectManager->get(SourceItemsSaveInterface::class);
+        $this->assertNotEmpty($this->getPriceIndexData($sku, $websiteCode));
+        $sourceItem = $this->getSourceItem($sku, $sourceCode);
+        $sourceItem->setQuantity(0);
+        $sourceItemsSave->execute([$sourceItem]);
+
+        $this->assertEmpty($this->getPriceIndexData($sku, $websiteCode));
+        $sourceItem->setQuantity(1);
+        $sourceItemsSave->execute([$sourceItem]);
+        $this->assertNotEmpty($this->getPriceIndexData($sku, $websiteCode));
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/assign_products_to_websites.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDataFixture setPriceIndexerModeToScheduled
+     * @magentoDbIsolation disabled
+     * @return void
+     */
+    public function testShouldTriggerPriceReindexRegardlessOfIndexMode(): void
+    {
+        $this->testShouldTriggerPriceReindex();
+    }
+
+    public static function setPriceIndexerModeToScheduled(): void
+    {
+        /** @var $priceIndexProcessor PriceIndexProcessor */
+        $priceIndexProcessor = Bootstrap::getObjectManager()->get(PriceIndexProcessor::class);
+        $priceIndexProcessor->getIndexer()->setScheduled(true);
+    }
+
+    public static function setPriceIndexerModeToScheduledRollback(): void
+    {
+        /** @var $priceIndexProcessor PriceIndexProcessor */
+        $priceIndexProcessor = Bootstrap::getObjectManager()->get(PriceIndexProcessor::class);
+        $priceIndexProcessor->getIndexer()->setScheduled(false);
+    }
+
+    /**
+     * @param string $sku
+     * @param string $websiteCode
+     * @return array
+     */
+    private function getPriceIndexData(string $sku, string $websiteCode): array
+    {
+        $objectManager = Bootstrap::getObjectManager();
+        /** @var ResourceConnection $resource */
+        $resource = $objectManager->get(ResourceConnection::class);
+        $storeManager = $objectManager->get(StoreManagerInterface::class);
+        $website = $storeManager->getWebsite($websiteCode);
+        $select = $resource->getConnection()
+            ->select()
+            ->from(
+                ['e' => $resource->getTableName('catalog_product_entity')],
+                []
+            )
+            ->join(
+                ['price_index' => $resource->getTableName('catalog_product_index_price')],
+                'e.entity_id = price_index.entity_id',
+            )
+            ->where('e.sku = ?', $sku)
+            ->where('price_index.website_id = ?', $website->getId());
+
+        return $resource->getConnection()->fetchall($select) ?? [];
     }
 
     /**

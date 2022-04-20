@@ -188,4 +188,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Catalog\Block\Product\ProductList\Toolbar">
+        <plugin name="update_toolbar_count" type="Magento\InventoryCatalog\Plugin\Catalog\Block\ProductList\UpdateToolbarCount"/>
+    </type>
 </config>

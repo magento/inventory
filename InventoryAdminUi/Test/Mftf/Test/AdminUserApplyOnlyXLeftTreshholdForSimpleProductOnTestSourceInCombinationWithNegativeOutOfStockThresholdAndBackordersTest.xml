@@ -34,6 +34,9 @@
                 <requiredEntity createDataKey="category"/>
             </createData>
             <magentoCLI command="config:set {{SetOnlyXLeftThresholdFive.path}} {{SetOnlyXLeftThresholdFive.value}}" stepKey="SetOnlyXleftFive"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -48,10 +51,15 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Clean up created data.-->
-            <magentoCLI command="config:set {{TurnOffOutOfStockConfig.path}} {{TurnOnOutOfStockConfig.value}}" stepKey="displayOutOfStockNo"/>
+            <comment userInput="BIC workaround" stepKey="displayOutOfStockNo"/>
+            <magentoCLI command="config:set {{SetOnlyXLeftThreshold.path}} {{SetOnlyXLeftThreshold.value}}" stepKey="setStockThresholdQty0"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </after>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
