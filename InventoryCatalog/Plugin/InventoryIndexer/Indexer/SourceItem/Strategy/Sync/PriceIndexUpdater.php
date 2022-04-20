@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
+use Magento\InventoryIndexer\Model\ResourceModel\GetSourceCodesBySourceItemIds;
 
 /**
  * Reindex price after source item has reindexed.
@@ -27,15 +29,31 @@ class PriceIndexUpdater
     private $productIdsBySourceItemIds;
 
     /**
+     * @var GetSourceCodesBySourceItemIds
+     */
+    private $getSourceCodesBySourceItemIds;
+
+    /**
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
+    /**
      * @param Processor $priceIndexProcessor
      * @param GetProductIdsBySourceItemIds $productIdsBySourceItemIds
+     * @param GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
      */
     public function __construct(
         Processor $priceIndexProcessor,
-        GetProductIdsBySourceItemIds $productIdsBySourceItemIds
+        GetProductIdsBySourceItemIds $productIdsBySourceItemIds,
+        GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds,
+        DefaultSourceProviderInterface $defaultSourceProvider
     ) {
         $this->priceIndexProcessor = $priceIndexProcessor;
         $this->productIdsBySourceItemIds = $productIdsBySourceItemIds;
+        $this->getSourceCodesBySourceItemIds = $getSourceCodesBySourceItemIds;
+        $this->defaultSourceProvider = $defaultSourceProvider;
     }
 
     /**
@@ -51,9 +69,20 @@ class PriceIndexUpdater
         $result,
         array $sourceItemIds
     ): void {
-        $productIds = $this->productIdsBySourceItemIds->execute($sourceItemIds);
-        if (!empty($productIds)) {
-            $this->priceIndexProcessor->reindexList($productIds);
+        $customSourceItemIds = [];
+        $defaultSourceCode = $this->defaultSourceProvider->getCode();
+        foreach ($this->getSourceCodesBySourceItemIds->execute($sourceItemIds) as $sourceItemId => $sourceCode) {
+            if ($sourceCode !== $defaultSourceCode) {
+                $customSourceItemIds[] = $sourceItemId;
+            }
+        }
+        // In the case the source item is default source,
+        // the price indexer will be executed according to indexer.xml configuration
+        if ($customSourceItemIds) {
+            $productIds = $this->productIdsBySourceItemIds->execute($customSourceItemIds);
+            if (!empty($productIds)) {
+                $this->priceIndexProcessor->reindexList($productIds, true);
+            }
         }
     }
 }
