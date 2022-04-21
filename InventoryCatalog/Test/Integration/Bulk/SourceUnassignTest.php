@@ -97,4 +97,26 @@ class SourceUnassignTest extends TestCase
             'Products source un-assignment involved unexpected entries'
         );
     }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku": "01234"} as:product1
+     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku": "1234"} as:product2
+     * @magentoDataFixture Magento\CatalogInventory\Test\Fixture\SourceItem with:{"sku": "01234", "source_code": "eu-1"}
+     * @magentoDataFixture Magento\CatalogInventory\Test\Fixture\SourceItem with:{"sku": "1234", "source_code": "eu-1"}
+     * @magentoDbIsolation enabled
+     */
+    public function testBulkSourceUnAssignmentOfProductsWithNumericSku(): void
+    {
+        $skus = ['01234', '1234'];
+        $sources = ['eu-1'];
+        $count = $this->bulkSourceUnassign->execute($skus, $sources);
+
+        $this->assertEquals(2, $count, 'Products source un-assignment count do not match');
+
+        foreach ($skus as $sku) {
+            $sourceItemCodes = $this->getSourceItemCodesBySku($sku);
+            $this->assertNotContains($sources, $sourceItemCodes, 'Mass source un-assignment failed');
+        }
+    }
 }

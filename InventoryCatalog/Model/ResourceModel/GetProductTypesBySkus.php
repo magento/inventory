@@ -66,10 +66,6 @@ class GetProductTypesBySkus implements GetProductTypesBySkusInterface
      */
     private function getResultKey(string $sku, array $productSkuList): string
     {
-        $key = array_search(strtolower($sku), array_map('strtolower', $productSkuList));
-        if ($key !== false) {
-            $sku = (string)$productSkuList[$key];
-        }
-        return $sku;
+        return in_array(strtolower($sku), array_map('strtolower', $productSkuList)) ? $sku : '';
     }
 }
