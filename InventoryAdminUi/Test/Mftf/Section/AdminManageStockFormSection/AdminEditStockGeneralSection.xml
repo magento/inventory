@@ -9,5 +9,6 @@
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminEditStockGeneralSection">
         <element name="name" type="input" selector=".admin__control-text[name='general[name]']"/>
+        <element name="disabledAddingSourcesNotice" type="text" selector="//strong[contains(text(), 'NOTE')]/following-sibling::span"/>
     </section>
 </sections>
