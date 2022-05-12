@@ -11,6 +11,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Psr\Log\LoggerInterface;
+use Magento\InventoryReservationsApi\Model\GetReservationsQuantityInterface;
 
 /**
  * Lightweight implementation for Storefront application.
@@ -21,6 +22,12 @@ class IsProductSalable implements IsProductSalableInterface
      * @var GetStockItemDataInterface
      */
     private $getStockItemData;
+
+    /**
+     * @var GetReservationsQuantityInterface
+     */
+    private $getReservationsQuantity;
+
     /**
      * @var LoggerInterface
      */
@@ -28,14 +35,17 @@ class IsProductSalable implements IsProductSalableInterface
 
     /**
      * @param GetStockItemDataInterface $getStockItemData
+     * @param GetReservationsQuantityInterface $getReservationsQuantity
      * @param LoggerInterface $logger
      */
     public function __construct(
-        GetStockItemDataInterface $getStockItemData,
-        LoggerInterface $logger
+        GetStockItemDataInterface           $getStockItemData,
+        GetReservationsQuantityInterface    $getReservationsQuantity,
+        LoggerInterface                     $logger
     ) {
-        $this->getStockItemData = $getStockItemData;
-        $this->logger = $logger;
+        $this->getStockItemData             = $getStockItemData;
+        $this->getReservationsQuantity      = $getReservationsQuantity;
+        $this->logger                       = $logger;
     }
 
     /**
@@ -44,8 +54,7 @@ class IsProductSalable implements IsProductSalableInterface
     public function execute(string $sku, int $stockId): bool
     {
         try {
-            $stockItem = $this->getStockItemData->execute($sku, $stockId);
-            $isSalable = (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
+            $isSalable = $this->getIsSalable($sku, $stockId);
         } catch (LocalizedException $exception) {
             $this->logger->warning(
                 sprintf(
@@ -59,5 +68,23 @@ class IsProductSalable implements IsProductSalableInterface
         }
 
         return $isSalable;
+    }
+
+    /**
+     * Get isSalable status based on stock and reservations.
+     *
+     * @param string $sku
+     * @param int $stockId
+     * @return bool
+     * @throws LocalizedException
+     */
+    private function getIsSalable(string $sku, int $stockId): bool
+    {
+        $stockItem = $this->getStockItemData->execute($sku, $stockId);
+        $isStockSalable = (bool)($stockItem[GetStockItemDataInterface::IS_SALABLE] ?? false);
+
+        $reservationQuantity = $this->getReservationsQuantity->execute($sku, $stockId);
+
+        return $isStockSalable && $reservationQuantity >= 0;
     }
 }
