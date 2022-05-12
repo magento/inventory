@@ -148,6 +148,10 @@
         <waitForPageLoad stepKey="waitForSourcesWillBeUnassign"/>
 
         <comment userInput="Check if default source still assigned to created products." stepKey="checkDefaultSourceStillAssignedToCreatedProductsComment"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceStillForFirstCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceStillForSecondCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('3', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceStillForThirdCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('4', _defaultSource.name)}}" userInput="1000" stepKey="checkDefaultSourceStillForFourthCreatedProduct"/>
 
         <comment userInput="Check for all sources was unassigned" stepKey="checkAllCreatedSourcesUnassignedFromProductsComment"/>
         <dontSee selector="{{AdminProductGridSection.productQtyPerSource('1', $$createFirstCustomSource.source[name]$$)}}" userInput="0" stepKey="checkSourceQtyForFirstCreatedProductForFirstSourceUnassined"/>
