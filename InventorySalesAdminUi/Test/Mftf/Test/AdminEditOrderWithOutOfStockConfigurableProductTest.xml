@@ -12,7 +12,7 @@
         <annotations>
             <stories value="Edit order"/>
             <title value="Verify that admin can edit order when configurable product is out of stock"/>
-            <description value="admin can edit order when configurable product is out of stock"/>
+            <description value="Admin can edit order when configurable product is out of stock"/>
             <severity value="MAJOR"/>
             <useCaseId value="ACP2E-201"/>
             <testCaseId value="AC-2078"/>
