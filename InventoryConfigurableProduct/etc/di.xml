@@ -40,4 +40,12 @@
         <plugin name="update_parent_configurable_product_stock_status_in_legacy_stock"
                 type="Magento\InventoryConfigurableProduct\Plugin\InventoryApi\UpdateParentStockStatusInLegacyStockPlugin"/>
     </type>
+    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
+        <plugin name="update_configurable_product_parent_stock_status"
+                type="Magento\InventoryConfigurableProduct\Plugin\InventoryApi\UpdateConfigurableProductParentStockStatus"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
+        <plugin name="update_source_stock_for_configurable_product"
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin" />
+    </type>
 </config>

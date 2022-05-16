@@ -51,6 +51,7 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout" before="deleteStock"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteStock" before="deleteSimpleProduct"/>
+            <magentoCron groups="index" stepKey="reindex" after="deleteBundleProduct"/>
         </after>
     </test>
 </tests>

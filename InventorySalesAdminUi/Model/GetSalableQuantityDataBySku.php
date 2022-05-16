@@ -17,7 +17,7 @@ use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 
 /**
- * Get salable quantity data by sku
+ * Get salable quantity data of product by sku
  */
 class GetSalableQuantityDataBySku
 {
@@ -60,6 +60,8 @@ class GetSalableQuantityDataBySku
     }
 
     /**
+     * Get salable quantity of product by sku
+     *
      * @param string $sku
      * @return array
      * @throws InputException
@@ -70,7 +72,7 @@ class GetSalableQuantityDataBySku
     public function execute(string $sku): array
     {
         $stockInfo = [];
-        $sku = htmlspecialchars_decode($sku, ENT_NOQUOTES);
+        $sku = htmlspecialchars_decode($sku, ENT_QUOTES | ENT_SUBSTITUTE);
         $stockIds = $this->getAssignedStockIdsBySku->execute($sku);
         if (count($stockIds)) {
             foreach ($stockIds as $stockId) {

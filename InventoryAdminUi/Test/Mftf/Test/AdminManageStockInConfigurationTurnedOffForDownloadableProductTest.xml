@@ -37,7 +37,9 @@
             </createData>
             <!--Assign created source to product and set product sock status to out of stock.-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
-            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPageToAssignSource">
+                <argument name="productId" value="$$product.id$$"/>
+            </actionGroup>
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
@@ -49,14 +51,18 @@
                 <argument name="sourceStatus" value="{{SourceStatusOutOfStock.value}}"/>
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </before>
         <after>
             <!--Turn on Manage Stock.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <comment userInput="BIC workaround" stepKey="reindex"/>
+            <comment userInput="BIC workaround" stepKey="flushCache"/>
             <!--Delete test data.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
@@ -72,21 +78,31 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex2">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache2">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </after>
 
         <!--Verify product is not visible on storefront.-->
         <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductNotVisibleOnStorefront">
-            <argument name="categoryUrlKey" value="$category.url_key$"/>
-            <argument name="productName" value="$product.name$"/>
+            <argument name="categoryUrlKey" value="$$category.url_key$$"/>
+            <argument name="productName" value="$$product.name$$"/>
         </actionGroup>
         <!-- Turn off Manage Stock-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache">
+            <argument name="tags" value="config full_page"/>
+        </actionGroup>
         <!-- Check product is visible on Storefront-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyProductVisibleOnStorefront">
-            <argument name="category" value="$category$"/>
-            <argument name="product" value="$product$"/>
+            <argument name="category" value="$$category$$"/>
+            <argument name="product" value="$$product$$"/>
         </actionGroup>
     </test>
 </tests>

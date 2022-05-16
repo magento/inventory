@@ -6,19 +6,9 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
-    <publisher topic="async.V1.inventory.bulk-product-source-assign.POST">
-        <connection name="amqp" exchange="magento" disabled="false" />
-    </publisher>
-    <publisher topic="async.V1.inventory.bulk-product-source-unassign.POST">
-        <connection name="amqp" exchange="magento" disabled="false" />
-    </publisher>
-    <publisher topic="async.V1.inventory.bulk-product-source-transfer.POST">
-        <connection name="amqp" exchange="magento" disabled="false" />
-    </publisher>
-    <publisher topic="inventory.source.items.cleanup">
-        <connection name="db" exchange="magento-db" disabled="false" />
-    </publisher>
-    <publisher topic="inventory.mass.update">
-        <connection name="db" exchange="magento-db" disabled="false" />
-    </publisher>
+    <publisher topic="async.V1.inventory.bulk-product-source-assign.POST"/>
+    <publisher topic="async.V1.inventory.bulk-product-source-unassign.POST"/>
+    <publisher topic="async.V1.inventory.bulk-product-source-transfer.POST"/>
+    <publisher topic="inventory.source.items.cleanup"/>
+    <publisher topic="inventory.mass.update"/>
 </config>

@@ -11,6 +11,8 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\ConfigurableProduct\Pricing\Price\ConfigurablePriceResolver;
 use Magento\ConfigurableProduct\Pricing\Price\FinalPriceResolver;
 use Magento\ConfigurableProduct\Pricing\Price\LowestPriceOptionsProviderInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 class LowestPriceOptionProviderTest extends TestCase
 {
     /**
-     * @var \Magento\Framework\ObjectManagerInterface
+     * @var ObjectManagerInterface
      */
     private $objectManager;
 
@@ -78,6 +80,7 @@ class LowestPriceOptionProviderTest extends TestCase
      * @return void
      *
      * @magentoDbIsolation disabled
+     * @throws NoSuchEntityException
      */
     // @codingStandardsIgnoreEnd
     public function testGetProductsWithAllChildren()
@@ -105,6 +108,7 @@ class LowestPriceOptionProviderTest extends TestCase
      * @return void
      *
      * @magentoDbIsolation disabled
+     * @throws NoSuchEntityException
      */
     public function testGetProductsIfOneOfChildIsOutOfStock(): void
     {
@@ -136,6 +140,7 @@ class LowestPriceOptionProviderTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDbIsolation disabled
      * @magentoConfigFixture store_for_us_website_store cataloginventory/options/show_out_of_stock 1
+     * @throws NoSuchEntityException
      */
     public function testGetProductsWhenOutOfStockInDefaultStock(): void
     {
@@ -154,6 +159,84 @@ class LowestPriceOptionProviderTest extends TestCase
         self::assertGreaterThan(0, count($lowestPriceChildrenProducts));
         $lowestPriceChildrenProduct = reset($lowestPriceChildrenProducts);
         self::assertEquals(10, $lowestPriceChildrenProduct->getPrice());
+    }
+
+    /**
+     * Tests getProducts method.
+     *
+     * Tests getProducts method will find Configurable Product Links in non-default stock when display out of stock
+     * config is set to "No" option.
+     *
+     * @return void
+     *
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/set_product_configurable_out_of_stock.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     * @magentoConfigFixture store_for_us_website_store cataloginventory/options/show_out_of_stock 0
+     * @throws NoSuchEntityException
+     */
+    public function testGetProductsWhenDisplayOutOfStockIsNoInDefaultStock(): void
+    {
+        $this->storeManager->setCurrentStore('store_for_us_website');
+        $configurableProduct = $this->productRepository->get(
+            'configurable',
+            false,
+            null,
+            true
+        );
+        $lowestPriceChildrenProducts = $this->createLowestPriceOptionsProvider()->getProducts($configurableProduct);
+        /**
+         * As ConfigurableReguralPrice and ConfigurablePriceResolver look for LowestPriceOptionProvider can return
+         * array of products "greater than" assertion is used.
+         */
+        self::assertGreaterThan(0, count($lowestPriceChildrenProducts));
+        $lowestPriceChildrenProduct = reset($lowestPriceChildrenProducts);
+        self::assertEquals(20, $lowestPriceChildrenProduct->getPrice());
+    }
+
+    /**
+     * Test lowest price option with "display out of stock products" enabled
+     *
+     * Test that if at least one child product is in-stock and "display out of stock products" is enabled,
+     * then only child product that are in-stock are considered for lowest price calculation
+     *
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/source_items_configurable.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento/ConfigurableProduct/_files/configurable_attribute.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/product_configurable_in_us_stock.php
+     * @magentoDataFixture Magento_InventoryConfigurableProduct::Test/_files/set_product_configurable_out_of_stock.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     * @magentoConfigFixture current_store cataloginventory/options/show_out_of_stock 1
+     * @magentoConfigFixture store_for_us_website_store cataloginventory/options/show_out_of_stock 1
+     * @throws NoSuchEntityException
+     * @return void
+     */
+    public function testGetProductsIfOneOfChildIsOutOfStockAndDisplayOutOfStockIsEnabled(): void
+    {
+        $this->storeManager->setCurrentStore('store_for_us_website');
+        $configurableProduct = $this->productRepository->get(
+            'configurable',
+            false,
+            null,
+            true
+        );
+        $lowestPriceChildrenProducts = $this->createLowestPriceOptionsProvider()->getProducts($configurableProduct);
+        self::assertGreaterThan(0, count($lowestPriceChildrenProducts));
+        $lowestPriceChildrenProduct = reset($lowestPriceChildrenProducts);
+        self::assertEquals(20, $lowestPriceChildrenProduct->getPrice());
     }
 
     /**
