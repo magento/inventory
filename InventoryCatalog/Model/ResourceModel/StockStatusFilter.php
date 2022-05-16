@@ -37,15 +37,13 @@ class StockStatusFilter
      * @param string $productTableAlias
      * @param string $stockStatusTableAlias
      * @param int $stockId
-     * @param bool|null $searchResultApplier
      * @return Select
      */
     public function execute(
         Select $select,
         string $productTableAlias,
         string $stockStatusTableAlias,
-        int $stockId,
-        bool $searchResultApplier = null
+        int $stockId
     ): Select {
         $stockStatusTable = $this->stockIndexTableProvider->execute($stockId);
         $isSalableFieldName = IndexStructure::IS_SALABLE;
@@ -54,10 +52,7 @@ class StockStatusFilter
             "{$stockStatusTableAlias}.sku = {$productTableAlias}.sku",
             []
         );
-
-        if (!$searchResultApplier) {
-            $select->where("{$stockStatusTableAlias}.{$isSalableFieldName} = ?", 1);
-        }
+        $select->where("{$stockStatusTableAlias}.{$isSalableFieldName} = ?", 1);
         return $select;
     }
 }
