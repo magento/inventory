@@ -55,8 +55,11 @@
                         "component": "Magento_InventoryConfigurableProductAdminUi/js/variations/steps/summary",
                         "appendTo": "<?= /* @noEscape */  $block->getParentComponentName() ?>",
                         "gridTemplate": "Magento_InventoryConfigurableProductAdminUi/variations/steps/summary-grid",
-                        "variationsComponent": "<?= /* @noEscape */ $block->getData('config/form') ?>.configurableVariations",
-                        "modalComponent": "<?= /* @noEscape */ $block->getData('config/form') ?>.configurableModal"
+                        "variationsComponent": "<?= /* @noEscape */ $block->getData('config/form')
+                        ?>.configurableVariations",
+                        "modalComponent": "<?= /* @noEscape */ $block->getData('config/form') ?>.configurableModal",
+                        "matrixGridComponent": "<?= /* @noEscape */ $block->getData('config/form')
+                        ?>.configurable.configurable-matrix"
                     }
                 }
             }

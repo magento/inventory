@@ -36,6 +36,7 @@
             <!--Disable additional source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Set 'Qty Use Decimals' on product edit page.-->
         <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
@@ -59,8 +60,8 @@
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
 
         <waitForPageLoad stepKey="waitFroPaymentSelectionPageLoad"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPage"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPayment"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextPaymentPage"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoadCheckoutSelectPayment"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
         <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible"/>
         <comment userInput="BIC workaround" stepKey="chooseBillingAddress"/>

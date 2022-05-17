@@ -48,6 +48,7 @@
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify product on storefront.-->

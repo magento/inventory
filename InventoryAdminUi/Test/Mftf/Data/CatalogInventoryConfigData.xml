@@ -13,6 +13,11 @@
         <data key="scope_id">0</data>
         <data key="value">1</data>
     </entity>
+    <entity name="TurnOffOutOfStockConfig">
+        <data key="path">cataloginventory/options/show_out_of_stock</data>
+        <data key="scope_id">0</data>
+        <data key="value">0</data>
+    </entity>
     <entity name="TurnOnManageStockConfig">
         <data key="path">cataloginventory/item_options/manage_stock</data>
         <data key="scope_id">0</data>
@@ -30,11 +35,6 @@
     </entity>
     <entity name="TurnOffAutoReturnConfiguration">
         <data key="path">cataloginventory/item_options/auto_return</data>
-        <data key="scope_id">0</data>
-        <data key="value">0</data>
-    </entity>
-    <entity name="TurnOffOutOfStockConfig">
-        <data key="path">cataloginventory/options/show_out_of_stock</data>
         <data key="scope_id">0</data>
         <data key="value">0</data>
     </entity>
