@@ -23,28 +23,28 @@ class GetSalableQty implements GetSalableQtyInterface
     private $getStockItemConfiguration;
 
     /**
-     * @var GetStockItemDataInterface
-     */
-    private $getStockItemData;
-
-    /**
      * @var GetReservationsQuantityInterface
      */
     private $getReservationsQuantity;
 
     /**
+     * @var GetStockItemDataInterface
+     */
+    private $getProductAvailableQty;
+
+    /**
      * @param GetStockItemConfigurationInterface $getStockItemConfig
-     * @param GetStockItemDataInterface $getStockItemData
      * @param GetReservationsQuantityInterface $getReservationsQuantity
+     * @param GetProductAvailableQty $getProductAvailableQty
      */
     public function __construct(
         GetStockItemConfigurationInterface $getStockItemConfig,
-        GetStockItemDataInterface $getStockItemData,
-        GetReservationsQuantityInterface $getReservationsQuantity
+        GetReservationsQuantityInterface $getReservationsQuantity,
+        GetProductAvailableQty $getProductAvailableQty
     ) {
         $this->getStockItemConfiguration = $getStockItemConfig;
-        $this->getStockItemData = $getStockItemData;
         $this->getReservationsQuantity = $getReservationsQuantity;
+        $this->getProductAvailableQty = $getProductAvailableQty;
     }
 
     /**
@@ -52,10 +52,9 @@ class GetSalableQty implements GetSalableQtyInterface
      */
     public function execute(string $sku, int $stockId): float
     {
-        $stockItemData = $this->getStockItemData->execute($sku, $stockId);
         $stockItemConfig = $this->getStockItemConfiguration->execute($sku, $stockId);
 
-        return $stockItemData[GetStockItemDataInterface::QUANTITY]
+        return $this->getProductAvailableQty->execute($sku, $stockId)
             + $this->getReservationsQuantity->execute($sku, $stockId)
             - $stockItemConfig->getMinQty();
     }
