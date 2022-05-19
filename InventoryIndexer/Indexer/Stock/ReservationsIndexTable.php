@@ -77,7 +77,7 @@ class ReservationsIndexTable
      */
     public function getTableName(int $stockId): string
     {
-        return 'reservations_temp_for_stock_' . $stockId;
+        return $this->resourceConnection->getTableName('reservations_temp_for_stock_' . $stockId);
     }
 
     /**
