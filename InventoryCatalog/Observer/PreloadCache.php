@@ -68,7 +68,7 @@ class PreloadCache implements ObserverInterface
         ProductSkusByIdsStorage $productSkusByIdsStorage,
         LegacyStockStatusCache $legacyStockStatusCache,
         StockItemDataCacheStorage $stockItemDataCacheStorage,
-        StockRegistryInterface $stockRegistry,
+        StockRegistryInterface $stockRegistry
     ) {
         $this->productTypesBySkusStorage = $productTypesBySkusStorage;
         $this->productIdsBySkusStorage = $productIdsBySkusStorage;
