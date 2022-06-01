@@ -33,6 +33,8 @@ use Magento\Setup\Fixtures\StoresFixture;
  *
  * When assigning the sources to the stocks, we assign between min_sources_per_stock and max_sources_per_stock amount
  * of sources to each stock.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Stocks extends AbstractFixture
 {
@@ -124,14 +126,19 @@ class Stocks extends AbstractFixture
 
     /**
      * {@inheritdoc}
-     * @SuppressWarnings(PHPMD)
      */
     public function execute()
     {
         $sourcesCount = (int)$this->fixtureModel->getValue('sources', self::DEFAULT_SOURCE_COUNT);
         $stocksCount = (int)$this->fixtureModel->getValue('stocks', self::DEFAULT_STOCK_COUNT);
-        $minSourcesPerStock = (int)$this->fixtureModel->getValue('min_sources_per_stock', self::DEFAULT_MIN_SOURCES_PER_STOCK);
-        $maxSourcesPerStock = (int)$this->fixtureModel->getValue('max_sources_per_stock', self::DEFAULT_MAX_SOURCES_PER_STOCK);
+        $minSourcesPerStock = (int)$this->fixtureModel->getValue(
+            'min_sources_per_stock',
+            self::DEFAULT_MIN_SOURCES_PER_STOCK
+        );
+        $maxSourcesPerStock = (int)$this->fixtureModel->getValue(
+            'max_sources_per_stock',
+            self::DEFAULT_MAX_SOURCES_PER_STOCK
+        );
         if ($sourcesCount <= self::DEFAULT_SOURCE_COUNT
             && $stocksCount <= self::DEFAULT_STOCK_COUNT
         ) {
@@ -269,7 +276,8 @@ class Stocks extends AbstractFixture
                     StockSourceLinkInterface::SOURCE_CODE => $newSourceIds[$sourceOffset],
                     StockSourceLinkInterface::PRIORITY => 1,
                 ]]);
-                $sourceOffset = ($sourceOffset + 1) % $sourceCount;
+                $sourceOffset++;
+                $sourceOffset %= $sourceCount;
             }
             $currentSourcesPerStock++;
             if ($currentSourcesPerStock > $maxSourcesPerStock) {
@@ -293,7 +301,8 @@ class Stocks extends AbstractFixture
                 $websitesInStocks[$currentStockOffset] = [];
             }
             $websitesInStocks[$currentStockOffset][] = $websiteCode;
-            $currentStockOffset = ($currentStockOffset + 1) % $newStocksCount;
+            $currentStockOffset++;
+            $currentStockOffset %= $newStocksCount;
         }
         foreach ($websitesInStocks as $stockOffset => $websitesInStock) {
             $salesChannels = [];
