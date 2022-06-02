@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminEditOrderWithOutOfStockProductTest">
+        <annotations>
+            <stories value="Edit order"/>
+            <title value="Verify that admin can edit order when product is out of stock"/>
+            <description value="Admin can edit order when product is out of stock"/>
+            <severity value="MAJOR"/>
+            <useCaseId value="ACP2E-201"/>
+            <testCaseId value="AC-2078"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+            <createData entity="SimpleProduct2" stepKey="simpleProduct">
+                <field key="price">50.00</field>
+            </createData>
+        </before>
+        <after>
+            <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
+            <amOnPage url="{{AdminOrdersPage.url}}" stepKey="onOrdersPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="resetOrderFilter"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+
+        <!-- Open Product page in StoreFront -->
+        <actionGroup ref="AssertProductNameAndSkuInStorefrontProductPageByCustomAttributeUrlKeyActionGroup" stepKey="openProductPageAndVerifyProduct">
+            <argument name="product" value="$$simpleProduct$$"/>
+        </actionGroup>
+
+        <!-- Add product to the cart -->
+        <actionGroup ref="StorefrontAddProductToCartWithQtyActionGroup" stepKey="addProductToTheCart">
+            <argument name="productQty" value="{{SimpleProduct2.quantity}}"/>
+        </actionGroup>
+
+        <!-- Open View and edit -->
+        <actionGroup ref="ClickViewAndEditCartFromMiniCartActionGroup" stepKey="clickMiniCart"/>
+        <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="goToCheckout"/>
+
+        <!-- Fill the guest form -->
+        <actionGroup ref="FillGuestCheckoutShippingAddressWithCountryAndStateActionGroup" stepKey="fillGuestForm"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextButton"/>
+
+        <!-- Place order and Assert success message -->
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+
+        <!-- Get order id -->
+        <seeElement selector="{{StorefrontMinicartSection.emptyMiniCart}}"  stepKey="assertEmptyCart" />
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumberWithoutLink}}" stepKey="orderId"/>
+
+        <!-- Open Order Index Page -->
+        <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="goToOrders"/>
+
+        <!-- Filter Order using orderId and assert order -->
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById">
+            <argument name="orderId" value="$orderId"/>
+        </actionGroup>
+        <click selector="{{AdminOrdersGridSection.viewLink('$orderId')}}" stepKey="clickOnViewLink"/>
+        <waitForPageLoad stepKey="waitForOrderPageToLoad"/>
+
+        <!-- Click Edit button and confirm edit in modal window -->
+        <actionGroup ref="AdminEditOrderActionGroup" stepKey="openOrderForEdit">
+            <argument name="orderId" value="$orderId"/>
+        </actionGroup>
+
+        <!-- Check error message is absent -->
+        <dontSee selector="{{AdminOrderEditMessagesSection.error}}" userInput="The requested qty is not available" stepKey="verifyErrorMessageIsAbsent"/>
+
+        <!-- Update customer address -->
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="updateCustomerInformation">
+            <argument name="customer" value="Simple_US_Customer_CA"/>
+            <argument name="address" value="US_Address_CA"/>
+        </actionGroup>
+
+        <!-- Select order payment and shipment methods -->
+        <waitForLoadingMaskToDisappear stepKey="waitForJavascriptToFinish"/>
+        <click selector="{{AdminOrderFormPaymentSection.linkPaymentOptions}}" stepKey="clickPaymentMethods"/>
+        <click selector="{{AdminOrderFormPaymentSection.getShippingMethods}}" stepKey="clickShippingMethods"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForJavascriptToFinish2"/>
+
+        <!-- Submit order with updated information -->
+        <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitEditedOrder"/>
+    </test>
+</tests>

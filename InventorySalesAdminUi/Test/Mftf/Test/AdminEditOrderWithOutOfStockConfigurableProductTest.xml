@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminEditOrderWithOutOfStockConfigurableProductTest">
+        <annotations>
+            <stories value="Edit order"/>
+            <title value="Verify that admin can edit order when configurable product is out of stock"/>
+            <description value="Admin can edit order when configurable product is out of stock"/>
+            <severity value="MAJOR"/>
+            <useCaseId value="ACP2E-201"/>
+            <testCaseId value="AC-2078"/>
+        </annotations>
+
+        <before>
+            <!-- Create Default Category -->
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+
+            <!-- Create an attribute with three options to be used in the child products -->
+            <createData entity="productAttributeWithTwoOptions" stepKey="createConfigProductAttribute"/>
+            <createData entity="productAttributeOption1" stepKey="createConfigProductAttributeOption1">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </createData>
+            <createData entity="productAttributeOption2" stepKey="createConfigProductAttributeOption2">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </createData>
+
+            <!-- Add the attribute just created to default attribute set -->
+            <createData entity="AddToDefaultSet" stepKey="createConfigAddToAttributeSet">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </createData>
+
+            <!-- Get the first option of the attribute created -->
+            <getData entity="ProductAttributeOptionGetter" index="1" stepKey="getConfigAttributeOption1">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </getData>
+
+            <!-- Get the second option of the attribute created -->
+            <getData entity="ProductAttributeOptionGetter" index="2" stepKey="getConfigAttributeOption2">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+            </getData>
+
+            <!-- Create Configurable product -->
+            <createData entity="BaseConfigurableProduct" stepKey="createConfigProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+
+            <!-- Create a simple product and give it the attribute with the first option -->
+            <createData entity="ApiSimpleOne" stepKey="createConfigChildProduct1">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption1"/>
+                <field key="price">10.00</field>
+            </createData>
+
+            <!--Create a simple product and give it the attribute with the second option -->
+            <createData entity="ApiSimpleTwo" stepKey="createConfigChildProduct2">
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption2"/>
+                <field key="price">2.00</field>
+            </createData>
+
+            <!-- Create the configurable product -->
+            <createData entity="ConfigurableProductThreeOptions" stepKey="createConfigProductOption">
+                <requiredEntity createDataKey="createConfigProduct"/>
+                <requiredEntity createDataKey="createConfigProductAttribute"/>
+                <requiredEntity createDataKey="getConfigAttributeOption1"/>
+                <requiredEntity createDataKey="getConfigAttributeOption2"/>
+            </createData>
+
+            <!-- Add the first simple product to the configurable product -->
+            <createData entity="ConfigurableProductAddChild" stepKey="createConfigProductAddChild1">
+                <requiredEntity createDataKey="createConfigProduct"/>
+                <requiredEntity createDataKey="createConfigChildProduct1"/>
+            </createData>
+
+            <!-- Add the second simple product to the configurable product -->
+            <createData entity="ConfigurableProductAddChild" stepKey="createConfigProductAddChild2">
+                <requiredEntity createDataKey="createConfigProduct"/>
+                <requiredEntity createDataKey="createConfigChildProduct2"/>
+            </createData>
+
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
+        </before>
+        <after>
+            <deleteData createDataKey="createConfigChildProduct1" stepKey="deleteSimpleProduct1"/>
+            <deleteData createDataKey="createConfigChildProduct2" stepKey="deleteSimpleProduct2"/>
+            <deleteData createDataKey="createConfigProduct" stepKey="deleteProduct"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createConfigProductAttribute" stepKey="deleteProductAttribute"/>
+            <amOnPage url="{{AdminOrdersPage.url}}" stepKey="onOrdersPage"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="resetOrderFilter"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+        </after>
+
+        <!-- Add Configurable Product to the cart -->
+        <actionGroup ref="StorefrontAddConfigurableProductToTheCartActionGroup" stepKey="addConfigurableProductToCart">
+            <argument name="urlKey" value="$$createConfigProduct.custom_attributes[url_key]$$" />
+            <argument name="productAttribute" value="$$createConfigProductAttribute.default_value$$"/>
+            <argument name="productOption" value="$$getConfigAttributeOption2.label$$"/>
+            <argument name="qty" value="1000"/>
+        </actionGroup>
+
+        <!-- Open View and edit -->
+        <actionGroup ref="ClickViewAndEditCartFromMiniCartActionGroup" stepKey="clickMiniCart"/>
+        <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="goToCheckout"/>
+
+        <!-- Fill the guest form -->
+        <actionGroup ref="FillGuestCheckoutShippingAddressWithCountryAndStateActionGroup" stepKey="fillGuestForm"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextButton"/>
+
+        <!-- Place order and Assert success message -->
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
+
+        <!-- Get order id -->
+        <seeElement selector="{{StorefrontMinicartSection.emptyMiniCart}}"  stepKey="assertEmptyCart" />
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumberWithoutLink}}" stepKey="orderId"/>
+
+        <!-- Open Order Index Page -->
+        <actionGroup ref="AdminOrdersPageOpenActionGroup" stepKey="goToOrders"/>
+
+        <!-- Filter Order using orderId and assert order -->
+        <actionGroup ref="FilterOrderGridByIdActionGroup" stepKey="filterOrderGridById">
+            <argument name="orderId" value="$orderId"/>
+        </actionGroup>
+        <click selector="{{AdminOrdersGridSection.viewLink('$orderId')}}" stepKey="clickOnViewLink"/>
+        <waitForPageLoad stepKey="waitForOrderPageToLoad"/>
+
+        <!-- Click Edit button and confirm edit in modal window -->
+        <actionGroup ref="AdminEditOrderActionGroup" stepKey="openOrderForEdit">
+            <argument name="orderId" value="$orderId"/>
+        </actionGroup>
+
+        <!-- Check error message is absent -->
+        <dontSee selector="{{AdminOrderEditMessagesSection.error}}" userInput="The requested qty is not available" stepKey="verifyErrorMessageIsAbsent"/>
+
+        <!-- Update customer address -->
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="updateCustomerInformation">
+            <argument name="customer" value="Simple_US_Customer_CA"/>
+            <argument name="address" value="US_Address_CA"/>
+        </actionGroup>
+
+        <!-- Select order payment and shipment methods -->
+        <waitForLoadingMaskToDisappear stepKey="waitForJavascriptToFinish"/>
+        <click selector="{{AdminOrderFormPaymentSection.linkPaymentOptions}}" stepKey="clickPaymentMethods"/>
+        <click selector="{{AdminOrderFormPaymentSection.getShippingMethods}}" stepKey="clickShippingMethods"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForJavascriptToFinish2"/>
+
+        <!-- Submit order with updated information -->
+        <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitEditedOrder"/>
+    </test>
+</tests>
