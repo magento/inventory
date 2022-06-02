@@ -93,4 +93,11 @@
     <type name="Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock">
         <plugin name="cache_product_stock_assignment_check" type="Magento\Inventory\Plugin\Inventory\Model\ResourceModel\IsProductAssignedToStockCache"/>
     </type>
+    <type name="Magento\Setup\Fixtures\FixtureRegistry">
+        <arguments>
+            <argument name="fixtures" xsi:type="array">
+                <item name="stocks" xsi:type="string">Magento\Inventory\Test\Performance\Fixtures\Stocks</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
