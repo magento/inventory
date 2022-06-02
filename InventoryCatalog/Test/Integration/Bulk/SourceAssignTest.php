@@ -13,6 +13,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface;
 use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -140,9 +141,9 @@ class SourceAssignTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
-     * @magentoDbIsolation enabled
      */
     #[
+        DbIsolation(true),
         DataFixture(ProductFixture::class, ['sku' => '01234'], 'product1'),
         DataFixture(ProductFixture::class, ['sku' => '1234'], 'product2'),
     ]
