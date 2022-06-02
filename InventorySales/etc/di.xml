@@ -155,6 +155,9 @@
     <type name="Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" type="Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin"/>
     </type>
+    <type name="Magento\AsyncOrder\Model\OrderManagement">
+        <plugin name="async_inventory_reservations_placement" type="Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement\AppendReservationsAfterAsyncOrderPlacementPlugin"/>
+    </type>
     <!-- Return Processor -->
     <preference for="Magento\InventorySalesApi\Model\ReturnProcessor\Request\ItemsToRefundInterface" type="Magento\InventorySales\Model\ReturnProcessor\Request\ItemsToRefund" />
     <preference for="Magento\InventorySalesApi\Model\ReturnProcessor\ProcessRefundItemsInterface" type="Magento\InventorySales\Model\ReturnProcessor\ProcessRefundItems" />
