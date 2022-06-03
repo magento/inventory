@@ -10,6 +10,7 @@ namespace Magento\InventoryIndexer\Model\ResourceModel;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Catalog\Model\Product\Type as ProductType;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
@@ -89,27 +90,66 @@ class GetStockItemData implements GetStockItemDataInterface
         $connection = $this->resource->getConnection();
         $select = $connection->select();
 
+        $productId = current($this->getProductIdsBySkus->execute([$sku]));
+
+        $select->join(
+            ['catalog_product_entity' => $this->resource->getTableName(
+                'catalog_product_entity'
+            )],
+            sprintf('"%s" = catalog_product_entity.entity_id'
+                . ' AND "%s" = catalog_product_entity.sku',
+                $productId,
+                $sku
+            ),
+            []
+        );
+
+        $select->joinLeft(
+            ['inventory_reservation' => $this->resource->getTableName(
+                'inventory_reservation'
+            )],
+            sprintf('"%s" = inventory_reservation.sku'
+                . ' AND catalog_product_entity.type_id = "%s"'
+                . ' AND "%d" = inventory_reservation.stock_id',
+                $sku,
+                ProductType::TYPE_SIMPLE,
+                $stockId
+            ),
+            []
+        );
+
         if ($this->defaultStockProvider->getId() === $stockId) {
-            $productId = current($this->getProductIdsBySkus->execute([$sku]));
+            $stockItemTableName = $this->resource->getTableName('cataloginventory_stock_status');
             $select->from(
-                $this->resource->getTableName('cataloginventory_stock_status'),
+                $stockItemTableName,
                 [
                     GetStockItemDataInterface::QUANTITY => 'qty',
-                    GetStockItemDataInterface::IS_SALABLE => 'stock_status',
+                    GetStockItemDataInterface::IS_SALABLE => 'IF ('
+                        . "$stockItemTableName.stock_status"
+                        . " AND ((SUM(IFNULL(inventory_reservation.quantity, 0)) + $stockItemTableName.qty) > 0)"
+                        . ', 1, 0)',
                 ]
+            )->group(
+                "$stockItemTableName.product_id"
             )->where(
-                'product_id = ?',
+                "$stockItemTableName.product_id = ?",
                 $productId
             );
         } else {
+            $stockItemTableName = $this->stockIndexTableNameResolver->execute($stockId);
             $select->from(
-                $this->stockIndexTableNameResolver->execute($stockId),
+                $stockItemTableName,
                 [
                     GetStockItemDataInterface::QUANTITY => IndexStructure::QUANTITY,
-                    GetStockItemDataInterface::IS_SALABLE => IndexStructure::IS_SALABLE,
+                    GetStockItemDataInterface::IS_SALABLE => 'IF ('
+                        . "$stockItemTableName." . IndexStructure::IS_SALABLE
+                        . " AND ((SUM(inventory_reservation.quantity) + $stockItemTableName.quantity) > 0)"
+                        . ', 1, 0)',
                 ]
+            )->group(
+                "$stockItemTableName.product_id"
             )->where(
-                IndexStructure::SKU . ' = ?',
+                "$stockItemTableName." . IndexStructure::SKU . ' = ?',
                 $sku
             );
         }
@@ -151,14 +191,47 @@ class GetStockItemData implements GetStockItemDataInterface
         $connection = $this->resource->getConnection();
         $select = $connection->select();
 
+        $select->join(
+            ['catalog_product_entity' => $this->resource->getTableName(
+                'catalog_product_entity'
+            )],
+            sprintf('"%s" = catalog_product_entity.entity_id'
+                . ' AND "%s" = catalog_product_entity.sku',
+                $productId,
+                $sku
+            ),
+            []
+        );
+
+        $select->joinLeft(
+            ['inventory_reservation' => $this->resource->getTableName(
+                'inventory_reservation'
+            )],
+            sprintf('"%s" = inventory_reservation.sku'
+                . ' AND catalog_product_entity.type_id = "%s"'
+                . ' AND "%d" = inventory_reservation.stock_id',
+                $sku,
+                ProductType::TYPE_SIMPLE,
+                $stockId
+            ),
+            []
+        );
+
+        $stockItemTableName = $this->resource->getTableName('cataloginventory_stock_item');
+
         $select->from(
             $this->resource->getTableName('cataloginventory_stock_item'),
             [
                 GetStockItemDataInterface::QUANTITY => 'qty',
-                GetStockItemDataInterface::IS_SALABLE => 'is_in_stock',
+                GetStockItemDataInterface::IS_SALABLE => 'IF ('
+                    . "$stockItemTableName.is_in_stock"
+                    . " AND ((SUM(IFNULL(inventory_reservation.quantity, 0)) + $stockItemTableName.qty) > 0)"
+                    . ', 1, 0)',
             ]
+        )->group(
+            "$stockItemTableName.product_id"
         )->where(
-            'product_id = ?',
+            "$stockItemTableName.product_id = ?",
             $productId
         );
 
