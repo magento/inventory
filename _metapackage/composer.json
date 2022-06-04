@@ -4,7 +4,7 @@
     "description": "Metapackage with Magento Inventory modules for simple installation",
     "type": "metapackage",
     "require": {
-        "magento/inventory-composer-installer": "1.2.0",
+        "magento/inventory-composer-installer": "^1.2.0",
         "magento/module-inventory": "*",
         "magento/module-inventory-admin-ui": "*",
         "magento/module-inventory-advanced-checkout": "*",
