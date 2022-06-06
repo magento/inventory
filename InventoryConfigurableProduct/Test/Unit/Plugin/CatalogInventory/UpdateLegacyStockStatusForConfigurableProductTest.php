@@ -17,7 +17,7 @@ use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\Framework\Model\AbstractModel as StockItem;
-use Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockSourceForConfigurableProduct;
+use Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
@@ -29,7 +29,7 @@ use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class UpdateLegacyStockSourceForConfigurableProductTest extends TestCase
+class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
 {
     /**
      * @var MockObject
@@ -62,7 +62,7 @@ class UpdateLegacyStockSourceForConfigurableProductTest extends TestCase
     private $getLegacyStockItemMock;
 
     /**
-     * @var UpdateLegacyStockSourceForConfigurableProduct
+     * @var UpdateLegacyStockStatusForConfigurableProduct
      */
     private $plugin;
 
