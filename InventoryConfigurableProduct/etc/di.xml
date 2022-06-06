@@ -45,7 +45,12 @@
                 type="Magento\InventoryConfigurableProduct\Plugin\InventoryApi\UpdateConfigurableProductParentStockStatus"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
+        <plugin name="after_update_stock_item_for_new_configurable_product"
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockItemForNewConfigurableProduct"
+                sortOrder="100"/>
         <plugin name="update_source_stock_for_configurable_product"
-                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin" />
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct"
+                sortOrder="200"/>
+
     </type>
 </config>
