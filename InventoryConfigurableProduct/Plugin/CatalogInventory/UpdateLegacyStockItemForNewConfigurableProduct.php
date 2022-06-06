@@ -99,10 +99,15 @@ class UpdateLegacyStockItemForNewConfigurableProduct
             $stockItem->getIsInStock() &&
             $this->getProductTypeById->execute($stockItem->getProductId()) === Configurable::TYPE_CODE
         ) {
-            $childrenIds = $this->configurableType->getChildrenIds($stockItem->getProductId());
-            $childrenIds = array_shift($childrenIds);
-            if (!empty($childrenIds)) {
-                $this->updateStatus($stockItem, $this->hasStockStatusFromChildren($childrenIds));
+            $configurableMatrix = $this->request->getParam('configurable-matrix-serialized');
+            if (!empty($configurableMatrix) && $configurableMatrix !== '[]') {
+                $this->updateStatus($stockItem, $this->hasStockStatusFromVariationMatrix($configurableMatrix));
+            } else {
+                $childrenIds = $this->configurableType->getChildrenIds($stockItem->getProductId());
+                $childrenIds = array_shift($childrenIds);
+                if (!empty($childrenIds)) {
+                    $this->updateStatus($stockItem, $this->hasStockStatusFromChildren($childrenIds));
+                }
             }
         }
 
@@ -126,6 +131,30 @@ class UpdateLegacyStockItemForNewConfigurableProduct
             StockItemModel::STOCK_STATUS_CHANGED_AUTO => 1
         ];
         $this->updateLegacyStockItems->execute([$stockItem->getProductId()], $stockItemData);
+    }
+
+    /**
+     * Get stock status based on qty of the variation-matrix from request
+     *
+     * @param string $configurableMatrix
+     * @return bool
+     */
+    private function hasStockStatusFromVariationMatrix(string $configurableMatrix): bool
+    {
+        $configurableMatrix = $this->serializer->unserialize($configurableMatrix);
+        foreach ($configurableMatrix as $item) {
+            if (!empty($item['qty'])) {
+                return true;
+            } elseif (!empty($item['quantity_per_source'])) {
+                foreach ($item['quantity_per_source'] as $source) {
+                    if (!empty($source['quantity_per_source'])) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
