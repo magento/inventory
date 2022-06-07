@@ -42,6 +42,8 @@
     <!-- IsStockItemSalableCondition -->
     <preference for="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface"
                 type="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\IsStockItemSalableConditionChain"/>
+    <preference for="Magento\InventorySalesApi\Model\GetIsQtySalableInterface" type="Magento\InventorySales\Model\GetIsQtySalable"/>
+    <preference for="Magento\InventorySalesApi\Model\GetSalableQtyInterface" type="Magento\InventorySales\Model\GetSalableQty"/>
     <type name="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\IsStockItemSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
