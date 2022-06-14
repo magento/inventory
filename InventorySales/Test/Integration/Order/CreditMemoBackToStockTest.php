@@ -65,6 +65,8 @@ class CreditMemoBackToStockTest extends TestCase
     }
 
     /**
+     * phpcs:disable Generic.Files.LineLength.TooLong
+     *
      * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"weight": 0, "type_id": "virtual"} as:p1
      * @magentoDataFixture Magento\CatalogInventory\Test\Fixture\SourceItem with:{"sku": "$p1.sku$", "source_code": "default", "quantity": 100}
      * @magentoDataFixture Magento\Quote\Test\Fixture\GuestCart as:cart
