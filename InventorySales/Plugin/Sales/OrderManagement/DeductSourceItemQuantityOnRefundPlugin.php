@@ -90,8 +90,7 @@ class DeductSourceItemQuantityOnRefundPlugin
         CreditmemoRepositoryInterface $subject,
         callable $proceed,
         CreditmemoInterface $entity
-    )
-    {
+    ) {
         $isNewCreditMemo = !(bool)$entity->getEntityId();
         $result = $proceed($entity);
 
@@ -103,6 +102,8 @@ class DeductSourceItemQuantityOnRefundPlugin
     }
 
     /**
+     * Compensate reservation for creditmemo item
+     *
      * @param CreditmemoInterface $creditMemo
      * @return void
      */
@@ -146,6 +147,8 @@ class DeductSourceItemQuantityOnRefundPlugin
     }
 
     /**
+     * Validate if the compensation should be processed
+     *
      * @param string $sku
      * @param CreditmemoItem $item
      * @return bool
