@@ -165,6 +165,7 @@ class DeductSourceItemQuantityOnRefundPlugin
 
         return $this->isSourceItemManagementAllowedForProductType->execute($productType)
                 && $item->getQty() > 0
-                && !$item->getBackToStock();
+                && !$item->getBackToStock()
+                && !$orderItem->getIsVirtual();
     }
 }

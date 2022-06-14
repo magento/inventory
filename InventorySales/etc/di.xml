@@ -175,7 +175,7 @@
         <plugin name="update_sales_channel_website_code" type="Magento\InventorySales\Plugin\Store\Model\ResourceModel\Website\UpdateSalesChannelWebsiteCodePlugin"/>
     </type>
     <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
-        <plugin name="deduct_source_item_quantity_on_refund" type="Magento\InventorySales\Plugin\Sales\OrderManagement\DeductSourceItemQuantityOnRefundPlugin" disabled="true"/>
+        <plugin name="deduct_source_item_quantity_on_refund" type="Magento\InventorySales\Plugin\Sales\OrderManagement\DeductSourceItemQuantityOnRefundPlugin"/>
     </type>
     <type name="Magento\InventoryApi\Model\StockValidatorChain">
         <arguments>
