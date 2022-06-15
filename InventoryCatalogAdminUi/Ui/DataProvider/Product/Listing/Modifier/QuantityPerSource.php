@@ -116,7 +116,8 @@ class QuantityPerSource extends AbstractModifier
 
         foreach ($dataItems as $key => $item) {
             if (in_array($item['type_id'], $allowedProductTypes)) {
-                $dataItems[$key]['quantity_per_source'] = $this->getQuantityPerSourceItemData($item['sku']);
+                $sku = htmlspecialchars_decode($item['sku'], ENT_QUOTES | ENT_SUBSTITUTE);
+                $dataItems[$key]['quantity_per_source'] = $this->getQuantityPerSourceItemData($sku);
             }
         }
 
