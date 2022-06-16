@@ -10,7 +10,10 @@
             <!-- ko if: !$salableQuantityData.manage_stock -->
             <span data-bind="i18n: 'No manage stock'"></span>
             <!-- /ko -->
-            <!-- ko if: $salableQuantityData.manage_stock -->
+            <!-- ko if: $salableQuantityData.message -->
+            <span data-bind="text: $salableQuantityData.message"></span>
+            <!-- /ko -->
+            <!-- ko if: $salableQuantityData.stock_name -->
             <strong data-bind="text: $salableQuantityData.stock_name"></strong>:
             <span data-bind="text: $salableQuantityData.qty"></span>
             <!-- /ko -->
