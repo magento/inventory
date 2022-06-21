@@ -9,9 +9,10 @@ namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Stra
 
 use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
+use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
-use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
 
 /**
  * Clean cache for corresponding products after source item reindex.
@@ -24,14 +25,14 @@ class CacheFlush
     private $flushCacheByIds;
 
     /**
-     * @var GetProductIdsBySourceItemIds
-     */
-    private $getProductIdsBySourceItemIds;
-
-    /**
      * @var GetCategoryIdsByProductIds
      */
     private $getCategoryIdsByProductIds;
+
+    /**
+     * @var GetSalableStatuses
+     */
+    private $getSalableStatuses;
 
     /**
      * @var FlushCacheByCategoryIds
@@ -39,21 +40,29 @@ class CacheFlush
     private $flushCategoryByCategoryIds;
 
     /**
+     * @var GetProductsIdsToProcess
+     */
+    private $getProductsIdsToProcess;
+
+    /**
      * @param FlushCacheByProductIds $flushCacheByIds
-     * @param GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
      * @param GetCategoryIdsByProductIds $getCategoryIdsByProductIds
      * @param FlushCacheByCategoryIds $flushCategoryByCategoryIds
+     * @param GetSalableStatuses $getSalableStatuses
+     * @param GetProductsIdsToProcess $getProductsIdsToProcess
      */
     public function __construct(
         FlushCacheByProductIds $flushCacheByIds,
-        GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds,
         GetCategoryIdsByProductIds $getCategoryIdsByProductIds,
-        FlushCacheByCategoryIds $flushCategoryByCategoryIds
+        FlushCacheByCategoryIds $flushCategoryByCategoryIds,
+        GetSalableStatuses $getSalableStatuses,
+        GetProductsIdsToProcess $getProductsIdsToProcess
     ) {
         $this->flushCacheByIds = $flushCacheByIds;
-        $this->getProductIdsBySourceItemIds = $getProductIdsBySourceItemIds;
         $this->getCategoryIdsByProductIds = $getCategoryIdsByProductIds;
         $this->flushCategoryByCategoryIds = $flushCategoryByCategoryIds;
+        $this->getSalableStatuses = $getSalableStatuses;
+        $this->getProductsIdsToProcess = $getProductsIdsToProcess;
     }
 
     /**
@@ -62,15 +71,20 @@ class CacheFlush
      * @param Sync $subject
      * @param callable $proceed
      * @param array $sourceItemIds
-     * @throws \Exception in case catalog product entity type hasn't been initialize.
+     * @return void
+     * @throws \Exception in case catalog product entity type hasn't been initialized.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function aroundExecuteList(Sync $subject, callable $proceed, array $sourceItemIds) : void
     {
+        $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
         $proceed($sourceItemIds);
-        $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
-        $categoryIds = $this->getCategoryIdsByProductIds->execute($productIds);
-        $this->flushCategoryByCategoryIds->execute($categoryIds);
-        $this->flushCacheByIds->execute($productIds);
+        $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $productsIdsToFlush = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
+        if (!empty($productsIdsToFlush)) {
+            $categoryIds = $this->getCategoryIdsByProductIds->execute($productsIdsToFlush);
+            $this->flushCacheByIds->execute($productsIdsToFlush);
+            $this->flushCategoryByCategoryIds->execute($categoryIds);
+        }
     }
 }
