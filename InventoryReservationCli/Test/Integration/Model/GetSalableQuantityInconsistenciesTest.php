@@ -7,7 +7,25 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Test\Integration\Model;
 
+use Magento\Bundle\Test\Fixture\AddProductToCart as AddBundleProductToCartFixture;
+use Magento\Bundle\Test\Fixture\Option as BundleOptionFixture;
+use Magento\Bundle\Test\Fixture\Product as BundleProductFixture;
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\Checkout\Test\Fixture\PlaceOrder as PlaceOrderFixture;
+use Magento\Checkout\Test\Fixture\SetBillingAddress as SetBillingAddressFixture;
+use Magento\Checkout\Test\Fixture\SetDeliveryMethod as SetDeliveryMethodFixture;
+use Magento\Checkout\Test\Fixture\SetGuestEmail as SetGuestEmailFixture;
+use Magento\Checkout\Test\Fixture\SetPaymentMethod as SetPaymentMethodFixture;
+use Magento\Checkout\Test\Fixture\SetShippingAddress as SetShippingAddressFixture;
+use Magento\ConfigurableProduct\Test\Fixture\AddProductToCart as AddConfigurableProductToCartFixture;
+use Magento\ConfigurableProduct\Test\Fixture\Attribute as AttributeFixture;
+use Magento\ConfigurableProduct\Test\Fixture\Product as ConfigurableProductFixture;
+use Magento\GroupedProduct\Test\Fixture\AddProductToCart as AddGroupedProductToCartFixture;
+use Magento\GroupedProduct\Test\Fixture\Product as GroupedProductFixture;
 use Magento\InventoryReservationCli\Model\GetSalableQuantityInconsistencies;
+use Magento\Quote\Test\Fixture\GuestCart as GuestCartFixture;
+use Magento\Sales\Test\Fixture\Shipment as ShipmentFixture;
+use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -181,6 +199,120 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
         $item = reset($inconsistencies)->getItems();
         self::assertCount(1, $inconsistencies);
         self::assertEquals(-2, $item['simple']);
+    }
+
+    #[
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(ProductFixture::class, as: 'p2'),
+        DataFixture(AttributeFixture::class, as: 'attr'),
+        DataFixture(
+            ConfigurableProductFixture::class,
+            ['_options' => ['$attr$'],'_links' => ['$p1$','$p2$']],
+            'cp1'
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddConfigurableProductToCartFixture::class,
+            ['cart_id' => '$cart.id$', 'product_id' => '$cp1.id$', 'child_product_id' => '$p1.id$', 'qty' => 2],
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetShippingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetDeliveryMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(
+            ShipmentFixture::class,
+            ['order_id' => '$order.id$', 'items' => [['product_id' => '$cp1.id$', 'qty' => 1]]]
+        ),
+    ]
+    public function testPartiallyShippedConfigurableProduct(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
+        self::assertCount(
+            0,
+            $inconsistencies,
+            $inconsistencies ? json_encode(reset($inconsistencies)->getItems()) : ''
+        );
+    }
+
+    #[
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(ProductFixture::class, as: 'p2'),
+        DataFixture(BundleOptionFixture::class, ['product_links' => ['$p1$']], 'opt1'),
+        DataFixture(BundleOptionFixture::class, ['product_links' => ['$p2$']], 'opt2'),
+        DataFixture(
+            BundleProductFixture::class,
+            ['sku' => 'bundle1', '_options' => ['$opt1$','$opt2$']],
+            'bp1'
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddBundleProductToCartFixture::class,
+            [
+                'cart_id' => '$cart.id$',
+                'product_id' => '$bp1.id$',
+                'selections' => [['$p1.id$'], ['$p2.id$']],
+                'qty' => 2
+            ],
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetShippingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetDeliveryMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(
+            ShipmentFixture::class,
+            ['order_id' => '$order.id$', 'items' => [['product_id' => '$bp1.id$', 'qty' => 1]]]
+        ),
+    ]
+    public function testPartiallyShippedBundleProduct(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
+        self::assertCount(
+            0,
+            $inconsistencies,
+            $inconsistencies ? json_encode(reset($inconsistencies)->getItems()) : ''
+        );
+    }
+
+    #[
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(ProductFixture::class, as: 'p2'),
+        DataFixture(
+            GroupedProductFixture::class,
+            ['product_links' => [['sku' => '$p1.sku$', 'qty' => 3], ['sku' => '$p2.sku$', 'qty' => 2]]],
+            'gp1'
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddGroupedProductToCartFixture::class,
+            [
+                'cart_id' => '$cart.id$',
+                'product_id' => '$gp1.id$',
+                'child_products' => ['$p1.id$', '$p2.id$'],
+            ],
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetShippingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetDeliveryMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(
+            ShipmentFixture::class,
+            ['order_id' => '$order.id$', 'items' => [['product_id' => '$p1.id$'],['product_id' => '$p2.id$']]]
+        ),
+    ]
+    public function testPartiallyShippedGroupedProduct(): void
+    {
+        $inconsistencies = $this->getSalableQuantityInconsistencies();
+        self::assertCount(
+            0,
+            $inconsistencies,
+            $inconsistencies ? json_encode(reset($inconsistencies)->getItems()) : ''
+        );
     }
 
     /**
