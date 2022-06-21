@@ -13,6 +13,7 @@ use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
+use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
 
 /**
  * Clean cache for corresponding products after source item reindex.
@@ -45,24 +46,32 @@ class CacheFlush
     private $getProductsIdsToProcess;
 
     /**
+     * @var GetProductIdsBySourceItemIds
+     */
+    private $getProductIdsBySourceItemIds;
+
+    /**
      * @param FlushCacheByProductIds $flushCacheByIds
      * @param GetCategoryIdsByProductIds $getCategoryIdsByProductIds
      * @param FlushCacheByCategoryIds $flushCategoryByCategoryIds
      * @param GetSalableStatuses $getSalableStatuses
      * @param GetProductsIdsToProcess $getProductsIdsToProcess
+     * @param GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
      */
     public function __construct(
         FlushCacheByProductIds $flushCacheByIds,
         GetCategoryIdsByProductIds $getCategoryIdsByProductIds,
         FlushCacheByCategoryIds $flushCategoryByCategoryIds,
         GetSalableStatuses $getSalableStatuses,
-        GetProductsIdsToProcess $getProductsIdsToProcess
+        GetProductsIdsToProcess $getProductsIdsToProcess,
+        GetProductIdsBySourceItemIds $getProductIdsBySourceItemIds
     ) {
         $this->flushCacheByIds = $flushCacheByIds;
         $this->getCategoryIdsByProductIds = $getCategoryIdsByProductIds;
         $this->flushCategoryByCategoryIds = $flushCategoryByCategoryIds;
         $this->getSalableStatuses = $getSalableStatuses;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
+        $this->getProductIdsBySourceItemIds = $getProductIdsBySourceItemIds;
     }
 
     /**
@@ -81,9 +90,10 @@ class CacheFlush
         $proceed($sourceItemIds);
         $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
         $productsIdsToFlush = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
-        if (!empty($productsIdsToFlush)) {
-            $categoryIds = $this->getCategoryIdsByProductIds->execute($productsIdsToFlush);
-            $this->flushCacheByIds->execute($productsIdsToFlush);
+        $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
+        if (!empty($productIds)) {
+            $categoryIds = $this->getCategoryIdsByProductIds->execute($productIds);
+            $this->flushCacheByIds->execute($productIds);
             $this->flushCategoryByCategoryIds->execute($categoryIds);
         }
     }
