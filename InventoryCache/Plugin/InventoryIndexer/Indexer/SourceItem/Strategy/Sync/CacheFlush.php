@@ -60,13 +60,14 @@ class CacheFlush
      * Clean cache for specific products after source items reindex.
      *
      * @param Sync $subject
-     * @param void $result
+     * @param callable $proceed
      * @param array $sourceItemIds
      * @throws \Exception in case catalog product entity type hasn't been initialize.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(Sync $subject, $result, array $sourceItemIds)
+    public function aroundExecuteList(Sync $subject, callable $proceed, array $sourceItemIds) : void
     {
+        $proceed($sourceItemIds);
         $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
         $categoryIds = $this->getCategoryIdsByProductIds->execute($productIds);
         $this->flushCategoryByCategoryIds->execute($categoryIds);
