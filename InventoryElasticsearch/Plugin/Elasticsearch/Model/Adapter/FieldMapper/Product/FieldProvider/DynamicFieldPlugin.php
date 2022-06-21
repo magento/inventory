@@ -9,7 +9,8 @@ namespace Magento\InventoryElasticsearch\Plugin\Elasticsearch\Model\Adapter\Fiel
 
 use Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\AttributeProvider;
 use Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\DynamicField;
-use Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\FieldName\ResolverInterface as FieldNameResolver;
+use Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\FieldName\ResolverInterface
+    as FieldNameResolver;
 use Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\ConverterInterface
     as FieldTypeConverterInterface;
 
@@ -46,6 +47,8 @@ class DynamicFieldPlugin
     }
 
     /**
+     * Resolve dynamic field name for out of stock sorting
+     *
      * @param DynamicField $subject
      * @param array $allAttributes
      * @return array

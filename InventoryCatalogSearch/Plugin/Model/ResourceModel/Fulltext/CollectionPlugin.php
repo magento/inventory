@@ -72,15 +72,15 @@ class CollectionPlugin
      * Add sorting attribute for out of stock on first place
      *
      * @param Collection $subject
-     * @param $attribute
+     * @param string $attribute
      * @param string $dir
      * @return array
      * @throws NoSuchEntityException
      */
     public function beforeSetOrder(
         Collection $subject,
-        $attribute,
-        $dir = Select::SQL_DESC
+        string $attribute,
+        string $dir = Select::SQL_DESC
     ): array {
         if (!$subject->getFlag('is_sorted_by_oos')) {
             $subject->setFlag('is_sorted_by_oos', true);
@@ -108,14 +108,14 @@ class CollectionPlugin
      *
      * @param Collection $subject
      * @param callable $proceed
-     * @param $attribute
+     * @param string $attribute
      * @param string $dir
      * @return Collection
      */
     public function aroundSetOrder(
         Collection $subject,
         callable $proceed,
-        $attribute,
+        string $attribute,
         string $dir = Select::SQL_DESC
     ): Collection {
         $flagName = $this->_getFlag($attribute);
@@ -127,7 +127,7 @@ class CollectionPlugin
     }
 
     /**
-     * check if automatic sorting for category is set
+     * Check if automatic sorting for category is set
      *
      * @return bool
      */

@@ -67,7 +67,7 @@ class StockInventory extends AbstractDb
      *
      * @return void
      */
-    protected function _construct(): void
+    public function _construct(): void
     {
         $this->stockIds = [];
         $this->skuRelations = [];
@@ -116,6 +116,8 @@ class StockInventory extends AbstractDb
     }
 
     /**
+     * Get stock id by website code
+     *
      * @param string $websiteCode
      * @return int
      */
