@@ -5,21 +5,19 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Model;
+namespace Magento\InventoryVisualMerchandiser\Model;
 
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 
-class OutOfStock implements OutOfStockInterface
+interface OutOfStockInterface
 {
-
     /**
+     * Check if, admin setting for automatic sorting is set to 'move out of stock to bottom'
+     *
      * @param Category $category
      * @param Collection $collection
      * @return bool
      */
-    public function isOutOfStockBottom(Category $category, Collection $collection): bool
-    {
-        return true;
-    }
+    public function isOutOfStockBottom(Category $category, Collection $collection): bool;
 }

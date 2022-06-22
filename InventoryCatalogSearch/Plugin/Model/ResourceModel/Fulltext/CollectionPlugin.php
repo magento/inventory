@@ -10,11 +10,11 @@ namespace Magento\InventoryCatalogSearch\Plugin\Model\ResourceModel\Fulltext;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\Category;
-use Magento\InventoryCatalog\Model\OutOfStockInterface;
 use Magento\CatalogInventory\Model\Configuration;
 use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryVisualMerchandiser\Model\OutOfStockInterface;
 
 /**
  * Resolve out of stock status for product sorting attribute

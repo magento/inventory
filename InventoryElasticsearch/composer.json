@@ -11,6 +11,9 @@
         "magento/module-inventory-sales-api": "*",
         "magento/module-store": "*"
     },
+    "suggest": {
+        "magento/module-elasticsearch": "*"
+    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",

@@ -16,6 +16,7 @@
         "magento/module-inventory-configuration-api": "*"
     },
     "suggest": {
+        "magento/module-inventory-catalog": "*",
         "magento/module-visual-merchandiser": "*"
     },
     "type": "magento2-module",

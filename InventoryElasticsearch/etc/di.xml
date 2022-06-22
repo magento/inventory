@@ -34,4 +34,5 @@
     <type name="Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\DynamicField">
         <plugin name="dynamicFieldPlugin" type="Magento\InventoryElasticsearch\Plugin\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\DynamicFieldPlugin"/>
     </type>
+    <preference for="Magento\AdvancedSearch\Model\Adapter\DataMapper\AdditionalFieldsProviderInterface" type="Magento\InventoryElasticsearch\Model\Adapter\BatchDataMapper\IsOutOfStockFieldsProvider"/>
 </config>
