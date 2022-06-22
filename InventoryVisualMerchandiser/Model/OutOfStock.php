@@ -5,9 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Magento\VisualMerchandiser\Model;
+namespace Magento\InventoryVisualMerchandiser\Model;
 
 use Magento\Catalog\Model\Category;
+use Magento\VisualMerchandiser\Model\Sorting;
 use Magento\InventoryCatalog\Model\OutOfStockInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 
