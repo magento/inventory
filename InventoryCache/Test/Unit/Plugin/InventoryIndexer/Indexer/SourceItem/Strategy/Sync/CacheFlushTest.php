@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCache\Test\Unit\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
+use Magento\Framework\Indexer\IndexerRegistry;
+use Magento\Framework\Indexer\IndexerInterface;
 use Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\CacheFlush;
 use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
@@ -60,6 +62,16 @@ class CacheFlushTest extends TestCase
     private $proceedMock;
 
     /**
+     * @var IndexerRegistry|MockObject
+     */
+    private $indexerRegistry;
+
+    /**
+     * @var IndexerInterface|MockObject
+     */
+    private $indexer;
+
+    /**
      * @var bool
      */
     private $isProceedMockCalled = false;
@@ -87,12 +99,18 @@ class CacheFlushTest extends TestCase
         $this->sync = $this->getMockBuilder(Sync::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $this->indexer = $this->getMockBuilder(IndexerInterface::class)
+            ->getMockForAbstractClass();
+        $this->indexerRegistry = $this->getMockBuilder(IndexerRegistry::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->cacheFlush = new CacheFlush(
             $this->flushCacheByIds,
             $this->getCategoryIdsByProductIds,
             $this->flushCategoryByCategoryIds,
             $this->getSalableStatuses,
-            $this->getProductsIdsToProcess
+            $this->getProductsIdsToProcess,
+            $this->indexerRegistry
         );
     }
 
@@ -112,6 +130,12 @@ class CacheFlushTest extends TestCase
         array $changedProductIds,
         int $numberOfCacheCleans
     ): void {
+        $this->indexerRegistry->expects($this->once())
+            ->method('get')
+            ->willReturn($this->indexer);
+        $this->indexer->expects($this->any())
+            ->method('isScheduled')
+            ->willReturn(true);
         $this->getSalableStatuses->expects($this->exactly(2))
             ->method('execute')
             ->with($sourceItemIds)

@@ -7,12 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
+use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
+use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 
 /**
  * Clean cache for corresponding products after source item reindex.
@@ -45,24 +47,32 @@ class CacheFlush
     private $getProductsIdsToProcess;
 
     /**
+     * @var IndexerRegistry
+     */
+    private $indexerRegistry;
+
+    /**
      * @param FlushCacheByProductIds $flushCacheByIds
      * @param GetCategoryIdsByProductIds $getCategoryIdsByProductIds
      * @param FlushCacheByCategoryIds $flushCategoryByCategoryIds
      * @param GetSalableStatuses $getSalableStatuses
      * @param GetProductsIdsToProcess $getProductsIdsToProcess
+     * @param IndexerRegistry $indexerRegistry
      */
     public function __construct(
         FlushCacheByProductIds $flushCacheByIds,
         GetCategoryIdsByProductIds $getCategoryIdsByProductIds,
         FlushCacheByCategoryIds $flushCategoryByCategoryIds,
         GetSalableStatuses $getSalableStatuses,
-        GetProductsIdsToProcess $getProductsIdsToProcess
+        GetProductsIdsToProcess $getProductsIdsToProcess,
+        IndexerRegistry $indexerRegistry
     ) {
         $this->flushCacheByIds = $flushCacheByIds;
         $this->getCategoryIdsByProductIds = $getCategoryIdsByProductIds;
         $this->flushCategoryByCategoryIds = $flushCategoryByCategoryIds;
         $this->getSalableStatuses = $getSalableStatuses;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
+        $this->indexerRegistry = $indexerRegistry;
     }
 
     /**
@@ -80,7 +90,12 @@ class CacheFlush
         $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
         $proceed($sourceItemIds);
         $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
-        $productsIdsToFlush = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList, true);
+        $forceDefaultProcessing = !$this->indexerRegistry->get(InventoryIndexer::INDEXER_ID)->isScheduled();
+        $productsIdsToFlush = $this->getProductsIdsToProcess->execute(
+            $beforeSalableList,
+            $afterSalableList,
+            $forceDefaultProcessing
+        );
         if (!empty($productsIdsToFlush)) {
             $categoryIds = $this->getCategoryIdsByProductIds->execute($productsIdsToFlush);
             $this->flushCacheByIds->execute($productsIdsToFlush);
