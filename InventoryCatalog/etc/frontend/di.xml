@@ -14,4 +14,5 @@
         <plugin name="inventory_catalog_get_legacy_stock_item_from_stock_registry"
                 type="\Magento\InventoryCatalog\Plugin\InventoryConfiguration\Model\GetLegacyStockItemFromStockRegistry"/>
     </type>
+    <preference for="Magento\InventoryCatalog\Model\OutOfStockInterface" type="Magento\InventoryCatalog\Model\OutOfStock" />
 </config>
