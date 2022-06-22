@@ -12,7 +12,6 @@ use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
-use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
 use Magento\InventoryIndexer\Model\ResourceModel\GetSourceCodesBySourceItemIds;
 
 /**
@@ -24,11 +23,6 @@ class PriceIndexUpdater
      * @var Processor
      */
     private $priceIndexProcessor;
-
-    /**
-     * @var GetProductIdsBySourceItemIds
-     */
-    private $productIdsBySourceItemIds;
 
     /**
      * @var GetSourceCodesBySourceItemIds
@@ -52,7 +46,6 @@ class PriceIndexUpdater
 
     /**
      * @param Processor $priceIndexProcessor
-     * @param GetProductIdsBySourceItemIds $productIdsBySourceItemIds
      * @param GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetSalableStatuses $getSalableStatuses
@@ -60,14 +53,12 @@ class PriceIndexUpdater
      */
     public function __construct(
         Processor $priceIndexProcessor,
-        GetProductIdsBySourceItemIds $productIdsBySourceItemIds,
         GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds,
         DefaultSourceProviderInterface $defaultSourceProvider,
         GetSalableStatuses $getSalableStatuses,
         GetProductsIdsToProcess $getProductsIdsToProcess
     ) {
         $this->priceIndexProcessor = $priceIndexProcessor;
-        $this->productIdsBySourceItemIds = $productIdsBySourceItemIds;
         $this->getSourceCodesBySourceItemIds = $getSourceCodesBySourceItemIds;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->getSalableStatuses = $getSalableStatuses;
