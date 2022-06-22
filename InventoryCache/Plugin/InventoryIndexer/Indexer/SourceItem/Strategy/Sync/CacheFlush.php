@@ -89,11 +89,11 @@ class CacheFlush
         $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
         $proceed($sourceItemIds);
         $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
-        $productsIdsToFlush = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
+        $productsIdsToFlush = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList, true);
         $productIds = $this->getProductIdsBySourceItemIds->execute($sourceItemIds);
-        if (!empty($productIds)) {
-            $categoryIds = $this->getCategoryIdsByProductIds->execute($productIds);
-            $this->flushCacheByIds->execute($productIds);
+        if (!empty($productsIdsToFlush)) {
+            $categoryIds = $this->getCategoryIdsByProductIds->execute($productsIdsToFlush);
+            $this->flushCacheByIds->execute($productsIdsToFlush);
             $this->flushCategoryByCategoryIds->execute($categoryIds);
         }
     }
