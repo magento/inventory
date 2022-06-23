@@ -151,7 +151,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     public function testExecuteWithPagination(): void
     {
         $items = [];
-        foreach($this->getSalableQuantityInconsistencies->execute() as $inconsistencies) {
+        foreach ($this->getSalableQuantityInconsistencies->execute() as $inconsistencies) {
             $items += $inconsistencies;
         }
         self::assertCount(1, $items);
@@ -165,7 +165,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
     public function testExecuteEmptyWithPagination()
     {
         $bunchSize = 1;
-        foreach($this->getSalableQuantityInconsistencies->execute($bunchSize) as $inconsistencies) {
+        foreach ($this->getSalableQuantityInconsistencies->execute($bunchSize) as $inconsistencies) {
             self::assertEmpty($inconsistencies);
         }
     }
@@ -207,7 +207,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
         DataFixture(AttributeFixture::class, as: 'attr'),
         DataFixture(
             ConfigurableProductFixture::class,
-            ['_options' => ['$attr$'],'_links' => ['$p1$','$p2$']],
+            ['_options' => ['$attr$'], '_links' => ['$p1$', '$p2$']],
             'cp1'
         ),
         DataFixture(GuestCartFixture::class, as: 'cart'),
@@ -243,7 +243,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
         DataFixture(BundleOptionFixture::class, ['product_links' => ['$p2$']], 'opt2'),
         DataFixture(
             BundleProductFixture::class,
-            ['sku' => 'bundle1', '_options' => ['$opt1$','$opt2$']],
+            ['sku' => 'bundle1', '_options' => ['$opt1$', '$opt2$']],
             'bp1'
         ),
         DataFixture(GuestCartFixture::class, as: 'cart'),
@@ -302,7 +302,7 @@ class GetSalableQuantityInconsistenciesTest extends TestCase
         DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
         DataFixture(
             ShipmentFixture::class,
-            ['order_id' => '$order.id$', 'items' => [['product_id' => '$p1.id$'],['product_id' => '$p2.id$']]]
+            ['order_id' => '$order.id$', 'items' => [['product_id' => '$p1.id$'], ['product_id' => '$p2.id$']]]
         ),
     ]
     public function testPartiallyShippedGroupedProduct(): void
