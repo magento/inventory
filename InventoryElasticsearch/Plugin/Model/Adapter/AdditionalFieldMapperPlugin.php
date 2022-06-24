@@ -24,9 +24,11 @@ class AdditionalFieldMapperPlugin
      *
      * @param mixed $subject
      * @param array $result
+     * @param array $context
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterGetAllAttributesTypes($subject, array $result): array
+    public function afterGetAllAttributesTypes($subject, array $result, array $context): array
     {
         foreach ($this->allowedFields as $fieldName => $fieldType) {
             $result[$fieldName] = ['type' => $fieldType];

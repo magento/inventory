@@ -7,27 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Model\ResourceModel;
 
-use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\Framework\Module\Manager;
 
 /**
  * Class Inventory for stock processing and calculation
  */
 class Inventory extends AbstractDb
 {
-    /**
-     * @var Manager
-     */
-    private $moduleManager;
-
-    /**
-     * @var StockRegistryInterface
-     */
-    private $stockRegistry;
-
     /**
      * @var array
      */
@@ -42,25 +29,6 @@ class Inventory extends AbstractDb
      * @var array
      */
     private $skuRelations;
-
-    /**
-     * Stock inventory constructor
-     *
-     * @param Manager $moduleManager
-     * @param StockRegistryInterface $stockRegistry
-     * @param Context $context
-     * @param string|null $connectionName
-     */
-    public function __construct(
-        Manager $moduleManager,
-        StockRegistryInterface $stockRegistry,
-        Context $context,
-        string $connectionName = null
-    ) {
-        parent::__construct($context, $connectionName);
-        $this->moduleManager = $moduleManager;
-        $this->stockRegistry = $stockRegistry;
-    }
 
     /**
      * Initialize stock ids and relations
@@ -82,26 +50,6 @@ class Inventory extends AbstractDb
      * @throws NoSuchEntityException
      */
     public function getStockStatus(string $productSku, ?string $websiteCode): int
-    {
-        if ($this->moduleManager->isEnabled('Magento_Inventory')) {
-            $stockStatus = $this->getMsiStock($productSku, $websiteCode);
-        } else {
-            $stockStatus = $this->stockRegistry
-                ->getStockItemBySku($productSku, $websiteCode)
-                ->getIsInStock();
-        }
-
-        return (int)$stockStatus;
-    }
-
-    /**
-     * Get stock status of product when MSI is enabled
-     *
-     * @param string $productSku
-     * @param string $websiteCode
-     * @return int
-     */
-    private function getMsiStock(string $productSku, string $websiteCode): int
     {
         if (!isset($this->stockStatus[$websiteCode][$productSku])) {
             $select = $this->getConnection()->select()

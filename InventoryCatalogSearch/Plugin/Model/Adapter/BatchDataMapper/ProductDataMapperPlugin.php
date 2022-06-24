@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Plugin\Model\Adapter\BatchDataMapper;
 
-use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogSearch\Model\Elasticsearch\Adapter\DataMapper\Stock as StockDataMapper;
 use Magento\InventoryCatalogSearch\Model\ResourceModel\Inventory;
@@ -39,25 +38,26 @@ class ProductDataMapperPlugin
     /**
      * Map more attributes
      *
-     * @param ProductDataMapper $subject
-     * @param mixed $documents
+     * @param mixed $subject
+     * @param array|mixed $documents
      * @param mixed $documentData
      * @param mixed $storeId
      * @param mixed $context
-     * @return mixed
+     * @return array
      * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterMap(
-        ProductDataMapper $subject,
-        $documents,
+        $subject,
+        array $documents,
         $documentData,
-        $storeId,
+        mixed $storeId,
         $context
-    ) {
+    ): array {
         $this->inventory->saveRelation(array_keys($documents));
 
         foreach ($documents as $productId => $document) {
-            $document = array_merge($document, $this->stockDataMapper->map($productId, $storeId));
+            $document += $this->stockDataMapper->map($productId, $storeId);
             $documents[$productId] = $document;
         }
 

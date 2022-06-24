@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
-use Magento\Framework\Module\Manager;
 use Magento\Framework\DB\Select;
 
 /**
@@ -25,11 +24,6 @@ class CollectionPlugin
     private $skipFlags = [];
 
     /**
-     * @var Manager
-     */
-    private $moduleManager;
-
-    /**
      * @var Data
      */
     private $categoryHelper;
@@ -37,14 +31,11 @@ class CollectionPlugin
     /**
      * Collection plugin constructor
      *
-     * @param Manager $moduleManager
      * @param Data $categoryHelper
      */
     public function __construct(
-        Manager $moduleManager,
         Data $categoryHelper
     ) {
-        $this->moduleManager = $moduleManager;
         $this->categoryHelper = $categoryHelper;
     }
 
@@ -132,9 +123,8 @@ class CollectionPlugin
      */
     public function isOutOfStockBottom(): bool
     {
-        if ($this->moduleManager->isEnabled('Magento_VisualMerchandiser')) {
-            $currentCategory = $this->categoryHelper->getCategory();
-
+        $currentCategory = $this->categoryHelper->getCategory();
+        if ($currentCategory) {
             return (int)$currentCategory->getData('automatic_sorting') === self::OUT_OF_STOCK_TO_BOTTOM;
         }
 
