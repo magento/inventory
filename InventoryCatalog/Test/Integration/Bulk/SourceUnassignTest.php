@@ -7,10 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration\Bulk;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
+use Magento\InventoryApi\Test\Fixture\SourceItem as SourceItemFixture;
 use Magento\InventoryCatalogApi\Api\BulkSourceUnassignInterface;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -100,12 +104,14 @@ class SourceUnassignTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
-     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku": "01234"} as:product1
-     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku": "1234"} as:product2
-     * @magentoDataFixture Magento\CatalogInventory\Test\Fixture\SourceItem with:{"sku": "01234", "source_code": "eu-1"}
-     * @magentoDataFixture Magento\CatalogInventory\Test\Fixture\SourceItem with:{"sku": "1234", "source_code": "eu-1"}
-     * @magentoDbIsolation enabled
      */
+    #[
+        DbIsolation(true),
+        DataFixture(ProductFixture::class, ['sku' => '01234'], 'product1'),
+        DataFixture(ProductFixture::class, ['sku' => '1234'], 'product2'),
+        DataFixture(SourceItemFixture::class, ['sku' => '01234', 'source_code' => 'eu-1']),
+        DataFixture(SourceItemFixture::class, ['sku' => '1234', 'source_code' => 'eu-1']),
+    ]
     public function testBulkSourceUnAssignmentOfProductsWithNumericSku(): void
     {
         $skus = ['01234', '1234'];
