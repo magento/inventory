@@ -11,10 +11,6 @@
         "magento/module-store": "*",
         "magento/module-catalog-search": "*"
     },
-    "suggest": {
-        "magento/module-catalog": "*",
-        "magento/module-inventory-visual-merchandiser": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",

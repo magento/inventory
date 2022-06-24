@@ -2,7 +2,7 @@
 <!--
 /**
  * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * See COPYING.txt for license details.O
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
@@ -13,5 +13,8 @@
     <type name="Magento\InventoryConfiguration\Model\GetLegacyStockItem">
         <plugin name="inventory_catalog_get_legacy_stock_item_from_stock_registry"
                 type="\Magento\InventoryCatalog\Plugin\InventoryConfiguration\Model\GetLegacyStockItemFromStockRegistry"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+        <plugin name="outOfStockSorting" type="Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin"/>
     </type>
 </config>

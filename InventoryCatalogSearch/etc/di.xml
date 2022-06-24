@@ -12,7 +12,7 @@
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
         <plugin name="fulltextIndexUpdater" type="Magento\InventoryCatalogSearch\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\FulltextIndexUpdater" sortOrder="10" />
     </type>
-    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
-        <plugin name="out_of_stock_sorting" type="Magento\InventoryCatalogSearch\Plugin\Model\ResourceModel\Fulltext\CollectionPlugin"/>
+    <type name="Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper">
+        <plugin name="addOutOfStockDataToMapperResult" type="Magento\InventoryCatalogSearch\Plugin\Model\Adapter\BatchDataMapper\ProductDataMapperPlugin"/>
     </type>
 </config>
