@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogSearch\Plugin\Model\Adapter\BatchDataMapper;
 
+use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogSearch\Model\Elasticsearch\Adapter\DataMapper\Stock as StockDataMapper;
 use Magento\InventoryCatalogSearch\Model\ResourceModel\Inventory;
@@ -38,7 +39,7 @@ class ProductDataMapperPlugin
     /**
      * Map more attributes
      *
-     * @param $subject
+     * @param ProductDataMapper $subject
      * @param array|mixed $documents
      * @param mixed $documentData
      * @param mixed $storeId
@@ -48,7 +49,7 @@ class ProductDataMapperPlugin
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterMap(
-        $subject,
+        ProductDataMapper $subject,
         array $documents,
         $documentData,
         mixed $storeId,
