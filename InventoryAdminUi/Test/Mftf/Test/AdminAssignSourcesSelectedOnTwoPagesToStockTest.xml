@@ -59,7 +59,7 @@
         </actionGroup>
         <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources"/>
         <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetAdminDataGridToDefaultView"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSourceByCode">
+        <actionGroup ref="AdminGridFilterSearchResultsByInputAndEnabledSourcesActionGroup" stepKey="filterSourceByCode">
             <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
             <argument name="value" value="source_two_pages_"/>
         </actionGroup>
