@@ -83,20 +83,17 @@ class AdaptParentItemProcessorPlugin
         if ($this->isSingleSourceMode->execute()) {
             $proceed($product);
         } else {
-            $stockItem = $this->stockRegistry->getStockItem($product->getId());
-            if (!$stockItem->getManageStock() && !$stockItem->getUseConfigManageStock()) {
-                $parentIds = $this->configurableType->getParentIdsByChild($product->getId());
-                $skus = $this->getSkusByProductIds->execute($parentIds);
+            $parentIds = $this->configurableType->getParentIdsByChild($product->getId());
+            $skus = $this->getSkusByProductIds->execute($parentIds);
 
-                $dataForUpdate = [];
-                foreach ($parentIds as $parentId) {
-                    $parentStockItem = $this->stockRegistry->getStockItem($parentId);
-                    if ($parentStockItem->getIsInStock()) {
-                        $dataForUpdate[$skus[$parentId]] = true;
-                    }
+            $dataForUpdate = [];
+            foreach ($parentIds as $parentId) {
+                $parentStockItem = $this->stockRegistry->getStockItem($parentId);
+                if ($parentStockItem->getIsInStock()) {
+                    $dataForUpdate[$skus[$parentId]] = true;
                 }
-                $this->updateLegacyStockStatus->execute($dataForUpdate);
             }
+            $this->updateLegacyStockStatus->execute($dataForUpdate);
         }
     }
 }
