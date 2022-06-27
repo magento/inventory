@@ -38,7 +38,7 @@ class ProductDataMapperPlugin
     /**
      * Map more attributes
      *
-     * @param mixed $subject
+     * @param $subject
      * @param array|mixed $documents
      * @param mixed $documentData
      * @param mixed $storeId
