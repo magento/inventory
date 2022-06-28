@@ -53,7 +53,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <magentoCron groups="index" stepKey="reindex"/>
         </after>
-        
+
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock" stepKey="goToEditStockPage">
             <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
             <argument name="filter_value" value="$createStock.stock[name]$"/>
@@ -61,7 +61,7 @@
 
         <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSources"/>
         <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetAdminDataGridToDefaultView"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSourceByCode">
+        <actionGroup ref="AdminGridFilterSearchResultsByInputAndEnabledSourcesActionGroup" stepKey="filterSourceByCode">
             <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
             <argument name="value" value="source_two_pages_"/>
         </actionGroup>
