@@ -8,6 +8,8 @@ declare(strict_types=1);
 return [
     'Magento\Elasticsearch' => [
         'Magento\InventoryCatalogSearch',
-        'Magento\InventoryElasticsearch'
+        'Magento\InventoryElasticsearch',
+        'Magento\InventoryCatalogSearchBundleProduct',
+        'Magento\InventoryCatalogSearchConfigurableProduct'
     ]
 ];

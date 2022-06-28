@@ -10,6 +10,8 @@ return [
     // so core modules must not be dependent on them
     'Magento\LiveSearch' => [
         'Magento\InventoryCatalogSearch',
-        'Magento\InventoryElasticsearch'
+        'Magento\InventoryElasticsearch',
+        'Magento\InventoryCatalogSearchBundleProduct',
+        'Magento\InventoryCatalogSearchConfigurableProduct'
     ],
 ];
