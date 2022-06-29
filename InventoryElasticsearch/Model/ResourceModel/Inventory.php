@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalogSearch\Model\ResourceModel;
+namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;

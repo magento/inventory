@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalogSearch\Model\Elasticsearch\Adapter\DataMapper;
+namespace Magento\InventoryElasticsearch\Model\Elasticsearch\Adapter\DataMapper;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\InventoryCatalogSearch\Model\ResourceModel\Inventory;
+use Magento\InventoryElasticsearch\Model\ResourceModel\Inventory;
 
 /**
  * Class Stock for mapping

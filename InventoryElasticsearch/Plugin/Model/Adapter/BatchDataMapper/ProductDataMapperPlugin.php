@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalogSearch\Plugin\Model\Adapter\BatchDataMapper;
+namespace Magento\InventoryElasticsearch\Plugin\Model\Adapter\BatchDataMapper;
 
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogSearch\Model\Elasticsearch\Adapter\DataMapper\Stock as StockDataMapper;
-use Magento\InventoryCatalogSearch\Model\ResourceModel\Inventory;
+use Magento\InventoryElasticsearch\Model\Elasticsearch\Adapter\DataMapper\Stock as StockDataMapper;
+use Magento\InventoryElasticsearch\Model\ResourceModel\Inventory;
 
 class ProductDataMapperPlugin
 {

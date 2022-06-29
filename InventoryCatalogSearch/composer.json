@@ -11,9 +11,6 @@
         "magento/module-store": "*",
         "magento/module-catalog-search": "*"
     },
-    "suggest": {
-        "magento/module-elasticsearch": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",

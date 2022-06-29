@@ -13,4 +13,7 @@
     <type name="Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\ProductFieldMapper">
         <plugin name="addOutOfStockMapper" type="Magento\InventoryElasticsearch\Plugin\Model\Adapter\AdditionalFieldMapperPlugin"/>
     </type>
+    <type name="Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper">
+        <plugin name="addOutOfStockDataToMapperResult" type="Magento\InventoryElasticsearch\Plugin\Model\Adapter\BatchDataMapper\ProductDataMapperPlugin"/>
+    </type>
 </config>
