@@ -1,22 +1,23 @@
 {
     "name": "magento/module-inventory-advanced-checkout",
     "description": "N/A",
-    "require": {
-        "php": "~7.3.0||~7.4.0",
-        "magento/framework": "*",
-        "magento/module-catalog": "*",
-        "magento/module-store": "*",
-        "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-sales-api": "*"
-    },
-    "suggest": {
-        "magento/module-advanced-checkout": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.0.2",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/module-catalog": "*",
+        "magento/module-store": "*",
+        "magento/module-inventory-catalog-api": "1.1.*",
+        "magento/module-inventory-sales-api": "1.0.*"
+    },
+    "suggest": {
+        "magento/module-advanced-checkout": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -26,3 +27,4 @@
         }
     }
 }
+
