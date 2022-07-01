@@ -8,10 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Sorting;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Module\Manager;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
@@ -24,11 +22,6 @@ use Magento\VisualMerchandiser\Model\Sorting\OutStockBottom;
  */
 class OutStockBottomSortingPlugin
 {
-    /**
-     * @var ResourceConnection
-     */
-    private $resource;
-
     /**
      * @var StoreManagerInterface
      */
@@ -49,31 +42,22 @@ class OutStockBottomSortingPlugin
      */
     private $defaultStockProvider;
 
-    /** @var Manager */
-    private $moduleManager;
-
     /**
-     * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
-     * @param Manager $moduleManager
      */
     public function __construct(
-        ResourceConnection $resource,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider,
-        Manager $moduleManager
+        DefaultStockProviderInterface $defaultStockProvider
     ) {
-        $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
-        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -96,8 +80,13 @@ class OutStockBottomSortingPlugin
             return $proceed($collection);
         }
 
+        $stockTable = $this->stockIndexTableNameResolver->execute((int)$stock->getStockId());
         $collection->getSelect()
-            ->reset(Select::ORDER)
+            ->joinLeft(
+                ['inventory_stock' => $stockTable],
+                'inventory_stock.sku = e.sku',
+                []
+            )->reset(Select::ORDER)
             ->order('inventory_stock.is_salable ' . Select::SQL_DESC);
 
         return $collection;
