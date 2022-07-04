@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\CatalogInventory\Model\Configuration;
 use Magento\Framework\DB\Select;
 
 /**
@@ -16,12 +17,12 @@ use Magento\Framework\DB\Select;
  */
 class CollectionPlugin
 {
-    public const OUT_OF_STOCK_TO_BOTTOM = 2;
+    private const OUT_OF_STOCK_TO_BOTTOM = 2;
 
     /**
-     * @var array
+     * @var Configuration
      */
-    private $skipFlags = [];
+    private $stockConfiguration;
 
     /**
      * @var Data
@@ -31,11 +32,14 @@ class CollectionPlugin
     /**
      * Collection plugin constructor
      *
-     * @param Data $categoryHelper
+     * @param Configuration $stockConfiguration
+     * @param Data $stockConfiguration
      */
     public function __construct(
+        Configuration $stockConfiguration,
         Data $categoryHelper
     ) {
+        $this->stockConfiguration = $stockConfiguration;
         $this->categoryHelper = $categoryHelper;
     }
 
@@ -52,51 +56,13 @@ class CollectionPlugin
         $attribute,
         string $dir = Select::SQL_DESC
     ): array {
-        $subject->setFlag('is_processing', true);
-        $this->applyOutOfStockSortOrders($subject);
-
-        $flagName = $this->_getFlag($attribute);
-
-        if ($subject->getFlag($flagName)) {
-            $this->skipFlags[] = $flagName;
+        if ($this->stockConfiguration->isShowOutOfStock()) {
+            $subject->setFlag('is_processing', true);
+            $this->applyOutOfStockSortOrders($subject);
+            $subject->setFlag('is_processing', false);
         }
 
-        $subject->setFlag('is_processing', false);
         return [$attribute, $dir];
-    }
-
-    /**
-     * Get flag by attribute
-     *
-     * @param string $attribute
-     * @return string
-     */
-    private function _getFlag(string $attribute): string
-    {
-        return 'sorted_by_' . $attribute;
-    }
-
-    /**
-     * Try to determine applied sorting attribute flags
-     *
-     * @param Collection $subject
-     * @param callable $proceed
-     * @param mixed $attribute
-     * @param string $dir
-     * @return Collection
-     */
-    public function aroundSetOrder(
-        Collection $subject,
-        callable $proceed,
-        $attribute,
-        string $dir = Select::SQL_DESC
-    ): Collection {
-        $flagName = $this->_getFlag($attribute);
-        if (!in_array($flagName, $this->skipFlags, true)) {
-            $proceed($attribute, $dir);
-        }
-
-        return $subject;
     }
 
     /**
@@ -117,11 +83,11 @@ class CollectionPlugin
     }
 
     /**
-     * Check if automatic sorting value is set to OUT_OF_STOCK_TO_BOTTOM
+     * Check if automatic sorting value for Category is set to OUT_OF_STOCK_TO_BOTTOM
      *
      * @return bool
      */
-    public function isOutOfStockBottom(): bool
+    private function isOutOfStockBottom(): bool
     {
         $currentCategory = $this->categoryHelper->getCategory();
         if ($currentCategory) {

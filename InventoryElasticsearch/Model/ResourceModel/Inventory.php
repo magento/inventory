@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
  * Class Inventory for stock processing and calculation
  */
-class Inventory extends AbstractDb
+class Inventory
 {
     /**
      * @var array
@@ -29,6 +29,22 @@ class Inventory extends AbstractDb
      * @var array
      */
     private $skuRelations;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
+     * Constructor to inject class dependencies
+     *
+     * @param ResourceConnection $resource
+     */
+    public function __construct(
+        ResourceConnection $resource
+    ) {
+        $this->resourceConnection = $resource;
+    }
 
     /**
      * Initialize stock ids and relations
@@ -52,11 +68,11 @@ class Inventory extends AbstractDb
     public function getStockStatus(string $productSku, ?string $websiteCode): int
     {
         if (!isset($this->stockStatus[$websiteCode][$productSku])) {
-            $select = $this->getConnection()->select()
-                ->from($this->getTable('inventory_stock_' . $this->getStockId($websiteCode)), ['is_salable'])
+            $select = $this->resourceConnection->getConnection()->select()
+                ->from($this->resourceConnection->getTableName('inventory_stock_' . $this->getStockId($websiteCode)), ['is_salable'])
                 ->where('sku = ?', $productSku)
                 ->group('sku');
-            $this->stockStatus[$websiteCode][$productSku] = (int) $this->getConnection()->fetchOne($select);
+            $this->stockStatus[$websiteCode][$productSku] = (int) $this->resourceConnection->getConnection()->fetchOne($select);
         }
 
         return (int)$this->stockStatus[$websiteCode][$productSku];
@@ -71,11 +87,11 @@ class Inventory extends AbstractDb
     public function getStockId(string $websiteCode): int
     {
         if (!isset($this->stockIds[$websiteCode])) {
-            $select = $this->getConnection()->select()
-                ->from($this->getTable('inventory_stock_sales_channel'), ['stock_id'])
+            $select = $this->resourceConnection->getConnection()->select()
+                ->from($this->resourceConnection->getTableName('inventory_stock_sales_channel'), ['stock_id'])
                 ->where('type = \'website\' AND code = ?', $websiteCode);
 
-            $this->stockIds[$websiteCode] = (int)$this->getConnection()->fetchOne($select);
+            $this->stockIds[$websiteCode] = (int)$this->resourceConnection->getConnection()->fetchOne($select);
         }
 
         return (int)$this->stockIds[$websiteCode];
@@ -89,12 +105,12 @@ class Inventory extends AbstractDb
      */
     public function saveRelation(array $entityIds): Inventory
     {
-        $select = $this->getConnection()->select()->from(
-            $this->getTable('catalog_product_entity'),
+        $select = $this->resourceConnection->getConnection()->select()->from(
+            $this->resourceConnection->getTableName('catalog_product_entity'),
             ['entity_id', 'sku']
         )->where('entity_id IN (?)', $entityIds);
 
-        $this->skuRelations = $this->getConnection()->fetchPairs($select);
+        $this->skuRelations = $this->resourceConnection->getConnection()->fetchPairs($select);
 
         return $this;
     }
