@@ -12,11 +12,9 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\VisualMerchandiser\Model\Resolver\QuantityAndStock;
@@ -101,7 +99,7 @@ class QuantityAndStockPlugin
     public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
+        $stock = $this->stockResolver->execute('website', $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
             $defaultCode = $this->defaultSourceProvider->getCode();
@@ -109,7 +107,7 @@ class QuantityAndStockPlugin
                 ->getLinkField();
             $collection->joinField(
                 'parent_stock',
-                $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
+                $this->resource->getTableName('inventory_source_item'),
                 null,
                 'sku = sku',
                 ['source_code' => $defaultCode],
@@ -130,7 +128,7 @@ class QuantityAndStockPlugin
                     []
                 )
                 ->joinLeft(
-                    ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
+                    ['child_stock' => $this->resource->getTableName('inventory_source_item')],
                     'child_stock.sku = child_product.sku'
                     . $collection->getConnection()->quoteInto(' AND child_stock.source_code = ?', $defaultCode),
                     []
