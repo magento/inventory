@@ -56,4 +56,7 @@
     <type name="Magento\InventoryAdminUi\Ui\DataProvider\SourceDataProvider">
         <plugin name="prevent_disabling_default_source" type="Magento\InventoryCatalogAdminUi\Plugin\InventoryAdminUi\DataProvider\PreventDisablingDefaultSourcePlugin"/>
     </type>
+    <type name="Magento\Ui\Component\Bookmark">
+        <plugin name="initialize_quantity_per_source_bookmark_configuration" type="Magento\InventoryCatalogAdminUi\Plugin\Ui\Component\InitializeQuantityPerSourceBookmarkConfiguration"/>
+    </type>
 </config>
