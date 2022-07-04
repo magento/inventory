@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Resolver;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -55,12 +57,18 @@ class QuantityAndStockPlugin
     private $defaultSourceProvider;
 
     /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ResourceConnection $resource,
@@ -68,7 +76,8 @@ class QuantityAndStockPlugin
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         DefaultStockProviderInterface $defaultStockProvider,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        MetadataPool $metadataPool
     ) {
         $this->resource = $resource;
         $this->storeManager = $storeManager;
@@ -76,6 +85,7 @@ class QuantityAndStockPlugin
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -95,6 +105,8 @@ class QuantityAndStockPlugin
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
             $defaultCode = $this->defaultSourceProvider->getCode();
+            $productLinkField = $this->metadataPool->getMetadata(ProductInterface::class)
+                ->getLinkField();
             $collection->joinField(
                 'parent_stock',
                 $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
@@ -107,7 +119,7 @@ class QuantityAndStockPlugin
                 'child_relation',
                 $this->resource->getTableName('catalog_product_relation'),
                 null,
-                'parent_id = entity_id',
+                'parent_id = ' . $productLinkField,
                 null,
                 'left'
             );
