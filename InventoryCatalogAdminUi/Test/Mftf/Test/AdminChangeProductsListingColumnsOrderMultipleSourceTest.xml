@@ -27,12 +27,12 @@
             <waitForPageLoad stepKey="waitForPageLoadAfterLogin"/>
             <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductListing1"/>
             <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetGridView"/>
-            <wait time="30" stepKey="waitForBookmarkToSave1"/>
+            <wait time="10" stepKey="waitForBookmarkToSave1"/>
         </before>
         <after>
             <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductListing4"/>
             <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetGridView"/>
-            <wait time="30" stepKey="waitForBookmarkToSave3"/>
+            <wait time="10" stepKey="waitForBookmarkToSave3"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="deleteSource">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
@@ -44,7 +44,7 @@
         <dragAndDrop selector1="{{AdminGridHeaders.headerByName('SKU')}}"
                      selector2="{{AdminGridHeaders.headerByName('Name')}}"
                      stepKey="dragAndDropSkuColumn"/>
-        <wait time="30" stepKey="waitForBookmarkToSave2"/>
+        <wait time="10" stepKey="waitForBookmarkToSave2"/>
         <grabMultiple selector="{{AdminGridHeaders.columnsNames}}" stepKey="grabColumnsOrder" />
         <assertNotEquals stepKey="assertNewOrder1">
             <actualResult type="variable">grabColumnsDefaultOrder</actualResult>
