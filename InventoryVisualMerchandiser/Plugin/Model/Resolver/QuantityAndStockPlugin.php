@@ -12,15 +12,19 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\VisualMerchandiser\Model\Resolver\QuantityAndStock;
 
 /**
  * This plugin adds multi-source stock calculation capabilities to the Visual Merchandiser feature.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class QuantityAndStockPlugin
 {
@@ -99,7 +103,7 @@ class QuantityAndStockPlugin
     public function aroundJoinStock(QuantityAndStock $subject, callable $proceed, Collection $collection): Collection
     {
         $websiteCode = $this->storeManager->getWebsite()->getCode();
-        $stock = $this->stockResolver->execute('website', $websiteCode);
+        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
             $defaultCode = $this->defaultSourceProvider->getCode();
@@ -107,7 +111,7 @@ class QuantityAndStockPlugin
                 ->getLinkField();
             $collection->joinField(
                 'parent_stock',
-                $this->resource->getTableName('inventory_source_item'),
+                $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
                 null,
                 'sku = sku',
                 ['source_code' => $defaultCode],
@@ -128,7 +132,7 @@ class QuantityAndStockPlugin
                     []
                 )
                 ->joinLeft(
-                    ['child_stock' => $this->resource->getTableName('inventory_source_item')],
+                    ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
                     'child_stock.sku = child_product.sku'
                     . $collection->getConnection()->quoteInto(' AND child_stock.source_code = ?', $defaultCode),
                     []
