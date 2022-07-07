@@ -9,7 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
-use Magento\CatalogInventory\Model\Configuration;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\DB\Select;
 
 /**
@@ -20,7 +20,7 @@ class CollectionPlugin
     private const OUT_OF_STOCK_TO_BOTTOM = 2;
 
     /**
-     * @var Configuration
+     * @var StockConfigurationInterface
      */
     private $stockConfiguration;
 
@@ -32,11 +32,11 @@ class CollectionPlugin
     /**
      * Collection plugin constructor
      *
-     * @param Configuration $stockConfiguration
-     * @param Data $stockConfiguration
+     * @param StockConfigurationInterface $stockConfiguration
+     * @param Data $categoryHelper
      */
     public function __construct(
-        Configuration $stockConfiguration,
+        StockConfigurationInterface $stockConfiguration,
         Data $categoryHelper
     ) {
         $this->stockConfiguration = $stockConfiguration;
@@ -53,16 +53,18 @@ class CollectionPlugin
      */
     public function beforeSetOrder(
         Collection $subject,
-        $attribute,
+        mixed $attribute,
         string $dir = Select::SQL_DESC
     ): array {
         if ($this->stockConfiguration->isShowOutOfStock()) {
             $subject->setFlag('is_processing', true);
             $this->applyOutOfStockSortOrders($subject);
             $subject->setFlag('is_processing', false);
+
+            return [$attribute, $dir];
         }
 
-        return [$attribute, $dir];
+        return [];
     }
 
     /**
@@ -94,7 +96,7 @@ class CollectionPlugin
             return (int)$currentCategory->getData('automatic_sorting') === self::OUT_OF_STOCK_TO_BOTTOM;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -107,7 +109,7 @@ class CollectionPlugin
      */
     public function beforeAddOrder(
         Collection $subject,
-        $attribute,
+        mixed $attribute,
         string $dir = Select::SQL_DESC
     ): array {
         if (!$subject->getFlag('is_processing')) {

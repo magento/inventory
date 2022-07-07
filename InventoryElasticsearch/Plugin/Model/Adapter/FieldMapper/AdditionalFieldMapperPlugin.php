@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryElasticsearch\Plugin\Model\Adapter;
+namespace Magento\InventoryElasticsearch\Plugin\Model\Adapter\FieldMapper;
 
 use Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\ProductFieldMapper;
 

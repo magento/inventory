@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class Inventory for stock processing and calculation
@@ -38,12 +37,12 @@ class Inventory
     /**
      * Constructor to inject class dependencies
      *
-     * @param ResourceConnection $resource
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
-        ResourceConnection $resource
+        ResourceConnection $resourceConnection
     ) {
-        $this->resourceConnection = $resource;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -63,16 +62,19 @@ class Inventory
      * @param string $productSku
      * @param string|null $websiteCode
      * @return int
-     * @throws NoSuchEntityException
      */
     public function getStockStatus(string $productSku, ?string $websiteCode): int
     {
         if (!isset($this->stockStatus[$websiteCode][$productSku])) {
             $select = $this->resourceConnection->getConnection()->select()
-                ->from($this->resourceConnection->getTableName('inventory_stock_' . $this->getStockId($websiteCode)), ['is_salable'])
+                ->from(
+                    $this->resourceConnection->getTableName('inventory_stock_' . $this->getStockId($websiteCode)),
+                    ['is_salable']
+                )
                 ->where('sku = ?', $productSku)
                 ->group('sku');
-            $this->stockStatus[$websiteCode][$productSku] = (int) $this->resourceConnection->getConnection()->fetchOne($select);
+            $this->stockStatus[$websiteCode][$productSku] = (int) $this->resourceConnection->getConnection()
+                ->fetchOne($select);
         }
 
         return (int)$this->stockStatus[$websiteCode][$productSku];
