@@ -7,10 +7,34 @@ declare(strict_types=1);
 
 namespace Magento\InventoryInStorePickupSalesApi\Test\Api;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\CatalogInventory\Model\Stock;
+use Magento\Checkout\Test\Fixture\PlaceOrder as PlaceOrderFixture;
+use Magento\Checkout\Test\Fixture\SetBillingAddress as SetBillingAddressFixture;
+use Magento\Checkout\Test\Fixture\SetDeliveryMethod;
+use Magento\Checkout\Test\Fixture\SetGuestEmail as SetGuestEmailFixture;
+use Magento\Checkout\Test\Fixture\SetPaymentMethod as SetPaymentMethodFixture;
+use Magento\Checkout\Test\Fixture\SetShippingAddress;
 use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Framework\Webapi\Rest\Request;
+use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
+use Magento\InventoryApi\Test\Fixture\Stock as StockFixture;
+use Magento\InventoryApi\Test\Fixture\StockSourceLinks as StockSourceLinksFixture;
+use Magento\InventoryInStorePickupApi\Test\Fixture\Source as PickupLocationFixture;
+use Magento\InventoryInStorePickupQuote\Test\Fixture\SetInStorePickup;
+use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
+use Magento\Quote\Test\Fixture\AddProductToCart as AddProductToCartFixture;
+use Magento\Quote\Test\Fixture\GuestCart as GuestCartFixture;
+use Magento\QuoteGraphQl\Model\Cart\SetShippingAddressesOnCart;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Test\Fixture\Invoice as InvoiceFixture;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 
 class OrderCreateTest extends OrderPlacementBase
 {
+    private const SERVICE_REFUND_ORDER_NAME = 'salesRefundOrderV1';
+
     /**
      * Create order  - registered customer, existed address, `eu-1` pickup location.
      *
@@ -241,6 +265,84 @@ class OrderCreateTest extends OrderPlacementBase
         $this->assertCount(0, $addressList);
 
         $this->cancelOrder($orderId);
+    }
+
+    #[
+        DataFixture(PickupLocationFixture::class, as: 'src1'),
+        DataFixture(PickupLocationFixture::class, as: 'src2'),
+        DataFixture(PickupLocationFixture::class, as: 'src3'),
+        DataFixture(StockFixture::class, as: 'stk2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stk2.stock_id$', 'source_code' => '$src1.source_code$'],
+                ['stock_id' => '$stk2.stock_id$', 'source_code' => '$src2.source_code$'],
+                ['stock_id' => '$stk2.stock_id$', 'source_code' => '$src3.source_code$']
+            ]
+        ),
+        DataFixture(StockSalesChannelsFixture::class, ['stock_id' => '$stk2.stock_id$', 'sales_channels' => ['base']]),
+        DataFixture(
+            ProductFixture::class,
+            ['stock_item' => ['use_config_backorders' =>  0, 'backorders' => Stock::BACKORDERS_YES_NONOTIFY]],
+            'product'
+        ),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$product.sku$', 'source_code' => '$src1.source_code$', 'quantity' => 0],
+                ['sku' => '$product.sku$', 'source_code' => '$src2.source_code$', 'quantity' => 10],
+                ['sku' => '$product.sku$', 'source_code' => '$src3.source_code$', 'quantity' => 0],
+            ]
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddProductToCartFixture::class,
+            ['cart_id' => '$cart.id$', 'product_id' => '$product.id$', 'qty' => 10]
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+//        DataFixture(SetShippingAddress::class, ['cart_id' => '$cart.id$']),
+//        DataFixture(SetDeliveryMethod::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetInStorePickup::class, ['cart_id' => '$cart.id$', 'source_code' => '$src1.source_code$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(InvoiceFixture::class, ['order_id' => '$order.id$']),
+    ]
+    public function testRefundOrder(): void
+    {
+        $fixtures = DataFixtureStorageManager::getStorage();
+        $order = $fixtures->get('order');
+        $orderItems = $order->getItems();
+        $orderItem = current($orderItems);
+        $this->_webApiCall(
+            $this->getRefundServiceData((int)$order->getEntityId()),
+            [
+                'orderId' => $order->getEntityId(),
+                'items' => [['order_item_id' => $orderItem->getItemId(), 'qty' => 1]]
+            ]
+        );
+    }
+
+    /**
+     * Prepares and returns info for API service.
+     *
+     * @param OrderInterface $order
+     *
+     * @return array
+     */
+    private function getRefundServiceData(int $orderId)
+    {
+        return [
+            'rest' => [
+                'resourcePath' => '/V1/order/' . $orderId . '/refund',
+                'httpMethod' => Request::HTTP_METHOD_POST,
+            ],
+            'soap' => [
+                'service' => self::SERVICE_REFUND_ORDER_NAME,
+                'serviceVersion' => 'V1',
+                'operation' => self::SERVICE_REFUND_ORDER_NAME . 'execute',
+            ]
+        ];
     }
 
     /**
