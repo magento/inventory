@@ -148,7 +148,7 @@ class InventoryTest extends TestCase
             ->method('where')
             ->willReturnSelf();
 
-        $connectionAdapterMock->expects($this->once(1))
+        $connectionAdapterMock->expects($this->once())
             ->method('select')
             ->willReturn($selectMock);
         $connectionAdapterMock->expects($this->once())

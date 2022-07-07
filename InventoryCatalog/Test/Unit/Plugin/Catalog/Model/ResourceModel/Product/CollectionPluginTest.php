@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Test\Unit\Plugin\Model\ResourceModel\Product;
+namespace Magento\InventoryCatalog\Test\Unit\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\Category;
