@@ -144,14 +144,17 @@ class CollectionPluginTest extends TestCase
      */
     public function testBeforeSetOrderWhenOutOfStockIsDisabled(): void
     {
+        $attribute = 'test';
+        $dir = 'DESC';
+
         $this->stockConfigurationMock
             ->expects($this->once())
             ->method('isShowOutOfStock')
             ->willReturn(false);
 
         $this->assertEquals(
-            [],
-            $this->plugin->beforeSetOrder($this->productCollectionMock, 'is_out_of_stock', 'DESC')
+            [$attribute, $dir],
+            $this->plugin->beforeSetOrder($this->productCollectionMock, $attribute, $dir)
         );
     }
 }

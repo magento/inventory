@@ -60,11 +60,9 @@ class CollectionPlugin
             $subject->setFlag('is_processing', true);
             $this->applyOutOfStockSortOrders($subject);
             $subject->setFlag('is_processing', false);
-
-            return [$attribute, $dir];
         }
 
-        return [];
+        return [$attribute, $dir];
     }
 
     /**
