@@ -94,7 +94,7 @@ class CollectionPlugin
             return (int)$currentCategory->getData('automatic_sorting') === self::OUT_OF_STOCK_TO_BOTTOM;
         }
 
-        return false;
+        return true;
     }
 
     /**

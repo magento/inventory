@@ -54,6 +54,7 @@ class Inventory
     {
         $this->stockIds = [];
         $this->skuRelations = [];
+        $this->stockStatus = null;
     }
 
     /**
@@ -125,6 +126,7 @@ class Inventory
     public function clearRelation(): void
     {
         $this->skuRelations = null;
+        $this->stockStatus = null;
     }
 
     /**

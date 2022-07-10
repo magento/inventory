@@ -190,4 +190,7 @@
     <type name="Magento\Catalog\Block\Product\ProductList\Toolbar">
         <plugin name="update_toolbar_count" type="Magento\InventoryCatalog\Plugin\Catalog\Block\ProductList\UpdateToolbarCount"/>
     </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+        <plugin name="outOfStockSorting" type="Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin"/>
+    </type>
 </config>
