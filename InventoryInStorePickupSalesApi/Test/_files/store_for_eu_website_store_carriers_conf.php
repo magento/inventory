@@ -14,11 +14,11 @@ $config = Bootstrap::getObjectManager()->get(
 );
 $config->setValue(
     'carriers/instore/active',
-    1,
+    '1',
     ScopeConfigInterface::SCOPE_TYPE_DEFAULT
 );
 $config->setValue(
     'carriers/instore/price',
-    5.95,
+    '5.95',
     ScopeConfigInterface::SCOPE_TYPE_DEFAULT
 );

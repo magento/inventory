@@ -68,7 +68,7 @@ class RefundOrderTest extends WebapiAbstract
     }
 
     #[
-        ConfigFixture('carriers/instore/active', 1),
+        DataFixture('Magento_InventoryInStorePickupSalesApi::Test/_files/store_for_eu_website_store_carriers_conf.php'),
         DataFixture(PickupLocationFixture::class, as: 'src1'),
         DataFixture(PickupLocationFixture::class, as: 'src2'),
         DataFixture(PickupLocationFixture::class, as: 'src3'),
