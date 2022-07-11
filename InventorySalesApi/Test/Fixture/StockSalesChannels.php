@@ -81,7 +81,7 @@ class StockSalesChannels implements RevertibleDataFixtureInterface
      */
     public function revert(DataObject $data): void
     {
-        $stock = $this->stockRepository->get($data['stock_id']);
+        $stock = $this->stockRepository->get((int) $data['stock_id']);
         $extensionAttributes = $stock->getExtensionAttributes();
         $extensionAttributes->setSalesChannels([]);
         $this->stockRepository->save($stock);

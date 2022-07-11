@@ -102,6 +102,9 @@ class SetInStorePickup implements DataFixtureInterface
             $this->getWebsiteCodeByStoreId->execute((int)$quote->getStoreId())
         );
         $address = $this->toQuoteAddress->convert($pickupLocation, $quote->getShippingAddress());
+        $address->setFirstname($pickupLocation->getName());
+        $address->setLastname('Store');
+        $address->setTelephone($pickupLocation->getPhone());
         $cartExtension = $quote->getExtensionAttributes() ?? $this->cartExtensionFactory->create();
 
         $shippingAssignments = $cartExtension->getShippingAssignments() ?: [$this->shippingAssignmentFactory->create()];
