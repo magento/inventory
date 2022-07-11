@@ -217,16 +217,6 @@ class SortingTest extends TestCase
     public function productListWithShowOutOfStockSortOrderDataProvider(): array
     {
         return [
-            'default_order_position_asc' => [
-                'sort' => 'position',
-                'direction' => 'ASC',
-                'expectation' => ['simple_1', 'simple_2', 'configurable2', 'configurable1'],
-            ],
-            'default_order_position_desc' => [
-                'sort' => 'position',
-                'direction' => 'DESC',
-                'expectation' => ['simple_1', 'simple_2', 'configurable2', 'configurable1'],
-            ],
             'default_order_price_asc' => [
                 'sort' => 'price',
                 'direction' => 'ASC',
