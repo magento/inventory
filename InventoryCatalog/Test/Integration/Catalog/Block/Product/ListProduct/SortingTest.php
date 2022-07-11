@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Catalog\Block\Product\ListProduct;
+namespace Magento\InventoryCatalog\Test\Integration\Catalog\Block\Product\ListProduct;
 
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
@@ -35,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests for products sorting on category page.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @magentoDbIsolation disabled
  * @magentoAppIsolation enabled
  */
