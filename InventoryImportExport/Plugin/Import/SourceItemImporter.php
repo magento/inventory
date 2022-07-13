@@ -8,8 +8,9 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\StockItemImporterInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
+use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 
@@ -37,20 +38,30 @@ class SourceItemImporter
     private $defaultSource;
 
     /**
+     * Fetch Source Items interface
+     *
+     * @var GetSourceItemsBySkuInterface
+     */
+    private $getSourceItemsBySku;
+
+    /**
      * StockItemImporter constructor
      *
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param SourceItemInterfaceFactory $sourceItemFactory
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         SourceItemInterfaceFactory $sourceItemFactory,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        GetSourceItemsBySkuInterface $getSourceItemsBySku
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->defaultSource = $defaultSourceProvider;
+        $this->getSourceItemsBySku = $getSourceItemsBySku;
     }
 
     /**
@@ -82,11 +93,36 @@ class SourceItemImporter
             $sourceItem->setSourceCode($this->defaultSource->getCode());
             $sourceItem->setQuantity((float)$qty);
             $sourceItem->setStatus($inStock);
-            $sourceItems[] = $sourceItem;
+            if ($this->isSourceItemAllowed($sourceItem)) {
+                $sourceItems[] = $sourceItem;
+            }
         }
         if (count($sourceItems) > 0) {
             /** SourceItemInterface[] $sourceItems */
             $this->sourceItemsSave->execute($sourceItems);
         }
+    }
+
+    /**
+     * Allow new inventory source item entries for - newly created products or existing products with `qty`>1 and
+     * without having any entry for `default` source code.
+     * Allow updating source item entries having `default` source code.
+     * Prevent new inventory source item entries for existing products having source code other than `default`
+     * and `qty`=0.
+     *
+     * @param $sourceItem
+     * @return bool
+     */
+    private function isSourceItemAllowed($sourceItem): bool
+    {
+        $existingSourceCodes = [];
+        $existingSourceItems = $this->getSourceItemsBySku->execute($sourceItem->getSku());
+        foreach ($existingSourceItems as $exitingSourceItem) {
+            $existingSourceCodes[] = $exitingSourceItem->getSourceCode();
+        }
+
+        return !(!$sourceItem->getQuantity()
+            && count($existingSourceCodes)
+            && !in_array($sourceItem->getSourceCode(), $existingSourceCodes, true));
     }
 }
