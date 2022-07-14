@@ -97,7 +97,6 @@ class StockItemImporterTest extends TestCase
      * MSI Plugin on Magento\Catalog\ImportExport\Model\StockItemImporter::import()
      *
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
-     * @magentoDbIsolation enabled
      */
     public function testSourceItemImportWithDefaultSource()
     {
@@ -182,12 +181,12 @@ class StockItemImporterTest extends TestCase
      *
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_with_source_link.php
      *
+     * @magentoDbIsolation enabled
      * @throws CouldNotSaveException
      * @throws InputException
      * @throws ValidationException
      */
     #[
-        DbIsolation(false),
         DataFixture(ProductFixture::class, ['sku' => 'simple'], 'p1'),
     ]
     public function testSourceItemImportWithNonDefaultExistingSources(): void
