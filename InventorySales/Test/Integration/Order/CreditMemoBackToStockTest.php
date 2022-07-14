@@ -26,7 +26,6 @@ use Magento\Checkout\Test\Fixture\SetPaymentMethod as SetPaymentMethodFixture;
 use Magento\Checkout\Test\Fixture\PlaceOrder as PlaceOrderFixture;
 use Magento\Sales\Test\Fixture\Invoice as InvoiceFixture;
 
-
 /**
  * Class to test credit memo updates of the reservations
  *
@@ -81,7 +80,8 @@ class CreditMemoBackToStockTest extends TestCase
         DataFixture(GuestCartFixture::class, as: 'cart'),
         DataFixture(
             AddProductToCartFixture::class,
-            ['cart_id' => '$cart.id$', 'product_id' => '$p1.id$', 'qty' => 1], 'item1'
+            ['cart_id' => '$cart.id$', 'product_id' => '$p1.id$', 'qty' => 1],
+            'item1'
         ),
         DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
         DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
