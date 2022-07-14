@@ -68,7 +68,7 @@ class SourceItemImporter
      * After plugin Import to import Stock Data to Source Items
      *
      * @param StockItemImporterInterface $subject
-     * @param null $result
+     * @param mixed $result
      * @param array $stockData
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\InputException
@@ -80,12 +80,12 @@ class SourceItemImporter
      */
     public function afterImport(
         StockItemImporterInterface $subject,
-        $result,
+        mixed $result,
         array $stockData
     ) {
         $sourceItems = [];
         foreach ($stockData as $sku => $stockDatum) {
-            $inStock = (isset($stockDatum['is_in_stock'])) ? intval($stockDatum['is_in_stock']) : 0;
+            $inStock = (isset($stockDatum['is_in_stock'])) ? (int)$stockDatum['is_in_stock'] : 0;
             $qty = (isset($stockDatum['qty'])) ? $stockDatum['qty'] : 0;
             /** @var SourceItemInterface $sourceItem */
             $sourceItem = $this->sourceItemFactory->create();
@@ -110,10 +110,10 @@ class SourceItemImporter
      * Prevent new inventory source item entries for existing products having source code other than `default`
      * and `qty`=0.
      *
-     * @param $sourceItem
+     * @param SourceItemInterface $sourceItem
      * @return bool
      */
-    private function isSourceItemAllowed($sourceItem): bool
+    private function isSourceItemAllowed(SourceItemInterface $sourceItem): bool
     {
         $existingSourceCodes = [];
         $existingSourceItems = $this->getSourceItemsBySku->execute($sourceItem->getSku());
