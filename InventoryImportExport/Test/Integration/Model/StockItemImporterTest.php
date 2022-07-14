@@ -32,6 +32,13 @@ use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Tests for StockItemImporter class.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @magentoDbIsolation disabled
+ * @magentoAppIsolation enabled
+ */
 class StockItemImporterTest extends TestCase
 {
     /** @var ObjectManagerInterface */
