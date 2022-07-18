@@ -59,7 +59,10 @@ class FlushCacheByCacheTag
             $cacheContext = $this->cacheContextFactory->create();
             $cacheContext->registerEntities($cacheTag, $entityIds);
             $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $cacheContext]);
-            $this->appCache->clean($cacheContext->getIdentities());
+            $tags = $cacheContext->getIdentities();
+            if ($tags) {
+                $this->appCache->clean($tags);
+            }
         }
     }
 }
