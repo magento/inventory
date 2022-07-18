@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCache\Unit\Model;
+namespace Magento\InventoryCache\Test\Unit\Model;
 
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\EntityManager\EventManager;
