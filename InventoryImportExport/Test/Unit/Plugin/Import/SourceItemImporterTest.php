@@ -10,7 +10,6 @@ namespace Magento\InventoryImportExport\Test\Unit\Plugin\Import;
 use Magento\CatalogImportExport\Model\StockItemImporterInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
@@ -87,14 +86,11 @@ class SourceItemImporterTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->plugin = (new ObjectManager($this))->getObject(
-            SourceItemImporter::class,
-            [
-                'sourceItemsSave' => $this->sourceItemsSaveMock,
-                'sourceItemFactory' => $this->sourceItemFactoryMock,
-                'defaultSourceProvider' => $this->defaultSourceMock,
-                'getSourceItemsBySku' => $this->getSourceItemsBySkuMock
-            ]
+        $this->plugin = new SourceItemImporter(
+            $this->sourceItemsSaveMock,
+            $this->sourceItemFactoryMock,
+            $this->defaultSourceMock,
+            $this->getSourceItemsBySkuMock
         );
     }
 
