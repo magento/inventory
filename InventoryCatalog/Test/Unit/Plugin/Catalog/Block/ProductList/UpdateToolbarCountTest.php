@@ -8,13 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Test\Unit\Plugin\Catalog\Block\ProductList;
 
 use Magento\Catalog\Block\Product\ProductList\Toolbar;
-use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\CatalogInventory\Api\Data\StockInterface;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DB\Adapter\Pdo\Mysql;
 use Magento\Framework\DB\Select;
 use Magento\Framework\Exception\LocalizedException;
@@ -27,6 +25,8 @@ use Magento\Store\Model\StoreManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\DataObject;
+use Magento\Catalog\Model\Layer;
+use Magento\Catalog\Model\Layer\Resolver;
 
 /**
  * Test class for Update toolbar count plugin
@@ -55,19 +55,9 @@ class UpdateToolbarCountTest extends TestCase
     private $selectMock;
 
     /**
-     * @var ScopeConfigInterface|MockObject
-     */
-    private $configMock;
-
-    /**
      * @var Toolbar|MockObject
      */
     private $toolbarMock;
-
-    /**
-     * @var Data|MockObject
-     */
-    private $categoryHelperMock;
 
     /**
      * @var CategoryFactory|MockObject
@@ -105,12 +95,21 @@ class UpdateToolbarCountTest extends TestCase
     private $storeManagerMock;
 
     /**
+     * @var Layer|MockObject
+     */
+    private $layerMock;
+
+    /**
+     * @var Resolver|MockObject
+     */
+    private $resolverMock;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
-        $this->configMock = $this->getMockForAbstractClass(ScopeConfigInterface::class);
         $this->connectionMock = $this->getMockBuilder(Mysql::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -130,7 +129,6 @@ class UpdateToolbarCountTest extends TestCase
         $this->areProductsSalableMock = $this->createMock(AreProductsSalableInterface::class);
         $this->toolbarMock = $this->createMock(Toolbar::class);
         $this->categoryMock = $this->createMock(Category::class);
-        $this->categoryHelperMock = $this->createMock(Data::class);
         $this->categoryFactoryMock = $this->getMockBuilder(CategoryFactory::class)
             ->onlyMethods(['create'])
             ->disableOriginalConstructor()
@@ -142,10 +140,6 @@ class UpdateToolbarCountTest extends TestCase
             ->expects($this->any())
             ->method('getCollection')
             ->willReturn($this->collectionMock);
-        $this->categoryHelperMock
-            ->expects($this->any())
-            ->method('getCategory')
-            ->willReturn($this->categoryMock);
         $this->categoryFactoryMock
             ->expects($this->any())
             ->method('create')
@@ -167,16 +161,24 @@ class UpdateToolbarCountTest extends TestCase
             ->expects($this->any())
             ->method('getWebsite')
             ->willReturn($websiteMock);
+
+        $this->resolverMock = $this->getMockBuilder(Resolver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->layerMock = $this->getMockBuilder(Layer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->model = $objectManager->getObject(
             UpdateToolbarCount::class,
             [
-                'config' => $this->configMock,
-                'categoryHelper' => $this->categoryHelperMock,
                 'categoryFactory' => $this->categoryFactoryMock,
                 'stockRegistry' => $this->stockRegistryMock,
                 'stockConfiguration' => $this->stockConfigurationMock,
                 'areProductsSalable' => $this->areProductsSalableMock,
-                'storeManager' => $this->storeManagerMock
+                'storeManager' => $this->storeManagerMock,
+                'layerResolver' => $this->resolverMock
             ]
         );
     }
@@ -185,7 +187,6 @@ class UpdateToolbarCountTest extends TestCase
      * Test case to check afterGetTotalNum returns valid result
      *
      * @param array $items
-     * @param bool $outOfStockFlagValue
      * @param int $defaultStockId
      * @param int $actualResult
      * @param int $expectedResult
@@ -194,11 +195,14 @@ class UpdateToolbarCountTest extends TestCase
      */
     public function testAfterGetTotalNumReturnValidResult(
         array $items,
-        bool $outOfStockFlagValue,
         int $defaultStockId,
         int $actualResult,
         int $expectedResult
     ): void {
+        $this->resolverMock
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($this->layerMock);
         $this->stockRegistryMock
             ->expects($this->any())
             ->method('getStock')
@@ -215,11 +219,6 @@ class UpdateToolbarCountTest extends TestCase
         $this->collectionMock->expects($this->any())
             ->method('getItems')
             ->willReturn($items);
-        $this->configMock
-            ->expects($this->any())
-            ->method('getValue')
-            ->with('cataloginventory/options/show_out_of_stock')
-            ->willReturn($outOfStockFlagValue);
 
         $updatedResult = $this->model->afterGetTotalNum($this->toolbarMock, $actualResult);
         $this->assertEquals($expectedResult, $updatedResult);
@@ -237,9 +236,9 @@ class UpdateToolbarCountTest extends TestCase
         $item3 = new DataObject(['id' => 3, 'sku' => 'item3']);
         $item4 = new DataObject(['id' => 4, 'sku' => 'item4']);
         return [
-            'verify total number of products when OUT OF STOCK status YES' => [[$item1, $item2], true, 1, 2, 2],
-            'verify total number of products when OUT OF STOCK status NO' => [[$item2,$item3,$item4], false, 1, 4, 4],
-            'verify total number of products when category is empty and OUT OF STOCK status YES' => [[], true, 1, 0, 0]
+            'verify total number of products when OUT OF STOCK status YES' => [[$item1, $item2], 1, 2, 2],
+            'verify total number of products when OUT OF STOCK status NO' => [[$item2,$item3,$item4], 1, 4, 4],
+            'verify total number of products when category is empty and OUT OF STOCK status YES' => [[], 1, 0, 0]
         ];
     }
 }
