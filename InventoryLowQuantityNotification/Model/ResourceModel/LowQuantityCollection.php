@@ -120,8 +120,8 @@ class LowQuantityCollection extends AbstractCollection
      */
     public function addStoreFilter($storeId)
     {
-        $storeIds = is_array($storeId) ? implode(',', $storeId) : $storeId;
-        $this->filterStoreId = '(' . $storeIds . ')';
+        $storeIds = is_array($storeId) ? $storeId : [$storeId];
+        $this->filterStoreId = $storeIds;
     }
 
     /**
@@ -192,11 +192,20 @@ class LowQuantityCollection extends AbstractCollection
         );
 
         if (null !== $this->filterStoreId) {
+            $productEavVarcharCondition = [
+                'product_entity_varchar_store.' . $linkField . ' = product_entity.' . $linkField,
+                $this->getConnection()->quoteInto(
+                    'product_entity_varchar_store.store_id IN (?)',
+                    $this->filterStoreId
+                ),
+                $this->getConnection()->quoteInto(
+                    'product_entity_varchar_store.attribute_id = ?',
+                    (int)$nameAttribute->getAttributeId()
+                )
+            ];
             $this->getSelect()->joinLeft(
                 ['product_entity_varchar_store' => $productEavVarcharTable],
-                'product_entity_varchar_store.' . $linkField . ' = product_entity.' . $linkField . ' ' .
-                'AND product_entity_varchar_store.store_id IN ' . $this->filterStoreId . ' ' .
-                'AND product_entity_varchar_store.attribute_id = ' . (int)$nameAttribute->getAttributeId(),
+                join(' AND ', $productEavVarcharCondition),
                 [
                     'product_name' => $this->getConnection()->getIfNullSql(
                         'product_entity_varchar_store.value',
@@ -204,11 +213,21 @@ class LowQuantityCollection extends AbstractCollection
                     ),
                 ]
             );
+
+            $productEavIntCondition = [
+                'product_entity_int_store.' . $linkField . ' = product_entity.' . $linkField,
+                $this->getConnection()->quoteInto(
+                    'product_entity_int_store.attribute_id = ?',
+                    (int)$statusAttribute->getAttributeId()
+                ),
+                $this->getConnection()->quoteInto(
+                    'product_entity_int_store.store_id IN (?)',
+                    $this->filterStoreId
+                )
+            ];
             $this->getSelect()->joinLeft(
                 ['product_entity_int_store' => $productEavIntTable],
-                'product_entity_int_store.' . $linkField . ' = product_entity.' . $linkField . ' ' .
-                'AND product_entity_int_store.attribute_id = ' . (int)$statusAttribute->getAttributeId()
-                . ' AND product_entity_int_store.store_id IN ' . $this->filterStoreId,
+                join(' AND ', $productEavIntCondition),
                 []
             )->where(
                 $this->getConnection()->getIfNullSql(
@@ -318,6 +337,10 @@ class LowQuantityCollection extends AbstractCollection
             return;
         }
 
+        $storeCondition = [
+            'store.website_id = website.website_id',
+            $this->getConnection()->quoteInto('store.store_id IN (?)', $this->filterStoreId)
+        ];
         $this->getSelect()->joinInner(
             ['source_stock_link' => $this->getTable('inventory_source_stock_link')],
             'source_stock_link.source_code = inventory_source.source_code',
@@ -336,7 +359,7 @@ class LowQuantityCollection extends AbstractCollection
             []
         )->joinInner(
             ['store' => $this->getTable('store')],
-            'store.website_id = website.website_id and store.store_id IN ' . $this->filterStoreId,
+            join(' AND ', $storeCondition),
             []
         );
     }
