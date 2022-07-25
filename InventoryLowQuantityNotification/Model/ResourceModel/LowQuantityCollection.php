@@ -113,14 +113,15 @@ class LowQuantityCollection extends AbstractCollection
     }
 
     /**
-     * Set store id to filter.
+     * Set store id(s) to filter.
      *
-     * @param int $storeId
+     * @param array|int $storeId
      * @return void
      */
-    public function addStoreFilter(int $storeId)
+    public function addStoreFilter($storeId)
     {
-        $this->filterStoreId = $storeId;
+        $storeIds = is_array($storeId) ? implode(',', $storeId) : $storeId;
+        $this->filterStoreId = '(' . $storeIds . ')';
     }
 
     /**
@@ -194,7 +195,7 @@ class LowQuantityCollection extends AbstractCollection
             $this->getSelect()->joinLeft(
                 ['product_entity_varchar_store' => $productEavVarcharTable],
                 'product_entity_varchar_store.' . $linkField . ' = product_entity.' . $linkField . ' ' .
-                'AND product_entity_varchar_store.store_id = ' . (int)$this->filterStoreId . ' ' .
+                'AND product_entity_varchar_store.store_id IN ' . $this->filterStoreId . ' ' .
                 'AND product_entity_varchar_store.attribute_id = ' . (int)$nameAttribute->getAttributeId(),
                 [
                     'product_name' => $this->getConnection()->getIfNullSql(
@@ -207,7 +208,7 @@ class LowQuantityCollection extends AbstractCollection
                 ['product_entity_int_store' => $productEavIntTable],
                 'product_entity_int_store.' . $linkField . ' = product_entity.' . $linkField . ' ' .
                 'AND product_entity_int_store.attribute_id = ' . (int)$statusAttribute->getAttributeId()
-                . ' AND product_entity_int_store.store_id = ' . $this->filterStoreId,
+                . ' AND product_entity_int_store.store_id IN ' . $this->filterStoreId,
                 []
             )->where(
                 $this->getConnection()->getIfNullSql(
@@ -335,7 +336,7 @@ class LowQuantityCollection extends AbstractCollection
             []
         )->joinInner(
             ['store' => $this->getTable('store')],
-            'store.website_id = website.website_id and store.store_id = ' . $this->filterStoreId,
+            'store.website_id = website.website_id and store.store_id IN ' . $this->filterStoreId,
             []
         );
     }
