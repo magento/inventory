@@ -20,5 +20,6 @@
         "psr-4": {
             "Magento\\InventoryCatalogSearch\\": ""
         }
-    }
+    },
+    "version": "1.1.0"
 }

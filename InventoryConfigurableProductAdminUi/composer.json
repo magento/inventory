@@ -7,8 +7,8 @@
         "magento/module-catalog": "*",
         "magento/module-configurable-product": "*",
         "magento/module-ui": "*",
-        "magento/module-inventory-api": "*",
-        "magento/module-inventory-catalog-api": "*"
+        "magento/module-inventory-api": "1.1.*",
+        "magento/module-inventory-catalog-api": "1.2.*"
     },
     "type": "magento2-module",
     "license": [
@@ -22,5 +22,6 @@
         "psr-4": {
             "Magento\\InventoryConfigurableProductAdminUi\\": ""
         }
-    }
+    },
+    "version": "1.1.0"
 }
