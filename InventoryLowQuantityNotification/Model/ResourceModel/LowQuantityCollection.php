@@ -118,10 +118,9 @@ class LowQuantityCollection extends AbstractCollection
      * @param array|int $storeId
      * @return void
      */
-    public function addStoreFilter($storeId)
+    public function addStoreFilter(array|int $storeId)
     {
-        $storeIds = is_array($storeId) ? $storeId : [$storeId];
-        $this->filterStoreId = $storeIds;
+        $this->filterStoreId = is_array($storeId) ? $storeId : [$storeId];
     }
 
     /**
