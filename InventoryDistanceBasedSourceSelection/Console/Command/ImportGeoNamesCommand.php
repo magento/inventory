@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryDistanceBasedSourceSelection\Console\Command;
 
+use Magento\Framework\Console\Cli;
 use Magento\InventoryDistanceBasedSourceSelection\Model\ImportGeoNames;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -77,5 +78,7 @@ class ImportGeoNamesCommand extends Command
         }
 
         $output->writeln('Done.');
+
+        return Cli::RETURN_SUCCESS;
     }
 }
