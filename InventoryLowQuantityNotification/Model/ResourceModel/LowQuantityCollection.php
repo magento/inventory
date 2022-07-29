@@ -206,11 +206,13 @@ class LowQuantityCollection extends AbstractCollection
                 'product_entity_varchar_store.' . $linkField . ' = product_entity.' . $linkField,
                 $this->getConnection()->quoteInto(
                     'product_entity_varchar_store.store_id IN (?)',
-                    $this->filterStoreId
+                    $this->filterStoreId,
+                    \Zend_Db::INT_TYPE
                 ),
                 $this->getConnection()->quoteInto(
                     'product_entity_varchar_store.attribute_id = ?',
-                    (int)$nameAttribute->getAttributeId()
+                    (int)$nameAttribute->getAttributeId(),
+                    \Zend_Db::INT_TYPE
                 )
             ];
             $this->getSelect()->joinLeft(
@@ -228,11 +230,13 @@ class LowQuantityCollection extends AbstractCollection
                 'product_entity_int_store.' . $linkField . ' = product_entity.' . $linkField,
                 $this->getConnection()->quoteInto(
                     'product_entity_int_store.attribute_id = ?',
-                    (int)$statusAttribute->getAttributeId()
+                    (int)$statusAttribute->getAttributeId(),
+                    \Zend_Db::INT_TYPE
                 ),
                 $this->getConnection()->quoteInto(
                     'product_entity_int_store.store_id IN (?)',
-                    $this->filterStoreId
+                    $this->filterStoreId,
+                    \Zend_Db::INT_TYPE
                 )
             ];
             $this->getSelect()->joinLeft(
@@ -349,7 +353,11 @@ class LowQuantityCollection extends AbstractCollection
 
         $storeCondition = [
             'store.website_id = website.website_id',
-            $this->getConnection()->quoteInto('store.store_id IN (?)', $this->filterStoreId)
+            $this->getConnection()->quoteInto(
+                'store.store_id IN (?)',
+                $this->filterStoreId,
+                \Zend_Db::INT_TYPE
+            )
         ];
         $this->getSelect()->joinInner(
             ['source_stock_link' => $this->getTable('inventory_source_stock_link')],
