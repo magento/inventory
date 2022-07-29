@@ -7,9 +7,9 @@
 -->
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorefrontBundleProductChangeStockStatusCustomStockCustomWebsiteTest">
+    <test name="StorefrontBundleProductChangeStockStatusCustomStockCustomWebsiteTest" extends="StorefrontBundleProductChangeStockStatusDefaultStockTest">
         <annotations>
-            <stories value="Bundle Product Custom Stock."/>
+ ck."/>
             <title value="Stock status bundle product custom stock, custom website."/>
             <description value="Verify, change stock status for bundle product on custom stock and custom website will affect product visibility on storefront."/>
             <testCaseId value="https://studio.cucumber.io/projects/69435/test-plan/folders/457016/scenarios/4092805"/>
@@ -97,7 +97,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" after="disableCreatedSource">
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" after="disableAllSources">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
