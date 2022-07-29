@@ -13,6 +13,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 class SourceItemImporter
 {
@@ -45,23 +46,31 @@ class SourceItemImporter
     private $getSourceItemsBySku;
 
     /**
+     * @var IsSingleSourceModeInterface
+     */
+    private $isSingleSourceMode;
+
+    /**
      * StockItemImporter constructor
      *
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param SourceItemInterfaceFactory $sourceItemFactory
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         SourceItemInterfaceFactory $sourceItemFactory,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        GetSourceItemsBySkuInterface $getSourceItemsBySku
+        GetSourceItemsBySkuInterface $getSourceItemsBySku,
+        IsSingleSourceModeInterface $isSingleSourceMode
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->defaultSource = $defaultSourceProvider;
         $this->getSourceItemsBySku = $getSourceItemsBySku;
+        $this->isSingleSourceMode = $isSingleSourceMode;
     }
 
     /**
@@ -104,17 +113,18 @@ class SourceItemImporter
     }
 
     /**
-     * Allow new inventory source item entries for - newly created products or existing products with `qty`>1 and
-     * without having any entry for `default` source code.
-     * Allow updating source item entries having `default` source code.
-     * Prevent new inventory source item entries for existing products having source code other than `default`
-     * and `qty`=0.
+     * In case of multiple sources, if the existing product already has source codes other than `default`,
+     * then this check will prevent a new entry for `default` source code with qty = 0.
      *
      * @param SourceItemInterface $sourceItem
      * @return bool
      */
     private function isSourceItemAllowed(SourceItemInterface $sourceItem): bool
     {
+        if ($this->isSingleSourceMode->execute()) {
+            return true;
+        }
+
         $existingSourceCodes = [];
         $existingSourceItems = $this->getSourceItemsBySku->execute($sourceItem->getSku());
         foreach ($existingSourceItems as $exitingSourceItem) {
