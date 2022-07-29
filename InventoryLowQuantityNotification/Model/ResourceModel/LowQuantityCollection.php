@@ -126,7 +126,7 @@ class LowQuantityCollection extends AbstractCollection
     /**
      * Set store ids to filter.
      *
-     * @param array $storeId
+     * @param array $storeIds
      * @return void
      */
     public function addStoresFilter(array $storeIds)
