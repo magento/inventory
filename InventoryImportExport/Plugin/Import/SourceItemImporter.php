@@ -113,8 +113,8 @@ class SourceItemImporter
     }
 
     /**
-     * In case of multiple sources, if the existing product already has source codes other than `default`,
-     * then this check will prevent a new entry for `default` source code with qty = 0.
+     * In case of multiple sources, if the existing product already has source codes other than `default`, then this
+     * check will prevent a new entry for `default` source code with qty = 0.
      *
      * @param SourceItemInterface $sourceItem
      * @return bool

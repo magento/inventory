@@ -15,6 +15,7 @@ use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryImportExport\Plugin\Import\SourceItemImporter;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -63,6 +64,11 @@ class SourceItemImporterTest extends TestCase
     private $sourceItemMock;
 
     /**
+     * @var IsSingleSourceModeInterface|MockObject
+     */
+    private $isSingleSourceModeMock;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -86,11 +92,14 @@ class SourceItemImporterTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->isSingleSourceModeMock = $this->createMock(IsSingleSourceModeInterface::class);
+
         $this->plugin = new SourceItemImporter(
             $this->sourceItemsSaveMock,
             $this->sourceItemFactoryMock,
             $this->defaultSourceMock,
-            $this->getSourceItemsBySkuMock
+            $this->getSourceItemsBySkuMock,
+            $this->isSingleSourceModeMock
         );
     }
 
@@ -105,7 +114,7 @@ class SourceItemImporterTest extends TestCase
      * @throws InputException
      * @throws ValidationException
      */
-    public function testAfterImport(
+    public function testAfterImportForMultipleSource(
         string $existingSourceCode,
         string $sourceCode,
         float $quantity,
