@@ -1,20 +1,21 @@
 {
     "name": "magento/module-inventory-in-store-pickup-frontend",
     "description": "N/A",
-    "require": {
-        "php": "~7.3.0||~7.4.0",
-        "magento/framework": "*",
-        "magento/module-checkout": "*",
-        "magento/module-inventory-in-store-pickup-api": "*",
-        "magento/module-inventory-in-store-pickup-sales-api": "*",
-        "magento/module-inventory-in-store-pickup-shipping-api": "*",
-        "magento/module-store": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.1.1-p2",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/module-checkout": "*",
+        "magento/module-inventory-in-store-pickup-api": "1.1.*",
+        "magento/module-inventory-in-store-pickup-sales-api": "1.1.*",
+        "magento/module-inventory-in-store-pickup-shipping-api": "1.1.*",
+        "magento/module-store": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -24,3 +25,4 @@
         }
     }
 }
+

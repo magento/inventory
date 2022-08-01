@@ -1,15 +1,16 @@
 {
     "name": "magento/module-inventory-distance-based-source-selection-admin-ui",
     "description": "N/A",
-    "require": {
-        "php": "~7.3.0||~7.4.0",
-        "magento/framework": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.2.0-p2",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -19,3 +20,4 @@
         }
     }
 }
+
