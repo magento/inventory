@@ -113,6 +113,8 @@ class SourceItemImporter
     }
 
     /**
+     * Assignment of default stock for existing products
+     *
      * In case of multiple sources, if the existing product already has source codes other than `default`, then this
      * check will prevent a new entry for `default` source code with qty = 0.
      *
