@@ -1,23 +1,24 @@
 {
     "name": "magento/module-inventory-requisition-list",
     "description": "N/A",
+    "type": "magento2-module",
+    "license": [
+        "proprietary"
+    ],
     "config": {
         "sort-packages": true
     },
+    "version": "1.2.2",
     "require": {
         "magento/framework": "*",
         "magento/module-catalog": "*",
-        "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-configuration-api": "*",
+        "magento/module-inventory-sales-api": "1.2.*",
+        "magento/module-inventory-configuration-api": "1.2.*",
         "php": "~7.4.0||~8.1.0"
     },
     "suggest": {
         "magento/module-requisition-list": "*"
     },
-    "type": "magento2-module",
-    "license": [
-        "proprietary"
-    ],
     "autoload": {
         "files": [
             "registration.php"
@@ -27,3 +28,4 @@
         }
     }
 }
+
