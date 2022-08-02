@@ -98,13 +98,13 @@
     <route url="/V1/inventory/source-items" method="POST">
         <service class="Magento\InventoryApi\Api\SourceItemsSaveInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventoryApi::stock_source_item_assign"/>
         </resources>
     </route>
     <route url="/V1/inventory/source-items-delete" method="POST">
         <service class="Magento\InventoryApi\Api\SourceItemsDeleteInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventoryApi::stock_source_item_assign"/>
         </resources>
     </route>
 </routes>
