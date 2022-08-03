@@ -167,7 +167,7 @@ class IsProductSalableForRequestedQtyConditionChain implements IsProductSalableF
             $errors = [
                 $this->productSalabilityErrorFactory->create([
                     'code' => 'requested-sku-is-not-assigned-to-given-stock',
-                    'message' => __('The requested sku is not assigned to given stock.')
+                    'message' => __('The requested sku %1 is not assigned to given stock.', $sku)
                 ])
             ];
             return $this->productSalableResultFactory->create(['errors' => $errors]);
