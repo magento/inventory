@@ -8,15 +8,23 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Validation\ValidationException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
-use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 class SourceItemImporter
 {
+    /**
+     * @var array
+     */
+    private $productSources = [];
+
     /**
      * Source Items Save Interface for saving multiple source items
      *
@@ -39,16 +47,14 @@ class SourceItemImporter
     private $defaultSource;
 
     /**
-     * Fetch Source Items interface
-     *
-     * @var GetSourceItemsBySkuInterface
-     */
-    private $getSourceItemsBySku;
-
-    /**
      * @var IsSingleSourceModeInterface
      */
     private $isSingleSourceMode;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
 
     /**
      * StockItemImporter constructor
@@ -56,21 +62,21 @@ class SourceItemImporter
      * @param SourceItemsSaveInterface $sourceItemsSave
      * @param SourceItemInterfaceFactory $sourceItemFactory
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         SourceItemInterfaceFactory $sourceItemFactory,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        IsSingleSourceModeInterface $isSingleSourceMode
+        IsSingleSourceModeInterface $isSingleSourceMode,
+        ResourceConnection $resourceConnection
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->defaultSource = $defaultSourceProvider;
-        $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->isSingleSourceMode = $isSingleSourceMode;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -79,9 +85,9 @@ class SourceItemImporter
      * @param StockItemImporterInterface $subject
      * @param mixed $result
      * @param array $stockData
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Validation\ValidationException
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
      * @return void
      * @see StockItemImporterInterface::import()
      *
@@ -91,18 +97,23 @@ class SourceItemImporter
         StockItemImporterInterface $subject,
         mixed $result,
         array $stockData
-    ) {
+    ): void {
         $sourceItems = [];
+        $this->saveSourceRelation(array_keys($stockData));
+
         foreach ($stockData as $sku => $stockDatum) {
-            $inStock = (isset($stockDatum['is_in_stock'])) ? (int)$stockDatum['is_in_stock'] : 0;
-            $qty = (isset($stockDatum['qty'])) ? $stockDatum['qty'] : 0;
-            /** @var SourceItemInterface $sourceItem */
+            $isQtySeExplicitly = ($stockDatum['explicit_qty']) ?? false;
+            $inStock = $stockDatum['is_in_stock'] ?? 0;
+            $qty = $stockDatum['qty'] ?? 0;
             $sourceItem = $this->sourceItemFactory->create();
             $sourceItem->setSku((string)$sku);
             $sourceItem->setSourceCode($this->defaultSource->getCode());
             $sourceItem->setQuantity((float)$qty);
-            $sourceItem->setStatus($inStock);
-            if ($this->isSourceItemAllowed($sourceItem)) {
+            $sourceItem->setStatus((int)$inStock);
+
+            if ($isQtySeExplicitly
+                || $this->isSingleSourceMode->execute()
+                || $this->isSourceItemAllowed($sourceItem)) {
                 $sourceItems[] = $sourceItem;
             }
         }
@@ -110,6 +121,7 @@ class SourceItemImporter
             /** SourceItemInterface[] $sourceItems */
             $this->sourceItemsSave->execute($sourceItems);
         }
+        $this->clearSourceRelation();
     }
 
     /**
@@ -123,18 +135,50 @@ class SourceItemImporter
      */
     private function isSourceItemAllowed(SourceItemInterface $sourceItem): bool
     {
-        if ($this->isSingleSourceMode->execute()) {
-            return true;
-        }
-
-        $existingSourceCodes = [];
-        $existingSourceItems = $this->getSourceItemsBySku->execute($sourceItem->getSku());
-        foreach ($existingSourceItems as $exitingSourceItem) {
-            $existingSourceCodes[] = $exitingSourceItem->getSourceCode();
-        }
+        $existingSourceCodes = $this->getSourceRelation($sourceItem->getSku());
 
         return !(!$sourceItem->getQuantity()
             && count($existingSourceCodes)
             && !in_array($sourceItem->getSourceCode(), $existingSourceCodes, true));
+    }
+
+    /**
+     * Store product sku and source relations in initialized variable
+     *
+     * @param array $listSku
+     * @return void
+     */
+    private function saveSourceRelation(array $listSku): void
+    {
+        $select = $this->resourceConnection->getConnection()->select()->from(
+            $this->resourceConnection->getTableName('inventory_source_item'),
+            ['sku', 'source_code']
+        )->where('sku IN (?)', $listSku);
+
+        $result = $this->resourceConnection->getConnection()->fetchAll($select);
+        foreach ($result as $sourceItem) {
+            $this->productSources[$sourceItem['sku']][] = $sourceItem['source_code'];
+        }
+    }
+
+    /**
+     * Clean the relation
+     *
+     * @return void
+     */
+    private function clearSourceRelation(): void
+    {
+        $this->productSources = [];
+    }
+
+    /**
+     * Get source relation
+     *
+     * @param string $sku
+     * @return array
+     */
+    private function getSourceRelation(string $sku): array
+    {
+        return $this->productSources[$sku] ?? [];
     }
 }
