@@ -12,5 +12,11 @@
         <element name="stockSelectedCheckbox" type="checkbox" selector="#idscheck{{id}}" parameterized="true"/>
         <element name="assignedSourceContent" type="text" selector="table[data-role='grid'] ul[data-bind*='assignedSource']"/>
         <element name="tooltipAssignedSource" type="text" selector="//div[contains(@class, 'data-tooltip-title') and contains(text(), 'Assigned Sources:')]/..//span[text()='{{source_code}}']" parameterized="true"/>
+        <element name="searchStockText" type="input" selector="//input[@placeholder='Search by keyword'][1]"/>
+        <element name="clickSearchStock" type="button" selector="//div[@class='data-grid-search-control-wrap']//button[@class='action-submit']"/>
+        <element name="editStock" type="button" selector="//tr[@class='data-row']//div[contains(text(),'{{test_source_code}}')]/../..//a[@class='action-menu-item' and contains(text(),'Edit')]" parameterized="true"/>
+        <element name="selectStock" type="select" selector="//tr[@class='data-row']//div[contains(text(),'{{test_stock_code}}')]/../..//input[@class='admin__control-checkbox']" parameterized="true"/>
+        <element name="stockSavedSuccessfulMessage" type="text" selector="//div[@class='message message-success success']//div[contains(text(),'The Stock has been saved.')]"/>
+        <element name="stockDeleteSuccessfulMessage" type="text" selector="//div[@class='message message-success success']//div[contains(text(),'The Stock has been deleted.')]"/>
     </section>
 </sections>

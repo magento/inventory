@@ -9,5 +9,11 @@
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminOrderFormItemsSection">
         <element name="itemError" type="text" selector=".row-messages-error"/>
+        <element name="qtyForOrder" type="input" selector="//td[contains(text(),'{{var}}')]/..//input[@name='qty']" parameterized="true" timeout="60"/>
+        <element name="billingAddress" type="text" selector="//div[@id='order-billing_address']//select[@id='order-billing_address_customer_address_id']//option[@selected='selected']"/>
+        <element name="shippingAddress" type="text" selector="//div[@id='order-shipping_address']//select[@id='order-shipping_address_customer_address_id']//option[@selected='selected']"/>
+        <element name="checkSameAsBillingAddress" type="checkbox" selector="//label[@for='order-shipping_same_as_billing']" />
+        <element name="orderedItemsName" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]"/>
+        <element name="orderedItemsQty" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]/../..//td[@class='col-qty']//input"/>
     </section>
 </sections>

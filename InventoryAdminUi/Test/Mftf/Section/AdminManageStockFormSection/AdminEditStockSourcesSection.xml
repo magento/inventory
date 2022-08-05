@@ -14,5 +14,13 @@
         <element name="rowSourceName" type="text" selector=".data-row[data-repeat-index='{{arg1}}'] span[data-index='name']" parameterized="true"/>
         <element name="rowSourceDelete" type="button" selector=".data-row[data-repeat-index='{{arg1}}'] .action-delete" parameterized="true"/>
         <element name="tableRow" type="block" selector=".admin__dynamic-rows[data-index='assigned_sources'] tbody > tr.data-row"/>
+        <element name="clearAll" type="button" selector="//div[contains(@data-bind,'data.setToolbarNode')]//button[@class='action-tertiary action-clear']" />
+        <element name="searchSourceText" type="input" selector="//div[contains(@data-bind,'data.setToolbarNode')]//input[@placeholder='Search by keyword']"/>
+        <element name="clickSearchSource" type="button" selector="//div[contains(@data-bind,'data.setToolbarNode')]//div[@class='data-grid-search-control-wrap']//button[@class='action-submit']"/>
+        <element name="selectSource" type="select" selector="//tr[@class='data-row']//div[contains(text(),'{{test_source_code}}')]/../..//input[@class='admin__control-checkbox']" parameterized="true"/>
+        <element name="doneButton" type="button" selector="//button[@class='action-primary']//span[contains(text(),'Done')]" />
+        <element name="deleteAssignedSources" type="button" selector="//tr[@class='data-row']//button[@class='action-delete']"/>
+        <element name="deleteStock" type="button" selector="//div[@class='page-actions-buttons']//button[@data-ui-id='delete-button']"/>
+        <element name="editStockPopUpOK" type="button" selector="//button[@class='action-primary action-accept']"/>
     </section>
 </sections>
