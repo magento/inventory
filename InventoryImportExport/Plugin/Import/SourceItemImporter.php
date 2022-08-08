@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\CatalogImportExport\Model\Import\Product\SkuProcessor;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
@@ -53,6 +54,11 @@ class SourceItemImporter
     private $resourceConnection;
 
     /**
+     * @var SkuProcessor
+     */
+    private $skuProcessor;
+
+    /**
      * StockItemImporter constructor
      *
      * @param SourceItemsSaveInterface $sourceItemsSave
@@ -60,19 +66,22 @@ class SourceItemImporter
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param ResourceConnection $resourceConnection
+     * @param SkuProcessor $skuProcessor
      */
     public function __construct(
         SourceItemsSaveInterface $sourceItemsSave,
         SourceItemInterfaceFactory $sourceItemFactory,
         DefaultSourceProviderInterface $defaultSourceProvider,
         IsSingleSourceModeInterface $isSingleSourceMode,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        SkuProcessor $skuProcessor
     ) {
         $this->sourceItemsSave = $sourceItemsSave;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->defaultSource = $defaultSourceProvider;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->resourceConnection = $resourceConnection;
+        $this->skuProcessor = $skuProcessor;
     }
 
     /**
@@ -98,6 +107,11 @@ class SourceItemImporter
         $skusWithDefaultSource = $this->getSourceRelation(array_keys($stockData));
 
         foreach ($stockData as $sku => $stockDatum) {
+            $isNewSku = true;
+            if (array_key_exists(strtolower($sku), $this->skuProcessor->getOldSkus())) {
+                $isNewSku = false;
+            }
+
             $inStock = $stockDatum['is_in_stock'] ?? 0;
             $qty = $stockDatum['qty'] ?? 0;
             $sourceItem = $this->sourceItemFactory->create();
@@ -106,7 +120,8 @@ class SourceItemImporter
             $sourceItem->setQuantity((float)$qty);
             $sourceItem->setStatus((int)$inStock);
 
-            if ($this->isSingleSourceMode->execute()
+            if ($isNewSku
+                ||$this->isSingleSourceMode->execute()
                 || $this->isSourceItemAllowed($sourceItem, $skusWithDefaultSource)) {
                 $sourceItems[] = $sourceItem;
             }
@@ -124,10 +139,10 @@ class SourceItemImporter
      * then this check will prevent assigning it to `default` source code if qty is set to 0.
      *
      * @param SourceItemInterface $sourceItem
-     * @param $existingSourceCodes
+     * @param array $existingSourceCodes
      * @return bool
      */
-    private function isSourceItemAllowed(SourceItemInterface $sourceItem, $existingSourceCodes): bool
+    private function isSourceItemAllowed(SourceItemInterface $sourceItem, array $existingSourceCodes): bool
     {
         return !(!$sourceItem->getQuantity() && !array_key_exists($sourceItem->getSku(), $existingSourceCodes));
     }
