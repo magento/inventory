@@ -32,12 +32,18 @@ class InStorePickupTest extends TestCase
     private $cartRepository;
 
     /**
+     * @var InStorePickup
+     */
+    private $inStorePickup;
+
+    /**
      * @inheritdoc
      */
     public function setUp(): void
     {
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->cartRepository = Bootstrap::getObjectManager()->get(CartRepositoryInterface::class);
+        $this->inStorePickup = Bootstrap::getObjectManager()->get(InStorePickup::class);
     }
 
     /**
@@ -146,5 +152,13 @@ class InStorePickupTest extends TestCase
 
         $this->assertEmpty($cart->getShippingAddress()->getShippingMethod());
         $this->assertEquals(0, $cart->getShippingAddress()->getShippingAmount());
+    }
+
+    /**
+     * @return void
+     */
+    public function testShippingMethodCodeIsAvailable()
+    {
+        $this->assertArrayHasKey('pickup', $this->inStorePickup->getAllowedMethods());
     }
 }
