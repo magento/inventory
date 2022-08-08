@@ -135,7 +135,7 @@ class SourceItemImporterTest extends TestCase
 
         $this->saveSourceRelationMock($existingSourceCode, $sku);
 
-        $this->defaultSourceMock->expects($this->once())->method('getCode')->willReturn($sourceCode);
+        $this->defaultSourceMock->expects($this->exactly(2))->method('getCode')->willReturn($sourceCode);
         $this->sourceItemMock->expects($this->once())->method('setSku')->with($sku)
             ->willReturnSelf();
         $this->sourceItemMock->expects($this->once())->method('setSourceCode')->with($sourceCode)
@@ -146,7 +146,7 @@ class SourceItemImporterTest extends TestCase
             ->willReturnSelf();
         $this->sourceItemFactoryMock->expects($this->once())->method('create')
             ->willReturn($this->sourceItemMock);
-        $this->sourceItemMock->expects($this->once())->method('getSku')->willReturn('simple');
+
 
         $this->isSingleSourceModeMock->expects($this->once())->method('execute')->willReturn(false);
 
@@ -170,15 +170,15 @@ class SourceItemImporterTest extends TestCase
         $selectMock->expects($this->once())
             ->method('from')
             ->willReturnSelf();
-        $selectMock->expects($this->once())
+        $selectMock->expects($this->exactly(2))
             ->method('where')
             ->willReturnSelf();
         $connectionAdapterMock->expects($this->once())
-            ->method('fetchAll')
+            ->method('fetchPairs')
             ->willReturn([['sku' => $sku, 'source_code' => $existingSourceCode]]);
 
         $this->resourceConnectionMock
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getConnection')
             ->willReturn($connectionAdapterMock);
 
@@ -200,6 +200,7 @@ class SourceItemImporterTest extends TestCase
 
         $this->sourceItemMock->expects($this->any())->method('getSourceCode')->willReturn($sourceCode);
         $this->sourceItemMock->expects($this->once())->method('getQuantity')->willReturn($quantity);
+        $this->sourceItemMock->expects($this->any())->method('getSku')->willReturn($sku);
 
         $this->sourceItemsSaveMock->expects($this->any())->method('execute')->with([$this->sourceItemMock])
             ->willReturnSelf();
