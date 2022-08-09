@@ -113,7 +113,7 @@ class SourceItemImporter
 
         foreach ($stockData as $sku => $stockDatum) {
             $isNewSku = true;
-            if (array_key_exists(strtolower($sku), $this->skuProcessor->getOldSkus())) {
+            if (array_key_exists(strtolower((string)$sku), $this->skuProcessor->getOldSkus())) {
                 $isNewSku = false;
             }
 
