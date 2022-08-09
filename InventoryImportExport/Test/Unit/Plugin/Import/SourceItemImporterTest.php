@@ -170,7 +170,7 @@ class SourceItemImporterTest extends TestCase
         }
         if (!$existingSkus) {
             $this->sourceItemsSaveMock->expects($this->once())->method('execute')->with([$this->sourceItemMock])
-        ->willReturnSelf();
+                ->willReturnSelf();
         }
 
         $this->plugin->afterImport($this->stockItemImporterMock, '', $stockData);
