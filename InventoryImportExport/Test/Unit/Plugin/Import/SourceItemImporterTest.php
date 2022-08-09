@@ -144,7 +144,6 @@ class SourceItemImporterTest extends TestCase
                 'stock_id' => 1,
             ]
         ];
-        $isAllowed = true;
 
         $this->saveSourceRelationMock($existingSourceCode, $sku);
 
