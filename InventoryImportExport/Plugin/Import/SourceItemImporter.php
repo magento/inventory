@@ -20,6 +20,11 @@ use Magento\InventoryApi\Api\SourceItemsSaveInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
+/**
+ * Assigning products to default source
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SourceItemImporter
 {
     /**
@@ -121,7 +126,7 @@ class SourceItemImporter
             $sourceItem->setStatus((int)$inStock);
 
             if ($isNewSku
-                ||$this->isSingleSourceMode->execute()
+                || $this->isSingleSourceMode->execute()
                 || $this->isSourceItemAllowed($sourceItem, $skusWithDefaultSource)) {
                 $sourceItems[] = $sourceItem;
             }

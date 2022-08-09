@@ -117,10 +117,12 @@ class SourceItemImporterTest extends TestCase
     /**
      * @dataProvider sourceItemDataProvider
      *
+     * @param string $sku
      * @param string $existingSourceCode
      * @param string $sourceCode
      * @param float $quantity
      * @param int $isInStock
+     * @param array $existingSkus
      * @throws CouldNotSaveException
      * @throws InputException
      * @throws ValidationException
@@ -142,6 +144,7 @@ class SourceItemImporterTest extends TestCase
                 'stock_id' => 1,
             ]
         ];
+        $isAllowed = true;
 
         $this->saveSourceRelationMock($existingSourceCode, $sku);
 
@@ -158,9 +161,18 @@ class SourceItemImporterTest extends TestCase
         $this->sourceItemFactoryMock->expects($this->once())->method('create')
             ->willReturn($this->sourceItemMock);
 
-        $this->isSingleSourceModeMock->expects($this->any())->method('execute')->willReturn(false);
+        if ($existingSkus) {
+            $this->isSingleSourceModeMock->expects($this->atLeastOnce())->method('execute')->willReturn(false);
+        }
 
-        $this->isSourceItemAllowedMock($sku, $sourceCode, $quantity);
+        if ($existingSkus && !$this->isSingleSourceModeMock->execute()) {
+            $this->sourceItemMock->expects($this->once())->method('getQuantity')->willReturn($quantity);
+            $this->sourceItemMock->expects($this->once())->method('getSku')->willReturn($sku);
+        }
+        if (!$existingSkus) {
+            $this->sourceItemsSaveMock->expects($this->once())->method('execute')->with([$this->sourceItemMock])
+        ->willReturnSelf();
+        }
 
         $this->plugin->afterImport($this->stockItemImporterMock, '', $stockData);
     }
@@ -199,24 +211,6 @@ class SourceItemImporterTest extends TestCase
     }
 
     /**
-     * @param string $sku
-     * @param string $sourceCode
-     * @param float $quantity
-     */
-    private function isSourceItemAllowedMock(string $sku, string $sourceCode, float $quantity): void
-    {
-        $this->sourceItemMock->expects($this->once())->method('setSku')->with($sku)
-            ->willReturnSelf();
-
-        $this->sourceItemMock->expects($this->any())->method('getSourceCode')->willReturn($sourceCode);
-        $this->sourceItemMock->expects($this->any())->method('getQuantity')->willReturn($quantity);
-        $this->sourceItemMock->expects($this->any())->method('getSku')->willReturn($sku);
-
-        $this->sourceItemsSaveMock->expects($this->any())->method('execute')->with([$this->sourceItemMock])
-            ->willReturnSelf();
-    }
-
-    /**
      * Source item data provider
      *
      * @return array[]
@@ -224,16 +218,22 @@ class SourceItemImporterTest extends TestCase
     public function sourceItemDataProvider(): array
     {
         return [
-            'non-default existing source code with 0 quantity' => [
-                'simple', 'source-code-1', 'default', 0.0, 0, ['simple']
+            'non-default existing source code with 0 quantity for existing product' => [
+                'simple', 'source-code-1', 'default', 0.0, 0, ['simple' => 'default']
             ],
-            'non-default existing source code with quantity > 1' => [
-                'simple', 'source-code-1', 'default', 25.0, 1, ['simple']
+            'non-default existing source code with quantity > 1 for existing product' => [
+                'simple', 'source-code-1', 'default', 25.0, 1, []
             ],
-            'default existing source code with 0 quantity' => [
+            'default existing source code with 0 quantity for existing product' => [
+                'simple', 'default', 'default', 0.0, 0, ['simple' => 'default']
+            ],
+            'default existing source code with quantity > 1 for existing product' => [
+                'simple', 'default', 'default', 100.0, 1, []
+            ],
+            'default source code with 0 quantity for new product' => [
                 'simple', 'default', 'default', 0.0, 0, []
             ],
-            'default existing source code with quantity > 1' => [
+            'default source code with quantity > 1 for new product' => [
                 'simple', 'default', 'default', 100.0, 1, []
             ],
         ];
