@@ -71,7 +71,7 @@
                 <div data-role="gallery"
                      class="gallery"
                      data-images="[]"
-                     data-types="<?= $block->escapeHtml(
+                     data-types="<?= $block->escapeHtmlAttr(
                          $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($block->getImageTypes())
                      ) ?>"
                 >
@@ -94,10 +94,10 @@
 
                     <?php foreach ($block->getImageTypes() as $typeData):
                         ?>
-                        <input name="<?= $block->escapeHtml($typeData['name']) ?>"
-                               class="image-<?= $block->escapeHtml($typeData['code']) ?>"
+                        <input name="<?= $block->escapeHtmlAttr($typeData['name']) ?>"
+                               class="image-<?= $block->escapeHtmlAttr($typeData['code']) ?>"
                                type="hidden"
-                               value="<?= $block->escapeHtml($typeData['value']) ?>"/>
+                               value="<?= $block->escapeHtmlAttr($typeData['value']) ?>"/>
                     <?php
                     endforeach;
                     ?>
@@ -141,7 +141,7 @@
                                     <button type="button"
                                             class="action-remove"
                                             data-role="delete-button"
-                                            title="<?= $block->escapeHtml(__('Remove image')) ?>">
+                                            title="<?= $block->escapeHtmlAttr(__('Remove image')) ?>">
                                         <span><?= $block->escapeHtml(__('Remove image')) ?></span>
                                     </button>
                                     <div class="draggable-handle"></div>
@@ -158,9 +158,9 @@
                                 <?php
                                 foreach ($block->getMediaAttributes() as $attribute):
                                     ?>
-                                    <li data-role-code="<?= $block->escapeHtml(
+                                    <li data-role-code="<?= $block->escapeHtmlAttr(
                                         $attribute->getAttributeCode()
-                                    ) ?>" class="item-role item-role-<?= $block->escapeHtml(
+                                    ) ?>" class="item-role item-role-<?= $block->escapeHtmlAttr(
                                         $attribute->getAttributeCode()
                                     ) ?>">
                                         <?= /* @noEscape */ $attribute->getFrontendLabel() ?>
@@ -185,7 +185,7 @@
                                     <button type="button"
                                             class="action-remove"
                                             data-role="delete-button"
-                                            title="<?= $block->escapeHtml(__('Remove image')) ?>">
+                                            title="<?= $block->escapeHtmlAttr(__('Remove image')) ?>">
                                         <span><?= $block->escapeHtml(__('Remove image')) ?></span>
                                     </button>
 
@@ -243,7 +243,7 @@
                                                         <input class="image-type"
                                                                data-role="type-selector"
                                                                type="checkbox"
-                                                               value="<?= $block->escapeHtml(
+                                                               value="<?= $block->escapeHtmlAttr(
                                                                    $attribute->getAttributeCode()
                                                                ) ?>"
                                                         />
@@ -265,7 +265,7 @@
                                             __('Image Size')
                                         ); ?></span>
                                     </label>
-                                    <div class="admin__field-value" data-message="<?= $block->escapeHtml(
+                                    <div class="admin__field-value" data-message="<?= $block->escapeHtmlAttr(
                                         __('{size}')
                                     );?>"></div>
                                 </div>
@@ -276,7 +276,7 @@
                                             __('Image Resolution')
                                         ); ?></span>
                                     </label>
-                                    <div class="admin__field-value" data-message="<?= $block->escapeHtml(
+                                    <div class="admin__field-value" data-message="<?= $block->escapeHtmlAttr(
                                         __('{width}^{height} px')
                                     );?>"></div>
                                 </div>
@@ -322,7 +322,7 @@
                                 options: $parent.attributes,
                                 optionsText: 'label',
                                 value: attribute,
-                                optionsCaption: '<?= $block->escapeHtml(
+                                optionsCaption: '<?= $block->escapeHtmlAttr(
                                         __("Select")
                                     ); ?>'
                                 ">
@@ -341,7 +341,7 @@
                         <div data-role="gallery"
                              class="gallery"
                              data-images="[]"
-                             data-types="<?= $block->escapeHtml(
+                             data-types="<?= $block->escapeHtmlAttr(
                                  $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($block->getImageTypes())
                              ) ?>"
                         >
@@ -368,10 +368,10 @@
 
                             <?php foreach ($block->getImageTypes() as $typeData):
                                 ?>
-                                <input name="<?= $block->escapeHtml($typeData['name']) ?>"
-                                       class="image-<?= $block->escapeHtml($typeData['code']) ?>"
+                                <input name="<?= $block->escapeHtmlAttr($typeData['name']) ?>"
+                                       class="image-<?= $block->escapeHtmlAttr($typeData['code']) ?>"
                                        type="hidden"
-                                       value="<?= $block->escapeHtml($typeData['value']) ?>"/>
+                                       value="<?= $block->escapeHtmlAttr($typeData['value']) ?>"/>
                             <?php
                             endforeach;
                             ?>
@@ -417,7 +417,7 @@
                                             <button type="button"
                                                     class="action-remove"
                                                     data-role="delete-button"
-                                                    title="<?= $block->escapeHtml(__('Remove image')) ?>">
+                                                    title="<?= $block->escapeHtmlAttr(__('Remove image')) ?>">
                                             <span><?= $block->escapeHtml(
                                                     __('Remove image')
                                                 ); ?></span>
@@ -438,9 +438,9 @@
                                         <?php
                                         foreach ($block->getMediaAttributes() as $attribute):
                                             ?>
-                                            <li data-role-code="<?= $block->escapeHtml(
+                                            <li data-role-code="<?= $block->escapeHtmlAttr(
                                                 $attribute->getAttributeCode()
-                                            ) ?>" class="item-role item-role-<?= $block->escapeHtml(
+                                            ) ?>" class="item-role item-role-<?= $block->escapeHtmlAttr(
                                                 $attribute->getAttributeCode()
                                             ) ?>">
                                                 <?= $block->escapeHtml($attribute->getFrontendLabel()) ?>
@@ -464,7 +464,7 @@
                                             <button type="button"
                                                     class="action-remove"
                                                     data-role="delete-button"
-                                                    title="<?= $block->escapeHtml(__('Remove image')) ?>">
+                                                    title="<?= $block->escapeHtmlAttr(__('Remove image')) ?>">
                                                 <span><?= $block->escapeHtml(__('Remove image')) ?></span>
                                             </button>
                                             <div class="draggable-handle"></div>
@@ -522,7 +522,7 @@
                                                                 <input class="image-type"
                                                                        data-role="type-selector"
                                                                        type="checkbox"
-                                                                       value="<?= $block->escapeHtml(
+                                                                       value="<?= $block->escapeHtmlAttr(
                                                                            $attribute->getAttributeCode()
                                                                        ) ?>"
                                                                 />
@@ -544,7 +544,7 @@
                                                     __('Image Size')
                                                 ); ?></span>
                                             </label>
-                                            <div class="admin__field-value" data-message="<?= $block->escapeHtml(
+                                            <div class="admin__field-value" data-message="<?= $block->escapeHtmlAttr(
                                                 __('{size}')
                                             ); ?>"></div>
                                         </div>
@@ -555,7 +555,7 @@
                                                     __('Image Resolution')
                                                 ); ?></span>
                                             </label>
-                                            <div class="admin__field-value" data-message="<?= $block->escapeHtml(
+                                            <div class="admin__field-value" data-message="<?= $block->escapeHtmlAttr(
                                                 __('{width}^{height} px')
                                             ); ?>"></div>
                                         </div>

@@ -9,13 +9,13 @@
     <route url="/V1/inventory/source-selection-algorithm-list" method="GET">
         <service class="Magento\InventorySourceSelectionApi\Api\GetSourceSelectionAlgorithmListInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventorySourceSelectionApi::source_selection_algorithm"/>
         </resources>
     </route>
     <route url="/V1/inventory/source-selection-algorithm-result" method="POST">
         <service class="Magento\InventorySourceSelectionApi\Api\SourceSelectionServiceInterface" method="execute"/>
         <resources>
-            <resource ref="Magento_InventoryApi::source"/>
+            <resource ref="Magento_InventorySourceSelectionApi::source_selection_algorithm_post"/>
         </resources>
     </route>
 </routes>
