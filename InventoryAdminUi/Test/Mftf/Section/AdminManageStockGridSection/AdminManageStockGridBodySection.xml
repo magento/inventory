@@ -18,5 +18,9 @@
         <element name="selectStock" type="select" selector="//tr[@class='data-row']//div[contains(text(),'{{test_stock_code}}')]/../..//input[@class='admin__control-checkbox']" parameterized="true"/>
         <element name="stockSavedSuccessfulMessage" type="text" selector="//div[@class='message message-success success']//div[contains(text(),'The Stock has been saved.')]"/>
         <element name="stockDeleteSuccessfulMessage" type="text" selector="//div[@class='message message-success success']//div[contains(text(),'The Stock has been deleted.')]"/>
+        <element name="editStockBackButton" type="button" selector="//button[@id='back']"/>
+        <element name="stockAssignSourcesGrid" type="text" selector="//tbody//tr[@class='data-row']//ul[contains(@data-bind,'assignedSource')]"/>
+        <element name="stockAssignedSourcesName" type="text" selector="//div[@data-tooltip='tooltip-wrapper']//span[contains(@data-bind,'assignedSource.name') and contains(text(),'{{var1}}')]" parameterized="true"/>
+        <element name="stockAssignedSourcesCode" type="text" selector="//div[@data-tooltip='tooltip-wrapper']//span[contains(@data-bind,'assignedSource.sourceCode') and contains(text(),'{{var1}}')]" parameterized="true"/>
     </section>
 </sections>
