@@ -20,6 +20,7 @@
         <element name="selectSource" type="select" selector="//tr[@class='data-row']//div[contains(text(),'{{test_source_code}}')]/../..//input[@class='admin__control-checkbox']" parameterized="true"/>
         <element name="doneButton" type="button" selector="//button[@class='action-primary']//span[contains(text(),'Done')]" />
         <element name="deleteAssignedSources" type="button" selector="//tr[@class='data-row']//button[@class='action-delete']"/>
+        <element name="deleteSpecificAssignedSources" type="button" selector="//tr[@class='data-row']//td//span[text()='{{var1}}']/../../../../..//button[@class='action-delete']" parameterized="true"/>
         <element name="deleteStock" type="button" selector="//div[@class='page-actions-buttons']//button[@data-ui-id='delete-button']"/>
         <element name="editStockPopUpOK" type="button" selector="//button[@class='action-primary action-accept']"/>
     </section>
