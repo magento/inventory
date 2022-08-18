@@ -161,13 +161,16 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
 
         $searchCriteriaMock = $this->getMockBuilder(StockItemCriteriaInterface::class)
             ->onlyMethods(['addFilter'])->disableOriginalConstructor()->getMockForAbstractClass();
-
         $searchCriteriaMock->expects($this->exactly(2))->method('addFilter')
             ->withConsecutive(
-                [StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId],
+                [
+                    StockItemInterface::PRODUCT_ID,
+                    StockItemInterface::PRODUCT_ID,
+                    ['in' => [$sku => $productId]],
+                    'public'
+                ],
                 [StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID]
             );
-
         $this->legacyStockItemCriteriaFactory->expects($this->once())->method('create')
             ->willReturn($searchCriteriaMock);
 
@@ -182,8 +185,8 @@ class SetDatatoLegacyCatalogInventoryTest extends TestCase
         $stockItemMock->expects($this->once())->method('getManageStock')->willReturn(true);
         $stockItemMock->expects($this->once())->method('setIsInStock')->willReturn($stockStatus);
         $stockItemMock->expects($this->once())->method('setQty')->willReturn($quantity);
-
-        $stockItemCollectionMock->expects($this->once())->method('getTotalCount')->willReturn(1);
+        $stockItemMock->expects($this->once())->method('getProductId')->willReturn($productId);
+        $stockItemCollectionMock->expects($this->never())->method('getTotalCount');
         $stockItemCollectionMock->expects($this->once())->method('getItems')->willReturn([$stockItemMock]);
 
         $this->legacyStockItemRepository->expects($this->once())->method('getList')->with($searchCriteriaMock)

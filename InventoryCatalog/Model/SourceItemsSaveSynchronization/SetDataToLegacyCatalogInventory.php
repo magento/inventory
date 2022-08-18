@@ -137,7 +137,6 @@ class SetDataToLegacyCatalogInventory
         $productIds = [];
         foreach ($sourceItems as $sourceItem) {
             $sku = $sourceItem->getSku();
-
             try {
                 $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
             } catch (NoSuchEntityException $e) {
@@ -164,58 +163,83 @@ class SetDataToLegacyCatalogInventory
     private function updateSourceItems(array $sourceItems): void
     {
         $stockStatuses = $this->getStockStatuses($sourceItems);
+        $skus = [];
+        foreach ($sourceItems as $sourceItem) {
+            $skus[] = $sourceItem->getSku();
+        }
+        $productIdsBySkus = $this->getProductIdsBySkus->execute($skus);
+        $legacyStockItemsByProductId = [];
+        $legacyStockItems = $this->getLegacyStockItems($productIdsBySkus);
+        foreach ($legacyStockItems as $legacyStockItem) {
+            $legacyStockItemsByProductId[$legacyStockItem->getProductId()] = $legacyStockItem;
+        }
         $productIds = [];
         $productIdsForPriceReindex = [];
+        $this->updateSourceItemsInnerLoop(
+            $sourceItems,
+            $productIdsBySkus,
+            $stockStatuses,
+            $legacyStockItemsByProductId,
+            $productIdsForPriceReindex,
+            $productIds
+        );
+        if ($productIds) {
+            $this->indexerProcessor->reindexList($productIds);
+        }
+        if ($productIdsForPriceReindex) {
+            $this->priceIndexProcessor->reindexList($productIdsForPriceReindex);
+        }
+    }
+
+    /**
+     * Inner loop of updateSourceItems
+     *
+     * @param array $sourceItems
+     * @param array $productIdsBySkus
+     * @param array $stockStatuses
+     * @param array $legacyStockItemsByProductId
+     * @param array $productIdsForPriceReindex
+     * @param array $productIds
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function updateSourceItemsInnerLoop(
+        array $sourceItems,
+        array $productIdsBySkus,
+        array $stockStatuses,
+        array $legacyStockItemsByProductId,
+        array &$productIdsForPriceReindex,
+        array &$productIds
+    ): void {
         foreach ($sourceItems as $sourceItem) {
             $sku = $sourceItem->getSku();
-
-            try {
-                $productId = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
-            } catch (NoSuchEntityException $e) {
-                // Skip synchronization of for not existed product
-                continue;
-            }
-
-            $legacyStockItem = $this->getLegacyStockItem($productId);
+            $productId = $productIdsBySkus[$sku] ?? null;
+            $legacyStockItem = $legacyStockItemsByProductId[$productId] ?? null;
             if (null === $legacyStockItem) {
                 continue;
             }
-
             $isInStock = (int)$sourceItem->getStatus();
-
             if ($this->hasStockDataChangedFor($sku, (int) $stockStatuses[(string)$sourceItem->getSku()])) {
                 $productIdsForPriceReindex[] = $productId;
             }
-
             if ($legacyStockItem->getManageStock()) {
                 $legacyStockItem->setIsInStock($isInStock);
                 $legacyStockItem->setQty((float)$sourceItem->getQuantity());
-
                 if (false === $this->stockStateProvider->verifyStock($legacyStockItem)) {
                     $isInStock = 0;
                 }
             }
-
             $this->setDataToLegacyStockItem->execute(
                 (string)$sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
                 $isInStock
             );
-
             $this->setDataToLegacyStockStatus->execute(
                 (string)$sourceItem->getSku(),
                 (float)$sourceItem->getQuantity(),
                 (int)$stockStatuses[(string)$sourceItem->getSku()]
             );
             $productIds[] = $productId;
-        }
-
-        if ($productIds) {
-            $this->indexerProcessor->reindexList($productIds);
-        }
-
-        if ($productIdsForPriceReindex) {
-            $this->priceIndexProcessor->reindexList($productIdsForPriceReindex);
         }
     }
 
@@ -246,7 +270,6 @@ class SetDataToLegacyCatalogInventory
         foreach ($sourceItems as $sourceItem) {
             $skus[] = $sourceItem->getSku();
         }
-
         $stockStatuses = [];
         foreach ($this->areProductsSalable->execute($skus, Stock::DEFAULT_STOCK_ID) as $productSalable) {
             $stockStatuses[$productSalable->getSku()] = $productSalable->isSalable();
@@ -255,25 +278,23 @@ class SetDataToLegacyCatalogInventory
     }
 
     /**
-     * Returns StockItem from legacy inventory.
+     * Returns StockItems from legacy inventory.
      *
-     * @param int $productId
-     * @return null|StockItemInterface
+     * @param int[] $productIds
+     * @return StockItemInterface[]
      */
-    private function getLegacyStockItem(int $productId): ?StockItemInterface
+    private function getLegacyStockItems(array $productIds): array
     {
         $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
-
-        $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId);
+        $searchCriteria->addFilter(
+            StockItemInterface::PRODUCT_ID,
+            StockItemInterface::PRODUCT_ID,
+            ['in' => $productIds],
+            'public'
+        );
         $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID);
-
         $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
-        if ($stockItemCollection->getTotalCount() === 0) {
-            return null;
-        }
-
         $stockItems = $stockItemCollection->getItems();
-        $stockItem = reset($stockItems);
-        return $stockItem;
+        return $stockItems;
     }
 }

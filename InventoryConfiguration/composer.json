@@ -10,6 +10,9 @@
         "magento/module-inventory-configuration-api": "*",
         "magento/module-store": "*"
     },
+    "suggest": {
+        "magento/module-inventory-sales-api": "*"
+    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",

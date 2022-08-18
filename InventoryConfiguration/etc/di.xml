@@ -22,4 +22,8 @@
         <plugin name="cache_legacy_stock_item"
                 type="Magento\InventoryConfiguration\Plugin\InventoryConfiguration\Model\GetLegacyStockItemCache"/>
     </type>
+    <type name="Magento\InventorySalesApi\Api\AreProductsSalableInterface">
+        <plugin name="pre_load_legacy_stock_items"
+                type="Magento\InventoryConfiguration\Plugin\InventorySales\Model\AreProductsSalable\PreLoadLegacyStockItems"/>
+    </type>
 </config>
