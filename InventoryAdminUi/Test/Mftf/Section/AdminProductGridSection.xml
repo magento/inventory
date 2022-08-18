@@ -28,5 +28,6 @@
         <element name="childApiProductName" type="text" selector="//td[@data-index='name_container']//span//a[contains(text(),'{{colour}}')]" parameterized="true"/>
         <element name="childApiProductSKU" type="text" selector="//td[@data-index='sku_container']//span[contains(text(),'{{colour}}')]" parameterized="true"/>
         <element name="selectStockStatus" type="select" selector="//div[@class='entry-edit form-inline']//select[@name='product[quantity_and_stock_status][is_in_stock]']"/>
+        <element name="checkOtherWebsites" type="checkbox" selector="//label[contains(text(),'{{var}}')]/..//input[@type='checkbox']" parameterized="true"/>
     </section>
 </sections>
