@@ -74,6 +74,7 @@
 
         <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton1"/>
        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskDisappear"/>
+      
        <waitForElementVisible selector="{{AdminConfigurableProductSelectAttributesSlideOut.grid}}" time="30" stepKey="waitForGridPresent1"/>
 
         <waitForPageLoad stepKey="waitForPageLoad4"/>
