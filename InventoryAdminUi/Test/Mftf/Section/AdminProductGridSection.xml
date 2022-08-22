@@ -29,5 +29,15 @@
         <element name="childApiProductSKU" type="text" selector="//td[@data-index='sku_container']//span[contains(text(),'{{colour}}')]" parameterized="true"/>
         <element name="selectStockStatus" type="select" selector="//div[@class='entry-edit form-inline']//select[@name='product[quantity_and_stock_status][is_in_stock]']"/>
         <element name="checkOtherWebsites" type="checkbox" selector="//label[contains(text(),'{{var}}')]/..//input[@type='checkbox']" parameterized="true"/>
+        <element name="productRowByID" type="block" selector="//td//div[contains(text(),'{{var}}')]/../..//td[2]//div" parameterized="true" />
+        <element name="productIdFrom" type="text" selector="//input[@type='text' and @name='entity_id[from]']" />
+        <element name="productIdTo" type="text" selector="//input[@type='text' and @name='entity_id[to]']" />
+        <element name="bulkProductSelect" type="button" selector="//div[@class='admin__data-grid-wrap' and @data-role='grid-wrapper']//div[@class='action-multicheck-wrap']//input[@type='checkbox']/..//label" />
+        <element name="selectBulkActions" type="button" selector="//*[contains(@class,'admin__data-grid-header-row row row-gutter')]//*[text()='{{var}}']" parameterized="true"/>
+        <element name="textMassSourceAssignmentHeader" type="text" selector="//aside[@data-type='popup']//header[@class='modal-header']//h1[contains(text(),'{{var1}}')]" parameterized="true" />
+        <element name="textMassSourceAssignmentBody" type="text" selector="//aside[@data-type='popup']//div[contains(text(),'{{var1}}')]" parameterized="true" />
+        <element name="acceptOKPopup" type="button" selector="//aside[@data-type='popup']//button[@class='action-primary action-accept']" />
+        <element name="qtyPerSourceInGrid" type="block" selector="//td//div[contains(text(),'{{var}}')]/../..//td[9]//div//li//strong[text()='Default Source']" parameterized="true" />
+        <element name="qtyPerSourceOnHover" type="block" selector="//div[contains(text(),'Quantity per Source:')]/..//strong[contains(text(),'{{var1}}')]/..//span[contains(text(),'{{var2}}')]" parameterized="true" />
     </section>
 </sections>
