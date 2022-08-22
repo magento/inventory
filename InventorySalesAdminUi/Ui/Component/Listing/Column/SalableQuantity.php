@@ -12,6 +12,7 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
+use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
 use Magento\Ui\Component\Listing\Columns\Column;
 
 /**
@@ -35,11 +36,23 @@ class SalableQuantity extends Column
     private $getSalableQuantityDataBySku;
 
     /**
+     * @var GetAssignedStockIdsBySku
+     */
+    private $getAssignedStockIdsBySku;
+
+    /**
+     * @var int
+     */
+    private $maximumStocksToShow;
+
+    /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param GetSalableQuantityDataBySku $getSalableQuantityDataBySku
+     * @param GetAssignedStockIdsBySku $getAssignedStockIdsBySku
+     * @param int $maximumStocksToShow
      * @param array $components
      * @param array $data
      */
@@ -49,6 +62,8 @@ class SalableQuantity extends Column
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         IsSingleSourceModeInterface $isSingleSourceMode,
         GetSalableQuantityDataBySku $getSalableQuantityDataBySku,
+        GetAssignedStockIdsBySku $getAssignedStockIdsBySku,
+        int $maximumStocksToShow,
         array $components = [],
         array $data = []
     ) {
@@ -56,6 +71,8 @@ class SalableQuantity extends Column
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->getSalableQuantityDataBySku = $getSalableQuantityDataBySku;
+        $this->getAssignedStockIdsBySku = $getAssignedStockIdsBySku;
+        $this->maximumStocksToShow = $maximumStocksToShow;
     }
 
     /**
@@ -67,12 +84,37 @@ class SalableQuantity extends Column
             foreach ($dataSource['data']['items'] as &$row) {
                 $row['salable_quantity'] =
                     $this->isSourceItemManagementAllowedForProductType->execute($row['type_id']) === true
-                    ? $this->getSalableQuantityDataBySku->execute($row['sku'])
+                    ? $this->getSalableQuantityItemData($row['sku'])
                     : [];
             }
         }
         unset($row);
 
         return $dataSource;
+    }
+
+    /**
+     * Get salable quantity data for product
+     *
+     * @param string $sku
+     * @return array
+     */
+    private function getSalableQuantityItemData(string $sku): array
+    {
+        $sku = htmlspecialchars_decode($sku, ENT_QUOTES | ENT_SUBSTITUTE);
+
+        $stockIds = $this->getAssignedStockIdsBySku->execute($sku);
+        if (count($stockIds) > $this->maximumStocksToShow) {
+            return [
+                [
+                    'manage_stock' => true,
+                    'message' => __('Associated to %1 stocks', count($stockIds)),
+                ]
+            ];
+        }
+
+        $salableQuantityData = $this->getSalableQuantityDataBySku->execute($sku);
+
+        return $salableQuantityData;
     }
 }

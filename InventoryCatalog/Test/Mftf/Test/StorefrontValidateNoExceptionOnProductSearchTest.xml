@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontValidateNoExceptionOnProductSearchTest">
+        <annotations>
+            <stories value="Exception in storefront when trying to search product if Display Out of Stock Products = Yes"/>
+            <title value="Validate no exception error when trying to search product if display out of stock product = yes"/>
+            <description value="Validate no exception error when trying to search product if display out of stock product = yes"/>
+            <testCaseId value="AC-5960"/>
+            <useCaseId value="ACP2E-1005"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+        </annotations>
+        <before>
+            <!-- Login to backend-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Display out of stock product -->
+            <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
+            <!--Create category and product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <createData entity="SimpleProduct" stepKey="firstProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="secondProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="thirdProduct">
+                <field key="status">0</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+        </before>
+        <after>
+            <!-- Don't display out of stock product -->
+            <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertDisplayOutOfStockProduct"/>
+            <deleteData createDataKey="firstProduct" stepKey="deleteFirstProduct"/>
+            <deleteData createDataKey="secondProduct" stepKey="deleteSecondProduct"/>
+            <deleteData createDataKey="thirdProduct" stepKey="deleteThirdProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!--Logout from backend-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Search for the product on Storefront -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
+        <actionGroup ref="StorefrontCheckQuickSearchStringActionGroup" stepKey="quickSearchByProductName">
+            <argument name="phrase" value="simple"/>
+        </actionGroup>
+    </test>
+</tests>
