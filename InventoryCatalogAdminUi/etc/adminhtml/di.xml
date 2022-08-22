@@ -43,8 +43,7 @@
         <arguments>
             <!-- @deprecated parameter isSourceItemManagementAllowedForProductType has been deprecated and not in use now -->
             <argument name="isSourceItemManagementAllowedForProductType" xsi:type="null"/>
-            <!-- @deprecated parameter getSourceItemsBySku has been deprecated and not in use now -->
-            <argument name="getSourceItemsBySku" xsi:type="null"/>
+            <argument name="getSourceItemsBySku" xsi:type="object">Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySkuCache</argument>
         </arguments>
     </type>
     <type name="Magento\Catalog\Model\Product\Copier">
