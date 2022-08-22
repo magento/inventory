@@ -20,25 +20,25 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
-<!--            <deleteData createDataKey="createMSISimpleProduct1" stepKey="deleteMSISimpleProduct1"/>-->
-<!--            <deleteData createDataKey="createMSISimpleProduct2" stepKey="deleteMSISimpleProduct2"/>-->
-<!--            <deleteData createDataKey="createMSISimpleProduct3" stepKey="deleteMSISimpleProduct3"/>-->
-<!--            <deleteData createDataKey="createMSISimpleProduct4" stepKey="deleteMSISimpleProduct4"/>-->
+            <deleteData createDataKey="createMSISimpleProduct1" stepKey="deleteMSISimpleProduct1"/>
+            <deleteData createDataKey="createMSISimpleProduct2" stepKey="deleteMSISimpleProduct2"/>
+            <deleteData createDataKey="createMSISimpleProduct3" stepKey="deleteMSISimpleProduct3"/>
+            <deleteData createDataKey="createMSISimpleProduct4" stepKey="deleteMSISimpleProduct4"/>
 
-<!--            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>-->
-<!--            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">-->
-<!--                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>-->
-<!--            </actionGroup>-->
-<!--            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">-->
-<!--                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>-->
-<!--            </actionGroup>-->
-<!--            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource3">-->
-<!--                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>-->
-<!--            </actionGroup>-->
-<!--            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource4">-->
-<!--                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>-->
-<!--            </actionGroup>-->
-<!--            <deleteData createDataKey="createStock" stepKey="deleteStock"/>-->
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
+                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
+                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource3">
+                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource4">
+                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+            </actionGroup>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -97,8 +97,6 @@
         <!-- Step5  Do the bulk assignment of sources to the products -->
         <actionGroup ref="AdminBulkAssignSourcesToBulkSimpleProductsActionGroup" stepKey="bulkAssignSourcesToAllProducts">
             <argument name="product1Sku" value="$$createMSISimpleProduct1.sku$$"/>
-            <argument name="product2Sku" value="$$createMSISimpleProduct2.sku$$"/>
-            <argument name="product3Sku" value="$$createMSISimpleProduct3.sku$$"/>
             <argument name="product4Sku" value="$$createMSISimpleProduct4.sku$$"/>
             <argument name="source1_code" value="$$createTestSource1.source[source_code]$$"/>
             <argument name="source2_code" value="$$createTestSource2.source[source_code]$$"/>
@@ -142,8 +140,6 @@
         <!-- Step5  Do the bulk unassignment of sources to the products -->
         <actionGroup ref="AdminBulkUnAssignSourcesToBulkSimpleProductsActionGroup" stepKey="bulkUnAssignSourcesToAllProducts">
             <argument name="product1Sku" value="$$createMSISimpleProduct1.sku$$"/>
-            <argument name="product2Sku" value="$$createMSISimpleProduct2.sku$$"/>
-            <argument name="product3Sku" value="$$createMSISimpleProduct3.sku$$"/>
             <argument name="product4Sku" value="$$createMSISimpleProduct4.sku$$"/>
             <argument name="source1_code" value="$$createTestSource1.source[source_code]$$"/>
             <argument name="source2_code" value="$$createTestSource2.source[source_code]$$"/>

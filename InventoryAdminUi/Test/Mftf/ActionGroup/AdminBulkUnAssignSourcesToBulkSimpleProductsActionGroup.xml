@@ -11,8 +11,6 @@
     <actionGroup name="AdminBulkUnAssignSourcesToBulkSimpleProductsActionGroup">
         <arguments>
             <argument name="product1Sku" type="string"/>
-            <argument name="product2Sku" type="string"/>
-            <argument name="product3Sku" type="string"/>
             <argument name="product4Sku" type="string"/>
             <argument name="source1_code"/>
             <argument name="source2_code"/>
