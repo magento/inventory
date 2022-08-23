@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Test\Integration\Model;
 
 use Magento\Catalog\Test\Fixture\Product as ProductFixture;
-use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\CatalogImportExport\Model\StockItemProcessorInterface;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -33,13 +33,13 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests for StockItemImporter class.
+ * Tests for StockItemProcessor class.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @magentoDbIsolation disabled
  * @magentoAppIsolation enabled
  */
-class StockItemImporterTest extends TestCase
+class StockItemProcessorTest extends TestCase
 {
     /** @var ObjectManagerInterface */
     private $objectManager;
@@ -55,7 +55,7 @@ class StockItemImporterTest extends TestCase
     private $defaultSourceProvider;
 
     /**
-     * @var StockItemImporterInterface
+     * @var StockItemProcessorInterface
      */
     private $importer;
 
@@ -86,7 +86,7 @@ class StockItemImporterTest extends TestCase
             DefaultSourceProviderInterface::class
         );
         $this->importer = $this->objectManager->get(
-            StockItemImporterInterface::class
+            StockItemProcessorInterface::class
         );
         $this->searchCriteriaBuilderFactory = $this->objectManager->get(
             SearchCriteriaBuilderFactory::class
@@ -101,10 +101,13 @@ class StockItemImporterTest extends TestCase
 
     /**
      * Tests Source Item Import of default source should use
-     * MSI Plugin on Magento\Catalog\ImportExport\Model\StockItemImporter::import()
+     * MSI Plugin on Magento\Catalog\ImportExport\Model\StockItemProcessor::process()
      *
      * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
      */
+    #[
+        DataFixture(ProductFixture::class, ['sku' => 'simple'], 'p1'),
+    ]
     public function testSourceItemImportWithDefaultSource()
     {
         $productId = $this->productIdBySku->execute(['SKU-1'])['SKU-1'];
@@ -117,8 +120,16 @@ class StockItemImporterTest extends TestCase
                 'stock_id' => 1,
             ]
         ];
+        $importedData = [
+            'SKU-1' => [
+                'sku' => 'SKU-1',
+                'name' => 'New Name',
+                'qty' => 1,
+                'is_in_stock' => SourceItemInterface::STATUS_IN_STOCK,
+            ]
+        ];
 
-        $this->importer->import($stockData);
+        $this->importer->process($stockData, $importedData);
 
         $sourceCode = $this->defaultSourceProvider->getCode();
         $compareData = $this->buildDataArray($this->getSourceItemList('SKU-1', $sourceCode)->getItems());
@@ -219,8 +230,15 @@ class StockItemImporterTest extends TestCase
                 'stock_id' => 1,
             ]
         ];
+        $importedData = [
+            'simple' => [
+                'sku' => 'simple',
+                'name' => 'New Name',
+            ]
+        ];
 
-        $this->importer->import($stockData);
+        $this->importer->process($stockData, $importedData);
+        //$this->importer->import($stockData);
 
         $compareData = $this->buildDataArray($this->getSourceItemList($sku, $sourceCode)->getItems());
         $expectedData = [

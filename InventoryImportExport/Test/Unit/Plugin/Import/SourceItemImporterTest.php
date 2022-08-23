@@ -165,7 +165,6 @@ class SourceItemImporterTest extends TestCase
         }
 
         if ($existingSkus && !$this->isSingleSourceModeMock->execute()) {
-            $this->sourceItemMock->expects($this->once())->method('getQuantity')->willReturn($quantity);
             $this->sourceItemMock->expects($this->once())->method('getSku')->willReturn($sku);
         }
         if (!$existingSkus) {
@@ -195,8 +194,8 @@ class SourceItemImporterTest extends TestCase
             ->method('where')
             ->willReturnSelf();
         $connectionAdapterMock->expects($this->once())
-            ->method('fetchPairs')
-            ->willReturn([['sku' => $sku, 'source_code' => $existingSourceCode]]);
+            ->method('fetchAll')
+            ->willReturn([['sku' => $sku]]);
 
         $this->resourceConnectionMock
             ->expects($this->once())

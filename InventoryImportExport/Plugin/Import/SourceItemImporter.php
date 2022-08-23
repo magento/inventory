@@ -110,7 +110,7 @@ class SourceItemImporter
         array $importedData
     ): void {
         $sourceItems = [];
-        $skusWithDefaultSource = $this->getSourceRelation(array_keys($stockData));
+        $skusHavingDefaultSource = $this->getSkusHavingDefaultSource(array_keys($stockData));
 
         foreach ($stockData as $sku => $stockDatum) {
             $isNewSku = true;
@@ -130,10 +130,11 @@ class SourceItemImporter
             $sourceItem->setQuantity((float)$qty);
             $sourceItem->setStatus((int)$inStock);
 
+            //Prevent existing products to be assigned to `default` source, when `qty` is not explicitly set.
             if ($isNewSku
                 || $isQtyExplicitlySet
                 || $this->isSingleSourceMode->execute()
-                || $this->isSourceItemAllowed($sourceItem, $skusWithDefaultSource)) {
+                || in_array($sourceItem->getSku(), $skusHavingDefaultSource, true)) {
                 $sourceItems[] = $sourceItem;
             }
         }
@@ -144,32 +145,17 @@ class SourceItemImporter
     }
 
     /**
-     * Assignment of default stock for existing products
-     *
-     * In case of multiple sources, if the existing product already has assigned to source codes other than `default`,
-     * then this check will prevent assigning it to `default` source code if `qty` is not explicitly set to 0.
-     *
-     * @param SourceItemInterface $sourceItem
-     * @param array $existingSourceCodes
-     * @return bool
-     */
-    private function isSourceItemAllowed(SourceItemInterface $sourceItem, array $existingSourceCodes): bool
-    {
-        return !(!$sourceItem->getQuantity() && !array_key_exists($sourceItem->getSku(), $existingSourceCodes));
-    }
-
-    /**
-     * Store product sku and source relations in initialized variable
+     * Fetch product's skus having assigned to `default` source.
      *
      * @param array $listSku
      * @return array
      */
-    private function getSourceRelation(array $listSku): array
+    private function getSkusHavingDefaultSource(array $listSku): array
     {
         $connection = $this->resourceConnection->getConnection();
         $select = $connection->select()->from(
             $this->resourceConnection->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
-            [SourceItemInterface::SKU, SourceItemInterface::SOURCE_CODE]
+            [SourceItemInterface::SKU]
         )->where(
             SourceItemInterface::SKU . ' IN (?)',
             $listSku
@@ -177,6 +163,11 @@ class SourceItemImporter
             SourceItemInterface::SOURCE_CODE . ' = ?',
             $this->defaultSource->getCode()
         );
-        return $connection->fetchPairs($select);
+        $result = [];
+        foreach ($connection->fetchAll($select) as $row) {
+            $result[] = $row[SourceItemInterface::SKU];
+        }
+
+        return $result;
     }
 }
