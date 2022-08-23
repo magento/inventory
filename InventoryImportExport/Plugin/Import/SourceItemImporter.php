@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Plugin\Import;
 
-use Magento\CatalogImportExport\Model\StockItemImporterInterface;
 use Magento\CatalogImportExport\Model\Import\Product\SkuProcessor;
+use Magento\CatalogImportExport\Model\StockItemProcessorInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
@@ -92,21 +92,22 @@ class SourceItemImporter
     /**
      * After plugin Import to import Stock Data to Source Items
      *
-     * @param StockItemImporterInterface $subject
+     * @param StockItemProcessorInterface $subject
      * @param mixed $result
      * @param array $stockData
+     * @param array $importedData
+     * @return void
      * @throws CouldNotSaveException
      * @throws InputException
      * @throws ValidationException
-     * @return void
-     * @see StockItemImporterInterface::import()
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterImport(
-        StockItemImporterInterface $subject,
+    public function afterProcess(
+        StockItemProcessorInterface $subject,
         mixed $result,
-        array $stockData
+        array $stockData,
+        array $importedData
     ): void {
         $sourceItems = [];
         $skusWithDefaultSource = $this->getSourceRelation(array_keys($stockData));
@@ -115,6 +116,10 @@ class SourceItemImporter
             $isNewSku = true;
             if (array_key_exists(strtolower((string)$sku), $this->skuProcessor->getOldSkus())) {
                 $isNewSku = false;
+            }
+            $isQtyExplicitlySet = false;
+            if (!empty($importedData)) {
+                $isQtyExplicitlySet = array_key_exists('qty', $importedData[$sku]);
             }
 
             $inStock = $stockDatum['is_in_stock'] ?? 0;
@@ -126,6 +131,7 @@ class SourceItemImporter
             $sourceItem->setStatus((int)$inStock);
 
             if ($isNewSku
+                || $isQtyExplicitlySet
                 || $this->isSingleSourceMode->execute()
                 || $this->isSourceItemAllowed($sourceItem, $skusWithDefaultSource)) {
                 $sourceItems[] = $sourceItem;
@@ -141,7 +147,7 @@ class SourceItemImporter
      * Assignment of default stock for existing products
      *
      * In case of multiple sources, if the existing product already has assigned to source codes other than `default`,
-     * then this check will prevent assigning it to `default` source code if qty is set to 0.
+     * then this check will prevent assigning it to `default` source code if `qty` is not explicitly set to 0.
      *
      * @param SourceItemInterface $sourceItem
      * @param array $existingSourceCodes

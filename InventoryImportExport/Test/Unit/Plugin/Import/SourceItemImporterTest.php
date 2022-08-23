@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryImportExport\Test\Unit\Plugin\Import;
 
 use Magento\CatalogImportExport\Model\Import\Product\SkuProcessor;
-use Magento\CatalogImportExport\Model\StockItemImporterInterface;
+use Magento\CatalogImportExport\Model\StockItemProcessorInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
@@ -57,9 +57,9 @@ class SourceItemImporterTest extends TestCase
     private $plugin;
 
     /**
-     * @var StockItemImporterInterface|MockObject
+     * @var StockItemProcessorInterface|MockObject
      */
-    private $stockItemImporterMock;
+    private $stockItemProcessorMock;
 
     /**
      * @var SourceItemInterface|MockObject
@@ -92,7 +92,7 @@ class SourceItemImporterTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->stockItemImporterMock = $this->getMockBuilder(StockItemImporterInterface::class)
+        $this->stockItemProcessorMock = $this->getMockBuilder(StockItemProcessorInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -173,7 +173,7 @@ class SourceItemImporterTest extends TestCase
                 ->willReturnSelf();
         }
 
-        $this->plugin->afterImport($this->stockItemImporterMock, '', $stockData);
+        $this->plugin->afterProcess($this->stockItemProcessorMock, '', $stockData, []);
     }
 
     /**
