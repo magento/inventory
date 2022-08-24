@@ -15,6 +15,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Module\Manager;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Validation\ValidationException;
@@ -103,12 +104,27 @@ class StockItemProcessorTest extends TestCase
      * Tests Source Item Import of default source should use
      * MSI Plugin on Magento\Catalog\ImportExport\Model\StockItemProcessor::process()
      *
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     *
+     * @return void
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws ValidationException
+     * @throws NoSuchEntityException
      */
     #[
-        DataFixture(ProductFixture::class, ['sku' => 'simple'], 'p1'),
+        DataFixture(ProductFixture::class, [
+            'sku' => 'SKU-1',
+            'extension_attributes' => [
+                'stock_item' => [
+                    'manage_stock' => true,
+                    'qty' => 8.5,
+                    'is_qty_decimal' => true,
+                    'is_in_stock' => true,
+                ]
+            ]
+        ]),
     ]
-    public function testSourceItemImportWithDefaultSource()
+    public function testSourceItemImportWithDefaultSource(): void
     {
         $productId = $this->productIdBySku->execute(['SKU-1'])['SKU-1'];
         $stockData = [
@@ -200,6 +216,7 @@ class StockItemProcessorTest extends TestCase
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_with_source_link.php
      *
      * @magentoDbIsolation enabled
+     * @return void
      * @throws CouldNotSaveException
      * @throws InputException
      * @throws ValidationException
@@ -238,7 +255,6 @@ class StockItemProcessorTest extends TestCase
         ];
 
         $this->importer->process($stockData, $importedData);
-        //$this->importer->import($stockData);
 
         $compareData = $this->buildDataArray($this->getSourceItemList($sku, $sourceCode)->getItems());
         $expectedData = [

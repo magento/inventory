@@ -145,7 +145,7 @@ class SourceItemImporterTest extends TestCase
             ]
         ];
 
-        $this->saveSourceRelationMock($existingSourceCode, $sku);
+        $this->saveSkusHavingDefaultSourceMock($sku);
 
         $this->skuProcessorMock->expects($this->once())->method('getOldSkus')->willReturn($existingSkus);
         $this->defaultSourceMock->expects($this->exactly(2))->method('getCode')->willReturn($sourceCode);
@@ -176,10 +176,9 @@ class SourceItemImporterTest extends TestCase
     }
 
     /**
-     * @param string $existingSourceCode
      * @param string $sku
      */
-    private function saveSourceRelationMock(string $existingSourceCode, string $sku): void
+    private function saveSkusHavingDefaultSourceMock(string $sku): void
     {
         $connectionAdapterMock = $this->getMockForAbstractClass(AdapterInterface::class);
         $selectMock = $this->createMock(Select::class);
