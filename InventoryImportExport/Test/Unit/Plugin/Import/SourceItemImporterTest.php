@@ -118,7 +118,6 @@ class SourceItemImporterTest extends TestCase
      * @dataProvider sourceItemDataProvider
      *
      * @param string $sku
-     * @param string $existingSourceCode
      * @param string $sourceCode
      * @param float $quantity
      * @param int $isInStock
@@ -129,7 +128,6 @@ class SourceItemImporterTest extends TestCase
      */
     public function testAfterImportForMultipleSource(
         string $sku,
-        string $existingSourceCode,
         string $sourceCode,
         float $quantity,
         int $isInStock,
@@ -216,22 +214,22 @@ class SourceItemImporterTest extends TestCase
     {
         return [
             'non-default existing source code with 0 quantity for existing product' => [
-                'simple', 'source-code-1', 'default', 0.0, 0, ['simple' => 'default']
+                'simple', 'default', 0.0, 0, ['simple' => 'default']
             ],
             'non-default existing source code with quantity > 1 for existing product' => [
-                'simple', 'source-code-1', 'default', 25.0, 1, []
+                'simple', 'default', 25.0, 1, []
             ],
             'default existing source code with 0 quantity for existing product' => [
-                'simple', 'default', 'default', 0.0, 0, ['simple' => 'default']
+                'simple', 'default', 0.0, 0, ['simple' => 'default']
             ],
             'default existing source code with quantity > 1 for existing product' => [
-                'simple', 'default', 'default', 100.0, 1, []
+                'simple', 'default', 100.0, 1, []
             ],
             'default source code with 0 quantity for new product' => [
-                'simple', 'default', 'default', 0.0, 0, []
+                'simple', 'default', 0.0, 0, []
             ],
             'default source code with quantity > 1 for new product' => [
-                'simple', 'default', 'default', 100.0, 1, []
+                'simple', 'default', 100.0, 1, []
             ],
         ];
     }
