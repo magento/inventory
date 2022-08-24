@@ -15,5 +15,13 @@
         <element name="checkSameAsBillingAddress" type="checkbox" selector="//label[@for='order-shipping_same_as_billing']" />
         <element name="orderedItemsName" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]"/>
         <element name="orderedItemsQty" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]/../..//td[@class='col-qty']//input"/>
+        <element name="paymentMethod" type="button" selector="//dl[@class='admin__payment-methods control']//input[@title='{{var1}}']" parameterized="true" />
+        <element name="orderNo" type="text" selector="//div[@class='admin__page-section-item order-information']//span[@class='title' and contains(text(),'Order # ')]" />
+        <element name="invoice_orderNo" type="text" selector="//div[@class='admin__page-section-item order-information']//span[@class='title']" />
+        <element name="invoice_paymentInformation" type="text" selector="//div[@class='order-payment-method-title']" />
+        <element name="invoice_productName" type="text" selector="//div[@class='product-title']" />
+        <element name="invoice_productQty" type="text" selector="//table[@class='qty-table']//td" />
+        <element name="invoice_customerEmail" type="text" selector="//table[@class='admin__table-secondary order-account-information-table']//tr//th[text()='Email']/..//td//a" />
+        <element name="invoice_submit" type="button" selector="//button[@title='Submit Invoice']"/>
     </section>
 </sections>
