@@ -21,6 +21,7 @@
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
                 <argument name="manageStockValue" value="Yes"/>
             </actionGroup>
+            <magentoCLI command="config:set {{EnableCashOnDeliveryPaymentMethod.path}} {{EnableCashOnDeliveryPaymentMethod.value}}" stepKey="enableCashOnDeliveryPaymentMethod"/>
         </before>
         <after>
             <actionGroup ref="AdminDeleteStockWithTwoAssignedSourcesActionGroup" stepKey="deleteCreatedStock">
@@ -38,7 +39,8 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
                 <argument name="sourceCode" value="$createTestSource2.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+          <magentoCLI command="config:set {{DisableCashOnDeliveryPaymentMethod.path}} {{DisableCashOnDeliveryPaymentMethod.value}}" stepKey="disableCashOnDeliveryPaymentMethod"/>
+          <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
 <!-- Step1 Create the SubCategory through API -->
