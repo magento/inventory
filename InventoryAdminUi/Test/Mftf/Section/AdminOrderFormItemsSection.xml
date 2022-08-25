@@ -14,6 +14,7 @@
         <element name="shippingAddress" type="text" selector="//div[@id='order-shipping_address']//select[@id='order-shipping_address_customer_address_id']//option[@selected='selected']"/>
         <element name="checkSameAsBillingAddress" type="checkbox" selector="//label[@for='order-shipping_same_as_billing']" />
         <element name="orderedItemsName" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]"/>
+        <element name="tab_invoice" type="text" selector="//button[@id='order_invoice']"/>
         <element name="orderedItemsQty" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]/../..//td[@class='col-qty']//input"/>
         <element name="paymentMethod" type="button" selector="//dl[@class='admin__payment-methods control']//input[@title='{{var1}}']" parameterized="true" />
         <element name="orderNo" type="text" selector="//div[@class='admin__page-section-item order-information']//span[@class='title' and contains(text(),'Order # ')]" />
