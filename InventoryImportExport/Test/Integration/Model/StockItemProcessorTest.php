@@ -112,17 +112,7 @@ class StockItemProcessorTest extends TestCase
      * @throws NoSuchEntityException
      */
     #[
-        DataFixture(ProductFixture::class, [
-            'sku' => 'SKU-1',
-            'extension_attributes' => [
-                'stock_item' => [
-                    'manage_stock' => true,
-                    'qty' => 8.5,
-                    'is_qty_decimal' => true,
-                    'is_in_stock' => true,
-                ]
-            ]
-        ]),
+        DataFixture(ProductFixture::class, ['sku' => 'SKU-1']),
     ]
     public function testSourceItemImportWithDefaultSource(): void
     {
@@ -215,7 +205,6 @@ class StockItemProcessorTest extends TestCase
      *
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_with_source_link.php
      *
-     * @magentoDbIsolation enabled
      * @return void
      * @throws CouldNotSaveException
      * @throws InputException
@@ -237,7 +226,7 @@ class StockItemProcessorTest extends TestCase
         // Add new inventory source item other than default source
         $this->addInventorySourceItem($sourceCode, $sku, $quantity);
 
-        // Now add default source item without having `qty` > 0
+        // Now try to add
         $stockData = [
             'simple' => [
                 'qty' => 0,
@@ -277,15 +266,10 @@ class StockItemProcessorTest extends TestCase
      */
     private function unassignInventorySourceItems(string $sku): void
     {
-        /** @var Manager $moduleManager */
-        $moduleManager = $this->objectManager->get(Manager::class);
-        // soft dependency in tests because we don't have possibility replace fixture from different modules
-        if ($moduleManager->isEnabled('Magento_InventoryCatalog')) {
-            $sourceItemsDelete = $this->objectManager->get(SourceItemsDeleteInterface::class);
-            $sourceItems = $this->getSourceItemList($sku)->getItems();
-            if (count($sourceItems)) {
-                $sourceItemsDelete->execute($sourceItems);
-            }
+        $sourceItemsDelete = $this->objectManager->get(SourceItemsDeleteInterface::class);
+        $sourceItems = $this->getSourceItemList($sku)->getItems();
+        if (count($sourceItems)) {
+            $sourceItemsDelete->execute($sourceItems);
         }
     }
 

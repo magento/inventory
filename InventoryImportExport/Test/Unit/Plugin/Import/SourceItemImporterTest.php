@@ -191,7 +191,7 @@ class SourceItemImporterTest extends TestCase
             ->method('where')
             ->willReturnSelf();
         $connectionAdapterMock->expects($this->once())
-            ->method('fetchAll')
+            ->method('fetchCol')
             ->willReturn([['sku' => $sku]]);
 
         $this->resourceConnectionMock

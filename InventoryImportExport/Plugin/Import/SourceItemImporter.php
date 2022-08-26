@@ -113,14 +113,8 @@ class SourceItemImporter
         $skusHavingDefaultSource = $this->getSkusHavingDefaultSource(array_keys($stockData));
 
         foreach ($stockData as $sku => $stockDatum) {
-            $isNewSku = true;
-            if (array_key_exists(strtolower((string)$sku), $this->skuProcessor->getOldSkus())) {
-                $isNewSku = false;
-            }
-            $isQtyExplicitlySet = false;
-            if (!empty($importedData)) {
-                $isQtyExplicitlySet = array_key_exists('qty', $importedData[$sku]);
-            }
+            $isNewSku = !array_key_exists(strtolower((string)$sku), $this->skuProcessor->getOldSkus());
+            $isQtyExplicitlySet = isset($importedData[$sku]['qty']) ?? false;
 
             $inStock = $stockDatum['is_in_stock'] ?? 0;
             $qty = $stockDatum['qty'] ?? 0;
@@ -163,11 +157,7 @@ class SourceItemImporter
             SourceItemInterface::SOURCE_CODE . ' = ?',
             $this->defaultSource->getCode()
         );
-        $result = [];
-        foreach ($connection->fetchAll($select) as $row) {
-            $result[] = $row[SourceItemInterface::SKU];
-        }
 
-        return $result;
+        return $connection->fetchCol($select);
     }
 }
