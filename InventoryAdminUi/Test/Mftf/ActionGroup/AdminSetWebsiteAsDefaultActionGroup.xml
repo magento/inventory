@@ -9,18 +9,14 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="AdminSetWebsiteAsDefaultActionGroup">
-        <!-- Admin creates new custom website -->
         <annotations>
             <description>check the Set As Default for the selected website</description>
         </annotations>
         <arguments>
             <argument name="WebsiteName" type="string"/>
         </arguments>
-
         <amOnPage url="{{AdminSystemStorePage.url}}" stepKey="navigateToStorePage"/>
         <waitForPageLoad stepKey="waitForStoresPageLoad"/>
-
-        <!--Select Website to set as default-->
         <fillField selector="{{AdminStoresGridSection.websiteFilterTextField}}" userInput="{{WebsiteName}}" stepKey="enterWebsiteName"/>
         <click selector="{{AdminStoresGridSection.searchButton}}" stepKey="searchWebsite"/>
         <click selector="{{AdminStoresGridSection.websiteNameInFirstRow}}" stepKey="clickOnResultWebsite"/>

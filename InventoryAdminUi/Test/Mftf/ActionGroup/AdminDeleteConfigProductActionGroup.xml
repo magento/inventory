@@ -10,7 +10,7 @@
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="AdminDeleteConfigProductActionGroup">
         <annotations>
-            <description>Deletes the provided Product Name from the Product grid page.</description>
+            <description>Deletes the provided config Product from the Product grid page.</description>
         </annotations>
         <arguments>
             <argument name="productName" type="string"/>

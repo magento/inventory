@@ -9,6 +9,9 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="AdminEditStockActionGroup">
+        <annotations>
+            <description>Admin edits the created stock</description>
+        </annotations>
         <arguments>
             <argument name="stockName"/>
         </arguments>

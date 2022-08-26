@@ -8,6 +8,9 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="AdminDeleteStockWithTwentyTwoAssignedSourcesActionGroup">
+        <annotations>
+          <description>Admin deletes stock with 22 assigned sources.</description>
+        </annotations>
         <arguments>
             <argument name="stockName" defaultValue="Test Stock 1" type="string"/>
             <argument name="websiteName" defaultValue="Main Website" type="string"/>
@@ -42,6 +45,7 @@
         <waitForPageLoad stepKey="waitForStoreGroupPageLoad1" />
         <unselectOption userInput="{{websiteName}}" selector="{{AdminEditStockGeneralSection.websites}}" stepKey="unselectWebsite"/>
 
+        <!-- Deletes all the assigned sources -->
         <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName1)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName1)}}" visible="true" stepKey="clickDeleteAssignedSources1" />
         <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName2)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName2)}}" visible="true" stepKey="clickDeleteAssignedSources2" />
         <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName3)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName3)}}" visible="true" stepKey="clickDeleteAssignedSources3" />
@@ -69,7 +73,6 @@
         <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostEditingTheSources" />
         <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
         <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="verifyTheStockSavedSuccessfully"/>
-
         <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockNameForDelete" />
         <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButtonForDelete" />
         <waitForPageLoad stepKey="waitForStoreGroupPageLoadForDelete" />
@@ -80,6 +83,5 @@
         <click selector="{{AdminEditStockSourcesSection.editStockPopUpOK}}" stepKey="acceptPopupToDelete"/>
         <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostDeletingTheStock" />
         <seeElement selector="{{AdminManageStockGridBody.stockDeleteSuccessfulMessage}}" stepKey="verifyTheStockDeletedSuccessfully"/>
-
     </actionGroup>
 </actionGroups>

@@ -16,6 +16,7 @@
             <testCaseId value="AC-1856"/>
             <severity value="CRITICAL"/>
         </annotations>
+
         <before>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <magentoCLI stepKey="setDisplayOutOfStockProductAsNo" command="config:set cataloginventory/options/show_out_of_stock 0" />
@@ -23,6 +24,7 @@
                 <argument name="manageStockValue" value="Yes"/>
             </actionGroup>
         </before>
+
         <after>
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToNo"/>
             <magentoCLI stepKey="setDisplayOutOfStockProductAsYes" command="config:set cataloginventory/options/show_out_of_stock 1" />
@@ -40,7 +42,6 @@
             <deleteData createDataKey="createMSISimpleProduct" stepKey="deleteMSISimpleProduct"/>
             <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
-
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
             </actionGroup>
@@ -59,12 +60,14 @@
             <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
             <argument name="websiteCode" value="{{customWebsite.code}}"/>
         </actionGroup>
+
         <!-- Step2.2 Create second store -->
         <actionGroup ref="CreateCustomStoreActionGroup" stepKey="createCustomStore">
             <argument name="website" value="{{customWebsite.name}}"/>
             <argument name="store" value="{{customStoreGroup.name}}"/>
             <argument name="rootCategory" value="Default Category"/>
         </actionGroup>
+
         <!-- Step2.3 Create second store view -->
         <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView">
             <argument name="StoreGroup" value="customStoreGroup"/>
@@ -108,11 +111,9 @@
             <argument name="filter_value" value="$$createTestSource1.source[source_code]$$"/>
             <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
         </actionGroup>
-
         <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToCustomWebsite">
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
-
         <actionGroup ref="AdminOpenContentSectionOnProductPageActionGroup" stepKey="openContentTab"/>
 
         <!-- Step6.4 Save the Simple Product-->
@@ -179,12 +180,9 @@
             <argument name="category" value="$$createSubCategory$$"/>
             <argument name="product" value="$$createBundleProduct$$"/>
         </actionGroup>
-
         <actionGroup ref="AssertProductNameAndSkuInStorefrontProductPageByCustomAttributeUrlKeyActionGroup" stepKey="navigateToProductOnStoreFrontToValidateNameAndSKU">
             <argument name="product" value="$$createBundleProduct$$"/>
         </actionGroup>
-
         <seeElement selector="{{AdminProductGridSection.stockAvailability('In stock')}}" stepKey="seeProductStockStatusOnStoreFrontAgain"/>
-
     </test>
 </tests>

@@ -10,7 +10,7 @@
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="AdminAssertAssignedSourcesQtyInGridForProductActionGroup">
         <annotations>
-            <description>Admin asserts the assigned sources quantity as zero.</description>
+            <description>Admin asserts the assigned sources quantity as zero on product grid page.</description>
         </annotations>
         <arguments>
             <argument name="productSku" type="string"/>
