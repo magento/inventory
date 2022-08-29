@@ -74,7 +74,7 @@
         <createData entity="SimpleProduct" stepKey="createMSISimpleProduct3">
             <requiredEntity createDataKey="createSubCategory" />
         </createData>
-        <createData enTity="SimpleProduct" stepKey="createMSISimpleProduct4">
+        <createData entity="SimpleProduct" stepKey="createMSISimpleProduct4">
             <requiredEntity createDataKey="createSubCategory" />
         </createData>
 
