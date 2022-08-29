@@ -114,7 +114,7 @@ class SourceItemImporter
 
         foreach ($stockData as $sku => $stockDatum) {
             $isNewSku = !array_key_exists(strtolower((string)$sku), $this->skuProcessor->getOldSkus());
-            $isQtyExplicitlySet = isset($importedData[$sku]['qty']) ?? false;
+            $isQtyExplicitlySet = $importedData[$sku]['qty'] ?? false;
 
             $inStock = $stockDatum['is_in_stock'] ?? 0;
             $qty = $stockDatum['qty'] ?? 0;
