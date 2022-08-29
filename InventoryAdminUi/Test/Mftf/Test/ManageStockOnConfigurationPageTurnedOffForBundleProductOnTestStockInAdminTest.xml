@@ -25,9 +25,8 @@
         </before>
 
         <after>
-          <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
-          <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
-                <argument name="stockName" value="Test Stock 1"/>
+            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
+                  <argument name="stockName" value="Test Stock 1"/>
             </actionGroup>
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
                 <argument name="manageStockValue" value="Yes"/>
@@ -35,6 +34,7 @@
             <deleteData createDataKey="createMSISimpleProduct" stepKey="deleteSimpleProduct"/>
             <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
