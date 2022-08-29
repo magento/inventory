@@ -25,9 +25,7 @@
         </before>
 
         <after>
-            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
-                <argument name="stockName" value="Test Stock 1"/>
-            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
                 <argument name="manageStockValue" value="Yes"/>
             </actionGroup>

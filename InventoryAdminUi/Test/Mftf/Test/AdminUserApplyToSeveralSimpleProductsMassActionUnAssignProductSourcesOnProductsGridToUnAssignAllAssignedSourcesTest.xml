@@ -27,18 +27,7 @@
             <deleteData createDataKey="createMSISimpleProduct3" stepKey="deleteMSISimpleProduct3"/>
             <deleteData createDataKey="createMSISimpleProduct4" stepKey="deleteMSISimpleProduct4"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
-                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
-                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource3">
-                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource4">
-                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
-            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>

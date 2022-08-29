@@ -42,9 +42,7 @@
             <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteWhiteColorAttribute">
                 <argument name="Color" value="{{colorProductAttribute1.name}}"/>
             </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
-                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
-            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 

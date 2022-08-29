@@ -47,6 +47,7 @@
                 <argument name="sourceName21" value="$$createTestSource21.source[name]$$" />
                 <argument name="sourceName22" value="$$createTestSource22.source[name]$$" />
             </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 

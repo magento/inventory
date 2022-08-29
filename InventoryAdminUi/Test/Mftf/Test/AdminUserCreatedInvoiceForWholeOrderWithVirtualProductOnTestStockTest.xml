@@ -34,12 +34,7 @@
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
             <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
-                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
-            </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource2">
-                <argument name="sourceCode" value="$createTestSource2.source[source_code]$"/>
-            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <magentoCLI command="config:set {{DisableCashOnDeliveryPaymentMethod.path}} {{DisableCashOnDeliveryPaymentMethod.value}}" stepKey="disableCashOnDeliveryPaymentMethod"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
