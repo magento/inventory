@@ -8,18 +8,18 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Model\SourceItemsSaveSynchronization;
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor as PriceIndexProcessor;
-use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemCriteriaInterfaceFactory;
+use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock\CacheCleaner;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
 use Magento\CatalogInventory\Model\Spi\StockStateProviderInterface;
 use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockItem;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
+use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItems;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
@@ -39,16 +39,6 @@ class SetDataToLegacyCatalogInventory
      * @var SetDataToLegacyStockStatus
      */
     private $setDataToLegacyStockStatus;
-
-    /**
-     * @var StockItemCriteriaInterfaceFactory
-     */
-    private $legacyStockItemCriteriaFactory;
-
-    /**
-     * @var StockItemRepositoryInterface
-     */
-    private $legacyStockItemRepository;
 
     /**
      * @var GetProductIdsBySkusInterface
@@ -86,6 +76,11 @@ class SetDataToLegacyCatalogInventory
     private $priceIndexProcessor;
 
     /**
+     * @var GetLegacyStockItems
+     */
+    private $getLegacyStockItems;
+
+    /**
      * @param SetDataToLegacyStockItem $setDataToLegacyStockItem
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
@@ -97,6 +92,7 @@ class SetDataToLegacyCatalogInventory
      * @param CacheCleaner|null $cacheCleaner
      * @param GetStockItemDataInterface|null $getStockItemData
      * @param PriceIndexProcessor|null $priceIndexProcessor
+     * @param GetLegacyStockItems|null $getLegacyStockItems
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -110,12 +106,11 @@ class SetDataToLegacyCatalogInventory
         AreProductsSalableInterface $areProductsSalable,
         ?CacheCleaner $cacheCleaner = null,
         ?GetStockItemDataInterface $getStockItemData = null,
-        ?PriceIndexProcessor $priceIndexProcessor = null
+        ?PriceIndexProcessor $priceIndexProcessor = null,
+        ?GetLegacyStockItems $getLegacyStockItems = null
     ) {
         $this->setDataToLegacyStockItem = $setDataToLegacyStockItem;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
-        $this->legacyStockItemCriteriaFactory = $legacyStockItemCriteriaFactory;
-        $this->legacyStockItemRepository = $legacyStockItemRepository;
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->stockStateProvider = $stockStateProvider;
         $this->indexerProcessor = $indexerProcessor;
@@ -125,6 +120,8 @@ class SetDataToLegacyCatalogInventory
             ?: ObjectManager::getInstance()->get(GetStockItemDataInterface::class);
         $this->priceIndexProcessor = $priceIndexProcessor
             ?: ObjectManager::getInstance()->get(PriceIndexProcessor::class);
+        $this->getLegacyStockItems = $getLegacyStockItems
+            ?: ObjectManager::getInstance()->get(GetLegacyStockItems::class);
     }
 
     /**
@@ -162,14 +159,14 @@ class SetDataToLegacyCatalogInventory
      */
     private function updateSourceItems(array $sourceItems): void
     {
-        $stockStatuses = $this->getStockStatuses($sourceItems);
         $skus = [];
         foreach ($sourceItems as $sourceItem) {
             $skus[] = $sourceItem->getSku();
         }
         $productIdsBySkus = $this->getProductIdsBySkus->execute($skus);
         $legacyStockItemsByProductId = [];
-        $legacyStockItems = $this->getLegacyStockItems($productIdsBySkus);
+        $legacyStockItems = $this->getLegacyStockItems->execute($skus);
+        $stockStatuses = $this->getStockStatuses($sourceItems);
         foreach ($legacyStockItems as $legacyStockItem) {
             $legacyStockItemsByProductId[$legacyStockItem->getProductId()] = $legacyStockItem;
         }
@@ -275,26 +272,5 @@ class SetDataToLegacyCatalogInventory
             $stockStatuses[$productSalable->getSku()] = $productSalable->isSalable();
         }
         return $stockStatuses;
-    }
-
-    /**
-     * Returns StockItems from legacy inventory.
-     *
-     * @param int[] $productIds
-     * @return StockItemInterface[]
-     */
-    private function getLegacyStockItems(array $productIds): array
-    {
-        $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
-        $searchCriteria->addFilter(
-            StockItemInterface::PRODUCT_ID,
-            StockItemInterface::PRODUCT_ID,
-            ['in' => $productIds],
-            'public'
-        );
-        $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID);
-        $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
-        $stockItems = $stockItemCollection->getItems();
-        return $stockItems;
     }
 }

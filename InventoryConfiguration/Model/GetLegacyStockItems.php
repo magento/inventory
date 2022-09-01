@@ -79,9 +79,10 @@ class GetLegacyStockItems
      */
     public function execute(array $skus): array
     {
-        $skus = $this->filterSkusAlreadyInCache($skus);
+        $cachedLegacyStockItems = [];
+        $skus = $this->filterSkusAlreadyInCache($skus, $cachedLegacyStockItems);  // TODO: Still need to add them to the return value.
         if (empty($skus)) {
-            return [];
+            return $cachedLegacyStockItems;
         }
         $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
         try {
@@ -107,21 +108,23 @@ class GetLegacyStockItems
             }
             $this->cacheStorage->set($sku, $stockItem);
         }
-        return $stockItems;
+        return array_merge($cachedLegacyStockItems, $stockItems);
     }
 
     /**
      * Only return skus that aren't already in cache.
      *
      * @param string $skus
+     * @param array $cachedLegacyStockItems
      * @return StockItemInterface
      * @throws LocalizedException
      */
-    public function filterSkusAlreadyInCache(array $skus): array
+    public function filterSkusAlreadyInCache(array $skus, array &$cachedLegacyStockItems): array
     {
         $filteredSkus = [];
         foreach ($skus as $sku) {
-            if ($this->cacheStorage->get($sku)) {
+            if ($item = $this->cacheStorage->get($sku)) {
+                $cachedLegacyStockItems[] = $item;
                 continue;
             }
             $filteredSkus[] = $sku;
