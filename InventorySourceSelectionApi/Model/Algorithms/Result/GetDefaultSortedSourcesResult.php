@@ -113,7 +113,7 @@ class GetDefaultSortedSourcesResult
         foreach ($sourceItems as $sourceItem) {
             $normalizedSku = $this->normalizeSku($sourceItem->getSku());
             $sourceItemQtyAvailable = $this->getSourceItemQtyAvailable->execute($sourceItem);
-            $qtyToDeduct = min($sourceItemQtyAvailable, $itemsTdDeliver[$normalizedSku] ?? 0.0);
+            $qtyToDeduct = min(max($sourceItemQtyAvailable, 0.0), $itemsTdDeliver[$normalizedSku] ?? 0.0);
 
             $sourceItemSelections[] = $this->sourceSelectionItemFactory->create(
                 [
