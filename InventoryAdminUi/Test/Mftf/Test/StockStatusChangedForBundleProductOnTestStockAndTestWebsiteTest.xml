@@ -15,6 +15,8 @@
             <description value="Stock status changed for Bundle product on Test stock and Test website"/>
             <testCaseId value="AC-1856"/>
             <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
         </annotations>
 
         <before>

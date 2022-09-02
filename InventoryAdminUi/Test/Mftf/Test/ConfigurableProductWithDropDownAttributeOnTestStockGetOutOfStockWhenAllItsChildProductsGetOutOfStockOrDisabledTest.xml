@@ -15,6 +15,8 @@
             <description value="Configurable product with drop-down attribute on Test stock get Out of stock when all its child products get out of stock or disabled"/>
             <testCaseId value="AC-1774"/>
             <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
         </annotations>
 
         <before>

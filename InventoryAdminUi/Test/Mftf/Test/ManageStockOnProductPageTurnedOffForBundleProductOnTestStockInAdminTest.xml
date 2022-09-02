@@ -15,6 +15,8 @@
             <description value="Manage Stock on Product page turned off for Bundle Product on Test stock in admin"/>
             <testCaseId value="AC-1771"/>
             <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
         </annotations>
 
         <before>

@@ -15,6 +15,8 @@
             <description value="Admin user created invoice for whole order with Virtual product on Test stock"/>
             <testCaseId value="AC-1810"/>
             <severity value="AVERAGE"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
         </annotations>
 
         <before>
