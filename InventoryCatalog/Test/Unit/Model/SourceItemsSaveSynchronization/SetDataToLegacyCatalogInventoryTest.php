@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class SetDatatoLegacyCatalogInventoryTest extends TestCase
+class SetDataToLegacyCatalogInventoryTest extends TestCase
 {
     /**
      * @var SetDataToLegacyCatalogInventory

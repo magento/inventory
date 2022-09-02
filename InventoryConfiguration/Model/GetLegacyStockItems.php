@@ -19,7 +19,7 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 
 /**
- * Get legacy stock item.
+ * Get legacy stock items entity by skus.
  */
 class GetLegacyStockItems
 {
@@ -71,10 +71,10 @@ class GetLegacyStockItems
     }
 
     /**
-     * Get legacy stock item entity by sku.
+     * Get legacy stock items entity by skus.
      *
-     * @param string $skus
-     * @return StockItemInterface
+     * @param string[] $skus
+     * @return StockItemInterface[]
      * @throws LocalizedException
      */
     public function execute(array $skus): array
@@ -112,11 +112,11 @@ class GetLegacyStockItems
     }
 
     /**
-     * Only return skus that aren't already in cache.
+     * Only return skus that aren't already in cache.  Adds cached items to $cachedLegacyStockItems.
      *
      * @param string $skus
      * @param array $cachedLegacyStockItems
-     * @return StockItemInterface
+     * @return StockItemInterface[]
      * @throws LocalizedException
      */
     public function filterSkusAlreadyInCache(array $skus, array &$cachedLegacyStockItems): array
