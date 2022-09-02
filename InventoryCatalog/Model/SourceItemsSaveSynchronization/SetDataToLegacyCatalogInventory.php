@@ -94,6 +94,7 @@ class SetDataToLegacyCatalogInventory
      * @param PriceIndexProcessor|null $priceIndexProcessor
      * @param GetLegacyStockItems|null $getLegacyStockItems
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         SetDataToLegacyStockItem $setDataToLegacyStockItem,

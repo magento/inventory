@@ -80,7 +80,7 @@ class GetLegacyStockItems
     public function execute(array $skus): array
     {
         $cachedLegacyStockItems = [];
-        $skus = $this->filterSkusAlreadyInCache($skus, $cachedLegacyStockItems);  // TODO: Still need to add them to the return value.
+        $skus = $this->filterSkusAlreadyInCache($skus, $cachedLegacyStockItems);
         if (empty($skus)) {
             return $cachedLegacyStockItems;
         }
