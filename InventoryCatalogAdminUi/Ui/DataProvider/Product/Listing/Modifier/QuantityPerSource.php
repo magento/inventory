@@ -166,7 +166,11 @@ class QuantityPerSource extends AbstractModifier
                     'children' => [
                         'quantity_per_source' => $this->getQuantityPerSourceMeta(),
                         'qty' => [
-                            'arguments' => null,
+                            'arguments' => [
+                                'data' => [
+                                    'disabled' => true
+                                ]
+                            ],
                         ],
                     ],
                 ],
