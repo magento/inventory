@@ -118,15 +118,10 @@
 
         <!-- Step7.3 Verify the Created Configurable Product on Storefront -->
         <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront"/>
+        <waitForPageLoad stepKey="waitForStoreFrontPageToLoad"/>
         <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName"/>
         <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice"/>
         <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku"/>
-
-        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="selectWhiteVariation"/>
-        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteVariationIsSelected"/>
-        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute3.name}}" stepKey="selectBlueVariation"/>
-        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute3.name}}" stepKey="checkBlueVariationIsSelected"/>
-
 
         <!-- Step7.4 Verify the Configurable Product in Created Category in Storefront is Present -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
