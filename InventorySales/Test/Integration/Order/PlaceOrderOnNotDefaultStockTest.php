@@ -8,12 +8,16 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Test\Integration\Order;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Registry;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryApi\Api\StockRepositoryInterface;
+use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
+use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -25,11 +29,8 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\InventoryApi\Api\StockRepositoryInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -106,6 +107,11 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      */
     private $saveStockItemConfiguration;
 
+    /**
+     * @var CacheStorage
+     */
+    private $cacheStorage;
+
     protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -124,6 +130,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
             Bootstrap::getObjectManager()->get(GetStockItemConfigurationInterface::class);
         $this->saveStockItemConfiguration =
             Bootstrap::getObjectManager()->get(SaveStockItemConfigurationInterface::class);
+        $this->cacheStorage = Bootstrap::getObjectManager()->get(CacheStorage::class);
     }
 
     /**
@@ -210,18 +217,15 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $sku = 'SKU-2';
         $stockId = 30;
         $quoteItemQty = 6.5;
-
         $this->setStockItemConfigIsDecimal($sku, $stockId);
         $cart = $this->getCartByStockId($stockId);
         $product = $this->productRepository->get($sku);
         $cartItem = $this->getCartItem($product, $quoteItemQty, (int)$cart->getId());
+        $this->cacheStorage->delete($sku);
         $cart->addItem($cartItem);
         $this->cartRepository->save($cart);
-
         $orderId = $this->cartManagement->placeOrder($cart->getId());
-
         self::assertNotNull($orderId);
-
         /**
          * This assert can be introduced once https://github.com/magento/magento2/pull/29881
          * has been merged
