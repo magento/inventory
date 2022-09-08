@@ -13,5 +13,9 @@
         <element name="done" type="button" selector=".page-actions-buttons button.action-primary" timeout="30"/>
         <element name="checkboxManageStock" type="checkbox" selector="fieldset[data-index='container_manage_stock'] input[name='product[stock_data][use_config_manage_stock]']"/>
         <element name="selectManageStock" type="select" selector="fieldset[data-index='container_manage_stock'] select[name='product[stock_data][manage_stock]']"/>
-    </section>
+        <element name="productStockOptions" type="button" selector="//div[@class='section-config']//a[@id='cataloginventory_item_options-head']"/>
+        <element name="productStockOptionsExpanded" type="button" selector="//div[contains(@class,'section-config')]//a[@id='cataloginventory_item_options-head']"/>
+        <element name="useSystemValue_ManageStock" type="checkbox" selector="//input[@id='cataloginventory_item_options_manage_stock_inherit']"/>
+        <element name="dropDownManageStock" type="select" selector="//select[@id='cataloginventory_item_options_manage_stock']"/>
+     </section>
 </sections>

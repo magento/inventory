@@ -10,5 +10,13 @@
     <section name="AdminEditStockGeneralSection">
         <element name="name" type="input" selector=".admin__control-text[name='general[name]']"/>
         <element name="disabledAddingSourcesNotice" type="text" selector="//strong[contains(text(), 'NOTE')]/following-sibling::span"/>
+        <element name="websites" type="select" selector="select[name='sales_channels[website]']"/>
+        <element name="assignSources" type="button" selector="//button//span[contains(text(),'Assign Sources')]"/>
+        <element name="saveAndContinueDropdown" type="button" selector="//button[@data-ui-id='save-button-dropdown']"/>
+        <element name="saveAndCloseButton" type="button" selector="//ul[@class='dropdown-menu']//span[contains(text(),'Save &amp; Close')]"/>
+        <element name="selectActions" type="button" selector="//div[@class='admin__data-grid-header-row']//div[@class='action-select-wrap']//button[@class='action-select']"/>
+        <element name="selectDelete" type="button" selector="//span[@class='action-menu-item' and contains(text(),'Delete')]"/>
+        <element name="editStock" type="button" selector="//tr[@class='data-row']//div[contains(text(),'{{test_source_code}}')]/../..//a[@class='action-menu-item' and contains(text(),'Edit')]" parameterized="true"/>
+        <element name="selectStock" type="input" selector="//tr[@class='data-row']//div[contains(text(),'{{test_source_code}}')]/../..//input[@class='admin__control-checkbox']" parameterized="true"/>
     </section>
 </sections>

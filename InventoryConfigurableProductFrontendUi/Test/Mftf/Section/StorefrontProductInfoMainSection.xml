@@ -10,5 +10,8 @@
         xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="StorefrontProductInfoMainSection">
         <element name="configurableVariationQty" type="text" selector=".configurable-variation-qty"/>
+        <element name="productAttributeDropDown" type="select" selector="select[id*='attribute']"/>
+        <element name="storefrontColorProductDropdown" type="button" selector="//div[@class='product-options-wrapper']"/>
+        <element name="storefrontColorProductDropdownValues" type="text" selector="//div[@class='product-options-wrapper']//option[contains(text(),'{{var}}')]" parameterized="true"/>
     </section>
 </sections>
