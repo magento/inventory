@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryVisualMerchandiser\Test\Integration\Model\Category;
 
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\DB\Select;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -74,7 +75,6 @@ class ProductsTest extends TestCase
         }
 
         $expectedOrderBy = ['inventory_stock.is_salable', Select::SQL_DESC];
-        $categoryId = 1234;
         $storeCode = 'store_for_eu_website';
 
         /** @var StoreManagerInterface $storeManager */
@@ -84,11 +84,10 @@ class ProductsTest extends TestCase
             ->getId();
         $storeManager->setCurrentStore($storeId);
 
-        /** @var Products $productsModel */
-        $productsModel = Bootstrap::getObjectManager()
-            ->get(Products::class);
-        $collection = $productsModel->getCollectionForGrid($categoryId, $storeCode);
-
+        $productCollectionFactory = Bootstrap::getObjectManager()
+            ->get(CollectionFactory::class);
+        $collection = $productCollectionFactory->create()
+            ->setStoreId($storeManager->getStore()->getId());
         /** @var OutStockBottom $sortingModel */
         $sortingModel = Bootstrap::getObjectManager()
             ->get(OutStockBottom::class);

@@ -7,10 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration\Bulk;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -138,10 +141,12 @@ class SourceAssignTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
-     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku": "01234"} as:product1
-     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku": "1234"} as:product2
-     * @magentoDbIsolation enabled
      */
+    #[
+        DbIsolation(true),
+        DataFixture(ProductFixture::class, ['sku' => '01234'], 'product1'),
+        DataFixture(ProductFixture::class, ['sku' => '1234'], 'product2'),
+    ]
     public function testBulkSourceAssignmentOfProductsWithNumericSku(): void
     {
         $skus = ['01234', '1234'];

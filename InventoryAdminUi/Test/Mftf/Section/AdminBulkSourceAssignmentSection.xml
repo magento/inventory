@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminBulkSourceAssignmentSection">
+        <element name="bulkSourceAssignmentTitle" type="block" selector="//h1[contains(text(),'Bulk source assignment')]"/>
+        <element name="bulkSourceUnAssignmentTitle" type="block" selector="//h1[contains(text(),'Bulk source unassignment')]"/>
+        <element name="selectTestSource" type="checkbox" selector="//input[@value='{{var1}}' and @type='checkbox']" parameterized="true"/>
+        <element name="buttonAssignSources" type="button" selector="//button[@title='Assign sources']"/>
+        <element name="buttonUnAssignSources" type="button" selector="//button[@title='Unassign sources']"/>
+        <element name="msgBulkAssignmentSuccessful" type="text" selector="//div[@class='message message-success success']//div[contains(text(),'{{var1}}')]" parameterized="true"/>
+    </section>
+</sections>

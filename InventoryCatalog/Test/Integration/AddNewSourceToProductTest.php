@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\TestFramework\Fixture\DataFixture;
 use Magento\TestFramework\Fixture\DataFixtureStorage;
 use Magento\TestFramework\Fixture\DataFixtureStorageManager;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -36,9 +39,11 @@ class AddNewSourceToProductTest extends TestCase
 
     /**
      * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_with_source_link.php
-     * @magentoDataFixture Magento\Catalog\Test\Fixture\Product with:{"sku":"simple", "type_id":"simple"} as:p1
-     * @magentoDbIsolation disabled
      */
+    #[
+        DbIsolation(false),
+        DataFixture(ProductFixture::class, ['sku' => 'simple'], 'p1'),
+    ]
     public function testAddNewSourceToProduct()
     {
         /** @var DataObjectHelper $dataObjectHelper */

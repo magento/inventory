@@ -12,8 +12,8 @@ use Magento\Framework\Webapi\Rest\Request;
 
 class IsProductSalableForRequestedQtyTest extends WebapiAbstract
 {
-    const API_PATH = '/V1/inventory/is-product-salable-for-requested-qty';
-    const SERVICE_NAME = 'inventorySalesApiIsProductSalableForRequestedQtyV1';
+    private const API_PATH = '/V1/inventory/is-product-salable-for-requested-qty';
+    private const SERVICE_NAME = 'inventorySalesApiIsProductSalableForRequestedQtyV1';
 
     /**
      * @return array
@@ -33,12 +33,12 @@ class IsProductSalableForRequestedQtyTest extends WebapiAbstract
      * @param float $requestedQty
      * @param bool $expectedResult
      *
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
-     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
-     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoConfigFixture default_store cataloginventory/item_options/manage_stock 0
      * @dataProvider executeDataProvider
      *

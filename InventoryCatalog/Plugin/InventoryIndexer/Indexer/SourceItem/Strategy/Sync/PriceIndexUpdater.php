@@ -9,8 +9,9 @@ namespace Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\St
 
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
+use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
-use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Model\ResourceModel\GetSourceCodesBySourceItemIds;
 
 /**
@@ -24,11 +25,6 @@ class PriceIndexUpdater
     private $priceIndexProcessor;
 
     /**
-     * @var GetProductIdsBySourceItemIds
-     */
-    private $productIdsBySourceItemIds;
-
-    /**
      * @var GetSourceCodesBySourceItemIds
      */
     private $getSourceCodesBySourceItemIds;
@@ -39,36 +35,47 @@ class PriceIndexUpdater
     private $defaultSourceProvider;
 
     /**
+     * @var GetSalableStatuses
+     */
+    private $getSalableStatuses;
+
+    /**
+     * @var GetProductsIdsToProcess
+     */
+    private $getProductsIdsToProcess;
+
+    /**
      * @param Processor $priceIndexProcessor
-     * @param GetProductIdsBySourceItemIds $productIdsBySourceItemIds
      * @param GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds
      * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param GetSalableStatuses $getSalableStatuses
+     * @param GetProductsIdsToProcess $getProductsIdsToProcess
      */
     public function __construct(
         Processor $priceIndexProcessor,
-        GetProductIdsBySourceItemIds $productIdsBySourceItemIds,
         GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds,
-        DefaultSourceProviderInterface $defaultSourceProvider
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        GetSalableStatuses $getSalableStatuses,
+        GetProductsIdsToProcess $getProductsIdsToProcess
     ) {
         $this->priceIndexProcessor = $priceIndexProcessor;
-        $this->productIdsBySourceItemIds = $productIdsBySourceItemIds;
         $this->getSourceCodesBySourceItemIds = $getSourceCodesBySourceItemIds;
         $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->getSalableStatuses = $getSalableStatuses;
+        $this->getProductsIdsToProcess = $getProductsIdsToProcess;
     }
 
     /**
      * Reindex product prices.
      *
      * @param Sync $subject
-     * @param void $result
+     * @param callable $proceed
      * @param array $sourceItemIds
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterExecuteList(
-        Sync $subject,
-        $result,
-        array $sourceItemIds
-    ): void {
+    public function aroundExecuteList(Sync $subject, callable $proceed, array $sourceItemIds) : void
+    {
         $customSourceItemIds = [];
         $defaultSourceCode = $this->defaultSourceProvider->getCode();
         foreach ($this->getSourceCodesBySourceItemIds->execute($sourceItemIds) as $sourceItemId => $sourceCode) {
@@ -76,13 +83,13 @@ class PriceIndexUpdater
                 $customSourceItemIds[] = $sourceItemId;
             }
         }
-        // In the case the source item is default source,
-        // the price indexer will be executed according to indexer.xml configuration
-        if ($customSourceItemIds) {
-            $productIds = $this->productIdsBySourceItemIds->execute($customSourceItemIds);
-            if (!empty($productIds)) {
-                $this->priceIndexProcessor->reindexList($productIds, true);
-            }
+        $beforeSalableList = $this->getSalableStatuses->execute($customSourceItemIds);
+        $proceed($sourceItemIds);
+        $afterSalableList = $this->getSalableStatuses->execute($customSourceItemIds);
+
+        $productsIdsToReindex = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
+        if (!empty($productsIdsToReindex)) {
+            $this->priceIndexProcessor->reindexList($productsIdsToReindex, true);
         }
     }
 }
