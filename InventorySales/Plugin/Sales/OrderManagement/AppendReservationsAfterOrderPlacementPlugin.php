@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
 use Magento\AsyncOrder\Model\OrderManagement;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
@@ -32,6 +33,9 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {
+
+    public const CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE = 'cataloginventory/item_options/use_deferred_stock_update';
+
     /**
      * @var PlaceReservationsForSalesEventInterface
      */
@@ -93,6 +97,11 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $deploymentConfig;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -105,6 +114,7 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
      * @param DeploymentConfig $deploymentConfig
+     * @param ScopeConfigInterface $scopeConfig
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -119,7 +129,8 @@ class AppendReservationsAfterOrderPlacementPlugin
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         SalesEventExtensionFactory $salesEventExtensionFactory,
-        DeploymentConfig $deploymentConfig
+        DeploymentConfig $deploymentConfig,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -133,6 +144,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->salesEventExtensionFactory = $salesEventExtensionFactory;
         $this->deploymentConfig = $deploymentConfig;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -152,7 +164,8 @@ class AppendReservationsAfterOrderPlacementPlugin
         callable $proceed,
         OrderInterface $order
     ): OrderInterface {
-        if (!$this->deploymentConfig->get(OrderManagement::ASYNC_ORDER_OPTION_PATH)) {
+        if (!$this->deploymentConfig->get(OrderManagement::ASYNC_ORDER_OPTION_PATH)
+            || !$this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             foreach ($order->getItems() as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {

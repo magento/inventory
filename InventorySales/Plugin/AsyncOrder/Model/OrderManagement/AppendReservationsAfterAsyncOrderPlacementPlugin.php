@@ -2,21 +2,22 @@
 
 namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
 
-
 use Magento\AsyncOrder\Api\Data\OrderInterface;
 use Magento\AsyncOrder\Model\OrderManagement;
 use Magento\AsyncOrder\Model\Quote;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\CheckItemsQuantity;
+use Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin;
+use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -100,6 +101,11 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
     protected $quoteItemToOrderItem;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -114,7 +120,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      * @param CartRepositoryInterface $quoteRepository
      * @param QuoteIdMaskFactory $quoteIdMaskFactory
      * @param ToOrderItemConverter $quoteItemToOrderItem
-     *
+     * @param ScopeConfigInterface $scopeConfig
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -131,7 +137,8 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         SalesEventExtensionFactory $salesEventExtensionFactory,
         CartRepositoryInterface $quoteRepository,
         QuoteIdMaskFactory $quoteIdMaskFactory,
-        ToOrderItemConverter $quoteItemToOrderItem
+        ToOrderItemConverter $quoteItemToOrderItem,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -147,6 +154,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         $this->quoteRepository = $quoteRepository;
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
         $this->quoteItemToOrderItem = $quoteItemToOrderItem;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -168,57 +176,58 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         $email,
         $cartId
     ): OrderInterface {
-        $itemsById = $itemsBySku = $itemsToSell = [];
-        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
-        foreach ($this->resolveItems($quote) as $item) {
-            if (!isset($itemsById[$item->getProductId()])) {
-                $itemsById[$item->getProductId()] = 0;
+        if ($this->scopeConfig->isSetFlag(AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
+            $itemsById = $itemsBySku = $itemsToSell = [];
+            $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
+            $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
+            foreach ($this->resolveItems($quote) as $item) {
+                if (!isset($itemsById[$item->getProductId()])) {
+                    $itemsById[$item->getProductId()] = 0;
+                }
+                $itemsById[$item->getProductId()] += $item->getQtyOrdered();
             }
-            $itemsById[$item->getProductId()] += $item->getQtyOrdered();
-        }
-        $productSkus = $this->getSkusByProductIds->execute(array_keys($itemsById));
-        $productTypes = $this->getProductTypesBySkus->execute($productSkus);
+            $productSkus = $this->getSkusByProductIds->execute(array_keys($itemsById));
+            $productTypes = $this->getProductTypesBySkus->execute($productSkus);
 
-        foreach ($productSkus as $productId => $sku) {
-            if (false === $this->isSourceItemManagementAllowedForProductType->execute($productTypes[$sku])) {
-                continue;
+            foreach ($productSkus as $productId => $sku) {
+                if (false === $this->isSourceItemManagementAllowedForProductType->execute($productTypes[$sku])) {
+                    continue;
+                }
+
+                $itemsBySku[$sku] = (float)$itemsById[$productId];
+                $itemsToSell[] = $this->itemsToSellFactory->create([
+                    'sku' => $sku,
+                    'qty' => -(float)$itemsById[$productId]
+                ]);
             }
 
-            $itemsBySku[$sku] = (float)$itemsById[$productId];
-            $itemsToSell[] = $this->itemsToSellFactory->create([
-                'sku' => $sku,
-                'qty' => -(float)$itemsById[$productId]
+            $websiteId = (int)$quote->getStore()->getWebsiteId();
+            $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
+            $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
+
+            $this->checkItemsQuantity->execute($itemsBySku, $stockId);
+
+            /** @var SalesEventExtensionInterface */
+            $salesEventExtension = $this->salesEventExtensionFactory->create([
+                'data' => ['objectIncrementId' => (string)$result->getIncrementId()]
             ]);
+
+            /** @var SalesEventInterface $salesEvent */
+            $salesEvent = $this->salesEventFactory->create([
+                'type' => SalesEventInterface::EVENT_ORDER_PLACED,
+                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+                'objectId' => (string)$result->getEntityId()
+            ]);
+            $salesEvent->setExtensionAttributes($salesEventExtension);
+            $salesChannel = $this->salesChannelFactory->create([
+                'data' => [
+                    'type' => SalesChannelInterface::TYPE_WEBSITE,
+                    'code' => $websiteCode
+                ]
+            ]);
+
+            $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
         }
-
-        $websiteId = (int)$quote->getStore()->getWebsiteId();
-        $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
-        $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-
-        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
-
-        /** @var SalesEventExtensionInterface */
-        $salesEventExtension = $this->salesEventExtensionFactory->create([
-            'data' => ['objectIncrementId' => (string)$result->getIncrementId()]
-        ]);
-
-        /** @var SalesEventInterface $salesEvent */
-        $salesEvent = $this->salesEventFactory->create([
-            'type' => SalesEventInterface::EVENT_ORDER_PLACED,
-            'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-            'objectId' => (string)$result->getEntityId()
-        ]);
-        $salesEvent->setExtensionAttributes($salesEventExtension);
-        $salesChannel = $this->salesChannelFactory->create([
-            'data' => [
-                'type' => SalesChannelInterface::TYPE_WEBSITE,
-                'code' => $websiteCode
-            ]
-        ]);
-
-        $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
-
 //        try {
 //            $order = $proceed($order);
 //        } catch (\Exception $e) {
