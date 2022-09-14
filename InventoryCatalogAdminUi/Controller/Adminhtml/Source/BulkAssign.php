@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Source;
 
 use Magento\Backend\App\Action;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Bulk\BulkPageProcessor;
@@ -15,12 +16,12 @@ use Magento\InventoryCatalogAdminUi\Controller\Adminhtml\Bulk\BulkPageProcessor;
 /**
  * Mass assign sources to products.
  */
-class BulkAssign extends Action
+class BulkAssign extends Action implements HttpPostActionInterface
 {
     /**
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magento_Catalog::products';
+    public const ADMIN_RESOURCE = 'Magento_Catalog::products';
 
     /**
      * @var BulkPageProcessor
@@ -41,6 +42,8 @@ class BulkAssign extends Action
     }
 
     /**
+     * Bulk source assignment
+     *
      * @return ResponseInterface|ResultInterface
      */
     public function execute()

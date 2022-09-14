@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminUserCreatedInvoiceForWholeOrderWithVirtualProductOnTestStockTest">
+        <annotations>
+            <stories value="Admin user created invoice for whole order with Virtual product on Test stock"/>
+            <title value="Admin user created invoice for whole order with Virtual product on Test stock"/>
+            <description value="Admin user created invoice for whole order with Virtual product on Test stock"/>
+            <testCaseId value="AC-1810"/>
+            <severity value="AVERAGE"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+            <magentoCLI command="config:set {{EnableCashOnDeliveryPaymentMethod.path}} {{EnableCashOnDeliveryPaymentMethod.value}}" stepKey="enableCashOnDeliveryPaymentMethod"/>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteStockWithTwoAssignedSourcesActionGroup" stepKey="deleteCreatedStock">
+                <argument name="stockName" value="$$createStock.stock[name]$$"/>
+                <argument name="sourceName1" value="$$createTestSource1.source[name]$$" />
+                <argument name="sourceName2" value="$$createTestSource2.source[name]$$" />
+            </actionGroup>
+            <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <magentoCLI command="config:set {{DisableCashOnDeliveryPaymentMethod.path}} {{DisableCashOnDeliveryPaymentMethod.value}}" stepKey="disableCashOnDeliveryPaymentMethod"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the SubCategory through API -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step2 Create 2 Test Source -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+        <createData entity="FullSource1" stepKey="createTestSource2"/>
+
+        <!-- Step3 Create the stock from UI and then assign the sources -->
+        <createData entity="BasicMsiStock1" stepKey="createStock"/>
+
+        <actionGroup ref="AdminEditStockActionGroup" stepKey="editCreatedStock">
+            <argument name="stockName" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignFirstSourceToCreatedStock">
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSecondSourceToCreatedStock">
+            <argument name="sourceName" value="$$createTestSource2.source[name]$$"/>
+        </actionGroup>
+        <selectOption selector="{{AdminEditStockGeneralSection.websites}}" userInput="Main Website" stepKey="selectWebsite" />
+        <actionGroup ref="AdminSaveAndContinueEditStockPageActionGroup" stepKey="saveTheEditedStock"/>
+
+        <!-- Step4.1 Create the Virtual product -->
+        <createData entity="VirtualProduct" stepKey="createVirtualProduct"/>
+
+        <!-- Step4.2 Search for the Created Virtual product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openVirtualProductPage">
+            <argument name="productSku" value="$$createVirtualProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step4.3 Assign the sources to the Created Virtual product-->
+        <actionGroup ref="AdminAssignSourceToSimpleProduct" stepKey="AdminAssignSource1ToVirtualProduct">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$createTestSource1.source[source_code]$$"/>
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToSimpleProduct" stepKey="AdminAssignSource2ToVirtualProduct">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$createTestSource2.source[source_code]$$"/>
+            <argument name="sourceName" value="$$createTestSource2.source[name]$$"/>
+        </actionGroup>
+
+        <!-- Step4.4 Save the Virtual Product-->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveVirtualProduct"/>
+
+        <!-- Step5 Create New Customer -->
+        <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <!-- Step6 Create Order for Virtual Product -->
+        <actionGroup ref="AdminCreateNewOrderForVirtualProductActionGroup" stepKey="createOrderForVirtualProduct">
+            <argument name="productSKU" value="$$createVirtualProduct.sku$$"/>
+            <argument name="productName" value="$$createVirtualProduct.name$$"/>
+            <argument name="customerFirstName" value="$$createCustomer1.firstname$$"/>
+            <argument name="orderQty" value="1"/>
+        </actionGroup>
+
+        <!-- Step7 Create the Invoice for Virtual Product -->
+        <actionGroup ref="AdminCreateInvoiceAndVerifyDetailsFromOrderPageActionGroup" stepKey="CreateTheInvoiceAndVerifyTheDetails"/>
+
+        <!-- Step8.1 Search for the Created Virtual product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openVirtualProductPageForQtyCheck">
+            <argument name="productSku" value="$$createVirtualProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step8.2 Asserts the quantities in sources assigned to Virtual product -->
+        <grabValueFrom selector="{{AdminProductGridSection.sourceQty($$createTestSource1.source[name]$$)}}" stepKey="testSource1QtyPostOrder"/>
+        <grabValueFrom selector="{{AdminProductGridSection.sourceQty($$createTestSource2.source[name]$$)}}" stepKey="testSource2QtyPostOrder"/>
+        <conditionalClick selector="{{AdminProductGridSection.productCollapsibleColumns('closed','Product Salable Quantity')}}" dependentSelector="{{AdminProductGridSection.productCollapsibleColumns('closed','Product Salable Quantity')}}" visible="true" stepKey="expandProductScalableQty"/>
+        <grabTextFrom selector="{{AdminProductGridSection.scalableQty}}" stepKey="productScalableQty"/>
+        <assertEquals message="Verifies the testSource1 qty" stepKey="assertTestSource1QtyPostOrder">
+            <expectedResult type="string">99</expectedResult>
+            <actualResult type="string">$testSource1QtyPostOrder</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the testSource2 qty" stepKey="assertTestSource2QtyPostOrder">
+            <expectedResult type="string">100</expectedResult>
+            <actualResult type="string">$testSource2QtyPostOrder</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the scalable Product qty" stepKey="assertScalableProductQtyPostOrder">
+            <expectedResult type="string">199</expectedResult>
+            <actualResult type="string">$productScalableQty</actualResult>
+        </assertEquals>
+    </test>
+</tests>

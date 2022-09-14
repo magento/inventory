@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminEditStockActionGroup">
+        <annotations>
+            <description>Admin edits the created stock</description>
+        </annotations>
+        <arguments>
+            <argument name="stockName"/>
+        </arguments>
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheManageStockPage"/>
+        <waitForPageLoad time="30" stepKey="waitForManageStockPageLoad"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearStockFilters"/>
+        <waitForPageLoad stepKey="waitForClearFilters" time="30"/>
+        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters"/>
+        <waitForPageLoad time="30" stepKey="waitForFiltersLoad"/>
+        <fillField userInput="{{stockName}}" selector="{{AdminManageStockGridFilterControls.name}}" stepKey="fillFilterField"/>
+        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters"/>
+        <waitForPageLoad time="30" stepKey="waitForFiltersApplied"/>
+        <click selector="{{AdminGridRow.editByValue(stockName)}}" stepKey="clickOnEditStock"/>
+        <waitForPageLoad time="30" stepKey="waitForStockPage"/>
+    </actionGroup>
+</actionGroups>
