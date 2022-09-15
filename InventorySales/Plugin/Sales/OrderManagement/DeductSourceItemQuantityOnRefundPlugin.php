@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\ReturnProcessor\DeductSourceItemQuantityOnRefund;
@@ -51,12 +52,18 @@ class DeductSourceItemQuantityOnRefundPlugin
     private $orderRepository;
 
     /**
+     * @var StockRegistryInterface
+     */
+    protected $stockRegistry;
+
+    /**
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
      * @param ItemsToRefundInterfaceFactory $itemsToRefundFactory
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param DeductSourceItemQuantityOnRefund $deductSourceItemQuantityOnRefund
      * @param OrderRepositoryInterface $orderRepository
+     * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
@@ -64,7 +71,8 @@ class DeductSourceItemQuantityOnRefundPlugin
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         DeductSourceItemQuantityOnRefund $deductSourceItemQuantityOnRefund,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        StockRegistryInterface $stockRegistry
     ) {
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
         $this->itemsToRefundFactory = $itemsToRefundFactory;
@@ -72,6 +80,7 @@ class DeductSourceItemQuantityOnRefundPlugin
         $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->deductSourceItemQuantityOnRefund = $deductSourceItemQuantityOnRefund;
         $this->orderRepository = $orderRepository;
+        $this->stockRegistry = $stockRegistry;
     }
 
     /**
@@ -166,9 +175,15 @@ class DeductSourceItemQuantityOnRefundPlugin
             [$sku]
         )[$sku];
 
+        $stockItem = $this->stockRegistry->getStockItem(
+            $item->getOrderItem()->getProductId(),
+            $item->getOrderItem()->getStore()->getWebsiteId()
+        );
+
         return $this->isSourceItemManagementAllowedForProductType->execute($productType)
                 && $item->getQty() > 0
                 && !$item->getBackToStock()
-                && !$orderItem->getIsVirtual();
+                && !$orderItem->getIsVirtual()
+                && $stockItem->getManageStock();
     }
 }
