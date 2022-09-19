@@ -116,30 +116,4 @@
     <requiredEntity type="custom_attribute">CustomAttributeDynamicPrice</requiredEntity>
     <requiredEntity type="custom_attribute">CustomAttributePriceView</requiredEntity>
   </entity>
-  <entity name="SimpleMsiProductWithSKU1234" type="product">
-    <data key="name" unique="suffix">Simple MSI Product </data>
-    <data key="sku" unique="suffix">1234</data>
-    <data key="type_id">simple</data>
-    <data key="price">10.00</data>
-    <data key="quantity">100</data>
-    <data key="weight">1</data>
-    <data key="urlKey" unique="suffix">simple-msi-product-</data>
-    <data key="status">1</data>
-    <data key="notifyQuantity">1</data>
-    <data key="attribute_set_id">4</data>
-    <data key="visibility">4</data>
-  </entity>
-  <entity name="SimpleMsiProductWithSKU01234" type="product">
-    <data key="name" unique="suffix">Simple MSI Product </data>
-    <data key="sku" unique="suffix">01234</data>
-    <data key="type_id">simple</data>
-    <data key="price">10.00</data>
-    <data key="quantity">100</data>
-    <data key="weight">1</data>
-    <data key="urlKey" unique="suffix">simple-msi-product-</data>
-    <data key="status">1</data>
-    <data key="notifyQuantity">1</data>
-    <data key="attribute_set_id">4</data>
-    <data key="visibility">4</data>
-  </entity>
 </entities>
