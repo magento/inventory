@@ -26,11 +26,11 @@
             <!--Create Category-->
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <!--Create SimpleProductWithSku1234-->
-            <createData entity="SimpleProductWithSKU1234" stepKey="product">
+            <createData entity="SimpleMsiProductWithSKU1234" stepKey="product">
                 <requiredEntity createDataKey="category"/>
             </createData>
             <!--Create SimpleProductWithSku01234-->
-            <createData entity="SimpleProductWithSKU01234" stepKey="product2">
+            <createData entity="SimpleMsiProductWithSKU01234" stepKey="product2">
                 <requiredEntity createDataKey="category"/>
             </createData>
             <!--Go to Product Page-->
