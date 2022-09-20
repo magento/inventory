@@ -58,6 +58,11 @@
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="product2" stepKey="deleteProductTwo"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+          <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource1">
+            <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+          </actionGroup>
+          <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearProductGridFilter"/>
+          <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
