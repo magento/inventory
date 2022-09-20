@@ -63,7 +63,6 @@
           </actionGroup>
           <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearProductGridFilter"/>
           <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 
         <!--Go To Product Index Page-->
