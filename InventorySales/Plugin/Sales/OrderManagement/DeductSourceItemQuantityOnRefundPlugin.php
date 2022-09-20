@@ -54,7 +54,7 @@ class DeductSourceItemQuantityOnRefundPlugin
     /**
      * @var StockRegistryInterface
      */
-    protected $stockRegistry;
+    private $stockRegistry;
 
     /**
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
