@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminCreateNewOrderForVirtualProductActionGroup">
+        <annotations>
+            <description>Admin Create New Order for Virtual product</description>
+        </annotations>
+        <arguments>
+            <argument name="productSKU" type="string"/>
+            <argument name="productName" type="string"/>
+            <argument name="customerFirstName" type="string"/>
+            <argument name="orderQty" type="string" defaultValue="100"/>
+        </arguments>
+        <amOnPage stepKey="navigateToNewOrderPage" url="{{AdminOrderCreatePage.url}}"/>
+        <waitForPageLoad stepKey="waitForNewOrderPageOpened"/>
+        <click stepKey="chooseCustomer" selector="{{AdminOrdersGridSection.customerInOrdersSection(customerFirstName)}}"/>
+        <waitForPageLoad stepKey="waitForStoresPageOpened"/>
+        <click selector="{{OrdersGridSection.addProducts}}" stepKey="clickOnAddProducts"/>
+        <waitForPageLoad stepKey="waitForProductsListForOrder"/>
+        <click selector="{{AdminOrdersGridSection.productForOrder(productSKU)}}" stepKey="chooseTheProduct"/>
+        <waitForPageLoad stepKey="waitForClickProduct"/>
+        <fillField selector="{{AdminOrderFormItemsSection.qtyForOrder(productSKU)}}" userInput="{{orderQty}}" stepKey="fillQuantityForSelectedProduct"/>
+        <click selector="{{AdminOrderFormItemsSection.addSelected}}" stepKey="addSelectedProductToOrder"/>
+        <waitForPageLoad stepKey="waitForProductAddedInOrder"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.orderedItemsName}}" stepKey="orderedProductName"/>
+        <grabAttributeFrom selector="{{AdminOrderFormItemsSection.orderedItemsQty}}" userInput="value" stepKey="orderedProductQty"/>
+        <assertEquals message="Verifies the ordered product name" stepKey="assertsOrderedProductName">
+            <expectedResult type="string">$orderedProductName</expectedResult>
+            <actualResult type="string">{{productName}}</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the ordered product quantity" stepKey="assertsOrderedProductQty">
+            <expectedResult type="string">{{orderQty}}</expectedResult>
+            <actualResult type="string">$orderedProductQty</actualResult>
+        </assertEquals>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.billingAddress}}" stepKey="billingAddress"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.shippingAddress}}" stepKey="shippingAddress"/>
+        <assertEquals message="Verifies if the Shipping and the Billing address are same" stepKey="assertsTheBillingAndShippingAddress">
+            <expectedResult type="string">$billingAddress</expectedResult>
+            <actualResult type="string">$shippingAddress</actualResult>
+        </assertEquals>
+        <scrollTo selector="{{AdminOrderFormItemsSection.paymentMethod('Check / Money order')}}" x="-200" y="-200" stepKey="scrollToPaymentMethod"/>
+        <click selector="{{AdminOrderFormItemsSection.paymentMethod('Check / Money order')}}" stepKey="selectTheCheckMoneyOrder"/>
+        <click selector="{{OrdersGridSection.submitOrder}}" stepKey="submitOrder"/>
+        <waitForPageLoad stepKey="waitForSubmitOrder"/>
+        <conditionalClick selector="{{AdminGridConfirmActionSection.ok}}" dependentSelector="{{AdminGridConfirmActionSection.ok}}" visible="true" stepKey="clickOK"/>
+        <waitForLoadingMaskToDisappear stepKey="waitPostSubmitOrder"/>
+        <see stepKey="seeSuccessMessageForOrder" userInput="You created the order."/>
+    </actionGroup>
+</actionGroups>

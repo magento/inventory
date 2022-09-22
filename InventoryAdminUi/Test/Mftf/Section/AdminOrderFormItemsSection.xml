@@ -9,5 +9,20 @@
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminOrderFormItemsSection">
         <element name="itemError" type="text" selector=".row-messages-error"/>
+        <element name="qtyForOrder" type="input" selector="//td[contains(text(),'{{var}}')]/..//input[@name='qty']" parameterized="true" timeout="60"/>
+        <element name="billingAddress" type="text" selector="//div[@id='order-billing_address']//select[@id='order-billing_address_customer_address_id']//option[@selected='selected']"/>
+        <element name="shippingAddress" type="text" selector="//div[@id='order-shipping_address']//select[@id='order-shipping_address_customer_address_id']//option[@selected='selected']"/>
+        <element name="checkSameAsBillingAddress" type="checkbox" selector="//label[@for='order-shipping_same_as_billing']" />
+        <element name="orderedItemsName" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]"/>
+        <element name="tab_invoice" type="text" selector="//button[@id='order_invoice']"/>
+        <element name="orderedItemsQty" type="text" selector="//table[@class='data-table admin__table-primary order-tables']//span[contains(@id,'order_item_')]/../..//td[@class='col-qty']//input"/>
+        <element name="paymentMethod" type="button" selector="//dl[@class='admin__payment-methods control']//input[@title='{{var1}}']" parameterized="true" />
+        <element name="orderNo" type="text" selector="//div[@class='admin__page-section-item order-information']//span[@class='title' and contains(text(),'Order # ')]" />
+        <element name="invoice_orderNo" type="text" selector="//div[@class='admin__page-section-item order-information']//span[@class='title']" />
+        <element name="invoice_paymentInformation" type="text" selector="//div[@class='order-payment-method-title']" />
+        <element name="invoice_productName" type="text" selector="//div[@class='product-title']" />
+        <element name="invoice_productQty" type="text" selector="//table[@class='qty-table']//td" />
+        <element name="invoice_customerEmail" type="text" selector="//table[@class='admin__table-secondary order-account-information-table']//tr//th[text()='Email']/..//td//a" />
+        <element name="invoice_submit" type="button" selector="//button[@title='Submit Invoice']"/>
     </section>
 </sections>
