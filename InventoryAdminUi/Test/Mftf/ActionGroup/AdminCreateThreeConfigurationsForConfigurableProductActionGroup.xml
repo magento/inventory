@@ -10,7 +10,6 @@
               xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="AdminCreateThreeConfigurationsForConfigurableProductActionGroup">
         <arguments>
-            <argument name="assignSource" type="string" defaultValue="Default Source"/>
             <argument name="blueColor" type="string"/>
             <argument name="whiteColor" type="string"/>
             <argument name="redColor" type="string"/>
