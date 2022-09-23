@@ -12,6 +12,7 @@ use Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\Bundle\Model\Inventory\ChangeParentStockStatus;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
  * Update bundle product stock status in legacy stock after decrement quantity of child stock item
@@ -29,15 +30,23 @@ class UpdateParentStockStatusInLegacyStockPlugin
     private $getProductIdsBySkus;
 
     /**
+     * @var IsSingleSourceModeInterface
+     */
+    private $isSingleSourceMode;
+
+    /**
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param ChangeParentStockStatus $changeParentStockStatus
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
      */
     public function __construct(
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        ChangeParentStockStatus $changeParentStockStatus
+        ChangeParentStockStatus $changeParentStockStatus,
+        IsSingleSourceModeInterface $isSingleSourceMode
     ) {
         $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->changeParentStockStatus = $changeParentStockStatus;
+        $this->isSingleSourceMode = $isSingleSourceMode;
     }
 
     /**
@@ -52,6 +61,9 @@ class UpdateParentStockStatusInLegacyStockPlugin
      */
     public function afterExecute(DecrementSourceItemQty $subject, $result, array $sourceItemDecrementData): void
     {
+        if (!$this->isSingleSourceMode->execute()) {
+            return;
+        }
         $productIds = [];
         $sourceItems = array_column($sourceItemDecrementData, 'source_item');
         foreach ($sourceItems as $sourceItem) {
