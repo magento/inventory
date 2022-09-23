@@ -24,6 +24,10 @@
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
                 <argument name="manageStockValue" value="Yes"/>
             </actionGroup>
+          <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+          <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+          </actionGroup>
         </before>
 
         <after>

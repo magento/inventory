@@ -39,24 +39,12 @@
         <fillField selector="{{AdminCreateProductConfigurationsPanel.qtyForColorAttribute(whiteColor)}}" userInput="30" stepKey="setQtyForWhiteProduct"/>
         <fillField selector="{{AdminCreateProductConfigurationsPanel.qtyForColorAttribute(redColor)}}" userInput="10" stepKey="setQtyForRedProduct"/>
         <fillField selector="{{AdminCreateProductConfigurationsPanel.qtyForColorAttribute(blueColor)}}" userInput="20" stepKey="setQtyForBlueProduct"/>
-
         <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
-        <waitForElementVisible selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="waitForOpenSelectSourcesModalWindow"/>
-        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
-        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
-        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
-        <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{assignSource}}" stepKey="fillKeywordSearchField"/>
-        <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch"/>
-
-        <click selector="{{AdminGridRow.checkboxByValue(assignSource)}}" stepKey="selectCustomSource"/>
-        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources"/>
-        <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="100" stepKey="fillQuantityForCustomSource"/>
+        <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForSingleMode}}" userInput="100" stepKey="fillQuantityForCustomSource"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToSummaryStep"/>
-
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnGenerateProducts"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableProduct"/>
         <conditionalClick selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" dependentSelector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" visible="true" stepKey="confirmDefaultAttributeSetForConfigurableProduct"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductSavedMessage"/>
-
     </actionGroup>
 </actionGroups>
