@@ -100,7 +100,7 @@
         </actionGroup>
 
         <!-- Step6.2 Update the White Configurable Product to out of stock from Product Page-->
-        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.selectStockStatusForChildConfigProduct}}" stepKey="selectOutOfStockForWhiteConfigProduct"/>
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectOutOfStockForWhiteConfigProduct"/>
 
         <!-- Step6.3 Save the White Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveWhiteConfigProductPostOutOfStock"/>
@@ -111,7 +111,7 @@
         </actionGroup>
 
         <!-- Step7.2 Update the White Configurable Product to out of stock from Product Page-->
-        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.selectStockStatusForChildConfigProduct}}" stepKey="selectOutOfStockForBlueConfigProduct"/>
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectOutOfStockForBlueConfigProduct"/>
 
         <!-- Step7.3 Save the White Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveBlueConfigProductPostOutOfStock"/>
@@ -122,7 +122,7 @@
         </actionGroup>
 
         <!-- Step8.2 Update the White Configurable Product to out of stock from Product Page-->
-        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.selectStockStatusForChildConfigProduct}}" stepKey="selectOutOfStockForRedConfigProduct"/>
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectOutOfStockForRedConfigProduct"/>
 
         <!-- Step8.3 Save the White Configurable Product -->
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveRedConfigProductPostOutOfStock"/>
