@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
-use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\ReturnProcessor\DeductSourceItemQuantityOnRefund;
@@ -18,6 +17,7 @@ use Magento\Sales\Api\Data\CreditmemoInterface;
 use Magento\Sales\Api\Data\CreditmemoItemInterface as CreditmemoItem;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
 
 class DeductSourceItemQuantityOnRefundPlugin
 {
@@ -52,9 +52,9 @@ class DeductSourceItemQuantityOnRefundPlugin
     private $orderRepository;
 
     /**
-     * @var StockRegistryInterface
+     * @var ProductResourceModel
      */
-    private $stockRegistry;
+    private $productResource;
 
     /**
      * @param GetSkuFromOrderItemInterface $getSkuFromOrderItem
@@ -63,7 +63,7 @@ class DeductSourceItemQuantityOnRefundPlugin
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param DeductSourceItemQuantityOnRefund $deductSourceItemQuantityOnRefund
      * @param OrderRepositoryInterface $orderRepository
-     * @param StockRegistryInterface $stockRegistry
+     * @param ProductResourceModel $productResource
      */
     public function __construct(
         GetSkuFromOrderItemInterface $getSkuFromOrderItem,
@@ -72,7 +72,7 @@ class DeductSourceItemQuantityOnRefundPlugin
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         DeductSourceItemQuantityOnRefund $deductSourceItemQuantityOnRefund,
         OrderRepositoryInterface $orderRepository,
-        StockRegistryInterface $stockRegistry
+        ProductResourceModel $productResource
     ) {
         $this->getSkuFromOrderItem = $getSkuFromOrderItem;
         $this->itemsToRefundFactory = $itemsToRefundFactory;
@@ -80,7 +80,7 @@ class DeductSourceItemQuantityOnRefundPlugin
         $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->deductSourceItemQuantityOnRefund = $deductSourceItemQuantityOnRefund;
         $this->orderRepository = $orderRepository;
-        $this->stockRegistry = $stockRegistry;
+        $this->productResource = $productResource;
     }
 
     /**
@@ -120,11 +120,13 @@ class DeductSourceItemQuantityOnRefundPlugin
     {
         $order = $this->orderRepository->get($creditMemo->getOrderId());
         $itemsToRefund = $refundedOrderItemIds = [];
+        $productSkus = [];
         /** @var CreditmemoItem $item */
         foreach ($creditMemo->getItems() as $item) {
             /** @var OrderItemInterface $orderItem */
             $orderItem = $item->getOrderItem();
             $sku = $this->getSkuFromOrderItem->execute($orderItem);
+            $productSkus[] = $sku;
 
             if ($this->isValidItem($sku, $item)) {
                 $refundedOrderItemIds[] = $item->getOrderItemId();
@@ -137,13 +139,17 @@ class DeductSourceItemQuantityOnRefundPlugin
             }
         }
 
+        $productIdsBySkus = $this->productResource->getProductsIdsBySkus($productSkus);
+
         $itemsToDeductFromSource = [];
         foreach ($itemsToRefund as $sku => $data) {
-            $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
-                'sku' => $sku,
-                'qty' => $data['qty'],
-                'processedQty' => $data['processedQty']
-            ]);
+            if (array_key_exists($sku, $productIdsBySkus)) {
+                $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
+                    'sku' => $sku,
+                    'qty' => $data['qty'],
+                    'processedQty' => $data['processedQty']
+                ]);
+            }
         }
 
         if (!empty($itemsToDeductFromSource)) {
@@ -175,15 +181,9 @@ class DeductSourceItemQuantityOnRefundPlugin
             [$sku]
         )[$sku];
 
-        $stockItem = $this->stockRegistry->getStockItem(
-            $item->getOrderItem()->getProductId(),
-            $item->getOrderItem()->getStore()->getWebsiteId()
-        );
-
         return $this->isSourceItemManagementAllowedForProductType->execute($productType)
                 && $item->getQty() > 0
                 && !$item->getBackToStock()
-                && !$orderItem->getIsVirtual()
-                && $stockItem->getManageStock();
+                && !$orderItem->getIsVirtual();
     }
 }

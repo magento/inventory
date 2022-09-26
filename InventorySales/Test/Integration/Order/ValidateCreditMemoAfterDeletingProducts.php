@@ -109,8 +109,6 @@ class ValidateCreditMemoAfterDeletingProducts extends TestCase
     {
         try {
             $product = $this->productRepository->get($sku);
-            $stockItem = $product->getExtensionAttributes()->getStockItem();
-            $stockItem->setUseConfigManageStock(false);
             $this->productRepository->delete($product);
         } catch (NoSuchEntityException $exception) {
             // product doesn't exist;
