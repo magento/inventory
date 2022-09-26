@@ -17,4 +17,7 @@
         <plugin name="update_parent_grouped_product_stock_status_in_legacy_stock"
                 type="Magento\InventoryGroupedProduct\Plugin\InventoryApi\UpdateParentStockStatusInLegacyStockPlugin" sortOrder="101"/>
     </type>
+    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
+        <plugin name="inventory_grouped_product_update_parent_stock_status_on_source_items_save" type="Magento\InventoryGroupedProduct\Plugin\InventoryApi\UpdateParentStockStatusOnSourceItemsSave"/>
+    </type>
 </config>
