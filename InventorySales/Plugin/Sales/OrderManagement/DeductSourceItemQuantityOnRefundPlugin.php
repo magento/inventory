@@ -139,11 +139,11 @@ class DeductSourceItemQuantityOnRefundPlugin
             }
         }
 
-        $productIdsBySkus = $this->productResource->getProductsIdsBySkus($productSkus);
+        $existingProductIdsBySkus = $this->productResource->getProductsIdsBySkus($productSkus);
 
         $itemsToDeductFromSource = [];
         foreach ($itemsToRefund as $sku => $data) {
-            if (array_key_exists($sku, $productIdsBySkus)) {
+            if (array_key_exists($sku, $existingProductIdsBySkus)) {
                 $itemsToDeductFromSource[] = $this->itemsToRefundFactory->create([
                     'sku' => $sku,
                     'qty' => $data['qty'],
