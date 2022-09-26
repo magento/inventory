@@ -12,7 +12,6 @@ use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\Layer\Resolver as LayerResolver;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -93,7 +92,6 @@ class UpdateToolbarCount
      * @param int $result
      * @return int
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @throws LocalizedException
      */
     public function afterGetTotalNum(Toolbar $subject, int $result): int
     {
@@ -113,7 +111,14 @@ class UpdateToolbarCount
                 );
                 $salableProducts = $this->areProductsSalable->execute($skus, $stock_id);
                 if ($salableProducts) {
-                    $result = count($salableProducts);
+                    $totalNoOfSalableProducts = 0;
+                    array_walk(
+                        $salableProducts,
+                        function ($salableProduct) use (&$totalNoOfSalableProducts) {
+                            $totalNoOfSalableProducts += $salableProduct->isSalable() ? 1 : 0;
+                        }
+                    );
+                    $result = $totalNoOfSalableProducts;
                 }
             } catch (\Exception $e) {
                 $this->logger->critical($e->getMessage());
