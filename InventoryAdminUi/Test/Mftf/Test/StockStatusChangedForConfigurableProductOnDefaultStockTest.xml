@@ -8,12 +8,12 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StockStatusChangedForConfigurableProductOnTestStockAndTestWebsiteTest">
+    <test name="StockStatusChangedForConfigurableProductOnDefaultStockTest">
         <annotations>
-            <stories value="Stock status changed for Configured product on Test stock and Test website"/>
-            <title value="Stock status changed for Configured product on Test stock and Test website"/>
-            <description value="Stock status changed for Configured product on Test stock and Test website"/>
-            <testCaseId value="AC-6567"/>
+            <stories value="Stock status changed for Configured product on Default stock"/>
+            <title value="Stock status changed for Configured product on Default stock"/>
+            <description value="Stock status changed for Configured product on Default stock"/>
+            <testCaseId value="AC-6565"/>
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -26,16 +26,9 @@
             </actionGroup>
         </before>
         <after>
-            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToNo"/>
             <magentoCLI stepKey="setDisplayOutOfStockProductAsYes" command="config:set cataloginventory/options/show_out_of_stock 1" />
-            <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheMainWebsiteAsDefault">
-                <argument name="WebsiteName" value="Main Website"/>
-            </actionGroup>
-            <magentoCron groups="index" stepKey="reindexForResettingTheMainWebsite"/>
-            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
-                <argument name="stockName" value="Test Stock 1"/>
-                <argument name="websiteName" value="{{customWebsite.name}}"/>
-            </actionGroup>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+
             <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
                 <argument name="manageStockValue" value="Yes"/>
             </actionGroup>
@@ -45,8 +38,13 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
             </actionGroup>
-            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
-                <argument name="websiteName" value="{{customWebsite.name}}"/>
+
+            <!-- Delete the Created Color attribute-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute3.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteWhiteColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute1.name}}"/>
             </actionGroup>
             <magentoCron groups="index" stepKey="reindex"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
@@ -55,43 +53,26 @@
         <!-- Step1 Create the SubCategory through API -->
         <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
 
-        <!-- Step2.1 Create website-->
-        <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
-            <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
-            <argument name="websiteCode" value="{{customWebsite.code}}"/>
-        </actionGroup>
-        <!-- Step2.2 Create second store -->
-        <actionGroup ref="CreateCustomStoreActionGroup" stepKey="createCustomStore">
-            <argument name="website" value="{{customWebsite.name}}"/>
-            <argument name="store" value="{{customStoreGroup.name}}"/>
-            <argument name="rootCategory" value="Default Category"/>
-        </actionGroup>
-        <!-- Step2.3 Create second store view -->
-        <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView">
-            <argument name="StoreGroup" value="customStoreGroup"/>
-            <argument name="customStore" value="customStoreEN"/>
-        </actionGroup>
-
-        <!-- Step2.4 Set The Secondary website as default -->
-        <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheWebsiteAsDefault">
-            <argument name="WebsiteName" value="{{customWebsite.name}}"/>
-        </actionGroup>
-        <magentoCron groups="index" stepKey="reindex"/>
-
         <!-- Step3 Create New Source -->
         <createData entity="FullSource1" stepKey="createTestSource1"/>
 
-        <!-- Step4 Create the stock from UI, assign the sources and assign Test Website as Sales Channel-->
-        <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="createNewStockWithTestWebsite">
-            <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
-            <argument name="stockName" value="Test Stock 1"/>
-            <argument name="websiteName" value="{{customWebsite.name}}"/>
-        </actionGroup>
+        <!-- Step4 Create the stock without selecting the website, and assign the sources -->
+        <createData entity="BasicMsiStock1" stepKey="createStock"/>
 
-        <!-- Step5 Set your Test Website accessible on frontend via Add Store Code to Urls-->
-        <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToYes"/>
         <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
         <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <actionGroup ref="AdminEditStockActionGroup" stepKey="adminEditCreatedStock">
+            <argument name="stockName" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource1ToStock1">
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+
+        <waitForPageLoad time="30" stepKey="waitForTheSourcesAssigned"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="AssertTheStockIsSaved" />
 
         <!-- Step7 Create Configurable Product -->
         <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">
@@ -106,7 +87,7 @@
         <!-- Step7.2 Update the Created Configurable Product -->
         <actionGroup ref="AdminEditConfigurableProductActionGroup" stepKey="editConfigurableProduct">
             <argument name="product" value="{{createConfigurableProduct}}"/>
-            <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
+            <argument name="assignSource" value="Default Source"/>
             <argument name="blueColor" value="{{colorProductAttribute3.name}}"/>
             <argument name="whiteColor" value="{{colorProductAttribute1.name}}"/>
         </actionGroup>
