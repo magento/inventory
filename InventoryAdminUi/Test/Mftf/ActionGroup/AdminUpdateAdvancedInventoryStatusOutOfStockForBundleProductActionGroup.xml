@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminUpdateAdvancedInventoryStatusOutOfStockForBundleProduct">
+        <annotations>
+            <description>Admin updates the bundled product as out of stock for a product from advanced inventory</description>
+        </annotations>
+        <arguments>
+            <argument name="selectManageStock" type="string"/>
+            <argument name="stockStatus" type="string"/>
+        </arguments>
+        <selectOption userInput="{{stockStatus}}" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectStockStatus"/>
+        <scrollTo selector="{{AdminProductGridSection.advancedInventory}}" x="-200" y="-200" stepKey="scrollToAdvancedInventory"/>
+        <click selector="{{AdminProductGridSection.advancedInventory}}" stepKey="clickOnAdvancedInventory"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad"/>
+        <uncheckOption selector="{{AdminProductGridSection.configSettingsManageStock}}" stepKey="uncheckManageStocksConfigSettings" />
+        <selectOption userInput="{{selectManageStock}}" selector="{{AdminProductGridSection.selectManageStock}}" stepKey="selectNoForManageStock"/>
+        <click selector="{{AdminProductGridSection.advancedInventoryDone}}" stepKey="clickOnDone"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
+    </actionGroup>
+</actionGroups>

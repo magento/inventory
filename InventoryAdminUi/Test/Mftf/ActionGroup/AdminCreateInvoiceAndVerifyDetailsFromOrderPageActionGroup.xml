@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminCreateInvoiceAndVerifyDetailsFromOrderPageActionGroup">
+        <annotations>
+            <description>Admin create invoice and verify the details from the Orders page.</description>
+        </annotations>
+        <!-- Captures all the details from submitted orders page  -->
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.orderNo}}" stepKey="orderNo"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_productQty}}" stepKey="productQty"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_paymentInformation}}" stepKey="payment_information"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_productName}}" stepKey="productName"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_customerEmail}}" stepKey="customerEmail"/>
+        <click selector="{{AdminOrderFormItemsSection.tab_invoice}}" stepKey="clickOnInvoiceBtn"/>
+
+        <!-- Verifies the captured details in invoice page -->
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_orderNo}}" stepKey="invoice_orderNo"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_paymentInformation}}" stepKey="invoice_paymentInformation"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_productName}}" stepKey="invoice_productName"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_productQty}}" stepKey="invoice_productQty"/>
+        <grabTextFrom selector="{{AdminOrderFormItemsSection.invoice_customerEmail}}" stepKey="invoice_customerEmail"/>
+        <assertEquals message="Verifies the ordered product name" stepKey="assertsOrderedProductName">
+            <expectedResult type="string">$productName</expectedResult>
+            <actualResult type="string">$invoice_productName</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the orderNo" stepKey="assertsOrderNo">
+            <expectedResult type="string">$orderNo</expectedResult>
+            <actualResult type="string">$invoice_orderNo</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the paymentMethod" stepKey="assertsPaymentMethod">
+            <expectedResult type="string">$payment_information</expectedResult>
+            <actualResult type="string">$invoice_paymentInformation</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the customer" stepKey="assertsCustomerMailAddress">
+            <expectedResult type="string">$customerEmail</expectedResult>
+            <actualResult type="string">$invoice_customerEmail</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the ordered product qty" stepKey="assertsOrderedProductQty">
+            <expectedResult type="string">$productQty</expectedResult>
+            <actualResult type="string">$invoice_productQty</actualResult>
+        </assertEquals>
+        <click selector="{{AdminOrderFormItemsSection.invoice_submit}}" stepKey="submitInvoice"/>
+    </actionGroup>
+</actionGroups>
