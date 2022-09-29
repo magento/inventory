@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminVerifyOrderStatusMAfterViewActionGroup">
+        <arguments>
+            <argument name="product_name" type="string" />
+            <argument name="status" type="string" />
+        </arguments>
+        <waitForElement selector="{{AdminOrderDetailsInformationSection.orderStatusUnderViewM('product_name','status')}}" time="30" stepKey="waitForPlaceOrderButton"/>
+        <seeElement selector="{{AdminOrderDetailsInformationSection.orderStatusUnderViewM('product_name','status')}}" stepKey="assertErrorMessage"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskForNextButton"/>
+    </actionGroup>
+</actionGroups>
+
+
