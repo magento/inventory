@@ -14,6 +14,9 @@
             <title value="Validate After placing an order with zero quantity product or lesser quantity product with more checked out quantity, we are properly getting the Item Status as Ordered, Partial and Back ordered accordingly."/>
             <description value="Validate After placing an order with zero quantity product or lesser quantity product with more checked out quantity, we are properly getting the Item Status as Ordered, Partial and Back ordered accordingly."/>
             <testCaseId value="AC-2803"/>
+            <severity value="MINOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
         </annotations>
 
         <before>
