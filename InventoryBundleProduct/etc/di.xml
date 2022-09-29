@@ -29,7 +29,7 @@
     <type name="Magento\CatalogInventory\Helper\Stock">
         <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
-    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorChain">
+    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
         <arguments>
             <argument name="compositeProductStockStatusProcessors" xsi:type="array">
                 <item name="bundle" xsi:type="object">Magento\InventoryBundleProduct\Model\StockStatusProcessor</item>

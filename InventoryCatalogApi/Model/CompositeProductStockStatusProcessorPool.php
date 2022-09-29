@@ -9,7 +9,7 @@ namespace Magento\InventoryCatalogApi\Model;
 
 use Magento\Framework\Exception\InvalidArgumentException;
 
-class CompositeProductStockStatusProcessorChain implements CompositeProductStockStatusProcessorInterface
+class CompositeProductStockStatusProcessorPool implements CompositeProductStockStatusProcessorInterface
 {
     /**
      * @var CompositeProductStockStatusProcessorInterface[]

@@ -45,7 +45,7 @@
                 sortOrder="200"/>
 
     </type>
-    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorChain">
+    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
         <arguments>
             <argument name="compositeProductStockStatusProcessors" xsi:type="array">
                 <item name="configurable" xsi:type="object">Magento\InventoryConfigurableProduct\Model\StockStatusProcessor</item>

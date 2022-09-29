@@ -10,7 +10,7 @@
         <plugin name="disable_grouped_type"
                 type="Magento\InventoryGroupedProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableGroupedTypePlugin"/>
     </type>
-    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorChain">
+    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
         <arguments>
             <argument name="compositeProductStockStatusProcessors" xsi:type="array">
                 <item name="grouped" xsi:type="object">Magento\InventoryGroupedProduct\Model\StockStatusProcessor</item>
