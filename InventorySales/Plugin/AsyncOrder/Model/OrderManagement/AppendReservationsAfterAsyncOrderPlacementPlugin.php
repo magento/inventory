@@ -178,8 +178,12 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
     ): OrderInterface {
         if ($this->scopeConfig->isSetFlag(AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             $itemsById = $itemsBySku = $itemsToSell = [];
-            $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-            $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
+            if (preg_match("/[a-z]/i", $cartId)) {
+                $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
+                $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
+            } else {
+                $quote = $this->quoteRepository->getActive($cartId);
+            }
             foreach ($this->resolveItems($quote) as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {
                     $itemsById[$item->getProductId()] = 0;
