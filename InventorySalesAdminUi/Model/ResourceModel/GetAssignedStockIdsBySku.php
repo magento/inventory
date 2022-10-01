@@ -10,9 +10,6 @@ namespace Magento\InventorySalesAdminUi\Model\ResourceModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventorySalesAdminUi\Model\GetStockSourceLinksBySourceCode;
 
-/**
- * Get all stocks Ids by sku
- */
 class GetAssignedStockIdsBySku
 {
     /**
@@ -26,33 +23,40 @@ class GetAssignedStockIdsBySku
     private $getStockSourceLinksBySourceCode;
 
     /**
+     * @var GetStockIdsBySourceCodes
+     */
+    private $getStockIdsBySourceCodes;
+
+    /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param GetStockSourceLinksBySourceCode $getStockSourceLinksBySourceCode
+     * @param GetStockIdsBySourceCodes $getStockIdsBySourceCodes
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        GetStockSourceLinksBySourceCode $getStockSourceLinksBySourceCode
+        GetStockSourceLinksBySourceCode $getStockSourceLinksBySourceCode,
+        GetStockIdsBySourceCodes $getStockIdsBySourceCodes
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->getStockSourceLinksBySourceCode = $getStockSourceLinksBySourceCode;
+        $this->getStockIdsBySourceCodes = $getStockIdsBySourceCodes;
     }
 
     /**
+     * Get all stocks Ids by sku
+     *
      * @param string $sku
      * @return array
      */
     public function execute(string $sku): array
     {
         $sourceItems = $this->getSourceItemsBySku->execute($sku);
-
-        $stocksIds = [];
+        $sourceCodes = [];
         foreach ($sourceItems as $sourceItem) {
-            $stockSourceLinks = $this->getStockSourceLinksBySourceCode->execute($sourceItem->getSourceCode());
-            foreach ($stockSourceLinks as $stockSourceLink) {
-                $stocksIds[] = (int)$stockSourceLink->getStockId();
-            }
+            $sourceCodes[] = $sourceItem->getSourceCode();
         }
+        $stocksIds = $this->getStockIdsBySourceCodes->execute($sourceCodes);
 
-        return array_unique($stocksIds);
+        return $stocksIds;
     }
 }

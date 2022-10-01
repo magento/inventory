@@ -17,19 +17,19 @@ use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\Framework\Model\AbstractModel as StockItem;
-use Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin;
+use Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
 /**
  * Unit test for
- * Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateSourceItemAtLegacyStockItemSavePlugin class.
+ * Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct class.
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
+class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
 {
     /**
      * @var MockObject
@@ -62,7 +62,7 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
     private $getLegacyStockItemMock;
 
     /**
-     * @var UpdateSourceItemAtLegacyStockItemSavePlugin
+     * @var UpdateLegacyStockStatusForConfigurableProduct
      */
     private $plugin;
 
@@ -85,7 +85,7 @@ class UpdateSourceItemAtLegacyStockItemSavePluginTest extends TestCase
         $this->getLegacyStockItemMock = $this->getMockBuilder(GetLegacyStockItem::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->plugin = new UpdateSourceItemAtLegacyStockItemSavePlugin(
+        $this->plugin = new UpdateLegacyStockStatusForConfigurableProduct(
             $this->getProductTypeByIdMock,
             $this->setDataToLegacyStockStatusMock,
             $this->getSkusByProductIdsMock,

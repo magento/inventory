@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="TwentyTwoSourcesAssignedToTheStockByAdminUserTest">
+        <annotations>
+            <stories value="TwentyTwo Sources assigned to the Stock by Admin user"/>
+            <title value="TwentyTwo Sources assigned to the Stock by Admin user"/>
+            <description value="TwentyTwo Sources assigned to the Stock by Admin user"/>
+            <testCaseId value="AC-1857"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteStockWithTwentyTwoAssignedSourcesActionGroup" stepKey="deleteCreatedStockWith22AssignedSources">
+                <argument name="stockName" value="$$createStock.stock[name]$$"/>
+                <argument name="sourceName1" value="$$createTestSource1.source[name]$$" />
+                <argument name="sourceName2" value="$$createTestSource2.source[name]$$" />
+                <argument name="sourceName3" value="$$createTestSource3.source[name]$$" />
+                <argument name="sourceName4" value="$$createTestSource4.source[name]$$" />
+                <argument name="sourceName5" value="$$createTestSource5.source[name]$$" />
+                <argument name="sourceName6" value="$$createTestSource6.source[name]$$" />
+                <argument name="sourceName7" value="$$createTestSource7.source[name]$$" />
+                <argument name="sourceName8" value="$$createTestSource8.source[name]$$" />
+                <argument name="sourceName9" value="$$createTestSource9.source[name]$$" />
+                <argument name="sourceName10" value="$$createTestSource10.source[name]$$" />
+                <argument name="sourceName11" value="$$createTestSource11.source[name]$$" />
+                <argument name="sourceName12" value="$$createTestSource12.source[name]$$" />
+                <argument name="sourceName13" value="$$createTestSource13.source[name]$$" />
+                <argument name="sourceName14" value="$$createTestSource14.source[name]$$" />
+                <argument name="sourceName15" value="$$createTestSource15.source[name]$$" />
+                <argument name="sourceName16" value="$$createTestSource16.source[name]$$" />
+                <argument name="sourceName17" value="$$createTestSource17.source[name]$$" />
+                <argument name="sourceName18" value="$$createTestSource18.source[name]$$" />
+                <argument name="sourceName19" value="$$createTestSource19.source[name]$$" />
+                <argument name="sourceName20" value="$$createTestSource20.source[name]$$" />
+                <argument name="sourceName21" value="$$createTestSource21.source[name]$$" />
+                <argument name="sourceName22" value="$$createTestSource22.source[name]$$" />
+            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the stock from UI and then assign the sources -->
+        <createData entity="BasicMsiStock1" stepKey="createStock"/>
+
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <!-- Step2 Create the 22 sources through API -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+        <createData entity="FullSource1" stepKey="createTestSource2"/>
+        <createData entity="FullSource1" stepKey="createTestSource3"/>
+        <createData entity="FullSource1" stepKey="createTestSource4"/>
+        <createData entity="FullSource1" stepKey="createTestSource5"/>
+        <createData entity="FullSource1" stepKey="createTestSource6"/>
+        <createData entity="FullSource1" stepKey="createTestSource7"/>
+        <createData entity="FullSource1" stepKey="createTestSource8"/>
+        <createData entity="FullSource1" stepKey="createTestSource9"/>
+        <createData entity="FullSource1" stepKey="createTestSource10"/>
+        <createData entity="FullSource1" stepKey="createTestSource11"/>
+        <createData entity="FullSource1" stepKey="createTestSource12"/>
+        <createData entity="FullSource1" stepKey="createTestSource13"/>
+        <createData entity="FullSource1" stepKey="createTestSource14"/>
+        <createData entity="FullSource1" stepKey="createTestSource15"/>
+        <createData entity="FullSource1" stepKey="createTestSource16"/>
+        <createData entity="FullSource1" stepKey="createTestSource17"/>
+        <createData entity="FullSource1" stepKey="createTestSource18"/>
+        <createData entity="FullSource1" stepKey="createTestSource19"/>
+        <createData entity="FullSource1" stepKey="createTestSource20"/>
+        <createData entity="FullSource1" stepKey="createTestSource21"/>
+        <createData entity="FullSource1" stepKey="createTestSource22"/>
+
+        <!-- Step3 Assign 22 Sources to the created Stock  -->
+        <actionGroup ref="AdminEditStockActionGroup" stepKey="adminEditCreatedStock">
+            <argument name="stockName" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource1ToStock1">
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource2ToStock1">
+            <argument name="sourceName" value="$$createTestSource2.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource3ToStock1">
+            <argument name="sourceName" value="$$createTestSource3.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource4ToStock1">
+            <argument name="sourceName" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource5ToStock1">
+            <argument name="sourceName" value="$$createTestSource5.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource6ToStock1">
+            <argument name="sourceName" value="$$createTestSource6.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource7ToStock1">
+            <argument name="sourceName" value="$$createTestSource7.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource8ToStock1">
+            <argument name="sourceName" value="$$createTestSource8.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource9ToStock1">
+            <argument name="sourceName" value="$$createTestSource9.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource10ToStock1">
+            <argument name="sourceName" value="$$createTestSource10.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource11ToStock1">
+            <argument name="sourceName" value="$$createTestSource11.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource12ToStock1">
+            <argument name="sourceName" value="$$createTestSource12.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource13ToStock1">
+            <argument name="sourceName" value="$$createTestSource13.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource14ToStock1">
+            <argument name="sourceName" value="$$createTestSource14.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource15ToStock1">
+            <argument name="sourceName" value="$$createTestSource15.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource16ToStock1">
+            <argument name="sourceName" value="$$createTestSource16.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource17ToStock1">
+            <argument name="sourceName" value="$$createTestSource17.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource18ToStock1">
+            <argument name="sourceName" value="$$createTestSource18.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource19ToStock1">
+            <argument name="sourceName" value="$$createTestSource19.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource20ToStock1">
+            <argument name="sourceName" value="$$createTestSource20.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource21ToStock1">
+            <argument name="sourceName" value="$$createTestSource21.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource22ToStock1">
+            <argument name="sourceName" value="$$createTestSource22.source[name]$$"/>
+        </actionGroup>
+
+        <waitForPageLoad time="30" stepKey="waitForTheSourcesAssigned"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="AssertTheStockIsSaved" />
+
+        <!-- Step4 Verify the assigned sources in the grid -->
+        <actionGroup ref="AdminVerifyAssignedSourcesTwentyTwoSourcesInStockGridActionGroup" stepKey="verifyAssignedSourcesInStockGrid">
+            <argument name="stockName" value="$$createStock.stock[name]$$"/>
+            <argument name="sourceName1" value="$$createTestSource1.source[name]$$"/>
+            <argument name="sourceName2" value="$$createTestSource2.source[name]$$"/>
+            <argument name="sourceName3" value="$$createTestSource3.source[name]$$"/>
+            <argument name="sourceName4" value="$$createTestSource4.source[name]$$"/>
+            <argument name="sourceName5" value="$$createTestSource5.source[name]$$"/>
+            <argument name="sourceName6" value="$$createTestSource6.source[name]$$"/>
+            <argument name="sourceName7" value="$$createTestSource7.source[name]$$"/>
+            <argument name="sourceName8" value="$$createTestSource8.source[name]$$"/>
+            <argument name="sourceName9" value="$$createTestSource9.source[name]$$"/>
+            <argument name="sourceName10" value="$$createTestSource10.source[name]$$"/>
+            <argument name="sourceName11" value="$$createTestSource11.source[name]$$"/>
+            <argument name="sourceName12" value="$$createTestSource12.source[name]$$"/>
+            <argument name="sourceName13" value="$$createTestSource13.source[name]$$"/>
+            <argument name="sourceName14" value="$$createTestSource14.source[name]$$"/>
+            <argument name="sourceName15" value="$$createTestSource15.source[name]$$"/>
+            <argument name="sourceName16" value="$$createTestSource16.source[name]$$"/>
+            <argument name="sourceName17" value="$$createTestSource17.source[name]$$"/>
+            <argument name="sourceName18" value="$$createTestSource18.source[name]$$"/>
+            <argument name="sourceName19" value="$$createTestSource19.source[name]$$"/>
+            <argument name="sourceName20" value="$$createTestSource20.source[name]$$"/>
+            <argument name="sourceName21" value="$$createTestSource21.source[name]$$"/>
+            <argument name="sourceName22" value="$$createTestSource22.source[name]$$"/>
+        </actionGroup>
+    </test>
+</tests>

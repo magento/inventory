@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminCreateShipmentPostOrderActionGroup">
+        <annotations>
+            <description>Admin Create New Shipment post creating order.</description>
+        </annotations>
+        <arguments>
+            <argument name="productName" type="string"/>
+        </arguments>
+        <grabTextFrom selector="{{AdminOrdersGridSection.orderedNumber}}" stepKey="orderNumberDetails"/>
+        <seeElement selector="{{AdminOrdersGridSection.orderStatus('Pending')}}" stepKey="verifyOrderStatusAsPending"/>
+        <click selector="{{AdminOrdersGridSection.shipOrder}}" stepKey="clickOnShipOrder"/>
+        <waitForPageLoad stepKey="waitForNewShipmentPageToLoad"/>
+        <grabTextFrom selector="{{AdminOrdersGridSection.shipmentProduct}}" stepKey="ShipmentProductName"/>
+        <grabAttributeFrom selector="{{AdminOrdersGridSection.shipmentQuantity}}" userInput="value" stepKey="ShipmentProductQty"/>
+        <assertEquals message="Verifies if the Shipping and the Billing address are same" stepKey="assertsTheProductInShipment">
+            <expectedResult type="string">{{productName}}</expectedResult>
+            <actualResult type="string">$ShipmentProductName</actualResult>
+        </assertEquals>
+        <assertEquals message="Verifies the ordered product name" stepKey="assertsShipmentProductQty">
+            <expectedResult type="string">100</expectedResult>
+            <actualResult type="string">$ShipmentProductQty</actualResult>
+        </assertEquals>
+        <click selector="{{AdminOrdersGridSection.buttonSubmitShipment}}" stepKey="clickOnSubmitShipment"/>
+        <waitForPageLoad stepKey="waitForShipmentToBeSubmitted"/>
+        <seeElement selector="{{AdminOrdersGridSection.shippingSuccess}}" stepKey="verifyTheSuccessfulShipping"/>
+        <seeElement selector="{{AdminOrdersGridSection.orderStatus('Processing')}}" stepKey="verifyOrderStatusAsProcessing"/>
+    </actionGroup>
+</actionGroups>

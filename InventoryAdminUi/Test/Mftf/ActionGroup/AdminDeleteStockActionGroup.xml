@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminDeleteStockActionGroup">
+        <annotations>
+            <description>Admin deletes the created stock</description>
+        </annotations>
+        <arguments>
+            <argument name="stockName" defaultValue="Test Stock 1" type="string"/>
+            <argument name="websiteName" defaultValue="Main Website" type="string"/>
+        </arguments>
+        <amOnPage url="{{AdminStockPage.url}}" stepKey="navigateToManageStockPage"/>
+        <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockName" />
+        <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButton" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad" />
+        <click selector="{{AdminManageStockGridBody.editStock(stockName)}}" stepKey="clickEditStockButton" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad1" />
+        <unselectOption userInput="{{websiteName}}" selector="{{AdminEditStockGeneralSection.websites}}" stepKey="unselectWebsite"/>
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteAssignedSources}}" dependentSelector="{{AdminEditStockSourcesSection.deleteAssignedSources}}" visible="true" stepKey="clickDeleteAssignedSources" />
+        <click selector="{{AdminEditStockGeneralSection.saveAndContinueDropdown}}" stepKey="clickSaveAndContinueDropdown" />
+        <click selector="{{AdminEditStockGeneralSection.saveAndCloseButton}}" stepKey="clickSaveAndClose" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostEditingTheSources" />
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="verifyTheStockSavedSuccessfully"/>
+        <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockNameForDelete" />
+        <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButtonForDelete" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoadForDelete" />
+        <click selector="{{AdminManageStockGridBody.editStock(stockName)}}" stepKey="clickEditStockButtonForDelete" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad1ForDelete" />
+        <click selector="{{AdminEditStockSourcesSection.deleteStock}}" stepKey="deleteTheStock" />
+        <waitForPageLoad stepKey="waitForPopupToDelete" />
+        <click selector="{{AdminEditStockSourcesSection.editStockPopUpOK}}" stepKey="acceptPopupToDelete"/>
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostDeletingTheStock" />
+        <seeElement selector="{{AdminManageStockGridBody.stockDeleteSuccessfulMessage}}" stepKey="verifyTheStockDeletedSuccessfully"/>
+    </actionGroup>
+</actionGroups>

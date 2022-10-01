@@ -21,7 +21,7 @@ use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
  * Class provides after Plugin on Magento\CatalogInventory\Model\ResourceModel\Stock\Item::save
  * to update legacy stock status for configurable product
  */
-class UpdateSourceItemAtLegacyStockItemSavePlugin
+class UpdateLegacyStockStatusForConfigurableProduct
 {
     /**
      * @var GetProductTypeById
@@ -83,12 +83,12 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param ItemResourceModel $subject
      * @param ItemResourceModel $result
      * @param StockItem $stockItem
-     * @return void
+     * @return ItemResourceModel
      * @throws Exception
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(ItemResourceModel $subject, ItemResourceModel $result, StockItem $stockItem): void
+    public function afterSave(ItemResourceModel $subject, ItemResourceModel $result, StockItem $stockItem)
     {
         if ($stockItem->getIsInStock() &&
             $this->getProductTypeById->execute($stockItem->getProductId()) === Configurable::TYPE_CODE
@@ -106,6 +106,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
                 );
             }
         }
+
+        return $result;
     }
 
     /**

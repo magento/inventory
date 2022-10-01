@@ -13,11 +13,13 @@
                     <resource id="Magento_InventoryApi::inventory" title="Inventory" translate="title" sortOrder="10">
                         <resource id="Magento_InventoryApi::source" title="Sources" translate="title" sortOrder="10">
                             <resource id="Magento_InventoryApi::source_edit" title="Edit Sources" translate="title" sortOrder="10" />
+                            <resource id="Magento_InventoryApi::ship_source_selection" title="Shipping Source Selection" translate="title" sortOrder="20" />
                         </resource>
                         <resource id="Magento_InventoryApi::stock" title="Stocks" translate="title" sortOrder="20">
                             <resource id="Magento_InventoryApi::stock_edit" title="Edit Stocks" translate="title" sortOrder="10" />
                             <resource id="Magento_InventoryApi::stock_delete" title="Delete Stocks" translate="title" sortOrder="20" />
                             <resource id="Magento_InventoryApi::stock_source_link" title="Source to Stock Assigning" translate="title" sortOrder="30" />
+                            <resource id="Magento_InventoryApi::stock_source_item_assign" title="Source Item Assigning" translate="title" sortOrder="40" />
                         </resource>
                     </resource>
                 </resource>
