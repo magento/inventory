@@ -2,18 +2,19 @@
     "name": "magento/module-inventory-quote-graph-ql",
     "description": "N/A",
     "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "version": "1.0.1",
     "require": {
         "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-quote": "*",
         "magento/module-quote-graph-ql": "*",
-        "magento/module-inventory-catalog": "*",
-        "magento/module-inventory-sales-api": "*"
+        "magento/module-inventory-catalog": "1.2.*",
+        "magento/module-inventory-sales-api": "1.2.*"
     },
-    "license": [
-        "OSL-3.0",
-        "AFL-3.0"
-    ],
     "autoload": {
         "files": [
             "registration.php"
@@ -23,3 +24,4 @@
         }
     }
 }
+
