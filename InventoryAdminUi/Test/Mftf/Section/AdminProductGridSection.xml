@@ -41,5 +41,6 @@
         <element name="qtyPerSourceOnHover" type="block" selector="//div[contains(text(),'Quantity per Source:')]/..//strong[contains(text(),'{{var1}}')]/..//span[contains(text(),'{{var2}}')]" parameterized="true" />
         <element name="scalableQty" type="text" selector="//span[contains(@data-bind,'salableQuantityData().qty')]"/>
         <element name="btnAdvancedInventory" type="button" selector="//button//span[contains(text(),'Advanced Inventory')]"/>
+        <element name="changeDefaultQuantity" type="button" selector="//td[@data-index='name']//span[contains(text(),'Default')]/../../..//div[@data-index='quantity']/..//input[@class='admin__control-text']"/>
     </section>
 </sections>
