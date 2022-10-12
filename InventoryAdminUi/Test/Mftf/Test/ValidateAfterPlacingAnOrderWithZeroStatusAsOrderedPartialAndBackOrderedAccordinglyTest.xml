@@ -48,7 +48,7 @@
            </createData>
 
           <!--Create Bundle product -->
-          <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
+           <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
         </before>
 
         <!-- select allow Backorder below 0 and notify customer-->
