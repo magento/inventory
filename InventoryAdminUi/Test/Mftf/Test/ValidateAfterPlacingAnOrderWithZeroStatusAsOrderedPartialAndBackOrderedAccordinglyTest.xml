@@ -31,24 +31,24 @@
           <!-- Create source and stock-->
             <createData entity="FullSource1" stepKey="source"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
-           <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
               <requiredEntity createDataKey="stock"/>
               <requiredEntity createDataKey="source"/>
-           </createData>
+            </createData>
 
           <!--Create 3 product.-->
-           <createData entity="_defaultProduct" stepKey="product1">
-              <requiredEntity createDataKey="category"/>
-           </createData>
-           <createData entity="SimpleProduct2" stepKey="product2">
-              <requiredEntity createDataKey="category"/>
-           </createData>
-           <createData entity="SimpleProduct3" stepKey="product3">
-              <requiredEntity createDataKey="category"/>
-           </createData>
+            <createData entity="_defaultProduct" stepKey="product1">
+               <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct2" stepKey="product2">
+               <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct3" stepKey="product3">
+               <requiredEntity createDataKey="category"/>
+            </createData>
 
           <!--Create Bundle product -->
-           <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
+            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
         </before>
 
         <!-- select allow Backorder below 0 and notify customer-->
