@@ -63,20 +63,20 @@
         <waitForPageLoad stepKey="waitForPageToLoad"/>
         <actionGroup ref="AdminChangeDefaultQuantityOnProductEditPageActionGroup" stepKey="changeTheProductQuantity"/>
         <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty">
-                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
-                <argument name="sourceQty" value="0"/>
+            <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            <argument name="sourceQty" value="0"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
         <!-- Login as customer -->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
-                <argument name="Customer" value="$$customer$$"/>
+            <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
         <!-- Add product to shopping cart -->
         <amOnPage url="{{StorefrontProductPage.url($product.custom_attributes[url_key]$)}}" stepKey="navigateToToPDP"/>
         <actionGroup ref="StorefrontAddProductToCartWithQtyActionGroup" stepKey="addProductToCart">
-                 <argument name="productQty" value="1"/>
+            <argument name="productQty" value="1"/>
         </actionGroup>
 
         <!--Place order.-->
