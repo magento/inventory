@@ -21,29 +21,43 @@
 
         <before>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
-        </before>
-
-        <!-- Create source and stock-->
-            <createData entity="FullSource1" stepKey="source"/>
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
-            <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
-                <requiredEntity createDataKey="stock"/>
-                <requiredEntity createDataKey="source"/>
-            </createData>
-
-        <!-- select allow Backorder below 0 and notify customer-->
-            <comment userInput="Fill config 'Backorders'." stepKey="fillConfigComment"/>
-            <magentoCLI command="config:set cataloginventory/item_options/backorders 2" stepKey="fillBackordersConfigValue"/>
-            <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
-
-        <!-- Create category, product and customer-->
+          <!-- Create category, product and customer-->
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
-                <requiredEntity createDataKey="category"/>
+              <requiredEntity createDataKey="category"/>
             </createData>
             <createData entity="MsiCustomer1" stepKey="customer"/>
+
+          <!-- Create source and stock-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
+           <createData entity="SourceStockLinked1" stepKey="sourceStockLink">
+              <requiredEntity createDataKey="stock"/>
+              <requiredEntity createDataKey="source"/>
+           </createData>
+
+          <!--Create 3 product.-->
+           <createData entity="_defaultProduct" stepKey="product1">
+              <requiredEntity createDataKey="category"/>
+           </createData>
+           <createData entity="SimpleProduct2" stepKey="product2">
+              <requiredEntity createDataKey="category"/>
+           </createData>
+           <createData entity="SimpleProduct3" stepKey="product3">
+              <requiredEntity createDataKey="category"/>
+           </createData>
+
+          <!--Create Bundle product -->
+          <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
+
+        </before>
+
+        <!-- select allow Backorder below 0 and notify customer-->
+        <comment userInput="Fill config 'Backorders'." stepKey="fillConfigComment"/>
+        <magentoCLI command="config:set cataloginventory/item_options/backorders 2" stepKey="fillBackordersConfigValue"/>
+        <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
 
          <!--Assign source to product, and save the product-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
@@ -71,7 +85,6 @@
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextPaymentPage"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrder"/>
         <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLink"/>
-        <comment userInput="BIC workaround" stepKey="orderNumber"/>
         <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId"/>
 
         <!--Check placed order in admin grid and validate the product.-->
@@ -82,17 +95,6 @@
             <argument name="product_name" value="$$product.name$$"/>
             <argument name="status" value="Backordered"/>
         </actionGroup>
-
-        <!--Create 3 product.-->
-             <createData entity="_defaultProduct" stepKey="product1">
-                <requiredEntity createDataKey="category"/>
-             </createData>
-             <createData entity="SimpleProduct2" stepKey="product2">
-                <requiredEntity createDataKey="category"/>
-             </createData>
-             <createData entity="SimpleProduct3" stepKey="product3">
-                <requiredEntity createDataKey="category"/>
-             </createData>
 
         <!--Assign source to all 3 product, and save the product-->
         <amOnPage url="{{AdminProductEditPage.url($$product1.id$$)}}" stepKey="openProduct1EditPage"/>
@@ -119,9 +121,6 @@
             <argument name="sourceQty" value="2"/>
         </actionGroup>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct3"/>
-
-        <!--Create Bundle product -->
-            <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
 
         <!--Search for the Created Bundle product -->
         <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBundleProductPage">
@@ -166,7 +165,6 @@
         <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextPaymentPageAgain"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickOnPlaceOrderAgain"/>
         <actionGroup ref="StorefrontClickOrderLinkFromCheckoutSuccessPageActionGroup" stepKey="clickOrderLinkAgain"/>
-        <comment userInput="BIC workaround" stepKey="orderNumber1"/>
         <grabFromCurrentUrl regex="~/order_id/(\d+)/~" stepKey="orderId1"/>
 
         <!--Check placed order in admin grid and validate the all product status .-->
