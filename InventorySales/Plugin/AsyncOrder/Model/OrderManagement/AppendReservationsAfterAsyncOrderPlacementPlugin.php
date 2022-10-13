@@ -164,17 +164,20 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      *
      * @param OrderManagementInterface $subject
      * @param callable $proceed
+     * @param Quote $asyncQuote
      * @param OrderInterface $order
+     * @param string $email
+     * @param string $cartId
      * @return OrderInterface
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterPlaceInitialOrder(
+    public function aroundPlaceInitialOrder(
         OrderManagement $subject,
-        OrderInterface $result,
-        Quote $quote,
-        $email,
-        $cartId
+        callable $proceed,
+        Quote $asyncQuote,
+        string $email,
+        string $cartId
     ): OrderInterface {
         if ($this->scopeConfig->isSetFlag(AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             $itemsById = $itemsBySku = $itemsToSell = [];
@@ -211,6 +214,8 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
 
             $this->checkItemsQuantity->execute($itemsBySku, $stockId);
 
+            $result = $this->createOrder($proceed, $asyncQuote, $email, $cartId);
+
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
                 'data' => ['objectIncrementId' => (string)$result->getIncrementId()]
@@ -231,27 +236,10 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             ]);
 
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
+
+        } else {
+            $result = $this->createOrder($proceed, $asyncQuote, $email, $cartId);
         }
-//        try {
-//            $order = $proceed($order);
-//        } catch (\Exception $e) {
-//            //add compensation
-//            foreach ($itemsToSell as $item) {
-//                $item->setQuantity(-(float)$item->getQuantity());
-//            }
-//
-//            /** @var SalesEventInterface $salesEvent */
-//            $salesEvent = $this->salesEventFactory->create([
-//                'type' => SalesEventInterface::EVENT_ORDER_PLACE_FAILED,
-//                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-//                'objectId' => (string)$order->getEntityId()
-//            ]);
-//            $salesEvent->setExtensionAttributes($salesEventExtension);
-//
-//            $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
-//
-//            throw $e;
-//        }
         return $result;
     }
 
@@ -283,5 +271,35 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             $orderItems[$itemId] = $this->quoteItemToOrderItem->convert($quoteItem, ['parent_item' => $parentItem]);
         }
         return array_values($orderItems);
+    }
+
+    /**
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function createOrder($proceed, $quote, $email, $cartId)
+    {
+        try {
+            $order = $proceed($quote, $email, $cartId);
+        } catch (\Exception $e) {
+            //add compensation
+            foreach ($itemsToSell as $item) {
+                $item->setQuantity(-(float)$item->getQuantity());
+            }
+
+            /** @var SalesEventInterface $salesEvent */
+            $salesEvent = $this->salesEventFactory->create([
+                'type' => SalesEventInterface::EVENT_ORDER_PLACE_FAILED,
+                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+                'objectId' => (string)$order->getEntityId()
+            ]);
+            $salesEvent->setExtensionAttributes($salesEventExtension);
+
+            $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
+
+            throw $e;
+        }
+        return $order;
     }
 }
