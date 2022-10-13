@@ -11,7 +11,7 @@
     <test name="BackorderNotificationShouldNotBeDisplayedWhenManageStockIsSetToNoTest">
         <annotations>
             <stories value="CatalogInventory stock option"/>
-            <title value="Backorder notification should not be displayed when manage stock is set to No"/>
+            <title value="Backorder notification should not be displayed when manage stock is set to No."/>
             <description value="Backorder notification should not be displayed when manage stock is set to No"/>
             <testCaseId value="AC-6584"/>
             <severity value="CRITICAL"/>
