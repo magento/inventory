@@ -17,7 +17,8 @@
         "magento/module-sales-inventory": "*",
         "magento/module-store": "*",
         "magento/module-sales": "*",
-        "magento/module-async-order": "*"
+        "magento/module-async-order": "*",
+        "magento/module-quote": "*"
     },
     "suggest": {
         "magento/module-inventory-catalog": "*"

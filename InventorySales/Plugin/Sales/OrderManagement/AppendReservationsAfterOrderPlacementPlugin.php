@@ -214,10 +214,10 @@ class AppendReservationsAfterOrderPlacementPlugin
             ]);
 
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
-            $this->createOrder($proceed, $order);
+            $this->createOrder($proceed, $order, $itemsToSell, $salesChannel, $salesEventExtension);
 
         } else {
-            $this->createOrder($proceed, $order);
+            $order = $proceed($order);
         }
         return $order;
     }
@@ -227,7 +227,7 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function createOrder($proceed, $order)
+    private function createOrder($proceed, $order, $itemsToSell, $salesChannel, $salesEventExtension)
     {
         try {
             $order = $proceed($order);

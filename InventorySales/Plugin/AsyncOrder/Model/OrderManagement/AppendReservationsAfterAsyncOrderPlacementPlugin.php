@@ -1,4 +1,9 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
 
@@ -98,7 +103,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
     /**
      * @var ToOrderItemConverter
      */
-    protected $quoteItemToOrderItem;
+    private $quoteItemToOrderItem;
 
     /**
      * @var ScopeConfigInterface
@@ -166,7 +171,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      * @param callable $proceed
      * @param Quote $asyncQuote
      * @param OrderInterface $order
-     * @param string $email
+     * @param string|null $email
      * @param string $cartId
      * @return OrderInterface
      * @throws \Exception
@@ -176,7 +181,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         OrderManagement $subject,
         callable $proceed,
         Quote $asyncQuote,
-        string $email,
+        string $email = null,
         string $cartId
     ): OrderInterface {
         if ($this->scopeConfig->isSetFlag(AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
@@ -214,7 +219,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
 
             $this->checkItemsQuantity->execute($itemsBySku, $stockId);
 
-            $result = $this->createOrder($proceed, $asyncQuote, $email, $cartId);
+            $result = $this->createOrder($proceed, $asyncQuote, $email, $cartId, $itemsToSell, $salesChannel, $salesEventExtension);
 
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
@@ -238,7 +243,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
 
         } else {
-            $result = $this->createOrder($proceed, $asyncQuote, $email, $cartId);
+            $result = $proceed($asyncQuote, $email, $cartId);
         }
         return $result;
     }
@@ -278,7 +283,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function createOrder($proceed, $quote, $email, $cartId)
+    private function createOrder($proceed, $quote, $email, $cartId, $itemsToSell, $salesChannel, $salesEventExtension)
     {
         try {
             $order = $proceed($quote, $email, $cartId);
