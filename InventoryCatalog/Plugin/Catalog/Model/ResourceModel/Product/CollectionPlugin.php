@@ -11,6 +11,7 @@ use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Module\Manager;
 
 /**
  * Class Collection plugin applying sort order
@@ -30,17 +31,25 @@ class CollectionPlugin
     private $categoryHelper;
 
     /**
+     * @var Manager
+     */
+    private $moduleManager;
+
+    /**
      * Collection plugin constructor
      *
      * @param StockConfigurationInterface $stockConfiguration
      * @param Data $categoryHelper
+     * @param Manager $moduleManager
      */
     public function __construct(
         StockConfigurationInterface $stockConfiguration,
-        Data $categoryHelper
+        Data $categoryHelper,
+        Manager $moduleManager
     ) {
         $this->stockConfiguration = $stockConfiguration;
         $this->categoryHelper = $categoryHelper;
+        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -76,7 +85,8 @@ class CollectionPlugin
         if (!$collection->getFlag('is_sorted_by_oos')) {
             $collection->setFlag('is_sorted_by_oos', true);
 
-            if ($this->isOutOfStockBottom()) {
+            if ($this->isOutOfStockBottom()
+                && $this->moduleManager->isEnabled('Magento_InventoryElasticsearch')) {
                 $collection->setOrder('is_out_of_stock', Select::SQL_DESC);
             }
         }
