@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
-use Magento\AsyncOrder\Model\OrderManagement;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
@@ -164,7 +163,8 @@ class AppendReservationsAfterOrderPlacementPlugin
         callable $proceed,
         OrderInterface $order
     ): OrderInterface {
-        if (!$this->deploymentConfig->get(OrderManagement::ASYNC_ORDER_OPTION_PATH)
+        //TODO: Needs better way to check Async Order Config without introducing Dependency on EE
+        if (!$this->deploymentConfig->get('checkout/async')
             || !$this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             foreach ($order->getItems() as $item) {
