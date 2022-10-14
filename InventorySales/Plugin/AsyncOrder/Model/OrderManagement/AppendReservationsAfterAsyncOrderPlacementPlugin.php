@@ -170,7 +170,6 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      * @param OrderManagementInterface $subject
      * @param callable $proceed
      * @param Quote $asyncQuote
-     * @param OrderInterface $order
      * @param string|null $email
      * @param string $cartId
      * @return OrderInterface
@@ -184,7 +183,9 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         string $email = null,
         string $cartId
     ): OrderInterface {
-        if ($this->scopeConfig->isSetFlag(AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
+        if ($this->scopeConfig->isSetFlag(
+            AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
+        )) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             if (preg_match("/[a-z]/i", $cartId)) {
                 $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
@@ -219,7 +220,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
 
             $this->checkItemsQuantity->execute($itemsBySku, $stockId);
 
-            $result = $this->createOrder($proceed, $asyncQuote, $email, $cartId, $itemsToSell, $salesChannel, $salesEventExtension);
+            $result = $proceed($asyncQuote, $email, $cartId);
 
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
@@ -241,7 +242,6 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             ]);
 
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
-
         } else {
             $result = $proceed($asyncQuote, $email, $cartId);
         }
@@ -276,35 +276,5 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             $orderItems[$itemId] = $this->quoteItemToOrderItem->convert($quoteItem, ['parent_item' => $parentItem]);
         }
         return array_values($orderItems);
-    }
-
-    /**
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function createOrder($proceed, $quote, $email, $cartId, $itemsToSell, $salesChannel, $salesEventExtension)
-    {
-        try {
-            $order = $proceed($quote, $email, $cartId);
-        } catch (\Exception $e) {
-            //add compensation
-            foreach ($itemsToSell as $item) {
-                $item->setQuantity(-(float)$item->getQuantity());
-            }
-
-            /** @var SalesEventInterface $salesEvent */
-            $salesEvent = $this->salesEventFactory->create([
-                'type' => SalesEventInterface::EVENT_ORDER_PLACE_FAILED,
-                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => (string)$order->getEntityId()
-            ]);
-            $salesEvent->setExtensionAttributes($salesEventExtension);
-
-            $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
-
-            throw $e;
-        }
-        return $order;
     }
 }
