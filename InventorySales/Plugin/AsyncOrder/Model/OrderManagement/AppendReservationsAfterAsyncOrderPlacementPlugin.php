@@ -187,7 +187,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
         )) {
             $itemsById = $itemsBySku = $itemsToSell = [];
-            if (preg_match("/[a-z]/i", $cartId)) {
+            if (ctype_alnum($cartId)) {
                 $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
                 $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
             } else {
