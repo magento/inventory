@@ -10,7 +10,7 @@ namespace Magento\InventoryCatalog\Model\ResourceModel;
 interface OutOfStockAttributeProviderInterface
 {
     /**
-     * Check, if elasticsearch attribute mapper `is_out_of_stock` exists
+     * Check, if `is_out_of_stock` attribute mapper exists
      *
      * @return bool
      */
