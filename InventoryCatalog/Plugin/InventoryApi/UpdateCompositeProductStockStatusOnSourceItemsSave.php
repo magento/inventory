@@ -5,63 +5,52 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Plugin\InventoryApi;
+namespace Magento\InventoryCatalog\Plugin\InventoryApi;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
-use Magento\ConfigurableProduct\Model\Inventory\ChangeParentStockStatus;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Update configurable product parent stock status
- *
- * Update product status based on the available stock of the child product
+ * Update parent products stock status on children products source items update
  */
-class UpdateConfigurableProductParentStockStatus
+class UpdateCompositeProductStockStatusOnSourceItemsSave
 {
-    /**
-     * @var ChangeParentStockStatus
-     */
-    private $changeParentStockStatus;
-
     /**
      * @var GetProductIdsBySkusInterface
      */
-    private $getProductIdsBySkus;
+    private GetProductIdsBySkusInterface $getProductIdsBySkus;
 
     /**
      * @var IsSingleSourceModeInterface
      */
-    private $isSingleSourceMode;
+    private IsSingleSourceModeInterface $isSingleSourceMode;
 
     /**
-     * @var StoreManagerInterface
+     * @var CompositeProductStockStatusProcessorInterface
      */
-    private $storeManager;
+    private CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor;
 
     /**
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
-     * @param ChangeParentStockStatus $changeParentStockStatus
      * @param IsSingleSourceModeInterface $isSingleSourceMode
-     * @param StoreManagerInterface $storeManager
+     * @param CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor
      */
     public function __construct(
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        ChangeParentStockStatus $changeParentStockStatus,
         IsSingleSourceModeInterface $isSingleSourceMode,
-        StoreManagerInterface $storeManager
+        CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor
     ) {
         $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->changeParentStockStatus = $changeParentStockStatus;
         $this->isSingleSourceMode = $isSingleSourceMode;
-        $this->storeManager = $storeManager;
+        $this->compositeProductStockStatusProcessor = $compositeProductStockStatusProcessor;
     }
 
     /**
-     *  Make configurable product out of stock if all its children out of stock
+     * Update parent products stock status on children products source items update
      *
      * @param SourceItemsSaveInterface $subject
      * @param void $result
@@ -71,18 +60,18 @@ class UpdateConfigurableProductParentStockStatus
      */
     public function afterExecute(SourceItemsSaveInterface $subject, $result, array $sourceItems): void
     {
-        $productIds = [];
-        if ($this->isSingleSourceMode->execute() && $this->storeManager->hasSingleStore()) {
+        if ($this->isSingleSourceMode->execute()) {
+            $productIds = [];
             foreach ($sourceItems as $sourceItem) {
                 $sku = $sourceItem->getSku();
                 try {
                     $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
                 } catch (NoSuchEntityException $e) {
-                    $productIds = [];
+                    continue;
                 }
             }
             if ($productIds) {
-                $this->changeParentStockStatus->execute($productIds);
+                $this->compositeProductStockStatusProcessor->execute($productIds);
             }
         }
     }

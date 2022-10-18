@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 use Magento\Catalog\Model\Product\Type;
 
-\Magento\TestFramework\Helper\Bootstrap::getInstance()->reinitialize();
-
 require __DIR__ . '/../../../../../../dev/tests/integration/testsuite/Magento/Catalog/_files/products.php';
 require __DIR__ . '/product_simple_out_of_stock.php';
 
