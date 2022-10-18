@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
-use Magento\InventoryCatalog\Model\ResourceModel\OutOfStockAttributeProviderInterface;
+use Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface;
 
 class OutOfStockAttributeProvider implements OutOfStockAttributeProviderInterface
 {

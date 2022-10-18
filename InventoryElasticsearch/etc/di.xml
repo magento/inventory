@@ -6,7 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\InventoryCatalog\Model\ResourceModel\OutOfStockAttributeProviderInterface"
+    <preference for="Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface"
                 type="Magento\InventoryElasticsearch\Model\ResourceModel\OutOfStockAttributeProvider"/>
     <type name="Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider">
         <plugin name="stockedProductsFilterPlugin" disabled="true"/>

@@ -11,7 +11,7 @@ use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\DB\Select;
-use Magento\InventoryCatalog\Model\ResourceModel\OutOfStockAttributeProviderInterface;
+use Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface;
 
 /**
  * Class Collection plugin applying sort order

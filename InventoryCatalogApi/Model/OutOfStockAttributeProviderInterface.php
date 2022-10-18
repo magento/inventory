@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryCatalog\Model\ResourceModel;
+namespace Magento\InventoryCatalogApi\Model;
 
 interface OutOfStockAttributeProviderInterface
 {

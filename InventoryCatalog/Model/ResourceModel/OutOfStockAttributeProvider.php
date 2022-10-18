@@ -7,9 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\ResourceModel;
 
+use Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface;
+
 class OutOfStockAttributeProvider implements OutOfStockAttributeProviderInterface
 {
-
     /**
      * @inheritDoc
      */
