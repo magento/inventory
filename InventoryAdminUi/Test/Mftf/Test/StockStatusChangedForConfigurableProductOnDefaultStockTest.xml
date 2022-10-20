@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StockStatusChangedForConfigurableProductOnDefaultStockTest">
+        <annotations>
+            <stories value="Stock status changed for Configured product on Default stock"/>
+            <title value="Stock status changed for Configured product on Default stock"/>
+            <description value="Stock status changed for Configured product on Default stock"/>
+            <testCaseId value="AC-6565"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <magentoCLI stepKey="setDisplayOutOfStockProductAsNo" command="config:set cataloginventory/options/show_out_of_stock 0" />
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+        </before>
+        <after>
+            <magentoCLI stepKey="setDisplayOutOfStockProductAsYes" command="config:set cataloginventory/options/show_out_of_stock 1" />
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+            <deleteData createDataKey="createConfigurableProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
+                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+            </actionGroup>
+
+            <!-- Delete the Created Color attribute-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute3.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteWhiteColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute1.name}}"/>
+            </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the SubCategory through API -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step3 Create New Source -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+
+        <!-- Step4 Create the stock without selecting the website, and assign the sources -->
+        <createData entity="BasicMsiStock1" stepKey="createStock"/>
+
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <actionGroup ref="AdminEditStockActionGroup" stepKey="adminEditCreatedStock">
+            <argument name="stockName" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource1ToStock1">
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+
+        <waitForPageLoad time="30" stepKey="waitForTheSourcesAssigned"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="AssertTheStockIsSaved" />
+
+        <!-- Step7 Create Configurable Product -->
+        <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">
+            <requiredEntity createDataKey="createSubCategory"/>
+        </createData>
+
+        <!-- Step7.1 Search for the Created Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openConfigurableProductForEdit">
+            <argument name="productSku" value="$$createConfigurableProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step7.2 Update the Created Configurable Product -->
+        <actionGroup ref="AdminEditConfigurableProductActionGroup" stepKey="editConfigurableProduct">
+            <argument name="product" value="{{createConfigurableProduct}}"/>
+            <argument name="assignSource" value="Default Source"/>
+            <argument name="blueColor" value="{{colorProductAttribute3.name}}"/>
+            <argument name="whiteColor" value="{{colorProductAttribute1.name}}"/>
+        </actionGroup>
+
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-White)}}" stepKey="grabChildWhiteProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-Blue)}}" stepKey="grabChildBlueProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-White)}}" stepKey="grabChildWhiteProdName"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-Blue)}}" stepKey="grabChildBlueProdName"/>
+
+        <!-- Step7.3 Verify the Created Configurable Product on Storefront -->
+        <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront"/>
+        <waitForPageLoad stepKey="waitForStoreFrontPageToLoad"/>
+        <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName"/>
+        <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice"/>
+        <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku"/>
+
+        <!-- Step7.4 Verify the Configurable Product in Created Category in Storefront is Present -->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createConfigurableProduct$$"/>
+        </actionGroup>
+
+        <!-- Step8.1 Search for the Created Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBundleProductPageForEditAdvancedInventoryManageStock">
+            <argument name="productSku" value="$$createConfigurableProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step8.2 Update the created Configurable Product to out of stock from Product Page-->
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.selectStockStatus}}" stepKey="selectOutOfStock"/>
+
+        <!-- Step8.3 Save the Configurable Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+
+        <!-- Step9.1 Verify the Configurable Product in Created Category in Storefront is not present -->
+        <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefrontPostMakingTheBundleProductOutOfStock">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createConfigurableProduct$$"/>
+        </actionGroup>
+
+        <!-- Step10.1 change the stock status back to In the Stock for the Configurable product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBundleProductPageForEditAdvancedInventoryManageStock1">
+            <argument name="productSku" value="$$createConfigurableProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step10.2 Update the created Configurable Product to in stock from Product Page-->
+        <selectOption userInput="In Stock" selector="{{AdminProductGridSection.selectStockStatus}}" stepKey="selectInStock"/>
+
+        <!-- Step10.3 Save the Configurable Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostInStock"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindexPostInStock"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
+
+        <!-- Step11 Verify the Configurable Product name , SKU and status for product in Storefront is present -->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefrontPostSwitchingBackToInStock">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createConfigurableProduct$$"/>
+        </actionGroup>
+
+        <actionGroup ref="AssertProductNameAndSkuInStorefrontProductPageByCustomAttributeUrlKeyActionGroup" stepKey="navigateToProductOnStoreFrontToValidateNameAndSKU">
+            <argument name="product" value="$$createConfigurableProduct$$"/>
+        </actionGroup>
+
+        <seeElement selector="{{AdminProductGridSection.stockStorefrontStatus('In stock')}}" stepKey="seeProductStockStatusOnStoreFrontAgain"/>
+
+    </test>
+</tests>
