@@ -47,6 +47,7 @@
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Login as customer -->

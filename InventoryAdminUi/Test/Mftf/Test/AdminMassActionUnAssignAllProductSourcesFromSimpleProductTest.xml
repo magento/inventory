@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MC-41048"/>
-            </skip>
             <group value="pr_exclude"/>
         </annotations>
 
@@ -75,6 +72,10 @@
         <after>
             <comment userInput="Disable created sources." stepKey="disableCreatedSourcesComment"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
@@ -82,11 +83,13 @@
             <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondProduct"/>
             <deleteData createDataKey="createThirdSimpleProduct" stepKey="deleteThirdProduct"/>
             <deleteData createDataKey="createFourthSimpleProduct" stepKey="deleteFourthProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckAssignThatTheDefaultSourceAssignedToProducts"/>
         <waitForPageLoad stepKey="waitForProductGridPageLoad"/>
         <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetFiltersOnProductGrid"/>
+        <conditionalClick selector="{{AdminProductFiltersSection.filtersClear}}" dependentSelector="{{AdminProductFiltersSection.filtersClear}}" visible="true" stepKey="ClickOnButtonToRemoveFiltersIfPresent"/>
         <comment userInput="Check default source assigned to created products." stepKey="checkDefaultSourceAssignedToCreatedProductsComment"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('1', _defaultSource.name)}}" userInput="1000" stepKey="checkSourceQtyForFirstCreatedProduct"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('2', _defaultSource.name)}}" userInput="1000" stepKey="checkSourceQtyForSecondCreatedProduct"/>

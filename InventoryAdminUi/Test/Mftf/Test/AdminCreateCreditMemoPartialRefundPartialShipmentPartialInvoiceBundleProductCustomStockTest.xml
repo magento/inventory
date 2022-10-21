@@ -26,7 +26,7 @@
             </createData>
         </before>
 
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="clickNext" after="waitForCheckoutPage"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext" after="waitForCheckoutPage"/>
         <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButton" after="clickNext"/>
         <!--Admin Area Process Partial Invoice.-->
         <scrollTo selector="{{AdminInvoiceItemsSection.updateQty}}" stepKey="scrollToQty" after="clickInvoice"/>

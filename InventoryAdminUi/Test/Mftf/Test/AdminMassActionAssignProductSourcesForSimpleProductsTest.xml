@@ -131,6 +131,7 @@
             <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondProduct"/>
             <deleteData createDataKey="createThirdSimpleProduct" stepKey="deleteThirdProduct"/>
             <deleteData createDataKey="createFourthSimpleProduct" stepKey="deleteFourthProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckAssignThatTheDefaultSourceAssignedToProducts"/>

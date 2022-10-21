@@ -31,9 +31,8 @@
             <createData entity="productAttributeOption2" stepKey="createConfigProductAttributeOptionTwo">
                 <requiredEntity createDataKey="createFirstConfigProductAttribute"/>
             </createData>
-            <!-- Reindex and flush cache -->
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <comment userInput="BIC workaround" stepKey="performReindex"/>
+            <comment userInput="BIC workaround" stepKey="cleanCache"/>
             <!--Add store code to url.-->
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlEnable"/>
             <!-- Login to backend-->
@@ -42,6 +41,12 @@
             <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
             <!--Disable all custom sources-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSource"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache1">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </before>
         <after>
             <!--Disable 'add store code to url'-->
@@ -52,6 +57,7 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
             <!-- Logout -->
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!-- Delete attribute -->
@@ -59,7 +65,12 @@
             <!-- Delete category-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </after>
         <!-- Go to product grid  -->
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
@@ -82,14 +93,19 @@
         <!--Set configurable product stock status.-->
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="setProductStockStatus"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveConfigurableProduct"/>
+        <magentoCron groups="index" stepKey="reindex"/>
         <!-- Go to storefront category page PLP -->
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_path]$$)}}" stepKey="navigateToCategoryPage"/>
+        <actionGroup ref="StorefrontNavigateToCategoryUrlActionGroup" stepKey="navigateToCategoryPage">
+            <argument name="categoryUrl" value="$$category.custom_attributes[url_key]$$"/>
+        </actionGroup>
         <!-- Assert that product is out of stock on category page PLP -->
         <actionGroup ref="StorefrontCheckCategoryOutOfStockConfigurableProductActionGroup" stepKey="assertProductIsOutOfStockOnCategoryPage">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <!-- Go to storefront product page PDP-->
-        <amOnPage url="{{StorefrontProductPage.url(ConfigurableMsiProduct.urlKey)}}" stepKey="navigateToProductPage"/>
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="navigateToProductPage">
+            <argument name="productUrl" value="{{ConfigurableMsiProduct.urlKey}}"/>
+        </actionGroup>
         <!-- Assert that product is out of stock on product page PDP -->
         <dontSee selector="{{StorefrontProductActionSection.addToCart}}" stepKey="assertAddToCartButtonIsNotPresent"/>
         <grabTextFrom selector="{{StorefrontProductInfoMainSection.productStockStatus}}" stepKey="productStockStatus"/>

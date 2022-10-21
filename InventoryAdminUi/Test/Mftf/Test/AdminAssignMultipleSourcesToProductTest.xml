@@ -17,6 +17,9 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
+          <skip>
+            <issueId value="ACQE-4167"/>
+          </skip>
         </annotations>
 
         <before>
@@ -117,6 +120,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Search for the product and open in edit mode.-->

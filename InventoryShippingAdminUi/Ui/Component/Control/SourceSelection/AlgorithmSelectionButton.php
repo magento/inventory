@@ -76,6 +76,7 @@ class AlgorithmSelectionButton implements ButtonProviderInterface
             'class_name' => Container::SPLIT_BUTTON,
             'options' => $this->getAlgorithmsListOptions(),
             'sort_order' => 10,
+            'aclResource' => 'Magento_InventoryApi::ship_source_selection',
         ];
     }
 

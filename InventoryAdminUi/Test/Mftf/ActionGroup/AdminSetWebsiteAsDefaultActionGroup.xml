@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminSetWebsiteAsDefaultActionGroup">
+        <annotations>
+            <description>check the Set As Default for the selected website</description>
+        </annotations>
+        <arguments>
+            <argument name="WebsiteName" type="string"/>
+        </arguments>
+        <amOnPage url="{{AdminSystemStorePage.url}}" stepKey="navigateToStorePage"/>
+        <waitForPageLoad stepKey="waitForStoresPageLoad"/>
+        <fillField selector="{{AdminStoresGridSection.websiteFilterTextField}}" userInput="{{WebsiteName}}" stepKey="enterWebsiteName"/>
+        <click selector="{{AdminStoresGridSection.searchButton}}" stepKey="searchWebsite"/>
+        <click selector="{{AdminStoresGridSection.websiteNameInFirstRow}}" stepKey="clickOnResultWebsite"/>
+        <waitForPageLoad stepKey="waitForEditStoresPageLoad"/>
+        <checkOption selector="{{AdminEditStoreSection.setAsDefault}}" stepKey="checkSetAsDefault"/>
+        <click selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="clickSaveWebsite"/>
+        <waitForPageLoad stepKey="waitForSuccess"/>
+        <see userInput="You saved the website." stepKey="seeSavedMessage"/>
+    </actionGroup>
+</actionGroups>

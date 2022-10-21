@@ -96,6 +96,7 @@
             <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
             <deleteData createDataKey="createThirdSimpleProduct" stepKey="deleteThirdSimpleProduct"/>
             <deleteData createDataKey="createFourthSimpleProduct" stepKey="deleteFourthSimpleProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Fill notify quantity on all products." stepKey="setOutOfStockToAllProductsComment"/>

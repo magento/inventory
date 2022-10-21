@@ -20,23 +20,41 @@
         </annotations>
 
         <before>
-            <!--Set auto return configuration.-->
-            <magentoCLI command="config:set cataloginventory/item_options/auto_return 1" stepKey="setAutoReturnItems" before="reindex"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex" before="flushCache"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache" before="loginAsAdmin"/>
             <!--Create additional stock and link additional source to stock.-->
-            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" after="additionalSource"/>
-            <createData entity="SourceStockLinked1" stepKey="sourceStockLink" after="additionalStock">
-                <requiredEntity createDataKey="additionalStock"/>
+            <comment userInput="BIC workaround" stepKey="additionalStock" after="additionalSource"/>
+            <comment userInput="BIC workaround" stepKey="sourceStockLink" after="additionalStock"/>
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock1" after="loginAsAdmin"/>
+            <createData entity="SourceStockLinked1" stepKey="sourceStockLink1" after="additionalStock1">
+                <requiredEntity createDataKey="additionalStock1"/>
                 <requiredEntity createDataKey="additionalSource"/>
             </createData>
+            <!--Set auto return configuration.-->
+            <magentoCLI command="config:set cataloginventory/item_options/auto_return 1" stepKey="setAutoReturnItems" after="sourceStockLink1"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex" after="setAutoReturnItems">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="flushCache" after="reindex">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
             <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
         </before>
         <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock" after="resetGrid">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <deleteData createDataKey="additionalStock1" stepKey="deleteStock" after="assignMainWebsiteToDefaultStock"/>
             <!--Revert auto return configuration.-->
-            <magentoCLI command="config:set cataloginventory/item_options/auto_return 0" stepKey="revertAutoReturnItems" after="deleteProduct"/>
-            <magentoCLI command="indexer:reindex" stepKey="reindex" after="revertAutoReturnItems"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache" after="reindex"/>
+            <magentoCLI command="config:set cataloginventory/item_options/auto_return 0" stepKey="revertAutoReturnItems1" after="deleteStock"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex1" after="revertAutoReturnItems1">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache" after="reindex1">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
+            <comment userInput="BIC workaround" stepKey="revertAutoReturnItems" after="deleteProduct"/>
+            <comment userInput="BIC workaround" stepKey="reindex" after="revertAutoReturnItems"/>
+            <comment userInput="BIC workaround" stepKey="flushCache" after="reindex"/>
         </after>
 
         <!--Assign virtual product to additional source.-->
@@ -50,6 +68,6 @@
         <remove keyForRemoval="checkProductSourceQtyAfterCreditMemo"/>
         <remove keyForRemoval="checkSalableQtyAfterCreditMemo"/>
         <see selector="{{AdminProductGridSection.productQtyPerSource('1',$$additionalSource.source[name]$$)}}" userInput="100" stepKey="checkProductSourceQtyAfterCreditMemo" after="findProductBySkuToCheckQtyAfterCreditMemo"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1', $$additionalStock.stock[name]$$)}}" userInput="100" stepKey="checkSalableQtyAfterCreditMemo" after="checkProductSourceQtyAfterCreditMemo"/>
+        <see selector="{{AdminProductGridSection.productSalableQty('1', $$additionalStock1.stock[name]$$)}}" userInput="100" stepKey="checkSalableQtyAfterCreditMemo" after="checkProductSourceQtyAfterCreditMemo"/>
     </test>
 </tests>

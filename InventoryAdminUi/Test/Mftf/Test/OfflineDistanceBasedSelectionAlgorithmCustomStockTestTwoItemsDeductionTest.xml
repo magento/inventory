@@ -25,7 +25,7 @@
 
         <before>
             <!--Enable "Manage Stock", set distance based algorithm to offline and download tables.-->
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="enableManageStock"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="config:set cataloginventory/source_selection_distance_based/provider offline" stepKey="setSelectionAlgorithm"/>
             <magentoCLI command="inventory-geonames:import us ua" stepKey="downloadTables"/>
             <!--Create Category and Simple Product.-->
@@ -73,50 +73,47 @@
         </before>
         <after>
             <!--Disable created sources.-->
-            <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
-            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUSSource1BySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
-                <argument name="value" value="$$USSource1.source[source_code]$$"/>
-            </actionGroup>
-            <click selector="{{AdminGridRow.editByValue($$USSource1.source[source_code]$$)}}" stepKey="clickEditUSSource1"/>
-            <waitForPageLoad time="30" stepKey="waitForUSSource1EditPageLoad"/>
-            <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableUSSource1"/>
-            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseUSSource1"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <comment userInput="BIC workaround" stepKey="navigateToSourceList"/>
+            <comment userInput="BIC workaround" stepKey="clearSourcesFilter"/>
+            <comment userInput="BIC workaround" stepKey="filterUSSource1BySourceCode"/>
+            <comment userInput="BIC workaround" stepKey="clickEditUSSource1"/>
+            <comment userInput="BIC workaround" stepKey="waitForUSSource1EditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="disableUSSource1"/>
+            <comment userInput="BIC workaround" stepKey="saveAndCloseUSSource1"/>
 
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUSSource2BySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
-                <argument name="value" value="$$USSource2.source[source_code]$$"/>
-            </actionGroup>
-            <click selector="{{AdminGridRow.editByValue($$USSource2.source[source_code]$$)}}" stepKey="clickEditUSSource2"/>
-            <waitForPageLoad time="30" stepKey="waitForUSSource2EditPageLoad"/>
-            <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableUSSource2"/>
-            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseUSSource2"/>
+            <comment userInput="BIC workaround" stepKey="filterUSSource2BySourceCode"/>
+            <comment userInput="BIC workaround" stepKey="clickEditUSSource2"/>
+            <comment userInput="BIC workaround" stepKey="waitForUSSource2EditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="disableUSSource2"/>
+            <comment userInput="BIC workaround" stepKey="saveAndCloseUSSource2"/>
 
-            <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterUASource1BySourceCode">
-                <argument name="selector" value="AdminManageSourcesGridFilterControls.code"/>
-                <argument name="value" value="$$UASource1.source[source_code]$$"/>
-            </actionGroup>
-            <click selector="{{AdminGridRow.editByValue($$UASource1.source[source_code]$$)}}" stepKey="clickEditUASource1"/>
-            <waitForPageLoad time="30" stepKey="waitForUASource1EditPageLoad"/>
-            <click selector="{{AdminEditSourceGeneralSection.isEnabledLabel}}" stepKey="disableUASource1"/>
-            <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseUASource1"/>
+            <comment userInput="BIC workaround" stepKey="filterUASource1BySourceCode"/>
+            <comment userInput="BIC workaround" stepKey="clickEditUASource1"/>
+            <comment userInput="BIC workaround" stepKey="waitForUASource1EditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="disableUASource1"/>
+            <comment userInput="BIC workaround" stepKey="saveAndCloseUASource1"/>
+
             <!--Assign Main Website to Default Stock.-->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitFroDefaultStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockListPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockListPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByName"/>
+            <comment userInput="BIC workaround" stepKey="clickEditDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitFroDefaultStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
+
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Remove category, product, customer and additional stock.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Login Customer.-->
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
@@ -134,13 +131,13 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad3"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad4"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad4"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad5"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 

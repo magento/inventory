@@ -62,6 +62,7 @@
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify product is not visible on storefront.-->

@@ -87,6 +87,7 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Add bundle product to cart.-->
         <amOnPage url="{{StorefrontProductPage.url($bundleProduct.custom_attributes[url_key]$)}}" stepKey="navigateToBundlePDP"/>

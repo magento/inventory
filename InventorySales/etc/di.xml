@@ -25,6 +25,9 @@
         <plugin name="check_quote_item_qty" type="Magento\InventorySales\Plugin\StockState\CheckQuoteItemQtyPlugin"/>
         <plugin name="suggest_qty" type="Magento\InventorySales\Plugin\StockState\SuggestQtyPlugin"/>
     </type>
+    <type name="Magento\CatalogInventory\Model\Spi\StockStateProviderInterface">
+        <plugin name="check_quote_item_qty" type="Magento\InventorySales\Plugin\StockStateProvider\CheckQuoteItemQtyPlugin" sortOrder="20"/>
+    </type>
     <type name="Magento\InventoryReservationsApi\Model\AppendReservationsInterface">
         <plugin name="prevent_append_reservation_on_not_manage_items_in_stock" type="Magento\InventorySales\Plugin\InventoryReservationsApi\PreventAppendReservationOnNotManageItemsInStockPlugin"/>
     </type>
@@ -39,17 +42,16 @@
     <!-- IsStockItemSalableCondition -->
     <preference for="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\GetIsStockItemSalableConditionInterface"
                 type="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\IsStockItemSalableConditionChain"/>
+    <preference for="Magento\InventorySalesApi\Model\GetIsQtySalableInterface" type="Magento\InventorySales\Model\GetIsQtySalable"/>
+    <preference for="Magento\InventorySalesApi\Model\GetSalableQtyInterface" type="Magento\InventorySales\Model\GetSalableQty"/>
     <type name="Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\IsStockItemSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
                 <item name="backorders" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\BackordersCondition</item>
                 <item name="manage_stock" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\ManageStockCondition</item>
                 <!-- min_qty condition includes source_item_status check (need to proper work of min_qty) -->
-                <item name="min_qty" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\MinQtyStockCondition</item>
+                <item name="min_qty" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\MinQtyStockWithReservationsCondition</item>
                 <item name="non_existing_legacy_sku" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\SkuIsAbsentInCatalogCondition</item>
-            </argument>
-            <argument name="requiredConditions" xsi:type="array">
-                <item name="reservations" xsi:type="object">Magento\InventorySales\Model\ResourceModel\IsStockItemSalableCondition\ReservationsCondition</item>
             </argument>
         </arguments>
     </type>

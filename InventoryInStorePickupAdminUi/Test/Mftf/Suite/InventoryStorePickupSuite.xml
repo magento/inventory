@@ -10,7 +10,7 @@
     <suite name="InventoryStorePickupSuite">
         <before>
             <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG" />
-            <magentoCLI stepKey="enableStockManagement" command="config:set cataloginventory/item_options/manage_stock 1"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
         </before>
         <include>
             <group name="store_pickup"/>

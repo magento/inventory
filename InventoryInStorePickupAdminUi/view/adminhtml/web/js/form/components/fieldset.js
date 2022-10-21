@@ -35,7 +35,7 @@ define([
                      * @param {String} value
                      */
                     write: function (value) {
-                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 0));
+                        value = Boolean(value) === value ? value : Boolean(parseInt(value, 10));
                         visible(value);
                     },
                     owner: this

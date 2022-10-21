@@ -9,6 +9,8 @@ namespace Magento\InventorySalesAdminUi\Model;
 
 /**
  * Resolve sales channel name by type and code
+ *
+ * @api
  */
 interface SalesChannelNameResolverInterface
 {

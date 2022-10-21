@@ -2,13 +2,14 @@
     "name": "magento/module-inventory-reservation-cli",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-sales": "*",
         "magento/module-inventory-api": "*",
         "magento/module-inventory-reservations-api": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-inventory-configuration-api": "*"
+        "magento/module-inventory-configuration-api": "*",
+        "magento/module-catalog": "*"
     },
     "type": "magento2-module",
     "license": [

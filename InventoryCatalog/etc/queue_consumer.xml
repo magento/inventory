@@ -6,6 +6,6 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/consumer.xsd">
-    <consumer name="inventory.source.items.cleanup" queue="inventory.source.items.cleanup" connection="db" handler="Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus::execute"/>
-    <consumer name="inventory.mass.update" queue="inventory.mass.update" connection="db" handler="Magento\InventoryCatalog\Model\UpdateInventory::execute"/>
+    <consumer name="inventory.source.items.cleanup" queue="inventory.source.items.cleanup" handler="Magento\InventoryCatalog\Model\DeleteSourceItemsBySkus::execute"/>
+    <consumer name="inventory.mass.update" queue="inventory.mass.update" handler="Magento\InventoryCatalog\Model\UpdateInventory::execute"/>
 </config>

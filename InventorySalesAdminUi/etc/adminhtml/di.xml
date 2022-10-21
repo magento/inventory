@@ -32,4 +32,18 @@
     <type name="Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer">
         <plugin name="can_return_item_to_stock_child_manage_stock_is_on" type="Magento\InventorySalesAdminUi\Plugin\Sales\Block\Items\Renderer\DefaultRenderer\ChildManageStockIsOn"/>
     </type>
+    <type name="Magento\InventorySalesApi\Model\GetSalableQtyInterface">
+        <plugin name="inventory_sales_admin_ui_adjust_product_qty_in_stock_for_edit_order"
+                type="Magento\InventorySalesAdminUi\Plugin\InventorySalesApi\Api\AdjustProductQtyInStockForEditOrder"/>
+    </type>
+    <type name="Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku">
+        <arguments>
+            <argument name="getSourceItemsBySku" xsi:type="object">Magento\Inventory\Model\SourceItem\Command\GetSourceItemsBySkuCache</argument>
+        </arguments>
+    </type>
+    <type name="Magento\InventorySalesAdminUi\Ui\Component\Listing\Column\SalableQuantity">
+        <arguments>
+            <argument name="maximumStocksToShow" xsi:type="number">15</argument>
+        </arguments>
+    </type>
 </config>

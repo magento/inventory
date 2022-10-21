@@ -44,8 +44,8 @@
                 <argument name="customStore" value="customStore"/>
             </actionGroup>
             <!-- Assign product to custom website -->
-            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToProductEditPage">
-                <argument name="product" value="$$product$$"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="navigateToProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct" >
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
@@ -60,6 +60,9 @@
             </actionGroup>
             <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrl"/>
             <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
         </before>
         <after>
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="removeStoreCodeFromUrl" />
@@ -78,6 +81,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--- Place order. -->
@@ -96,8 +100,8 @@
         </actionGroup>
         <waitForPageLoad stepKey="waitForPageLoadOrder"/>
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRateShipping"/>
-        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="clickSubmitOrder"/>
-        <waitForPageLoad stepKey="waitForOrderPlacement"/>
+        <actionGroup ref="AdminOrderClickSubmitOrderActionGroup" stepKey="clickSubmitOrder" />
+        <comment userInput="BIC workaround" stepKey="waitForOrderPlacement"/>
         <!--Verify product quantity.-->
         <actionGroup ref="NavigateToAndResetProductGridToDefaultViewActionGroup" stepKey="navigateToProductGrid"/>
         <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProduct">

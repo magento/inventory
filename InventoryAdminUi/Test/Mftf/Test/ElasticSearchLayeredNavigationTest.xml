@@ -16,7 +16,7 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <group value="SearchEngineElasticsearch"/>
+            <group value="SearchEngine"/>
         </annotations>
 
         <before>
@@ -57,6 +57,10 @@
             <!--Disable created test source.-->
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource">
                 <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+            </actionGroup>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <!--Delete created products and stock.-->
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminEditConfigurableProductActionGroup">
+        <annotations>
+            <description>Admin edits the already created configurable product</description>
+        </annotations>
+        <arguments>
+            <argument name="assignSource" type="string"/>
+            <argument name="blueColor" type="string"/>
+            <argument name="whiteColor" type="string"/>
+        </arguments>
+        <conditionalClick selector="{{AdminProductGridSection.productCollapsibleColumns('closed','Product in Websites')}}" dependentSelector="{{AdminProductGridSection.productCollapsibleColumns('closed','Product in Websites')}}" visible="true" stepKey="expandProductInWebsites"/>
+        <checkOption selector="{{AdminProductGridSection.checkMainWebsite}}" stepKey="checkMainWebsite"/>
+        <scrollTo selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" x="-200" y="-200" stepKey="scrollToCreateConfigurationsButton"/>
+        <click selector="{{AdminProductFormConfigurationsSection.createConfigurations}}" stepKey="clickOnTheCreateConfigurationsButton"/>
+        <waitForLoadingMaskToDisappear stepKey="waitPostClickingCreateConfigButton"/>
+        <click selector="{{AdminGridRow.checkboxByValue('color')}}" stepKey="selectColorAttributeCheckbox"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToAttributeValues"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="addNewColorWhite"/>
+        <fillField userInput="{{whiteColor}}" selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="setNameWhite"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.saveAttribute}}" stepKey="saveWhiteColor"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="addNewColorBlue"/>
+        <fillField userInput="{{blueColor}}" selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" stepKey="setNameBlue"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.saveAttribute}}" stepKey="saveBlueColor"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToBulkPricesAndImages"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
+        <fillField selector="{{AdminDataGridHeaderSection.search}}" userInput="{{assignSource}}" stepKey="fillKeywordSearchField"/>
+        <click selector="{{AdminDataGridHeaderSection.submitSearch}}" stepKey="clickKeywordSearch"/>
+        <click selector="{{AdminGridRow.checkboxByValue(assignSource)}}" stepKey="selectCustomSource"/>
+        <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources"/>
+        <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSourceForMultiMode}}" userInput="100" stepKey="fillQuantityForCustomSource"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToSummaryStep"/>
+        <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="clickOnGenerateProducts"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableProduct"/>
+        <conditionalClick selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" dependentSelector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" visible="true" stepKey="confirmDefaultAttributeSetForConfigurableProduct"/>
+        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductSavedMessage"/>
+    </actionGroup>
+</actionGroups>

@@ -43,8 +43,8 @@
         <see selector="{{StorefrontMessagesSection.success}}" userInput="You added $$downloadableProduct1.name$$ to your shopping cart." stepKey="seeAddToCartSuccessMessage"/>
         <!--Place order.-->
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="navigateToCheckout"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
         <!--Reorder simple product.-->
@@ -52,8 +52,8 @@
             <argument name="orderNumber" value="${orderNumber}"/>
         </actionGroup>
         <click selector="{{CheckoutCartSummarySection.proceedToCheckout}}" stepKey="goToCheckout"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrderToReorder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlacedToReorder"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrderToReorder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlacedToReorder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="reorderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessageAfterReorder"/>
         <!--Verify reorder.-->

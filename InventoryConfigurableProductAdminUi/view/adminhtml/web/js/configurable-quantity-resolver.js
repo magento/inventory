@@ -125,7 +125,7 @@ define([
             }
 
             if (typeof elem.validate === 'function') {
-                this.valid = this.valid & elem.validate().valid;
+                this.valid &= elem.validate().valid;
             } else if (elem.elems) {
                 elem.elems().forEach(this.validate, this);
             }

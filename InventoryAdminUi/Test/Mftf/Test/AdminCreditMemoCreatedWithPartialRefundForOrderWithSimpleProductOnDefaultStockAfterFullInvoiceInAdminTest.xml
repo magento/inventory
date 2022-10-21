@@ -27,18 +27,19 @@
                 <requiredEntity createDataKey="createSource"/>
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
-            <waitForPageLoad stepKey="waitForDashboardLoad"/>
-
-            <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <comment userInput="BIC workaround" stepKey="waitForDashboardLoad"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForDefaultStockPageLoaded"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="assignChannelToStockComment"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockListPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel"/>
+            <comment userInput="BIC workaround" stepKey="clickEditDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForDefaultStockPageLoaded"/>
+            <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
 
             <createData entity="SimpleSubCategory" stepKey="simpleCategory"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">
@@ -78,13 +79,13 @@
         <click selector="{{StorefrontMinicartSection.itemQuantityUpdate($$simpleProduct.name$$)}}" stepKey="updateQtyInMiniCart"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
         <waitForPageLoad stepKey="waitForPaymentSelectionPageLoad"/>
-        <click selector=".continue" stepKey="clickOnNextPaymentPage"/>
-        <waitForPageLoad stepKey="waitForPageLoadCheckoutSelectPayment"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickOnNextPaymentPage"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoadCheckoutSelectPayment"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="grabOrderNumber"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 

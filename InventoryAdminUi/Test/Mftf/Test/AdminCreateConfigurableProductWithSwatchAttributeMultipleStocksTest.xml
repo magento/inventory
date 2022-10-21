@@ -61,6 +61,7 @@
                 <argument name="stockName" value="$$additionalStockAdditionalWebsite.stock[name]$$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete created website.-->
@@ -87,6 +88,7 @@
             <deleteData createDataKey="configurableProduct" stepKey="deleteConfigurable"/>
             <deleteData createDataKey="additionalStockAdditionalWebsite" stepKey="deleteMainWebsiteStock"/>
             <deleteData createDataKey="additionalStockMainWebsite" stepKey="deleteAdditionalWebsiteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Create configurable variations.-->

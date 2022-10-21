@@ -10,5 +10,12 @@
         xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="AdminOrdersGridSection">
         <element name="allocatedSourcesColumn" type="text" selector="//div[contains(@class,'admin__data-grid-wrap')][@data-role='grid-wrapper']//th[contains(@class,'data-grid-th')]//span[text()='Allocated sources']"/>
+        <element name="orderedNumber" type="text" selector="//div[@class='admin__page-section-item order-information']//span[@class='title']"/>
+        <element name="orderStatus" type="text" selector="//span[@id='order_status' and contains(text(),'{{status}}')]" parameterized="true"/>
+        <element name="shipOrder" type="text" selector="//button[@id='order_ship']"/>
+        <element name="shipmentProduct" type="text" selector="//div[@class='product-title']"/>
+        <element name="shipmentQuantity" type="text" selector="//input[@class='input-text admin__control-text qty-item']"/>
+        <element name="buttonSubmitShipment" type="button" selector="//button[@title='Submit Shipment']"/>
+        <element name="shippingSuccess" type="text" selector="//div[@data-ui-id='messages-message-success' and contains(text(),'The shipment has been created')]"/>
     </section>
 </sections>

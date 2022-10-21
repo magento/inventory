@@ -47,6 +47,7 @@
             <magentoCLI
                     command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}"
                     stepKey="setConfigAddStoreCodeToUrl" after="fillConfigValue"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <remove keyForRemoval="deleteStock"/>
@@ -57,6 +58,7 @@
             <magentoCLI
                     command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}"
                     stepKey="DisableAddStoreCodeToUrl" after="disableCreatedSourceComment"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!-- Add this product to second website -->
         <click selector="{{ProductInWebsitesSection.sectionHeader}}" stepKey="openProductInWebsitesSection1"

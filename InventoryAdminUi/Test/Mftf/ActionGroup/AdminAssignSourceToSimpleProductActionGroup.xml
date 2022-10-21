@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminAssignSourceToSimpleProduct">
+        <annotations>
+          <description>Admin assigns Source to Simple products</description>
+        </annotations>
+        <arguments>
+            <argument name="filter_selector"/>
+            <argument name="filter_value" type="string"/>
+            <argument name="sourceName" type="string"/>
+        </arguments>
+        <scrollTo selector="{{AdminProductSourcesSection.assignSources}}" x="-200" y="-200" stepKey="AssignSourcesButton"/>
+        <click selector="{{AdminProductSourcesSection.assignSources}}" stepKey="clickOnAssignSources1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+        <conditionalClick selector="{{AdminGridFilterControls.clearAll}}" dependentSelector=".admin__data-grid-header[data-bind='afterRender: \$data.setToolbarNode'] .admin__data-grid-filters-current._show" visible="true" stepKey="clearTheFiltersIfPresent"/>
+        <waitForPageLoad stepKey="waitForPageLoad2"/>
+        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters1"/>
+        <fillField userInput="{{filter_value}}" selector="{{filter_selector}}" stepKey="fillCodeField2"/>
+        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters1"/>
+        <waitForPageLoad stepKey="waitForPageLoad3"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
+        <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode(filter_value)}}" stepKey="clickOnCheckbox1"/>
+        <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="clickOnDone1"/>
+        <conditionalClick selector="{{AdminProductGridSection.unAssignSource('Default Source')}}" dependentSelector="{{AdminProductGridSection.unAssignSource('Default Source')}}" visible="true" stepKey="unAssignDefaultSource"/>
+        <fillField userInput="100" selector="{{AdminProductGridSection.sourceQty(sourceName)}}" stepKey="setAssignedQuantity"/>
+        <conditionalClick selector="{{AdminProductGridSection.productCollapsibleColumns('closed','Product in Websites')}}" dependentSelector="{{AdminProductGridSection.productCollapsibleColumns('closed','Product in Websites')}}" visible="true" stepKey="expandProductInWebsites"/>
+        <checkOption selector="{{AdminProductGridSection.checkMainWebsite}}" stepKey="checkMainWebsite"/>
+    </actionGroup>
+</actionGroups>

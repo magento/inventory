@@ -28,19 +28,21 @@
                 <requiredEntity createDataKey="customSource"/>
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
-            <waitForPageLoad stepKey="waitForDashboardLoad"/>
+            <comment userInput="BIC workaround" stepKey="waitForDashboardLoad"/>
 
             <!-- Assign Sales Channel to Stock -->
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
-            <waitForPageLoad time="30" stepKey="waitForStockGridPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
-                <argument name="keyword" value="$$customStock.stock[name]$$"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToCustomStock">
+                <argument name="stockName" value="$$customStock.stock[name]$$"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickOnEditForCustomStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockEditPageLoad"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannel"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveCustomStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockSaved"/>
+            <comment userInput="BIC workaround" stepKey="amOnTheStockGridPage"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockGridPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchCustomStockByKeyword"/>
+            <comment userInput="BIC workaround" stepKey="clickOnEditForCustomStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockEditPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="selectWebsiteAsSalesChannel"/>
+            <comment userInput="BIC workaround" stepKey="saveCustomStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockSaved"/>
 
             <!--Go to product page-->
             <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPage"/>
@@ -78,21 +80,26 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteCreatedProduct">
                 <argument name="product" value="VirtualMsiProduct"/>
             </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
 
-            <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
-            <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
-                <argument name="keyword" value="_defaultStock.name"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForDefaultStockPageLoaded"/>
-            <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
-            <click selector="{{AdminGridMainControls.saveAndContinue}}" stepKey="saveDefaultStock"/>
-            <waitForPageLoad time="30" stepKey="waitForStockWithoutSalesChannelsSaved"/>
+            <comment userInput="BIC workaround" stepKey="assignChannelToStockComment"/>
+            <comment userInput="BIC workaround" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockListPageLoad"/>
+            <comment userInput="BIC workaround" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel"/>
+            <comment userInput="BIC workaround" stepKey="clickEditDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForDefaultStockPageLoaded"/>
+            <comment userInput="BIC workaround" stepKey="selectDefaultWebsiteAsSalesChannelForDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="saveDefaultStock"/>
+            <comment userInput="BIC workaround" stepKey="waitForStockWithoutSalesChannelsSaved"/>
+
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- add Product to Cart-->
@@ -131,9 +138,9 @@
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="updateCustomerBillingAddress"/>
 
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForElement selector="{{CheckoutPaymentSection.placeOrder}}" time="30" stepKey="waitForPlaceOrderButtonVisible"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad stepKey="waitUntilOrderPlaced"/>
+        <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <seeElement selector="{{CheckoutSuccessMainSection.success}}" stepKey="seeOrderNumber"/>
     </test>
 </tests>

@@ -2,14 +2,16 @@
     "name": "magento/module-inventory-grouped-product",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-grouped-product": "*"
     },
     "suggest": {
         "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-catalog": "*",
-        "magento/module-inventory-catalog-api": "*"
+        "magento/module-inventory-catalog-api": "*",
+        "magento/module-inventory": "*",
+        "magento/module-inventory-api": "*"
     },
     "type": "magento2-module",
     "license": [

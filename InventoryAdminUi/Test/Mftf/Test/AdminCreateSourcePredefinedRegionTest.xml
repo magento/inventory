@@ -30,6 +30,7 @@
             </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--Create Source with predefined State/Province value.-->
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceListPage"/>

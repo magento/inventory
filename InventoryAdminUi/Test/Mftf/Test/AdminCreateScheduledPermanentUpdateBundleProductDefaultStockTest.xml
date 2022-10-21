@@ -59,6 +59,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex" after="amOnLogoutPage"/>
         </after>
 
         <!--Verify bundle product on storefront.-->

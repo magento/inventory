@@ -53,6 +53,7 @@
             <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
             <!--Disable backorders in configuration.-->
             <magentoCLI command="config:set cataloginventory/item_options/backorders 0" stepKey="disableBackorders" after="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Assign virtual product to additional source.-->

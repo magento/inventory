@@ -11,10 +11,8 @@
     <test name="AdminReorderOfTheOrderWithConfigurableProductWithDropDownAttributeOnDefaultStockFromAdminTest">
         <annotations>
             <stories value="Reorder of the Order"/>
-            <title
-                value="Reorder of the Order with Configurable product with drop-down attribute on Default stock from Admin"/>
-            <description
-                value="Reorder of the Order with Configurable product with drop-down attribute on Default stock from Admin"/>
+            <title value="Reorder of the Order with Configurable product with drop-down attribute on Default stock from Admin"/>
+            <description value="Reorder of the Order with Configurable product with drop-down attribute on Default stock from Admin"/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/735208/scenarios/2628138"/>
             <severity value="BLOCKER"/>
             <group value="msi"/>
@@ -59,8 +57,13 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
                 <argument name="sourceCode" value="$$createSource.source[source_code]$$"/>
             </actionGroup>
@@ -68,30 +71,36 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct">
                 <argument name="product" value="ConfigurableMsiProduct"/>
             </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
             <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrdersGridFilter"/>
-            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
-            <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearOrderFilters"/>
+            <comment userInput="BIC workaround" stepKey="amOnProductGridPage"/>
+            <comment userInput="BIC workaround" stepKey="clearOrderFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="createFirstConfigProductAttribute" stepKey="deleteFirstConfigProductAttribute"/>
             <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
 
             <!-- Reindex invalidated indices after product attribute has been created/deleted -->
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexInvalidatedIndices">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </after>
 
         <!-- Create a configurable product -->
-        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnProductGridPage"/>
-        <waitForPageLoad stepKey="waitForProductGrid"/>
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="amOnProductGridPage"/>
+        <comment userInput="BIC workaround" stepKey="waitForProductGrid"/>
         <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
         <actionGroup ref="FillMainProductFormActionGroup" stepKey="fillProductForm">
             <argument name="product" value="ConfigurableMsiProduct"/>
         </actionGroup>
-        <actionGroup ref="createConfigurationsForTwoAttributeCustomSource"
-                     stepKey="createConfigurationsWithCustomStock">
+        <actionGroup ref="createConfigurationsForTwoAttributeCustomSource" stepKey="createConfigurationsWithCustomStock">
             <argument name="attributeCode" value="$$createFirstConfigProductAttribute.attribute_code$$"/>
             <argument name="secondAttributeCode" value="$$createSecondConfigProductAttribute.attribute_code$$"/>
             <argument name="sourceName" value="{{_defaultSource.name}}"/>
@@ -109,13 +118,10 @@
             <argument name="productSKU" value="{{ConfigurableMsiProduct.sku}}"/>
         </actionGroup>
         <actionGroup ref="AdminAddToOrderConfigurableProductWithTwoOptionsActionGroup" stepKey="addConfProduct">
-            <argument name="attribute"
-                      value="$$createFirstConfigProductAttribute.attribute[frontend_labels][0][label]$$"/>
-            <argument name="secondAttribute"
-                      value="$$createSecondConfigProductAttribute.attribute[frontend_labels][0][label]$$"/>
+            <argument name="attribute" value="$$createFirstConfigProductAttribute.attribute[frontend_labels][0][label]$$"/>
+            <argument name="secondAttribute" value="$$createSecondConfigProductAttribute.attribute[frontend_labels][0][label]$$"/>
             <argument name="option" value="$$createConfigProductAttributeOptionOne.option[store_labels][1][label]$$"/>
-            <argument name="optionTwo"
-                      value="$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
+            <argument name="optionTwo" value="$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
             <argument name="quantity" value="5"/>
         </actionGroup>
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
@@ -128,18 +134,13 @@
         </assertNotEmpty>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
-        <amOnPage url="{{AdminProductIndexPage.url}}"
-                  stepKey="navigateToProductIndexPageForCheckProductQty"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput"
-                     stepKey="findVirtualProductBySkuToCheckQty">
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexPageForCheckProductQty"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findVirtualProductBySkuToCheckQty">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value"
-                      value="{{ConfigurableMsiProduct.sku}}-$$createConfigProductAttributeOptionOne.option[store_labels][1][label]$$-$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
+            <argument name="value" value="{{ConfigurableMsiProduct.sku}}-$$createConfigProductAttributeOptionOne.option[store_labels][1][label]$$-$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
         </actionGroup>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',_defaultSource.name)}}"
-             userInput="100" stepKey="checkProductSourceQty"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}"
-             userInput="95" stepKey="checkSalableQty"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1',_defaultSource.name)}}" userInput="100" stepKey="checkProductSourceQty"/>
+        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="95" stepKey="checkSalableQty"/>
 
         <!-- Open Order -->
         <comment userInput="BIC workaround" stepKey="goToOrders1"/>
@@ -152,22 +153,18 @@
         <comment userInput="BIC workaround" stepKey="waitForOrderPageToLoad"/>
 
         <!-- Reorder the product -->
-        <click selector="{{AdminOrderDetailsMainActionsSection.reorder}}" stepKey="clickOnReorderButton"/>
-        <waitForPageLoad stepKey="waitForReorderFormToLoad"/>
-        <click selector="{{AdminOrderFormActionSection.SubmitOrder}}" stepKey="submitOrder1"/>
+        <comment userInput="BIC workaround" stepKey="clickOnReorderButton"/>
+        <comment userInput="BIC workaround" stepKey="waitForReorderFormToLoad"/>
+        <comment userInput="BIC workaround" stepKey="submitOrder1"/>
+        <actionGroup ref="AdminReorderActionGroup" stepKey="reorder"/>
 
         <!--Verify that reservation '-5' items of 'Configurable product 1-red' on Default stock is created correctly -->
-        <amOnPage url="{{AdminProductIndexPage.url}}"
-                  stepKey="navigateToProductIndexPageForCheckProductQtyAfterReorder"/>
-        <actionGroup ref="AdminGridFilterSearchResultsByInput"
-                     stepKey="findProductBySkuToCheckQtyAfterReorder">
+        <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="navigateToProductIndexPageForCheckProductQtyAfterReorder"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="findProductBySkuToCheckQtyAfterReorder">
             <argument name="selector" value="AdminProductGridFilterSection.skuFilter"/>
-            <argument name="value"
-                      value="{{ConfigurableMsiProduct.sku}}-$$createConfigProductAttributeOptionOne.option[store_labels][1][label]$$-$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
+            <argument name="value" value="{{ConfigurableMsiProduct.sku}}-$$createConfigProductAttributeOptionOne.option[store_labels][1][label]$$-$$createConfigProductAttributeOptionThree.option[store_labels][1][label]$$"/>
         </actionGroup>
-        <see selector="{{AdminProductGridSection.productQtyPerSource('1',_defaultSource.name)}}"
-             userInput="100" stepKey="checkProductSourceQtyAfterReorder"/>
-        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}"
-             userInput="90" stepKey="checkSalableQtyAfterReorder"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1',_defaultSource.name)}}" userInput="100" stepKey="checkProductSourceQtyAfterReorder"/>
+        <see selector="{{AdminProductGridSection.productSalableQty('1',_defaultStock.name)}}" userInput="90" stepKey="checkSalableQtyAfterReorder"/>
     </test>
 </tests>

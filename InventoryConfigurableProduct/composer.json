@@ -2,9 +2,11 @@
     "name": "magento/module-inventory-configurable-product",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-catalog": "*",
+        "magento/module-inventory-catalog": "*",
+        "magento/module-inventory-configuration": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-indexer": "*",

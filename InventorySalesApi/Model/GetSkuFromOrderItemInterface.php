@@ -10,6 +10,9 @@ namespace Magento\InventorySalesApi\Model;
 
 use Magento\Sales\Api\Data\OrderItemInterface;
 
+/**
+ * @api
+ */
 interface GetSkuFromOrderItemInterface
 {
     /**

@@ -57,6 +57,7 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock" before="amOnLogoutPage"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Verify product on storefront.-->

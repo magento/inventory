@@ -11,6 +11,8 @@ use Magento\Framework\DB\Select;
 
 /**
  * Prepare select for data provider
+ *
+ * @api
  */
 interface SelectBuilderInterface
 {

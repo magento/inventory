@@ -125,6 +125,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCreatedCategory"/>
             <deleteData createDataKey="createStock" stepKey="deleteCreatedStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Fill notify quantity on all products." stepKey="forAllProductsFillNotifyQuantityComment"/>

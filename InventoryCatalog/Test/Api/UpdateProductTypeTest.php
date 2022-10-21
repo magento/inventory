@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Api;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\MessageQueue\ConsumerFactory;
+use Magento\Framework\MessageQueue\DefaultValueProvider;
 use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
@@ -30,9 +30,9 @@ class UpdateProductTypeTest extends WebapiAbstract
     private $getSourceItemsBySku;
 
     /**
-     * @var ProductRepositoryInterface
+     * @var DefaultValueProvider
      */
-    private $productRepository;
+    private $defaultValueProvider;
 
     /**
      * @inheritDoc
@@ -40,18 +40,18 @@ class UpdateProductTypeTest extends WebapiAbstract
     protected function setUp(): void
     {
         $this->getSourceItemsBySku = Bootstrap::getObjectManager()->get(GetSourceItemsBySkuInterface::class);
-        $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->defaultValueProvider = Bootstrap::getObjectManager()->get(DefaultValueProvider::class);
         $this->rejectMessages();
     }
 
     /**
      * Verify, change product type will remove product source items.
      *
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/products.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/sources.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stocks.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/source_items.php
-     * @magentoApiDataFixture ../../../../app/code/Magento/InventoryApi/Test/_files/stock_source_links.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoApiDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
      * @magentoConfigFixture cataloginventory/options/synchronize_with_catalog 1
      *
      * @return void
@@ -100,7 +100,10 @@ class UpdateProductTypeTest extends WebapiAbstract
     private function rejectMessages()
     {
         $queueFactory = Bootstrap::getObjectManager()->get(QueueFactoryInterface::class);
-        $queue = $queueFactory->create('inventory.source.items.cleanup', 'db');
+        $queue = $queueFactory->create(
+            'inventory.source.items.cleanup',
+            $this->defaultValueProvider->getConnection()
+        );
         while ($envelope = $queue->dequeue()) {
             $queue->reject($envelope, false);
         }

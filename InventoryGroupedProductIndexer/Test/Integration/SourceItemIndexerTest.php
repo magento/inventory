@@ -216,8 +216,8 @@ class SourceItemIndexerTest extends TestCase
         $grouped1StockData = $this->getStockItemData->execute('grouped_1', 10);
         $grouped2StockData = $this->getStockItemData->execute('grouped_2', 10);
 
-        $this->assertEquals(1, $grouped1StockData[GetStockItemDataInterface::IS_SALABLE]);
-        $this->assertEquals(1, $grouped2StockData[GetStockItemDataInterface::IS_SALABLE]);
+        $this->assertEquals(0, $grouped1StockData[GetStockItemDataInterface::IS_SALABLE]);
+        $this->assertEquals(0, $grouped2StockData[GetStockItemDataInterface::IS_SALABLE]);
     }
 
     /**

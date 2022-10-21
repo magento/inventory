@@ -37,6 +37,9 @@
             <magentoCLI command="config:set {{StorefrontInventoryCatalogStockThresholdQtyConfigData.path}} {{StorefrontInventoryCatalogStockThresholdQtyConfigData.value}}" stepKey="setThresholdQty"/>
             <!-- Reindex invalidated indices after product attribute has been created -->
             <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAftercreateProductAttributes"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanInvalidatedCaches">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
 
@@ -77,9 +80,12 @@
             <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteConfigurableProductOptions">
                 <argument name="product" value="ApiConfigurableProductWithDescription"/>
             </actionGroup>
-            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetProductGridFilters"/>
             <!-- Reindex invalidated indices after product attribute has been deleted -->
             <magentoCron groups="index" stepKey="reindexInvalidatedIndicesAfterDeleteAttributes"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanInvalidatedCaches">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdmin"/>
         </after>
@@ -108,8 +114,10 @@
             <argument name="customerAddressVar" value="CustomerAddressSimple"/>
             <argument name="paymentMethod" value="Check / Money order"/>
         </actionGroup>
+        <waitForPageLoad stepKey="waitForUpdate"/>
+        <waitForElementClickable selector="{{CheckoutPaymentSection.update}}" stepKey="waitForUpdateButton"/>
         <click selector="{{CheckoutPaymentSection.update}}" stepKey="clickUpdateButton"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForBillingAddressUpdate"/>
+        <waitForPageLoad stepKey="waitForBillingAddressUpdate"/>
         <actionGroup ref="CheckoutPlaceOrderActionGroup" stepKey="placeOrder">
             <argument name="orderNumberMessage" value="CONST.successGuestCheckoutOrderNumberMessage"/>
             <argument name="emailYouMessage" value="CONST.successCheckoutEmailYouMessage"/>

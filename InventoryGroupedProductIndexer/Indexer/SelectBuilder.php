@@ -9,10 +9,12 @@ namespace Magento\InventoryGroupedProductIndexer\Indexer;
 
 use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\GroupedProduct\Model\ResourceModel\Product\Link;
+use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
@@ -21,6 +23,8 @@ use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface
 
 /**
  * Class to prepare select for partial reindex
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SelectBuilder
 {
@@ -45,21 +49,30 @@ class SelectBuilder
     private $metadataPool;
 
     /**
+     * @var DefaultStockProviderInterface
+     */
+    private DefaultStockProviderInterface $defaultStockProvider;
+
+    /**
      * @param ResourceConnection $resourceConnection
      * @param IndexNameBuilder $indexNameBuilder
      * @param IndexNameResolverInterface $indexNameResolver
      * @param MetadataPool $metadataPool
+     * @param DefaultStockProviderInterface $defaultStockProvider
      */
     public function __construct(
         ResourceConnection $resourceConnection,
         IndexNameBuilder $indexNameBuilder,
         IndexNameResolverInterface $indexNameResolver,
-        MetadataPool $metadataPool
+        MetadataPool $metadataPool,
+        DefaultStockProviderInterface $defaultStockProvider = null
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->indexNameBuilder = $indexNameBuilder;
         $this->indexNameResolver = $indexNameResolver;
         $this->metadataPool = $metadataPool;
+        $this->defaultStockProvider = $defaultStockProvider ?:
+            ObjectManager::getInstance()->get(DefaultStockProviderInterface::class);
     }
 
     /**
@@ -107,11 +120,16 @@ class SelectBuilder
             'child_stock.sku = child_product_entity.sku',
             [
                 IndexStructure::QUANTITY => 'SUM(child_stock.quantity)',
-                IndexStructure::IS_SALABLE => 'MAX(child_stock.is_salable)',
+                IndexStructure::IS_SALABLE => 'IF(inventory_stock_item.is_in_stock = 0, 0, 
+                MAX(child_stock.is_salable))',
             ]
         )->joinInner(
             ['child_filter_product_entity' => $this->resourceConnection->getTableName('catalog_product_entity')],
             "child_filter_product_entity.entity_id = parent_link.linked_product_id",
+            []
+        )->joinLeft(
+            ['inventory_stock_item' => $this->resourceConnection->getTableName('cataloginventory_stock_item')],
+            'inventory_stock_item.product_id = parent_product_entity.entity_id',
             []
         )->where(
             'parent_link.link_type_id = ' . Link::LINK_TYPE_GROUPED

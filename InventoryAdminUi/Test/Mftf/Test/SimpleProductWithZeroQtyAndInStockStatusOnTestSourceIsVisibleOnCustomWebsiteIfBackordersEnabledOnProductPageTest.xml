@@ -64,6 +64,7 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!-- Assign product to custom website -->
         <remove keyForRemoval="openProductFromSubCategory1"/>

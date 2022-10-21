@@ -41,6 +41,7 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </before>
         <after>
             <!--Delete test data.-->
@@ -57,6 +58,7 @@
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Advanced search product by name.-->

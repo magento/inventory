@@ -39,6 +39,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <!--Delete category.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Start creating configurable product.-->

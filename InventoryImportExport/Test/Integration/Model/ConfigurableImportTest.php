@@ -27,9 +27,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\ImportExport\Model\Import\Source\CsvFactory;
-use Magento\MysqlMq\Model\Driver\Queue;
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\MysqlMq\DeleteTopicRelatedMessages;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -7,11 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryVisualMerchandiser\Plugin\Model\Resolver;
 
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Inventory\Model\ResourceModel\SourceItem;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
@@ -20,6 +23,8 @@ use Magento\VisualMerchandiser\Model\Resolver\QuantityAndStock;
 
 /**
  * This plugin adds multi-source stock calculation capabilities to the Visual Merchandiser feature.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class QuantityAndStockPlugin
 {
@@ -49,24 +54,40 @@ class QuantityAndStockPlugin
     private $defaultStockProvider;
 
     /**
+     * @var DefaultSourceProviderInterface
+     */
+    private $defaultSourceProvider;
+
+    /**
+     * @var MetadataPool
+     */
+    private $metadataPool;
+
+    /**
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param DefaultStockProviderInterface $defaultStockProvider
+     * @param DefaultSourceProviderInterface $defaultSourceProvider
+     * @param MetadataPool $metadataPool
      */
     public function __construct(
         ResourceConnection $resource,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
-        DefaultStockProviderInterface $defaultStockProvider
+        DefaultStockProviderInterface $defaultStockProvider,
+        DefaultSourceProviderInterface $defaultSourceProvider,
+        MetadataPool $metadataPool
     ) {
         $this->resource = $resource;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
         $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->defaultStockProvider = $defaultStockProvider;
+        $this->defaultSourceProvider = $defaultSourceProvider;
+        $this->metadataPool = $metadataPool;
     }
 
     /**
@@ -85,19 +106,22 @@ class QuantityAndStockPlugin
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = (int)$stock->getStockId();
         if ($stockId === $this->defaultStockProvider->getId()) {
+            $defaultCode = $this->defaultSourceProvider->getCode();
+            $productLinkField = $this->metadataPool->getMetadata(ProductInterface::class)
+                ->getLinkField();
             $collection->joinField(
                 'parent_stock',
                 $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM),
                 null,
                 'sku = sku',
-                null,
+                ['source_code' => $defaultCode],
                 'left'
             );
             $collection->joinField(
                 'child_relation',
                 $this->resource->getTableName('catalog_product_relation'),
                 null,
-                'parent_id = entity_id',
+                'parent_id = ' . $productLinkField,
                 null,
                 'left'
             );
@@ -109,7 +133,8 @@ class QuantityAndStockPlugin
                 )
                 ->joinLeft(
                     ['child_stock' => $this->resource->getTableName(SourceItem::TABLE_NAME_SOURCE_ITEM)],
-                    'child_stock.sku = child_product.sku',
+                    'child_stock.sku = child_product.sku'
+                    . $collection->getConnection()->quoteInto(' AND child_stock.source_code = ?', $defaultCode),
                     []
                 )
                 ->columns(

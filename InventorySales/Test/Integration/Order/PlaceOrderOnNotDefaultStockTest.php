@@ -7,24 +7,56 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Test\Integration\Order;
 
+use Magento\Bundle\Test\Fixture\AddProductToCart as AddBundleProductToCartFixture;
+use Magento\Bundle\Test\Fixture\Option as BundleOptionFixture;
+use Magento\Bundle\Test\Fixture\Product as BundleProductFixture;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\Checkout\Test\Fixture\PlaceOrder as PlaceOrderFixture;
+use Magento\Checkout\Test\Fixture\SetBillingAddress as SetBillingAddressFixture;
+use Magento\Checkout\Test\Fixture\SetDeliveryMethod as SetDeliveryMethodFixture;
+use Magento\Checkout\Test\Fixture\SetGuestEmail as SetGuestEmailFixture;
+use Magento\Checkout\Test\Fixture\SetPaymentMethod as SetPaymentMethodFixture;
+use Magento\Checkout\Test\Fixture\SetShippingAddress as SetShippingAddressFixture;
+use Magento\ConfigurableProduct\Test\Fixture\AddProductToCart as AddConfigurableProductToCartFixture;
+use Magento\ConfigurableProduct\Test\Fixture\Attribute as AttributeFixture;
+use Magento\ConfigurableProduct\Test\Fixture\Product as ConfigurableProductFixture;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Registry;
+use Magento\GroupedProduct\Test\Fixture\AddProductToCart as AddGroupedProductToCartFixture;
+use Magento\GroupedProduct\Test\Fixture\Product as GroupedProductFixture;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryApi\Test\Fixture\Source as SourceFixture;
+use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
+use Magento\InventoryApi\Test\Fixture\Stock as StockFixture;
+use Magento\InventoryApi\Test\Fixture\StockSourceLinks as StockSourceLinksFixture;
+use Magento\InventoryApi\Test\Fixture\DeleteSourceItems as DeleteSourceItemsFixture;
 use Magento\InventoryConfigurationApi\Api\GetStockItemConfigurationInterface;
 use Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
 use Magento\Quote\Api\Data\CartItemInterfaceFactory;
+use Magento\Quote\Test\Fixture\GuestCart as GuestCartFixture;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Test\Fixture\Shipment as ShipmentFixture;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Fixture\AppIsolation;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorage;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
+use Magento\TestFramework\Fixture\DbIsolation;
 use PHPUnit\Framework\TestCase;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\InventoryReservationsApi\Model\CleanupReservationsInterface;
@@ -33,6 +65,7 @@ use Magento\InventoryApi\Api\StockRepositoryInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class PlaceOrderOnNotDefaultStockTest extends TestCase
 {
@@ -106,6 +139,26 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      */
     private $saveStockItemConfiguration;
 
+    /**
+     * @var AreProductsSalableInterface
+     */
+    private $areProductsSalable;
+
+    /**
+     * @var SourceItemsSaveInterface
+     */
+    private $sourceItemsSave;
+
+    /**
+     * @var SourceItemInterfaceFactory
+     */
+    private $sourceItemFactory;
+
+    /**
+     * @var DataFixtureStorage
+     */
+    private $fixtures;
+
     protected function setUp(): void
     {
         $this->registry = Bootstrap::getObjectManager()->get(Registry::class);
@@ -124,6 +177,10 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
             Bootstrap::getObjectManager()->get(GetStockItemConfigurationInterface::class);
         $this->saveStockItemConfiguration =
             Bootstrap::getObjectManager()->get(SaveStockItemConfigurationInterface::class);
+        $this->areProductsSalable = Bootstrap::getObjectManager()->get(AreProductsSalableInterface::class);
+        $this->sourceItemsSave = Bootstrap::getObjectManager()->get(SourceItemsSaveInterface::class);
+        $this->sourceItemFactory = Bootstrap::getObjectManager()->get(SourceItemInterfaceFactory::class);
+        $this->fixtures = DataFixtureStorageManager::getStorage();
     }
 
     /**
@@ -154,6 +211,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
         $orderId = $this->cartManagement->placeOrder($cart->getId());
 
         self::assertNotNull($orderId);
+        self::assertNull($this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered());
 
         $this->deleteOrderById((int)$orderId);
     }
@@ -221,6 +279,12 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
 
         self::assertNotNull($orderId);
 
+        /**
+         * This assert can be introduced once https://github.com/magento/magento2/pull/29881
+         * has been merged
+         */
+        //self::assertEquals($this->orderRepository->get($orderId)->getItems()[0]->getQtyBackordered(), 1.5);
+
         //cleanup
         $this->deleteOrderById((int)$orderId);
     }
@@ -238,6 +302,7 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
      * @magentoConfigFixture current_store cataloginventory/item_options/manage_stock 0
      *
      * @magentoDbIsolation disabled
+     * @magentoAppIsolation enabled
      */
     public function testPlaceOrderWithOutOffStockProductAndManageStockTurnedOff()
     {
@@ -259,6 +324,225 @@ class PlaceOrderOnNotDefaultStockTest extends TestCase
 
         //cleanup
         $this->deleteOrderById((int)$orderId);
+    }
+
+    #[
+        DbIsolation(false),
+        AppIsolation(true),
+        DataFixture(SourceFixture::class, as: 'src1'),
+        DataFixture(StockFixture::class, as: 'stk2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stk2.stock_id$', 'source_code' => '$src1.source_code$'],
+            ]
+        ),
+        DataFixture(StockSalesChannelsFixture::class, ['stock_id' => '$stk2.stock_id$', 'sales_channels' => ['base']]),
+        DataFixture(AttributeFixture::class, ['options' => [['label' => 'option1', 'sort_order' => 0]]], as: 'attr'),
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(ConfigurableProductFixture::class, ['_options' => ['$attr$'], '_links' => ['$p1$']], 'cp1'),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$p1.sku$', 'source_code' => 'default', 'quantity' => 0],
+                ['sku' => '$p1.sku$', 'source_code' => '$src1.source_code$', 'quantity' => 1],
+            ]
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddConfigurableProductToCartFixture::class,
+            ['cart_id' => '$cart.id$', 'product_id' => '$cp1.id$', 'child_product_id' => '$p1.id$', 'qty' => 1],
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetShippingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetDeliveryMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(ShipmentFixture::class, ['order_id' => '$order.id$', 'items' => [['product_id' => '$cp1.id$']]]),
+    ]
+    public function testConfigurableProductShouldBeBackInStockWhenChildProductIsBackInStock(): void
+    {
+        $simpleProductSKU = $this->fixtures->get('p1')->getSku();
+        $configurableProductSKU = $this->fixtures->get('cp1')->getSku();
+        $stock = $this->fixtures->get('stk2');
+        $source = $this->fixtures->get('src1');
+        $this->assertFalse(
+            current($this->areProductsSalable->execute([$simpleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $this->assertFalse(
+            current($this->areProductsSalable->execute([$configurableProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $sourceItem = $this->sourceItemFactory->create(
+            [
+                'data' => [
+                    SourceItemInterface::SOURCE_CODE => $source->getSourceCode(),
+                    SourceItemInterface::SKU => $simpleProductSKU,
+                    SourceItemInterface::QUANTITY => 1,
+                    SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+                ]
+            ]
+        );
+        $this->sourceItemsSave->execute([$sourceItem]);
+        $this->assertTrue(
+            current($this->areProductsSalable->execute([$simpleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $this->assertTrue(
+            current($this->areProductsSalable->execute([$configurableProductSKU], $stock->getStockId()))->isSalable()
+        );
+    }
+
+    #[
+        DbIsolation(false),
+        AppIsolation(true),
+        DataFixture(SourceFixture::class, as: 'src1'),
+        DataFixture(StockFixture::class, as: 'stk2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stk2.stock_id$', 'source_code' => '$src1.source_code$'],
+            ]
+        ),
+        DataFixture(StockSalesChannelsFixture::class, ['stock_id' => '$stk2.stock_id$', 'sales_channels' => ['base']]),
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(
+            DeleteSourceItemsFixture::class,
+            [
+                ['sku' => '$p1.sku$', 'source_code' => 'default']
+            ]
+        ),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$p1.sku$', 'source_code' => '$src1.source_code$', 'quantity' => 1],
+            ]
+        ),
+        DataFixture(BundleOptionFixture::class, ['product_links' => ['$p1$']], 'opt1'),
+        DataFixture(
+            BundleProductFixture::class,
+            ['_options' => ['$opt1$']],
+            'bp1'
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddBundleProductToCartFixture::class,
+            [
+                'cart_id' => '$cart.id$',
+                'product_id' => '$bp1.id$',
+                'selections' => [['$p1.id$']],
+                'qty' => 1
+            ],
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetShippingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetDeliveryMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(ShipmentFixture::class, ['order_id' => '$order.id$', 'items' => [['product_id' => '$bp1.id$']]]),
+    ]
+    public function testBundleProductShouldBeBackInStockWhenChildProductIsBackInStock(): void
+    {
+        $simpleProductSKU = $this->fixtures->get('p1')->getSku();
+        $bundleProductSKU = $this->fixtures->get('bp1')->getSku();
+        $stock = $this->fixtures->get('stk2');
+        $source = $this->fixtures->get('src1');
+        $this->assertFalse(
+            current($this->areProductsSalable->execute([$simpleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $this->assertFalse(
+            current($this->areProductsSalable->execute([$bundleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $sourceItem = $this->sourceItemFactory->create(
+            [
+                'data' => [
+                    SourceItemInterface::SOURCE_CODE => $source->getSourceCode(),
+                    SourceItemInterface::SKU => $simpleProductSKU,
+                    SourceItemInterface::QUANTITY => 1,
+                    SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+                ]
+            ]
+        );
+        $this->sourceItemsSave->execute([$sourceItem]);
+        $this->assertTrue(
+            current($this->areProductsSalable->execute([$simpleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $this->assertTrue(
+            current($this->areProductsSalable->execute([$bundleProductSKU], $stock->getStockId()))->isSalable()
+        );
+    }
+
+    #[
+        DbIsolation(false),
+        AppIsolation(true),
+        DataFixture(SourceFixture::class, as: 'src1'),
+        DataFixture(StockFixture::class, as: 'stk2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stk2.stock_id$', 'source_code' => '$src1.source_code$'],
+            ]
+        ),
+        DataFixture(StockSalesChannelsFixture::class, ['stock_id' => '$stk2.stock_id$', 'sales_channels' => ['base']]),
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(
+            GroupedProductFixture::class,
+            ['product_links' => [['sku' => '$p1.sku$']]],
+            'gp1'
+        ),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$p1.sku$', 'source_code' => 'default', 'quantity' => 0],
+                ['sku' => '$p1.sku$', 'source_code' => '$src1.source_code$', 'quantity' => 1],
+            ]
+        ),
+        DataFixture(GuestCartFixture::class, as: 'cart'),
+        DataFixture(
+            AddGroupedProductToCartFixture::class,
+            [
+                'cart_id' => '$cart.id$',
+                'product_id' => '$gp1.id$',
+                'child_products' => ['$p1.id$'],
+            ],
+        ),
+        DataFixture(SetBillingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetShippingAddressFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetGuestEmailFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetDeliveryMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
+        DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
+        DataFixture(ShipmentFixture::class, ['order_id' => '$order.id$', 'items' => [['product_id' => '$p1.id$']]]),
+    ]
+    public function testGroupedProductShouldBeBackInStockWhenChildProductIsBackInStock(): void
+    {
+        $simpleProductSKU = $this->fixtures->get('p1')->getSku();
+        $groupedProductSKU = $this->fixtures->get('gp1')->getSku();
+        $stock = $this->fixtures->get('stk2');
+        $source = $this->fixtures->get('src1');
+        $this->assertFalse(
+            current($this->areProductsSalable->execute([$simpleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $this->assertFalse(
+            current($this->areProductsSalable->execute([$groupedProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $sourceItem = $this->sourceItemFactory->create(
+            [
+                'data' => [
+                    SourceItemInterface::SOURCE_CODE => $source->getSourceCode(),
+                    SourceItemInterface::SKU => $simpleProductSKU,
+                    SourceItemInterface::QUANTITY => 1,
+                    SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+                ]
+            ]
+        );
+        $this->sourceItemsSave->execute([$sourceItem]);
+        $this->assertTrue(
+            current($this->areProductsSalable->execute([$simpleProductSKU], $stock->getStockId()))->isSalable()
+        );
+        $this->assertTrue(
+            current($this->areProductsSalable->execute([$groupedProductSKU], $stock->getStockId()))->isSalable()
+        );
     }
 
     /**

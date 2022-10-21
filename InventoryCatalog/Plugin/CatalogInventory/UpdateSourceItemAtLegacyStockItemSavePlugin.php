@@ -14,11 +14,14 @@ use Magento\CatalogInventory\Model\Stock\Item;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Model\AbstractModel;
+use Magento\InventoryCatalog\Model\Cache\ProductIdsBySkusStorage;
+use Magento\InventoryCatalog\Model\Cache\ProductSkusByIdsStorage;
 use Magento\InventoryCatalog\Model\GetDefaultSourceItemBySku;
 use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
+use Magento\InventoryCatalog\Model\UpdateSourceItemBasedOnLegacyStockItem;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryCatalog\Model\UpdateSourceItemBasedOnLegacyStockItem;
+use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 
@@ -70,6 +73,21 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
     private $setDataToLegacyStockStatus;
 
     /**
+     * @var ProductIdsBySkusStorage
+     */
+    private $productIdsBySkusStorage;
+
+    /**
+     * @var ProductSkusByIdsStorage
+     */
+    private $productSkusByIdsStorage;
+
+    /**
+     * @var CacheStorage
+     */
+    private $itemCacheStorage;
+
+    /**
      * @param UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem
      * @param ResourceConnection $resourceConnection
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
@@ -78,6 +96,10 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
      * @param GetDefaultSourceItemBySku $getDefaultSourceItemBySku
      * @param AreProductsSalableInterface $areProductsSalable
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+     * @param ProductIdsBySkusStorage $productIdsBySkusStorage
+     * @param ProductSkusByIdsStorage $productSkusByIdsStorage
+     * @param CacheStorage $itemCacheStorage
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         UpdateSourceItemBasedOnLegacyStockItem $updateSourceItemBasedOnLegacyStockItem,
@@ -87,7 +109,10 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         GetSkusByProductIdsInterface $getSkusByProductIds,
         GetDefaultSourceItemBySku $getDefaultSourceItemBySku,
         AreProductsSalableInterface $areProductsSalable,
-        SetDataToLegacyStockStatus $setDataToLegacyStockStatus
+        SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
+        ProductIdsBySkusStorage $productIdsBySkusStorage,
+        ProductSkusByIdsStorage $productSkusByIdsStorage,
+        CacheStorage $itemCacheStorage
     ) {
         $this->updateSourceItemBasedOnLegacyStockItem = $updateSourceItemBasedOnLegacyStockItem;
         $this->resourceConnection = $resourceConnection;
@@ -97,6 +122,9 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         $this->getDefaultSourceItemBySku = $getDefaultSourceItemBySku;
         $this->areProductsSalable = $areProductsSalable;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
+        $this->productIdsBySkusStorage = $productIdsBySkusStorage;
+        $this->productSkusByIdsStorage = $productSkusByIdsStorage;
+        $this->itemCacheStorage = $itemCacheStorage;
     }
 
     /**
@@ -126,6 +154,8 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
 
                 $productSku = $this->getSkusByProductIds
                     ->execute([$legacyStockItem->getProductId()])[$legacyStockItem->getProductId()];
+                $this->updateCaches($legacyStockItem, $productSku);
+
                 $stockStatuses = [];
                 $areSalableResults = $this->areProductsSalable->execute([$productSku], Stock::DEFAULT_STOCK_ID);
                 foreach ($areSalableResults as $productSalable) {
@@ -186,5 +216,26 @@ class UpdateSourceItemAtLegacyStockItemSavePlugin
         }
 
         return $typeId;
+    }
+
+    /**
+     * Update legacy item caches
+     *
+     * @param Item $legacyStockItem
+     * @param string $productSku
+     * @return void
+     */
+    private function updateCaches(Item $legacyStockItem, string $productSku): void
+    {
+        $this->productIdsBySkusStorage->set(
+            $productSku,
+            $legacyStockItem->getProductId()
+        );
+        $this->productSkusByIdsStorage->set(
+            (int)$legacyStockItem->getProductId(),
+            $productSku
+        );
+        // Remove cache to get updated legacy stock item on the next request.
+        $this->itemCacheStorage->delete($productSku);
     }
 }

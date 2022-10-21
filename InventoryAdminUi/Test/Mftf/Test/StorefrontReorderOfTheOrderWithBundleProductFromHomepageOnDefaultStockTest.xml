@@ -65,7 +65,12 @@
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
             <!--Disable additional source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAdditionalSource"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--Place order.-->
@@ -77,8 +82,8 @@
             <argument name="productName" value="$$bundleProduct.name$$"/>
         </actionGroup>
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicart"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNext"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskAfterClickNext"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNext"/>
+        <comment userInput="BIC workaround" stepKey="waitForLoadingMaskAfterClickNext"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectPaymentMethod"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="checkoutPlaceOrder"/>
         <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber22}}" stepKey="orderNumber"/>
@@ -87,8 +92,8 @@
             <argument name="orderNumber" value="${orderNumber}"/>
         </actionGroup>
         <actionGroup ref="GoToCheckoutFromMinicartActionGroup" stepKey="goToCheckoutFromMinicartToReorder"/>
-        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickNextToReorder"/>
-        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskAfterClickNextToReorder"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="clickNextToReorder"/>
+        <comment userInput="BIC workaround" stepKey="waitForLoadingMaskAfterClickNextToReorder"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectPaymentMethodToReorder"/>
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="reorder"/>
         <waitForPageLoad stepKey="waitForReorder"/>

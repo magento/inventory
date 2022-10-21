@@ -125,6 +125,7 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCreatedCategory"/>
             <deleteData createDataKey="createStock" stepKey="deleteCreatedStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Set to all products status 'Out of stock' on default source." stepKey="setOutOfStockToAllProductsComment"/>

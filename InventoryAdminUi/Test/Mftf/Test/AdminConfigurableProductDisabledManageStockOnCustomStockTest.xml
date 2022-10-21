@@ -144,6 +144,12 @@
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkRedConfigurableVariationSaveMessage"/>
 
         <comment userInput="Check, configurable product is absent on category page and has 'Out of Stock' status" stepKey="checkConfigurableProductIsAbsentOnCategoryPageAndHasOutOfStockStatusOnViewPageComment"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
+        <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanInvalidatedCaches">
+            <argument name="tags" value="full_page"/>
+        </actionGroup>
 
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateBackToConfigurableCategoryPage"/>
         <waitForPageLoad stepKey="waitForPageLoad7"/>

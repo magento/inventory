@@ -49,6 +49,7 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!-- Assign product to custom website -->

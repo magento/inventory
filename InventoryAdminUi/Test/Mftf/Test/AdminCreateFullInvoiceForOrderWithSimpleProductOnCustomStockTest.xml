@@ -32,8 +32,8 @@
             </createData>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
             <!-- Assign source to product. -->
-            <actionGroup ref="NavigateToCreatedProductEditPageActionGroup" stepKey="navigateToProductEditPage">
-                <argument name="product" value="$$product$$"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="navigateToProductEditPage">
+                <argument name="productId" value="$$product.id$$"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignTestSourceToCreatedProduct" >
                 <argument name="sourceCode" value="$$source.source[source_code]$$"/>
@@ -52,6 +52,7 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <!--- Place order and create invoice. -->

@@ -2,7 +2,7 @@
     "name": "magento/module-inventory-bundle-product",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
         "magento/module-bundle": "*",
         "magento/module-catalog": "*",
@@ -13,7 +13,8 @@
         "magento/module-store": "*"
     },
     "suggest": {
-        "magento/module-catalog-inventory": "*"
+        "magento/module-catalog-inventory": "*",
+        "magento/module-inventory": "*"
     },
     "type": "magento2-module",
     "license": [

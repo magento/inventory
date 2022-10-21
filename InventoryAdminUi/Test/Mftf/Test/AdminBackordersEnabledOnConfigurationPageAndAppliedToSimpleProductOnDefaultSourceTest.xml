@@ -85,6 +85,7 @@
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Customer login to storefront." stepKey="customerLoginToStorefrontComment"/>
@@ -105,9 +106,9 @@
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>
         <waitForElementVisible selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="waitForShippingMethodsLoad"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
-        <waitForElement selector="{{CheckoutShippingMethodsSection.next}}" time="30" stepKey="waitForNextButtonVisible"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"/>
-        <waitForPageLoad stepKey="waitFroPaymentSelectionPageLoad"/>
+        <comment userInput="BIC workaround" stepKey="waitForNextButtonVisible"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>
+        <comment userInput="BIC workaround" stepKey="waitFroPaymentSelectionPageLoad"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
         <comment userInput="BIC workaround" stepKey="waitForPlaceOrderButtonVisible"/>
         <comment userInput="BIC workaround" stepKey="chooseBillingAddress"/>

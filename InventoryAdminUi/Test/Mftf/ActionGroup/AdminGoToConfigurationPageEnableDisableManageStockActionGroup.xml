@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminGoToConfigurationPageEnableDisableManageStock">
+        <annotations>
+            <description>Admin enables or disables the Manage stock option from configuration page</description>
+        </annotations>
+        <arguments>
+            <argument name="manageStockValue" type="string"/>
+        </arguments>
+        <amOnPage url="{{AdminInventoryConfiguration.url}}" stepKey="amOnTheInventoryConfigurationPage1"/>
+        <scrollTo selector="{{AdminAdvancedInventorySlideOutSection.productStockOptionsExpanded}}" x="-200" y="-200" stepKey="scrollToProductStockOption"/>
+        <conditionalClick selector="{{AdminAdvancedInventorySlideOutSection.productStockOptions}}" dependentSelector="{{AdminAdvancedInventorySlideOutSection.productStockOptions}}" visible="true" stepKey="expandProductStockOptions"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <uncheckOption selector="{{AdminAdvancedInventorySlideOutSection.useSystemValue_ManageStock}}" stepKey="clickOnUseSystemValue1"/>
+        <selectOption userInput="{{manageStockValue}}" selector="{{AdminAdvancedInventorySlideOutSection.dropDownManageStock}}" stepKey="selectOptionForManageStock"/>
+        <click selector="#save" stepKey="clickOnSave1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock1"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock1"/>
+    </actionGroup>
+</actionGroups>

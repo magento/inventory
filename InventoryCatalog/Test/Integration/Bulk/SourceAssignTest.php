@@ -7,10 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Integration\Bulk;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\BulkSourceAssignInterface;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -134,5 +137,27 @@ class SourceAssignTest extends TestCase
             $count,
             'Products source assignment count do not match with mixed product types'
         );
+    }
+
+    /**
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     */
+    #[
+        DbIsolation(true),
+        DataFixture(ProductFixture::class, ['sku' => '01234'], 'product1'),
+        DataFixture(ProductFixture::class, ['sku' => '1234'], 'product2'),
+    ]
+    public function testBulkSourceAssignmentOfProductsWithNumericSku(): void
+    {
+        $skus = ['01234', '1234'];
+        $sources = ['default', 'eu-1'];
+        $count = $this->bulkSourceAssign->execute($skus, $sources);
+
+        $this->assertEquals(2, $count, 'Products source assignment count do not match');
+
+        foreach ($skus as $sku) {
+            $sourceItemCodes = $this->getSourceItemCodesBySku($sku);
+            $this->assertEquals($sources, $sourceItemCodes, 'Mass source un-assignment failed');
+        }
     }
 }

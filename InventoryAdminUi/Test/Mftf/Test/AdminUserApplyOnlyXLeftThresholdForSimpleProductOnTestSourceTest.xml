@@ -102,6 +102,7 @@
             <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
 
         <comment userInput="Customer login to storefront." stepKey="customerLoginToStorefrontComment"/>
@@ -123,13 +124,13 @@
         <waitForPageLoad time="30" stepKey="waitForPageLoad5"/>
         <click selector="{{CheckoutShippingMethodsSection.firstShippingMethod}}" stepKey="selectShippingMethod"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
-        <click selector="{{CheckoutShippingMethodsSection.next}}" stepKey="navigateToSecondCheckoutStep"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>
+        <actionGroup ref="StorefrontCheckoutClickNextButtonActionGroup" stepKey="navigateToSecondCheckoutStep"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad7"/>
         <actionGroup ref="CheckoutSelectCheckMoneyOrderPaymentActionGroup" stepKey="selectCheckMoneyOrderPayment"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad8"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad8"/>
         <see selector="{{CheckoutPaymentSection.billingAddress}}" userInput="{{US_Address_TX.street[0]}}" stepKey="chooseBillingAddress"/>
-        <click selector="{{CheckoutPaymentSection.placeOrder}}" stepKey="placeOrder"/>
-        <waitForPageLoad time="30" stepKey="waitForPageLoad9"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrder"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoad9"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 
         <comment userInput="Verify that message 'Only 500 left' appeared on product page on frontend." stepKey="verifyMessageIsDisplayedComment"/>

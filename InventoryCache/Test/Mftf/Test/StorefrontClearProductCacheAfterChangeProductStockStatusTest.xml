@@ -75,6 +75,7 @@
             <!--Disable created sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!--1. Assert simple and bundle products are visible on category page -->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertSimpleProductPresentOnCategory">

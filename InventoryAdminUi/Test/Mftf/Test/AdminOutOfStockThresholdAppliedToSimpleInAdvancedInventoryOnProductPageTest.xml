@@ -31,7 +31,9 @@
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="category"/>
             </createData>
-            <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>
+            <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPageToAssignSource">
+                <argument name="productId" value="$$simpleProduct.id$$"/>
+            </actionGroup>
             <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignSourceToCreatedProduct">
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
@@ -56,28 +58,38 @@
                 <argument name="sourceCode" value="$$customSource.source[source_code]$$"/>
             </actionGroup>
             <deleteData createDataKey="CustomStockMainWebsite" stepKey="deleteStock"/>
-            <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="runIndexerReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCache">
+                <argument name="tags" value="config full_page"/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
         <!-- Go to storefront category page, assert product isn't visible. -->
-        <waitForPageLoad time="30" stepKey="waitForPageLoadToNotSeeTheProduct1"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct"/>
+        <comment userInput="BIC workaround" stepKey="waitForPageLoadToNotSeeTheProduct1"/>
+        <actionGroup ref="StorefrontNavigateToCategoryUrlActionGroup" stepKey="navigateToCategoryPageOnStorefrontToNotSeeTheProduct">
+            <argument name="categoryUrl" value="$$category.custom_attributes[url_key]$$"/>
+        </actionGroup>
         <dontSee userInput="$$simpleProduct.product[name]$$" stepKey="assertProductNotPresentOnCategoryPageOnStorefront"/>
         <dontSee userInput="$$simpleProduct.product[price]$$" stepKey="assertProductPriceNotPresentOnCategoryPageOnStorefront"/>
 
         <!--Change value 'Out of Stock Threshold' for simple product.-->
-        <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPage"/>
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+            <argument name="productId" value="$$simpleProduct.id$$"/>
+        </actionGroup>
         <actionGroup ref="AdminChangeOutOfStockThresholdOnProductEditPageActionGroup" stepKey="setOutOfStockThreshold">
             <argument name="threshold" value="99"/>
         </actionGroup>
-        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
 
         <!-- Go to storefront category page, assert product visibility. -->
-        <reloadPage stepKey="reloadPage1"/>
-        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageOnStorefront"/>
-        <waitForPageLoad time="30" stepKey="waitForCategoryPageLoadOnStorefront"/>
+        <comment userInput="BIC workaround" stepKey="reloadPage1"/>
+        <actionGroup ref="StorefrontNavigateToCategoryUrlActionGroup" stepKey="navigateToCategoryPageOnStorefront">
+            <argument name="categoryUrl" value="$$category.custom_attributes[url_key]$$"/>
+        </actionGroup>
+        <comment userInput="BIC workaround" stepKey="waitForCategoryPageLoadOnStorefront"/>
         <see userInput="$$simpleProduct.product[name]$$" stepKey="assertProductPresentOnCategoryPageOnStorefront"/>
         <see userInput="$$simpleProduct.product[price]$$" stepKey="assertProductPricePresentOnCategoryPageOnStorefront"/>
     </test>

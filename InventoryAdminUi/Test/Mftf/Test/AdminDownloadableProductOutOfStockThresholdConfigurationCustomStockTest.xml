@@ -58,6 +58,7 @@
             </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
             <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <magentoCron groups="index" stepKey="reindex1"/>
         </after>
 
         <!--Assign source to product.-->

@@ -9,6 +9,7 @@ namespace Magento\InventoryLowQuantityNotification\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\MessageQueue\ConsumerFactory;
+use Magento\Framework\MessageQueue\DefaultValueProvider;
 use Magento\Framework\MessageQueue\QueueFactoryInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
@@ -35,12 +36,18 @@ class UpdateProductSkuTest extends WebapiAbstract
     private $productRepository;
 
     /**
+     * @var DefaultValueProvider
+     */
+    private $defaultValueProvider;
+
+    /**
      * @inheritDoc
      */
     protected function setUp(): void
     {
         $this->getBySku = Bootstrap::getObjectManager()->get(GetBySku::class);
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->defaultValueProvider = Bootstrap::getObjectManager()->get(DefaultValueProvider::class);
         $this->rejectMessages();
     }
 
@@ -113,7 +120,10 @@ class UpdateProductSkuTest extends WebapiAbstract
     private function rejectMessages()
     {
         $queueFactory = Bootstrap::getObjectManager()->get(QueueFactoryInterface::class);
-        $queue = $queueFactory->create('inventory.source.items.cleanup', 'db');
+        $queue = $queueFactory->create(
+            'inventory.source.items.cleanup',
+            $this->defaultValueProvider->getConnection()
+        );
         while ($envelope = $queue->dequeue()) {
             $queue->reject($envelope, false);
         }

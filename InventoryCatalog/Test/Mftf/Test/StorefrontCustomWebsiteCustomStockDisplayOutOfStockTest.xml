@@ -65,6 +65,7 @@
                 <argument name="stockName" value="$stock.stock[name]$"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
             <!--Open product edit page-->
             <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
                 <argument name="productId" value="$$product.id$$"/>
@@ -95,8 +96,13 @@
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <!--Logout from backend-->
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+            <magentoCron groups="index" stepKey="reindex"/>
         </after>
         <!-- Assert product is visible on default website category page-->
         <actionGroup ref="StorefrontAssertProductOnCategoryPageAdditionalWebsiteActionGroup" stepKey="assertProductPresentOnDefaultWebsite">
