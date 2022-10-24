@@ -22,10 +22,14 @@
     <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
         <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save"
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SetDataToLegacyCatalogInventoryAtSourceItemsSavePlugin"/>
+        <plugin name="inventory_catalog_update_parent_stock_status_on_source_items_save"
+                type="Magento\InventoryCatalog\Plugin\InventoryApi\UpdateCompositeProductStockStatusOnSourceItemsSave"/>
     </type>
     <type name="Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty">
         <plugin name="synchronize_legacy_catalog_inventory_at_source_item_decrement_quantity"
                 type="Magento\InventoryCatalog\Plugin\InventoryApi\SynchronizeLegacyStockAfterDecrementStockPlugin" sortOrder="50"/>
+        <plugin name="inventory_catalog_update_parent_stock_status_on_decrement_source_item_qty"
+                type="Magento\InventoryCatalog\Plugin\Inventory\UpdateCompositeProductStockStatusOnDecrementSourceItemQty" sortOrder="100"/>
     </type>
     <type name="Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync">
         <plugin name="priceIndexUpdater" type="Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater"/>
@@ -95,6 +99,7 @@
     </type>
     <type name="Magento\Inventory\Model\SourceItem\Command\SourceItemsSaveWithoutLegacySynchronization">
         <plugin name="set_data_to_legacy_catalog_inventory_at_source_items_save" disabled="true"/>
+        <plugin name="inventory_catalog_update_parent_stock_status_on_source_items_save" disabled="true"/>
     </type>
     <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
         <plugin name="adapt_get_stock_status" type="Magento\InventoryCatalog\Plugin\CatalogInventory\Api\StockRegistry\AdaptGetStockStatusPlugin"/>

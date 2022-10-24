@@ -8,112 +8,138 @@
 
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
-    <entity name="SimpleMsiProduct" type="product">
-        <data key="name" unique="suffix">Simple MSI Product </data>
-        <data key="sku" unique="suffix">Simple_MSI_Product_</data>
-        <data key="type_id">simple</data>
-        <data key="price">10.00</data>
-        <data key="quantity">100</data>
-        <data key="weight">1</data>
-        <data key="urlKey" unique="suffix">simple-msi-product-</data>
-        <data key="status">1</data>
-        <data key="notifyQuantity">1</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-    </entity>
-    <!--Notice: This product created for specific test. Has no unique suffix in sku.-->
-    <entity name="SimpleMsiProductWithNumericSku" type="product">
-        <data key="name" unique="suffix">Simple MSI Product </data>
-        <data key="sku">123456789</data>
-        <data key="type_id">simple</data>
-        <data key="price">10.00</data>
-        <data key="quantity">100</data>
-        <data key="weight">1</data>
-        <data key="urlKey" unique="suffix">simple-msi-product-</data>
-        <data key="status">1</data>
-        <data key="notifyQuantity">1</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
-    </entity>
-    <entity name="ConfigurableMsiProduct" type="product">
-        <data key="name" unique="suffix">Configurable MSI Product </data>
-        <data key="sku" unique="suffix">Configurable-MSI-Product-</data>
-        <data key="type_id">configurable</data>
-        <data key="price">100</data>
-        <data key="quantity">100</data>
-        <data key="weight">1</data>
-        <data key="status">1</data>
-        <data key="urlKey" unique="suffix">configurable-msi-product-</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-    </entity>
-    <entity name="VirtualMsiProduct" type="product">
-        <data key="name" unique="suffix">Virtual MSI Product </data>
-        <data key="sku" unique="suffix">Virtual-MSI-Product-</data>
-        <data key="type_id">virtual</data>
-        <data key="price">100</data>
-        <data key="quantity">100</data>
-        <data key="urlKey" unique="suffix">Virtual-MSI-Product-</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-    </entity>
-    <entity name="DownloadableMsiProduct" type="product">
-        <data key="name" unique="suffix">Downloadable MSI Product </data>
-        <data key="sku" unique="suffix">Downloadable-MSI-Product-</data>
-        <data key="type_id">virtual</data>
-        <data key="price">100</data>
-        <data key="quantity">100</data>
-        <data key="urlKey" unique="suffix">Downloadable-MSI-Product-</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-    </entity>
-    <entity name="MsiDownloadableProduct" type="product">
-        <data key="name" unique="suffix">Downloadable MSI Product </data>
-        <data key="sku" unique="suffix">Downloadable-MSI-Product-</data>
-        <data key="type_id">downloadable</data>
-        <data key="price">100</data>
-        <data key="quantity">100</data>
-        <data key="urlKey" unique="suffix">Downloadable-MSI-Product-</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
-    </entity>
-    <entity name="MsiAdvancedSearchDownloadableProduct" type="product">
-        <data key="name" unique="suffix">abc_dfj_</data>
-        <data key="sku" unique="suffix">abc_dfj_</data>
-        <data key="type_id">downloadable</data>
-        <data key="price">100</data>
-        <data key="quantity">100</data>
-        <data key="urlKey" unique="suffix">abc_dfj_</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
-    </entity>
-    <entity name="AdvancedSearchConfigurableMsiProduct" type="product">
-        <data key="name" unique="suffix">abc_dfj_</data>
-        <data key="sku" unique="suffix">abc_dfj_</data>
-        <data key="type_id">configurable</data>
-        <data key="price">100</data>
-        <data key="quantity">100</data>
-        <data key="weight">1</data>
-        <data key="status">1</data>
-        <data key="urlKey" unique="suffix">abc_dfj_</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-    </entity>
-    <entity name="AdvancedSearchBundleProduct" type="product2">
-        <data key="name" unique="suffix">abc_dfj_</data>
-        <data key="sku" unique="suffix">abc_dfj_</data>
-        <data key="type_id">bundle</data>
-        <data key="attribute_set_id">4</data>
-        <data key="visibility">4</data>
-        <data key="status">1</data>
-        <data key="urlKey" unique="suffix">abc_dfj_</data>
-        <requiredEntity type="product_extension_attribute">EavStockItem</requiredEntity>
-        <requiredEntity type="custom_attribute">ApiProductDescription</requiredEntity>
-        <requiredEntity type="custom_attribute">ApiProductShortDescription</requiredEntity>
-        <requiredEntity type="custom_attribute">CustomAttributeDynamicPrice</requiredEntity>
-        <requiredEntity type="custom_attribute">CustomAttributePriceView</requiredEntity>
-    </entity>
+  <entity name="SimpleMsiProduct" type="product">
+    <data key="name" unique="suffix">Simple MSI Product </data>
+    <data key="sku" unique="suffix">Simple_MSI_Product_</data>
+    <data key="type_id">simple</data>
+    <data key="price">10.00</data>
+    <data key="quantity">100</data>
+    <data key="weight">1</data>
+    <data key="urlKey" unique="suffix">simple-msi-product-</data>
+    <data key="status">1</data>
+    <data key="notifyQuantity">1</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
+  <!--Notice: This product created for specific test. Has no unique suffix in sku.-->
+  <entity name="SimpleMsiProductWithNumericSku" type="product">
+    <data key="name" unique="suffix">Simple MSI Product </data>
+    <data key="sku">123456789</data>
+    <data key="type_id">simple</data>
+    <data key="price">10.00</data>
+    <data key="quantity">100</data>
+    <data key="weight">1</data>
+    <data key="urlKey" unique="suffix">simple-msi-product-</data>
+    <data key="status">1</data>
+    <data key="notifyQuantity">1</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+    <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+  </entity>
+  <entity name="ConfigurableMsiProduct" type="product">
+    <data key="name" unique="suffix">Configurable MSI Product </data>
+    <data key="sku" unique="suffix">Configurable-MSI-Product-</data>
+    <data key="type_id">configurable</data>
+    <data key="price">100</data>
+    <data key="quantity">100</data>
+    <data key="weight">1</data>
+    <data key="status">1</data>
+    <data key="urlKey" unique="suffix">configurable-msi-product-</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
+  <entity name="VirtualMsiProduct" type="product">
+    <data key="name" unique="suffix">Virtual MSI Product </data>
+    <data key="sku" unique="suffix">Virtual-MSI-Product-</data>
+    <data key="type_id">virtual</data>
+    <data key="price">100</data>
+    <data key="quantity">100</data>
+    <data key="urlKey" unique="suffix">Virtual-MSI-Product-</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
+  <entity name="DownloadableMsiProduct" type="product">
+    <data key="name" unique="suffix">Downloadable MSI Product </data>
+    <data key="sku" unique="suffix">Downloadable-MSI-Product-</data>
+    <data key="type_id">virtual</data>
+    <data key="price">100</data>
+    <data key="quantity">100</data>
+    <data key="urlKey" unique="suffix">Downloadable-MSI-Product-</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
+  <entity name="MsiDownloadableProduct" type="product">
+    <data key="name" unique="suffix">Downloadable MSI Product </data>
+    <data key="sku" unique="suffix">Downloadable-MSI-Product-</data>
+    <data key="type_id">downloadable</data>
+    <data key="price">100</data>
+    <data key="quantity">100</data>
+    <data key="urlKey" unique="suffix">Downloadable-MSI-Product-</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+    <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+  </entity>
+  <entity name="MsiAdvancedSearchDownloadableProduct" type="product">
+    <data key="name" unique="suffix">abc_dfj_</data>
+    <data key="sku" unique="suffix">abc_dfj_</data>
+    <data key="type_id">downloadable</data>
+    <data key="price">100</data>
+    <data key="quantity">100</data>
+    <data key="urlKey" unique="suffix">abc_dfj_</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+    <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+  </entity>
+  <entity name="AdvancedSearchConfigurableMsiProduct" type="product">
+    <data key="name" unique="suffix">abc_dfj_</data>
+    <data key="sku" unique="suffix">abc_dfj_</data>
+    <data key="type_id">configurable</data>
+    <data key="price">100</data>
+    <data key="quantity">100</data>
+    <data key="weight">1</data>
+    <data key="status">1</data>
+    <data key="urlKey" unique="suffix">abc_dfj_</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
+  <entity name="AdvancedSearchBundleProduct" type="product2">
+    <data key="name" unique="suffix">abc_dfj_</data>
+    <data key="sku" unique="suffix">abc_dfj_</data>
+    <data key="type_id">bundle</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+    <data key="status">1</data>
+    <data key="urlKey" unique="suffix">abc_dfj_</data>
+    <requiredEntity type="product_extension_attribute">EavStockItem</requiredEntity>
+    <requiredEntity type="custom_attribute">ApiProductDescription</requiredEntity>
+    <requiredEntity type="custom_attribute">ApiProductShortDescription</requiredEntity>
+    <requiredEntity type="custom_attribute">CustomAttributeDynamicPrice</requiredEntity>
+    <requiredEntity type="custom_attribute">CustomAttributePriceView</requiredEntity>
+  </entity>
+  <entity name="SimpleMsiProductWithSKU1234" type="product">
+    <data key="name" unique="suffix">Simple MSI Product </data>
+    <data key="sku" unique="suffix">1234</data>
+    <data key="type_id">simple</data>
+    <data key="price">10.00</data>
+    <data key="quantity">100</data>
+    <data key="weight">1</data>
+    <data key="urlKey" unique="suffix">simple-msi-product-</data>
+    <data key="status">1</data>
+    <data key="notifyQuantity">1</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
+  <entity name="SimpleMsiProductWithSKU01234" type="product">
+    <data key="name" unique="suffix">Simple MSI Product </data>
+    <data key="sku" unique="suffix">01234</data>
+    <data key="type_id">simple</data>
+    <data key="price">10.00</data>
+    <data key="quantity">100</data>
+    <data key="weight">1</data>
+    <data key="urlKey" unique="suffix">simple-msi-product-</data>
+    <data key="status">1</data>
+    <data key="notifyQuantity">1</data>
+    <data key="attribute_set_id">4</data>
+    <data key="visibility">4</data>
+  </entity>
 </entities>
