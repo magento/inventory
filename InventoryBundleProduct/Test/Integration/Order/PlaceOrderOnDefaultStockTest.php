@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
  * @magentoDataFixture Magento_InventoryBundleProduct::Test/_files/source_items_for_bundle_options_on_default_source.php
  * @magentoDataFixture Magento_InventorySalesApi::Test/_files/quote.php
  * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+ * @magentoAppIsolation enabled
  */
 class PlaceOrderOnDefaultStockTest extends TestCase
 {
@@ -204,15 +205,8 @@ class PlaceOrderOnDefaultStockTest extends TestCase
     public function testPlaceOrderWithOutOfStockProductAndBackOrdersTurnedOn()
     {
         $bundleSku = 'bundle-product-out-of-stock';
-        $bundleOptionSku = 'simple-out-of-stock';
         $qty = 3;
         $cart = $this->getCart();
-        $defaultStockId = $this->defaultStockProvider->getId();
-        $stockItemConfiguration = $this->getStockItemConfiguration->execute($bundleOptionSku, $defaultStockId);
-        $stockItemConfigurationExtension = $stockItemConfiguration->getExtensionAttributes();
-        $stockItemConfigurationExtension->setIsInStock(true);
-        $stockItemConfiguration->setExtensionAttributes($stockItemConfigurationExtension);
-        $this->saveStockItemConfiguration->execute($bundleOptionSku, $defaultStockId, $stockItemConfiguration);
 
         $bundleProduct = $this->productRepository->get($bundleSku);
 

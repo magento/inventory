@@ -11,8 +11,5 @@
     </type>
     <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
         <plugin name="update_bundle_products_stock_item_status" disabled="true"/>
-        <plugin name="update_bundle_products_stock_item_status_single_source_only"
-                type="Magento\InventoryBundleImportExport\Plugin\Import\Product\UpdateBundleProductsStockItemStatusPlugin"
-                sortOrder="200"/>
     </type>
 </config>

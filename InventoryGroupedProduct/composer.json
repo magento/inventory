@@ -4,12 +4,12 @@
     "require": {
         "php": "~7.4.0||~8.1.0",
         "magento/framework": "*",
-        "magento/module-grouped-product": "*"
+        "magento/module-grouped-product": "*",
+        "magento/module-inventory-catalog-api": "*"
     },
     "suggest": {
         "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-catalog": "*",
-        "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory": "*",
         "magento/module-inventory-api": "*"
     },
