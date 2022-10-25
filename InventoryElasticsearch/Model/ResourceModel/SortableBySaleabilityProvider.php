@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
-use Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface;
+use Magento\InventoryCatalogApi\Model\SortableBySaleabilityInterface;
 
-class OutOfStockAttributeProvider implements OutOfStockAttributeProviderInterface
+class SortableBySaleabilityProvider implements SortableBySaleabilityInterface
 {
     /**
      * @inheritDoc
      */
-    public function isOutOfStockAttributeExists(): bool
+    public function isSortableBySaleability(): bool
     {
         return true;
     }

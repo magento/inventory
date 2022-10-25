@@ -11,10 +11,10 @@ use Magento\Catalog\Helper\Data;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\DB\Select;
-use Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface;
+use Magento\InventoryCatalogApi\Model\SortableBySaleabilityInterface;
 
 /**
- * Class Collection plugin applying sort order
+ * Collection plugin applying sort order
  */
 class CollectionPlugin
 {
@@ -31,25 +31,25 @@ class CollectionPlugin
     private $categoryHelper;
 
     /**
-     * @var OutOfStockAttributeProviderInterface
+     * @var SortableBySaleabilityInterface
      */
-    private $outOfStockAttributeProvider;
+    private $sortableBySaleabilityProvider;
 
     /**
      * Collection plugin constructor
      *
      * @param StockConfigurationInterface $stockConfiguration
      * @param Data $categoryHelper
-     * @param OutOfStockAttributeProviderInterface $outOfStockAttributeProvider
+     * @param SortableBySaleabilityInterface $sortableBySaleabilityProvider
      */
     public function __construct(
         StockConfigurationInterface $stockConfiguration,
         Data $categoryHelper,
-        OutOfStockAttributeProviderInterface $outOfStockAttributeProvider
+        SortableBySaleabilityInterface $sortableBySaleabilityProvider
     ) {
         $this->stockConfiguration = $stockConfiguration;
         $this->categoryHelper = $categoryHelper;
-        $this->outOfStockAttributeProvider = $outOfStockAttributeProvider;
+        $this->sortableBySaleabilityProvider = $sortableBySaleabilityProvider;
     }
 
     /**
@@ -85,7 +85,7 @@ class CollectionPlugin
         if (!$collection->getFlag('is_sorted_by_oos')) {
             $collection->setFlag('is_sorted_by_oos', true);
 
-            if ($this->isOutOfStockBottom() && $this->outOfStockAttributeProvider->isOutOfStockAttributeExists()) {
+            if ($this->isOutOfStockBottom() && $this->sortableBySaleabilityProvider->isSortableBySaleability()) {
                 $collection->setOrder('is_out_of_stock', Select::SQL_DESC);
             }
         }

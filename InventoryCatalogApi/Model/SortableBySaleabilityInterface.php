@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalogApi\Model;
 
-interface OutOfStockAttributeProviderInterface
+interface SortableBySaleabilityInterface
 {
     /**
-     * Check, if `is_out_of_stock` attribute mapper exists
+     * Check, if sortable by saleability is true/false
      *
      * @return bool
      */
-    public function isOutOfStockAttributeExists():bool;
+    public function isSortableBySaleability():bool;
 }

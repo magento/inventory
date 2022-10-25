@@ -13,6 +13,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin;
+use Magento\InventoryCatalogApi\Model\SortableBySaleabilityInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -47,6 +48,11 @@ class CollectionPluginTest extends TestCase
     private $categoryMock;
 
     /**
+     * @var SortableBySaleabilityInterface|MockObject
+     */
+    private $sortableBySaleabilityProviderMock;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
@@ -57,6 +63,10 @@ class CollectionPluginTest extends TestCase
         $this->categoryHelperMock = $this->createMock(Data::class);
         $this->productCollectionMock = $this->createMock(Collection::class);
         $this->categoryMock = $this->createMock(Category::class);
+        $this->sortableBySaleabilityProviderMock =
+            $this->getMockBuilder(SortableBySaleabilityInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->plugin = (new ObjectManager($this))->getObject(
             CollectionPlugin::class,
@@ -81,7 +91,6 @@ class CollectionPluginTest extends TestCase
         string $dir,
         int $automaticSorting
     ): void {
-
         $this->stockConfigurationMock
             ->expects($this->once())
             ->method('isShowOutOfStock')
@@ -104,10 +113,15 @@ class CollectionPluginTest extends TestCase
             ->willReturn($this->categoryMock);
 
         $this->categoryMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getData')
             ->with('automatic_sorting')
             ->willReturn($automaticSorting);
+
+        $this->sortableBySaleabilityProviderMock
+            ->expects($this->any())
+            ->method('isSortableBySaleability')
+            ->willReturn(true);
 
         $this->productCollectionMock
             ->expects($this->any())

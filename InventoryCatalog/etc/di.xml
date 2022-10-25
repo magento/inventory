@@ -115,8 +115,8 @@
                 type="Magento\InventoryCatalog\Model\BulkPartialInventoryTransfer"/>
     <preference for="Magento\InventoryCatalogApi\Api\Data\PartialInventoryTransferItemInterface"
                 type="Magento\InventoryCatalog\Model\PartialInventoryTransferItem"/>
-    <preference for="Magento\InventoryCatalogApi\Model\OutOfStockAttributeProviderInterface"
-                type="Magento\InventoryCatalog\Model\ResourceModel\OutOfStockAttributeProvider"/>
+    <preference for="Magento\InventoryCatalogApi\Model\SortableBySaleabilityInterface"
+                type="Magento\InventoryCatalog\Model\ResourceModel\SortableBySaleabilityProvider"/>
 
     <type name="\Magento\InventoryCatalogApi\Model\BulkSourceAssignValidatorChain">
         <arguments>
