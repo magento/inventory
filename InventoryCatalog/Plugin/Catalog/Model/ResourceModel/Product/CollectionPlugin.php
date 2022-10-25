@@ -36,8 +36,6 @@ class CollectionPlugin
     private $sortableBySaleabilityProvider;
 
     /**
-     * Collection plugin constructor
-     *
      * @param StockConfigurationInterface $stockConfiguration
      * @param Data $categoryHelper
      * @param SortableBySaleabilityInterface $sortableBySaleabilityProvider
