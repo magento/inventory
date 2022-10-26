@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="ConfigurableProductWhenAllChildProductsAreOutOfStockTest">
+        <annotations>
+            <stories value="Configurable product when all child products are out-of-stock"/>
+            <title value="Configurable product when all child products are out-of-stock"/>
+            <description value="Configurable product when all child products are out-of-stock"/>
+            <testCaseId value="AC-4265"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+          <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+          <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+          </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+            <deleteData createDataKey="createConfigurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+
+            <!-- Delete the Created Color attribute-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteWhiteColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute1.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteRedColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute2.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute3.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the SubCategory through API -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step2 Create Configurable Product -->
+        <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">
+            <requiredEntity createDataKey="createSubCategory"/>
+        </createData>
+
+        <!-- Step3 Search for the Created Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openConfigurableProductForEdit">
+            <argument name="productSku" value="$$createConfigurableProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step4 Update the Created Configurable Product -->
+        <actionGroup ref="AdminCreateThreeConfigurationsForConfigurableProductActionGroup" stepKey="editConfigurableProduct">
+            <argument name="product" value="{{createConfigurableProduct}}"/>
+            <argument name="redColor" value="{{colorProductAttribute2.name}}"/>
+            <argument name="blueColor" value="{{colorProductAttribute3.name}}"/>
+            <argument name="whiteColor" value="{{colorProductAttribute1.name}}"/>
+        </actionGroup>
+
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-White)}}" stepKey="grabChildWhiteProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-Blue)}}" stepKey="grabChildBlueProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-Red)}}" stepKey="grabChildRedProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-White)}}" stepKey="grabChildWhiteProdName"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-Blue)}}" stepKey="grabChildBlueProdName"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-Red)}}" stepKey="grabChildRedProdName"/>
+
+        <!-- Step5 Verify the Created Configurable Product on Storefront -->
+        <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront"/>
+        <waitForPageLoad stepKey="waitForStoreFrontPageToLoad"/>
+        <waitForElementVisible selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" stepKey="waitForDropdownElementVisible"/>
+
+        <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName"/>
+        <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice"/>
+        <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku"/>
+
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="selectWhiteVariation"/>
+        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}} +$20.00" stepKey="checkWhiteVariationIsSelected"/>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute3.name}}" stepKey="selectBlueVariation"/>
+        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute3.name}} +$10.00" stepKey="checkBlueVariationIsSelected"/>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute2.name}}" stepKey="selectRedVariation"/>
+        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute2.name}}" stepKey="checkRedVariationIsSelected"/>
+
+        <!-- Step6.1 Search for the White Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openWhiteConfigProduct">
+            <argument name="productSku" value="$grabChildWhiteProdSku"/>
+        </actionGroup>
+
+        <!-- Step6.2 Update the White Configurable Product to out of stock from Product Page-->
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectOutOfStockForWhiteConfigProduct"/>
+
+        <!-- Step6.3 Save the White Configurable Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveWhiteConfigProductPostOutOfStock"/>
+
+        <!-- Step7.1 Search for the White Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBlueConfigProduct">
+            <argument name="productSku" value="$grabChildBlueProdSku"/>
+        </actionGroup>
+
+        <!-- Step7.2 Update the White Configurable Product to out of stock from Product Page-->
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectOutOfStockForBlueConfigProduct"/>
+
+        <!-- Step7.3 Save the White Configurable Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveBlueConfigProductPostOutOfStock"/>
+
+        <!-- Step8.1 Search for the White Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openRedConfigProduct">
+            <argument name="productSku" value="$grabChildRedProdSku"/>
+        </actionGroup>
+
+        <!-- Step8.2 Update the White Configurable Product to out of stock from Product Page-->
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.stockStatus}}" stepKey="selectOutOfStockForRedConfigProduct"/>
+
+        <!-- Step8.3 Save the White Configurable Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveRedConfigProductPostOutOfStock"/>
+
+        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+
+        <!-- Step9 Verify the Configurable Product in Created Category in Storefront is no more present -->
+        <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefront">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createConfigurableProduct$$"/>
+        </actionGroup>
+
+        <!-- Step10 Verify the Configurable Product is out of Stock on Storefront -->
+        <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront1"/>
+        <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName1"/>
+        <seeElement selector="{{StorefrontCategoryProductSection.ProductStockUnavailable}}" stepKey="assertOutOfStockStatusForProduct"/>
+
+        <!-- Delete the child products-->
+        <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableBlueProduct">
+            <argument name="productName" value="$grabChildBlueProdName"/>
+        </actionGroup>
+        <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableWhiteProduct">
+            <argument name="productName" value="$grabChildWhiteProdName"/>
+        </actionGroup>
+        <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableRedProduct">
+            <argument name="productName" value="$grabChildRedProdName"/>
+        </actionGroup>
+    </test>
+</tests>
