@@ -19,7 +19,6 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
 
-
 /**
  * Test product data mapper
  */
