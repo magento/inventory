@@ -139,12 +139,10 @@
 
         <actionGroup ref="AdminOpenCategoryPageActionGroup" stepKey="goToCategoryPage"/>
 
-        <click selector="{{AdminBannerBasicActionSection.Scope}}" stepKey="clickScopeSelector"/>
-        <waitForElementVisible selector="{{AdminBannerBasicActionSection.ScopeDropdown}}" stepKey="waitForScopeDropdown"/>
-        <click selector="{{AdminBannerBasicActionSection.ScopeOption(customStoreEN.name)}}" stepKey="selectScope"/>
-        <waitForElementVisible selector="{{AdminBannerBasicActionSection.ScopeModal}}" stepKey="waitForScopeModal"/>
-        <click selector="{{AdminBannerBasicActionSection.ScopeModalConfirm}}" stepKey="confirmScopeModal"/>
-        <waitForPageLoad stepKey="waitForPageLoad7"/>
+        <actionGroup ref="SwitchCategoryStoreViewActionGroup" stepKey="goToCategory1PageOnEnStoreView">
+          <argument name="Store" value="customStoreEN.name"/>
+          <argument name="CatName" value="$category.name$"/>
+        </actionGroup>
 
         <actionGroup ref="AdminCategoriesOpenCategoryActionGroup" stepKey="openCategory">
             <argument name="category" value="$$category$$"/>
