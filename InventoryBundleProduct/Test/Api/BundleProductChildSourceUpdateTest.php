@@ -7,26 +7,33 @@ declare(strict_types=1);
 
 namespace Magento\InventoryBundleProduct\Test\Api;
 
+use Magento\Bundle\Test\Fixture\Option as BundleOptionFixture;
+use Magento\Bundle\Test\Fixture\Product as BundleProductFixture;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
+use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 use Magento\TestFramework\Assert\AssertArrayContains;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
- * Test validation on add source to child product of bundle product.
+ * Test source and stock changes of child product.
  */
-class BundleProductAddSourceToChildValidationTest extends WebapiAbstract
+class BundleProductChildSourceUpdateTest extends WebapiAbstract
 {
     private const SERVICE_NAME = 'bundleProductLinkManagementV1';
     private const SERVICE_VERSION = 'V1';
     private const RESOURCE_PATH = '/V1/bundle-products';
 
-    const SOURCE_ITEM_RESOURCE_PATH = '/V1/inventory/source-items';
-    const SOURCE_ITEM_SERVICE_NAME_SAVE = 'inventoryApiSourceItemsSaveV1';
-    const SOURCE_ITEM_SERVICE_NAME_DELETE = 'inventoryApiSourceItemsDeleteV1';
+    private const SOURCE_ITEM_RESOURCE_PATH = '/V1/inventory/source-items';
+    private const SOURCE_ITEM_SERVICE_NAME_SAVE = 'inventoryApiSourceItemsSaveV1';
+    private const SOURCE_ITEM_SERVICE_NAME_DELETE = 'inventoryApiSourceItemsDeleteV1';
 
     /**
      * @var ProductRepositoryInterface
@@ -52,11 +59,29 @@ class BundleProductAddSourceToChildValidationTest extends WebapiAbstract
     ];
 
     /**
+     * @var GetLegacyStockItem
+     */
+    private $getLegacyStockItem;
+
+    /**
+     * @var CacheStorage
+     */
+    private $getLegacyStockItemCache;
+
+    /**
+     * @var \Magento\TestFramework\Fixture\DataFixtureStorage
+     */
+    private $fixtures;
+
+    /**
      * @inheritDoc
      */
     protected function setUp(): void
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
+        $this->getLegacyStockItem = Bootstrap::getObjectManager()->get(GetLegacyStockItem::class);
+        $this->getLegacyStockItemCache = Bootstrap::getObjectManager()->get(CacheStorage::class);
+        $this->fixtures = DataFixtureStorageManager::getStorage();
     }
 
     /**
@@ -135,6 +160,45 @@ class BundleProductAddSourceToChildValidationTest extends WebapiAbstract
         $actualData = $this->getSourceItems('SKU-4');
         self::assertEquals(2, $actualData['total_count']);
         AssertArrayContains::assert($this->sourceItems, $actualData['items']);
+    }
+
+    #[
+        DataFixture(ProductFixture::class, as: 'p1'),
+        DataFixture(BundleOptionFixture::class, ['product_links' => ['$p1$']], 'opt1'),
+        DataFixture(
+            BundleProductFixture::class,
+            ['_options' => ['$opt1$']],
+            'bundle1'
+        ),
+    ]
+    public function testBundleProductStockStatusShouldBeUpdatedWhenChildProductStockStatusChange(): void
+    {
+        $bundleProductSku = $this->fixtures->get('bundle1')->getSku();
+        $simpleProductSku = $this->fixtures->get('p1')->getSku();
+        $this->assertTrue($this->getLegacyStockItem->execute($bundleProductSku)->getIsInStock());
+        $sources = [
+            [
+                SourceItemInterface::SOURCE_CODE => 'default',
+                SourceItemInterface::SKU => $simpleProductSku,
+                SourceItemInterface::QUANTITY => 99,
+                SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
+            ]
+        ];
+        $this->sourceItems = array_merge($this->sourceItems, $sources);
+        $this->addSourceItems($sources);
+        $this->getLegacyStockItemCache->delete($bundleProductSku);
+        $this->assertFalse($this->getLegacyStockItem->execute($bundleProductSku)->getIsInStock());
+        $sources = [
+            [
+                SourceItemInterface::SOURCE_CODE => 'default',
+                SourceItemInterface::SKU => $simpleProductSku,
+                SourceItemInterface::QUANTITY => 99,
+                SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+            ]
+        ];
+        $this->addSourceItems($sources);
+        $this->getLegacyStockItemCache->delete($bundleProductSku);
+        $this->assertTrue($this->getLegacyStockItem->execute($bundleProductSku)->getIsInStock());
     }
 
     /**
