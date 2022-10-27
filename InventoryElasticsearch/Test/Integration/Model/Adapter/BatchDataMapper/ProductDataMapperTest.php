@@ -95,7 +95,6 @@ class ProductDataMapperTest extends TestCase
                 'select_attribute_value' => 'Table_fixture_second_store'
             ],
         ];
-
         /** @var Manager $moduleManager */
         $moduleManager = $this->objectManager->get(Manager::class);
         if ($moduleManager->isEnabled('Magento_InventoryElasticsearch')) {
