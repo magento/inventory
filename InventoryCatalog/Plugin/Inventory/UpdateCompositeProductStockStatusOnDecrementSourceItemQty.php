@@ -5,51 +5,52 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProduct\Plugin\InventoryApi;
+namespace Magento\InventoryCatalog\Plugin\Inventory;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorInterface;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
-use Magento\ConfigurableProduct\Model\Inventory\ChangeParentStockStatus;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
- * Update configurable product stock status in legacy stock after decrement quantity of child stock item
+ * Update parent products stock status after decrementing quantity of children stock
  */
-class UpdateParentStockStatusInLegacyStockPlugin
+class UpdateCompositeProductStockStatusOnDecrementSourceItemQty
 {
-    /**
-     * @var ChangeParentStockStatus
-     */
-    private $changeParentStockStatus;
-
     /**
      * @var GetProductIdsBySkusInterface
      */
-    private $getProductIdsBySkus;
+    private GetProductIdsBySkusInterface $getProductIdsBySkus;
 
     /**
      * @var IsSingleSourceModeInterface
      */
-    private $isSingleSourceMode;
+    private IsSingleSourceModeInterface $isSingleSourceMode;
+
+    /**
+     * @var CompositeProductStockStatusProcessorInterface
+     */
+    private CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor;
 
     /**
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
-     * @param ChangeParentStockStatus $changeParentStockStatus
      * @param IsSingleSourceModeInterface $isSingleSourceMode
+     * @param CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor
      */
     public function __construct(
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        ChangeParentStockStatus $changeParentStockStatus,
-        IsSingleSourceModeInterface $isSingleSourceMode
+        IsSingleSourceModeInterface $isSingleSourceMode,
+        CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor
     ) {
         $this->getProductIdsBySkus = $getProductIdsBySkus;
-        $this->changeParentStockStatus = $changeParentStockStatus;
         $this->isSingleSourceMode = $isSingleSourceMode;
+        $this->compositeProductStockStatusProcessor = $compositeProductStockStatusProcessor;
     }
 
     /**
-     *  Make configurable product out of stock if all its children out of stock
+     * Update parent products stock status after decrementing quantity of children stock
      *
      * @param DecrementSourceItemQty $subject
      * @param void $result
@@ -64,10 +65,14 @@ class UpdateParentStockStatusInLegacyStockPlugin
             $sourceItems = array_column($sourceItemDecrementData, 'source_item');
             foreach ($sourceItems as $sourceItem) {
                 $sku = $sourceItem->getSku();
-                $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
+                try {
+                    $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
+                } catch (NoSuchEntityException $e) {
+                    continue;
+                }
             }
             if ($productIds) {
-                $this->changeParentStockStatus->execute($productIds);
+                $this->compositeProductStockStatusProcessor->execute($productIds);
             }
         }
     }
