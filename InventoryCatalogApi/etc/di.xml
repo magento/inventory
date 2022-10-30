@@ -15,4 +15,6 @@
                 type="Magento\InventoryCatalogApi\Model\BulkInventoryTransferValidatorChain" />
     <preference for="Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorInterface"
                 type="Magento\InventoryCatalogApi\Model\PartialInventoryTransferValidatorChain"/>
+    <preference for="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorInterface"
+                type="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool"/>
 </config>
