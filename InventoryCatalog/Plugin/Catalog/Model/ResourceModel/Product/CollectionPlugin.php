@@ -84,7 +84,7 @@ class CollectionPlugin
             $collection->setFlag('is_sorted_by_oos', true);
 
             if ($this->isOutOfStockBottom() && $this->sortableBySaleabilityProvider->isSortableBySaleability()) {
-                $collection->setOrder('is_out_of_stock', Select::SQL_DESC);
+                $collection->setOrder(SortableBySaleabilityInterface::IS_OUT_OF_STOCK, Select::SQL_DESC);
             }
         }
     }
