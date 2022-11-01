@@ -42,10 +42,10 @@ class CompositeProductStockStatusProcessorPool implements CompositeProductStockS
     /**
      * @inheritdoc
      */
-    public function execute(array $productIds): void
+    public function execute(array $skus): void
     {
         foreach ($this->compositeProductStockStatusProcessors as $compositeProductStockStatusProcessor) {
-            $compositeProductStockStatusProcessor->execute($productIds);
+            $compositeProductStockStatusProcessor->execute($skus);
         }
     }
 }
