@@ -63,12 +63,7 @@ class CollectionPlugin
         mixed $attribute,
         string $dir = Select::SQL_DESC
     ): array {
-        if ($this->stockConfiguration->isShowOutOfStock()) {
-            $subject->setFlag('is_processing', true);
-            $this->applyOutOfStockSortOrders($subject);
-            $subject->setFlag('is_processing', false);
-        }
-
+        $this->applyOutOfStockSortOrders($subject);
         return [$attribute, $dir];
     }
 
@@ -80,12 +75,17 @@ class CollectionPlugin
      */
     private function applyOutOfStockSortOrders(Collection $collection): void
     {
-        if (!$collection->getFlag('is_sorted_by_oos')) {
-            $collection->setFlag('is_sorted_by_oos', true);
+        if ($this->stockConfiguration->isShowOutOfStock()) {
+            $collection->setFlag('is_processing', true);
 
-            if ($this->isOutOfStockBottom() && $this->sortableBySaleabilityProvider->isSortableBySaleability()) {
-                $collection->setOrder(SortableBySaleabilityInterface::IS_OUT_OF_STOCK, Select::SQL_DESC);
+            if (!$collection->getFlag('is_sorted_by_oos')) {
+                $collection->setFlag('is_sorted_by_oos', true);
+
+                if ($this->isOutOfStockBottom() && $this->sortableBySaleabilityProvider->isSortableBySaleability()) {
+                    $collection->setOrder(SortableBySaleabilityInterface::IS_OUT_OF_STOCK, Select::SQL_DESC);
+                }
             }
+            $collection->setFlag('is_processing', false);
         }
     }
 
@@ -118,9 +118,8 @@ class CollectionPlugin
         string $dir = Select::SQL_DESC
     ): array {
         if (!$subject->getFlag('is_processing')) {
-            $result = $this->beforeSetOrder($subject, $attribute, $dir);
+            $this->applyOutOfStockSortOrders($subject);
         }
-
-        return $result ?? [$attribute, $dir];
+        return [$attribute, $dir];
     }
 }
