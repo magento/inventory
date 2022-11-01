@@ -169,7 +169,6 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
      * @param OrderRejecter $subject
      * @param null $result
      * @param AsyncOrderMessageInterface $asyncOrderMessage
-     * @param string $rejectComment
      * @return void
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -219,14 +218,14 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
 
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
-                'data' => ['objectIncrementId' => (string)$asyncOrderMessage->getOrderId()]
+                'data' => ['objectIncrementId' => $asyncOrderMessage->getOrderId()]
             ]);
 
             /** @var SalesEventInterface $salesEvent */
             $salesEvent = $this->salesEventFactory->create([
                 'type' => SalesEventInterface::EVENT_ORDER_PLACED,
                 'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => (string)$asyncOrderMessage->getOrderId()
+                'objectId' => $asyncOrderMessage->getOrderId()
             ]);
             $salesEvent->setExtensionAttributes($salesEventExtension);
             $salesChannel = $this->salesChannelFactory->create([
