@@ -155,7 +155,7 @@
     <type name="Magento\Sales\Api\OrderManagementInterface">
         <plugin name="inventory_reservations_placement" type="Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin"/>
     </type>
-    <type name="Magento\AsyncOrder\Model\OrderManagement">
+    <type name="Magento\Framework\Model\ResourceModel\Db\AbstractDb">
         <plugin name="async_inventory_reservations_placement" type="Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement\AppendReservationsAfterAsyncOrderPlacementPlugin"/>
     </type>
 

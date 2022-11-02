@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
 
-use Magento\AsyncOrder\Api\Data\OrderInterface;
-use Magento\AsyncOrder\Model\OrderManagement;
-use Magento\AsyncOrder\Model\Quote;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
@@ -29,7 +27,10 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote as QuoteEntity;
 use Magento\Quote\Model\Quote\Item\ToOrderItem as ToOrderItemConverter;
 use Magento\Quote\Model\QuoteIdMaskFactory;
+use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\EntityInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
 class AppendReservationsAfterAsyncOrderPlacementPlugin
@@ -111,6 +112,11 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
     private $scopeConfig;
 
     /**
+     * @var QuoteIdToMaskedQuoteIdInterface
+     */
+    private $quoteIdToMaskedQuoteId;
+
+    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -126,6 +132,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      * @param QuoteIdMaskFactory $quoteIdMaskFactory
      * @param ToOrderItemConverter $quoteItemToOrderItem
      * @param ScopeConfigInterface $scopeConfig
+     * @param QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -143,7 +150,8 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         CartRepositoryInterface $quoteRepository,
         QuoteIdMaskFactory $quoteIdMaskFactory,
         ToOrderItemConverter $quoteItemToOrderItem,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -160,6 +168,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
         $this->quoteItemToOrderItem = $quoteItemToOrderItem;
         $this->scopeConfig = $scopeConfig;
+        $this->quoteIdToMaskedQuoteId = $quoteIdToMaskedQuoteId;
     }
 
     /**
@@ -167,31 +176,26 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
      *
      * In case of error during order placement exception add compensation
      *
-     * @param OrderManagementInterface $subject
-     * @param callable $proceed
-     * @param Quote $asyncQuote
-     * @param string|null $email
-     * @param string $cartId
-     * @return OrderInterface
+     * @param AbstractDb $subject
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function aroundPlaceInitialOrder(
-        OrderManagement $subject,
-        callable $proceed,
-        Quote $asyncQuote,
-        string $email = null,
-        string $cartId
-    ): OrderInterface {
-        if ($this->scopeConfig->isSetFlag(
-            AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
-        )) {
+    public function afterSave(
+        AbstractDb $subject,
+        $result,
+        $data
+    ) {
+        if ($data instanceof EntityInterface && !$data instanceof OrderInterface &&
+            $this->scopeConfig->isSetFlag(
+                AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
+            )) {
             $itemsById = $itemsBySku = $itemsToSell = [];
-            if (!is_numeric($cartId)) {
+            $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$data->getQuoteId());
+            if ($cartId) {
                 $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
                 $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
             } else {
-                $quote = $this->quoteRepository->getActive($cartId);
+                $quote = $this->quoteRepository->getActive($data->getQuoteId());
             }
             foreach ($this->resolveItems($quote) as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {
@@ -220,18 +224,16 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
 
             $this->checkItemsQuantity->execute($itemsBySku, $stockId);
 
-            $result = $proceed($asyncQuote, $email, $cartId);
-
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
-                'data' => ['objectIncrementId' => (string)$result->getIncrementId()]
+                'data' => ['objectIncrementId' => (string)$data->getIncrementId()]
             ]);
 
             /** @var SalesEventInterface $salesEvent */
             $salesEvent = $this->salesEventFactory->create([
                 'type' => SalesEventInterface::EVENT_ORDER_PLACED,
                 'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => (string)$result->getEntityId()
+                'objectId' => (string)$data->getEntityId()
             ]);
             $salesEvent->setExtensionAttributes($salesEventExtension);
             $salesChannel = $this->salesChannelFactory->create([
@@ -242,8 +244,6 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
             ]);
 
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
-        } else {
-            $result = $proceed($asyncQuote, $email, $cartId);
         }
         return $result;
     }
