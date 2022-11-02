@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\DeploymentConfig;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
@@ -22,10 +21,6 @@ use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\QuoteIdMaskFactory;
-use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
@@ -95,34 +90,9 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $salesEventExtensionFactory;
 
     /**
-     * @var DeploymentConfig
-     */
-    private $deploymentConfig;
-
-    /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-
-    /**
-     * @var CartRepositoryInterface
-     */
-    private $quoteRepository;
-
-    /**
-     * @var QuoteIdMaskFactory
-     */
-    private $quoteIdMaskFactory;
-
-    /**
-     * @var QuoteIdToMaskedQuoteIdInterface
-     */
-    private $quoteIdToMaskedQuoteId;
-
-    /**
-     * @var Quote
-     */
-    private $quote;
 
     /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
@@ -137,10 +107,6 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
      * @param SalesEventExtensionFactory $salesEventExtensionFactory
      * @param ScopeConfigInterface $scopeConfig
-     * @param CartRepositoryInterface $quoteRepository
-     * @param QuoteIdMaskFactory $quoteIdMaskFactory
-     * @param QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
-     * @param Quote $quote
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -155,11 +121,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
         SalesEventExtensionFactory $salesEventExtensionFactory,
-        ScopeConfigInterface $scopeConfig,
-        CartRepositoryInterface $quoteRepository,
-        QuoteIdMaskFactory $quoteIdMaskFactory,
-        QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId,
-        Quote $quote
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -173,10 +135,6 @@ class AppendReservationsAfterOrderPlacementPlugin
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
         $this->salesEventExtensionFactory = $salesEventExtensionFactory;
         $this->scopeConfig = $scopeConfig;
-        $this->quoteRepository = $quoteRepository;
-        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
-        $this->quoteIdToMaskedQuoteId = $quoteIdToMaskedQuoteId;
-        $this->quote = $quote;
     }
 
     /**
@@ -196,11 +154,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         callable $proceed,
         OrderInterface $order
     ): OrderInterface {
-        $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$order->getQuoteId());
-        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        $quote = $this->quote->load($quoteIdMask->getQuoteId());
-        $id = $quote->getId() ?? $order->getQuoteId();
-        if (!$this->quoteRepository->get($id)->getOrigOrderId()
+        if (!$order->getEntityId()
             || !$this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             foreach ($order->getItems() as $item) {

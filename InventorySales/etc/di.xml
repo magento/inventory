@@ -159,7 +159,7 @@
         <plugin name="async_inventory_reservations_placement" type="Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement\AppendReservationsAfterAsyncOrderPlacementPlugin"/>
     </type>
 
-    <type name="Magento\AsyncOrder\Model\OrderRejecter">
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
         <plugin name="async_inventory_reservations_rejection" type="Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement\AppendReservationsAfterAsyncOrderRejectionPlugin"/>
     </type>
     <!-- Return Processor -->

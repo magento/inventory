@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
 
-use Magento\AsyncOrder\Api\Data\AsyncOrderMessageInterface;
-use Magento\AsyncOrder\Model\OrderRejecter;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
@@ -25,15 +23,21 @@ use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote as QuoteEntity;
 use Magento\Quote\Model\Quote\Item\ToOrderItem as ToOrderItemConverter;
 use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
+use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
 class AppendReservationsAfterAsyncOrderRejectionPlugin
 {
+    public const STATUS_REJECTED = 'rejected';
+
     /**
      * @var PlaceReservationsForSalesEventInterface
      */
@@ -110,6 +114,11 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
     private $scopeConfig;
 
     /**
+     * @var QuoteIdToMaskedQuoteIdInterface
+     */
+    private $quoteIdToMaskedQuoteId;
+
+    /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
      * @param WebsiteRepositoryInterface $websiteRepository
@@ -125,6 +134,7 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
      * @param QuoteIdMaskFactory $quoteIdMaskFactory
      * @param ToOrderItemConverter $quoteItemToOrderItem
      * @param ScopeConfigInterface $scopeConfig
+     * @param QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -142,7 +152,8 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
         CartRepositoryInterface $quoteRepository,
         QuoteIdMaskFactory $quoteIdMaskFactory,
         ToOrderItemConverter $quoteItemToOrderItem,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -159,35 +170,36 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
         $this->quoteItemToOrderItem = $quoteItemToOrderItem;
         $this->scopeConfig = $scopeConfig;
+        $this->quoteIdToMaskedQuoteId = $quoteIdToMaskedQuoteId;
     }
 
     /**
-     * Add reservation before placing Async order
+     * Add reservation before rejecting Async order
      *
      * In case of error during order placement exception add compensation
      *
-     * @param OrderRejecter $subject
-     * @param null $result
-     * @param AsyncOrderMessageInterface $asyncOrderMessage
-     * @return void
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface $result
+     * @return OrderInterface $result
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterReject(
-        OrderRejecter $subject,
-        $result,
-        AsyncOrderMessageInterface $asyncOrderMessage
-    ): void {
-        if ($this->scopeConfig->isSetFlag(
-            AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
-        )) {
+    public function afterSave(
+        OrderRepositoryInterface $subject,
+        OrderInterface $result
+    ): OrderInterface {
+        if ($result->getStatus() === self::STATUS_REJECTED &&
+            $this->scopeConfig->isSetFlag(
+                AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
+            )) {
+            $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$result->getEntityId());
             $itemsById = $itemsBySku = $itemsToSell = [];
             /** @var $quoteIdMask QuoteIdMask */
-            if ($asyncOrderMessage->getIsGuest()) {
-                $quoteIdMask = $this->quoteIdMaskFactory->create()->load($asyncOrderMessage->getCartId(), 'masked_id');
+            if ($cartId) {
+                $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
                 $quote = $this->quoteRepository->get($quoteIdMask->getQuoteId());
             } else {
-                $quote = $this->quoteRepository->get($asyncOrderMessage->getCartId());
+                $quote = $this->quoteRepository->get($result->getQuoteId());
             }
             foreach ($this->resolveItems($quote) as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {
@@ -218,14 +230,14 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
 
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
-                'data' => ['objectIncrementId' => $asyncOrderMessage->getOrderId()]
+                'data' => ['objectIncrementId' => $result->getEntityId()]
             ]);
 
             /** @var SalesEventInterface $salesEvent */
             $salesEvent = $this->salesEventFactory->create([
                 'type' => SalesEventInterface::EVENT_ORDER_PLACED,
                 'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => $asyncOrderMessage->getOrderId()
+                'objectId' => $result->getEntityId()
             ]);
             $salesEvent->setExtensionAttributes($salesEventExtension);
             $salesChannel = $this->salesChannelFactory->create([
@@ -237,6 +249,7 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
 
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
         }
+        return $result;
     }
 
     /**
