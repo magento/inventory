@@ -14,5 +14,6 @@
         <element name="customerEmailField" type="input" selector="//input[contains(@id, 'store-pickup-checkout-customer-email')]"/>
         <element name="selectShipping" type="button" selector="//button[contains(@class, 'action-select-shipping')]"/>
         <element name="selectedStoreName" type="input" selector="//div[contains(@class, 'selected-location-details')]/p[contains(@class, 'location-name')]"/>
+        <element name="instorepickupdelivery" type="button" selector="#label_carrier_pickup_instore"/>
     </section>
 </sections>
