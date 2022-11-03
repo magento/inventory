@@ -31,7 +31,6 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {
-
     public const CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE = 'cataloginventory/item_options/use_deferred_stock_update';
 
     /**
@@ -212,6 +211,14 @@ class AppendReservationsAfterOrderPlacementPlugin
     }
 
     /**
+     * Create new Order
+     *
+     * @param callable $proceed
+     * @param OrderInterface $order
+     * @param array $itemsToSell
+     * @param SalesChannelInterface $salesChannel
+     * @param SalesEventExtensionInterface $salesEventExtension
+     * @return OrderInterface
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException

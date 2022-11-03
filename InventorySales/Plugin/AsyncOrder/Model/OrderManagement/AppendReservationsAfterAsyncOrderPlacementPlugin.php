@@ -33,6 +33,12 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\EntityInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
+/**
+ *  Append Reservation after Async Order is placed
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class AppendReservationsAfterAsyncOrderPlacementPlugin
 {
 
@@ -172,11 +178,13 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
     }
 
     /**
-     * Add reservation before placing Async order
      *
+     * Add reservation after placing Async order
      * In case of error during order placement exception add compensation
      *
      * @param AbstractDb $subject
+     * @param mixed $result
+     * @param mixed $data
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

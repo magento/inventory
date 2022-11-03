@@ -34,6 +34,12 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
+/**
+ *  Append Reservation after Async Order is rejected
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class AppendReservationsAfterAsyncOrderRejectionPlugin
 {
     public const STATUS_REJECTED = 'rejected';
@@ -41,7 +47,7 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
     /**
      * @var PlaceReservationsForSalesEventInterface
      */
-    private $placeReservationsForSalesEvent;
+    private $placeReservationsForSalesEvent; //phpcs:ignore CopyPaste
 
     /**
      * @var GetSkusByProductIdsInterface
