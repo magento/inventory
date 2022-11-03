@@ -39,6 +39,7 @@ use Magento\Store\Api\WebsiteRepositoryInterface;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPCPD)
  */
 class AppendReservationsAfterAsyncOrderRejectionPlugin
 {
@@ -47,7 +48,7 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
     /**
      * @var PlaceReservationsForSalesEventInterface
      */
-    private $placeReservationsForSalesEvent; //phpcs:ignore CopyPaste
+    private $placeReservationsForSalesEvent;
 
     /**
      * @var GetSkusByProductIdsInterface
@@ -181,8 +182,6 @@ class AppendReservationsAfterAsyncOrderRejectionPlugin
 
     /**
      * Add reservation before rejecting Async order
-     *
-     * In case of error during order placement exception add compensation
      *
      * @param OrderRepositoryInterface $subject
      * @param OrderInterface $result

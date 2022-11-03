@@ -178,9 +178,7 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
     }
 
     /**
-     *
      * Add reservation after placing Async order
-     * In case of error during order placement exception add compensation
      *
      * @param AbstractDb $subject
      * @param mixed $result
