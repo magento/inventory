@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="ConfigurableProductWithDropDownAttributeOnTestStockGetOutOfStockWhenAllItsChildProductsGetOutOfStockOrDisabledTest">
+        <annotations>
+            <stories value="Configurable product with drop-down attribute on Test stock get Out of stock when all its child products get out of stock or disabled"/>
+            <title value="Configurable product with drop-down attribute on Test stock get Out of stock when all its child products get out of stock or disabled"/>
+            <description value="Configurable product with drop-down attribute on Test stock get Out of stock when all its child products get out of stock or disabled"/>
+            <testCaseId value="AC-1774"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
+                <argument name="stockName" value="Test Stock 1"/>
+            </actionGroup>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+            <deleteData createDataKey="createConfigurableProduct" stepKey="deleteConfigurableProduct"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <deleteData createDataKey="createCustomer1" stepKey="deleteCustomer"/>
+
+            <!-- Delete the Created Color attribute-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute3.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteWhiteColorAttribute">
+                <argument name="Color" value="{{colorProductAttribute1.name}}"/>
+            </actionGroup>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the SubCategory through API -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step2 Create New Customer -->
+        <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
+
+        <!-- Step3 Create New Source -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+
+        <!-- Step4 Create the stock from UI and then assign the sources -->
+        <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="createNewStock">
+            <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
+            <argument name="stockName" value="Test Stock 1"/>
+        </actionGroup>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <!-- Step5 Create Configurable Product -->
+        <createData entity="ApiConfigurableProduct" stepKey="createConfigurableProduct">
+            <requiredEntity createDataKey="createSubCategory"/>
+        </createData>
+
+        <!-- Step5.1 Search for the Created Configurable Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openConfigurableProductForEdit">
+            <argument name="productSku" value="$$createConfigurableProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step5.2 Update the Created Configurable Product -->
+        <actionGroup ref="AdminEditConfigurableProductActionGroup" stepKey="editConfigurableProduct">
+            <argument name="product" value="{{createConfigurableProduct}}"/>
+            <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
+            <argument name="blueColor" value="{{colorProductAttribute3.name}}"/>
+            <argument name="whiteColor" value="{{colorProductAttribute1.name}}"/>
+        </actionGroup>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-White)}}" stepKey="grabChildWhiteProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductSKU($$createConfigurableProduct.sku$$-Blue)}}" stepKey="grabChildBlueProdSku"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-White)}}" stepKey="grabChildWhiteProdName"/>
+        <grabTextFrom selector="{{AdminProductGridSection.childApiProductName($$createConfigurableProduct.name$$-Blue)}}" stepKey="grabChildBlueProdName"/>
+
+        <!-- Step5.3 Verify the Created Configurable Product on Storefront -->
+        <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront"/>
+        <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName"/>
+        <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice"/>
+        <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku"/>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="selectWhiteVariation"/>
+        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteVariationIsSelected"/>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute3.name}}" stepKey="selectBlueVariation"/>
+        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute3.name}}" stepKey="checkBlueVariationIsSelected"/>
+
+        <!--  Step6 Disable child product blue      -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBlueConfigurableProductForDisabling">
+            <argument name="productSku" value="$grabChildBlueProdSku"/>
+        </actionGroup>
+        <actionGroup ref="DisableTheProductActionGroup" stepKey="disableTheBlueProduct"/>
+
+        <!-- Step6.1 Verify the Blue Configurable Product is not displayed on Storefront -->
+        <amOnPage url="$$createConfigurableProduct.sku$$.html" stepKey="navigateToProductPageOnStoreFront1"/>
+        <see userInput="$$createConfigurableProduct.name$$" selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="assertProductName1"/>
+        <see userInput="$$createConfigurableProduct.price$$" selector="{{StorefrontProductInfoMainSection.productPrice}}" stepKey="assertProductPrice1"/>
+        <see userInput="$$createConfigurableProduct.sku$$" selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="assertProductSku1"/>
+        <selectOption selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="selectWhiteVariation1"/>
+        <seeOptionIsSelected selector="{{StorefrontProductInfoMainSection.productAttributeDropDown}}" userInput="{{colorProductAttribute1.name}}" stepKey="checkWhiteVariationIsSelected1"/>
+        <click selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdown}}" stepKey="clickOnAttributeDropdown"/>
+        <seeElement selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdownValues(colorProductAttribute1.name)}}" stepKey="checkWhiteVariationIsDisplayed"/>
+        <dontSeeElement selector="{{StorefrontProductInfoMainSection.storefrontColorProductDropdownValues(colorProductAttribute3.name)}}" stepKey="checkBlueVariationIsNotDisplayed"/>
+
+        <!--  Step7 Create Order with total qty of option white     -->
+        <actionGroup ref="AdminCreateNewOrderActionGroup" stepKey="createOrderForWhiteProduct">
+            <argument name="productSKU" value="$grabChildWhiteProdSku"/>
+            <argument name="productName" value="$grabChildWhiteProdName"/>
+            <argument name="customerFirstName" value="$$createCustomer1.firstname$$"/>
+        </actionGroup>
+
+        <!--  Step8 Create Order with total qty of option white     -->
+        <actionGroup ref="AdminCreateShipmentPostOrderActionGroup" stepKey="createShipmentPostOrder">
+            <argument name="productName" value="$grabChildWhiteProdName"/>
+        </actionGroup>
+
+        <!-- Step8.1 Verify the Configurable Product in Created Category in Storefront is no more present -->
+        <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefront">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createConfigurableProduct$$"/>
+        </actionGroup>
+
+        <!-- Delete the child products-->
+        <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableBlueProduct">
+            <argument name="productName" value="$grabChildBlueProdName"/>
+        </actionGroup>
+        <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableWhiteProduct">
+            <argument name="productName" value="$grabChildWhiteProdName"/>
+        </actionGroup>
+    </test>
+</tests>

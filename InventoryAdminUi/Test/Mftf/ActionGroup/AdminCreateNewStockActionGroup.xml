@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminCreateNewStockActionGroup">
+        <annotations>
+            <description>Admin Create New Stock from UI</description>
+        </annotations>
+        <arguments>
+            <argument name="stockName" defaultValue="Test Stock 1" type="string"/>
+            <argument name="websiteName" defaultValue="Main Website" type="string"/>
+            <argument name="assignSource" type="string"/>
+        </arguments>
+        <amOnPage url="{{AdminCreateStockPage.url}}" stepKey="navigateToNewStockPage"/>
+        <fillField selector="{{AdminEditStockGeneralSection.name}}" userInput="{{stockName}}" stepKey="enterNameForNewStock"/>
+        <selectOption selector="{{AdminEditStockGeneralSection.websites}}" userInput="{{websiteName}}" stepKey="selectWebsite" />
+        <click selector="{{AdminEditStockGeneralSection.assignSources}}" stepKey="clickAssignSourceButton" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.clearAll}}" dependentSelector="{{AdminEditStockSourcesSection.clearAll}}" visible="true" stepKey="clearAllPreviouslySearchedSources" />
+        <fillField selector="{{AdminEditStockSourcesSection.searchSourceText}}" userInput="{{assignSource}}" stepKey="enterSourceName" />
+        <click selector="{{AdminEditStockSourcesSection.clickSearchSource}}" stepKey="clickSearchSourceButton" />
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
+        <checkOption selector="{{AdminEditStockSourcesSection.selectSource(assignSource)}}" stepKey="selectTheSource"/>
+        <click selector="{{AdminEditStockSourcesSection.doneButton}}" stepKey="clickDoneButton" />
+        <click selector="{{AdminEditStockGeneralSection.saveAndContinueDropdown}}" stepKey="clickSaveAndContinueDropdown" />
+        <click selector="{{AdminEditStockGeneralSection.saveAndCloseButton}}" stepKey="clickSaveAndClose" />
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="verifyTheStockCreatedSuccessfully"/>
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad1" />
+    </actionGroup>
+</actionGroups>
