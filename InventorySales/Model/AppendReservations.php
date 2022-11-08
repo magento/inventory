@@ -30,7 +30,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
 
 /**
- *  Append Reservation after Async Order is placed
+ *  Append Reservation after Order is placed
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
@@ -173,6 +173,7 @@ class AppendReservations
     }
 
     /**
+     * Append Reservations for Async Order
      *
      * @param mixed $order
      */
@@ -216,32 +217,48 @@ class AppendReservations
             }
 
             $websiteId = (int)$quote->getStore()->getWebsiteId();
-            $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
-            $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
-
-            $this->checkItemsQuantity->execute($itemsBySku, $stockId);
-
-            /** @var SalesEventExtensionInterface */
-            $salesEventExtension = $this->salesEventExtensionFactory->create([
-                'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
-            ]);
-
-            /** @var SalesEventInterface $salesEvent */
-            $salesEvent = $this->salesEventFactory->create([
-                'type' => SalesEventInterface::EVENT_ORDER_PLACED,
-                'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => (string)$order->getEntityId()
-            ]);
-            $salesEvent->setExtensionAttributes($salesEventExtension);
-            $salesChannel = $this->salesChannelFactory->create([
-                'data' => [
-                    'type' => SalesChannelInterface::TYPE_WEBSITE,
-                    'code' => $websiteCode
-                ]
-            ]);
-
-            $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
+            $this->reserve($websiteId, $itemsBySku, $order, $itemsToSell);
         }
+    }
+
+    /**
+     * Append Reservations
+     *
+     * @param int $websiteId
+     * @param array $itemsBySku
+     * @param mixed $order
+     * @param array $itemsToSell
+     * @return array
+     * @throws \Exception
+     */
+    public function reserve($websiteId, $itemsBySku, $order, $itemsToSell)
+    {
+        $websiteCode = $this->websiteRepository->getById($websiteId)->getCode();
+        $stockId = (int)$this->stockByWebsiteIdResolver->execute((int)$websiteId)->getStockId();
+
+        $this->checkItemsQuantity->execute($itemsBySku, $stockId);
+
+        /** @var SalesEventExtensionInterface */
+        $salesEventExtension = $this->salesEventExtensionFactory->create([
+            'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
+        ]);
+
+        /** @var SalesEventInterface $salesEvent */
+        $salesEvent = $this->salesEventFactory->create([
+            'type' => SalesEventInterface::EVENT_ORDER_PLACED,
+            'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
+            'objectId' => (string)$order->getEntityId()
+        ]);
+        $salesEvent->setExtensionAttributes($salesEventExtension);
+        $salesChannel = $this->salesChannelFactory->create([
+            'data' => [
+                'type' => SalesChannelInterface::TYPE_WEBSITE,
+                'code' => $websiteCode
+            ]
+        ]);
+
+        $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
+        return [$salesChannel, $salesEventExtension];
     }
     /**
      * Convert quote items to order items for quote

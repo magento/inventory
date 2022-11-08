@@ -8,20 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
 
 use Magento\InventorySales\Model\AppendReservations;
-use Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
-use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\Quote as QuoteEntity;
-use Magento\Quote\Model\ResourceModel\Quote\Item;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 class AppendReservationsAfterAsyncOrderRejectionPlugin
 {
     /**
-     * @param AppendReservations
+     * @var AppendReservations
      */
     private AppendReservations $appendReservations;
 

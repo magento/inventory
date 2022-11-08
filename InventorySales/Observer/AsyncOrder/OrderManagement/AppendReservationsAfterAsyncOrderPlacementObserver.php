@@ -14,7 +14,7 @@ class AppendReservationsAfterAsyncOrderPlacementObserver implements ObserverInte
 {
 
     /**
-     * @param AppendReservations
+     * @var AppendReservations
      */
     private AppendReservations $appendReservations;
 
