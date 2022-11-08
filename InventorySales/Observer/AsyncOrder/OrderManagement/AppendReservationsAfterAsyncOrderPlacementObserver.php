@@ -5,43 +5,33 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
+namespace Magento\InventorySales\Observer\AsyncOrder\OrderManagement;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Event\ObserverInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\CheckItemsQuantity;
 use Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin;
-use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
-use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
-use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote as QuoteEntity;
-use Magento\Quote\Model\Quote\Item\ToOrderItem as ToOrderItemConverter;
 use Magento\Quote\Model\QuoteIdMaskFactory;
+use Magento\Quote\Model\Quote\Item\ToOrderItem as ToOrderItemConverter;
 use Magento\Quote\Model\QuoteIdToMaskedQuoteIdInterface;
 use Magento\Quote\Model\ResourceModel\Quote\Item;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Model\EntityInterface;
 use Magento\Store\Api\WebsiteRepositoryInterface;
+use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
+use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
 
-/**
- *  Append Reservation after Async Order is placed
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyFields)
- */
-class AppendReservationsAfterAsyncOrderPlacementPlugin
+class AppendReservationsAfterAsyncOrderPlacementObserver implements ObserverInterface
 {
-
     /**
      * @var PlaceReservationsForSalesEventInterface
      */
@@ -177,31 +167,19 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
         $this->quoteIdToMaskedQuoteId = $quoteIdToMaskedQuoteId;
     }
 
-    /**
-     * Add reservation after placing Async order
-     *
-     * @param AbstractDb $subject
-     * @param mixed $result
-     * @param mixed $data
-     * @throws \Exception
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function afterSave(
-        AbstractDb $subject,
-        $result,
-        $data
-    ) {
-        if ($data instanceof EntityInterface && !$data instanceof OrderInterface &&
-            $this->scopeConfig->isSetFlag(
-                AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
-            )) {
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        $order = $observer->getEvent()->getAsyncOrder();
+        if ($this->scopeConfig->isSetFlag(
+            AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
+        )) {
             $itemsById = $itemsBySku = $itemsToSell = [];
-            $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$data->getQuoteId());
+            $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$order->getQuoteId());
             if ($cartId) {
                 $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
                 $quote = $this->quoteRepository->getActive($quoteIdMask->getQuoteId());
             } else {
-                $quote = $this->quoteRepository->getActive($data->getQuoteId());
+                $quote = $this->quoteRepository->getActive($order->getQuoteId());
             }
             foreach ($this->resolveItems($quote) as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {
@@ -232,14 +210,14 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
 
             /** @var SalesEventExtensionInterface */
             $salesEventExtension = $this->salesEventExtensionFactory->create([
-                'data' => ['objectIncrementId' => (string)$data->getIncrementId()]
+                'data' => ['objectIncrementId' => (string)$order->getIncrementId()]
             ]);
 
             /** @var SalesEventInterface $salesEvent */
             $salesEvent = $this->salesEventFactory->create([
                 'type' => SalesEventInterface::EVENT_ORDER_PLACED,
                 'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
-                'objectId' => (string)$data->getEntityId()
+                'objectId' => (string)$order->getEntityId()
             ]);
             $salesEvent->setExtensionAttributes($salesEventExtension);
             $salesChannel = $this->salesChannelFactory->create([
@@ -251,7 +229,6 @@ class AppendReservationsAfterAsyncOrderPlacementPlugin
 
             $this->placeReservationsForSalesEvent->execute($itemsToSell, $salesChannel, $salesEvent);
         }
-        return $result;
     }
 
     /**
