@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Observer\AsyncOrder\OrderManagement;
+namespace Magento\InventorySales\Observer\OrderManagement;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\InventorySales\Model\AppendReservations;
 
-class AppendReservationsAfterAsyncOrderPlacementObserver implements ObserverInterface
+class AppendReservationsAfterAsynchronousOrderPlacementObserver implements ObserverInterface
 {
 
     /**

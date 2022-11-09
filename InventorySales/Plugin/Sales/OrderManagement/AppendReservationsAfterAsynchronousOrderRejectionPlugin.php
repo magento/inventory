@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventorySales\Plugin\AsyncOrder\Model\OrderManagement;
+namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
 use Magento\InventorySales\Model\AppendReservations;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
-class AppendReservationsAfterAsyncOrderRejectionPlugin
+class AppendReservationsAfterAsynchronousOrderRejectionPlugin
 {
     /**
      * @var AppendReservations
