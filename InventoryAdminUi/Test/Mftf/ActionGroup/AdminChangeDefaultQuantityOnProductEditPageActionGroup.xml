@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminChangeDefaultQuantityOnProductEditPageActionGroup">
+        <annotations>
+            <description>Admin change the default quantity on product page</description>
+        </annotations>
+
+        <scrollTo selector="{{AdminProductGridSection.btnAdvancedInventory}}" x="-200" y="-200" stepKey="scrollToAdvancedInventory"/>
+        <click selector="{{AdminProductGridSection.btnAdvancedInventory}}" stepKey="clickOnAdvancedInventory"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad"/>
+        <conditionalClick selector="{{AdminProductFormAdvancedInventorySection.useConfigSettings}}" dependentSelector="{{AdminProductFormAdvancedInventorySection.useConfigSettings}}" visible="true" stepKey="checkUseConfigSettingsCheckBox"/>
+        <selectOption selector="{{AdminProductFormAdvancedInventorySection.manageStock}}" userInput="Yes" stepKey="selectManageStock"/>
+        <click stepKey="clickOnDoneButton" selector="{{AdminProductFormAdvancedInventorySection.doneButton}}"/>
+        <waitForPageLoad stepKey="waitForProductPageToLoad"/>
+        <seeElement selector="{{AdminProductGridSection.changeDefaultQuantity}}" stepKey="unselectInitialCategory"/>
+        <click selector="{{AdminProductGridSection.changeDefaultQuantity}}" stepKey="unselectInitialCategory2"/>
+        <fillField selector="{{AdminProductGridSection.changeDefaultQuantity}}" userInput="10" stepKey="unselectInitialCategory3"/>
+
+    </actionGroup>
+</actionGroups>
