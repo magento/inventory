@@ -35,7 +35,7 @@ class AppendReservationsAfterAsynchronousOrderPlacementObserver implements Obser
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $order = $observer->getEvent()->getAsyncOrder();
+        $order = $observer->getEvent()->getDataObject();
         $this->appendReservations->execute($order);
     }
 }
