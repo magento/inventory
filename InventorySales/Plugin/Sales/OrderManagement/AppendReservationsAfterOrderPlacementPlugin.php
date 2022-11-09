@@ -23,6 +23,7 @@ use Magento\Sales\Api\OrderManagementInterface;
 
 /**
  * Add reservation during order placement
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {
@@ -64,7 +65,7 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $scopeConfig;
 
     /**
-     * @param AppendReservations
+     * @var AppendReservations
      */
     private AppendReservations $appendReservations;
 
