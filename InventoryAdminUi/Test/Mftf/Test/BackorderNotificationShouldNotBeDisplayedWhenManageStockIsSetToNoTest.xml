@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="BackorderNotificationShouldNotBeDisplayedWhenManageStockIsSetToNoTest">
+        <annotations>
+            <stories value="CatalogInventory stock option"/>
+            <title value="Backorder notification should not be displayed when manage stock is set to No."/>
+            <description value="Backorder notification should not be displayed when manage stock is set to No"/>
+            <testCaseId value="AC-6584"/>
+            <severity value="CRITICAL"/>
+        </annotations>
+
+        <before>
+            <!--Create Source-->
+            <createData entity="FullSource1" stepKey="testSource"/>
+            <!--Create Stock-->
+            <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock"/>
+            <!--Create Simple Product-->
+            <createData entity="SimpleProduct" stepKey="createSimpleProduct"/>
+            <!--Create Category-->
+            <createData entity="_defaultCategory" stepKey="category"/>
+            <!--Admin login-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <waitForPageLoad stepKey="waitForDashboardLoad"/>
+        </before>
+        <after>
+            <!--Assign Main Website to Default Stock-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
+            <!--Clear Filter-->
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters"/>
+            <!--Delete Stock-->
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <!--Disable Stock-->
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="ClearFiltersAdminDataGridActionGroup" stepKey="clearGridFilters2"/>
+
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteProduct"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!--Filter Stock-->
+        <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
+                     stepKey="goToStockGridFilterResultsByInputEditStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+
+        <!--  Assign Sources to stock-->
+        <actionGroup ref="AdminOnStockEditPageAssignSourceToStock" stepKey="onStockEditPageAssignSourceToStock1">
+            <argument name="filter_selector" value="AdminManageStockGridFilterControls.name"/>
+            <argument name="filter_value" value="$$testSource.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose1"/>
+
+        <!--Go to product and open product to edit-->
+        <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="openProductEditPage">
+            <argument name="productId" value="$createSimpleProduct.id$"/>
+        </actionGroup>
+
+        <!--Add category to product-->
+        <actionGroup ref="AdminAssignCategoryToProductAndSaveActionGroup" stepKey="assignProduct">
+            <argument name="categoryName" value="$$category.name$$"/>
+        </actionGroup>
+
+        <!--Assign Source to product and update quantity-->
+        <actionGroup ref="AdminOnProductEditPageAssignSourceToProduct" stepKey="AdminOnProductEditPageAssignSourceToProduct1">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$testSource.source[source_code]$$"/>
+        </actionGroup>
+
+        <!--Update Qty-->
+        <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="fillDefaultQuantityField1"/>
+
+        <!--Go to Advance Inventory and Enable Backorder and disable Manage Stock as No-->
+        <click selector="{{AdminProductSourcesSection.advancedInventory}}" stepKey="goToAdvancedInventory"/>
+        <waitForElement selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="waitTillBackOrderIsFound"/>
+        <uncheckOption selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="clickOnUseDefaultBackorders"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <selectOption selector="{{AdminAdvancedInventorySection.backorders}}" userInput="Allow Qty Below 0 and Notify Customer" stepKey="selectBackordersType"/>
+        <click selector="{{AdminAdvancedInventorySection.manageStockUseDefault}}" stepKey="removeUseDefaultCheckBox"/>
+        <waitForPageLoad stepKey="waitForSelect"/>
+        <selectOption selector="{{AdminAdvancedInventorySection.manageStock}}" userInput="No" stepKey="setManageStock"/>
+        <click selector="{{AdminAdvancedInventoryControlsSection.done}}" stepKey="clickOnDone"/>
+        <waitForPageLoad stepKey="waitForPageLoad2"/>
+
+        <!--Save the product-->
+        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct"/>
+
+        <!--Open product in storefront-->
+        <amOnPage url="{{StorefrontProductPage.url($$createSimpleProduct.custom_attributes[url_key]$$)}}" stepKey="goToProductPageOnStorefront"/>
+        <waitForPageLoad stepKey="waitForStoreFrontProductPageLoad"/>
+
+        <!--Add product to cart-->
+        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart">
+            <argument name="product" value="$$createSimpleProduct$$"/>
+            <argument name="quantity" value="101"/>
+        </actionGroup>
+
+        <!-- Go to shopping cart page and Verify Qty and Error Message-->
+        <actionGroup ref="StorefrontCartPageOpenActionGroup" stepKey="openShoppingCartPage1"/>
+
+        <seeInField userInput="101" selector="{{CheckoutCartProductSection.ProductQuantityByName($$createSimpleProduct.name$$)}}" stepKey="seeInQtyField20"/>
+        <dontSeeElement selector="{{CheckoutCartMessageSection.backorderErrorMessage}}" stepKey="dontSeeBackOrderErrorMessage"/>
+    </test>
+</tests>
