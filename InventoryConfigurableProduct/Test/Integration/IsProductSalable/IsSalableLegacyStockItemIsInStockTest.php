@@ -11,6 +11,7 @@ use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
 use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
 use Magento\InventoryCatalog\Model\GetProductIdsBySkus;
+use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
@@ -43,6 +44,11 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
     private $stockItemRepository;
 
     /**
+     * @var CacheStorage
+     */
+    private $cacheStorage;
+
+    /**
      * @inheritDoc
      */
     protected function setUp(): void
@@ -52,6 +58,7 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $this->stockRegistryProvider = Bootstrap::getObjectManager()->get(StockRegistryProviderInterface::class);
         $this->stockConfiguration = Bootstrap::getObjectManager()->get(StockConfigurationInterface::class);
         $this->stockItemRepository = Bootstrap::getObjectManager()->get(StockItemRepositoryInterface::class);
+        $this->cacheStorage = Bootstrap::getObjectManager()->get(CacheStorage::class);
     }
 
     /**
@@ -111,6 +118,7 @@ class IsSalableLegacyStockItemIsInStockTest extends TestCase
         $productId = current($this->getProductIdsBySkus->execute([$sku]));
         $stockItem = $this->stockRegistryProvider->getStockItem($productId, $scopeId);
         $stockItem->setIsInStock($isInStock);
+        $this->cacheStorage->delete($sku);
         $this->stockItemRepository->save($stockItem);
     }
 }
