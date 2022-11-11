@@ -19,9 +19,9 @@ use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryConfiguration\Model\LegacyStockItem\CacheStorage;
 
 /**
- * Get legacy stock item entity by sku.
+ * Get legacy stock items entity by skus.
  */
-class GetLegacyStockItem
+class GetLegacyStockItems
 {
     /**
      * @var StockItemInterfaceFactory
@@ -53,14 +53,14 @@ class GetLegacyStockItem
      * @param StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory
      * @param StockItemRepositoryInterface $legacyStockItemRepository
      * @param GetProductIdsBySkusInterface $getProductIdsBySkus
-     * @param CacheStorage|null $cacheStorage
+     * @param CacheStorage $cacheStorage
      */
     public function __construct(
         StockItemInterfaceFactory $stockItemFactory,
         StockItemCriteriaInterfaceFactory $legacyStockItemCriteriaFactory,
         StockItemRepositoryInterface $legacyStockItemRepository,
         GetProductIdsBySkusInterface $getProductIdsBySkus,
-        ?CacheStorage $cacheStorage = null
+        CacheStorage $cacheStorage = null
     ) {
         $this->stockItemFactory = $stockItemFactory;
         $this->legacyStockItemCriteriaFactory = $legacyStockItemCriteriaFactory;
@@ -71,53 +71,64 @@ class GetLegacyStockItem
     }
 
     /**
-     * Get legacy stock item entity by sku.  Uses cache.
+     * Get legacy stock items entity by skus.
      *
-     * @param string $sku
-     * @return StockItemInterface
+     * @param string[] $skus
+     * @return StockItemInterface[]
      * @throws LocalizedException
      */
-    public function execute(string $sku): StockItemInterface
+    public function execute(array $skus): array
     {
-        if ($this->cacheStorage->get($sku)) {
-            return $this->cacheStorage->get($sku);
+        $cachedLegacyStockItems = [];
+        $skus = $this->filterSkusAlreadyInCache($skus, $cachedLegacyStockItems);
+        if (empty($skus)) {
+            return $cachedLegacyStockItems;
         }
-        $item = $this->getLegacyStockItemBySku($sku);
-        /* Avoid add to cache a new item */
-        if ($item->getItemId()) {
-            $this->cacheStorage->set($sku, $item);
+        $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
+        try {
+            $productIds = $this->getProductIdsBySkus->execute($skus);
+        } catch (NoSuchEntityException $skuNotFoundInCatalog) {
+            return [];
         }
-        return $item;
+        $productSkus = array_flip($productIds);
+        $searchCriteria->addFilter(
+            StockItemInterface::PRODUCT_ID,
+            StockItemInterface::PRODUCT_ID,
+            ['in' => $productIds],
+            'public'
+        );
+        // Stock::DEFAULT_STOCK_ID is used until we have proper multi-stock item configuration
+        $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID);
+        $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
+        $stockItems = $stockItemCollection->getItems();
+        foreach ($stockItems as $stockItem) {
+            $sku = (string)$productSkus[$stockItem->getProductId()];
+            if (empty($sku)) {
+                continue;
+            }
+            $this->cacheStorage->set($sku, $stockItem);
+        }
+        return array_merge($cachedLegacyStockItems, $stockItems);
     }
 
     /**
-     * Get legacy stock item entity by sku.
+     * Only return skus that aren't already in cache.  Adds cached items to $cachedLegacyStockItems.
      *
-     * @param string $sku
-     * @return StockItemInterface
+     * @param string $skus
+     * @param array $cachedLegacyStockItems
+     * @return StockItemInterface[]
      * @throws LocalizedException
      */
-    public function getLegacyStockItemBySku(string $sku): StockItemInterface
+    public function filterSkusAlreadyInCache(array $skus, array &$cachedLegacyStockItems): array
     {
-        $searchCriteria = $this->legacyStockItemCriteriaFactory->create();
-        try {
-            $productId = $this->getProductIdsBySkus->execute([$sku])[$sku];
-        } catch (NoSuchEntityException $skuNotFoundInCatalog) {
-            $stockItem = $this->stockItemFactory->create();
-            // Make possible to Manage Stock for Products removed from Catalog
-            $stockItem->setManageStock(true);
-            return $stockItem;
+        $filteredSkus = [];
+        foreach ($skus as $sku) {
+            if ($item = $this->cacheStorage->get($sku)) {
+                $cachedLegacyStockItems[] = $item;
+                continue;
+            }
+            $filteredSkus[] = $sku;
         }
-        $searchCriteria->addFilter(StockItemInterface::PRODUCT_ID, StockItemInterface::PRODUCT_ID, $productId);
-        // Stock::DEFAULT_STOCK_ID is used until we have proper multi-stock item configuration
-        $searchCriteria->addFilter(StockItemInterface::STOCK_ID, StockItemInterface::STOCK_ID, Stock::DEFAULT_STOCK_ID);
-        $searchCriteria->setLimit(1, 1);
-        $stockItemCollection = $this->legacyStockItemRepository->getList($searchCriteria);
-        $stockItems = $stockItemCollection->getItems();
-        $stockItem = reset($stockItems);
-        if (!$stockItem) {
-            return $this->stockItemFactory->create();
-        }
-        return $stockItem;
+        return $filteredSkus;
     }
 }

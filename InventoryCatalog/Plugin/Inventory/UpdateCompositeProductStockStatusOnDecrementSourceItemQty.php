@@ -7,11 +7,9 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Plugin\Inventory;
 
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorInterface;
-use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
@@ -19,11 +17,6 @@ use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
  */
 class UpdateCompositeProductStockStatusOnDecrementSourceItemQty
 {
-    /**
-     * @var GetProductIdsBySkusInterface
-     */
-    private GetProductIdsBySkusInterface $getProductIdsBySkus;
-
     /**
      * @var IsSingleSourceModeInterface
      */
@@ -35,16 +28,13 @@ class UpdateCompositeProductStockStatusOnDecrementSourceItemQty
     private CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor;
 
     /**
-     * @param GetProductIdsBySkusInterface $getProductIdsBySkus
      * @param IsSingleSourceModeInterface $isSingleSourceMode
      * @param CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor
      */
     public function __construct(
-        GetProductIdsBySkusInterface $getProductIdsBySkus,
         IsSingleSourceModeInterface $isSingleSourceMode,
         CompositeProductStockStatusProcessorInterface $compositeProductStockStatusProcessor
     ) {
-        $this->getProductIdsBySkus = $getProductIdsBySkus;
         $this->isSingleSourceMode = $isSingleSourceMode;
         $this->compositeProductStockStatusProcessor = $compositeProductStockStatusProcessor;
     }
@@ -61,18 +51,13 @@ class UpdateCompositeProductStockStatusOnDecrementSourceItemQty
     public function afterExecute(DecrementSourceItemQty $subject, $result, array $sourceItemDecrementData): void
     {
         if ($this->isSingleSourceMode->execute()) {
-            $productIds = [];
             $sourceItems = array_column($sourceItemDecrementData, 'source_item');
+            $skus = [];
             foreach ($sourceItems as $sourceItem) {
-                $sku = $sourceItem->getSku();
-                try {
-                    $productIds[] = (int)$this->getProductIdsBySkus->execute([$sku])[$sku];
-                } catch (NoSuchEntityException $e) {
-                    continue;
-                }
+                $skus[] = $sourceItem->getSku();
             }
-            if ($productIds) {
-                $this->compositeProductStockStatusProcessor->execute($productIds);
+            if ($skus) {
+                $this->compositeProductStockStatusProcessor->execute($skus);
             }
         }
     }
