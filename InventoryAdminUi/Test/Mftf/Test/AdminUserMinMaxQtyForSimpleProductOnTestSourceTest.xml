@@ -10,8 +10,8 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="AdminUserMinMaxQtyForSimpleProductOnTestSourceTest">
         <annotations>
-            <stories value="Simple Product Custom Stock."/>
-            <title value="Min and Max allowed quantity in cart with simple product on custom stock."/>
+            <stories value="The Simple Product Custom Stock."/>
+            <title value="The Min and Max allowed quantity in cart with simple product on custom stock."/>
             <description value="Min and Max Qty allowed in shopping cart applied to Simple product on product page and checked on frontend."/>
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/481999/scenarios/1652313"/>
             <severity value="CRITICAL"/>
