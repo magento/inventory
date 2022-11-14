@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminUserApplyMinMaxQtyForSimpleProductOnTestSourceTest">
+    <test name="AdminUserMinMaxQtyForSimpleProductOnTestSourceTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
             <title value="Min and Max allowed quantity in cart with simple product on custom stock."/>
@@ -70,13 +70,13 @@
         <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1" stepKey="fillProductQtyLowerThanAllowed"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartLowerThenAllowedQty"/>
-        <waitForElementVisible selector="#qty-error" time="30" stepKey="witForLowQtyAdded"/>
-        <see selector="#qty-error" userInput="The fewest you may purchase is 5." stepKey="seeLowQtyErrorMessage"/>
+        <waitForElementVisible selector="{{StorefrontProductPageSection.qtyErr}}" time="30" stepKey="witForLowQtyAdded"/>
+        <see selector="{{StorefrontProductPageSection.qtyErr}}" userInput="The fewest you may purchase is 5." stepKey="seeLowQtyErrorMessage"/>
         <!--Try to add product ot cart with greater qty than allowed.-->
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="6" stepKey="fillProductQtyGreaterThanAllowed"/>
         <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartGreaterThenAllowedQty"/>
-        <waitForElementVisible selector="#qty-error" time="30" stepKey="witForHighQtyAdded"/>
-        <see selector="#qty-error" userInput="The maximum you may purchase is 5." stepKey="seeHighQtyErrorMessage"/>
+        <waitForElementVisible selector="{{StorefrontProductPageSection.qtyErr}}" time="30" stepKey="witForHighQtyAdded"/>
+        <see selector="{{StorefrontProductPageSection.qtyErr}}" userInput="The fewest you may purchase is 5." stepKey="seeHighQtyErrorMessage"/>
         <!--Try to add product with proper qty to cart.-->
         <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCartWithProperQty">
             <argument name="product" value="$$product$$"/>
