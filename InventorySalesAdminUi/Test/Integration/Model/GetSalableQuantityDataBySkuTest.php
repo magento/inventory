@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
  * Class to test getting salable quantity data by sku in the admin area
  *
  * @magentoAppArea adminhtml
+ * @magentoAppIsolation enabled
  */
 class GetSalableQuantityDataBySkuTest extends TestCase
 {
