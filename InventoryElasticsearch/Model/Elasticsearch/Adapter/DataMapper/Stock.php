@@ -55,7 +55,8 @@ class Stock
 
         if (!empty($productStockStatus)) {
             foreach ($documents as $productId => $document) {
-                $document['is_out_of_stock']= (int)($productStockStatus[$document['sku']] ?? 1);
+                $sku = $document['sku'] ?? '';
+                $document['is_out_of_stock'] = !$sku ? 1 : (int)($productStockStatus[$sku] ?? 1);
                 $documents[$productId] = $document;
             }
         }
