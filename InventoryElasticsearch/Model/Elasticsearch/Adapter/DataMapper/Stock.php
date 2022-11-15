@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryElasticsearch\Model\Elasticsearch\Adapter\DataMapper;
 
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\InventoryElasticsearch\Model\ResourceModel\Inventory;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class Stock for mapping
@@ -42,24 +42,24 @@ class Stock
     /**
      * Map the product attribute with it's sku value
      *
-     * @param mixed $entityId
+     * @param array $documents
      * @param mixed $storeId
      * @return array
      * @throws NoSuchEntityException
      */
-    public function map($entityId, $storeId): array
+    public function map(array $documents, mixed $storeId): array
     {
-        $sku = $this->inventory->getSkuRelation((int)$entityId);
-
-        if (!$sku) {
-            return ['is_out_of_stock' => 1];
-        }
-
-        $value = $this->inventory->getStockStatus(
-            $sku,
+        $productStockStatus = $this->inventory->getStockStatus(
             $this->storeManager->getStore($storeId)->getWebsite()->getCode()
         );
 
-        return ['is_out_of_stock' => $value];
+        if (!empty($productStockStatus)) {
+            foreach ($documents as $productId => $document) {
+                $document['is_out_of_stock']= (int)($productStockStatus[$document['sku']] ?? 1);
+                $documents[$productId] = $document;
+            }
+        }
+
+        return $documents;
     }
 }

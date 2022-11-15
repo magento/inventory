@@ -76,7 +76,6 @@ class ProductDataMapperPluginTest extends TestCase
             ],
         ];
         $storeId = 1;
-        $productId = 1;
         $expectedResult[1] = array_merge($documents[1], $attribute);
 
         $this->stockInventoryMock
@@ -85,10 +84,10 @@ class ProductDataMapperPluginTest extends TestCase
             ->with(array_keys($documents))
             ->willReturnSelf();
         $this->stockDataMapperMock
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
             ->method('map')
-            ->with($productId, $storeId)
-            ->willReturn($attribute);
+            ->with($documents, $storeId)
+            ->willReturn($expectedResult);
         $this->stockInventoryMock
             ->expects($this->once())
             ->method('clearRelation')

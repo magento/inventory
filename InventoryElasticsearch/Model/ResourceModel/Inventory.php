@@ -60,25 +60,21 @@ class Inventory
     /**
      * Get stock status
      *
-     * @param string $productSku
      * @param string|null $websiteCode
-     * @return int
+     * @return array
      */
-    public function getStockStatus(string $productSku, ?string $websiteCode): int
-    {
-        if (!isset($this->stockStatus[$websiteCode][$productSku])) {
-            $select = $this->resourceConnection->getConnection()->select()
-                ->from(
-                    $this->resourceConnection->getTableName('inventory_stock_' . $this->getStockId($websiteCode)),
-                    ['is_salable']
-                )
-                ->where('sku = ?', $productSku)
-                ->group('sku');
-            $this->stockStatus[$websiteCode][$productSku] = (int) $this->resourceConnection->getConnection()
-                ->fetchOne($select);
-        }
 
-        return (int)$this->stockStatus[$websiteCode][$productSku];
+    public function getStockStatus(?string $websiteCode) : array
+    {
+        $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()
+            ->from(
+                $this->resourceConnection->getTableName('inventory_stock_' . $this->getStockId($websiteCode)),
+                ['sku', 'is_salable']
+            )
+            ->where('sku IN (?)', $this->getSkuRelation());
+
+        return $connection->fetchPairs($select);
     }
 
     /**
@@ -90,11 +86,12 @@ class Inventory
     public function getStockId(string $websiteCode): int
     {
         if (!isset($this->stockIds[$websiteCode])) {
-            $select = $this->resourceConnection->getConnection()->select()
+            $connection = $this->resourceConnection->getConnection();
+            $select = $connection->select()
                 ->from($this->resourceConnection->getTableName('inventory_stock_sales_channel'), ['stock_id'])
                 ->where('type = \'website\' AND code = ?', $websiteCode);
 
-            $this->stockIds[$websiteCode] = (int)$this->resourceConnection->getConnection()->fetchOne($select);
+            $this->stockIds[$websiteCode] = (int)$connection->fetchOne($select);
         }
 
         return (int)$this->stockIds[$websiteCode];
@@ -108,12 +105,13 @@ class Inventory
      */
     public function saveRelation(array $entityIds): Inventory
     {
-        $select = $this->resourceConnection->getConnection()->select()->from(
+        $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()->from(
             $this->resourceConnection->getTableName('catalog_product_entity'),
             ['entity_id', 'sku']
         )->where('entity_id IN (?)', $entityIds);
 
-        $this->skuRelations = $this->resourceConnection->getConnection()->fetchPairs($select);
+        $this->skuRelations = $connection->fetchPairs($select);
 
         return $this;
     }
@@ -130,13 +128,12 @@ class Inventory
     }
 
     /**
-     * Get sku relation
+     * Get skus relation
      *
-     * @param int $entityId
-     * @return string
+     * @return array
      */
-    public function getSkuRelation(int $entityId): string
+    public function getSkuRelation(): array
     {
-        return $this->skuRelations[$entityId] ?? '';
+        return $this->skuRelations;
     }
 }

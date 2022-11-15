@@ -52,38 +52,36 @@ class InventoryTest extends TestCase
     public function testGetStockStatus(): void
     {
         $websiteCode = 'base';
-        $productSku = '24-MB01';
+        $productId = 1;
 
         $connectionAdapterMock = $this->getMockForAbstractClass(AdapterInterface::class);
         $selectMock = $this->createMock(Select::class);
 
-        $connectionAdapterMock->expects($this->exactly(2))
+        $connectionAdapterMock->expects($this->atLeastOnce())
             ->method('select')
             ->willReturn($selectMock);
-        $selectMock->expects($this->exactly(2))
+        $selectMock->expects($this->atLeastOnce())
             ->method('from')
             ->willReturnSelf();
-        $selectMock->expects($this->exactly(2))
+        $selectMock->expects($this->atLeastOnce())
             ->method('where')
             ->willReturnSelf();
-        $selectMock->expects($this->once())
-            ->method('group')
-            ->willReturnSelf();
         $connectionAdapterMock->expects($this->exactly(2))
-            ->method('fetchOne')
-            ->willReturn(1);
+            ->method('fetchPairs')
+            ->willReturn([$productId => '1']);
 
         $this->resourceConnectionMock
-            ->expects($this->exactly(4))
+            ->expects($this->atLeastOnce())
             ->method('getConnection')
             ->willReturn($connectionAdapterMock);
 
         $this->resourceConnectionMock
-            ->expects($this->exactly(2))
+            ->expects($this->atLeastOnce())
             ->method('getTableName')
             ->willReturnSelf();
 
-        $this->assertSame(1, $this->model->getStockStatus($productSku, $websiteCode));
+        $this->model->saveRelation([$productId]);
+        $this->assertSame([$productId => '1'], $this->model->getStockStatus($websiteCode));
     }
 
     /**
@@ -114,7 +112,7 @@ class InventoryTest extends TestCase
             ->willReturn(1);
 
         $this->resourceConnectionMock
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getConnection')
             ->willReturn($connectionAdapterMock);
 
@@ -156,7 +154,7 @@ class InventoryTest extends TestCase
             ->willReturn([$productId => $productSku]);
 
         $this->resourceConnectionMock
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getConnection')
             ->willReturn($connectionAdapterMock);
 
@@ -166,6 +164,6 @@ class InventoryTest extends TestCase
             ->with($tableName)
             ->willReturn($tableName);
 
-        $this->assertSame($productSku, $this->model->saveRelation([$productId])->getSkuRelation($productId));
+        $this->assertSame([$productId => $productSku], $this->model->saveRelation([$productId])->getSkuRelation());
     }
 }

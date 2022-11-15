@@ -56,12 +56,7 @@ class ProductDataMapperPlugin
         $context
     ): array {
         $this->inventory->saveRelation(array_keys($documents));
-
-        foreach ($documents as $productId => $document) {
-            $document += $this->stockDataMapper->map($productId, $storeId);
-            $documents[$productId] = $document;
-        }
-
+        $documents = $this->stockDataMapper->map($documents, $storeId);
         $this->inventory->clearRelation();
 
         return $documents;

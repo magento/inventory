@@ -64,13 +64,17 @@ class StockTest extends TestCase
     {
         $entityId = 1;
         $storeId = 1;
-        $sku = '24-MB01';
         $websiteCode = 'base';
 
-        $this->inventoryMock->expects($this->once())
-            ->method('getSkuRelation')
-            ->with($entityId)
-            ->willReturn($sku);
+        $attribute = ['is_out_of_stock' => 1];
+        $documents = [
+            1 => [
+                'store_id' => $storeId,
+                'sku' => '24-MB01',
+                'status' => 1
+            ],
+        ];
+        $expectedResult[1] = array_merge($documents[1], $attribute);
 
         $websiteMock = $this->getMockBuilder(Website::class)
             ->disableOriginalConstructor()
@@ -94,9 +98,9 @@ class StockTest extends TestCase
 
         $this->inventoryMock->expects($this->once())
             ->method('getStockStatus')
-            ->with($sku, $websiteCode)
-            ->willReturn(1);
+            ->with($websiteCode)
+            ->willReturn([$entityId => 1]);
 
-        $this->assertSame(['is_out_of_stock' => 1], $this->model->map($entityId, $storeId));
+        $this->assertSame($expectedResult, $this->model->map($documents, $storeId));
     }
 }
