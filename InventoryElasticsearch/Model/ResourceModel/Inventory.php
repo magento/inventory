@@ -9,25 +9,17 @@ namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
 
-/**
- * Class Inventory for stock processing and calculation
- */
 class Inventory
 {
     /**
      * @var array
      */
-    private $stockStatus;
+    private $stockIds = [];
 
     /**
      * @var array
      */
-    private $stockIds;
-
-    /**
-     * @var array
-     */
-    private $skuRelations;
+    private $skuRelations = [];
 
     /**
      * @var ResourceConnection
@@ -43,18 +35,6 @@ class Inventory
         ResourceConnection $resourceConnection
     ) {
         $this->resourceConnection = $resourceConnection;
-    }
-
-    /**
-     * Initialize stock ids and relations
-     *
-     * @return void
-     */
-    public function _construct(): void
-    {
-        $this->stockIds = [];
-        $this->skuRelations = [];
-        $this->stockStatus = null;
     }
 
     /**
@@ -124,7 +104,6 @@ class Inventory
     public function clearRelation(): void
     {
         $this->skuRelations = null;
-        $this->stockStatus = null;
     }
 
     /**
