@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StockStatusChangedForBundleProductOnTestStockTest">
+        <annotations>
+            <stories value="Stock status changed for Bundle product on Test stock"/>
+            <title value="Stock status changed for Bundle product on Test stock"/>
+            <description value="Stock status changed for Bundle product on Test stock"/>
+            <testCaseId value="AC-1870"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
+              <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
+              <argument name="stockName" value="Test Stock 1"/>
+            </actionGroup>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
+              <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+            <deleteData createDataKey="createMSISimpleProduct" stepKey="deleteMSISimpleProduct"/>
+            <deleteData createDataKey="createBundleProduct" stepKey="deleteBundleProduct"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the SubCategory through API -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step2 Create New Source -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+
+        <!-- Step3 Create the stock from UI and then assign the sources -->
+        <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="createNewStock">
+            <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
+            <argument name="stockName" value="Test Stock 1"/>
+        </actionGroup>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+
+        <!-- Step4.1 Create Simple Product -->
+        <createData entity="SimpleProduct" stepKey="createMSISimpleProduct">
+            <requiredEntity createDataKey="createSubCategory" />
+        </createData>
+
+        <!-- Step4.2 Search for the Created Simple Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openSimpleProductPage">
+            <argument name="productSku" value="$$createMSISimpleProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step4.3 Assign the Source to the created Simple Product -->
+        <actionGroup ref="AdminAssignSourceToSimpleProduct" stepKey="AdminAssignSourceToSimpleProduct">
+            <argument name="filter_selector" value="AdminManageSourcesGridFilterControls.code"/>
+            <argument name="filter_value" value="$$createTestSource1.source[source_code]$$"/>
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+
+        <!-- Step4.4 Save the Simple Product-->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
+
+        <!-- Step5.1 Create Bundle product -->
+        <createData entity="ApiBundleProductShipmentTypeSeparately" stepKey="createBundleProduct"/>
+
+        <!-- Step5.2 Search for the Created Bundle product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBundleProductPage">
+            <argument name="productSku" value="$$createBundleProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step5.3 Update the Created Bundle product-->
+        <actionGroup ref="AdminAssignSourceToBundleProduct" stepKey="AdminAssignSourceToBundleProduct">
+            <argument name="categoryName" value="$$createSubCategory.name$$"/>
+            <argument name="product" value="$$createMSISimpleProduct$$"/>
+        </actionGroup>
+
+        <!-- Step5.4 Save the Bundle Product-->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveBundleProduct"/>
+
+        <!-- Step5.6 Verify the Bundle Product in Created Category in Storefront is Present -->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefront1">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createBundleProduct$$"/>
+        </actionGroup>
+
+        <!-- Step6.1 Search for the Created Bundle Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBundleProductPageForEditAdvancedInventoryManageStock">
+            <argument name="productSku" value="$$createBundleProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step6.2 Update the created Bundle Product to out of stock from Product Page-->
+        <selectOption userInput="Out of Stock" selector="{{AdminProductGridSection.selectStockStatus}}" stepKey="selectOutOfStock"/>
+
+        <!-- Step6.3 Save the Bundle Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostOutOfStock"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindexPostOutOfStock"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCachePostOutOfStock"/>
+
+        <!-- Step7.1 Verify the Bundle Product in Created Category in Storefront is not present -->
+        <actionGroup ref="AssertProductNotPresentInStorefrontCategoryPage" stepKey="assertProductNotPresentInStorefrontPostMakingTheBundleProductOutOfStock">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createBundleProduct$$"/>
+        </actionGroup>
+
+        <!-- Step8.1 change the stock status back to In the Stock for the bundled product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openBundleProductPageForEditAdvancedInventoryManageStock1">
+            <argument name="productSku" value="$$createBundleProduct.sku$$"/>
+        </actionGroup>
+
+        <!-- Step8.2 Update the created Bundle Product to in stock from Product Page-->
+        <selectOption userInput="In Stock" selector="{{AdminProductGridSection.selectStockStatus}}" stepKey="selectInStock"/>
+
+        <!-- Step8.3 Save the Bundle Product -->
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProductPostInStock"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindexPostInStock"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCachePostInStock"/>
+
+        <!-- Step9 Verify the Bundle Product name , SKU and status for product in Storefront is present -->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="assertProductInStorefrontPostSwitchingBackToInStock">
+            <argument name="category" value="$$createSubCategory$$"/>
+            <argument name="product" value="$$createBundleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AssertProductNameAndSkuInStorefrontProductPageByCustomAttributeUrlKeyActionGroup" stepKey="navigateToProductOnStoreFrontToValidateNameAndSKU">
+            <argument name="product" value="$$createBundleProduct$$"/>
+        </actionGroup>
+        <seeElement selector="{{AdminProductGridSection.stockAvailability('In stock')}}" stepKey="seeProductStockStatusOnStoreFrontAgain"/>
+    </test>
+</tests>

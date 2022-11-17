@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminDeleteStockWithTwentyTwoAssignedSourcesActionGroup">
+        <annotations>
+          <description>Admin deletes stock with 22 assigned sources.</description>
+        </annotations>
+        <arguments>
+            <argument name="stockName" defaultValue="Test Stock 1" type="string"/>
+            <argument name="websiteName" defaultValue="Main Website" type="string"/>
+            <argument name="sourceName1"/>
+            <argument name="sourceName2"/>
+            <argument name="sourceName3"/>
+            <argument name="sourceName4"/>
+            <argument name="sourceName5"/>
+            <argument name="sourceName6"/>
+            <argument name="sourceName7"/>
+            <argument name="sourceName8"/>
+            <argument name="sourceName9"/>
+            <argument name="sourceName10"/>
+            <argument name="sourceName11"/>
+            <argument name="sourceName12"/>
+            <argument name="sourceName13"/>
+            <argument name="sourceName14"/>
+            <argument name="sourceName15"/>
+            <argument name="sourceName16"/>
+            <argument name="sourceName17"/>
+            <argument name="sourceName18"/>
+            <argument name="sourceName19"/>
+            <argument name="sourceName20"/>
+            <argument name="sourceName21"/>
+            <argument name="sourceName22"/>
+        </arguments>
+        <amOnPage url="{{AdminStockPage.url}}" stepKey="navigateToManageStockPage"/>
+        <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockName" />
+        <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButton" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad" />
+        <click selector="{{AdminManageStockGridBody.editStock(stockName)}}" stepKey="clickEditStockButton" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad1" />
+        <unselectOption userInput="{{websiteName}}" selector="{{AdminEditStockGeneralSection.websites}}" stepKey="unselectWebsite"/>
+
+        <!-- Deletes all the assigned sources -->
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName1)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName1)}}" visible="true" stepKey="clickDeleteAssignedSources1" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName2)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName2)}}" visible="true" stepKey="clickDeleteAssignedSources2" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName3)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName3)}}" visible="true" stepKey="clickDeleteAssignedSources3" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName4)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName4)}}" visible="true" stepKey="clickDeleteAssignedSources4" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName5)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName5)}}" visible="true" stepKey="clickDeleteAssignedSources5" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName6)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName6)}}" visible="true" stepKey="clickDeleteAssignedSources6" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName7)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName7)}}" visible="true" stepKey="clickDeleteAssignedSources7" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName8)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName8)}}" visible="true" stepKey="clickDeleteAssignedSources8" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName9)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName9)}}" visible="true" stepKey="clickDeleteAssignedSources9" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName10)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName10)}}" visible="true" stepKey="clickDeleteAssignedSources10" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName11)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName11)}}" visible="true" stepKey="clickDeleteAssignedSources11" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName12)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName12)}}" visible="true" stepKey="clickDeleteAssignedSources12" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName13)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName13)}}" visible="true" stepKey="clickDeleteAssignedSources13" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName14)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName14)}}" visible="true" stepKey="clickDeleteAssignedSources14" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName15)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName15)}}" visible="true" stepKey="clickDeleteAssignedSources15" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName16)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName16)}}" visible="true" stepKey="clickDeleteAssignedSources16" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName17)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName17)}}" visible="true" stepKey="clickDeleteAssignedSources17" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName18)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName18)}}" visible="true" stepKey="clickDeleteAssignedSources18" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName19)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName19)}}" visible="true" stepKey="clickDeleteAssignedSources19" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName20)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName20)}}" visible="true" stepKey="clickDeleteAssignedSources20" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName21)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName21)}}" visible="true" stepKey="clickDeleteAssignedSources21" />
+        <conditionalClick selector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName22)}}" dependentSelector="{{AdminEditStockSourcesSection.deleteSpecificAssignedSources(sourceName22)}}" visible="true" stepKey="clickDeleteAssignedSources22" />
+        <click selector="{{AdminEditStockGeneralSection.saveAndContinueDropdown}}" stepKey="clickSaveAndContinueDropdown" />
+        <click selector="{{AdminEditStockGeneralSection.saveAndCloseButton}}" stepKey="clickSaveAndClose" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostEditingTheSources" />
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="verifyTheStockSavedSuccessfully"/>
+        <fillField selector="{{AdminManageStockGridBody.searchStockText}}" userInput="{{stockName}}" stepKey="enterStockNameForDelete" />
+        <click selector="{{AdminManageStockGridBody.clickSearchStock}}" stepKey="clickSearchStockButtonForDelete" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoadForDelete" />
+        <click selector="{{AdminManageStockGridBody.editStock(stockName)}}" stepKey="clickEditStockButtonForDelete" />
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoad1ForDelete" />
+        <click selector="{{AdminEditStockSourcesSection.deleteStock}}" stepKey="deleteTheStock" />
+        <waitForPageLoad stepKey="waitForPopupToDelete" />
+        <click selector="{{AdminEditStockSourcesSection.editStockPopUpOK}}" stepKey="acceptPopupToDelete"/>
+        <waitForPageLoad stepKey="waitForStoreGroupPageLoadPostDeletingTheStock" />
+        <seeElement selector="{{AdminManageStockGridBody.stockDeleteSuccessfulMessage}}" stepKey="verifyTheStockDeletedSuccessfully"/>
+    </actionGroup>
+</actionGroups>
