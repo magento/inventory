@@ -24,7 +24,6 @@ class Stock
     private $storeManager;
 
     /**
-     * Stock constructor.
      * @param Inventory $inventory
      * @param StoreManagerInterface $storeManager
      */

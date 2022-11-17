@@ -8,14 +8,12 @@ declare(strict_types=1);
 namespace Magento\InventoryElasticsearch\Model\ResourceModel;
 
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 
 class Inventory
 {
-    /**
-     * @var array
-     */
-    private $stockIds = [];
-
     /**
      * @var array
      */
@@ -27,54 +25,42 @@ class Inventory
     private $resourceConnection;
 
     /**
-     * Constructor to inject class dependencies
-     *
+     * @var StockResolverInterface
+     */
+    private $stockResolver;
+
+    /**
      * @param ResourceConnection $resourceConnection
+     * @param StockResolverInterface $stockResolver
      */
     public function __construct(
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        StockResolverInterface $stockResolver
     ) {
         $this->resourceConnection = $resourceConnection;
+        $this->stockResolver = $stockResolver;
     }
 
     /**
      * Get stock status
      *
-     * @param string|null $websiteCode
+     * @param string $websiteCode
      * @return array
+     * @throws NoSuchEntityException
      */
 
-    public function getStockStatus(?string $websiteCode) : array
+    public function getStockStatus(string $websiteCode) : array
     {
+        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $connection = $this->resourceConnection->getConnection();
         $select = $connection->select()
             ->from(
-                $this->resourceConnection->getTableName('inventory_stock_' . $this->getStockId($websiteCode)),
+                $this->resourceConnection->getTableName('inventory_stock_' . $stock->getStockId()),
                 ['sku', 'is_salable']
             )
             ->where('sku IN (?)', $this->getSkuRelation());
 
         return $connection->fetchPairs($select);
-    }
-
-    /**
-     * Get stock id by website code
-     *
-     * @param string $websiteCode
-     * @return int
-     */
-    public function getStockId(string $websiteCode): int
-    {
-        if (!isset($this->stockIds[$websiteCode])) {
-            $connection = $this->resourceConnection->getConnection();
-            $select = $connection->select()
-                ->from($this->resourceConnection->getTableName('inventory_stock_sales_channel'), ['stock_id'])
-                ->where('type = \'website\' AND code = ?', $websiteCode);
-
-            $this->stockIds[$websiteCode] = (int)$connection->fetchOne($select);
-        }
-
-        return (int)$this->stockIds[$websiteCode];
     }
 
     /**
@@ -97,17 +83,7 @@ class Inventory
     }
 
     /**
-     * Clean the relation
-     *
-     * @return void
-     */
-    public function clearRelation(): void
-    {
-        $this->skuRelations = null;
-    }
-
-    /**
-     * Get skus relation
+     * Get productList with productId skus relation
      *
      * @return array
      */
