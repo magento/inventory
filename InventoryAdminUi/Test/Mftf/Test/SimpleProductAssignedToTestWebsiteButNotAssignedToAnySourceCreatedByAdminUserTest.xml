@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SimpleProductAssignedToTestWebsiteButNotAssignedToAnySourceCreatedByAdminUserTest">
+        <annotations>
+            <stories value="Simple Product assigned to Test website but not assigned to any source created by Admin user"/>
+            <title value="Simple Product assigned to Test website but not assigned to any source created by Admin user"/>
+            <description value="Simple Product assigned to Test website but not assigned to any source created by Admin user"/>
+            <testCaseId value="AC-6512"/>
+            <severity value="MAJOR"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+        <before>
+            <!-- Step1 Login to backend as admin -->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <magentoCLI stepKey="setDisplayOutOfStockProductAsNo" command="config:set cataloginventory/options/show_out_of_stock 0" />
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockAsYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+        </before>
+        <after>
+            <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToNo"/>
+            <magentoCLI stepKey="setDisplayOutOfStockProductAsYes" command="config:set cataloginventory/options/show_out_of_stock 1" />
+            <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheMainWebsiteAsDefault">
+                <argument name="WebsiteName" value="Main Website"/>
+            </actionGroup>
+            <magentoCron groups="index" stepKey="reindexForResettingTheMainWebsite"/>
+            <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
+                <argument name="stockName" value="Test Stock 1"/>
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminGoToConfigurationPageEnableDisableManageStock" stepKey="enableManageStockBackToYes">
+                <argument name="manageStockValue" value="Yes"/>
+            </actionGroup>
+            <deleteData createDataKey="createSimpleProduct" stepKey="deleteSimpleProduct"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteCategory"/>
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
+                <argument name="sourceCode" value="$createTestSource1.source[source_code]$"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
+                <argument name="websiteName" value="{{customWebsite.name}}"/>
+            </actionGroup>
+            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step2 Create website-->
+        <actionGroup ref="AdminCreateWebsiteActionGroup" stepKey="createWebsite">
+            <argument name="newWebsiteName" value="{{customWebsite.name}}"/>
+            <argument name="websiteCode" value="{{customWebsite.code}}"/>
+        </actionGroup>
+
+        <!-- Step3 Create second store -->
+        <actionGroup ref="CreateCustomStoreActionGroup" stepKey="createCustomStore">
+            <argument name="website" value="{{customWebsite.name}}"/>
+            <argument name="store" value="{{customStoreGroup.name}}"/>
+            <argument name="rootCategory" value="Default Category"/>
+        </actionGroup>
+        <!-- Step4 Create second store view -->
+        <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView">
+            <argument name="StoreGroup" value="customStoreGroup"/>
+            <argument name="customStore" value="customStoreEN"/>
+        </actionGroup>
+
+        <!-- Step5 Set Add Store Code to URL as Yes -->
+        <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToYes"/>
+
+        <!-- Step6 perform re-indexing and cache flush -->
+        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+
+        <!-- Step7 and 8 Create New Source -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+
+        <!-- Step9 and 10 Create the stock from UI, assign the sources and assign Test Website as Sales Channel-->
+        <actionGroup ref="AdminCreateNewStockActionGroup" stepKey="createNewStockWithTestWebsite">
+            <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
+            <argument name="stockName" value="Test Stock 1"/>
+            <argument name="websiteName" value="{{customWebsite.name}}"/>
+        </actionGroup>
+
+        <!-- Step11 Create New Category under default category -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step12 enable display out of stock products as enabled-->
+        <magentoCLI command="config:set cataloginventory/options/show_out_of_stock 1" stepKey="setDisplayOutOfStockProductOnConfigPage"/>
+
+        <!-- Step13 perform cache flush -->
+        <magentoCLI command="cache:flush" stepKey="flushCachePostDeisplayOutOfStockProductAsYes"/>
+
+        <!-- Step14 Create Simple Product and assign to subcategory-->
+        <createData entity="SimpleProduct" stepKey="createSimpleProduct">
+            <requiredEntity createDataKey="createSubCategory" />
+        </createData>
+
+        <!-- Step15 Set the Test Website for Simple Product -->
+        <actionGroup ref="FilterAndSelectProductActionGroup" stepKey="openSimpleProductForEdit">
+            <argument name="productSku" value="$$createSimpleProduct.sku$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignProductInWebsiteActionGroup" stepKey="assignProductToCustomWebsite">
+            <argument name="website" value="{{customWebsite.name}}"/>
+        </actionGroup>
+        <uncheckOption selector="{{ProductInWebsitesSection.website('Main Website')}}" stepKey="unselectMainWebsite"/>
+        <actionGroup ref="SaveProductFormActionGroup" stepKey="saveSimpleProduct"/>
+
+        <!-- Step16.1 Switch to Test website  -->
+        <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheTestWebsiteAsDefault">
+            <argument name="WebsiteName" value="{{customWebsite.name}}"/>
+        </actionGroup>
+
+        <magentoCLI command="indexer:reindex" stepKey="reindexPostSwitchingToTestWebsite"/>
+        <magentoCLI command="cache:flush" stepKey="flushCachePostSwitchingToTestWebsite"/>
+
+        <!-- Step16.2 Navigate to Test website  -->
+        <amOnPage url="{{StorefrontHomePage.url}}" stepKey="navigateToCategoryPage"/>
+        <waitForPageLoad stepKey="waitForHomePageLoad"/>
+        <click selector="{{StorefrontNavigationSection.topCategory($$createSubCategory.name$$)}}" stepKey="NavigateToCategoryOnStorefront"/>
+
+        <see userInput="$$createSimpleProduct.name$$" stepKey="assertProductPresent"/>
+        <see userInput="$$createSimpleProduct.price$$" stepKey="assertProductPricePresent"/>
+
+        <moveMouseOver selector="{{StorefrontCategoryMainSection.ProductItemInfo}}" stepKey="hoverOverProductOnCategoryPage"/>
+        <seeElement selector="{{StorefrontCategoryMainSection.outOfStockProductCategoryPage}}" stepKey="SeeOutOfStockProductOnCategoryPage" />
+        <click selector="{{StorefrontCategoryMainSection.ProductItemInfo}}" stepKey="NavigateToProduct"/>
+
+        <!-- Assert the product name, sku and the out of stock status for the product -->
+        <grabTextFrom selector="{{StorefrontProductInfoMainSection.productName}}" stepKey="grabStoreFrontProductName"/>
+        <grabTextFrom selector="{{StorefrontProductInfoMainSection.productSku}}" stepKey="grabStoreFrontProductSKU"/>
+
+        <assertEquals message="Verify the product name on product section of storefront" stepKey="assertProductNameOnStorefront">
+            <expectedResult type="string">$$createSimpleProduct.name$$</expectedResult>
+            <actualResult type="string">$grabStoreFrontProductName</actualResult>
+        </assertEquals>
+        <assertEquals message="Verify the product sku on product section of storefront" stepKey="assertProductSkuOnStorefront">
+            <expectedResult type="string">$$createSimpleProduct.sku$$</expectedResult>
+            <actualResult type="string">$grabStoreFrontProductSKU</actualResult>
+        </assertEquals>
+        <seeElement selector="{{StorefrontCategoryMainSection.outOfStockProductCategoryPage}}" stepKey="SeeOutOfStockProductOnProductPage" />
+
+    </test>
+</tests>
