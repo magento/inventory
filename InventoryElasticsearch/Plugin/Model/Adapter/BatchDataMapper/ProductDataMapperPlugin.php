@@ -121,6 +121,6 @@ class ProductDataMapperPlugin
         );
         $select->where('sku IN (?)', $skus);
 
-        return $connection->fetchPairs($select);
+        return $connection->fetchPairs($select) ?? [];
     }
 }
