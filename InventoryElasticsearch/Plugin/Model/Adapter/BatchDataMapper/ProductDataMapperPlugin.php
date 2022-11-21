@@ -8,51 +8,59 @@ declare(strict_types=1);
 namespace Magento\InventoryElasticsearch\Plugin\Model\Adapter\BatchDataMapper;
 
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
+use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
 
 class ProductDataMapperPlugin
 {
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var StockResolverInterface
-     */
-    private $stockResolver;
-
-    /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
     /**
      * @var GetSkusByProductIdsInterface
      */
     private $getSkusByProductIds;
 
     /**
-     * @param StoreManagerInterface $storeManager
-     * @param StockResolverInterface $stockResolver
-     * @param AreProductsSalableInterface $areProductsSalable
+     * @var StockIndexTableNameResolverInterface
+     */
+    private $stockIndexTableNameResolver;
+
+    /**
+     * @var StockByWebsiteIdResolverInterface
+     */
+    private $stockByWebsiteIdResolver;
+
+    /**
+     * @var StoreRepositoryInterface
+     */
+    private $storeRepository;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
+     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
+     * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
+     * @param StoreRepositoryInterface $storeRepository
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
-        StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver,
-        AreProductsSalableInterface $areProductsSalable,
-        GetSkusByProductIdsInterface $getSkusByProductIds
+        GetSkusByProductIdsInterface $getSkusByProductIds,
+        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
+        StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
+        StoreRepositoryInterface $storeRepository,
+        ResourceConnection $resourceConnection
     ) {
-        $this->storeManager = $storeManager;
-        $this->stockResolver = $stockResolver;
-        $this->areProductsSalable = $areProductsSalable;
         $this->getSkusByProductIds = $getSkusByProductIds;
+        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
+        $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
+        $this->storeRepository = $storeRepository;
+        $this->resourceConnection = $resourceConnection;
     }
 
     /**
@@ -62,7 +70,6 @@ class ProductDataMapperPlugin
      * @param array|mixed $documents
      * @param mixed $documentData
      * @param mixed $storeId
-     * @param mixed $context
      * @return array
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -70,18 +77,19 @@ class ProductDataMapperPlugin
     public function afterMap(
         ProductDataMapper $subject,
         array $documents,
-        $documentData,
-        mixed $storeId,
-        $context
+        array $documentData,
+        int $storeId
     ): array {
-        $websiteCode = $this->storeManager->getStore($storeId)->getWebsite()->getCode();
-        $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
-        $skus = $this->getSkusByProductIds->execute(array_keys($documents));
+        $store = $this->storeRepository->getById($storeId);
+        $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
 
-        $productsSaleability = [];
-        foreach ($this->areProductsSalable->execute($skus, $stock->getStockId()) as $productStock) {
-            $productsSaleability[$productStock->getSku()] = (int)$productStock->isSalable();
+        try {
+            $skus = $this->getSkusByProductIds->execute(array_keys($documents));
+        } catch (NoSuchEntityException $e) {
+            $skus = [];
         }
+
+        $productsSaleability = $this->getStockStatuses($skus, $stock->getStockId());
 
         foreach ($documents as $productId => $document) {
             $sku = $document['sku'] ?? '';
@@ -90,5 +98,29 @@ class ProductDataMapperPlugin
         }
 
         return $documents;
+    }
+
+    /**
+     * Get product stock statuses on stock.
+     *
+     * @param array $skus
+     * @param int $stockId
+     * @return array
+     */
+    private function getStockStatuses(array $skus, int $stockId): array
+    {
+        $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
+        $connection = $this->resourceConnection->getConnection();
+        if (!$connection->isTableExists($stockTable)) {
+            return [];
+        }
+        $select = $connection->select();
+        $select->from(
+            [$this->resourceConnection->getTableName($stockTable)],
+            ['sku', 'is_salable']
+        );
+        $select->where('sku IN (?)', $skus);
+
+        return $connection->fetchPairs($select);
     }
 }
