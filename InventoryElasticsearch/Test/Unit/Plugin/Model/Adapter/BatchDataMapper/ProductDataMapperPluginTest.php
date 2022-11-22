@@ -8,22 +8,19 @@ declare(strict_types=1);
 namespace Magento\InventoryElasticsearch\Test\Unit\Plugin\Model\Adapter\BatchDataMapper;
 
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryElasticsearch\Plugin\Model\Adapter\BatchDataMapper\ProductDataMapperPlugin;
-use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test class for additional field product data mapper plugin
+ * Test for additional field product data mapper plugin
  */
 class ProductDataMapperPluginTest extends TestCase
 {
@@ -31,16 +28,6 @@ class ProductDataMapperPluginTest extends TestCase
      * @var ProductDataMapperPlugin
      */
     private $plugin;
-
-    /**
-     * @var GetSkusByProductIdsInterface|MockObject
-     */
-    private $getSkusByProductIdsMock;
-
-    /**
-     * @var StockIndexTableNameResolverInterface|MockObject
-     */
-    private $stockIndexTableNameResolverMock;
 
     /**
      * @var StockByWebsiteIdResolverInterface|MockObject
@@ -53,14 +40,9 @@ class ProductDataMapperPluginTest extends TestCase
     private $storeRepositoryMock;
 
     /**
-     * @var AdapterInterface|MockObject
+     * @var GetStockItemDataInterface|MockObject
      */
-    private $connectionMock;
-
-    /**
-     * @var ResourceConnection|MockObject
-     */
-    private $resourceConnectionMock;
+    private $getStockItemDataMock;
 
     /**
      * @var ProductDataMapper|MockObject
@@ -72,30 +54,20 @@ class ProductDataMapperPluginTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->getSkusByProductIdsMock = $this->createMock(GetSkusByProductIdsInterface::class);
-        $this->stockIndexTableNameResolverMock = $this->createMock(StockIndexTableNameResolverInterface::class);
         $this->stockByWebsiteIdResolverMock = $this->getMockForAbstractClass(StockByWebsiteIdResolverInterface::class);
         $this->storeRepositoryMock = $this->getMockBuilder(StoreRepositoryInterface::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getById'])
             ->addMethods(['getWebsiteId'])
             ->getMockForAbstractClass();
-        $this->resourceConnectionMock = $this->getMockBuilder(ResourceConnection::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getConnection', 'getTableName'])
-            ->getMock();
-        $this->connectionMock = $this->getMockBuilder(AdapterInterface::class)
-            ->onlyMethods(['select', 'isTableExists', 'fetchPairs'])
-            ->getMockForAbstractClass();
+        $this->getStockItemDataMock = $this->createMock(GetStockItemDataInterface::class);
         $this->productDataMapperMock = $this->createMock(ProductDataMapper::class);
         $this->plugin = (new ObjectManager($this))->getObject(
             ProductDataMapperPlugin::class,
             [
-                'getSkusByProductIds' => $this->getSkusByProductIdsMock,
-                'stockIndexTableNameResolver' => $this->stockIndexTableNameResolverMock,
                 'stockByWebsiteIdResolver' => $this->stockByWebsiteIdResolverMock,
                 'storeRepository' => $this->storeRepositoryMock,
-                'resourceConnection' => $this->resourceConnectionMock
+                'getStockItemData' => $this->getStockItemDataMock
             ]
         );
     }
@@ -109,11 +81,10 @@ class ProductDataMapperPluginTest extends TestCase
      * @param int $stockId
      * @param int $salability
      * @return void
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityException|LocalizedException
      */
     public function testAfterMap(int $storeId, int $websiteId, int $stockId, int $salability): void
     {
-        $stockTable = 'inventory_stock_' . $stockId;
         $sku = '24-MB01';
         $attribute = ['is_out_of_stock' => $salability];
         $documents = [
@@ -142,51 +113,15 @@ class ProductDataMapperPluginTest extends TestCase
             ->method('execute')
             ->willReturn($stock);
 
-        $this->stockIndexTableNameResolverMock
-            ->expects($this->once())
+        $this->getStockItemDataMock->expects($this->atLeastOnce())
             ->method('execute')
-            ->with($stockId)
-            ->willReturn($stockTable);
-
-        $this->getSkusByProductIdsMock
-            ->expects($this->once())
-            ->method('execute')
-            ->with(array_keys($documents))
-            ->willReturn([$sku]);
-
-        $this->resourceConnectionMock->expects($this->atLeastOnce())
-            ->method('getConnection')
-            ->with(ResourceConnection::DEFAULT_CONNECTION)
-            ->willReturn($this->connectionMock);
-        $this->resourceConnectionMock->expects($this->atLeastOnce())
-            ->method('getTableName')
-            ->willReturn($stockTable);
-
-        $select = $this->getMockBuilder(Select::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['from', 'where'])
-            ->getMock();
-        $select->expects($this->once())
-            ->method('from')
-            ->with([$stockTable], ['sku', 'is_salable'])
-            ->willReturnSelf();
-        $select->expects($this->once())
-            ->method('where')
-            ->with('sku IN (?)', [$sku])
-            ->willReturnSelf();
-
-        $this->connectionMock
-            ->expects($this->once())
-            ->method('isTableExists')
-            ->with($stockTable)
-            ->willReturn(true);
-        $this->connectionMock->expects($this->atLeastOnce())
-            ->method('select')
-            ->willReturn($select);
-
-        $this->connectionMock->expects($this->atLeastOnce())
-            ->method('fetchPairs')
-            ->willReturn([$sku => $salability]);
+            ->willReturnCallback(
+                function ($sku) use ($salability) {
+                    return isset($sku)
+                        ? ['is_salable' => $salability]
+                        : null;
+                }
+            );
 
         $this->assertSame(
             $expectedResult,

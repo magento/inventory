@@ -8,25 +8,13 @@ declare(strict_types=1);
 namespace Magento\InventoryElasticsearch\Plugin\Model\Adapter\BatchDataMapper;
 
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
-use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 use Magento\InventorySalesApi\Model\StockByWebsiteIdResolverInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\InventorySalesApi\Model\GetStockItemDataInterface;
 
 class ProductDataMapperPlugin
 {
-    /**
-     * @var GetSkusByProductIdsInterface
-     */
-    private $getSkusByProductIds;
-
-    /**
-     * @var StockIndexTableNameResolverInterface
-     */
-    private $stockIndexTableNameResolver;
-
     /**
      * @var StockByWebsiteIdResolverInterface
      */
@@ -38,29 +26,23 @@ class ProductDataMapperPlugin
     private $storeRepository;
 
     /**
-     * @var ResourceConnection
+     * @var GetStockItemDataInterface
      */
-    private $resourceConnection;
+    private $getStockItemData;
 
     /**
-     * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param StockIndexTableNameResolverInterface $stockIndexTableNameResolver
      * @param StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver
      * @param StoreRepositoryInterface $storeRepository
-     * @param ResourceConnection $resourceConnection
+     * @param GetStockItemDataInterface $getStockItemData
      */
     public function __construct(
-        GetSkusByProductIdsInterface $getSkusByProductIds,
-        StockIndexTableNameResolverInterface $stockIndexTableNameResolver,
         StockByWebsiteIdResolverInterface $stockByWebsiteIdResolver,
         StoreRepositoryInterface $storeRepository,
-        ResourceConnection $resourceConnection
+        GetStockItemDataInterface $getStockItemData
     ) {
-        $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->stockIndexTableNameResolver = $stockIndexTableNameResolver;
         $this->stockByWebsiteIdResolver = $stockByWebsiteIdResolver;
         $this->storeRepository = $storeRepository;
-        $this->resourceConnection = $resourceConnection;
+        $this->getStockItemData = $getStockItemData;
     }
 
     /**
@@ -71,7 +53,7 @@ class ProductDataMapperPlugin
      * @param mixed $documentData
      * @param mixed $storeId
      * @return array
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityException|\Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterMap(
@@ -83,44 +65,22 @@ class ProductDataMapperPlugin
         $store = $this->storeRepository->getById($storeId);
         $stock = $this->stockByWebsiteIdResolver->execute((int)$store->getWebsiteId());
 
-        try {
-            $skus = $this->getSkusByProductIds->execute(array_keys($documents));
-        } catch (NoSuchEntityException $e) {
-            $skus = [];
-        }
-
-        $productsSaleability = $this->getStockStatuses($skus, $stock->getStockId());
-
         foreach ($documents as $productId => $document) {
             $sku = $document['sku'] ?? '';
-            $document['is_out_of_stock'] = !$sku ? 1 : (int)($productsSaleability[$sku] ?? 1);
+            if (!$sku) {
+                $document['is_out_of_stock'] = 1;
+            } else {
+                try {
+                    $stockItemData = $this->getStockItemData->execute($sku, $stock->getStockId());
+                } catch (NoSuchEntityException $e) {
+                    $stockItemData = null;
+                }
+                $document['is_out_of_stock'] = null !== $stockItemData
+                    ? (int)$stockItemData[GetStockItemDataInterface::IS_SALABLE] : 1;
+            }
             $documents[$productId] = $document;
         }
 
         return $documents;
-    }
-
-    /**
-     * Get product stock statuses on stock.
-     *
-     * @param array $skus
-     * @param int $stockId
-     * @return array
-     */
-    private function getStockStatuses(array $skus, int $stockId): array
-    {
-        $stockTable = $this->stockIndexTableNameResolver->execute($stockId);
-        $connection = $this->resourceConnection->getConnection();
-        if (!$connection->isTableExists($stockTable)) {
-            return [];
-        }
-        $select = $connection->select();
-        $select->from(
-            [$this->resourceConnection->getTableName($stockTable)],
-            ['sku', 'is_salable']
-        );
-        $select->where('sku IN (?)', $skus);
-
-        return $connection->fetchPairs($select) ?? [];
     }
 }
