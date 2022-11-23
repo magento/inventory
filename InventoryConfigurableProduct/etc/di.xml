@@ -36,14 +36,6 @@
         <plugin name="inventory_catalog_add_qty_to_legacy_stock_configurable"
                 type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock"/>
     </type>
-    <type name="Magento\Inventory\Model\SourceItem\Command\DecrementSourceItemQty">
-        <plugin name="update_parent_configurable_product_stock_status_in_legacy_stock"
-                type="Magento\InventoryConfigurableProduct\Plugin\InventoryApi\UpdateParentStockStatusInLegacyStockPlugin"/>
-    </type>
-    <type name="Magento\InventoryApi\Api\SourceItemsSaveInterface">
-        <plugin name="update_configurable_product_parent_stock_status"
-                type="Magento\InventoryConfigurableProduct\Plugin\InventoryApi\UpdateConfigurableProductParentStockStatus"/>
-    </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
         <plugin name="after_update_stock_item_for_new_configurable_product"
                 type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockItemForNewConfigurableProduct"
@@ -52,5 +44,12 @@
                 type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct"
                 sortOrder="200"/>
 
+    </type>
+    <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
+        <arguments>
+            <argument name="compositeProductStockStatusProcessors" xsi:type="array">
+                <item name="configurable" xsi:type="object">Magento\InventoryConfigurableProduct\Model\StockStatusProcessor</item>
+            </argument>
+        </arguments>
     </type>
 </config>

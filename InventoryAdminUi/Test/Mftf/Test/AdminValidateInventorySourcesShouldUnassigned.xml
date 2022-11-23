@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminValidateInventorySourcesShouldUnassigned">
+        <annotations>
+            <features value="Unassign source from product"/>
+            <stories value="Unassign source from product"/>
+            <title value="Validate that Inventory sources should unassigned for both product sources"/>
+            <description value="You should be able to unassign all sources"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="AC-2869"/>
+        </annotations>
+        <before>
+            <!--Login to Admin-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+
+           <!--Create Inventory Source-->
+            <createData entity="FullSource1" stepKey="source"/>
+            <!--Create Category-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <!--Create SimpleProductWithSku1234-->
+            <createData entity="SimpleMsiProductWithSKU1234" stepKey="product">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Create SimpleProductWithSku01234-->
+            <createData entity="SimpleMsiProductWithSKU01234" stepKey="product2">
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <!--Go to Product Page-->
+            <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToAssignSources"/>
+            <!--Assign sources to Simpleproduct.-->
+            <waitForPageLoad time="60" stepKey="waitForAssignSourcesToProduct"/>
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFirstSourceToProductOne">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <!-- Save the Product-->
+            <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveTheProductOne"/>
+            <!--Go to Product Page of another Product-->
+            <amOnPage url="{{AdminProductEditPage.url($$product2.id$$)}}" stepKey="openProduct2EditPageToAssignSources"/>
+            <!--Assign multiple sources to product.-->
+            <waitForPageLoad time="60" stepKey="waitForAssignSourcesToProduct2"/>
+            <!--Assign sources to SimpleproductTwo-->
+            <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignFirstSourceToProductTwo">
+                <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+            </actionGroup>
+            <!-- Save the Product-->
+            <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveTheProductTwo"/>
+        </before>
+        <after>
+            <!--Delete Data-->
+            <deleteData createDataKey="product" stepKey="deleteProduct"/>
+            <deleteData createDataKey="product2" stepKey="deleteProductTwo"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+          <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource1">
+            <argument name="sourceCode" value="$$source.source[source_code]$$"/>
+          </actionGroup>
+          <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearProductGridFilter"/>
+          <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
+        </after>
+
+        <!--Go To Product Index Page-->
+        <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="amOnTheProductGridPageForCheckAssignThatTheDefaultSourceAssimgnedToProducts"/>
+        <waitForPageLoad stepKey="waitForProductGridPageLmoad"/>
+        <actionGroup ref="SearchProductGridByKeyword2ActionGroup" stepKey="assignFirstSourceToProductTwomm">
+        <argument name="keyword" value="1234"/>
+        </actionGroup>
+        <comment userInput="Check default source assigned to created products." stepKey="checkDefaultSourceAssignedToCreatedProductsComment"/>
+        <!--Verify Sources are assigned to both the Products-->
+        <see selector="{{AdminProductGridSection.productQtyPerSource('1',  $$source.source[name]$$)}}" userInput="0" stepKey="checkSourceQtyForFirstCreatedProduct"/>
+        <see selector="{{AdminProductGridSection.productQtyPerSource('2',  $$source.source[name]$$)}}" userInput="0" stepKey="checkSourceQtyForSecondCreatedProduct"/>
+       <!-- Again Go to Product Index Page-->
+        <comment userInput="Unassign all sources from all products" stepKey="unassignSourcesFromAllCreatedProducts"/>
+        <!-- Click on Multi Select Dropdown-->
+        <click selector="{{AdminGridSelectRows.multicheckDropdown}}" stepKey="openMulticheckDropdownForSelectAllProductsForUnassignSources"/>
+        <!-- Select All-->
+        <click selector="{{AdminGridSelectRows.multicheckOption('Select All')}}" stepKey="selectAllProductInGridForUnassignSources"/>
+        <!-- Click on Actions-->
+        <click selector="{{AdminGridSelectRows.bulkActionDropdown}}" stepKey="clickActionDropdownForSelectUnassignProductSources"/>
+        <!-- Click on Unassign Sources-->
+        <click selector="{{AdminGridSelectRows.bulkActionOption('Unassign Inventory Source')}}" stepKey="clickUnassignProductSources"/>
+        <waitForElementVisible selector="{{AdminGridConfirmActionSection.title}}" stepKey="waitForConfirmModalToUnassignSources"/>
+        <!--Confirm the Selection-->
+        <click selector="{{AdminGridConfirmActionSection.ok}}" stepKey="confirmUnassignSources"/>
+    </test>
+</tests>
