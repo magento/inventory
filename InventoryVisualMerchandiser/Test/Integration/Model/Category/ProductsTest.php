@@ -10,13 +10,11 @@ namespace Magento\InventoryVisualMerchandiser\Test\Integration\Model\Category;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\DB\Select;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\VisualMerchandiser\Model\Category\Products;
 use Magento\VisualMerchandiser\Model\Sorting\OutStockBottom;
 use PHPUnit\Framework\TestCase;
-use Zend_Db_Select_Exception;
 
 class ProductsTest extends TestCase
 {
@@ -68,7 +66,7 @@ class ProductsTest extends TestCase
      */
     public function testProductsInCategory(): void
     {
-        if (!class_exists(Products::class)) {
+        if (!class_exists(Products::class) || !class_exists(OutStockBottom::class)) {
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
@@ -104,15 +102,15 @@ class ProductsTest extends TestCase
      */
     public function testOutStockBottomCategorySorting(): void
     {
-        if (!class_exists(Products::class)) {
+        if (!class_exists(Products::class) || !class_exists(OutStockBottom::class)) {
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
+
+        $expectedOrderBy = ['is_in_stock', Select::SQL_DESC];
 
         $storeCode = 'store_for_eu_website';
         $this->storeManager->setCurrentStore($storeCode);
         $storeId = $this->storeManager->getStore($storeCode)->getId();
-
-        $expectedOrderBy = ['is_in_stock', Select::SQL_DESC];
 
         $collection = $this->productCollectionFactory->create()->setStoreId($storeId);
         $sortedCollection = $this->sortingModel->sort($collection);
@@ -135,23 +133,23 @@ class ProductsTest extends TestCase
      * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
      * @magentoDbIsolation disabled
      * @return void
-     * @throws Zend_Db_Select_Exception
-     * @throws NoSuchEntityException
      */
-    public function testIsAvailableForCompareWithCustomSource(): void
+    public function testOutStockBottomCategorySortingWithCustomSource(): void
     {
-        if (!class_exists(Products::class)) {
+        if (!class_exists(Products::class) || !class_exists(OutStockBottom::class)) {
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
         $storeCode = 'store_for_us_website';
-        $this->storeManager->setCurrentStore($storeCode);
-        $storeId = $this->storeManager->getStore($storeCode)->getId();
+        $storeManager = $this->objectManager->get(StoreManagerInterface::class);
+        $storeManager->setCurrentStore($storeCode);
+        $storeId = $storeManager->getStore($storeCode)->getId();
 
         $expectedOrderBy = ['inventory_stock.is_salable', Select::SQL_DESC];
 
         $collection = $this->productCollectionFactory->create()->setStoreId($storeId);
-        $sortedCollection = $this->sortingModel->sort($collection);
+        $sortingModel = $this->objectManager->get(OutStockBottom::class);
+        $sortedCollection = $sortingModel->sort($collection);
         $actualOrderBy = $sortedCollection->getSelect()
             ->getPart(Select::ORDER);
 
