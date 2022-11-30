@@ -34,11 +34,6 @@ class ProductsTest extends TestCase
     private $productCollectionFactory;
 
     /**
-     * @var OutStockBottom
-     */
-    private $sortingModel;
-
-    /**
      * @inheirtDoc
      */
     protected function setUp(): void
@@ -48,7 +43,6 @@ class ProductsTest extends TestCase
         $this->objectManager = Bootstrap::getObjectManager();
         $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
         $this->productCollectionFactory = $this->objectManager->get(CollectionFactory::class);
-        $this->sortingModel = $this->objectManager->get(OutStockBottom::class);
     }
 
     /**
@@ -102,7 +96,7 @@ class ProductsTest extends TestCase
      */
     public function testProductsInCategory(): void
     {
-        if (!class_exists(Products::class) || !class_exists(OutStockBottom::class)) {
+        if (!class_exists(Products::class)) {
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
@@ -149,7 +143,8 @@ class ProductsTest extends TestCase
         $storeId = $this->storeManager->getStore($storeCode)->getId();
 
         $collection = $this->productCollectionFactory->create()->setStoreId($storeId);
-        $sortedCollection = $this->sortingModel->sort($collection);
+        $sortingModel = $this->objectManager->get(OutStockBottom::class);
+        $sortedCollection = $sortingModel->sort($collection);
         $actualOrderBy = $sortedCollection->getSelect()
             ->getPart(Select::ORDER);
 
