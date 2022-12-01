@@ -17,9 +17,6 @@
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-          <skip>
-            <issueId value="ACQE-4167"/>
-          </skip>
         </annotations>
 
         <before>
