@@ -7,22 +7,36 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
+use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 
 class SourceItemConvert
 {
-    /**´
+    public const QTY = 'qty';
+
+    /**
      * @var SourceItemInterfaceFactory
      */
     private $sourceItemFactory;
 
     /**
-     * @param SourceItemInterfaceFactory $sourceItemFactory
+     * @var DefaultSourceProviderInterface
      */
-    public function __construct(SourceItemInterfaceFactory $sourceItemFactory)
-    {
+    private $defaultSourceProvider;
+
+    /**
+     * @param SourceItemInterfaceFactory $sourceItemFactory
+     * @param DefaultSourceProviderInterface|null $defaultSourceProvider
+     */
+    public function __construct(
+        SourceItemInterfaceFactory $sourceItemFactory,
+        ?DefaultSourceProviderInterface $defaultSourceProvider = null
+    ) {
         $this->sourceItemFactory = $sourceItemFactory;
+        $this->defaultSourceProvider = $defaultSourceProvider
+            ?? ObjectManager::getInstance()->get(DefaultSourceProviderInterface::class);
     }
 
     /**
@@ -37,19 +51,13 @@ class SourceItemConvert
         foreach ($bunch as $rowData) {
             /** @var SourceItemInterface $sourceItem */
             $sourceItem = $this->sourceItemFactory->create();
-            if (isset($rowData[Sources::COL_SOURCE_CODE])) {
-                $sourceItem->setSourceCode($rowData[Sources::COL_SOURCE_CODE]);
-            }
+            $sourceCode = $rowData[Sources::COL_SOURCE_CODE] ?? $this->defaultSourceProvider->getCode();
+            $sourceItem->setSourceCode($sourceCode);
             $sourceItem->setSku($rowData[Sources::COL_SKU]);
-            if (isset($rowData[Sources::COL_QTY])) {
-                $sourceItem->setQuantity((float)$rowData[Sources::COL_QTY]);
-            }
-            if (isset($rowData[Sources::COL_STATUS])) {
-                $status = (int)$rowData[Sources::COL_STATUS];
-            } else {
-                $status = 1;
-            }
-            $sourceItem->setStatus($status);
+            $sourceQuantity = $rowData[Sources::COL_QTY] ?? $rowData[self::QTY];
+            $sourceItem->setQuantity((float)$sourceQuantity);
+            $status = $rowData[Sources::COL_STATUS] ?? 1;
+            $sourceItem->setStatus((int)$status);
 
             $sourceItems[] = $sourceItem;
         }
