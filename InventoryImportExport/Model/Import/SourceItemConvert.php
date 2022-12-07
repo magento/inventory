@@ -54,7 +54,13 @@ class SourceItemConvert
             $sourceCode = $rowData[Sources::COL_SOURCE_CODE] ?? $this->defaultSourceProvider->getCode();
             $sourceItem->setSourceCode($sourceCode);
             $sourceItem->setSku($rowData[Sources::COL_SKU]);
-            $sourceQuantity = $rowData[Sources::COL_QTY] ?? $rowData[self::QTY];
+            if (isset($rowData[Sources::COL_QTY])) {
+                $sourceQuantity = $rowData[Sources::COL_QTY];
+            } elseif (isset($rowData[self::QTY])) {
+                $sourceQuantity = $rowData[self::QTY];
+            } else {
+                $sourceQuantity = 0;
+            }
             $sourceItem->setQuantity((float)$sourceQuantity);
             $status = $rowData[Sources::COL_STATUS] ?? 1;
             $sourceItem->setStatus((int)$status);
