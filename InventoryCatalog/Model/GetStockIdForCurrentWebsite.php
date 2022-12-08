@@ -39,10 +39,12 @@ class GetStockIdForCurrentWebsite
     }
 
     /**
+     * Returns stock id for website context
+     *
      * @param int|null $storeId
      * @return int
      */
-    public function execute(?int $storeId): int
+    public function execute(?int $storeId = null): int
     {
         $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
