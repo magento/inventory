@@ -80,7 +80,7 @@ class AdaptAssignStatusToProductPlugin
         try {
             $this->getProductIdsBySkus->execute([$product->getSku()]);
             if (null === $status) {
-                $stockId = $this->getStockIdForCurrentWebsite->execute();
+                $stockId = $this->getStockIdForCurrentWebsite->execute($product->getStoreId());
                 $result = $this->areProductsSalable->execute([$product->getSku()], $stockId);
                 $result = current($result);
                 return [$product, (int)$result->isSalable()];
