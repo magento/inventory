@@ -23,6 +23,7 @@ use Magento\Sales\Api\OrderManagementInterface;
 
 /**
  * Add reservation during order placement
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {

@@ -4,15 +4,13 @@
     "require": {
         "php": "~8.1.0||~8.2.0",
         "magento/framework": "*",
+        "magento/module-async-order": "*",
+        "magento/module-inventory-sales": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-configuration-api": "*",
-        "magento/module-inventory-sales": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-quote": "*",
         "magento/module-sales": "*"
-    },
-    "suggest": {
-        "magento/module-async-order": "*"
     },
     "type": "magento2-module",
     "license": [

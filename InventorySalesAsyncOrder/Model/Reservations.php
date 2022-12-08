@@ -26,6 +26,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 
 /**
  *  Append Reservation after Order is placed
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Reservations
 {
@@ -90,6 +91,7 @@ class Reservations
      * @param ScopeConfigInterface $scopeConfig
      * @param QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
      * @param AppendReservations $appendReservations
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         ItemToSellInterfaceFactory $itemsToSellFactory,
