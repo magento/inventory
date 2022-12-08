@@ -16,8 +16,7 @@
         "magento/module-inventory-source-selection-api": "*",
         "magento/module-sales-inventory": "*",
         "magento/module-store": "*",
-        "magento/module-sales": "*",
-        "magento/module-quote": "*"
+        "magento/module-sales": "*"
     },
     "suggest": {
         "magento/module-inventory-catalog": "*"
