@@ -23,7 +23,6 @@ use Magento\Sales\Api\OrderManagementInterface;
 
 /**
  * Add reservation during order placement
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {
@@ -100,9 +99,7 @@ class AppendReservationsAfterOrderPlacementPlugin
     }
 
     /**
-     * Add reservation before place order
-     *
-     * In case of error during order placement exception add compensation
+     * Add reservation before placing synchronous order or if "Use deferred Stock update" = Yes
      *
      * @param OrderManagementInterface $subject
      * @param callable $proceed
@@ -117,7 +114,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         OrderInterface $order
     ): OrderInterface {
         if (!$order->getEntityId()
-            || !$this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
+            || $this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             foreach ($order->getItems() as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {
@@ -152,6 +149,8 @@ class AppendReservationsAfterOrderPlacementPlugin
 
     /**
      * Create new Order
+     *
+     * In case of error during order placement exception add compensation
      *
      * @param callable $proceed
      * @param OrderInterface $order
