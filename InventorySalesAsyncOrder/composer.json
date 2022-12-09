@@ -5,6 +5,7 @@
         "php": "~8.1.0||~8.2.0",
         "magento/framework": "*",
         "magento/module-inventory-sales": "*",
+        "magento/module-async-order": "*",
         "magento/module-inventory-catalog-api": "*",
         "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-sales-api": "*",
