@@ -8,13 +8,11 @@ declare(strict_types=1);
 namespace Magento\InventorySalesAsyncOrder\Model;
 
 use Magento\AsyncOrder\Api\Data\OrderInterface as AsyncOrderInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\AppendReservations;
-use Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
@@ -25,8 +23,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Item;
 use Magento\Sales\Api\Data\OrderInterface;
 
 /**
- *  Append Reservation after Order is placed
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Append Reservation after Order is placed
  */
 class Reservations
 {
@@ -66,11 +63,6 @@ class Reservations
     private $quoteItemToOrderItem;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
      * @var QuoteIdToMaskedQuoteIdInterface
      */
     private $quoteIdToMaskedQuoteId;
@@ -88,10 +80,8 @@ class Reservations
      * @param CartRepositoryInterface $quoteRepository
      * @param QuoteIdMaskFactory $quoteIdMaskFactory
      * @param ToOrderItem $quoteItemToOrderItem
-     * @param ScopeConfigInterface $scopeConfig
      * @param QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId
      * @param AppendReservations $appendReservations
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         ItemToSellInterfaceFactory $itemsToSellFactory,
@@ -101,7 +91,6 @@ class Reservations
         CartRepositoryInterface $quoteRepository,
         QuoteIdMaskFactory $quoteIdMaskFactory,
         ToOrderItem $quoteItemToOrderItem,
-        ScopeConfigInterface $scopeConfig,
         QuoteIdToMaskedQuoteIdInterface $quoteIdToMaskedQuoteId,
         AppendReservations $appendReservations
     ) {
@@ -112,59 +101,54 @@ class Reservations
         $this->quoteRepository = $quoteRepository;
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
         $this->quoteItemToOrderItem = $quoteItemToOrderItem;
-        $this->scopeConfig = $scopeConfig;
         $this->quoteIdToMaskedQuoteId = $quoteIdToMaskedQuoteId;
         $this->appendReservations = $appendReservations;
     }
 
     /**
-     * Add Reservation for Async Order if "Use deferred Stock update" = No
+     * Place inventory reservation for async order.
      *
      * @param AsyncOrderInterface|OrderInterface $order
      * @throws NoSuchEntityException
      */
     public function execute($order)
     {
-        if (!$this->scopeConfig->isSetFlag(
-            AppendReservationsAfterOrderPlacementPlugin::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE
-        )) {
-            $itemsById = $itemsBySku = $itemsToSell = [];
-            $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$order->getQuoteId());
-            if ($cartId) {
-                $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-                $quote = $this->quoteRepository->get($quoteIdMask->getQuoteId());
-            } else {
-                $quote = $this->quoteRepository->get($order->getQuoteId());
-            }
-            foreach ($this->resolveItems($quote) as $item) {
-                if (!isset($itemsById[$item->getProductId()])) {
-                    $itemsById[$item->getProductId()] = 0;
-                }
-                $itemsById[$item->getProductId()] += $item->getQtyOrdered();
-            }
-            $productSkus = $this->getSkusByProductIds->execute(array_keys($itemsById));
-            $productTypes = $this->getProductTypesBySkus->execute($productSkus);
-
-            foreach ($productSkus as $productId => $sku) {
-                if (false === $this->isSourceItemManagementAllowedForProductType->execute($productTypes[$sku])) {
-                    continue;
-                }
-                if ($order instanceof OrderInterface) {
-                    $qty = (float)$itemsById[$productId];
-                } else {
-                    $qty = -(float)$itemsById[$productId];
-                }
-
-                $itemsBySku[$sku] = (float)$itemsById[$productId];
-                $itemsToSell[] = $this->itemsToSellFactory->create([
-                    'sku' => $sku,
-                    'qty' => $qty
-                ]);
-            }
-
-            $websiteId = (int)$quote->getStore()->getWebsiteId();
-            $this->appendReservations->reserve($websiteId, $itemsBySku, $order, $itemsToSell);
+        $itemsById = $itemsBySku = $itemsToSell = [];
+        $cartId = $this->quoteIdToMaskedQuoteId->execute((int)$order->getQuoteId());
+        if ($cartId) {
+            $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
+            $quote = $this->quoteRepository->get($quoteIdMask->getQuoteId());
+        } else {
+            $quote = $this->quoteRepository->get($order->getQuoteId());
         }
+        foreach ($this->resolveItems($quote) as $item) {
+            if (!isset($itemsById[$item->getProductId()])) {
+                $itemsById[$item->getProductId()] = 0;
+            }
+            $itemsById[$item->getProductId()] += $item->getQtyOrdered();
+        }
+        $productSkus = $this->getSkusByProductIds->execute(array_keys($itemsById));
+        $productTypes = $this->getProductTypesBySkus->execute($productSkus);
+
+        foreach ($productSkus as $productId => $sku) {
+            if (false === $this->isSourceItemManagementAllowedForProductType->execute($productTypes[$sku])) {
+                continue;
+            }
+            if ($order instanceof OrderInterface) {
+                $qty = (float)$itemsById[$productId];
+            } else {
+                $qty = -(float)$itemsById[$productId];
+            }
+
+            $itemsBySku[$sku] = (float)$itemsById[$productId];
+            $itemsToSell[] = $this->itemsToSellFactory->create([
+                'sku' => $sku,
+                'qty' => $qty
+            ]);
+        }
+
+        $websiteId = (int)$quote->getStore()->getWebsiteId();
+        $this->appendReservations->reserve($websiteId, $itemsBySku, $order, $itemsToSell);
     }
 
     /**
@@ -191,7 +175,7 @@ class Reservations
                     ['parent_item' => null]
                 );
             }
-            $parentItem = isset($orderItems[$parentItemId]) ? $orderItems[$parentItemId] : null;
+            $parentItem = $orderItems[$parentItemId] ?? null;
             $orderItems[$itemId] = $this->quoteItemToOrderItem->convert($quoteItem, ['parent_item' => $parentItem]);
         }
         return array_values($orderItems);

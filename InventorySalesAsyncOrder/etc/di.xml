@@ -6,6 +6,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventorySales\Model\ReservationExecutionInterface" type="Magento\InventorySalesAsyncOrder\Model\ReservationExecution"/>
     <type name="Magento\AsyncOrder\Model\Order\Email\Sender\RejectedOrderSender">
         <plugin name="rollback_reservations_after_order_rejected" type="Magento\InventorySalesAsyncOrder\Plugin\RollbackReservationsAfterOrderRejectedPlugin"/>
     </type>

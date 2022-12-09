@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventorySales\Plugin\Sales\OrderManagement;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface;
 use Magento\InventorySales\Model\AppendReservations;
+use Magento\InventorySales\Model\ReservationExecutionInterface;
 use Magento\InventorySalesApi\Api\Data\ItemToSellInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
@@ -27,8 +27,6 @@ use Magento\Sales\Api\OrderManagementInterface;
  */
 class AppendReservationsAfterOrderPlacementPlugin
 {
-    public const CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE = 'cataloginventory/item_options/use_deferred_stock_update';
-
     /**
      * @var PlaceReservationsForSalesEventInterface
      */
@@ -60,14 +58,14 @@ class AppendReservationsAfterOrderPlacementPlugin
     private $isSourceItemManagementAllowedForProductType;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
      * @var AppendReservations
      */
-    private AppendReservations $appendReservations;
+    private $appendReservations;
+
+    /**
+     * @var ReservationExecutionInterface
+     */
+    private $reservationExecution;
 
     /**
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
@@ -76,8 +74,8 @@ class AppendReservationsAfterOrderPlacementPlugin
      * @param ItemToSellInterfaceFactory $itemsToSellFactory
      * @param GetProductTypesBySkusInterface $getProductTypesBySkus
      * @param IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType
-     * @param ScopeConfigInterface $scopeConfig
      * @param AppendReservations $appendReservations
+     * @param ReservationExecutionInterface $reservationExecution
      */
     public function __construct(
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
@@ -86,8 +84,8 @@ class AppendReservationsAfterOrderPlacementPlugin
         ItemToSellInterfaceFactory $itemsToSellFactory,
         GetProductTypesBySkusInterface $getProductTypesBySkus,
         IsSourceItemManagementAllowedForProductTypeInterface $isSourceItemManagementAllowedForProductType,
-        ScopeConfigInterface $scopeConfig,
-        AppendReservations $appendReservations
+        AppendReservations $appendReservations,
+        ReservationExecutionInterface $reservationExecution
     ) {
         $this->placeReservationsForSalesEvent = $placeReservationsForSalesEvent;
         $this->getSkusByProductIds = $getSkusByProductIds;
@@ -95,12 +93,12 @@ class AppendReservationsAfterOrderPlacementPlugin
         $this->itemsToSellFactory = $itemsToSellFactory;
         $this->getProductTypesBySkus = $getProductTypesBySkus;
         $this->isSourceItemManagementAllowedForProductType = $isSourceItemManagementAllowedForProductType;
-        $this->scopeConfig = $scopeConfig;
         $this->appendReservations = $appendReservations;
+        $this->reservationExecution = $reservationExecution;
     }
 
     /**
-     * Add reservation before placing synchronous order or if "Use deferred Stock update" = Yes
+     * Add inventory reservation before placing synchronous order or if stock reservation is deferred.
      *
      * @param OrderManagementInterface $subject
      * @param callable $proceed
@@ -114,8 +112,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         callable $proceed,
         OrderInterface $order
     ): OrderInterface {
-        if (!$order->getEntityId()
-            || $this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
+        if ($this->reservationExecution->defer()) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             foreach ($order->getItems() as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {

@@ -9,6 +9,7 @@ namespace Magento\InventorySalesAsyncOrder\Plugin;
 
 use Magento\AsyncOrder\Api\Data\OrderInterface;
 use Magento\AsyncOrder\Model\OrderManagement;
+use Magento\InventorySales\Model\ReservationExecutionInterface;
 use Magento\InventorySalesAsyncOrder\Model\Reservations;
 
 class AppendReservationsAfterAsynchronousOrderPlacementPlugin
@@ -16,19 +17,27 @@ class AppendReservationsAfterAsynchronousOrderPlacementPlugin
     /**
      * @var Reservations
      */
-    private Reservations $inventoryReservations;
+    private $inventoryReservations;
+
+    /**
+     * @var ReservationExecutionInterface
+     */
+    private $reservationExecution;
 
     /**
      * @param Reservations $inventoryReservations
+     * @param ReservationExecutionInterface $reservationExecution
      */
     public function __construct(
-        Reservations $inventoryReservations
+        Reservations $inventoryReservations,
+        ReservationExecutionInterface $reservationExecution
     ) {
         $this->inventoryReservations = $inventoryReservations;
+        $this->reservationExecution = $reservationExecution;
     }
 
     /**
-     * Add inventory reservation after async initial order is placed
+     * Add inventory reservation after async initial order is placed with no deferred stock update.
      *
      * @param OrderManagement $subject
      * @param OrderInterface $result
@@ -40,7 +49,9 @@ class AppendReservationsAfterAsynchronousOrderPlacementPlugin
         OrderManagement $subject,
         OrderInterface $result
     ): OrderInterface {
-        $this->inventoryReservations->execute($result);
+        if (!$this->reservationExecution->defer()) {
+            $this->inventoryReservations->execute($result);
+        }
 
         return $result;
     }
