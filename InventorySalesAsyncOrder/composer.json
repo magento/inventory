@@ -12,9 +12,6 @@
         "magento/module-quote": "*",
         "magento/module-sales": "*"
     },
-    "suggest": {
-        "magento/module-async-order": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
