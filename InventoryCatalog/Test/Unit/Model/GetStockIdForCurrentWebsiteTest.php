@@ -7,16 +7,21 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Unit\Model;
 
+use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\InventoryApi\Api\Data\StockInterface;
-use Magento\InventorySalesApi\Api\StockResolverInterface;
-use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Test class for stock id resolver
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class GetStockIdForCurrentWebsiteTest extends TestCase
 {
     /**

@@ -18,6 +18,11 @@ use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Test class for AdaptAssignStatusToProductPlugin interceptor
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AdaptAssignStatusToProductPluginTest extends TestCase
 {
     /**
