@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAsyncOrder\Model;
 
-use Magento\AsyncOrder\Model\OrderManagement;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\Exception\FileSystemException;
@@ -19,7 +18,15 @@ use Magento\InventorySales\Model\ReservationExecutionInterface;
  */
 class ReservationExecution implements ReservationExecutionInterface
 {
+    /**
+     * Config path for deferred stock update.
+     */
     public const CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE = 'cataloginventory/item_options/use_deferred_stock_update';
+
+    /**
+     * Constant for async option path.
+     */
+    private const ASYNC_ORDER_OPTION_PATH = 'checkout/async';
 
     /**
      * @var ScopeConfigInterface
@@ -52,7 +59,7 @@ class ReservationExecution implements ReservationExecutionInterface
      */
     public function defer(): bool
     {
-        if ($this->deploymentConfig->get(OrderManagement::ASYNC_ORDER_OPTION_PATH)
+        if ($this->deploymentConfig->get(self::ASYNC_ORDER_OPTION_PATH)
             && !$this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {
             return false;
         }
