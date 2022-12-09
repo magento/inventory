@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
+
+namespace Magento\InventoryCatalog\Test\Unit\Model;
+
+use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Api\Data\WebsiteInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventoryApi\Api\Data\StockInterface;
+use Magento\InventorySalesApi\Api\StockResolverInterface;
+use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+
+class GetStockIdForCurrentWebsiteTest extends TestCase
+{
+    /**
+     * @var StoreManagerInterface|MockObject
+     */
+    private StoreManagerInterface $storeManager;
+
+    /**
+     * @var StockResolverInterface|MockObject
+     */
+    private StockResolverInterface $stockResolver;
+
+    private GetStockIdForCurrentWebsite $model;
+
+    protected function setUp(): void
+    {
+        $this->storeManager = $this->createMock(StoreManagerInterface::class);
+        $this->stockResolver = $this->createMock(StockResolverInterface::class);
+        $this->model = new GetStockIdForCurrentWebsite($this->storeManager, $this->stockResolver);
+    }
+
+    public function testExecuteWithStoreId(): void
+    {
+        $storeId = 1;
+        $websiteId = 1;
+        $websiteCode = 'website_code';
+        $stockId = 2;
+
+        $store = $this->createMock(StoreInterface::class);
+        $store->expects($this->once())
+            ->method('getWebsiteId')
+            ->willReturn($websiteId);
+        $website = $this->createMock(WebsiteInterface::class);
+        $website->expects($this->once())
+            ->method('getCode')
+            ->willReturn($websiteCode);
+        $stock = $this->createMock(StockInterface::class);
+        $stock->expects($this->once())->method('getStockId')
+            ->willReturn($stockId);
+
+        $this->storeManager->expects($this->once())
+            ->method('getStore')
+            ->with($storeId)
+            ->willReturn($store);
+        $this->storeManager->expects($this->once())
+            ->method('getWebsite')
+            ->with($websiteId)
+            ->willReturn($website);
+        $this->stockResolver->expects($this->once())
+            ->method('execute')
+            ->with(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)
+            ->willReturn($stock);
+
+        $this->assertSame($stockId, $this->model->execute($storeId));
+    }
+
+    public function testExecuteWithoutStoreId(): void
+    {
+        $websiteId = 1;
+        $websiteCode = 'website_code';
+        $stockId = 2;
+
+        $store = $this->createMock(StoreInterface::class);
+        $store->expects($this->once())
+            ->method('getWebsiteId')
+            ->willReturn($websiteId);
+        $website = $this->createMock(WebsiteInterface::class);
+        $website->expects($this->once())
+            ->method('getCode')
+            ->willReturn($websiteCode);
+        $stock = $this->createMock(StockInterface::class);
+        $stock->expects($this->once())->method('getStockId')
+            ->willReturn($stockId);
+
+        $this->storeManager->expects($this->once())
+            ->method('getStore')
+            ->willReturn($store);
+        $this->storeManager->expects($this->once())
+            ->method('getWebsite')
+            ->with($websiteId)
+            ->willReturn($website);
+        $this->stockResolver->expects($this->once())
+            ->method('execute')
+            ->with(SalesChannelInterface::TYPE_WEBSITE, $websiteCode)
+            ->willReturn($stock);
+
+        $this->assertSame($stockId, $this->model->execute());
+    }
+}
