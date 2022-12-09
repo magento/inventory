@@ -34,8 +34,14 @@ class GetStockIdForCurrentWebsiteTest extends TestCase
      */
     private StockResolverInterface $stockResolver;
 
+    /**
+     * @var GetStockIdForCurrentWebsite
+     */
     private GetStockIdForCurrentWebsite $model;
 
+    /**
+     * @return void
+     */
     protected function setUp(): void
     {
         $this->storeManager = $this->createMock(StoreManagerInterface::class);
@@ -43,6 +49,10 @@ class GetStockIdForCurrentWebsiteTest extends TestCase
         $this->model = new GetStockIdForCurrentWebsite($this->storeManager, $this->stockResolver);
     }
 
+
+    /**
+     * @return void
+     */
     public function testExecuteWithStoreId(): void
     {
         $storeId = 1;
@@ -78,6 +88,9 @@ class GetStockIdForCurrentWebsiteTest extends TestCase
         $this->assertSame($stockId, $this->model->execute($storeId));
     }
 
+    /**
+     * @return void
+     */
     public function testExecuteWithoutStoreId(): void
     {
         $websiteId = 1;
