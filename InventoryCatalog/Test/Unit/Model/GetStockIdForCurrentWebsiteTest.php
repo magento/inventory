@@ -49,7 +49,6 @@ class GetStockIdForCurrentWebsiteTest extends TestCase
         $this->model = new GetStockIdForCurrentWebsite($this->storeManager, $this->stockResolver);
     }
 
-
     /**
      * @return void
      */
