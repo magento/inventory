@@ -320,11 +320,8 @@ class ProductTest extends TestCase
 
             /** @var Data $dataSourceModel */
             $dataSourceModel = $objectManager->create(Data::class);
-            try {
-                $dataSourceModel->cleanBunches();
-            } catch (\Exception $e) {
-                // nothing to clean
-            }
+            $dataSourceModel->cleanBunches();
+
             $registry->unregister('isSecureArea');
             $registry->register('isSecureArea', false);
         }
