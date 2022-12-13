@@ -36,17 +36,21 @@ class GetStockIdForCurrentWebsite
     /**
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
+     * @param Request|null $request
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        Request $request = null
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
-        $this->request = ObjectManager::getInstance()->get(Request::class);
+        $this->request = $request ?: ObjectManager::getInstance()->get(Request::class);
     }
 
     /**
+     * Determine stock id in use based on current store context
+     *
      * @return int
      */
     public function execute(): int
