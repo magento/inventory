@@ -31,6 +31,13 @@ class Sources extends AbstractEntity
     const COL_QTY = SourceItemInterface::QUANTITY;
     const COL_STATUS = SourceItemInterface::STATUS;
 
+    protected $validColumnNames = [
+        self::COL_SKU,
+        self::COL_SOURCE_CODE,
+        self::COL_QTY,
+        self::COL_STATUS
+    ];
+
     /**
      * @var Json
      */
@@ -80,6 +87,10 @@ class Sources extends AbstractEntity
             }
         }
         $this->commands = $commands;
+
+        foreach ($this->errorMessageTemplates as $errorCode => $message) {
+            $this->getErrorAggregator()->addErrorMessageTemplate($errorCode, $message);
+        }
     }
 
     /**
