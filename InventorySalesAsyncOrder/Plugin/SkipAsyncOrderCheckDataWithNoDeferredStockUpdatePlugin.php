@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAsyncOrder\Plugin;
 
-use Magento\AsyncOrder\Model\OrderManagement;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\InventorySales\Model\ReservationExecutionInterface;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
@@ -64,7 +63,7 @@ class SkipAsyncOrderCheckDataWithNoDeferredStockUpdatePlugin
         } else {
             $searchCriteria = $this->searchCriteriaBuilder
                 ->addFilter('quote_id', $subject->getQuoteId())
-                ->addFilter('status', OrderManagement::STATUS_RECEIVED)
+                ->addFilter('status', 'received')
                 ->create();
             $asyncOrder = $this->orderRepository->getList($searchCriteria)->getItems();
 
