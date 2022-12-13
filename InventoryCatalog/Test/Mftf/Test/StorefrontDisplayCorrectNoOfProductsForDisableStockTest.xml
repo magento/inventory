@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="StorefrontDisplayCorrectNoOfProductsForDisableStockTest">
+        <annotations>
+            <stories value="Category item count incorrect after filtering if Display Out of Stock Products = Yes"/>
+            <title value="Validate category item count returns correct number if display out of stock product = yes"/>
+            <description value="Validate correct count displayed at storefront and filter returns correct number if display out of stock product = yes"/>
+            <testCaseId value="AC-6765"/>
+            <useCaseId value="ACP2E-1147"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+        </annotations>
+        <before>
+            <!-- Login to backend-->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <!-- Display out of stock product -->
+            <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
+            <!--Create category and product.-->
+            <createData entity="SimpleSubCategory" stepKey="category"/>
+            <!-- create customer -->
+            <createData entity="CustomerEntityOne" stepKey="createCustomer"/>
+            <createData entity="SimpleProduct" stepKey="firstProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="secondProduct">
+                <field key="status">1</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <createData entity="SimpleProduct" stepKey="thirdProduct">
+                <field key="status">0</field>
+                <requiredEntity createDataKey="category"/>
+            </createData>
+            <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateBackToAdminProductGrid1"/>
+            <waitForPageLoad time="30" stepKey="waitForProductGridPageIsLoaded1"/>
+            <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
+                              dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
+                              stepKey="clearSourcesFilter1"/>
+            <!-- Create Configurable Product 1 having color attribute -->
+                <actionGroup ref="ConfigurableProductWithColorAttributeActionGroup" stepKey="createConfigurableProduct1">
+                <argument name="product" value="_defaultProduct"/>
+                <argument name="category" value="$$category$$"/>
+                <argument name="colorAttribute1" value="color1"/>
+                <argument name="colorAttribute2" value="color2"/>
+                <argument name="childProductQuantity" value="15"/>
+            </actionGroup>
+            <!-- Create Configurable Product 2 having color attribute -->
+            <actionGroup ref="ConfigurableProductWithColorAttributeActionGroup" stepKey="createConfigurableProduct2">
+                <argument name="product" value="ApiSimpleProduct"/>
+                <argument name="category" value="$$category$$"/>
+                <argument name="colorAttribute1" value="color3"/>
+                <argument name="colorAttribute2" value="color4"/>
+                <argument name="childProductQuantity" value="10"/>
+            </actionGroup>
+            <!--Set the child product 1 visibility to Catalog, Search-->
+            <actionGroup ref="ConfigurableChildProductSetVisibilityActionGroup" stepKey="setChildProductVisibility1">
+                <argument name="product" value="color1"/>
+                <argument name="childProductVisibility" value="Catalog, Search"/>
+            </actionGroup>
+            <!--Set the child product 2 visibility to Catalog, Search-->
+            <actionGroup ref="ConfigurableChildProductSetVisibilityActionGroup" stepKey="setChildProductVisibility2">
+                <argument name="product" value="color2"/>
+                <argument name="childProductVisibility" value="Catalog, Search"/>
+            </actionGroup>
+            <!--Set the child product 3 visibility to Catalog, Search-->
+            <actionGroup ref="ConfigurableChildProductSetVisibilityActionGroup" stepKey="setChildProductVisibility3">
+                <argument name="product" value="color3"/>
+                <argument name="childProductVisibility" value="Catalog, Search"/>
+            </actionGroup>
+            <!--Set the child product 4 visibility to Catalog, Search-->
+            <actionGroup ref="ConfigurableChildProductSetVisibilityActionGroup" stepKey="setChildProductVisibility4">
+                <argument name="product" value="color4"/>
+                <argument name="childProductVisibility" value="Catalog, Search"/>
+            </actionGroup>
+        </before>
+        <after>
+            <!-- Don't display out of stock product -->
+            <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertDisplayOutOfStockProduct"/>
+            <deleteData createDataKey="firstProduct" stepKey="deleteFirstProduct"/>
+            <deleteData createDataKey="secondProduct" stepKey="deleteSecondProduct"/>
+            <deleteData createDataKey="thirdProduct" stepKey="deleteThirdProduct"/>
+            <deleteData createDataKey="category" stepKey="deleteCategory"/>
+            <!-- Delete configurable product 1 -->
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct1">
+                <argument name="product" value="_defaultProduct"/>
+            </actionGroup>
+            <!-- Delete configurable product 2 -->
+            <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteProduct2">
+                <argument name="product" value="ApiSimpleProduct"/>
+            </actionGroup>
+            <actionGroup ref="ResetProductGridToDefaultViewActionGroup" stepKey="clearProductsGridFilters"/>
+            <!-- Delete the Created Color attribute 1-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute1">
+                <argument name="Color" value="{{color1.name}}"/>
+            </actionGroup>
+            <!-- Delete the Created Color attribute 2-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute2">
+                <argument name="Color" value="{{color2.name}}"/>
+            </actionGroup>
+            <!-- Delete the Created Color attribute 3-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute3">
+                <argument name="Color" value="{{color3.name}}"/>
+            </actionGroup>
+            <!-- Delete the Created Color attribute 4-->
+            <actionGroup ref="AdminDeleteCreatedColorAttributeActionGroup" stepKey="deleteBlueColorAttribute4">
+                <argument name="Color" value="{{color4.name}}"/>
+            </actionGroup>
+            <!-- Delete Created Customer -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
+            <!--Logout from backend-->
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+        <!-- Login as customer to Customer Portal -->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="storefrontCustomerLogin">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Search for the product on Storefront -->
+        <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
+        <!-- check configurable product presents in storefront page-->
+        <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage">
+            <argument name="category" value="$$category$$"/>
+            <argument name="product" value="_defaultProduct"/>
+        </actionGroup>
+        <!--verify the number of products matches with the count-->
+        <actionGroup ref="AssertToolbarTextIsVisibleInStorefrontActionGroup" stepKey="VerifyToolbarText1">
+            <argument name="text" value="8"/>
+        </actionGroup>
+        <!--Set Out Of Stock  child configurable product 2.-->
+        <actionGroup ref="ConfigurableChildProductSetOutOfStockActionGroup" stepKey="setChildProduct2OutOfStock">
+            <argument name="product" value="color2"/>
+        </actionGroup>
+        <!--verify the number of products matches with the count for out of stock product-->
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage2"/>
+        <waitForPageLoad stepKey="waitForCategoryPageLoad2"/>
+        <actionGroup ref="AssertToolbarTextIsVisibleInStorefrontActionGroup" stepKey="VerifyToolbarText2">
+            <argument name="text" value="8"/>
+        </actionGroup>
+        <!--Disable child configurable product 3 disable.-->
+        <actionGroup ref="ConfigurableChildProductSetDisableActionGroup" stepKey="setChildProduct3Disable">
+            <argument name="product" value="color3"/>
+        </actionGroup>
+        <!--verify the number of products matches with the count for disable product-->
+        <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPage3"/>
+        <waitForPageLoad stepKey="waitForCategoryPageLoad3"/>
+        <actionGroup ref="AssertToolbarTextIsVisibleInStorefrontActionGroup" stepKey="VerifyToolbarText3">
+            <argument name="text" value="7"/>
+        </actionGroup>
+        <!-- Verify Color 1 attribute matches the item quantity -->
+        <actionGroup ref="AssertStorefrontAttributeOptionQuantityInLayeredNavigationActionGroup" stepKey="assertColor1OptionFilterMatchesItemQuantity">
+            <argument name="attributeLabel" value="Color"/>
+            <argument name="attributeOptionLabel" value="{{color1.name}}"/>
+            <argument name="attributeOptionPosition" value="1"/>
+            <argument name="attributeOptionQuantity" value="2"/>
+        </actionGroup>
+        <!-- Verify Color 2 attribute matches the item quantity -->
+        <actionGroup ref="AssertStorefrontAttributeOptionQuantityInLayeredNavigationActionGroup" stepKey="assertColor2OptionFilterMatchesItemQuantity">
+            <argument name="attributeLabel" value="Color"/>
+            <argument name="attributeOptionLabel" value="{{color2.name}}"/>
+            <argument name="attributeOptionPosition" value="2"/>
+            <argument name="attributeOptionQuantity" value="2"/>
+        </actionGroup>
+    </test>
+</tests>
