@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\HTTP\PhpEnvironment\Request;
 
 /**
  * Service for get stock id for current website.
@@ -27,6 +29,11 @@ class GetStockIdForCurrentWebsite
     private $stockResolver;
 
     /**
+     * @var Request
+     */
+    private Request $request;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      */
@@ -36,16 +43,15 @@ class GetStockIdForCurrentWebsite
     ) {
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->request = ObjectManager::getInstance()->get(Request::class);
     }
 
     /**
-     * Returns stock id for website context
-     *
-     * @param int|null $storeId
      * @return int
      */
-    public function execute(?int $storeId = null): int
+    public function execute(): int
     {
+        $storeId = $this->request->getParam('store');
         $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
         $websiteCode = $this->storeManager->getWebsite($websiteId)->getCode();
 
