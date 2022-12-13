@@ -14,6 +14,8 @@
             <description value="Product Salable Qty has to be decreased only after the order is processed by the consumer"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-930"/>
+            <group value="msi_ee"/>
+            <group value="multi_mode"/>
         </annotations>
         <before>
             <!-- Enable AsyncOrder -->
