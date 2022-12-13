@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAsyncOrder\Model;
 
-use Magento\AsyncOrder\Api\Data\OrderInterface as AsyncOrderInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
@@ -108,7 +107,7 @@ class Reservations
     /**
      * Place inventory reservation for async order.
      *
-     * @param AsyncOrderInterface|OrderInterface $order
+     * @param mixed $order
      * @throws NoSuchEntityException
      */
     public function execute($order)
