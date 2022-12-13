@@ -59,7 +59,7 @@ class SkipAsyncOrderCheckDataWithNoDeferredStockUpdatePlugin
         AbstractItem $subject,
         \Closure     $proceed
     ) {
-        if ($this->reservationExecution->defer()) {
+        if ($this->reservationExecution->isDeferred()) {
             return $proceed();
         } else {
             $searchCriteria = $this->searchCriteriaBuilder

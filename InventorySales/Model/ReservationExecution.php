@@ -17,7 +17,7 @@ class ReservationExecution implements ReservationExecutionInterface
      *
      * @return bool
      */
-    public function defer(): bool
+    public function isDeferred(): bool
     {
         return true;
     }

@@ -112,7 +112,7 @@ class AppendReservationsAfterOrderPlacementPlugin
         callable $proceed,
         OrderInterface $order
     ): OrderInterface {
-        if ($this->reservationExecution->defer()) {
+        if ($this->reservationExecution->isDeferred()) {
             $itemsById = $itemsBySku = $itemsToSell = [];
             foreach ($order->getItems() as $item) {
                 if (!isset($itemsById[$item->getProductId()])) {

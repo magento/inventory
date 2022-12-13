@@ -17,5 +17,5 @@ interface ReservationExecutionInterface
      *
      * @return bool
      */
-    public function defer(): bool;
+    public function isDeferred(): bool;
 }

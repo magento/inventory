@@ -57,7 +57,7 @@ class ReservationExecution implements ReservationExecutionInterface
      * @throws FileSystemException
      * @throws RuntimeException
      */
-    public function defer(): bool
+    public function isDeferred(): bool
     {
         if ($this->deploymentConfig->get(self::ASYNC_ORDER_OPTION_PATH)
             && !$this->scopeConfig->isSetFlag(self::CONFIG_PATH_USE_DEFERRED_STOCK_UPDATE)) {

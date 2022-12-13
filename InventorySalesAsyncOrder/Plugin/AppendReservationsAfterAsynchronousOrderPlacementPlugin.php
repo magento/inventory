@@ -49,7 +49,7 @@ class AppendReservationsAfterAsynchronousOrderPlacementPlugin
         OrderManagement $subject,
         OrderInterface $result
     ): OrderInterface {
-        if (!$this->reservationExecution->defer()) {
+        if (!$this->reservationExecution->isDeferred()) {
             $this->inventoryReservations->execute($result);
         }
 
