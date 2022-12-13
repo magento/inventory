@@ -49,7 +49,7 @@ class SkipAsyncOrderCheckDataWithNoDeferredStockUpdatePlugin
     }
 
     /**
-     * Skip checking data if it is async order processing with no deferred stock update.
+     * Skip checking data if it is processing of async order with "received" status and no deferred stock update.
      *
      * @param AbstractItem $subject
      * @param \Closure $proceed
@@ -59,7 +59,9 @@ class SkipAsyncOrderCheckDataWithNoDeferredStockUpdatePlugin
         AbstractItem $subject,
         \Closure     $proceed
     ) {
-        if (!$this->reservationExecution->defer()) {
+        if ($this->reservationExecution->defer()) {
+            return $proceed();
+        } else {
             $searchCriteria = $this->searchCriteriaBuilder
                 ->addFilter('quote_id', $subject->getQuoteId())
                 ->addFilter('status', OrderManagement::STATUS_RECEIVED)
