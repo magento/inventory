@@ -14,12 +14,9 @@
             <description value="Salable Qty of the product has to be rolled back if the order had been Rejected"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-928"/>
-            <group value="msi_ee"/>
-            <group value="multi_mode"/>
+            <group value="async_checkout"/>
         </annotations>
         <before>
-            <!-- Enable AsyncOrder -->
-            <magentoCLI stepKey="EnableAsyncOrder" command="setup:config:set --no-interaction --checkout-async 1"/>
             <!-- Create Product and Category for Order Placement -->
             <createData entity="_defaultCategory" stepKey="createCategory"/>
             <createData entity="ApiSimpleProduct" stepKey="createProduct">
@@ -36,7 +33,6 @@
             <createData entity="DisableFreeShippingConfig" stepKey="disableFreeShippingConfig"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
-            <magentoCLI stepKey="DisableAsyncOrder" command="setup:config:set --no-interaction --checkout-async 0"/>
             <actionGroup ref="DeleteCustomerByEmailActionGroup" stepKey="deleteCustomer">
                 <argument name="email" value="{{CustomerEntityOne.email}}"/>
             </actionGroup>

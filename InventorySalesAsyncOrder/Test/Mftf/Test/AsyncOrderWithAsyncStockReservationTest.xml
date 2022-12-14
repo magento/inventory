@@ -14,12 +14,10 @@
             <description value="Product Salable Qty has to be decreased only after the order is processed by the consumer"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-930"/>
-            <group value="msi_ee"/>
-            <group value="multi_mode"/>
+            <group value="async_checkout"/>
         </annotations>
         <before>
-            <!-- Enable AsyncOrder -->
-            <magentoCLI stepKey="EnableAsyncOrder" command="setup:config:set --no-interaction --checkout-async 1"/>
+            <!-- Enable Deferred Stock Update -->
             <magentoCLI command="config:set cataloginventory/item_options/use_deferred_stock_update 1" stepKey="enableDeferredStockUpdate"/>
             <!-- Create Product and Category for Order Placement -->
             <createData entity="_defaultCategory" stepKey="createCategory"/>
@@ -37,7 +35,6 @@
             <createData entity="DisableFreeShippingConfig" stepKey="disableFreeShippingConfig"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
-            <magentoCLI stepKey="DisableAsyncOrder" command="setup:config:set --no-interaction --checkout-async 0"/>
             <magentoCLI command="config:set cataloginventory/item_options/use_deferred_stock_update 0" stepKey="disableDeferredStockUpdate"/>
             <actionGroup ref="DeleteCustomerByEmailActionGroup" stepKey="deleteCustomer">
                 <argument name="email" value="{{CustomerEntityOne.email}}"/>
