@@ -14,8 +14,8 @@
             <description value="Product Salable Qty has to be decreased only after the order is processed by the consumer"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-930"/>
-            <group value="msi_ee" />
-            <group value="single_mode" />
+            <group value="async_checkout"/>
+            <group value="async_checkout_msi_ee"/>
         </annotations>
         <before>
             <!-- Enable Deferred Stock Update -->

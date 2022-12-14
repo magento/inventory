@@ -14,8 +14,8 @@
             <description value="Salable Qty of the product has to be rolled back if the order had been Rejected"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-928"/>
-            <group value="msi_ee" />
-            <group value="single_mode" />
+            <group value="async_checkout"/>
+            <group value="async_checkout_msi_ee"/>
         </annotations>
         <before>
             <!-- Create Product and Category for Order Placement -->
