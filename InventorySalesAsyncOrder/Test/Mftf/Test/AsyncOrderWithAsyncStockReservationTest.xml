@@ -7,14 +7,15 @@
 -->
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AsyncOrderWithAsyncStockReservationTest">
+    <test name="AsyncOrderWithAsyncStockReservationTest" extends="AsyncOrderStockReservationTest">
         <annotations>
             <stories value="Stock Reservation for Async Order"/>
             <title value="Onepage checkout with AsyncOrder and Async Stock Reservation"/>
             <description value="Product Salable Qty has to be decreased only after the order is processed by the consumer"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-930"/>
-            <group value="async_checkout"/>
+            <group value="msi_ee" />
+            <group value="single_mode" />
         </annotations>
         <before>
             <!-- Enable Deferred Stock Update -->

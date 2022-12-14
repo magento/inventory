@@ -7,14 +7,15 @@
 -->
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AsyncOrderStockReservationRollbackTest">
+    <test name="AsyncOrderStockReservationRollbackTest" extends="AsyncOrderStockReservationTest">
         <annotations>
             <stories value="Stock Reservation for Async Order"/>
             <title value="Stock Reservation Rollback for Rejected AsyncOrder"/>
             <description value="Salable Qty of the product has to be rolled back if the order had been Rejected"/>
             <severity value="MAJOR"/>
             <testCaseId value="ACPT-928"/>
-            <group value="async_checkout"/>
+            <group value="msi_ee" />
+            <group value="single_mode" />
         </annotations>
         <before>
             <!-- Create Product and Category for Order Placement -->
