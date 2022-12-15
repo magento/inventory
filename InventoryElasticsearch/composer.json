@@ -2,7 +2,7 @@
     "name": "magento/module-inventory-elasticsearch",
     "description": "N/A",
     "require": {
-        "php": "~7.4.0||~8.1.0",
+        "php": "~8.1.0||~8.2.0",
         "magento/framework": "*",
         "magento/module-catalog-inventory": "*",
         "magento/module-catalog-search": "*",
@@ -10,6 +10,9 @@
         "magento/module-inventory-indexer": "*",
         "magento/module-inventory-sales-api": "*",
         "magento/module-store": "*"
+    },
+    "suggest": {
+        "magento/module-elasticsearch": "*"
     },
     "type": "magento2-module",
     "license": [
