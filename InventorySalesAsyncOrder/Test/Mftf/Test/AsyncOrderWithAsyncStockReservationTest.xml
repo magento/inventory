@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AsyncOrderWithAsyncStockReservationTest" extends="AsyncOrderStockReservationTest">
+        <annotations>
+            <stories value="Stock Reservation for Async Order"/>
+            <title value="Onepage checkout with AsyncOrder and Async Stock Reservation"/>
+            <description value="Product Salable Qty has to be decreased only after the order is processed by the consumer"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="ACPT-930"/>
+            <group value="async_checkout"/>
+            <group value="async_checkout_msi_ee"/>
+        </annotations>
+        <before>
+            <!-- Enable Deferred Stock Update -->
+            <magentoCLI command="config:set cataloginventory/item_options/use_deferred_stock_update 1" stepKey="enableDeferredStockUpdate"/>
+            <!-- Create Product and Category for Order Placement -->
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="ApiSimpleProduct" stepKey="createProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Enable Free Shipping -->
+            <createData entity="PaymentMethodsSettingConfig" stepKey="paymentMethodsSettingConfig"/>
+            <createData entity="FreeShippingMethodsSettingConfig" stepKey="freeShippingMethodsSettingConfig"/>
+            <!-- Login to Admin -->
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <after>
+            <createData entity="DefaultShippingMethodsConfig" stepKey="defaultShippingMethodsConfig"/>
+            <createData entity="DisableFreeShippingConfig" stepKey="disableFreeShippingConfig"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
+            <magentoCLI command="config:set cataloginventory/item_options/use_deferred_stock_update 0" stepKey="disableDeferredStockUpdate"/>
+            <actionGroup ref="DeleteCustomerByEmailActionGroup" stepKey="deleteCustomer">
+                <argument name="email" value="{{CustomerEntityOne.email}}"/>
+            </actionGroup>
+            <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="resetGrid"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
+        </after>
+
+        <!-- Proceed to Storefront and Place an Order Using Coupon Code -->
+        <!-- Add Product to Card -->
+        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="AddProductToCard">
+            <argument name="product" value="$$createProduct$$"/>
+        </actionGroup>
+
+        <!-- Proceed to Checkout -->
+        <actionGroup ref="StorefrontClickOnMiniCartActionGroup" stepKey="clickToOpenCard"/>
+        <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="clickToProceedToCheckout"/>
+        <waitForPageLoad stepKey="waitForTheFormIsOpened"/>
+
+        <!-- Fill Shipping Form -->
+        <actionGroup ref="ShipmentFormFreeShippingActionGroup" stepKey="shipmentFormFreeShippingActionGroup"/>
+
+        <!-- Place Order -->
+        <comment userInput="Comment is added to preserve the step key for backward compatibility" stepKey="waitForPlaceOrderButton"/>
+        <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="clickPlaceOrder"/>
+        <grabTextFrom selector="{{CheckoutSuccessMainSection.orderNumber}}" stepKey="grabOrderNumber"/>
+
+        <!-- Create Customer -->
+        <actionGroup ref="StorefrontRegisterCustomerFromOrderSuccessPage" stepKey="createCustomerAfterPlaceOrder">
+            <argument name="customer" value="CustomerEntityOne"/>
+        </actionGroup>
+
+        <!-- Verify Customer -->
+        <actionGroup ref="AssertMessageCustomerCreateAccountActionGroup" stepKey="seeSuccessMessage1">
+            <argument name="messageType" value="success"/>
+            <argument name="message" value="Thank you for registering with Main Website Store."/>
+        </actionGroup>
+
+        <!-- Go to My Account > My Orders Page -->
+        <actionGroup ref="StorefrontOpenMyAccountPageActionGroup" stepKey="onMyAccount"/>
+        <click selector="{{StorefrontCustomerSidebarSection.sidebarTab('My Orders')}}" stepKey="clickOnMyOrders"/>
+        <waitForPageLoad stepKey="waitForOrdersLoad"/>
+
+        <!-- Check Order Status is Received and Reorder Action is Not Available -->
+        <actionGroup ref="AssertReceivedOrderInGridActionGroup" stepKey="checkReorderButton">
+            <argument name="orderId" value="$grabOrderNumber"/>
+        </actionGroup>
+
+        <!-- Check that Product Salable Qty has NOT been Decreased -->
+        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct1">
+            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="filter_value" value="$$createProduct.product[sku]$$"/>
+        </actionGroup>
+        <see selector="{{AdminProductGridSection.productSalableQty('1', 'Default Stock')}}" userInput="1000" stepKey="verifyStockQuantity"/>
+
+        <!-- Trigger Async Place Order Consumer to Process the Order -->
+        <actionGroup ref="CliConsumerStartActionGroup" stepKey="processFirstOrder">
+            <argument name="consumerName" value="{{AsyncPlaceOrderConsumerData.consumerName}}"/>
+            <argument name="maxMessages" value="{{AsyncPlaceOrderConsumerData.messageLimit}}"/>
+        </actionGroup>
+
+        <!-- Wait 30s for Order Processing -->
+        <wait time="30" stepKey="conditionalWait1"/>
+
+        <!-- Go to My Account > My Orders Page -->
+        <actionGroup ref="StorefrontOpenMyAccountPageActionGroup" stepKey="onMyAccountAgain"/>
+        <click selector="{{StorefrontCustomerSidebarSection.sidebarTab('My Orders')}}" stepKey="clickOnMyOrdersAgain"/>
+        <waitForPageLoad stepKey="waitForOrdersLoadAgain"/>
+
+        <!-- Check Order Status is Pending -->
+        <actionGroup ref="AssertProcessedOrderInGridActionGroup" stepKey="checkReorderButtonTwo">
+            <argument name="orderId" value="{$grabOrderNumber}"/>
+        </actionGroup>
+
+        <!-- Check that Product Salable Qty has been Decreased -->
+        <actionGroup ref="AdminGoToProductGridFilterResultsByInput" stepKey="goToProductGridFilterResultsByInputEditProduct1Again">
+            <argument name="filter_selector" value="AdminProductGridFilterSection.skuFilter"/>
+            <argument name="filter_value" value="$$createProduct.product[sku]$$"/>
+        </actionGroup>
+        <see selector="{{AdminProductGridSection.productSalableQty('1', 'Default Stock')}}" userInput="999" stepKey="verifyStockQuantityAgain"/>
+    </test>
+</tests>
