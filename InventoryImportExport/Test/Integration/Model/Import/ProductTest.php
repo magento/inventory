@@ -22,6 +22,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\ImportExport\Model\Import\Source\CsvFactory;
+use Magento\ImportExport\Model\ResourceModel\Import\Data;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
@@ -316,6 +317,11 @@ class ProductTest extends TestCase
                     // product already deleted
                 }
             }
+
+            /** @var Data $dataSourceModel */
+            $dataSourceModel = $objectManager->create(Data::class);
+            $dataSourceModel->cleanBunches();
+
             $registry->unregister('isSecureArea');
             $registry->register('isSecureArea', false);
         }
