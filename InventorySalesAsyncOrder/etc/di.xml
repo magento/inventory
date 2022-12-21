@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\InventorySales\Model\ReservationExecutionInterface" type="Magento\InventorySalesAsyncOrder\Model\ReservationExecution"/>
+    <type name="Magento\AsyncOrder\Model\Order\Email\Sender\RejectedOrderSender">
+        <plugin name="rollback_reservations_after_order_rejected" type="Magento\InventorySalesAsyncOrder\Plugin\RollbackReservationsAfterOrderRejectedPlugin"/>
+    </type>
+    <type name="Magento\AsyncOrder\Model\OrderManagement">
+        <plugin name="add_reservation_after_async_initial_order_placed" type="Magento\InventorySalesAsyncOrder\Plugin\AppendReservationsAfterAsynchronousOrderPlacementPlugin"/>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Item\AbstractItem">
+        <plugin name="skip_async_order_check_data_no_deferred_stock_update" type="Magento\InventorySalesAsyncOrder\Plugin\SkipAsyncOrderCheckDataWithNoDeferredStockUpdatePlugin"/>
+    </type>
+</config>
