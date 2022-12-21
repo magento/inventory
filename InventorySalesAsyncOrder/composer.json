@@ -1,18 +1,18 @@
 {
-    "name": "magento/module-inventory-elasticsearch",
+    "name": "magento/module-inventory-sales-async-order",
     "description": "N/A",
     "require": {
         "php": "~8.1.0||~8.2.0",
         "magento/framework": "*",
-        "magento/module-catalog-inventory": "*",
-        "magento/module-catalog-search": "*",
+        "magento/module-inventory-sales": "*",
         "magento/module-inventory-catalog-api": "*",
-        "magento/module-inventory-indexer": "*",
+        "magento/module-inventory-configuration-api": "*",
         "magento/module-inventory-sales-api": "*",
-        "magento/module-store": "*"
+        "magento/module-quote": "*",
+        "magento/module-sales": "*"
     },
     "suggest": {
-        "magento/module-elasticsearch": "*"
+        "magento/module-async-order": "*"
     },
     "type": "magento2-module",
     "license": [
@@ -24,7 +24,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Magento\\InventoryElasticsearch\\": ""
+            "Magento\\InventorySalesAsyncOrder\\": ""
         }
     }
 }

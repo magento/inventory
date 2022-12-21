@@ -202,4 +202,5 @@
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyRequestInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyRequest"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableForRequestedQtyResultInterface" type="Magento\InventorySales\Model\IsProductSalableForRequestedQtyResult"/>
     <preference for="Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface" type="Magento\InventorySales\Model\IsProductSalableResult"/>
+    <preference for="Magento\InventorySales\Model\ReservationExecutionInterface" type="Magento\InventorySales\Model\ReservationExecution"/>
 </config>
