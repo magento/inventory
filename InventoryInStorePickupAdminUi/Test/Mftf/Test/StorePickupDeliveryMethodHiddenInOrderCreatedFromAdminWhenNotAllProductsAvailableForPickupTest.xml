@@ -8,12 +8,12 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="StorePickupButtonHiddenOnCheckoutWhenNotAllProductsInTheCartAvailableForPickupTest">
+    <test name="StorePickupDeliveryMethodHiddenInOrderCreatedFromAdminWhenNotAllProductsAvailableForPickupTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
-            <title value="Store Pickup button hidden on checkout when not all products in the cart available for pickup"/>
-            <description value="Store Pickup button hidden on checkout when not all products in the cart available for pickup"/>
-            <testCaseId value="ACQE-6624"/>
+            <title value="Store Pickup delivery method hidden in order created from Admin when not all products available for pickup"/>
+            <description value="Store Pickup delivery method hidden in order created from Admin when not all products available for pickup"/>
+            <testCaseId value="ACQE-6625"/>
             <severity value="CRITICAL"/>
         </annotations>
 
@@ -125,37 +125,24 @@
         <!--Save the product-->
         <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="saveProduct2"/>
 
-       <!--  Login as customer -->
-        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="storefrontCustomerLogin">
-            <argument name="Customer" value="$$createCustomer$$"/>
+        <!--Create new order-->
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="CreateNewOrder">
+            <argument name="customer" value="Simple_US_Customer"/>
         </actionGroup>
 
-        <!--Open product in storefront-->
-        <amOnPage url="{{StorefrontProductPage.url($$createSimpleProduct.custom_attributes[url_key]$$)}}" stepKey="goToProductPageOnStorefront"/>
-        <waitForPageLoad stepKey="waitForStoreFrontProductPageLoad"/>
-
-        <!--Add product to cart-->
-        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart">
-            <argument name="product" value="$$createSimpleProduct$$"/>
-            <argument name="quantity" value="1"/>
+        <!--Add product to order-->
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProductToOrder">
+            <argument name="product" value="$createSimpleProduct$"/>
         </actionGroup>
 
-        <!--Open product in storefront-->
-        <amOnPage url="{{StorefrontProductPage.url($$createSimpleProduct.custom_attributes[url_key]$$)}}" stepKey="goToProductPageOnStorefront2"/>
-        <waitForPageLoad stepKey="waitForStoreFrontProductPageLoad2"/>
-
-        <!--Add product to cart-->
-        <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addSimpleProductToCart2">
-            <argument name="product" value="$$createSimpleProduct2$$"/>
-            <argument name="quantity" value="1"/>
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addSimpleProduct2ToOrder">
+            <argument name="product" value="$createSimpleProduct2$"/>
         </actionGroup>
 
-        <!--Click on Proceed to checkout-->
-        <actionGroup ref="StorefrontCartPageOpenActionGroup" stepKey="goToCart"/>
-        <actionGroup ref="StorefrontClickProceedToCheckoutActionGroup" stepKey="goToCheckout"/>
+        <click selector="{{AdminOrderFormPaymentSection.header}}" stepKey="unfocus"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForJavascriptToFinish"/>
 
-        <dontSeeElement selector="{{StorefrontSelectStoreSection.pickInStoreBtn}}" stepKey="dontSeePickupStore"/>
-        <dontSeeElement selector="{{StorefrontSelectStoreSection.instorepickupdelivery}}" stepKey="dontSeeInStorePickupDelivery"/>
+        <dontSeeElement selector="{{AdminOrderFormPaymentSection.inStorePickupOption}}" stepKey="waitForShippingOptions"/>
+
     </test>
 </tests>
-
