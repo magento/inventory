@@ -9,7 +9,6 @@ namespace Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\ResourceModel\Product;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\MessageQueue\PublisherInterface;
 
 /**
@@ -23,18 +22,11 @@ class DeleteSourceItemsPlugin
     private $publisher;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $config;
-
-    /**
      * @param PublisherInterface $publisher
-     * @param ScopeConfigInterface $config
      */
-    public function __construct(PublisherInterface $publisher, ScopeConfigInterface $config)
+    public function __construct(PublisherInterface $publisher)
     {
         $this->publisher = $publisher;
-        $this->config = $config;
     }
 
     /**
@@ -48,14 +40,12 @@ class DeleteSourceItemsPlugin
      */
     public function afterDelete(Product $subject, $result, $product): Product
     {
-        if ($this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
-            $this->publisher->publish(
-                'inventory.source.items.cleanup',
-                [
-                    (string)$product->getSku(),
-                ]
-            );
-        }
+        $this->publisher->publish(
+            'inventory.source.items.cleanup',
+            [
+                (string)$product->getSku(),
+            ]
+        );
 
         return $result;
     }
