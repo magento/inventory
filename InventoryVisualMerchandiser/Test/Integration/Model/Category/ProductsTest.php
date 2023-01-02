@@ -19,6 +19,69 @@ use PHPUnit\Framework\TestCase;
 class ProductsTest extends TestCase
 {
     /**
+     * @var Bootstrap
+     */
+    private $objectManager;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var CollectionFactory
+     */
+    private $productCollectionFactory;
+
+    /**
+     * @inheirtDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->objectManager = Bootstrap::getObjectManager();
+        $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
+        $this->productCollectionFactory = $this->objectManager->get(CollectionFactory::class);
+    }
+
+    /**
+     * Test that products in category have correct sorting order for out_of_stock_sort with custom source.
+     *
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/products.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/sources.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stocks.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/stock_source_links.php
+     * @magentoDataFixture Magento_InventoryApi::Test/_files/source_items.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
+     * @magentoDataFixture Magento_InventorySalesApi::Test/_files/stock_website_sales_channels.php
+     * @magentoDataFixture Magento_InventoryIndexer::Test/_files/reindex_inventory.php
+     * @magentoDbIsolation disabled
+     * @return void
+     */
+    public function testOutStockBottomCategorySortingWithCustomSource(): void
+    {
+        if (!class_exists(Products::class) || !class_exists(OutStockBottom::class)) {
+            $this->markTestSkipped('VisualMerchandiser module is absent');
+        }
+
+        $storeCode = 'store_for_us_website';
+        $storeManager = $this->objectManager->get(StoreManagerInterface::class);
+        $storeManager->setCurrentStore($storeCode);
+        $storeId = $storeManager->getStore($storeCode)->getId();
+
+        $expectedOrderBy = ['inventory_stock.is_salable', Select::SQL_DESC];
+
+        $collection = $this->productCollectionFactory->create()->setStoreId($storeId);
+        $sortingModel = $this->objectManager->get(OutStockBottom::class);
+        $sortedCollection = $sortingModel->sort($collection);
+        $actualOrderBy = $sortedCollection->getSelect()
+            ->getPart(Select::ORDER);
+
+        self::assertEquals($expectedOrderBy, reset($actualOrderBy));
+    }
+
+    /**
      * Test that products in category have correct quantity by source
      *
      * @magentoDataFixture Magento_InventorySalesApi::Test/_files/websites_with_stores.php
@@ -38,14 +101,13 @@ class ProductsTest extends TestCase
         }
 
         $categoryId = 1234;
-        /** @var StoreManagerInterface $storeManager */
-        $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
         /** @var $product Product */
-        $product = Bootstrap::getObjectManager()->create(Product::class);
-        $product->setStoreId($storeManager->getStore('store_for_us_website')->getId());
+        $product = $this->objectManager->create(Product::class);
+        $product->setStoreId($this->storeManager->getStore('store_for_us_website')->getId());
         $product->load(10);
+
         /** @var Products $productsModel */
-        $productsModel = Bootstrap::getObjectManager()->get(Products::class);
+        $productsModel = $this->objectManager->get(Products::class);
         $collection = $productsModel->getCollectionForGrid($categoryId, 'store_for_us_website');
         $productsStockData = [];
         foreach ($collection as $item) {
@@ -70,27 +132,18 @@ class ProductsTest extends TestCase
      */
     public function testOutStockBottomCategorySorting(): void
     {
-        if (!class_exists(Products::class)) {
+        if (!class_exists(Products::class) || !class_exists(OutStockBottom::class)) {
             $this->markTestSkipped('VisualMerchandiser module is absent');
         }
 
-        $expectedOrderBy = ['inventory_stock.is_salable', Select::SQL_DESC];
-        $storeCode = 'store_for_eu_website';
+        $expectedOrderBy = ['is_in_stock', Select::SQL_DESC];
 
-        /** @var StoreManagerInterface $storeManager */
-        $storeManager = Bootstrap::getObjectManager()
-            ->get(StoreManagerInterface::class);
-        $storeId = $storeManager->getStore($storeCode)
-            ->getId();
-        $storeManager->setCurrentStore($storeId);
+        $storeCode = 'default';
+        $this->storeManager->setCurrentStore($storeCode);
+        $storeId = $this->storeManager->getStore($storeCode)->getId();
 
-        $productCollectionFactory = Bootstrap::getObjectManager()
-            ->get(CollectionFactory::class);
-        $collection = $productCollectionFactory->create()
-            ->setStoreId($storeManager->getStore()->getId());
-        /** @var OutStockBottom $sortingModel */
-        $sortingModel = Bootstrap::getObjectManager()
-            ->get(OutStockBottom::class);
+        $collection = $this->productCollectionFactory->create()->setStoreId($storeId);
+        $sortingModel = $this->objectManager->get(OutStockBottom::class);
         $sortedCollection = $sortingModel->sort($collection);
         $actualOrderBy = $sortedCollection->getSelect()
             ->getPart(Select::ORDER);
