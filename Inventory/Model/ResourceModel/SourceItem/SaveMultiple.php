@@ -53,18 +53,15 @@ class SaveMultiple
             SourceItemInterface::STATUS
         ]);
         $valuesSql = $this->buildValuesSqlPart($sourceItems);
-        $onDuplicateSql = $this->buildOnDuplicateSqlPart([
-            SourceItemInterface::QUANTITY,
-            SourceItemInterface::STATUS,
-        ]);
         $bind = $this->getSqlBindData($sourceItems);
 
+        /* can not use "INSERT ... ON DUPLICATE KEY UPDATE" statement against a table having more than one unique
+        or primary key because it is unsafe */
         $insertSql = sprintf(
-            'INSERT INTO `%s` (%s) VALUES %s %s',
+            'INSERT INTO `%s` (%s) VALUES %s',
             $tableName,
             $columnsSql,
-            $valuesSql,
-            $onDuplicateSql
+            $valuesSql
         );
         $connection->query($insertSql, $bind);
     }

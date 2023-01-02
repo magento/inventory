@@ -11,6 +11,7 @@ use Exception;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Validation\ValidationException;
+use Magento\Inventory\Model\ResourceModel\SourceItem\DeleteMultiple;
 use Magento\Inventory\Model\ResourceModel\SourceItem\SaveMultiple;
 use Magento\Inventory\Model\SourceItem\Validator\SourceItemsValidator;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
@@ -37,18 +38,26 @@ class SourceItemsSaveHandler
     private $logger;
 
     /**
+     * @var DeleteMultiple
+     */
+    private $deleteMultiple;
+
+    /**
      * @param SourceItemsValidator $sourceItemsValidator
+     * @param DeleteMultiple $deleteMultiple
      * @param SaveMultiple $saveMultiple
      * @param LoggerInterface $logger
      */
     public function __construct(
         SourceItemsValidator $sourceItemsValidator,
+        DeleteMultiple $deleteMultiple,
         SaveMultiple $saveMultiple,
         LoggerInterface $logger
     ) {
         $this->sourceItemsValidator = $sourceItemsValidator;
         $this->saveMultiple = $saveMultiple;
         $this->logger = $logger;
+        $this->deleteMultiple = $deleteMultiple;
     }
 
     /**
@@ -73,6 +82,7 @@ class SourceItemsSaveHandler
         }
 
         try {
+            $this->deleteMultiple->execute($sourceItems);
             $this->saveMultiple->execute($sourceItems);
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
