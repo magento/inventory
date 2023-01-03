@@ -29,7 +29,7 @@
             <magentoCLI stepKey="disableWYSYWYG" command="config:set {{enableWYSYWYG.path}} {{enableWYSYWYG.value}}"/>
             <!--Download tables for 'US'-->
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
-<!--            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>-->
+            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Create test data.-->
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="stock"/>
