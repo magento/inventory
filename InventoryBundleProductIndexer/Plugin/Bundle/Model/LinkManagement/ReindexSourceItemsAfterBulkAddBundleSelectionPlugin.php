@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement;
 
 use Magento\Bundle\Api\Data\LinkInterface;
+use Magento\Bundle\Api\ProductAddChildrenInterface;
 use Magento\Bundle\Api\ProductLinkManagementInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\InputException;
@@ -20,7 +21,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Reindex source items after bundle link has been added plugin.
  */
-class ReindexSourceItemsAfterAddBundleSelectionPlugin
+class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
 {
     /**
      * @var GetSourceItemsBySkuInterface
@@ -43,44 +44,52 @@ class ReindexSourceItemsAfterAddBundleSelectionPlugin
     private $getSourceItemIds;
 
     /**
+     * @var ProductLinkManagementInterface
+     */
+    private $linkManagement;
+
+    /**
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param SourceItemIndexer $sourceItemIndexer
      * @param GetSourceItemIds $getSourceItemIds
      * @param LoggerInterface $logger
+     * @param ProductLinkManagementInterface $linkManagement
      */
     public function __construct(
         GetSourceItemsBySkuInterface $getSourceItemsBySku,
         SourceItemIndexer $sourceItemIndexer,
         GetSourceItemIds $getSourceItemIds,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ProductLinkManagementInterface $linkManagement
     ) {
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->sourceItemIndexer = $sourceItemIndexer;
         $this->logger = $logger;
         $this->getSourceItemIds = $getSourceItemIds;
+        $this->linkManagement = $linkManagement;
     }
 
     /**
      * Reindex source items after selection has been added to bundle product.
      *
-     * @param ProductLinkManagementInterface $subject
+     * @param ProductAddChildrenInterface $subject
      * @param int $result
      * @param ProductInterface $product
      * @param int $optionId
-     * @param LinkInterface $linkedProduct
+     * @param LinkInterface[] $linkedProducts
      * @return int
      * @throws InputException
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterAddChild(
-        ProductLinkManagementInterface $subject,
+    public function afterAddChildren(
+        ProductAddChildrenInterface $subject,
         int $result,
         ProductInterface $product,
         int $optionId,
-        LinkInterface $linkedProduct
+        array $linkedProducts
     ): int {
-        $skus = $this->getBundleSelectionsSkus($subject, $product, $linkedProduct);
+        $skus = $this->getBundleSelectionsSkus($product, $linkedProducts);
         $sourceItems = [];
         foreach ($skus as $sku) {
             $sourceItems[] = $this->getSourceItemsBySku->execute($sku);
@@ -99,17 +108,15 @@ class ReindexSourceItemsAfterAddBundleSelectionPlugin
     /**
      * Retrieve bundle selections skus.
      *
-     * @param ProductLinkManagementInterface $productLinkManagement
      * @param ProductInterface $product
-     * @param LinkInterface $link
+     * @param LinkInterface[] $link
      * @return array
      * @throws InputException
      * @throws NoSuchEntityException
      */
     private function getBundleSelectionsSkus(
-        ProductLinkManagementInterface $productLinkManagement,
         ProductInterface $product,
-        LinkInterface $link
+        array $links
     ): array {
         $skus = [];
         $bundleSelectionsData = $product->getBundleSelectionsData() ?: [];
@@ -118,8 +125,10 @@ class ReindexSourceItemsAfterAddBundleSelectionPlugin
         }
         $skus = $skus ? array_merge(...$skus) : $skus;
         if (!$skus) {
-            $skus = [$link->getSku()];
-            $children = $productLinkManagement->getChildren($product->getSku());
+            foreach ($links as $link) {
+                $skus[] = $link->getSku();
+            }
+            $children = $this->linkManagement->getChildren($product->getSku());
             foreach ($children as $child) {
                 $skus[] = $child->getSku();
             }

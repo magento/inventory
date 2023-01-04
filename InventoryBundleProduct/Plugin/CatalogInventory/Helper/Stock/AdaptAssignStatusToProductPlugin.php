@@ -76,7 +76,6 @@ class AdaptAssignStatusToProductPlugin
         Product $product,
         $status = null
     ): array {
-        /*
         if ($product->getTypeId() === Type::TYPE_CODE) {
             $website = $this->storeManager->getWebsite();
             $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
@@ -91,7 +90,6 @@ class AdaptAssignStatusToProductPlugin
                 $status = 0;
             }
         }
-        */
         return [$product, $status];
     }
 }
