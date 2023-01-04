@@ -80,6 +80,7 @@ class ReindexSourceItemsAfterAddBundleSelectionPlugin
         int $optionId,
         LinkInterface $linkedProduct
     ): int {
+        /*
         $skus = $this->getBundleSelectionsSkus($subject, $product, $linkedProduct);
         $sourceItems = [];
         foreach ($skus as $sku) {
@@ -92,6 +93,7 @@ class ReindexSourceItemsAfterAddBundleSelectionPlugin
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
+        */
 
         return $result;
     }
