@@ -73,7 +73,7 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
      * Reindex source items after selection has been added to bundle product.
      *
      * @param ProductAddChildrenInterface $subject
-     * @param null $result
+     * @param void $result
      * @param ProductInterface $product
      * @param int $optionId
      * @param LinkInterface[] $linkedProducts
@@ -107,7 +107,7 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
      * Retrieve bundle selections skus.
      *
      * @param ProductInterface $product
-     * @param LinkInterface[] $link
+     * @param LinkInterface[] $links
      * @return array
      * @throws InputException
      * @throws NoSuchEntityException
