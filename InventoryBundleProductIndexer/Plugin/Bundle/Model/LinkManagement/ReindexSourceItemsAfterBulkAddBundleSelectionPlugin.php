@@ -73,22 +73,22 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
      * Reindex source items after selection has been added to bundle product.
      *
      * @param ProductAddChildrenInterface $subject
-     * @param int $result
+     * @param null $result
      * @param ProductInterface $product
      * @param int $optionId
      * @param LinkInterface[] $linkedProducts
-     * @return int
+     * @return void
      * @throws InputException
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterAddChildren(
         ProductAddChildrenInterface $subject,
-        int $result,
+        $result,
         ProductInterface $product,
         int $optionId,
         array $linkedProducts
-    ): int {
+    ): void {
         $skus = $this->getBundleSelectionsSkus($product, $linkedProducts);
         $sourceItems = [];
         foreach ($skus as $sku) {
@@ -101,8 +101,6 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
-
-        return $result;
     }
 
     /**
