@@ -84,10 +84,10 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
      */
     public function afterAddChildren(
         ProductLinkManagementAddChildrenInterface $subject,
-                                                  $result,
-        ProductInterface                          $product,
-        int                                       $optionId,
-        array                                     $linkedProducts
+        $result,
+        ProductInterface $product,
+        int $optionId,
+        array $linkedProducts
     ): void {
         $skus = $this->getBundleSelectionsSkus($product, $linkedProducts);
         $sourceItems = [];
