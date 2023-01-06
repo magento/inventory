@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement;
 
 use Magento\Bundle\Api\Data\LinkInterface;
-use Magento\Bundle\Api\ProductAddChildrenInterface;
+use Magento\Bundle\Api\ProductLinkManagementAddChildrenInterface;
 use Magento\Bundle\Api\ProductLinkManagementInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\InputException;
@@ -72,7 +72,7 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
     /**
      * Reindex source items after selection has been added to bundle product.
      *
-     * @param ProductAddChildrenInterface $subject
+     * @param ProductLinkManagementAddChildrenInterface $subject
      * @param void $result
      * @param ProductInterface $product
      * @param int $optionId
@@ -83,11 +83,11 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterAddChildren(
-        ProductAddChildrenInterface $subject,
-        $result,
-        ProductInterface $product,
-        int $optionId,
-        array $linkedProducts
+        ProductLinkManagementAddChildrenInterface $subject,
+                                                  $result,
+        ProductInterface                          $product,
+        int                                       $optionId,
+        array                                     $linkedProducts
     ): void {
         $skus = $this->getBundleSelectionsSkus($product, $linkedProducts);
         $sourceItems = [];
