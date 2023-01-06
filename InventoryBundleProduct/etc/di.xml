@@ -36,4 +36,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\InventorySalesApi\Model\GetIsQtySalableInterface">
+        <plugin name="inventory_bundle_product_is_any_child_salable" type="Magento\InventoryBundleProduct\Plugin\InventorySales\Model\IsProductSalableCondition\GetIsQtySalableForBundleProduct"/>
+    </type>
 </config>
