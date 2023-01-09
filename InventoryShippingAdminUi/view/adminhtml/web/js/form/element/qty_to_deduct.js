@@ -29,6 +29,14 @@ define([
             qtyToShip = this.source.get(path + '.qtyToShip');
             isManageStock = this.source.get(path + '.isManageStock');
 
+            if (this.qtyAvailable === 0) {
+                for (let i = 0; i < this.source.get(path + '.sources').length; i++) {
+                    if (this.source.get(path + '.sources')[i].sourceCode === this.sourceCode) {
+                        this.qtyAvailable = this.source.get(path + '.sources')[i].qtyAvailable;
+                    }
+                }
+            }
+
             this.validation['less-than-equals-to'] = isManageStock ? this.qtyAvailable : qtyToShip;
 
             return this;
