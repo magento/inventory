@@ -106,7 +106,6 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         self::assertFalse((bool) $childStockItem[GetStockItemDataInterface::IS_SALABLE]);
         $bundleStockItem = $this->getStockItemData->execute('bundle1', $stock->getStockId());
         self::assertFalse((bool) $bundleStockItem[GetStockItemDataInterface::IS_SALABLE]);
-
     }
 
     #[
@@ -154,6 +153,5 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         self::assertFalse((bool) $childStockItem[GetStockItemDataInterface::IS_SALABLE]);
         $bundleStockItem = $this->getStockItemData->execute('bundle1', $stock->getStockId());
         self::assertFalse((bool) $bundleStockItem[GetStockItemDataInterface::IS_SALABLE]);
-
     }
 }

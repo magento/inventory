@@ -9,7 +9,6 @@ namespace Magento\InventoryIndexer\Model\Queue;
 
 use Magento\Framework\Exception\StateException;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
-use Magento\InventoryIndexer\Model\Queue\ReservationDataFactory;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
 use Magento\InventoryCatalogApi\Model\GetParentSkusOfChildrenSkusInterface;
