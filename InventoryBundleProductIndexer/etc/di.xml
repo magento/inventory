@@ -30,7 +30,4 @@
         <plugin name="reindex_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>
         <plugin name="reindex_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterRemoveBundleSelectionPlugin"/>
     </type>
-    <type name="Magento\InventoryIndexer\Model\Queue\GetSalabilityDataForUpdate">
-        <plugin name="bundle_product_salability" type="Magento\InventoryBundleProductIndexer\Plugin\InventoryIndexer\Model\Queue\GetSalabilityDataForUpdate\ChangedSalabilityPlugin"/>
-    </type>
 </config>
