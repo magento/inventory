@@ -100,7 +100,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         /** @var StockInterface $stock */
         $stock = $this->fixtures->get('stock2');
 
-        $this->consumer->process(100);
+        $this->consumer->process(1);
 
         $childStockItem = $this->getStockItemData->execute('simple1', $stock->getStockId());
         self::assertFalse((bool) $childStockItem[GetStockItemDataInterface::IS_SALABLE]);
@@ -142,16 +142,23 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         DataFixture(SetPaymentMethodFixture::class, ['cart_id' => '$cart.id$']),
         DataFixture(PlaceOrderFixture::class, ['cart_id' => '$cart.id$'], 'order'),
     ]
-    public function testProductsStatusesAfterBuyingParentProduct(): void
+    public function testProductsStatusesAfterBuyingBundleProduct(): void
     {
         /** @var StockInterface $stock */
         $stock = $this->fixtures->get('stock2');
 
-        $this->consumer->process(100);
+        $this->consumer->process(2);
 
         $childStockItem = $this->getStockItemData->execute('simple1', $stock->getStockId());
         self::assertFalse((bool) $childStockItem[GetStockItemDataInterface::IS_SALABLE]);
         $bundleStockItem = $this->getStockItemData->execute('bundle1', $stock->getStockId());
         self::assertFalse((bool) $bundleStockItem[GetStockItemDataInterface::IS_SALABLE]);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        Bootstrap::getObjectManager()->get(ConsumerFactory::class)
+            ->get('inventory.reservations.updateSalabilityStatus')
+            ->process(1);
     }
 }
