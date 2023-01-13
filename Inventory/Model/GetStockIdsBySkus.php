@@ -59,6 +59,6 @@ class GetStockIdsBySkus implements GetStockIdsBySkusInterface
             $stockIds[] = $stockSourceLink->getStockId();
         }
 
-        return $stockIds;
+        return array_unique($stockIds);
     }
 }
