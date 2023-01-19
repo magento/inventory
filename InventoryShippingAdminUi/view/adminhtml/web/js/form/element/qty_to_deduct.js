@@ -28,7 +28,6 @@ define([
             path = utils.getPart(utils.getPart(this.parentScope, -2), -2);
             qtyToShip = this.source.get(path + '.qtyToShip');
             isManageStock = this.source.get(path + '.isManageStock');
-            
             this.validation['less-than-equals-to'] = isManageStock ? this.source.get(this.parentScope + '.qtyAvailable') : qtyToShip;
 
             return this;
@@ -42,6 +41,5 @@ define([
         toggleDisable: function (selected) {
             this.disabled(selected ? selected.toString() !== this.sourceCode : !selected);
         },
-
     });
 });
