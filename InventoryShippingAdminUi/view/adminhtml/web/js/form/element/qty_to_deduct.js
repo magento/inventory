@@ -28,12 +28,8 @@ define([
             path = utils.getPart(utils.getPart(this.parentScope, -2), -2);
             qtyToShip = this.source.get(path + '.qtyToShip');
             isManageStock = this.source.get(path + '.isManageStock');
-
-            if (this.qtyAvailable === 0) {
-                this.quantityBySourceCode(path);
-            }
-
-            this.validation['less-than-equals-to'] = isManageStock ? this.qtyAvailable : qtyToShip;
+            
+            this.validation['less-than-equals-to'] = isManageStock ? this.source.get(this.parentScope + '.qtyAvailable') : qtyToShip;
 
             return this;
         },
@@ -47,16 +43,5 @@ define([
             this.disabled(selected ? selected.toString() !== this.sourceCode : !selected);
         },
 
-        /**
-         * Get quantity which matches sourceCode
-         *
-         */
-        quantityBySourceCode: function (path) {
-            for (let i = 0; i < this.source.get(path + '.sources').length; i++) {
-                if (this.source.get(path + '.sources')[i].sourceCode === this.sourceCode) {
-                    this.qtyAvailable = this.source.get(path + '.sources')[i].qtyAvailable;
-                }
-            }
-        }
     });
 });
