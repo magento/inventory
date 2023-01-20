@@ -29,8 +29,7 @@ define([
             qtyToShip = this.source.get(path + '.qtyToShip');
             isManageStock = this.source.get(path + '.isManageStock');
 
-            this.validation['less-than-equals-to'] = isManageStock ?
-                this.source.get(this.parentScope + '.qtyAvailable') : qtyToShip;
+            this.validation['less-than-equals-to'] = isManageStock ? this.qtyAvailable : qtyToShip;
 
             return this;
         },
