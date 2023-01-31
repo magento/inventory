@@ -114,8 +114,8 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
                 if ($isShipmentCreated === false) {
                     $this->createShippingDocument->execute($order);
                 }
-                $this->emailNotifier->notify($order);
                 $this->addStorePickupAttributesToOrder->execute($order);
+                $this->emailNotifier->notify($order);
             } catch (LocalizedException $exception) {
                 $errors[] = [
                     'id' => $orderId,
