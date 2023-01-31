@@ -48,6 +48,7 @@
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="reenableManageStock"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <magentoCLI command="config:set {{MediaGalleryConfigDataEnabled.path}} {{MediaGalleryConfigDataEnabled.value}}" stepKey="disabledOldMediaGallery"/>
         </after>
 
         <comment userInput="Create Configurable product with two options 'In Stock' on 'Custom' stock" stepKey="CreateConfigurableProductComment"/>
