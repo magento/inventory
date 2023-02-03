@@ -82,6 +82,11 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
      */
     private $orderMock;
 
+    /**
+     * @var ResultInterface
+     */
+    private $resultMock;
+
     protected function setUp(): void
     {
         $this->emailNotifier = $this->getMockBuilder(ReadyForPickupNotifier::class)
