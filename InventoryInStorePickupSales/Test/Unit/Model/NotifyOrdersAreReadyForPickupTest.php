@@ -140,11 +140,11 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
     }
 
     /**
-     * @dataProvider emailExceptionDataProvider
+     * @dataProvider executeMethodEmailCheck
      * @param $exception
      * @return void
      */
-    public function testEmailWithoutException($exception): void
+    public function testExecuteForEmailNotify($exception): void
     {
         $this->orderRepository->method('get')->willReturn($this->orderMock);
         $this->searchCriteriaBuilder->method('addFilter')->willReturnSelf();
@@ -162,7 +162,7 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
         $this->model->execute([1]);
     }
 
-    public function emailExceptionDataProvider(): array
+    public function executeMethodEmailCheck(): array
     {
         return [
             [1, 0]
