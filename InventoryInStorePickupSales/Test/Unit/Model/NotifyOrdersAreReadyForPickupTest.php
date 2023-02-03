@@ -140,33 +140,32 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
     }
 
     /**
+     * @dataProvider emailExceptionDataProvider
+     * @param $exception
      * @return void
      */
-    public function testEmailWithoutException(): void
+    public function testEmailWithoutException($exception): void
     {
         $this->orderRepository->method('get')->willReturn($this->orderMock);
         $this->searchCriteriaBuilder->method('addFilter')->willReturnSelf();
         $this->searchCriteriaBuilder->method('create')->willReturn($this->searchCriteriaInterfaceMock);
         $this->shipmentRepository->method('getList')->willReturnSelf();
         $this->resultFactory->method('create')->willReturn($this->resultMock);
-        $this->emailNotifier->expects($this->once())->method('notify');
+        if ($exception) {
+            $this->createShippingDocument->method('execute')->willThrowException(
+                new \Exception("Error")
+            );
+            $this->emailNotifier->expects($this->never())->method('notify');
+        } else {
+            $this->emailNotifier->expects($this->once())->method('notify');
+        }
         $this->model->execute([1]);
     }
 
-    /**
-     * @return void
-     */
-    public function testEmailWithException(): void
+    public function emailExceptionDataProvider(): array
     {
-        $this->orderRepository->method('get')->willReturn($this->orderMock);
-        $this->searchCriteriaBuilder->method('addFilter')->willReturnSelf();
-        $this->searchCriteriaBuilder->method('create')->willReturn($this->searchCriteriaInterfaceMock);
-        $this->shipmentRepository->method('getList')->willReturnSelf();
-        $this->resultFactory->method('create')->willReturn($this->resultMock);
-        $this->createShippingDocument->method('execute')->willThrowException(
-            new \Exception("Error")
-        );
-        $this->emailNotifier->expects($this->never())->method($this->anything());
-        $this->model->execute([1]);
+        return [
+            [1, 0]
+        ];
     }
 }
