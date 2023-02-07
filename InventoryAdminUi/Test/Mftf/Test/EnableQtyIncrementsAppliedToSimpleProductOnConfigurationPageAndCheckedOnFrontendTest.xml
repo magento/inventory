@@ -79,5 +79,5 @@
         <argument name="product" value="$$product$$"/>
         <argument name="quantity" value="5"/>
       </actionGroup>
-
+    </test>
 </tests>
