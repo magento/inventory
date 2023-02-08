@@ -78,6 +78,7 @@
       <remove keyForRemoval="addToCartGreaterThenAllowedQty"/>
       <remove keyForRemoval="witForHighQtyAdded"/>
       <remove keyForRemoval="seeHighQtyErrorMessage"/>
+
       <!--Try to add product ot cart with greater qty than allowed.-->
       <!--Try to add product with proper qty to cart.-->
       <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCartWithProperQty">
