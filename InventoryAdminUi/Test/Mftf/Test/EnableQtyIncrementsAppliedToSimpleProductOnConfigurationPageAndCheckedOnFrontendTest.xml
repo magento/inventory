@@ -76,6 +76,7 @@
       <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time."
                    stepKey="seeIncrementQtyError" />
       <remove keyForRemoval="seeLowQtyErrorMessage"/>
+      <remove keyForRemoval="fillProductQtyGreaterThanAllowed"/>
       <remove keyForRemoval="addToCartGreaterThenAllowedQty"/>
       <remove keyForRemoval="witForHighQtyAdded"/>
       <remove keyForRemoval="seeHighQtyErrorMessage"/>
