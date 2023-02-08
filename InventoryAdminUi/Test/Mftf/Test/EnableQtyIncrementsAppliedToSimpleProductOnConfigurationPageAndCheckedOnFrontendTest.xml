@@ -19,8 +19,8 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
+      <remove keyForRemoval="setMaxMinQty"/>
       <before>
-        <remove keyForRemoval="setMaxMinQty"/>
         <magentoCLI command="config:set {{EnableQtyIncrements.path}} {{EnableQtyIncrements.value}}" stepKey="enableQtyIncrements" />
         <magentoCLI command="config:set {{SetQtyIncrements.path}} 5" stepKey="setQtyIncrements"/>
         <!--Crate additional source and stock.-->
@@ -65,16 +65,17 @@
       <!--Set Min and Max qty for simple product.-->
       <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
       <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
+      <remove keyForRemoval="seeLowQtyErrorMessage"/>
 
-        <see selector="//div[@class='product pricing']"
+      <see selector="//div[@class='product pricing']"
              userInput="$$product.name$$ is available to buy in increments of 5"
              stepKey="verifyNotice"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1" stepKey="fillProductQtyLowerThanAllowed"/>
       <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartLowerThenAllowedQty"/>
-      <waitForElementVisible selector="#qty-error"  time="30" stepKey="seeLowQtyErrorMessage"/>
+      <waitForElementVisible selector="#qty-error"  time="30" stepKey="witForLowQtyAdded"/>
       <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time."
                    stepKey="seeIncrementQtyError" />
-      <wait time="5" stepKey="fillProductQtyGreaterThanAllowed"></wait>
+      <remove keyForRemoval="seeLowQtyErrorMessage"/>
       <remove keyForRemoval="addToCartGreaterThenAllowedQty"/>
       <remove keyForRemoval="witForHighQtyAdded"/>
       <remove keyForRemoval="seeHighQtyErrorMessage"/>
