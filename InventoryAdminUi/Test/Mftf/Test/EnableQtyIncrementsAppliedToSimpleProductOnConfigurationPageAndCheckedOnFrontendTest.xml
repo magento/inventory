@@ -20,6 +20,7 @@
             <group value="multi_mode"/>
         </annotations>
       <before>
+        <remove keyForRemoval="setMaxMinQty"/>
         <magentoCLI command="config:set {{EnableQtyIncrements.path}} {{EnableQtyIncrements.value}}" stepKey="enableQtyIncrements" />
         <magentoCLI command="config:set {{SetQtyIncrements.path}} 5" stepKey="setQtyIncrements"/>
         <!--Crate additional source and stock.-->
@@ -70,9 +71,13 @@
              stepKey="verifyNotice"/>
         <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1" stepKey="fillProductQtyLowerThanAllowed"/>
       <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartLowerThenAllowedQty"/>
-      <waitForElementVisible selector="#qty-error"  time="30" stepKey="witForLowQtyAdded"/>
+      <waitForElementVisible selector="#qty-error"  time="30" stepKey="seeLowQtyErrorMessage"/>
       <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time."
                    stepKey="seeIncrementQtyError" />
+      <wait time="5" stepKey="fillProductQtyGreaterThanAllowed"></wait>
+      <remove keyForRemoval="addToCartGreaterThenAllowedQty"/>
+      <remove keyForRemoval="witForHighQtyAdded"/>
+      <remove keyForRemoval="seeHighQtyErrorMessage"/>
       <!--Try to add product ot cart with greater qty than allowed.-->
       <!--Try to add product with proper qty to cart.-->
       <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCartWithProperQty">
