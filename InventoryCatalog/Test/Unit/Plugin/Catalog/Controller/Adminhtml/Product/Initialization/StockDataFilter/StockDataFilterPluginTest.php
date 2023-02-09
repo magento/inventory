@@ -31,7 +31,7 @@ class StockDataFilterPluginTest extends TestCase
     /**
      * @covers StockDataFilterPlugin::afterFilter
      */
-    public function testAfterFilter(array $inputStockData, array $outputStockData)
+    public function testAfterFilter()
     {
         $result = [
             'min_qty' => 0,
