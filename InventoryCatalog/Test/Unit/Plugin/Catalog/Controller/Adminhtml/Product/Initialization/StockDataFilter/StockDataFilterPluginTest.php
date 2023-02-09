@@ -7,8 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Unit\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter;
 
-use Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml
-\Product\Initialization\StockDataFilter\StockDataFilterPlugin;// phpcs:ignore
+use Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\StockDataFilterPlugin;// phpcs:ignore
 use Magento\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
