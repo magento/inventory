@@ -162,6 +162,9 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
         $this->model->execute([1]);
     }
 
+    /**
+     * @return array
+     */
     public function executeMethodEmailCheck(): array
     {
         return [
