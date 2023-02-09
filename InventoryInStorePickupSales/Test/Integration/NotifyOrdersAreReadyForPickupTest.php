@@ -213,9 +213,9 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
     {
         return [
             ['eu-1', 'The order is not ready for pickup'],
-//            ['eu-3', 'The order is not ready for pickup'],
-//            ['eu-disabled', 'The order is not ready for pickup'],
-//            ['us-1', 'The order is not ready for pickup'],
+            ['eu-3', 'The order is not ready for pickup'],
+            ['eu-disabled', 'The order is not ready for pickup'],
+            ['us-1', 'The order is not ready for pickup'],
         ];
     }
 }
