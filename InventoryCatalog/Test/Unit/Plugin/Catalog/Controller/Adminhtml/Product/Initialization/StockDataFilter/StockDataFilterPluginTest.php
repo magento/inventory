@@ -7,17 +7,28 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Test\Unit\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter;
 
-use Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\StockDataFilterPlugin;
+use Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml
+\Product\Initialization\StockDataFilter\StockDataFilterPlugin;// phpcs:ignore
 use Magento\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * phpcs:disable
+ * @covers \Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\StockDataFilterPlugin
+ * phpcs:enable
+ */
 class StockDataFilterPluginTest extends TestCase
 {
     /**
      * @var StockDataFilter|MockObject
      */
     private $subjectMock;
+
+    /**
+     * @var StockDataFilterPlugin
+     */
+    protected $stockDataFilterPlugin;
 
     protected function setUp(): void
     {
@@ -29,7 +40,7 @@ class StockDataFilterPluginTest extends TestCase
     }
 
     /**
-     * @covers StockDataFilterPlugin::afterFilter
+     * Test for min_qty, qty filter
      */
     public function testAfterFilter()
     {
