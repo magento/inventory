@@ -44,7 +44,7 @@ class StockDataFilterPluginTest extends TestCase
     public function testAfterFilter()
     {
         $result = [
-            'min_qty' => 0,
+            'min_qty' => -1,
             'max_sale_qty' => 10000,
             'notify_stock_qty' => 1,
             'min_sale_qty' => 1,
