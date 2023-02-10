@@ -100,8 +100,12 @@ class NotifyOrdersAreReadyForPickupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse($result->isSuccessful());
         $this->assertEquals(current($result->getErrors())['message'], $errorMessage);
-        $message = $this->transportBuilder->getSentMessage();
-        $this->assertNotEquals("Your store_view_eu_website order is ready for pickup", $message->getSubject());
+        if ($message = $this->transportBuilder->getSentMessage()) {
+            $this->assertNotEquals(
+                "Your store_view_eu_website order is ready for pickup",
+                $message->getSubject()
+            );
+        }
     }
 
     /**
