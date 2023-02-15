@@ -13,14 +13,14 @@ use Magento\InventoryInStorePickupSales\Model\NotifyOrdersAreReadyForPickup;
 use Magento\InventoryInStorePickupSales\Model\Order\AddStorePickupAttributesToOrder;
 use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingDocument;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
+use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
+use Magento\Sales\Api\Data\OrderExtension;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
-use Psr\Log\LoggerInterface;
-use PHPUnit\Framework\TestCase;
 use Magento\Sales\Model\Order;
-use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
-use Magento\Sales\Api\Data\OrderExtension;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  *
@@ -135,11 +135,6 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
         $this->orderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $mockOrderExtension = $this->getMockBuilder(OrderExtension::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockOrderExtension->method('setSendNotification')->willReturn(0);
-        $this->orderMock->method('getExtensionAttributes')->willReturn($mockOrderExtension);
         $this->resultMock = $this->getMockBuilder(ResultInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -152,6 +147,11 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
      */
     public function testExecuteForEmailNotify($exception): void
     {
+        $mockOrderExtension = $this->getMockBuilder(OrderExtension::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockOrderExtension->method('setSendNotification')->willReturn(0);
+        $this->orderMock->method('getExtensionAttributes')->willReturn($mockOrderExtension);
         $this->orderRepository->method('get')->willReturn($this->orderMock);
         $this->searchCriteriaBuilder->method('addFilter')->willReturnSelf();
         $this->searchCriteriaBuilder->method('create')->willReturn($this->searchCriteriaInterfaceMock);
