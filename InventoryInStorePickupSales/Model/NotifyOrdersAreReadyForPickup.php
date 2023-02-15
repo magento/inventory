@@ -112,6 +112,7 @@ class NotifyOrdersAreReadyForPickup implements NotifyOrdersAreReadyForPickupInte
                 $shipments = $this->shipmentRepository->getList($searchCriteria->create());
                 $isShipmentCreated = $shipments->getTotalCount() > 0;
                 if ($isShipmentCreated === false) {
+                    $order->getExtensionAttributes()->setSendNotification(0);
                     $this->createShippingDocument->execute($order);
                 }
                 $this->addStorePickupAttributesToOrder->execute($order);
