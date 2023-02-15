@@ -148,7 +148,7 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
     public function testExecuteForEmailNotify($exception): void
     {
         $mockOrderExtension = $this->getMockBuilder(OrderExtension::class)
-            ->disableOriginalConstructor()
+            ->onlyMethods(['setSendNotification'])
             ->getMock();
         $mockOrderExtension->method('setSendNotification')->willReturn(0);
         $this->orderMock->method('getExtensionAttributes')->willReturn($mockOrderExtension);
