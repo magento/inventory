@@ -15,7 +15,6 @@ use Magento\InventoryInStorePickupSales\Model\Order\CreateShippingDocument;
 use Magento\InventoryInStorePickupSales\Model\Order\Email\ReadyForPickupNotifier;
 use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
 use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterfaceFactory;
-use Magento\Sales\Api\Data\OrderExtension;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -147,11 +146,7 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
      */
     public function testExecuteForEmailNotify($exception): void
     {
-        $mockOrderExtension = $this->getMockBuilder(OrderExtension::class)
-            ->onlyMethods(['setSendNotification'])
-            ->getMock();
-        $mockOrderExtension->method('setSendNotification')->willReturn(0);
-        $this->orderMock->method('getExtensionAttributes')->willReturn($mockOrderExtension);
+        $this->orderMock->method('getExtensionAttributes')->willReturnSelf();
         $this->orderRepository->method('get')->willReturn($this->orderMock);
         $this->searchCriteriaBuilder->method('addFilter')->willReturnSelf();
         $this->searchCriteriaBuilder->method('create')->willReturn($this->searchCriteriaInterfaceMock);
