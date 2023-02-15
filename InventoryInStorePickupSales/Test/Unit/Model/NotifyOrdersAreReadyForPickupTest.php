@@ -20,6 +20,7 @@ use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Sales\Model\Order;
 use Magento\InventoryInStorePickupSalesApi\Api\Data\ResultInterface;
+use Magento\Sales\Api\Data\OrderExtension;
 
 /**
  *
@@ -134,6 +135,11 @@ class NotifyOrdersAreReadyForPickupTest extends TestCase
         $this->orderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $mockOrderExtension = $this->getMockBuilder(OrderExtension::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockOrderExtension->method('setSendNotification')->willReturn(0);
+        $this->orderMock->method('getExtensionAttributes')->willReturn($mockOrderExtension);
         $this->resultMock = $this->getMockBuilder(ResultInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
