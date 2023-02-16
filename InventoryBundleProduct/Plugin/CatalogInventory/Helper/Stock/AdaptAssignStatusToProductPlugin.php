@@ -90,6 +90,7 @@ class AdaptAssignStatusToProductPlugin
                 $status = 0;
             }
         }
+
         return [$product, $status];
     }
 }
