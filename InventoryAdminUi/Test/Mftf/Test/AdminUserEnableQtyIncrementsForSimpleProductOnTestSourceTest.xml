@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminUserEnableQtyIncrementsForSimpleProductOnTestSourceTest" extends="AdminUserApplyMinMaxQtyForSimpleProductOnTestSourceTest">
+    <test name="AdminUserEnableQtyIncrementsForSimpleProductOnTestSourceTest">
         <annotations>
             <stories value="Simple Product Custom Stock."/>
             <title value="Quantity increments enabled with simple product on custom stock."/>
@@ -18,19 +18,76 @@
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-
-        <remove keyForRemoval="setMaxMinQty"/>
-        <!--Set product quantity increments.-->
-        <actionGroup ref="AdminEnableQtyIncrementsOnProductEditPageActionGroup" stepKey="setQtyIncrements" before="saveProduct">
-            <argument name="qtyIncrements" value="5"/>
+      <before>
+        <magentoCLI command="config:set {{EnableQtyIncrements.path}} {{EnableQtyIncrements.value}}" stepKey="enableQtyIncrements" />
+        <magentoCLI command="config:set {{SetQtyIncrements.path}} 5" stepKey="setQtyIncrement"/>
+        <!--Crate additional source and stock.-->
+        <createData entity="_minimalSource" stepKey="additionalSource"/>
+        <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock"/>
+        <!--Link additional source with stock.-->
+        <createData entity="SourceStockLinked1" stepKey="stockSourceLink">
+          <requiredEntity createDataKey="additionalStock"/>
+          <requiredEntity createDataKey="additionalSource"/>
+        </createData>
+        <!--Create category and product.-->
+        <createData entity="SimpleSubCategory" stepKey="category"/>
+        <createData entity="SimpleProduct" stepKey="product">
+          <field key="price">10.00</field>
+          <requiredEntity createDataKey="category"/>
+        </createData>
+      </before>
+      <after>
+        <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+          <argument name="stockName" value="{{_defaultStock.name}}"/>
+          <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
         </actionGroup>
-        <!--Verify error message.-->
-        <see selector="//div[@class='product pricing']" userInput="$$product.name$$ is available to buy in increments of 5" before="fillProductQtyLowerThanAllowed" stepKey="verifyNotice"/>
-        <remove keyForRemoval="seeLowQtyErrorMessage"/>
-        <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time." stepKey="seeIncrementQtyError" after="witForLowQtyAdded"/>
-        <remove keyForRemoval="fillProductQtyGreaterThanAllowed"/>
-        <remove keyForRemoval="addToCartGreaterThenAllowedQty"/>
-        <remove keyForRemoval="witForHighQtyAdded"/>
-        <remove keyForRemoval="seeHighQtyErrorMessage"/>
+        <!--Disable additional source.-->
+        <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">
+          <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+        <deleteData createDataKey="category" stepKey="deleteCategory"/>
+        <deleteData createDataKey="product" stepKey="deleteProduct"/>
+        <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
+        <magentoCron groups="index" stepKey="reindex"/>
+        <magentoCLI command="config:set {{SetQtyIncrements.path}} 0" stepKey="setQtyIncrements" />
+        <magentoCLI command="config:set {{DisableQtyIncrements.path}} {{DisableQtyIncrements.value}}" stepKey="enableQtyIncrements"/>
+      </after>
+      <remove keyForRemoval="setMaxMinQty"/>
+
+
+      <!--Assign create product to additional stock and set product qty.-->
+      <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+      <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPageToSetQty"/>
+      <actionGroup ref="AssignSourceToProductActionGroup" stepKey="assignUSSource1ToCreatedProduct">
+        <argument name="sourceCode" value="$$additionalSource.source[source_code]$$"/>
+      </actionGroup>
+      <fillField selector="{{AdminProductSourcesGrid.rowQty('1')}}" userInput="100" stepKey="setProduct1Quantity"/>
+      <actionGroup ref="AdminEnableQtyIncrementsOnProductEditPageActionGroup" stepKey="setQtyIncrements" >
+        <argument name="qtyIncrements" value="5"/>
+      </actionGroup>
+      <!--Set Min and Max qty for simple product.-->
+      <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
+      <!--Try to add product to cart with lower qty than allowed.-->
+      <amOnPage url="{{StorefrontProductPage.url($$product.custom_attributes[url_key]$$)}}" stepKey="navigateToPDP"/>
+      <!--Verify error message.-->
+      <see selector="//div[@class='product pricing']"
+           userInput="$$product.name$$ is available to buy in increments of 5" stepKey="verifyNotice"/>
+      <remove keyForRemoval="seeLowQtyErrorMessage"/>
+      <remove keyForRemoval="fillProductQtyGreaterThanAllowed"/>
+      <remove keyForRemoval="addToCartGreaterThenAllowedQty"/>
+      <remove keyForRemoval="witForHighQtyAdded"/>
+      <remove keyForRemoval="seeHighQtyErrorMessage"/>
+      <fillField selector="{{StorefrontProductPageSection.qtyInput}}" userInput="1" stepKey="fillProductQtyLowerThanAllowed"/>
+      <click selector="{{StorefrontProductPageSection.addToCartBtn}}" stepKey="addToCartLowerThenAllowedQty"/>
+      <waitForElementVisible selector="#qty-error"  time="30" stepKey="witForLowQtyAdded"/>
+      <see selector="#qty-error" userInput="You can buy this product only in quantities of 5 at a time."
+           stepKey="seeIncrementQtyError"/>
+      <!--Try to add product ot cart with greater qty than allowed.-->
+      <!--Try to add product with proper qty to cart.-->
+      <actionGroup ref="StorefrontAddSimpleProductWithQtyActionGroup" stepKey="addProductToCartWithProperQty">
+        <argument name="product" value="$$product$$"/>
+        <argument name="quantity" value="5"/>
+      </actionGroup>
     </test>
 </tests>
