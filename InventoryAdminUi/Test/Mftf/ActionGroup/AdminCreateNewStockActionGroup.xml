@@ -29,6 +29,7 @@
         <click selector="{{AdminEditStockSourcesSection.doneButton}}" stepKey="clickDoneButton" />
         <click selector="{{AdminEditStockGeneralSection.saveAndContinueDropdown}}" stepKey="clickSaveAndContinueDropdown" />
         <click selector="{{AdminEditStockGeneralSection.saveAndCloseButton}}" stepKey="clickSaveAndClose" />
+        <waitForElementVisible selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="waitForVerifyTheStockCreatedSuccessfullyMessageVisible"/>
         <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="verifyTheStockCreatedSuccessfully"/>
         <waitForPageLoad stepKey="waitForStoreGroupPageLoad1" />
     </actionGroup>
