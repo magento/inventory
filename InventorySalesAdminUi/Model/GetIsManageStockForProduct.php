@@ -92,7 +92,7 @@ class GetIsManageStockForProduct
     private function getProductStockIds(string $sku): array
     {
         $stockIds = [];
-        $stocksInfo =$this->getSalableQuantityDataBySku->execute($sku);
+        $stocksInfo = $this->getSalableQuantityDataBySku->execute($sku);
         foreach ($stocksInfo as $stockInfo) {
             $stockIds[] = (int)$stockInfo['stock_id'];
         }
