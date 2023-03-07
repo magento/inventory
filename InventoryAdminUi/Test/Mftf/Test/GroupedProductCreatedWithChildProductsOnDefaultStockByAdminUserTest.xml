@@ -11,10 +11,10 @@
     <test name="GroupedProductCreatedWithChildProductsOnDefaultStockByAdminUserTest">
         <annotations>
             <stories value="Grouped Product"/>
-            <title value="Stock status changed for Grouped Product on Test stock and Test website"/>
-            <description value="Stock status changed for Grouped Product on Test stock and Test website"/>
+            <title value="ACQE-4676: Grouped Product created with child products on default stock by Admin user"/>
+            <description value="ACQE-4676: Grouped Product created with child products on default stock by Admin user"/>
             <severity value="MAJOR"/>
-            <testCaseId value="AC-6564"/>
+            <testCaseId value="AC-6553"/>
         </annotations>
         <before>
             <!--Create simple and grouped product-->
