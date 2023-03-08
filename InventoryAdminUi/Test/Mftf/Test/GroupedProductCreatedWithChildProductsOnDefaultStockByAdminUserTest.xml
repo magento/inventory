@@ -43,8 +43,11 @@
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToSimpleProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty1">
+           <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
+                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField1"/>
@@ -56,8 +59,11 @@
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToVirtualProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
-            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty2">
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct2">
+                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField2"/>
