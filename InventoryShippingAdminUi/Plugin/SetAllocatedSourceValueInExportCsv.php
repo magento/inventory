@@ -22,15 +22,11 @@ class SetAllocatedSourceValueInExportCsv
     private $filter;
 
     /**
-     * Allocate Sources Attribute code
-     *
      * @var string
      */
     private static $allocateSourcesAttributeCode = 'allocated_sources';
 
     /**
-     * Sales Order Component Name
-     *
      * @var string
      */
     private static $salesOrderComponentName = 'sales_order_grid';
@@ -77,8 +73,9 @@ class SetAllocatedSourceValueInExportCsv
             foreach ($fields as $key => $column) {
                 if ($column === self::$allocateSourcesAttributeCode) {
                     $allocated_sources = $this->getAllocatedSourcesForOrder->execute((int)$document['entity_id']);
-                    if(count($allocated_sources) > 0)
+                    if (count($allocated_sources) > 0) {
                         $result[$key] = implode(",", $allocated_sources);
+                    }
                 }
             }
         }

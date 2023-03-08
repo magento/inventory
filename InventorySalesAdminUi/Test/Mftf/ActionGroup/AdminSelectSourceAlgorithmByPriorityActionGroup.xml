@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminSelectSourceAlgorithmByPriorityActionGroup">
+        <arguments>
+            <argument name="Source"/>
+        </arguments>
+
+        <click selector="{{AdminSourceSelectionFormSection.sourceSelectionAlgorithmToggle}}" stepKey="openSourceSelectionAlgorithmList"/>
+        <click selector="{{AdminSourceSelectionFormSection.selectSourcePriority1}}" stepKey="selectSourcePriorityAlgorithm"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+        <selectOption selector="{{AdminSourceSelectionFormSection.sourceSelection}}" userInput="{{Source}}" stepKey="selectSourceToCreateShipment"/>
+    </actionGroup>
+</actionGroups>

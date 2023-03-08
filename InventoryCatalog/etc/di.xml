@@ -161,7 +161,7 @@
     <!-- Negative Min Quantity Threshold for Backorders -->
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter">
         <plugin name="allow_negative_min_qty"
-                type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\AllowNegativeMinQtyPlugin"/>
+                type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\StockDataFilterPlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Api\Data\StockItemInterface">
         <plugin name="adapt_min_qty_to_backorders"

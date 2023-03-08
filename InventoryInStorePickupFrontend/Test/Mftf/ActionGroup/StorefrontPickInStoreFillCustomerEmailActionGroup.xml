@@ -14,6 +14,8 @@
         <arguments>
             <argument name="email" type="string" defaultValue="{{Simple_US_Customer.email}}"/>
         </arguments>
+        <seeInCurrentUrl url="checkout/#shipping" stepKey="checkUrlFormKey"/>
+        <waitForPageLoad time="30" stepKey="waitForPageRefresh"/>
         <fillField selector="{{StorefrontSelectStoreSection.customerEmailField}}" userInput="{{email}}" stepKey="fillCustomerEmail"/>
     </actionGroup>
 </actionGroups>
