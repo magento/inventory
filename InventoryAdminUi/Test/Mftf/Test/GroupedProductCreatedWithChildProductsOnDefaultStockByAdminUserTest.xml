@@ -47,7 +47,7 @@
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
-                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField1"/>
@@ -63,7 +63,7 @@
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct2">
-                <argument name="sourceCode" value="$createSource.source[source_code]$"/>
+                <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField2"/>
