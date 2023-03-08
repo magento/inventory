@@ -11,8 +11,8 @@
     <test name="GroupedProductCreatedWithChildProductsOnDefaultStockByAdminUserTest">
         <annotations>
             <stories value="Grouped Product"/>
-            <title value="ACQE-4676: Grouped Product created with child products on default stock by Admin user"/>
-            <description value="ACQE-4676: Grouped Product created with child products on default stock by Admin user"/>
+            <title value="Stock status changed for Grouped Product on Test stock and Test website"/>
+            <description value="Stock status changed for Grouped Product on Test stock and Test website"/>
             <severity value="MAJOR"/>
             <testCaseId value="AC-6553"/>
         </annotations>
@@ -37,19 +37,25 @@
             </createData>
 
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
-            <!-- Add Category to Simple Product-->
+            <!-- Add Category and source to Simple Product-->
             <amOnPage url="{{AdminProductEditPage.url($$createFirstSimpleProduct.id$$)}}" stepKey="goToSimpleProductEditPage"/>
             <waitForPageLoad stepKey="waitForSimpleProductEditPage"/>
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToSimpleProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty1">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
+            </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>
 
-            <!-- Add Category to Virtual Product-->
+            <!-- Add Category and source to Virtual Product-->
             <amOnPage url="{{AdminProductEditPage.url($$createVirtualProduct.id$$)}}" stepKey="goToVirtualProductEditPage"/>
             <waitForPageLoad stepKey="waitForVirtualProductEditPage"/>
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToVirtualProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty2">
+                <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateVirtualProduct"/>
 
@@ -118,15 +124,13 @@
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
+        <!--<see userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="seeGroupedProduct"/>-->
         <dontSee userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="dontSeeGroupedProduct"/>
 
         <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="goToProductEditPage"/>
         <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
-        
-        <magentoCLI stepKey="reindex" command="indexer:reindex"/>
-        <magentoCLI stepKey="flushCache" command="cache:flush"/>
 
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
 
