@@ -46,6 +46,8 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty1">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
+                       stepKey="fillSourceQtyField1"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>
 
             <!-- Add Category and source to Virtual Product-->
@@ -57,6 +59,8 @@
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignSourceAndSetQty2">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
+            <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
+                       stepKey="fillSourceQtyField2"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateVirtualProduct"/>
 
             <!-- Add one more product, update status and  qty to Grouped Product-->
