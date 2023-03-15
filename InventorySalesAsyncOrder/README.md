@@ -4,6 +4,7 @@ The `InventorySalesAsyncOrder` module integrates Inventory Sales logic with Asyn
 It gives ability to use "Use deferred Stock update" config option with async order.
 
 ## Usage
+
 | Async Order | Use Deferred Stock Update | Result                                                                                                              |
 |-------------|---------------------------|---------------------------------------------------------------------------------------------------------------------|
 | 1           | 1                         | Reservation is created when async order is processed by consumer.                                                   |
