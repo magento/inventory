@@ -74,7 +74,8 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <!--Delete created website.-->
+            <!--Delete created website, store and store view -->
+            <actionGroup ref="AdminSystemStoreOpenPageActionGroup" stepKey="navigateToStores"/>
             <actionGroup ref="AdminDeleteMultipleStoreViewsActionGroup" stepKey="deleteStoreViews" />
             <actionGroup ref="AdminDeleteMultipleStoresActionGroup" stepKey="deleteStores" />
             <actionGroup ref="AdminDeleteMultipleWebsitesActionGroup" stepKey="deleteWebsite" />
