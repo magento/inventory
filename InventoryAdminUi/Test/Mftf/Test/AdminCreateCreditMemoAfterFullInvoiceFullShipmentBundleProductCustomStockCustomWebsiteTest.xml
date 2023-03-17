@@ -121,8 +121,9 @@
             <argument name="website" value="{{customWebsite.name}}"/>
         </actionGroup>
         <!--Create new customer order.-->
-        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
-            <argument name="storeView" value="customStore"/>
+        <actionGroup ref="AdminNavigateToNewOrderPageNewCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer"/>
+        <actionGroup ref="AdminSelectStoreDuringOrderCreationActionGroup" stepKey="selectCustomStore">
+            <argument name="storeView" value="customStore" />
         </actionGroup>
         <!--Add bundle product to order.-->
         <actionGroup ref="AdminFilterProductInCreateOrderActionGroup" stepKey="filterBundleProduct">
