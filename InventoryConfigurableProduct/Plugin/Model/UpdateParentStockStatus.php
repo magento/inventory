@@ -84,7 +84,7 @@ class UpdateParentStockStatus
      */
     public function afterExecute(
         SourceItemsSaveHandler $subject,
-                               $result,
+        $result,
         array $sourceItems
     ): void {
         if (!$this->isSingleSourceMode->execute()) {
