@@ -8,18 +8,31 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Test\Api;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Test\Fixture\Product;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\CatalogInventory\Helper\Stock;
+use Magento\ConfigurableProduct\Test\Fixture\Attribute;
+use Magento\ConfigurableProduct\Test\Fixture\Product as ConfigurableProductFixture;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Test\Fixture\Source;
 use Magento\InventoryCatalogApi\Model\GetProductIdsBySkusInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Fixture\AppArea;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorage;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
  * Test validation on add source to child product of configurable product.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends WebapiAbstract
 {
@@ -61,6 +74,11 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
     private $storeCodeBefore;
 
     /**
+     * @var DataFixtureStorage
+     */
+    private $fixtures;
+
+    /**
      * @var array[]
      */
     private $sourceItems = [
@@ -82,6 +100,12 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
             SourceItemInterface::QUANTITY => 0,
             SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
         ],
+        [
+            SourceItemInterface::SOURCE_CODE => 'default',
+            SourceItemInterface::SKU => self::CONFIGURABLE_CHILD_PRODUCT_SKU2,
+            SourceItemInterface::QUANTITY => 0,
+            SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK,
+        ],
     ];
     /**
      * @inheritdoc
@@ -94,6 +118,7 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
         $this->getProductIdsBySkus = $this->objectManager->get(GetProductIdsBySkusInterface::class);
         $this->storeManager = $this->objectManager->get(StoreManagerInterface::class);
         $this->storeCodeBefore = $this->storeManager->getStore()->getCode();
+        $this->fixtures = DataFixtureStorageManager::getStorage();
     }
 
     protected function tearDown(): void
@@ -128,6 +153,70 @@ class ConfigurableProductShouldBeInStockWhenChildProductInStockTest extends Weba
         $actualData = $this->getSourceItems($childSku1);
         self::assertEquals(SourceItemInterface::STATUS_OUT_OF_STOCK, $actualData['items'][0]['status']);
         self::assertEquals(0, $actualData['items'][0]['quantity']);
+    }
+
+    /**
+     * Test if configurable product back in stock if child product is in stock again
+     *
+     */
+    #[
+        AppArea('frontend'),
+        DataFixture(Source::class, as: 'src'),
+        DataFixture(Attribute::class, ['options' => [['label' => 'option', 'sort_order' => 0]]], as:'attribute'),
+        DataFixture(Product::class, as: 'simple'),
+        DataFixture(
+            ConfigurableProductFixture::class,
+            ['_options' => ['$attribute$'], '_links' => ['$simple$']],
+            as: 'configurable'
+        )
+    ]
+    public function testConfigurableProductIsInStockOnDefaultSourceAfterSave()
+    {
+        $simpleProduct = $this->fixtures->get('simple');
+        $configurableProduct = $this->fixtures->get('configurable');
+
+        $collection = $this->getLayerProductCollection($configurableProduct->getSku());
+        self::assertEquals(1, $collection->count());
+
+        $this->addSourceItems([
+            [
+                SourceItemInterface::SOURCE_CODE => 'default',
+                SourceItemInterface::SKU => $simpleProduct->getSku(),
+                SourceItemInterface::QUANTITY => 0,
+                SourceItemInterface::STATUS => SourceItemInterface::STATUS_OUT_OF_STOCK
+            ]
+        ]);
+
+        $collection = $this->getLayerProductCollection($configurableProduct->getSku());
+        self::assertEquals(0, $collection->count());
+
+        $this->addSourceItems([
+            [
+                SourceItemInterface::SOURCE_CODE => 'default',
+                SourceItemInterface::SKU => $simpleProduct->getSku(),
+                SourceItemInterface::QUANTITY => 100,
+                SourceItemInterface::STATUS => SourceItemInterface::STATUS_IN_STOCK,
+            ]
+        ]);
+
+        $collection = $this->getLayerProductCollection($configurableProduct->getSku());
+        self::assertEquals(1, $collection->count());
+    }
+
+    /**
+     * Get layer product collection for frontend
+     *
+     * @param string $sku
+     * @return Collection
+     */
+    private function getLayerProductCollection(string $sku): Collection
+    {
+        $collection = $this->objectManager->get(CollectionFactory::class)->create();
+        $collection->addAttributeToFilter('sku', $sku)
+            ->addMinimalPrice()
+            ->addFinalPrice()
+            ->addTaxPercents();
+        return $collection;
     }
 
     /**
