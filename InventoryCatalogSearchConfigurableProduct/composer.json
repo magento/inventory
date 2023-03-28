@@ -6,8 +6,9 @@
         "magento/framework": "*",
         "magento/module-catalog": "*",
         "magento/module-configurable-product": "*",
-        "magento/module-eav": "*",
-        "magento/module-inventory-catalog-search": "*"
+        "magento/module-inventory-catalog-search": "*",
+        "magento/module-store": "*",
+        "magento/module-catalog-inventory": "*"
     },
     "type": "magento2-module",
     "license": [
