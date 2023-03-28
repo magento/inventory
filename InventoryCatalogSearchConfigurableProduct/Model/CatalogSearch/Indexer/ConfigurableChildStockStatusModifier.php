@@ -92,13 +92,13 @@ class ConfigurableChildStockStatusModifier implements SelectModifierInterface
         $statusAttribute = $this->productAttributeRepository->get(ProductInterface::STATUS);
         $existsSelect->joinLeft(
             ['child_status_global' => $statusAttribute->getBackendTable()],
-            "child_status_global.{$linkField} = child_product.{$linkField}"
+            "child_status_global.{$linkField} = product_child.{$linkField}"
             . " AND child_status_global.attribute_id = {$statusAttribute->getAttributeId()}"
             . " AND child_status_global.store_id = 0",
             []
         )->joinLeft(
             ['child_status_store' => $statusAttribute->getBackendTable()],
-            "child_status_store.{$linkField} = child_product.{$linkField}"
+            "child_status_store.{$linkField} = product_child.{$linkField}"
             . " AND child_status_store.attribute_id = {$statusAttribute->getAttributeId()}"
             . " AND child_status_store.store_id = {$storeId}",
             []
