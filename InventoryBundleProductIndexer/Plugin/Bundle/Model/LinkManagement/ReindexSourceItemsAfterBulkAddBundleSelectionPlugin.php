@@ -9,13 +9,9 @@ namespace Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManageme
 
 use Magento\Bundle\Api\Data\LinkInterface;
 use Magento\Bundle\Api\ProductLinkManagementAddChildrenInterface;
-use Magento\Bundle\Api\ProductLinkManagementInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\InventoryBundleProductIndexer\Indexer\SourceItem\SourceItemIndexer;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSourceItemIds;
+use Magento\InventoryApi\Model\GetStockIdsBySkusInterface;
+use Magento\InventoryBundleProductIndexer\Indexer\StockIndexer;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -24,49 +20,33 @@ use Psr\Log\LoggerInterface;
 class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
 {
     /**
-     * @var GetSourceItemsBySkuInterface
-     */
-    private $getSourceItemsBySku;
-
-    /**
-     * @var SourceItemIndexer
-     */
-    private $sourceItemIndexer;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var GetSourceItemIds
+     * @var GetStockIdsBySkusInterface
      */
-    private $getSourceItemIds;
+    private $getStockIdsBySkus;
 
     /**
-     * @var ProductLinkManagementInterface
+     * @var StockIndexer
      */
-    private $linkManagement;
+    private $stockIndexer;
 
     /**
-     * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
-     * @param SourceItemIndexer $sourceItemIndexer
-     * @param GetSourceItemIds $getSourceItemIds
      * @param LoggerInterface $logger
-     * @param ProductLinkManagementInterface $linkManagement
+     * @param GetStockIdsBySkusInterface $getStockIdsBySkus
+     * @param StockIndexer $stockIndexer
      */
     public function __construct(
-        GetSourceItemsBySkuInterface $getSourceItemsBySku,
-        SourceItemIndexer $sourceItemIndexer,
-        GetSourceItemIds $getSourceItemIds,
         LoggerInterface $logger,
-        ProductLinkManagementInterface $linkManagement
+        GetStockIdsBySkusInterface $getStockIdsBySkus,
+        StockIndexer $stockIndexer
     ) {
-        $this->getSourceItemsBySku = $getSourceItemsBySku;
-        $this->sourceItemIndexer = $sourceItemIndexer;
         $this->logger = $logger;
-        $this->getSourceItemIds = $getSourceItemIds;
-        $this->linkManagement = $linkManagement;
+        $this->getStockIdsBySkus = $getStockIdsBySkus;
+        $this->stockIndexer = $stockIndexer;
     }
 
     /**
@@ -78,8 +58,6 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
      * @param int $optionId
      * @param LinkInterface[] $linkedProducts
      * @return void
-     * @throws InputException
-     * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterAddChildren(
@@ -89,49 +67,12 @@ class ReindexSourceItemsAfterBulkAddBundleSelectionPlugin
         int $optionId,
         array $linkedProducts
     ): void {
-        $skus = $this->getBundleSelectionsSkus($product, $linkedProducts);
-        $sourceItems = [];
-        foreach ($skus as $sku) {
-            $sourceItems[] = $this->getSourceItemsBySku->execute($sku);
-        }
-        $sourceItems = array_merge(...$sourceItems);
-        $sourceItemIds = $this->getSourceItemIds->execute($sourceItems);
         try {
-            $this->sourceItemIndexer->executeList($sourceItemIds);
+            $skus = array_map(fn ($linkedProduct) => $linkedProduct->getSku(), $linkedProducts);
+            $stockIds = $this->getStockIdsBySkus->execute($skus);
+            $this->stockIndexer->executeList($stockIds, [$product->getSku()]);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
-    }
-
-    /**
-     * Retrieve bundle selections skus.
-     *
-     * @param ProductInterface $product
-     * @param LinkInterface[] $links
-     * @return array
-     * @throws InputException
-     * @throws NoSuchEntityException
-     */
-    private function getBundleSelectionsSkus(
-        ProductInterface $product,
-        array $links
-    ): array {
-        $skus = [];
-        $bundleSelectionsData = $product->getBundleSelectionsData() ?: [];
-        foreach ($bundleSelectionsData as $option) {
-            $skus[] = array_column($option, 'sku');
-        }
-        $skus = $skus ? array_merge(...$skus) : $skus;
-        if (!$skus) {
-            foreach ($links as $link) {
-                $skus[] = $link->getSku();
-            }
-            $children = $this->linkManagement->getChildren($product->getSku());
-            foreach ($children as $child) {
-                $skus[] = $child->getSku();
-            }
-        }
-
-        return $skus;
     }
 }
