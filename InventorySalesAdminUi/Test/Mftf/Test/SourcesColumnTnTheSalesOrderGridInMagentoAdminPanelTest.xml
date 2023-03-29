@@ -35,7 +35,7 @@
      </before>
      <after>
          <!--Remove default flat rate shipping method settings-->
-         <magentoCLI command="config:set {{DisableFlatRateConfigData.path}} {{DisableFlatRateConfigData.value}}" stepKey="disableFlatRate"/>
+         <comment userInput="Preserve BIC. config:set DisableFlatRateConfigData.path DisableFlatRateConfigData.value" stepKey="disableFlatRate"/>
          <!--Assign Main Website to Default Stock-->
          <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
              <argument name="stockName" value="{{_defaultStock.name}}"/>
