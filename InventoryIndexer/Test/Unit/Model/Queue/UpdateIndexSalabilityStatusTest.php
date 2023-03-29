@@ -9,6 +9,7 @@ namespace Magento\InventoryIndexer\Test\Unit\Model\Queue;
 
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
 use Magento\InventoryIndexer\Model\Queue\ReservationData;
+use Magento\InventoryIndexer\Model\Queue\ReservationDataFactory;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\UpdateLegacyStock;
 use Magento\InventoryIndexer\Model\Queue\UpdateIndexSalabilityStatus\IndexProcessor;
@@ -42,6 +43,11 @@ class UpdateIndexSalabilityStatusTest extends TestCase
     private $getParentSkusOfChildrenSkus;
 
     /**
+     * @var ReservationDataFactory|MockObject
+     */
+    private $reservationDataFactory;
+
+    /**
      * @var UpdateIndexSalabilityStatus
      */
     private $model;
@@ -58,11 +64,13 @@ class UpdateIndexSalabilityStatusTest extends TestCase
         $this->indexProcessor = $this->createMock(IndexProcessor::class);
         $this->updateLegacyStock = $this->createMock(UpdateLegacyStock::class);
         $this->getParentSkusOfChildrenSkus = $this->createMock(GetParentSkusOfChildrenSkusInterface::class);
+        $this->reservationDataFactory = $this->createMock(ReservationDataFactory::class);
         $this->model = new UpdateIndexSalabilityStatus(
             $this->defaultStockProvider,
             $this->indexProcessor,
             $this->updateLegacyStock,
-            $this->getParentSkusOfChildrenSkus
+            $this->getParentSkusOfChildrenSkus,
+            $this->reservationDataFactory
         );
     }
 
@@ -95,10 +103,12 @@ class UpdateIndexSalabilityStatusTest extends TestCase
             ->willReturn($changes);
         $this->indexProcessor->expects($this->exactly($indexProcessorInvokeCount))
             ->method('execute')
-            ->with($reservation, $stockId)
             ->willReturn($changes);
         $this->getParentSkusOfChildrenSkus->method('execute')
             ->willReturn($parentSkusOfChildrenSkus);
+        $reservationData = $this->createMock(ReservationData::class);
+        $this->reservationDataFactory->method('create')
+            ->willReturn($reservationData);
 
         $this->assertEquals($changes, $this->model->execute($reservation));
     }
@@ -119,7 +129,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
             [
                 'stock_id' => 2,
                 'update_legacy_stock_invoke_count' => 0,
-                'index_processor_invoke_count' => 1,
+                'index_processor_invoke_count' => 2,
                 'parent_skus_of_children_skus' => [
                     'P1' => ['PConf1', 'PConf2']
                 ],
@@ -128,7 +138,7 @@ class UpdateIndexSalabilityStatusTest extends TestCase
             [
                 'stock_id' => 3,
                 'update_legacy_stock_invoke_count' => 0,
-                'index_processor_invoke_count' => 1,
+                'index_processor_invoke_count' => 2,
                 'parent_skus_of_children_skus' => [
                     'P1' => ['PConf3']
                 ],
