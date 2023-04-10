@@ -10,6 +10,8 @@ namespace Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\Stock
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
 class SetQtyToLegacyStock
 {
@@ -19,11 +21,18 @@ class SetQtyToLegacyStock
     private $request;
 
     /**
-     * @param RequestInterface $request
+     * @var GetLegacyStockItem
      */
-    public function __construct(RequestInterface $request)
+    private GetLegacyStockItem $getLegacyStockItem;
+
+    /**
+     * @param RequestInterface $request
+     * @param GetLegacyStockItem $getLegacyStockItem
+     */
+    public function __construct(RequestInterface $request, GetLegacyStockItem $getLegacyStockItem)
     {
         $this->request = $request;
+        $this->getLegacyStockItem = $getLegacyStockItem;
     }
 
     /**
@@ -34,6 +43,7 @@ class SetQtyToLegacyStock
      * @param StockItemInterface $stockItem
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws LocalizedException
      */
     public function beforeUpdateStockItemBySku(
         StockRegistryInterface $subject,
@@ -51,6 +61,7 @@ class SetQtyToLegacyStock
                 }
             }
         }
+        $this->getLegacyStockItem->execute($productSku);
         return [$productSku, $stockItem];
     }
 }
