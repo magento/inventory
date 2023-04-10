@@ -14,7 +14,7 @@ use Magento\InventoryCatalog\Model\ResourceModel\SetDataToLegacyStockStatus;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\CatalogInventory\Model\Stock;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventoryConfigurableProduct\Model\IsProductSalableCondition\IsConfigurableProductChildrenSalable;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
 /**
@@ -39,42 +39,34 @@ class UpdateLegacyStockStatusForConfigurableProduct
     private $getSkusByProductIds;
 
     /**
-     * @var Configurable
-     */
-    private $configurableType;
-
-    /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
-    /**
      * @var GetLegacyStockItem
      */
     private $getLegacyStockItem;
 
     /**
+     * @var IsConfigurableProductChildrenSalable
+     */
+    private $isConfigurableProductChildrenSalable;
+
+    /**
      * @param GetProductTypeById $getProductTypeById
      * @param SetDataToLegacyStockStatus $setDataToLegacyStockStatus
      * @param GetSkusByProductIdsInterface $getSkusByProductIds
-     * @param Configurable $configurableType
-     * @param AreProductsSalableInterface $areProductsSalable
      * @param GetLegacyStockItem $getLegacyStockItem
+     * @param IsConfigurableProductChildrenSalable $isConfigurableProductChildrenSalable
      */
     public function __construct(
         GetProductTypeById $getProductTypeById,
         SetDataToLegacyStockStatus $setDataToLegacyStockStatus,
         GetSkusByProductIdsInterface $getSkusByProductIds,
-        Configurable $configurableType,
-        AreProductsSalableInterface $areProductsSalable,
-        GetLegacyStockItem $getLegacyStockItem
+        GetLegacyStockItem $getLegacyStockItem,
+        IsConfigurableProductChildrenSalable $isConfigurableProductChildrenSalable
     ) {
         $this->getProductTypeById = $getProductTypeById;
         $this->setDataToLegacyStockStatus = $setDataToLegacyStockStatus;
         $this->getSkusByProductIds = $getSkusByProductIds;
-        $this->configurableType = $configurableType;
-        $this->areProductsSalable = $areProductsSalable;
         $this->getLegacyStockItem = $getLegacyStockItem;
+        $this->isConfigurableProductChildrenSalable = $isConfigurableProductChildrenSalable;
     }
 
     /**
@@ -97,7 +89,9 @@ class UpdateLegacyStockStatusForConfigurableProduct
                 ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
 
             if ($stockItem->getStockStatusChangedAuto() ||
-                ($this->stockStatusChange($productSku) && $this->hasChildrenInStock($stockItem->getProductId()))
+                ($this->stockStatusChange($productSku)
+                    && $this->isConfigurableProductChildrenSalable->execute($productSku, Stock::DEFAULT_STOCK_ID)
+                )
             ) {
                 $this->setDataToLegacyStockStatus->execute(
                     $productSku,
@@ -119,28 +113,5 @@ class UpdateLegacyStockStatusForConfigurableProduct
     private function stockStatusChange(string $sku): bool
     {
         return $this->getLegacyStockItem->execute($sku)->getIsInStock() == Stock::STOCK_OUT_OF_STOCK;
-    }
-
-    /**
-     * Checks if configurable has salable options
-     *
-     * @param int $productId
-     * @return bool
-     */
-    private function hasChildrenInStock(int $productId): bool
-    {
-        $childrenIds = $this->configurableType->getChildrenIds($productId);
-        if (empty($childrenIds)) {
-            return false;
-        }
-        $skus = $this->getSkusByProductIds->execute(array_shift($childrenIds));
-        $areSalableResults = $this->areProductsSalable->execute($skus, Stock::DEFAULT_STOCK_ID);
-        foreach ($areSalableResults as $productSalable) {
-            if ($productSalable->isSalable() === true) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
