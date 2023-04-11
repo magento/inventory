@@ -18,49 +18,40 @@
       <severity value="CRITICAL"/>
       <group value="msi"/>
     </annotations>
+
     <before>
       <!-- Login to admin -->
       <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
-
       <!-- Set Display Out of Stock to NO -->
       <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProductToNO"/>
-
       <!-- Create a category -->
       <createData entity="SimpleSubCategory" stepKey="createCategory"/>
-
       <!-- Create a product -->
       <createData entity="ABC_dfj_SimpleProduct" stepKey="createProduct"/>
-
     </before>
 
     <after>
-
       <!-- Set Display Out of Stock to NO -->
       <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertBackdisplayOutOfStockProductToNO"/>
-
       <!-- Delete the product -->
       <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
-
       <!-- Delete the category -->
       <actionGroup ref="DeleteCategoryActionGroup" stepKey="deleteCategory">
         <argument name="categoryEntity" value="SimpleSubCategory"/>
       </actionGroup>
-
       <!-- Logout from admin -->
       <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
     </after>
-
 
     <!-- Set the created product to out of stock -->
     <actionGroup ref="AdminProductPageOpenByIdActionGroup" stepKey="goToEditPage">
       <argument name="productId" value="$$createProduct.id$$"/>
     </actionGroup>
-    <makeScreenshot userInput="scrnsht1" stepKey="screenshotPage1"/>
     <selectOption selector="{{AdminProductFormSection.stockStatus}}" userInput="{{virtualProductOutOfStock.status}}" stepKey="selectStockStatusOutOfStock"/>
     <actionGroup ref="AdminProductFormSaveButtonClickActionGroup" stepKey="clickSaveButton"/>
     <see selector="{{AdminProductFormSection.successMessage}}" userInput="You saved the product." stepKey="seeAssertVirtualProductSuccessMessage"/>
 
-    <!-- Do reindex -->
+    <!-- Do reindex because product has been edited, and configurations changed -->
     <magentoCLI command="indexer:reindex" stepKey="performReindex1"/>
     <magentoCLI command="cache:flush" stepKey="cleanCache1"/>
 
@@ -68,16 +59,13 @@
     <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
     <fillField selector="{{StorefrontQuickSearchResultsSection.searchTextBox}}" userInput="$$createProduct.sku$$" stepKey="searchProduct1"/>
     <waitForPageLoad stepKey="waitForSearchTextBox"/>
-    <makeScreenshot userInput="scrnsht2" stepKey="screenshotPage2"/>
     <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton"/>
     <waitForPageLoad stepKey="waitForSearchResultToLoad"/>
     <dontSee selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.name$$" stepKey="seeProductNameInCategoryPage1"/>
-    <makeScreenshot userInput="scrnsht3" stepKey="screenshotPage3"/>
 
     <!-- Set Display Out of Stock to YES -->
     <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
-    <makeScreenshot userInput="beforeflush" stepKey="beforeflush1"/>
-    <!-- Do reindex -->
+    <!-- Do reindex because again the configuration changed -->
     <magentoCLI command="indexer:reindex" stepKey="performReindex2"/>
     <magentoCLI command="cache:flush" stepKey="cleanCache2"/>
 
@@ -85,12 +73,8 @@
     <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage1"/>
     <fillField selector="{{StorefrontQuickSearchResultsSection.searchTextBox}}" userInput="$$createProduct.sku$$" stepKey="searchProduct2"/>
     <waitForPageLoad stepKey="waitForSearchTextBox1"/>
-    <makeScreenshot userInput="afterflush" stepKey="afterflush1"/>
-    <makeScreenshot userInput="scrnsht4" stepKey="screenshotPage4"/>
     <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton1"/>
     <waitForPageLoad stepKey="waitForSearchResultToLoad1"/>
-    <makeScreenshot userInput="scrnsht5" stepKey="screenshotPage5"/>
     <see selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.name$$" stepKey="seeProductNameInCategoryPage2"/>
-
   </test>
 </tests>
