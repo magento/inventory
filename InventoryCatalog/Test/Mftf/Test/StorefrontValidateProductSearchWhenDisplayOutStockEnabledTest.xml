@@ -71,7 +71,7 @@
     <makeScreenshot userInput="scrnsht2" stepKey="screenshotPage2"/>
     <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton"/>
     <waitForPageLoad stepKey="waitForSearchResultToLoad"/>
-    <dontSee selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.sku$$" stepKey="seeProductNameInCategoryPage1"/>
+    <dontSee selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.name$$" stepKey="seeProductNameInCategoryPage1"/>
     <makeScreenshot userInput="scrnsht3" stepKey="screenshotPage3"/>
 
     <!-- Set Display Out of Stock to YES -->
@@ -90,7 +90,7 @@
     <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton1"/>
     <waitForPageLoad stepKey="waitForSearchResultToLoad1"/>
     <makeScreenshot userInput="scrnsht5" stepKey="screenshotPage5"/>
-    <see selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.sku$$" stepKey="seeProductNameInCategoryPage2"/>
+    <see selector="{{StorefrontCategoryMainSection.productName}}" userInput="$$createProduct.name$$" stepKey="seeProductNameInCategoryPage2"/>
 
   </test>
 </tests>
