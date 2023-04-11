@@ -34,7 +34,6 @@
             <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
-
             <!-- Don't display out of stock product -->
             <actionGroup ref="NoDisplayOutOfStockProductActionGroup" stepKey="revertDisplayOutOfStockProduct"/>
             <!--Delete all created product-->
@@ -63,7 +62,6 @@
             <argument name="attributeName" value="{{VisualSwatchProductAttribute.attribute_code}}"/>
             <argument name="attributeType" value="{{VisualSwatchProductAttribute.frontend_input}}"/>
         </actionGroup>
-
         <!-- Add a few Swatches and add images to Manage Swatch (Values of Your Attribute)
              1. Set swatch #1 using the color picker -->
         <click selector="{{AdminManageSwatchSection.addSwatch}}" stepKey="clickAddFirstSwatch"/>
@@ -82,7 +80,6 @@
         <actionGroup ref="OpenSwatchMenuByIndexActionGroup" stepKey="clickSwatch2">
             <argument name="index" value="1"/>
         </actionGroup>
-
         <click selector="{{AdminManageSwatchSection.nthChooseColor('2')}}" stepKey="clickChooseColor2"/>
         <actionGroup ref="SetColorPickerByHexActionGroup" stepKey="fillHex3">
             <argument name="nthColorPicker" value="2"/>
@@ -90,10 +87,8 @@
         </actionGroup>
         <fillField selector="{{AdminManageSwatchSection.adminInputByIndex('1')}}" userInput="blue" stepKey="fillSecondAdminField"/>
         <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('1')}}" userInput="blue" stepKey="fillSwatchForStoreView2"/>
-
         <click selector="{{AdminProductFormNewAttributeSection.saveAttribute}}" stepKey="saveAttribute"/>
         <switchToIFrame stepKey="switchOutFromIframe"/>
-
         <click selector="{{AdminCreateProductConfigurationsPanel.filters}}" stepKey="clickFilters"/>
         <fillField selector="{{AdminCreateProductConfigurationsPanel.attributeCode}}" userInput="{{VisualSwatchProductAttribute.attribute_code}}" stepKey="fillFilterAttributeCodeField"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.applyFilters}}" stepKey="clickApplyFiltersButton"/>
@@ -111,7 +106,6 @@
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.done}}" stepKey="doneAssignSources1"/>
         <fillField selector="{{AdminConfigurableProductAssignSourcesSlideOut.quantityPerSource('0')}}"
                    userInput="100" stepKey="fillQuantityForCustomSource1"/>
-
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="navigateToFourthStep"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="doneGeneratingConfigurableVariations"/>
         <waitForPageLoad stepKey="waitForLoadProductPage"/>
@@ -121,15 +115,12 @@
         <click selector="{{AdminProductFormConfigurationsSection.variationProductLinkByName('red')}}" stepKey="clickOnFirstProductLink"/>
         <switchToNextTab stepKey="switchToConfigChildProductPage"/>
         <waitForPageLoad stepKey="waitForProductPageLoad"/>
-
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="0" stepKey="fillSourceQuantityField1"/>
         <selectOption selector="{{AdminProductSourcesGrid.rowStatus('0')}}" userInput="Out of Stock" stepKey="setWhiteConfigurableVariationToOutOfStock"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveSimpleProduct"/>
         <closeTab stepKey="closeConfigChildProductPage"/>
-
         <!-- Display out of stock product -->
         <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
-
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="GoToProductPage">
             <argument name="productUrl" value="{{ApiConfigurableProduct.urlKey}}"/>
         </actionGroup>
