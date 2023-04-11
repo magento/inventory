@@ -35,7 +35,6 @@
                 <requiredEntity createDataKey="stock"/>
                 <requiredEntity createDataKey="source"/>
             </createData>
-
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <!-- Add Category and source to Simple Product-->
             <amOnPage url="{{AdminProductEditPage.url($$createFirstSimpleProduct.id$$)}}" stepKey="goToSimpleProductEditPage"/>
@@ -52,7 +51,6 @@
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField1"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>
-
             <!-- Add Category and source to Virtual Product-->
             <amOnPage url="{{AdminProductEditPage.url($$createVirtualProduct.id$$)}}" stepKey="goToVirtualProductEditPage"/>
             <waitForPageLoad stepKey="waitForVirtualProductEditPage"/>
@@ -68,7 +66,6 @@
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField2"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateVirtualProduct"/>
-
             <!-- Add one more product, update status and  qty to Grouped Product-->
             <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="openCreateGroupedProductEditPage"/>
             <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
@@ -128,28 +125,21 @@
         </actionGroup>
         <waitForPageLoad stepKey="waitForProductFilterLoad2"/>
         <see selector="{{AdminProductGridSection.table}}" userInput="$$createVirtualProduct.name$$" stepKey="seeVirtualProduct"/>
-
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront"/>
-
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
         <dontSee userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="dontSeeGroupedProduct"/>
-
         <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="goToProductEditPage"/>
         <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
-        
         <magentoCLI stepKey="reindex" command="indexer:reindex"/>
         <magentoCLI stepKey="flushCache" command="cache:flush"/>
-
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
-
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory2">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
         <see userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="seeGroupedProduct"/>
-
     </test>
 </tests>
