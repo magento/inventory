@@ -57,7 +57,7 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100" stepKey="setDefaultStockQuantity"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveProduct"/>
         <!--Create order with downloadable product-->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>
