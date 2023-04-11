@@ -61,8 +61,8 @@
     <see selector="{{AdminProductFormSection.successMessage}}" userInput="You saved the product." stepKey="seeAssertVirtualProductSuccessMessage"/>
 
     <!-- Do reindex -->
-    <magentoCLI stepKey="reindexForAssignedSources1" command="indexer:reindex"/>
-    <magentoCLI stepKey="flushCacheForAssignedSources1" command="cache:flush"/>
+    <magentoCLI command="indexer:reindex" stepKey="performReindex1"/>
+    <magentoCLI command="cache:flush" stepKey="cleanCache1"/>
 
     <!-- Check the product is not displayed in the front end after the search -->
     <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage"/>
@@ -76,15 +76,16 @@
 
     <!-- Set Display Out of Stock to YES -->
     <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
-
+    <makeScreenshot userInput="beforeflush" stepKey="beforeflush1"/>
     <!-- Do reindex -->
-    <magentoCLI stepKey="reindexForAssignedSources2" command="indexer:reindex"/>
-    <magentoCLI stepKey="flushCacheForAssignedSources2" command="cache:flush"/>
+    <magentoCLI command="indexer:reindex" stepKey="performReindex2"/>
+    <magentoCLI command="cache:flush" stepKey="cleanCache2"/>
 
     <!-- Check the product is displayed in the front end after the search without any errors -->
     <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToHomePage1"/>
     <fillField selector="{{StorefrontQuickSearchResultsSection.searchTextBox}}" userInput="$$createProduct.sku$$" stepKey="searchProduct2"/>
     <waitForPageLoad stepKey="waitForSearchTextBox1"/>
+    <makeScreenshot userInput="afterflush" stepKey="afterflush1"/>
     <makeScreenshot userInput="scrnsht4" stepKey="screenshotPage4"/>
     <click selector="{{StorefrontQuickSearchResultsSection.searchTextBoxButton}}" stepKey="clickSearchTextBoxButton1"/>
     <waitForPageLoad stepKey="waitForSearchResultToLoad1"/>
