@@ -53,7 +53,7 @@
 
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveVirtualProduct1"/>
 
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrderExistingCustomer1">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrderExistingCustomer1">
             <argument name="customer" value="Simple_US_Customer"/>
         </actionGroup>
 

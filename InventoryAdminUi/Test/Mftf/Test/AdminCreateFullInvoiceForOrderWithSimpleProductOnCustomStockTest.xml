@@ -56,7 +56,7 @@
         </after>
 
         <!--- Place order and create invoice. -->
-        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
+        <actionGroup ref="AdminNavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
         <waitForPageLoad stepKey="waitForPageLoad"/>
         <fillField selector="{{AdminOrderFormAccountSection.email}}" userInput="{{Msi_US_Customer.email}}" stepKey="fillEmailField"/>
         <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addProductToOrder">

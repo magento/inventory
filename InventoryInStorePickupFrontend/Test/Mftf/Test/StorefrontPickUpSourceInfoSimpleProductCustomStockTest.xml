@@ -20,6 +20,7 @@
         </annotations>
 
         <before>
+            <magentoCLI command="config:set {{MediaGalleryConfigDataDisabled.path}} {{MediaGalleryConfigDataDisabled.value}}" stepKey="enabledOldMediaGallery"/>
             <!--Set Distance Provider for Distance Based SSA to offline-->
             <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
             <!--Enable 'In Store Pickup' shipping method.-->
@@ -73,6 +74,7 @@
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
         </before>
         <after>
+            <wait time="10" stepKey="disabledOldMediaGallery"/>
             <actionGroup ref="NavigateToMediaGalleryActionGroup" stepKey="navigateToMediaGallery"/>
             <actionGroup ref="AdminExpandMediaGalleryFolderActionGroup" stepKey="expandStorageRootFolder">
                 <argument name="FolderName" value="Storage Root"/>
@@ -100,6 +102,7 @@
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
             <magentoCron groups="index" stepKey="reindex"/>
+            <magentoCLI command="config:set {{MediaGalleryConfigDataEnabled.path}} {{MediaGalleryConfigDataEnabled.value}}" stepKey="disableOldMediaGallery"/>
         </after>
 
         <!--Add product to cart.-->
