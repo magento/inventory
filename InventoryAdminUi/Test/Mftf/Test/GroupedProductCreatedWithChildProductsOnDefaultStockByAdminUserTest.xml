@@ -42,12 +42,14 @@
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToSimpleProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
-           <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
+            <!-- Unassign default source-->
+            <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+            <!-- Fill qty for source in source-->
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField1"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateFirstSimpleProduct"/>
@@ -57,16 +59,18 @@
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToVirtualProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
+            <!-- Unassign default source-->
             <actionGroup ref="UnassignSourceFromProductActionGroup" stepKey="unassignDefaultSourceFromProduct2">
                 <argument name="sourceCode" value="{{_defaultSource.name}}"/>
             </actionGroup>
             <actionGroup ref="AdminAssignSourceToProductAndSetSourceQuantityActionGroup" stepKey="assignCreatedSourceToFirstChildProduct2">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+            <!-- Fill qty for source in source-->
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="100"
                        stepKey="fillSourceQtyField2"/>
             <actionGroup ref="SaveProductFormActionGroup" stepKey="saveCreateVirtualProduct"/>
-            <!-- Add one more product, update status and  qty to Grouped Product-->
+            <!-- Add virtual product, update status and  qty to Grouped Product-->
             <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="openCreateGroupedProductEditPage"/>
             <click selector="{{AdminProductFormGroupedProductsSection.addProductsToGroup}}" stepKey="clickAddProductsToGroup"/>
             <waitForElementVisible selector="{{AdminAddProductsToGroupPanel.filters}}" stepKey="waitForGroupedProductModal"/>
@@ -77,19 +81,22 @@
             <click selector="{{AdminAddProductsToGroupPanel.addSelectedProducts}}" stepKey="clickAddSelectedGroupProducts"/>
             <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="Out of Stock" stepKey="selectStockStatus1"/>
             <waitForLoadingMaskToDisappear stepKey="waitForProductsAssignedToGroupedProduct" after="clickAddSelectedGroupProducts"/>
+            <!-- Add category-->
             <actionGroup ref="SetCategoryByNameActionGroup" stepKey="addCategoryToGroupedProduct">
                 <argument name="categoryName" value="$$createCategory.name$$"/>
             </actionGroup>
+            <!-- Fill qty as 2 for virtual product-->
             <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForVirtualProduct">
                 <argument name="productName" value="$$createVirtualProduct.name$$"/>
                 <argument name="qty" value="{{twoPiecesAddToCart.value}}"/>
             </actionGroup>
+            <!-- Fill qty as 2 for simple product-->
             <actionGroup ref="FillDefaultQuantityForLinkedToGroupProductInGridActionGroup" stepKey="fillDefaultQtyForSimpleProduct">
                 <argument name="productName" value="$$createFirstSimpleProduct.name$$"/>
                 <argument name="qty" value="{{twoPiecesAddToCart.value}}"/>
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
-            <!-- Reindex and Flush Magento-->
+            <!-- Reindex and Flush Magento as sources and stocks were updated for products-->
             <magentoCLI stepKey="reindex" command="indexer:reindex"/>
             <magentoCLI stepKey="flushCache" command="cache:flush"/>
         </before>
@@ -99,10 +106,12 @@
             <deleteData createDataKey="createVirtualProduct" stepKey="deleteVirtualProduct"/>
             <deleteData createDataKey="createGroupedProduct" stepKey="deleteGroupedProduct"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <!-- Unassign main website with default stock-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
+            <!-- Delete custom stock-->
             <deleteData createDataKey="stock" stepKey="deleteCustomStock"/>
             <!--Disable all sources.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
@@ -125,21 +134,25 @@
         </actionGroup>
         <waitForPageLoad stepKey="waitForProductFilterLoad2"/>
         <see selector="{{AdminProductGridSection.table}}" userInput="$$createVirtualProduct.name$$" stepKey="seeVirtualProduct"/>
+        <!-- Go to storefront and assert grouped product is absent-->
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
         <dontSee userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="dontSeeGroupedProduct"/>
+        <!-- Go to admin product edit page and update stock status as In stock-->
         <amOnPage url="{{AdminProductEditPage.url($$createGroupedProduct.id$$)}}" stepKey="goToProductEditPage"/>
         <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
+        <!-- Reindex and flush cache as updating status-->
         <magentoCLI stepKey="reindex" command="indexer:reindex"/>
         <magentoCLI stepKey="flushCache" command="cache:flush"/>
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory2">
             <argument name="categoryName" value="$$createCategory.name$$"/>
         </actionGroup>
+        <!-- Go to storefront and assert grouped product is present-->
         <see userInput="$$createGroupedProduct.name$$" selector="{{StorefrontCategoryMainSection.productName}}" stepKey="seeGroupedProduct"/>
     </test>
 </tests>
