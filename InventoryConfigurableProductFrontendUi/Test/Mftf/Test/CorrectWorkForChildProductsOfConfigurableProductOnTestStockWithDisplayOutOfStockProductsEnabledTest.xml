@@ -43,7 +43,7 @@
             <actionGroup ref="ResetAdminDataGridToDefaultViewActionGroup" stepKey="clearFilters"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
         </after>
-
+       
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductIndexPage"/>
         <actionGroup ref="GoToCreateProductPageActionGroup" stepKey="goToCreateConfigurableProduct">
             <argument name="product" value="ApiConfigurableProduct"/>
@@ -89,6 +89,7 @@
         <fillField selector="{{AdminCreateNewProductAttributeSection.visualSwatchAdmin('1')}}" userInput="blue" stepKey="fillSwatchForStoreView2"/>
         <click selector="{{AdminProductFormNewAttributeSection.saveAttribute}}" stepKey="saveAttribute"/>
         <switchToIFrame stepKey="switchOutFromIframe"/>
+        <!-- Admin create configurations -->
         <click selector="{{AdminCreateProductConfigurationsPanel.filters}}" stepKey="clickFilters"/>
         <fillField selector="{{AdminCreateProductConfigurationsPanel.attributeCode}}" userInput="{{VisualSwatchProductAttribute.attribute_code}}" stepKey="fillFilterAttributeCodeField"/>
         <click selector="{{AdminCreateProductConfigurationsPanel.applyFilters}}" stepKey="clickApplyFiltersButton"/>
@@ -99,6 +100,7 @@
         <checkOption selector="{{AdminCreateProductConfigurationsPanel.applySingleQuantityToEachSkus}}" stepKey="clickOnApplySingleQuantityToEachSku"/>
         <click selector="{{AdminConfigurableProductAssignSourcesSlideOut.assignSources}}" stepKey="openSelectSourcesModalWindow1"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearSourcesFilter"/>
+        <!-- Select source and fill qty-->
         <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomSourceByNameForAssignment">
             <argument name="keyword" value="$$source.source[name]$$"/>
         </actionGroup>
@@ -110,8 +112,10 @@
         <click selector="{{AdminCreateProductConfigurationsPanel.next}}" stepKey="doneGeneratingConfigurableVariations"/>
         <waitForPageLoad stepKey="waitForLoadProductPage"/>
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableProduct"/>
+        <!-- click confirm on popup-->
         <conditionalClick selector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" dependentSelector="{{AdminChooseAffectedAttributeSetPopup.confirm}}" visible="true" stepKey="confirmDefaultAttributeSetForConfigurableProduct"/>
         <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductSavedMessage"/>
+        <!-- Go to child product Red and update qty as 0-->
         <click selector="{{AdminProductFormConfigurationsSection.variationProductLinkByName('red')}}" stepKey="clickOnFirstProductLink"/>
         <switchToNextTab stepKey="switchToConfigChildProductPage"/>
         <waitForPageLoad stepKey="waitForProductPageLoad"/>
