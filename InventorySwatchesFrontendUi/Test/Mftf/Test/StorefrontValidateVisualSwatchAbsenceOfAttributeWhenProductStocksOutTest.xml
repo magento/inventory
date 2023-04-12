@@ -34,7 +34,7 @@
         </before>
 
         <after>
-            <!-- Delete the configurable product attribute -->
+            <!-- Delete the configurable product with all child products of it -->
             <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableProductOption1">
                 <argument name="productName" value="{{ApiConfigurableProduct.name}}"/>
             </actionGroup>
@@ -44,14 +44,16 @@
             <actionGroup ref="AdminDeleteConfigProductActionGroup" stepKey="deleteConfigurableProductMain">
                 <argument name="productName" value="{{ApiConfigurableProduct.name}}"/>
             </actionGroup>
+            <!-- Delete the product attribute -->
             <actionGroup ref="AdminDeleteProductAttributeByLabelActionGroup" stepKey="deleteProductAttribute">
                 <argument name="productAttributeLabel" value="{{visualSwatchAttribute.default_label}}"/>
             </actionGroup>
+            <!-- Delete the created customer -->
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
                 <argument name="stockName" value="{{BasicMsiStock1.name}}"/>
             </actionGroup>
-            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource1">
+            <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource">
                 <argument name="sourceCode" value="$$createSource1.source[source_code]$$"/>
             </actionGroup>
             <actionGroup ref="DeleteCategoryActionGroup" stepKey="deleteCategory">
