@@ -71,10 +71,13 @@ class APISourceItemIndexerPlugin
     {
         if ($object instanceof Product && $object->getTypeId() == Configurable::TYPE_CODE) {
             $childProductIds = $object->getTypeInstance()->getChildrenIds($object->getId());
+            $sourceItemIds = [];
             foreach ($childProductIds as $productId) {
+                if (!$productId) {
+                    continue;
+                }
                 $childProductSku = $this->skuProvider->execute($productId)[key($productId)];
                 $sourceItems = $this->getSourceItemsBySku->execute($childProductSku);
-                $sourceItemIds = [];
                 foreach ($sourceItems as $key => $sourceItem) {
                     if ($sourceItem->getSourceCode() === $this->defaultSourceProvider->getCode()) {
                         unset($sourceItems[$key]);
@@ -83,9 +86,9 @@ class APISourceItemIndexerPlugin
                     $sourceItem->setSku($object->getSku());
                     $sourceItemIds[] = $sourceItem->getId();
                 }
-                if ($sourceItemIds) {
-                    $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
-                }
+            }
+            if ($sourceItemIds) {
+                $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
             }
         }
 
