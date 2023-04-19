@@ -15,7 +15,7 @@ For more detailed information on contribution please read our [beginners guide](
 
 ## Contribution requirements
 
-1. Contributions must adhere to the [Magento coding standards](https://devdocs.magento.com/guides/v2.4/coding-standards/bk-coding-standards.html).
+1. Contributions must adhere to the [Magento coding standards](https://developer.adobe.com/commerce/php/coding-standards/).
 1. Pull requests (PRs) must be accompanied by a meaningful description of their purpose. Comprehensive descriptions increase the chances of a pull request being merged quickly and without additional clarification requests.
 1. Commits must be accompanied by meaningful commit messages. Please see the [Magento Inventory Pull Request Template](https://github.com/magento/inventory/blob/1.1-develop/.github/PULL_REQUEST_TEMPLATE.md) for more information.
 1. PRs which include bug fixes must be accompanied with a step-by-step description of how to reproduce the bug.
