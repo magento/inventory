@@ -5,6 +5,7 @@
  */
 declare(strict_types=1);
 
+// @codingStandardsIgnoreStart
 namespace Magento\InventoryConfigurableProductIndexer\Test\Unit\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Catalog\Model\Product;
@@ -20,6 +21,7 @@ use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemInd
 use Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\APISourceItemIndexerPlugin;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+// @codingStandardsIgnoreEnd
 
 class APISourceItemIndexerPluginTest extends TestCase
 {
