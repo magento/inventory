@@ -58,11 +58,14 @@ class APISourceItemIndexerPlugin
     }
 
     /**
+     * Once the product has been saved, perform stock reindex
+     *
      * @param ProductResource $subject
      * @param $result
      * @param AbstractModel $object
      * @return mixed
      * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterSave(ProductResource $subject, $result, AbstractModel $object)
     {
