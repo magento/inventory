@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="DisableTheProductActionGroup">
+        <annotations>
+            <description>Disables the product</description>
+        </annotations>
+        <conditionalClick selector="{{AdminProductFormBundleSection.enableDisableToggleOn}}" dependentSelector="{{AdminProductFormBundleSection.enableDisableToggleOn}}" visible="true" stepKey="disableTheProduct"/>
+        <seeElement selector="{{AdminProductFormBundleSection.enableDisableToggleOff}}" stepKey="verifiesTheProductIsDisabled"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveConfigurableProductPostDisabling"/>
+        <seeElement selector="{{AdminProductMessagesSection.successMessage}}" stepKey="checkProductSavedMessagePostDisabling"/>
+    </actionGroup>
+</actionGroups>

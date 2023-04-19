@@ -9,6 +9,8 @@
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Suite/etc/suiteSchema.xsd">
     <suite name="InventoryMultiModeSuite">
         <before>
+	    <magentoCLI command="config:set {{EnableFlatRateConfigData.path}} {{EnableFlatRateConfigData.value}}" stepKey="enableFlatRate"/>
+
             <actionGroup ref="AdminDisableWYSIWYGActionGroup" stepKey="disableWYSYWYG"/>
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement"/>
             <magentoCron groups="index" stepKey="reindex"/>
@@ -24,6 +26,8 @@
             <group name="single_mode"/>
         </exclude>
         <after>
+	    <magentoCLI command="config:set {{DisableFlatRateConfigData.path}} {{DisableFlatRateConfigData.value}}" stepKey="disableFlatRate"/>
+
             <actionGroup ref="AdminEnableWYSIWYGActionGroup" stepKey="enableWYSYWYG"/>
             <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableStockManagement"/>
             <magentoCron groups="index" stepKey="reindex"/>

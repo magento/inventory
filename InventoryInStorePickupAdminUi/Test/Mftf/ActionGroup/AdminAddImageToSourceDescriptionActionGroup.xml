@@ -14,7 +14,7 @@
 
         <click selector="{{AdminEditSourcePickupLocationSection.tabName}}" stepKey="openPickupLocationTab"/>
         <waitForElement selector="{{AdminEditSourcePickupLocationSection.InsertImageIcon}}" stepKey="waitForWYSIWYG"/>
-        <scrollTo selector="{{AdminEditSourcePickupLocationSection.InsertImageIcon}}" stepKey="scrollToDescription" />
+        <scrollTo selector="{{AdminEditSourcePickupLocationSection.InsertImageIcon}}" x="0" y="-150" stepKey="scrollToDescription" />
         <click selector="{{AdminEditSourcePickupLocationSection.InsertImageIcon}}" stepKey="clickInsertImageIcon" />
         <waitForPageLoad stepKey="waitForImageModalWindow" />
     </actionGroup>
