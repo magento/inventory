@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Magento\InventoryConfigurableProductIndexer\Test\Unit\Plugin\InventoryIndexer\Indexer\Strategy\Sync;
+namespace Magento\InventoryConfigurableProductIndexer\Test\Unit\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\AbstractType;
