@@ -73,7 +73,7 @@ class APISourceItemIndexerPlugin
         AbstractResource $result,
         AbstractModel    $object
     ): AbstractResource {
-        if ($object instanceof Product && $object->getTypeId() == Configurable::TYPE_CODE) {
+        if ($object instanceof Product) {
             $childProductIds = $object->getTypeInstance()->getChildrenIds($object->getId());
             $sourceItemIds = [];
             foreach ($childProductIds as $productIds) {
