@@ -10,7 +10,6 @@ namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\In
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\AbstractResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
-use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;

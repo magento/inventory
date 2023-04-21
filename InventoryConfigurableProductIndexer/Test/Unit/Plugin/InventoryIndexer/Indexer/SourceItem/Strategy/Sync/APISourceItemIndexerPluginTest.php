@@ -12,7 +12,6 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\ResourceModel\AbstractResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
-use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Inventory\Model\SourceItem;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
@@ -21,6 +20,7 @@ use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemInd
 use Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\APISourceItemIndexerPlugin;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+
 // @codingStandardsIgnoreEnd
 
 class APISourceItemIndexerPluginTest extends TestCase
@@ -81,7 +81,6 @@ class APISourceItemIndexerPluginTest extends TestCase
                 ]
             );
 
-        $object->expects($this->once())->method('getTypeId')->willReturn(Configurable::TYPE_CODE);
         $object->expects($this->once())->method('getTypeInstance')->willReturn($typeInstance);
         $object->expects($this->once())->method('getId')->willReturn(1);
         $this->defaultSourceProvider->expects($this->exactly(2))->method('getCode')->willreturn('default');
