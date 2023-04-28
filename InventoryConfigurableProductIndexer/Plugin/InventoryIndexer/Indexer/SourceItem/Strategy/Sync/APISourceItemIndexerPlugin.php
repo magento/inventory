@@ -13,9 +13,12 @@ use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
+use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
+use Magento\InventoryCache\Model\FlushCacheByProductIds;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer;
+use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 
 class APISourceItemIndexerPlugin
 {
@@ -40,21 +43,45 @@ class APISourceItemIndexerPlugin
     private GetSkusByProductIdsInterface $skuProvider;
 
     /**
+     * @var FlushCacheByProductIds
+     */
+    private FlushCacheByProductIds $flushCacheByIds;
+
+    /**
+     * @var FlushCacheByCategoryIds
+     */
+    private FlushCacheByCategoryIds $flushCategoryByCategoryIds;
+
+    /**
+     * @var GetCategoryIdsByProductIds
+     */
+    private GetCategoryIdsByProductIds $getCategoryIdsByProductIds;
+
+    /**
      * @param SourceItemIndexer $configurableProductsSourceItemIndexer
      * @param GetSourceItemsBySkuInterface $getSourceItemsBySku
      * @param DefaultSourceProviderInterface $defaultSourceProvider
      * @param GetSkusByProductIdsInterface $getSkusByProductIdsInterface
+     * @param FlushCacheByProductIds $flushCacheByIds
+     * @param FlushCacheByCategoryIds $flushCategoryByCategoryIds
+     * @param GetCategoryIdsByProductIds $getCategoryIdsByProductIds
      */
     public function __construct(
         SourceItemIndexer              $configurableProductsSourceItemIndexer,
         GetSourceItemsBySkuInterface   $getSourceItemsBySku,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        GetSkusByProductIdsInterface   $getSkusByProductIdsInterface
+        GetSkusByProductIdsInterface   $getSkusByProductIdsInterface,
+        FlushCacheByProductIds         $flushCacheByIds,
+        FlushCacheByCategoryIds        $flushCategoryByCategoryIds,
+        GetCategoryIdsByProductIds     $getCategoryIdsByProductIds
     ) {
         $this->configurableProductsSourceItemIndexer = $configurableProductsSourceItemIndexer;
         $this->getSourceItemsBySku = $getSourceItemsBySku;
         $this->defaultSourceProvider = $defaultSourceProvider;
         $this->skuProvider = $getSkusByProductIdsInterface;
+        $this->flushCacheByIds = $flushCacheByIds;
+        $this->flushCategoryByCategoryIds = $flushCategoryByCategoryIds;
+        $this->getCategoryIdsByProductIds = $getCategoryIdsByProductIds;
     }
 
     /**
@@ -74,12 +101,13 @@ class APISourceItemIndexerPlugin
     ): AbstractResource {
         if ($object instanceof Product) {
             $childProductIds = $object->getTypeInstance()->getChildrenIds($object->getId());
-            $sourceItemIds = [];
+            $sourceItemIds = $productsIdsToFlush = [];
             foreach ($childProductIds as $productIds) {
                 if (empty($productIds)) {
                     continue;
                 }
                 foreach ($productIds as $productId) {
+                    $productsIdsToFlush[] = $productId;
                     $childProductSku = $this->skuProvider->execute([$productId])[$productId];
                     $sourceItems = $this->getSourceItemsBySku->execute($childProductSku);
                     foreach ($sourceItems as $key => $sourceItem) {
@@ -94,6 +122,9 @@ class APISourceItemIndexerPlugin
             }
             if ($sourceItemIds) {
                 $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
+                $categoryIds = $this->getCategoryIdsByProductIds->execute($productsIdsToFlush);
+                $this->flushCacheByIds->execute($productsIdsToFlush);
+                $this->flushCategoryByCategoryIds->execute($categoryIds);
             }
         }
 
