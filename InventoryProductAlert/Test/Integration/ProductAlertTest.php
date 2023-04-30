@@ -169,7 +169,7 @@ class ProductAlertTest extends TestCase
         $this->changeProductIsInStock('eu-2', 1);
         $this->changeProductIsInStock('default', 1);
         $this->observer->process();
-        sleep(20); // timeout to processing Magento queue
+        sleep(30); // timeout to processing Magento queue
         $this->waitingForProcessAlertsByConsumer(2);
 
         $stockCollection = $this->stockCollectionFactory->create();
