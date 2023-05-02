@@ -25,7 +25,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 // @codingStandardsIgnoreEnd
-
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class APISourceItemIndexerPluginTest extends TestCase
 {
     /**
