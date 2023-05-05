@@ -89,7 +89,7 @@ class UpdateLegacyStockStatusForConfigurableProduct
                 ->execute([$stockItem->getProductId()])[$stockItem->getProductId()];
 
             if ($stockItem->getStockStatusChangedAuto() ||
-                ($this->stockStatusChange($productSku)
+                ($this->stockStatusChange($stockItem)
                     && $this->isConfigurableProductChildrenSalable->execute($productSku, Stock::DEFAULT_STOCK_ID)
                 )
             ) {
@@ -107,11 +107,11 @@ class UpdateLegacyStockStatusForConfigurableProduct
     /**
      * Checks if configurable product stock item status was changed
      *
-     * @param string $sku
+     * @param StockItem $stockItem
      * @return bool
      */
-    private function stockStatusChange(string $sku): bool
+    private function stockStatusChange(StockItem $stockItem): bool
     {
-        return $this->getLegacyStockItem->execute($sku)->getIsInStock() == Stock::STOCK_OUT_OF_STOCK;
+        return $stockItem->getOrigData('is_in_stock') == Stock::STOCK_OUT_OF_STOCK;
     }
 }
