@@ -13,18 +13,15 @@ use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\ResourceModel\AbstractResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Inventory\Model\SourceItem;
-use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
-use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
-use Magento\InventoryCache\Model\FlushCacheByProductIds;
+use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer;
 use Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\APISourceItemIndexerPlugin;
-use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-
 // @codingStandardsIgnoreEnd
+
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -51,21 +48,6 @@ class APISourceItemIndexerPluginTest extends TestCase
     private GetSkusByProductIdsInterface $skuProvider;
 
     /**
-     * @var FlushCacheByProductIds|MockObject
-     */
-    private FlushCacheByProductIds $flushCacheByIds;
-
-    /**
-     * @var FlushCacheByCategoryIds|MockObject
-     */
-    private FlushCacheByCategoryIds $flushCategoryByCategoryIds;
-
-    /**
-     * @var GetCategoryIdsByProductIds|MockObject
-     */
-    private GetCategoryIdsByProductIds $getCategoryIdsByProductIds;
-
-    /**
      * @var APISourceItemIndexerPlugin|MockObject
      */
     private APISourceItemIndexerPlugin $plugin;
@@ -76,17 +58,12 @@ class APISourceItemIndexerPluginTest extends TestCase
         $this->getSourceItemsBySku = $this->createMock(GetSourceItemsBySkuInterface::class);
         $this->defaultSourceProvider = $this->createMock(DefaultSourceProviderInterface::class);
         $this->skuProvider = $this->createMock(GetSkusByProductIdsInterface::class);
-        $this->flushCacheByIds = $this->createMock(FlushCacheByProductIds::class);
-        $this->flushCategoryByCategoryIds = $this->createMock(FlushCacheByCategoryIds::class);
-        $this->getCategoryIdsByProductIds = $this->createMock(GetCategoryIdsByProductIds::class);
+
         $this->plugin = new APISourceItemIndexerPlugin(
             $this->configurableProductsSourceItemIndexer,
             $this->getSourceItemsBySku,
             $this->defaultSourceProvider,
-            $this->skuProvider,
-            $this->flushCacheByIds,
-            $this->flushCategoryByCategoryIds,
-            $this->getCategoryIdsByProductIds
+            $this->skuProvider
         );
 
         parent::setUp();
@@ -112,18 +89,15 @@ class APISourceItemIndexerPluginTest extends TestCase
         $this->defaultSourceProvider->expects($this->exactly(2))->method('getCode')->willreturn('default');
         $childSourceItem1 = $this->getSourceItem(1);
         $childSourceItem2 = $this->getSourceItem(2);
-        $this->skuProvider->expects($this->exactly(2))
+        $this->skuProvider->expects($this->once())
             ->method('execute')
-            ->withConsecutive([[11]], [[12]])
-            ->willReturnOnConsecutiveCalls([11 => 'child-1'], [12 => 'child-2']);
+            ->with([11 => '11', 12 => '12'])
+            ->willReturn([11 => 'child-1', 12 => 'child-2']);
         $this->getSourceItemsBySku->expects($this->exactly(2))
             ->method('execute')
             ->withConsecutive(['child-1'], ['child-2'])
             ->willReturnOnConsecutiveCalls([$childSourceItem1], [$childSourceItem2]);
         $this->configurableProductsSourceItemIndexer->expects($this->once())->method('executeList')->with([1, 2]);
-        $this->getCategoryIdsByProductIds->expects($this->once())->method('execute');
-        $this->flushCacheByIds->expects($this->once())->method('execute');
-        $this->flushCategoryByCategoryIds->expects($this->once())->method('execute');
 
         $interceptorResult = $this->plugin->afterSave($subject, $result, $object);
         $this->assertSame($interceptorResult, $result);
