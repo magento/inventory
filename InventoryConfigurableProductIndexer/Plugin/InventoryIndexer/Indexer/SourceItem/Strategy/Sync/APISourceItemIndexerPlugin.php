@@ -9,6 +9,7 @@ namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\In
 
 use Magento\Catalog\Model\ResourceModel\AbstractResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
@@ -71,7 +72,32 @@ class APISourceItemIndexerPlugin
         AbstractResource $result,
         AbstractModel    $object
     ): AbstractResource {
+        if ($object->getTypeId() != Configurable::TYPE_CODE) {
+            return $result;
+        }
+        $existingStockData = $object->getQuantityAndStockStatus();
+        if (!$object->getStockData() && !empty($existingStockData)) {
+            $object->setStockData(['is_in_stock' => $existingStockData['is_in_stock']]);
+        }
         $childProductIds = $object->getTypeInstance()->getChildrenIds($object->getId());
+        $sourceItemIds = $this->getProductSourceItemIds($childProductIds);
+        if ($sourceItemIds) {
+            $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
+            $object->cleanModelCache();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Extracts product source item ids
+     *
+     * @param array $childProductIds
+     * @return array
+     * @throws NoSuchEntityException
+     */
+    private function getProductSourceItemIds(array $childProductIds): array
+    {
         $sourceItemIds = [];
         foreach ($childProductIds as $productIds) {
             if (empty($productIds)) {
@@ -88,10 +114,7 @@ class APISourceItemIndexerPlugin
                 }
             }
         }
-        if ($sourceItemIds) {
-            $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
-        }
 
-        return $result;
+        return $sourceItemIds;
     }
 }

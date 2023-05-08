@@ -12,8 +12,9 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\ResourceModel\AbstractResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Inventory\Model\SourceItem;
-use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;;
+use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\InventoryConfigurableProductIndexer\Indexer\SourceItem\SourceItemIndexer;
@@ -74,6 +75,9 @@ class APISourceItemIndexerPluginTest extends TestCase
         $subject = $this->createMock(ProductResource::class);
         $result = $this->createMock(AbstractResource::class);
         $object = $this->createMock(Product::class);
+        $object->expects($this->once())->method('getTypeId')->willReturn(Configurable::TYPE_CODE);
+        $object->expects($this->once())->method('getQuantityAndStockStatus')->willReturn(['is_in_stock' => true]);
+        $object->expects($this->once())->method('setStockData')->with(['is_in_stock' => true]);
         $typeInstance = $this->createMock(AbstractType::class);
         $typeInstance->expects($this->once())
             ->method('getChildrenIds')
@@ -86,6 +90,7 @@ class APISourceItemIndexerPluginTest extends TestCase
 
         $object->expects($this->once())->method('getTypeInstance')->willReturn($typeInstance);
         $object->expects($this->once())->method('getId')->willReturn(1);
+        $object->expects($this->once())->method('cleanModelCache');
         $this->defaultSourceProvider->expects($this->exactly(2))->method('getCode')->willreturn('default');
         $childSourceItem1 = $this->getSourceItem(1);
         $childSourceItem2 = $this->getSourceItem(2);
