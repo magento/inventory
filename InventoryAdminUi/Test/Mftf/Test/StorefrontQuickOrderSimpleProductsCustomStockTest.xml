@@ -17,6 +17,7 @@
             <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/987821/scenarios/3356756"/>
             <group value="msi_b2b"/>
             <group value="multi_mode"/>
+            <group value="cloud"/>
         </annotations>
         <before>
             <createData entity="Simple_US_Customer" stepKey="customer"/>

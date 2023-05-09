@@ -15,6 +15,7 @@
             <description value="Products Sorting in Storeview scope in Visual Merchandiser on Category page in Admin (EE)"/>
             <testCaseId value="ACQE-6610"/>
             <severity value="CRITICAL"/>
+            <group value="cloud"/>
         </annotations>
 
         <before>
