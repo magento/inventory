@@ -10,7 +10,6 @@ namespace Magento\InventoryConfigurableProductIndexer\Test\Unit\Plugin\Inventory
 
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\AbstractType;
-use Magento\Catalog\Model\ResourceModel\AbstractResource;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Inventory\Model\SourceItem;

@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
-use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
@@ -90,7 +90,7 @@ class APISourceItemIndexerPlugin
      *
      * @param ProductResource $subject
      * @param ProductResource $result
-     * @param Product $product
+     * @param AbstractModel $product
      * @return mixed
      * @throws NoSuchEntityException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -98,7 +98,7 @@ class APISourceItemIndexerPlugin
     public function afterSave(
         ProductResource $subject,
         ProductResource $result,
-        Product   $product
+        AbstractModel   $product
     ): ProductResource {
         if ($product->getTypeId() != Configurable::TYPE_CODE) {
             return $result;
