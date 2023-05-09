@@ -73,11 +73,9 @@ class APISourceItemIndexerPluginTest extends TestCase
     public function testAfterSave()
     {
         $subject = $this->createMock(ProductResource::class);
-        $result = $this->createMock(AbstractResource::class);
+        $result = $this->createMock(ProductResource::class);
         $object = $this->createMock(Product::class);
         $object->expects($this->once())->method('getTypeId')->willReturn(Configurable::TYPE_CODE);
-        $object->expects($this->once())->method('getQuantityAndStockStatus')->willReturn(['is_in_stock' => true]);
-        $object->expects($this->once())->method('setStockData')->with(['is_in_stock' => true]);
         $typeInstance = $this->createMock(AbstractType::class);
         $typeInstance->expects($this->once())
             ->method('getChildrenIds')

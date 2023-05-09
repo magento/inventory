@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\InventoryConfigurableProductIndexer\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 
-use Magento\Catalog\Model\ResourceModel\AbstractResource;
+use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryApi\Api\GetSourceItemsBySkuInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
@@ -58,38 +57,6 @@ class APISourceItemIndexerPlugin
     }
 
     /**
-     * Once the product has been saved, perform stock reindex
-     *
-     * @param ProductResource $subject
-     * @param AbstractResource $result
-     * @param AbstractModel $object
-     * @return AbstractResource
-     * @throws NoSuchEntityException
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function afterSave(
-        ProductResource  $subject,
-        AbstractResource $result,
-        AbstractModel    $object
-    ): AbstractResource {
-        if ($object->getTypeId() != Configurable::TYPE_CODE) {
-            return $result;
-        }
-        $existingStockData = $object->getQuantityAndStockStatus();
-        if (!$object->getStockData() && !empty($existingStockData)) {
-            $object->setStockData(['is_in_stock' => $existingStockData['is_in_stock']]);
-        }
-        $childProductIds = $object->getTypeInstance()->getChildrenIds($object->getId());
-        $sourceItemIds = $this->getProductSourceItemIds($childProductIds);
-        if ($sourceItemIds) {
-            $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
-            $object->cleanModelCache();
-        }
-
-        return $result;
-    }
-
-    /**
      * Extracts product source item ids
      *
      * @param array $childProductIds
@@ -116,5 +83,36 @@ class APISourceItemIndexerPlugin
         }
 
         return $sourceItemIds;
+    }
+
+    /**
+     * Once the product has been saved, perform stock reindex
+     *
+     * @param ProductResource $subject
+     * @param ProductResource $result
+     * @param Product $product
+     * @return mixed
+     * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function afterSave(
+        ProductResource $subject,
+        ProductResource $result,
+        Product   $product
+    ): ProductResource {
+        if ($product->getTypeId() != Configurable::TYPE_CODE) {
+            return $result;
+        }
+
+        $childProductIds = $product->getTypeInstance()->getChildrenIds($product->getId());
+        $sourceItemIds = $this->getProductSourceItemIds($childProductIds);
+        if ($sourceItemIds) {
+            $this->configurableProductsSourceItemIndexer->executeList($sourceItemIds);
+            $product->setIsChangedCategories(true);
+            $product->setAffectedCategoryIds($product->getCategoryIds());
+            $product->cleanModelCache();
+        }
+
+        return $result;
     }
 }
