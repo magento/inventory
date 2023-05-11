@@ -18,6 +18,8 @@
             <severity value="CRITICAL"/>
             <group value="catalog"/>
             <group value="swatches"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
         </annotations>
 
         <before>
