@@ -15,6 +15,7 @@
             <description value="Add Simple Product assigned to Test Source to customer's whishlist"/>
             <severity value="MAJOR"/>
             <testCaseId value="AC-6511"/>
+            <group value="cloud"/>
         </annotations>
         <before>
             <createData entity="SimpleMsiProduct" stepKey="product"/>
