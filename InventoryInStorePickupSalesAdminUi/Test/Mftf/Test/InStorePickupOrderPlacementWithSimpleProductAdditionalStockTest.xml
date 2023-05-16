@@ -80,7 +80,7 @@
         </after>
 
         <!--Create Order with "In Store Pickup' shipping method.-->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="navigateToNewOrderWithExistingCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <!--Add simple product to order and check product price in grid-->

@@ -97,7 +97,7 @@ class AdaptUpdateStockStatusBySkuPlugin
 
         $stockItemConfiguration = $this->getStockItemConfiguration->execute($productSku, Stock::DEFAULT_STOCK_ID);
         if ($stockItemConfiguration->isManageStock() === false
-            || $stockItemConfiguration->isUseConfigManageStock() === false
+            && $stockItemConfiguration->isUseConfigManageStock() === false
         ) {
             $this->setDataToLegacyStockStatus->execute($productSku, (float)$updatedStockItem->getQty(), 1);
         } else {
