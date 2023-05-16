@@ -16,6 +16,7 @@
             <description value="You should be able to unassign all sources"/>
             <severity value="MAJOR"/>
             <testCaseId value="AC-2869"/>
+            <group value="cloud"/>
         </annotations>
         <before>
             <!--Login to Admin-->
