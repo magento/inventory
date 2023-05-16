@@ -7,17 +7,26 @@ declare(strict_types=1);
 
 namespace Magento\Inventory\Plugin\Inventory\Model\ResourceModel;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock;
 
 /**
  * Caching plugin for IsProductAssignedToStock service.
  */
-class IsProductAssignedToStockCache
+class IsProductAssignedToStockCache implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $skuToStockIdAssignment = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->skuToStockIdAssignment = [];
+    }
 
     /**
      * Cache service result to avoid multiple database calls for same item
