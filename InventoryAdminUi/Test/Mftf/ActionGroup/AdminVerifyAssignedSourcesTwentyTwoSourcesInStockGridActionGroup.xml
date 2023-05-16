@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AdminVerifyAssignedSourcesTwentyTwoSourcesInStockGridActionGroup">
+        <annotations>
+            <description>Admin verify the 22 assigned sources for Virtual product</description>
+        </annotations>
+        <arguments>
+            <argument name="stockName"/>
+            <argument name="sourceName1"/>
+            <argument name="sourceName2"/>
+            <argument name="sourceName3"/>
+            <argument name="sourceName4"/>
+            <argument name="sourceName5"/>
+            <argument name="sourceName6"/>
+            <argument name="sourceName7"/>
+            <argument name="sourceName8"/>
+            <argument name="sourceName9"/>
+            <argument name="sourceName10"/>
+            <argument name="sourceName11"/>
+            <argument name="sourceName12"/>
+            <argument name="sourceName13"/>
+            <argument name="sourceName14"/>
+            <argument name="sourceName15"/>
+            <argument name="sourceName16"/>
+            <argument name="sourceName17"/>
+            <argument name="sourceName18"/>
+            <argument name="sourceName19"/>
+            <argument name="sourceName20"/>
+            <argument name="sourceName21"/>
+            <argument name="sourceName22"/>
+        </arguments>
+        <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheManageStockPage"/>
+        <waitForPageLoad time="30" stepKey="waitForManageStockPageLoad"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearStockFilters"/>
+        <waitForPageLoad stepKey="waitForClearFilters" time="30"/>
+        <click selector="{{AdminGridFilterControls.filters}}" stepKey="clickOnFilters"/>
+        <waitForPageLoad time="30" stepKey="waitForFiltersLoad"/>
+        <fillField userInput="{{stockName}}" selector="{{AdminManageStockGridFilterControls.name}}" stepKey="fillFilterField"/>
+        <click selector="{{AdminGridFilterControls.applyFilters}}" stepKey="clickOnApplyFilters"/>
+        <waitForPageLoad time="30" stepKey="waitForFiltersApplied"/>
+        <moveMouseOver selector="{{AdminManageStockGridBody.stockAssignSourcesGrid}}" stepKey="hoverOverStockAssignedSourcesGrid"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName1)}}" stepKey="seeAssignedSources1"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName2)}}" stepKey="seeAssignedSources2"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName3)}}" stepKey="seeAssignedSources3"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName4)}}" stepKey="seeAssignedSources4"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName5)}}" stepKey="seeAssignedSources5"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName6)}}" stepKey="seeAssignedSources6"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName7)}}" stepKey="seeAssignedSources7"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName8)}}" stepKey="seeAssignedSources8"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName9)}}" stepKey="seeAssignedSources9"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName10)}}" stepKey="seeAssignedSources10"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName11)}}" stepKey="seeAssignedSources11"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName12)}}" stepKey="seeAssignedSources12"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName13)}}" stepKey="seeAssignedSources13"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName14)}}" stepKey="seeAssignedSources14"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName15)}}" stepKey="seeAssignedSources15"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName16)}}" stepKey="seeAssignedSources16"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName17)}}" stepKey="seeAssignedSources17"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName18)}}" stepKey="seeAssignedSources18"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName19)}}" stepKey="seeAssignedSources19"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName20)}}" stepKey="seeAssignedSources20"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName21)}}" stepKey="seeAssignedSources21"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockAssignedSourcesName(sourceName22)}}" stepKey="seeAssignedSources22"/>
+    </actionGroup>
+</actionGroups>

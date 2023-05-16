@@ -74,10 +74,10 @@
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
-            <!--Delete created website.-->
-            <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite" >
-                <argument name="websiteName" value="{{customWebsite.name}}"/>
-            </actionGroup>
+            <!--Delete created website, store and store view -->
+            <actionGroup ref="AdminSystemStoreOpenPageActionGroup" stepKey="navigateToStores"/>
+            <actionGroup ref="AdminDeleteMultipleWebsitesActionGroup" stepKey="deleteWebsite" />
+
             <deleteData createDataKey="stock" stepKey="deleteStock"/>
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
@@ -85,8 +85,9 @@
         </after>
 
         <!--- Place order. -->
-        <actionGroup ref="NavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer">
-            <argument name="storeView" value="customStore"/>
+        <actionGroup ref="AdminNavigateToNewOrderPageNewCustomerActionGroup" stepKey="createNewOrderForCustomer"/>
+        <actionGroup ref="AdminSelectStoreDuringOrderCreationActionGroup" stepKey="selectCustomStore">
+            <argument name="storeView" value="customStore" />
         </actionGroup>
         <waitForPageLoad stepKey="waitForPageLoad"/>
         <fillField selector="{{AdminOrderFormAccountSection.email}}" userInput="{{Msi_US_Customer.email}}" stepKey="fillEmailField"/>

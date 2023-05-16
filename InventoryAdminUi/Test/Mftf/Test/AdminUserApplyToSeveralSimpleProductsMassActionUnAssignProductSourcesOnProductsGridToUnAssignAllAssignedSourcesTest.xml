@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminUserApplyToSeveralSimpleProductsMassActionUnAssignProductSourcesOnProductsGridToUnAssignAllAssignedSourcesTest">
+        <annotations>
+            <stories value="Admin user apply to several simple products mass action 'Un-assign product sources' on Products grid to un-assign all assigned sources"/>
+            <title value="Admin user apply to several simple products mass action 'Un-assign product sources' on Products grid to un-assign all assigned sources"/>
+            <description value="Admin user apply to several simple products mass action 'Un-assign product sources' on Products grid to un-assign all assigned sources"/>
+            <testCaseId value="AC-1812"/>
+            <severity value="CRITICAL"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+
+        <after>
+            <deleteData createDataKey="createMSISimpleProduct1" stepKey="deleteMSISimpleProduct1"/>
+            <deleteData createDataKey="createMSISimpleProduct2" stepKey="deleteMSISimpleProduct2"/>
+            <deleteData createDataKey="createMSISimpleProduct3" stepKey="deleteMSISimpleProduct3"/>
+            <deleteData createDataKey="createMSISimpleProduct4" stepKey="deleteMSISimpleProduct4"/>
+            <deleteData createDataKey="createSubCategory" stepKey="deleteSubCategory"/>
+            <deleteData createDataKey="createStock" stepKey="deleteStock"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
+        </after>
+
+        <!-- Step1 Create the SubCategory through API -->
+        <createData entity="SimpleSubCategory" stepKey="createSubCategory"/>
+
+        <!-- Step2 Create 4 New Sources -->
+        <createData entity="FullSource1" stepKey="createTestSource1"/>
+        <createData entity="FullSource1" stepKey="createTestSource2"/>
+        <createData entity="FullSource1" stepKey="createTestSource3"/>
+        <createData entity="FullSource1" stepKey="createTestSource4"/>
+
+        <!-- Step3 Create the stock from UI, assign the 4 sources -->
+        <createData entity="BasicMsiStock1" stepKey="createStock"/>
+        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="AdminEditStockActionGroup" stepKey="adminEditCreatedStock">
+            <argument name="stockName" value="$$createStock.stock[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource1ToStock1">
+            <argument name="sourceName" value="$$createTestSource1.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource2ToStock1">
+            <argument name="sourceName" value="$$createTestSource2.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource3ToStock1">
+            <argument name="sourceName" value="$$createTestSource3.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssignSourceToStockActionGroup" stepKey="assignSource4ToStock1">
+            <argument name="sourceName" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <waitForPageLoad time="30" stepKey="waitForTheSourcesAssigned"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickOnSaveAndContinue"/>
+        <seeElement selector="{{AdminManageStockGridBody.stockSavedSuccessfulMessage}}" stepKey="AssertTheStockIsSaved" />
+
+        <!-- Step4.1 Create 4 Simple Products with default source assigned -->
+        <createData entity="SimpleProduct" stepKey="createMSISimpleProduct1">
+            <requiredEntity createDataKey="createSubCategory" />
+        </createData>
+        <createData entity="SimpleProduct" stepKey="createMSISimpleProduct2">
+            <requiredEntity createDataKey="createSubCategory" />
+        </createData>
+        <createData entity="SimpleProduct" stepKey="createMSISimpleProduct3">
+            <requiredEntity createDataKey="createSubCategory" />
+        </createData>
+        <createData entity="SimpleProduct" stepKey="createMSISimpleProduct4">
+            <requiredEntity createDataKey="createSubCategory" />
+        </createData>
+
+        <!-- Step5  Do the bulk assignment of sources to the products -->
+        <actionGroup ref="AdminBulkAssignSourcesToBulkSimpleProductsActionGroup" stepKey="bulkAssignSourcesToAllProducts">
+            <argument name="product1Sku" value="$$createMSISimpleProduct1.sku$$"/>
+            <argument name="product4Sku" value="$$createMSISimpleProduct4.sku$$"/>
+            <argument name="source1_code" value="$$createTestSource1.source[source_code]$$"/>
+            <argument name="source2_code" value="$$createTestSource2.source[source_code]$$"/>
+            <argument name="source3_code" value="$$createTestSource3.source[source_code]$$"/>
+            <argument name="source4_code" value="$$createTestSource4.source[source_code]$$"/>
+        </actionGroup>
+
+        <!-- Step6  Verify the assigned sources have 0 as default quantity for all the four products-->
+        <actionGroup ref="AdminAssertAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertAssignedSourcesAsZeroForProduct1">
+            <argument name="productSku" value="$$createMSISimpleProduct1.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertAssignedSourcesAsZeroForProduct2">
+            <argument name="productSku" value="$$createMSISimpleProduct2.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertAssignedSourcesAsZeroForProduct3">
+            <argument name="productSku" value="$$createMSISimpleProduct3.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertAssignedSourcesAsZeroForProduct4">
+            <argument name="productSku" value="$$createMSISimpleProduct4.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+
+        <!-- Step5  Do the bulk unAssignment of sources to the products -->
+        <actionGroup ref="AdminBulkUnAssignSourcesToBulkSimpleProductsActionGroup" stepKey="bulkUnAssignSourcesToAllProducts">
+            <argument name="product1Sku" value="$$createMSISimpleProduct1.sku$$"/>
+            <argument name="product4Sku" value="$$createMSISimpleProduct4.sku$$"/>
+            <argument name="source1_code" value="$$createTestSource1.source[source_code]$$"/>
+            <argument name="source2_code" value="$$createTestSource2.source[source_code]$$"/>
+            <argument name="source3_code" value="$$createTestSource3.source[source_code]$$"/>
+            <argument name="source4_code" value="$$createTestSource4.source[source_code]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertUnAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertUnAssignedSourcesForProduct1">
+            <argument name="productSku" value="$$createMSISimpleProduct1.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertUnAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertUnAssignedSourcesForProduct2">
+            <argument name="productSku" value="$$createMSISimpleProduct2.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertUnAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertUnAssignedSourcesForProduct3">
+            <argument name="productSku" value="$$createMSISimpleProduct3.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminAssertUnAssignedSourcesQtyInGridForProductActionGroup" stepKey="assertUnAssignedSourcesForProduct4">
+            <argument name="productSku" value="$$createMSISimpleProduct4.sku$$"/>
+            <argument name="source1_name" value="$$createTestSource1.source[name]$$"/>
+            <argument name="source2_name" value="$$createTestSource2.source[name]$$"/>
+            <argument name="source3_name" value="$$createTestSource3.source[name]$$"/>
+            <argument name="source4_name" value="$$createTestSource4.source[name]$$"/>
+        </actionGroup>
+    </test>
+</tests>

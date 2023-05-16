@@ -47,7 +47,7 @@
 
         <!--Create Order with 3 items of Virtual product from Admin-->
         <comment userInput="Create order with Virtual product from admin area." stepKey="createOrderWithVirtualProductComment"/>
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent"/>

@@ -13,5 +13,36 @@
         <element name="singleStockSalableQuantity" type="text" selector="//tr[{{row}}]//td[count(//div[@data-role='grid-wrapper']//tr//th[contains(., 'Salable Quantity')]/preceding-sibling::th) +1 ]//*[text()='{{stockName}}']/following-sibling::span" parameterized="true"/>
         <element name="productQtyPerSource" type="text" selector="//tr[{{row}}]//td[count(//div[@data-role='grid-wrapper']//tr//th[contains(., 'Quantity per Source')]/preceding-sibling::th) +1 ]//*[text()='{{sourceName}}']/following-sibling::span" parameterized="true"/>
         <element name="productSalableQty" type="text" selector="//tr[{{row}}]//td[count(//div[@data-role='grid-wrapper']//tr//th[contains(., 'Salable Quantity')]/preceding-sibling::th) +1 ]//*[text()='{{stockName}}']/following-sibling::span" parameterized="true"/>
+        <element name="sourceQty" type="text" selector="//table[@class='admin__dynamic-rows data-grid']//span[contains(text(),'{{testSourceName}}')]/../../..//td[@data-index='quantity']//input[@type='text']" parameterized="true"/>
+        <element name="productCollapsibleColumns" type="button" selector="//div[@data-state-collapsible='{{state}}']//strong[@class='admin__collapsible-title']//span[text()='{{expandTitle}}']" parameterized="true"/>
+        <element name="checkMainWebsite" type="checkbox" selector="//label[contains(text(),'Main Website')]/..//input[@type='checkbox']" />
+        <element name="contentDescription" type="text" selector="//textarea[@id='product_form_short_description']"/>
+        <element name="unAssignSource" type="text" selector="//table[@class='admin__dynamic-rows data-grid']//span[contains(text(),'{{testSourceName}}')]/../../..//button//span[contains(text(),'Unassign')]" parameterized="true"/>
+        <element name="stockItemStatus" type="text" selector="//table[@class='admin__dynamic-rows data-grid']//span[contains(text(),'{{testSourceName}}')]/../../..//select[@class='admin__control-select']" parameterized="true"/>
+        <element name="advancedInventory" type="button" selector="//div[@class='admin__field-control']//button//span[contains(text(),'Advanced Inventory')]"/>
+        <element name="configSettingsManageStock" type="checkbox" selector="//div[@data-index='use_config_manage_stock']//input[@type='checkbox']"/>
+        <element name="selectManageStock" type="select" selector="//div[@data-index='manage_stock']//select[@class='admin__control-select']"/>
+        <element name="advancedInventoryDone" type="button" selector="//aside[@class='modal-slide product_form_product_form_advanced_inventory_modal _show']//button//span[contains(text(),'Done')]"/>
+        <element name="stockStatus" type="text" selector="//select[@name='product[quantity_and_stock_status][is_in_stock]']"/>
+        <element name="stockAvailability" type="text" selector="//p[@title='Availability:']//span[contains(text(),'{{availability}}')]" parameterized="true" timeout="30"/>
+        <element name="childApiProductName" type="text" selector="//td[@data-index='name_container']//span//a[contains(text(),'{{colour}}')]" parameterized="true"/>
+        <element name="childApiProductSKU" type="text" selector="//td[@data-index='sku_container']//span[contains(text(),'{{colour}}')]" parameterized="true"/>
+        <element name="selectStockStatus" type="select" selector="//div[@class='entry-edit form-inline']//select[@name='product[quantity_and_stock_status][is_in_stock]']"/>
+        <element name="checkOtherWebsites" type="checkbox" selector="//label[contains(text(),'{{var}}')]/..//input[@type='checkbox']" parameterized="true"/>
+        <element name="productRowByID" type="block" selector="//td//div[contains(text(),'{{var}}')]/../..//td[2]//div" parameterized="true" />
+        <element name="productIdFrom" type="text" selector="//input[@type='text' and @name='entity_id[from]']" />
+        <element name="productIdTo" type="text" selector="//input[@type='text' and @name='entity_id[to]']" />
+        <element name="bulkProductSelect" type="button" selector="//div[@class='admin__data-grid-wrap' and @data-role='grid-wrapper']//div[@class='action-multicheck-wrap']//input[@type='checkbox']/..//label" />
+        <element name="selectBulkActions" type="button" selector="//*[contains(@class,'admin__data-grid-header-row row row-gutter')]//*[text()='{{var}}']" parameterized="true"/>
+        <element name="textMassSourceAssignmentHeader" type="text" selector="//aside[@data-type='popup']//header[@class='modal-header']//h1[contains(text(),'{{var1}}')]" parameterized="true" />
+        <element name="textMassSourceAssignmentBody" type="text" selector="//aside[@data-type='popup']//div[contains(text(),'{{var1}}')]" parameterized="true" />
+        <element name="acceptOKPopup" type="button" selector="//aside[@data-type='popup']//button[@class='action-primary action-accept']" />
+        <element name="qtyPerSourceInGrid" type="block" selector="//td//div[contains(text(),'{{var}}')]/../..//td[9]//div//li//strong[text()='Default Source']" parameterized="true" />
+        <element name="qtyPerSourceOnHover" type="block" selector="//div[contains(text(),'Quantity per Source:')]/..//strong[contains(text(),'{{var1}}')]/..//span[contains(text(),'{{var2}}')]" parameterized="true" />
+        <element name="scalableQty" type="text" selector="//span[contains(@data-bind,'salableQuantityData().qty')]"/>
+        <element name="btnAdvancedInventory" type="button" selector="//button//span[contains(text(),'Advanced Inventory')]"/>
+        <element name="changeDefaultQuantity" type="button" selector="//td[@data-index='name']//span[contains(text(),'Default')]/../../..//div[@data-index='quantity']/..//input[@class='admin__control-text']"/>
+        <element name="stockStorefrontStatus" type="text" selector="//div[@title='Availability']//span[contains(text(),'{{availability}}')]" parameterized="true" timeout="30"/>
+        <element name="selectStockStatusForChildConfigProduct" type="select" selector="//div[@class='entry-edit form-inline']//select[@name='sources[assigned_sources][0][status]']"/>
     </section>
 </sections>
