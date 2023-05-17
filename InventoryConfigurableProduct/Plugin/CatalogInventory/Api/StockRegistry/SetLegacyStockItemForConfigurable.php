@@ -9,48 +9,43 @@ namespace Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\Stock
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Framework\App\RequestInterface;
+use Magento\CatalogInventory\Model\Stock;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
-class RefreshLegacyStockItem
+class SetLegacyStockItemForConfigurable
 {
-    /**
-     * @var RequestInterface
-     */
-    private $request;
-
     /**
      * @var GetLegacyStockItem
      */
     private GetLegacyStockItem $getLegacyStockItem;
 
     /**
-     * @param RequestInterface $request
      * @param GetLegacyStockItem $getLegacyStockItem
      */
-    public function __construct(RequestInterface $request, GetLegacyStockItem $getLegacyStockItem)
+    public function __construct(GetLegacyStockItem $getLegacyStockItem)
     {
-        $this->request = $request;
         $this->getLegacyStockItem = $getLegacyStockItem;
     }
 
     /**
-     * Refresh legacy stock item.
+     * Set legacy stock for configurable if stock item status changed.
      *
      * @param StockRegistryInterface $subject
      * @param string $productSku
      * @param StockItemInterface $stockItem
      * @return array
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function beforeUpdateStockItemBySku(
         StockRegistryInterface $subject,
         string $productSku,
         StockItemInterface $stockItem
     ): array {
-        $this->getLegacyStockItem->execute($productSku);
+        if ($stockItem->getIsInStock() !== Stock::STOCK_OUT_OF_STOCK) {
+            $this->getLegacyStockItem->execute($productSku);
+        }
         return [$productSku, $stockItem];
     }
 }
