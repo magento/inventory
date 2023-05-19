@@ -80,7 +80,7 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2" after="setCustomSourceQuantity2"/>
 
         <!-- Create order -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AddSimpleProductWithQtyToOrderActionGroup" stepKey="addFirstProductToOrder" >
