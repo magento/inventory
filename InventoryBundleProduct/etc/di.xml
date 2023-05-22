@@ -9,9 +9,6 @@
     <type name="Magento\InventoryConfigurationApi\Model\IsSourceItemManagementAllowedForProductTypeInterface">
         <plugin name="disable_bundle_type" type="Magento\InventoryBundleProduct\Plugin\InventoryConfigurationApi\IsSourceItemManagementAllowedForProductType\DisableBundleTypePlugin"/>
     </type>
-    <type name="Magento\Bundle\Model\Product\Type">
-        <plugin name="adapt_is_product_salable" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\Product\Type\AdaptIsSalablePlugin"/>
-    </type>
     <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
         <plugin name="adapt_add_quantity_filter" type="Magento\InventoryBundleProduct\Plugin\Bundle\Model\ResourceModel\Selection\Collection\AdaptAddQuantityFilterPlugin"/>
     </type>
@@ -26,14 +23,14 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\CatalogInventory\Helper\Stock">
-        <plugin name="adapt_assign_stock_status_to_bundle_product" type="Magento\InventoryBundleProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
-    </type>
     <type name="Magento\InventoryCatalogApi\Model\CompositeProductStockStatusProcessorPool">
         <arguments>
             <argument name="compositeProductStockStatusProcessors" xsi:type="array">
                 <item name="bundle" xsi:type="object">Magento\InventoryBundleProduct\Model\StockStatusProcessor</item>
             </argument>
         </arguments>
+    </type>
+    <type name="Magento\InventorySalesApi\Model\GetIsQtySalableInterface">
+        <plugin name="inventory_bundle_product_is_any_child_salable" type="Magento\InventoryBundleProduct\Plugin\InventorySales\Model\IsProductSalableCondition\GetIsQtySalableForBundleProduct"/>
     </type>
 </config>

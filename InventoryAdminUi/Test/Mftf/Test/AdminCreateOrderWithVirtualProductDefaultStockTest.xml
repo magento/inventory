@@ -82,7 +82,7 @@
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <comment userInput="Create order with virtual product from admin area." stepKey="createOrderWithVirtualProductComment"/>
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 

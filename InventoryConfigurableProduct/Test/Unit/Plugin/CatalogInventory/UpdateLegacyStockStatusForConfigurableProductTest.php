@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryConfigurableProduct\Test\Unit\Plugin\CatalogInventory;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
+use Magento\InventoryConfigurableProduct\Model\IsProductSalableCondition\IsConfigurableProductChildrenSalable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Magento\CatalogInventory\Model\Stock;
@@ -18,8 +19,6 @@ use Magento\InventoryCatalogApi\Model\GetSkusByProductIdsInterface;
 use Magento\CatalogInventory\Model\ResourceModel\Stock\Item as ItemResourceModel;
 use Magento\Framework\Model\AbstractModel as StockItem;
 use Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\UpdateLegacyStockStatusForConfigurableProduct;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
-use Magento\InventorySalesApi\Api\Data\IsProductSalableResultInterface;
 use Magento\InventoryConfiguration\Model\GetLegacyStockItem;
 
 /**
@@ -47,14 +46,9 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
     private $getSkusByProductIdsMock;
 
     /**
-     * @var Configurable
+     * @var IsConfigurableProductChildrenSalable
      */
-    private $configurableTypeMock;
-
-    /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalableMock;
+    private $isConfigurableProductChildrenSalable;
 
     /**
      * @var GetLegacyStockItem
@@ -78,10 +72,7 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->getSkusByProductIdsMock = $this->getMockForAbstractClass(GetSkusByProductIdsInterface::class);
-        $this->configurableTypeMock = $this->getMockBuilder(Configurable::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->areProductsSalableMock = $this->getMockForAbstractClass(AreProductsSalableInterface::class);
+        $this->isConfigurableProductChildrenSalable = $this->createMock(IsConfigurableProductChildrenSalable::class);
         $this->getLegacyStockItemMock = $this->getMockBuilder(GetLegacyStockItem::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -89,9 +80,8 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             $this->getProductTypeByIdMock,
             $this->setDataToLegacyStockStatusMock,
             $this->getSkusByProductIdsMock,
-            $this->configurableTypeMock,
-            $this->areProductsSalableMock,
-            $this->getLegacyStockItemMock
+            $this->getLegacyStockItemMock,
+            $this->isConfigurableProductChildrenSalable
         );
     }
 
@@ -120,7 +110,7 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
             ->getMock();
         $stockItemMock->expects($this->once())->method('getQty')->willReturn($product['qty']);
         $stockItemMock->expects($this->once())->method('getIsInStock')->willReturn(Stock::STOCK_IN_STOCK);
-        $stockItemMock->expects($this->exactly(4))->method('getProductId')->willReturn($product['id']);
+        $stockItemMock->method('getProductId')->willReturn($product['id']);
         $stockItemMock->expects($this->once())
             ->method('getStockStatusChangedAuto')
             ->willReturn(false);
@@ -140,13 +130,10 @@ class UpdateLegacyStockStatusForConfigurableProductTest extends TestCase
                 [[$product['id']], [$product['id'] => $product['sku']]],
                 [$childIds, $childSkus]
             ]);
-        $this->configurableTypeMock->expects($this->once())->method('getChildrenIds')->willReturn([$childIds]);
-        $isProductSalableMock = $this->getMockForAbstractClass(IsProductSalableResultInterface::class);
-        $isProductSalableMock->expects($this->once())->method('isSalable')->willReturn(true);
-        $this->areProductsSalableMock->expects($this->once())
+        $this->isConfigurableProductChildrenSalable->expects($this->once())
             ->method('execute')
-            ->with($childSkus, Stock::DEFAULT_STOCK_ID)
-            ->willReturn([$isProductSalableMock]);
+            ->with($product['sku'], Stock::DEFAULT_STOCK_ID)
+            ->willReturn(true);
         $this->setDataToLegacyStockStatusMock->expects($this->once())
             ->method('execute')
             ->with($product['sku'], (float) $product['qty'], Stock::STOCK_IN_STOCK);

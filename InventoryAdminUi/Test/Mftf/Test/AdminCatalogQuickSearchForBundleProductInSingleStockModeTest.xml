@@ -17,6 +17,7 @@
             <severity value="AVERAGE"/>
             <group value="msi"/>
             <group value="single_mode"/>
+            <group value="cloud"/>
         </annotations>
 
         <before>
