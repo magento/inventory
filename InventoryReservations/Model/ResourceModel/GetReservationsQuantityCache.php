@@ -42,7 +42,6 @@ class GetReservationsQuantityCache implements GetReservationsQuantityInterface, 
         $this->reservationsQuantity = [[]];
     }
 
-
     /**
      * @inheritdoc
      */

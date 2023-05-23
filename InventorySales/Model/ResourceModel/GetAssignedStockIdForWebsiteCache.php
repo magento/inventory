@@ -34,7 +34,6 @@ class GetAssignedStockIdForWebsiteCache implements GetAssignedStockIdForWebsiteI
         $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
     }
 
-
     /**
      * @inheritDoc
      */
