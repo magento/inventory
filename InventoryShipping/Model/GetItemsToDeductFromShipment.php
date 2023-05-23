@@ -75,6 +75,7 @@ class GetItemsToDeductFromShipment
 
         /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
         foreach ($shipment->getAllItems() as $shipmentItem) {
+            $shipmentItem->setShipment($shipment);
             $orderItem = $shipmentItem->getOrderItem();
             // This code was added as quick fix for merge mainline
             // https://github.com/magento-engcom/msi/issues/1586
