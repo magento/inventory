@@ -30,4 +30,7 @@
         <plugin name="reindex_source_items_after_save_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>
         <plugin name="reindex_source_items_after_remove_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterRemoveBundleSelectionPlugin"/>
     </type>
+    <type name="Magento\Bundle\Api\ProductLinkManagementAddChildrenInterface">
+        <plugin name="reindex_source_items_after_bulk_add_bundle_selection" type="Magento\InventoryBundleProductIndexer\Plugin\Bundle\Model\LinkManagement\ReindexSourceItemsAfterBulkAddBundleSelectionPlugin"/>
+    </type>
 </config>
