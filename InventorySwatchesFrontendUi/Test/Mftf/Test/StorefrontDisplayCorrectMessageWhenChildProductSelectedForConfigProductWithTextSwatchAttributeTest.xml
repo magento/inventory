@@ -18,6 +18,8 @@
             <severity value="MAJOR"/>
             <group value="catalog"/>
             <group value="swatches"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
         </annotations>
         <before>
             <!-- Create product attribute with 3 variations -->
