@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\InventorySourceSelectionApi\Model\SourceSelectionService">
+        <arguments>
+            <argument name="sourceSelectionMethods" xsi:type="array">
+                <item name="default_for_countries"
+                      xsi:type="string">Magento\InventoryDefaultForCountrySourceSelection\Model\Algorithms\DefaultForCountryAlgorithm</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\InventorySourceSelectionApi\Model\GetSourceSelectionAlgorithmList">
+        <arguments>
+            <argument name="availableAlgorithms" xsi:type="array">
+                <item name="default_for_countries" xsi:type="array">
+                    <item xsi:type="const" name="code">Magento\InventoryDefaultForCountrySourceSelection\Model\Algorithms\DefaultForCountryAlgorithm::CODE</item>
+                    <item xsi:type="string" name="title" translatable="true">Default For Country Priority</item>
+                    <item xsi:type="string" name="description" translatable="true">Algorithm which provides Source Selections based on shipping address country from the source</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="LoadCountriesSelectionGetListPlugin" type="Magento\InventoryDefaultForCountrySourceSelection\Plugin\InventoryApi\SourceRepository\LoadCountriesSelectionGetListPlugin"/>
+        <plugin name="LoadCountriesSelectionOnGetPlugin" type="Magento\InventoryDefaultForCountrySourceSelection\Plugin\InventoryApi\SourceRepository\LoadCountriesSelectionOnGetPlugin"/>
+        <plugin name="SaveCountriesSelectionPlugin" type="Magento\InventoryDefaultForCountrySourceSelection\Plugin\InventoryApi\SourceRepository\SaveCountriesSelectionPlugin"/>
+    </type>
+</config>

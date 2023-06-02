@@ -1,0 +1,24 @@
+{
+    "name": "magento/module-inventory-default-for-country-source-selection-admin-ui",
+    "description": "N/A",
+    "require": {
+        "php": "~7.3.0||~7.4.0",
+        "magento/framework": "*",
+        "magento/module-inventory-default-for-country-source-selection": "*",
+        "magento/module-inventory-source-selection-api": "*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\InventoryDefaultForCountrySourceSelectionAdminUi\\": ""
+        }
+    },
+    "version": "1.2.0"
+}

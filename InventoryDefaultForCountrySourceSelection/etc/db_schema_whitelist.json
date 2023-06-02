@@ -1,0 +1,7 @@
+{
+    "inventory_source": {
+        "column": {
+            "default_for_countries": true
+        }
+    }
+}
