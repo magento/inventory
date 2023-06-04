@@ -7,15 +7,25 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\Cache;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+
 /**
  * Cache storage for SKU/type pairs
  */
-class ProductTypesBySkusStorage
+class ProductTypesBySkusStorage implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $storage = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->clean();
+    }
 
     /**
      * Get type by SKU
