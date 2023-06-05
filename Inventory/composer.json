@@ -1,16 +1,17 @@
 {
     "name": "magento/module-inventory",
     "description": "N/A",
-    "require": {
-        "php": "~7.4.0||~8.1.0",
-        "magento/framework": "*",
-        "magento/module-inventory-api": "*"
-    },
     "type": "magento2-module",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
+    "version": "1.2.2",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "*",
+        "magento/module-inventory-api": "1.2.*"
+    },
     "autoload": {
         "files": [
             "registration.php"
@@ -20,3 +21,4 @@
         }
     }
 }
+
