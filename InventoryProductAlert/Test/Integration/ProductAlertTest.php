@@ -241,7 +241,7 @@ class ProductAlertTest extends TestCase
     {
         $this->startConsumer($maxMessageCount);
 
-        sleep(15); // timeout to processing Magento queue
+        sleep(30); // timeout to processing Magento queue
 
         $this->publisherConsumerController->waitForAsynchronousResult(
             function () {
