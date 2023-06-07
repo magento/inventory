@@ -7,16 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Model\Import;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\ImportExport\Helper\Data as DataHelper;
 use Magento\ImportExport\Model\Import\Entity\AbstractEntity;
 use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingErrorAggregatorInterface;
 use Magento\ImportExport\Model\ResourceModel\Helper as ResourceHelper;
 use Magento\ImportExport\Model\ResourceModel\Import\Data as ImportData;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Model\GetSourceCodesBySkusInterface;
 use Magento\InventoryImportExport\Model\Import\Command\CommandInterface;
 use Magento\InventoryImportExport\Model\Import\Serializer\Json;
 use Magento\InventoryImportExport\Model\Import\Validator\ValidatorInterface;
-use Magento\InventoryApi\Api\Data\SourceItemInterface;
 
 /**
  * @inheritdoc
@@ -47,12 +49,18 @@ class Sources extends AbstractEntity
     private $commands = [];
 
     /**
+     * @var GetSourceCodesBySkusInterface
+     */
+    private $getSourceCodesBySkus;
+
+    /**
      * @param Json $jsonHelper
      * @param ProcessingErrorAggregatorInterface $errorAggregator
      * @param ResourceHelper $resourceHelper
      * @param DataHelper $dataHelper
      * @param ImportData $importData
      * @param ValidatorInterface $validator
+     * @param GetSourceCodesBySkusInterface $getSourceCodesBySkus
      * @param CommandInterface[] $commands
      * @throws LocalizedException
      */
@@ -63,7 +71,8 @@ class Sources extends AbstractEntity
         DataHelper $dataHelper,
         ImportData $importData,
         ValidatorInterface $validator,
-        array $commands = []
+        array $commands = [],
+        GetSourceCodesBySkusInterface $getSourceCodesBySkus = null,
     ) {
         $this->jsonHelper = $jsonHelper;
         $this->errorAggregator = $errorAggregator;
@@ -80,6 +89,8 @@ class Sources extends AbstractEntity
             }
         }
         $this->commands = $commands;
+        $this->getSourceCodesBySkus = $getSourceCodesBySkus ?: ObjectManager::getInstance()
+            ->get(\Magento\InventoryApi\Model\GetSourceCodesBySkusInterface::class);
     }
 
     /**
@@ -90,13 +101,53 @@ class Sources extends AbstractEntity
     protected function _importData()
     {
         $command = $this->getCommandByBehavior($this->getBehavior());
+
         while ($bunch = $this->_dataSourceModel->getNextBunch()) {
-            $command->execute($bunch);
+            foreach ($bunch as $rowNum => $rowData) {
+                $newRows = [];
+                $updateRows = [];
+                $deleteRowIds = [];
+
+                $result = $this->validator->validate($rowData, $rowNum);
+                if ($result->isValid()) {
+                    if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
+                        $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
+                        if (in_array($rowData['sku'], $sourceCodes)) {
+                            $updateRows = ['row_update'];
+                        } else {
+                            $newRows = ['row_new'];
+                        }
+                    } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_REPLACE) {
+                        $updateRows = ['row_update'];
+                    } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE) {
+                        $deleteRowIds = ['row_delete'];
+                    }
+                    $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
+                    $command->execute($bunch);
+                } else {
+                    unset($bunch[$rowNum]);
+                }
+            }
         }
 
         return true;
     }
 
+    /**
+     * Update proceed items counter
+     *
+     * @param array $created
+     * @param array $updated
+     * @param array $deleted
+     * @return $this
+     */
+    protected function updateItemsCounterStats(array $created = [], array $updated = [], array $deleted = []): static
+    {
+        $this->countItemsCreated += count($created);
+        $this->countItemsUpdated += count($updated);
+        $this->countItemsDeleted += count($deleted);
+        return $this;
+    }
     /**
      * @param string $behavior
      * @return CommandInterface
