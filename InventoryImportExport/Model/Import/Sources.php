@@ -110,7 +110,7 @@ class Sources extends AbstractEntity
                 $deleteRowIds = [];
                 if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
                     $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
-                    if (in_array($rowData['sku'], $sourceCodes)) {
+                    if (in_array($rowData['source_code'], $sourceCodes)) {
                         $updateRows = ['row_update'];
                     } else {
                         $newRows = ['row_new'];
