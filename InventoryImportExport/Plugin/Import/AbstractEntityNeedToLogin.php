@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Plugin\Import;
 
-use Magento\ImportExport\Model\Import\EntityInterface;
+use Magento\ImportExport\Model\Import\Entity\AbstractEntity;
 
 /**
  * Assigning products to default source
@@ -26,14 +26,14 @@ class AbstractEntityNeedToLogin
     /**
      * After plugin Import to import Stock Data to Source Items
      *
-     * @param EntityInterface $subject
+     * @param AbstractEntity $subject
      * @param mixed $result
      * @return bool
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterIsNeedToLogInHistory(
-        EntityInterface $subject,
+        AbstractEntity $subject,
         mixed $result
     ): bool {
         return $this->logInHistory;

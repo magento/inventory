@@ -144,7 +144,7 @@ class Sources extends AbstractEntity
         return $this;
     }
     /**
-     * to fetch command by behavior
+     * To fetch command by behavior
      *
      * @param string $behavior
      * @return CommandInterface
