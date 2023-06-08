@@ -28,10 +28,10 @@ class Sources extends AbstractEntity
     /**
      * Column names for import file
      */
-    const COL_SKU = SourceItemInterface::SKU;
-    const COL_SOURCE_CODE = SourceItemInterface::SOURCE_CODE;
-    const COL_QTY = SourceItemInterface::QUANTITY;
-    const COL_STATUS = SourceItemInterface::STATUS;
+    public const COL_SKU = SourceItemInterface::SKU;
+    public const COL_SOURCE_CODE = SourceItemInterface::SOURCE_CODE;
+    public const COL_QTY = SourceItemInterface::QUANTITY;
+    public const COL_STATUS = SourceItemInterface::STATUS;
 
     /**
      * @var Json
@@ -60,8 +60,8 @@ class Sources extends AbstractEntity
      * @param DataHelper $dataHelper
      * @param ImportData $importData
      * @param ValidatorInterface $validator
-     * @param GetSourceCodesBySkusInterface $getSourceCodesBySkus
      * @param CommandInterface[] $commands
+     * @param GetSourceCodesBySkusInterface|null $getSourceCodesBySkus
      * @throws LocalizedException
      */
     public function __construct(
@@ -95,6 +95,7 @@ class Sources extends AbstractEntity
 
     /**
      * Import data rows.
+     *
      * @return boolean
      * @throws LocalizedException
      */
@@ -107,26 +108,20 @@ class Sources extends AbstractEntity
                 $newRows = [];
                 $updateRows = [];
                 $deleteRowIds = [];
-
-                $result = $this->validator->validate($rowData, $rowNum);
-                if ($result->isValid()) {
-                    if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
-                        $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
-                        if (in_array($rowData['sku'], $sourceCodes)) {
-                            $updateRows = ['row_update'];
-                        } else {
-                            $newRows = ['row_new'];
-                        }
-                    } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_REPLACE) {
+                if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
+                    $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
+                    if (in_array($rowData['sku'], $sourceCodes)) {
                         $updateRows = ['row_update'];
-                    } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE) {
-                        $deleteRowIds = ['row_delete'];
+                    } else {
+                        $newRows = ['row_new'];
                     }
-                    $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
-                    $command->execute($bunch);
-                } else {
-                    unset($bunch[$rowNum]);
+                } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_REPLACE) {
+                    $updateRows = ['row_update'];
+                } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE) {
+                    $deleteRowIds = ['row_delete'];
                 }
+                $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
+                $command->execute($bunch);
             }
         }
 
@@ -149,6 +144,8 @@ class Sources extends AbstractEntity
         return $this;
     }
     /**
+     * to fetch command by behavior
+     *
      * @param string $behavior
      * @return CommandInterface
      * @throws LocalizedException
