@@ -7,12 +7,22 @@ declare(strict_types=1);
 
 namespace Magento\InventoryIndexer\Model\GetStockItemData;
 
-class CacheStorage
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+
+class CacheStorage implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $cachedItemData = [[]];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->cachedItemData = [[]];
+    }
 
     /**
      * Save item to cache
