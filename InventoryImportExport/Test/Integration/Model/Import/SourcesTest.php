@@ -10,11 +10,12 @@ namespace Magento\InventoryImportExport\Test\Integration\Model\Import;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\ImportExport\Model\ResourceModel\Import\Data as ImportData;
-use Magento\InventoryApi\Api\Data\SourceInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryApi\Api\SourceRepositoryInterface;
@@ -59,6 +60,13 @@ class SourcesTest extends TestCase
     private $filesystem;
 
     /**
+     * Model object which used for tests
+     *
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
+    /**
      * @inheritDoc
      */
     protected function setUp(): void
@@ -77,6 +85,7 @@ class SourcesTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->create(SourceItemRepositoryInterface::class);
         $this->sourceRepository = Bootstrap::getObjectManager()->create(SourceRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->create(SearchCriteriaBuilder::class);
+        $this->objectManager = Bootstrap::getObjectManager();
     }
 
     /**
@@ -397,6 +406,31 @@ class SourcesTest extends TestCase
         )->create();
         $actualData = $this->getSourceItemList($searchCriteria);
         $this->assertEquals($expectedData, $actualData);
+    }
+
+    /**
+     * Verify sample file import with Delete behaviour.
+     *
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/products_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
+     * @throws LocalizedException
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
+     */
+    public function testImportSourceWithAppendBehavior()
+    {
+        $importer = $this->getImporter(Import::BEHAVIOR_APPEND);
+        $errors = $importer->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+
+        /** @var Import $import2 */
+        $import2 = $this->objectManager->create(Import::class);
+        $import2->setEntity('stock_sources');
+        $result = $import2->importSource();
+        $createdItemsCount = $import2->getCreatedItemsCount();
+        $updatedItemsCount = $import2->getUpdatedItemsCount();
+        $this->assertEquals(0, $createdItemsCount);
+        $this->assertEquals(6, $updatedItemsCount);
     }
 
     /**
