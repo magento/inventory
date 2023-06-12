@@ -426,7 +426,7 @@ class SourcesTest extends TestCase
         /** @var Import $import2 */
         $import2 = $this->objectManager->create(Import::class);
         $import2->setEntity('stock_sources');
-         $import2->importSource();
+        $import2->importSource();
         $createdItemsCount = $import2->getCreatedItemsCount();
         $updatedItemsCount = $import2->getUpdatedItemsCount();
         $deletedItemsCount = $import2->getDeletedItemsCount();
