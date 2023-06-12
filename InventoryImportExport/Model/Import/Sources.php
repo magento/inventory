@@ -104,25 +104,28 @@ class Sources extends AbstractEntity
         $command = $this->getCommandByBehavior($this->getBehavior());
 
         while ($bunch = $this->_dataSourceModel->getNextBunch()) {
+            $newRows = [];
+            $updateRows = [];
+            $deleteRowIds = [];
             foreach ($bunch as $rowData) {
-                $newRows = [];
-                $updateRows = [];
-                $deleteRowIds = [];
                 if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
                     $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
                     if (in_array($rowData['source_code'], $sourceCodes)) {
-                        $updateRows = ['row_update'];
+                        $updateRows[] = ['row_update'];
                     } else {
-                        $newRows = ['row_new'];
+                        $newRows[] = ['row_new'];
                     }
                 } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_REPLACE) {
-                    $updateRows = ['row_update'];
+                    $updateRows[] = ['row_update'];
                 } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE) {
-                    $deleteRowIds = ['row_delete'];
+                    $deleteRowIds[] = ['row_delete'];
                 }
-                $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
-                $command->execute($bunch);
             }
+            $newRows = array_merge([], ...$newRows);
+            $updateRows = array_merge([], ...$updateRows);
+            $deleteRowIds = array_merge([], ...$deleteRowIds);
+            $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
+            $command->execute($bunch);
         }
 
         return true;

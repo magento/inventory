@@ -415,6 +415,7 @@ class SourcesTest extends TestCase
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
      * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
      * @throws LocalizedException
+     * @magentoDbIsolation enabled
      * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
      */
     public function testImportSourceWithAppendBehavior()
@@ -430,8 +431,8 @@ class SourcesTest extends TestCase
         $createdItemsCount = $import2->getCreatedItemsCount();
         $updatedItemsCount = $import2->getUpdatedItemsCount();
         $deletedItemsCount = $import2->getDeletedItemsCount();
-        $this->assertEquals(0, $createdItemsCount);
-        $this->assertEquals(4, $updatedItemsCount);
+        $this->assertEquals(2, $createdItemsCount);
+        $this->assertEquals(2, $updatedItemsCount);
         $this->assertEquals(0, $deletedItemsCount);
     }
 
