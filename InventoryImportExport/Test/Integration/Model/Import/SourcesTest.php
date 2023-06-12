@@ -426,11 +426,13 @@ class SourcesTest extends TestCase
         /** @var Import $import2 */
         $import2 = $this->objectManager->create(Import::class);
         $import2->setEntity('stock_sources');
-        $result = $import2->importSource();
+         $import2->importSource();
         $createdItemsCount = $import2->getCreatedItemsCount();
         $updatedItemsCount = $import2->getUpdatedItemsCount();
+        $deletedItemsCount = $import2->getDeletedItemsCount();
         $this->assertEquals(0, $createdItemsCount);
-        $this->assertEquals(6, $updatedItemsCount);
+        $this->assertEquals(4, $updatedItemsCount);
+        $this->assertEquals(0, $deletedItemsCount);
     }
 
     /**
