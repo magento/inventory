@@ -7,15 +7,25 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\Cache;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
+
 /**
  * Cache storage for SKU/ID pairs
  */
-class ProductIdsBySkusStorage
+class ProductIdsBySkusStorage implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $storage = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->clean();
+    }
 
     /**
      * Get ID by SKU
