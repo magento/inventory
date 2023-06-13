@@ -130,12 +130,15 @@ class BundleChildStockStatusModifier implements SelectModifierInterface
             'is_available' => $isOptionSalableExpr,
             'is_required_and_unavailable' => $isRequiredOptionUnsalable,
         ]);
+        $isBundleAvailableExpr = new \Zend_Db_Expr('(MAX(is_available) = 1 AND MAX(is_required_and_unavailable) = 0)');
+        $bundleAvailabilitySelect = $connection->select()
+            ->from($optionsAvailabilitySelect, ['parent_id' => 'parent_id', 'is_available' => $isBundleAvailableExpr])
+            ->group('parent_id');
 
         $existsSelect = $connection->select()
-            ->from($optionsAvailabilitySelect)
-            ->where("parent_id = e.{$linkField}")
-            ->group('parent_id')
-            ->having(new \Zend_Db_Expr('(MAX(is_available) = 1 AND MAX(is_required_and_unavailable) = 0)'));
+            ->from($bundleAvailabilitySelect)
+            ->where('is_available = 1')
+            ->where("parent_id = e.{$linkField}");
         $typeBundle = Type::TYPE_CODE;
         $select->where(
             "e.type_id != '{$typeBundle}' OR EXISTS ({$existsSelect->assemble()})"
