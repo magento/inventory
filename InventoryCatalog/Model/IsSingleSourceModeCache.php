@@ -7,12 +7,13 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model;
 
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
  * @inheritdoc
  */
-class IsSingleSourceModeCache implements IsSingleSourceModeInterface
+class IsSingleSourceModeCache implements IsSingleSourceModeInterface, ResetAfterRequestInterface
 {
     /**
      * @var IsSingleSourceMode
@@ -30,6 +31,14 @@ class IsSingleSourceModeCache implements IsSingleSourceModeInterface
     public function __construct(IsSingleSourceMode $isSingleSourceMode)
     {
         $this->isSingleSourceMode = $isSingleSourceMode;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->cacheValue = null;
     }
 
     /**
