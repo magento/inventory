@@ -103,7 +103,7 @@ class Sources extends AbstractEntity
     {
         $command = $this->getCommandByBehavior($this->getBehavior());
 
-        while ($bunch = $this->_dataSourceModel->getNextBunch()) {
+        while ($bunch = $this->_dataSourceModel->getNextUniqueBunch($this->getIds())) {
             $newRows = [];
             $updateRows = [];
             $deleteRowIds = [];

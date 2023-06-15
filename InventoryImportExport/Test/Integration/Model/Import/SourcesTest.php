@@ -12,9 +12,9 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
-use Magento\Framework\ObjectManagerInterface;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
+use Magento\ImportExport\Model\ResourceModel\Import\Data;
 use Magento\ImportExport\Model\ResourceModel\Import\Data as ImportData;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
@@ -60,11 +60,14 @@ class SourcesTest extends TestCase
     private $filesystem;
 
     /**
-     * Model object which used for tests
-     *
-     * @var ObjectManagerInterface
+     * @var Import
      */
-    private $objectManager;
+    private $import;
+
+    /**
+     * @var Data
+     */
+    private $dataSourceModel;
 
     /**
      * @inheritDoc
@@ -85,7 +88,8 @@ class SourcesTest extends TestCase
         $this->sourceItemRepository = Bootstrap::getObjectManager()->create(SourceItemRepositoryInterface::class);
         $this->sourceRepository = Bootstrap::getObjectManager()->create(SourceRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->create(SearchCriteriaBuilder::class);
-        $this->objectManager = Bootstrap::getObjectManager();
+        $this->import = Bootstrap::getObjectManager()->create(Import::class);
+        $this->dataSourceModel = Bootstrap::getObjectManager()->create(Data::class);
     }
 
     /**
@@ -136,18 +140,15 @@ class SourcesTest extends TestCase
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
         $beforeImportData = $this->getSourceItemList($searchCriteria);
-
-        $bunch = [
-            $this->buildRowDataArray('eu-1', 'SKU-1', 6.8800, 1),
-            $this->buildRowDataArray('eu-2', 'SKU-1', 5.0000, 1),
-            $this->buildRowDataArray('us-1', 'SKU-2', 15, 1),
-            $this->buildRowDataArray('eu-1', 'SKU-2', 33, 1),
-        ];
-        $this->importData($bunch);
-
+        $importer = $this->getImporter(Import::BEHAVIOR_APPEND, '/_files/stock_sources.csv');
+        $errors = $importer->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+        $this->import->setEntity('stock_sources');
+        $this->import->importSource();
+        /** @var $dataSourceModel \Magento\ImportExport\Model\ResourceModel\Import\Data */
+        $bunch = $this->dataSourceModel->getNextBunch();
         $expectedData = $this->updateDataArrayByBunch($beforeImportData, $bunch);
         $afterImportData = $this->getSourceItemList($searchCriteria);
-
         $this->assertEquals($expectedData, $afterImportData);
     }
 
@@ -258,7 +259,7 @@ class SourcesTest extends TestCase
      */
     public function testAddUpdateWithSampleFile(array $expectedData): void
     {
-        $importer = $this->getImporter(Import::BEHAVIOR_APPEND);
+        $importer = $this->getImporter(Import::BEHAVIOR_APPEND, '/_files/sample.csv');
         $errors = $importer->validateData();
         $this->assertTrue($errors->getErrorsCount() == 0);
         $importer->importData();
@@ -287,7 +288,7 @@ class SourcesTest extends TestCase
      */
     public function testReplaceWithSampleFile(array $expectedData): void
     {
-        $importer = $this->getImporter(Import::BEHAVIOR_REPLACE);
+        $importer = $this->getImporter(Import::BEHAVIOR_REPLACE, '/_files/sample.csv');
         $errors = $importer->validateData();
         $this->assertTrue($errors->getErrorsCount() == 0);
         $importer->importData();
@@ -302,6 +303,32 @@ class SourcesTest extends TestCase
         )->create();
         $actualData = $this->getSourceItemList($searchCriteria);
         $this->assertEquals($expectedData, $actualData);
+    }
+
+    /**
+     * Verify sample file import with Delete behaviour.
+     *
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/products_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
+     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
+     * @throws LocalizedException
+     * @magentoDbIsolation enabled
+     * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
+     */
+    public function testImportSourceWithAppendBehavior()
+    {
+        $importer = $this->getImporter(Import::BEHAVIOR_APPEND, '/_files/sample.csv');
+        $errors = $importer->validateData();
+        $this->assertTrue($errors->getErrorsCount() == 0);
+
+        $this->import->setEntity('stock_sources');
+        $this->import->importSource();
+        $createdItemsCount = $this->import->getCreatedItemsCount();
+        $updatedItemsCount = $this->import->getUpdatedItemsCount();
+        $deletedItemsCount = $this->import->getDeletedItemsCount();
+        $this->assertEquals(2, $createdItemsCount);
+        $this->assertEquals(2, $updatedItemsCount);
+        $this->assertEquals(0, $deletedItemsCount);
     }
 
     /**
@@ -391,7 +418,7 @@ class SourcesTest extends TestCase
      */
     public function testDeleteWithSampleFile(array $expectedData): void
     {
-        $importer = $this->getImporter(Import::BEHAVIOR_DELETE);
+        $importer = $this->getImporter(Import::BEHAVIOR_DELETE, '/_files/sample.csv');
         $errors = $importer->validateData();
         $this->assertTrue($errors->getErrorsCount() == 0);
         $importer->importData();
@@ -406,34 +433,6 @@ class SourcesTest extends TestCase
         )->create();
         $actualData = $this->getSourceItemList($searchCriteria);
         $this->assertEquals($expectedData, $actualData);
-    }
-
-    /**
-     * Verify sample file import with Delete behaviour.
-     *
-     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/products_sample_file.php
-     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/sources_sample_file.php
-     * @magentoDataFixture Magento_InventoryImportExport::Test/_files/source_items_sample_file.php
-     * @throws LocalizedException
-     * @magentoDbIsolation enabled
-     * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/1465136
-     */
-    public function testImportSourceWithAppendBehavior()
-    {
-        $importer = $this->getImporter(Import::BEHAVIOR_APPEND);
-        $errors = $importer->validateData();
-        $this->assertTrue($errors->getErrorsCount() == 0);
-
-        /** @var Import $import2 */
-        $import2 = $this->objectManager->create(Import::class);
-        $import2->setEntity('stock_sources');
-        $import2->importSource();
-        $createdItemsCount = $import2->getCreatedItemsCount();
-        $updatedItemsCount = $import2->getUpdatedItemsCount();
-        $deletedItemsCount = $import2->getDeletedItemsCount();
-        $this->assertEquals(2, $createdItemsCount);
-        $this->assertEquals(2, $updatedItemsCount);
-        $this->assertEquals(0, $deletedItemsCount);
     }
 
     /**
@@ -535,7 +534,7 @@ class SourcesTest extends TestCase
             $data[$key] = $this->buildRowDataArray(
                 $bunchData[Sources::COL_SOURCE_CODE],
                 $bunchData[Sources::COL_SKU],
-                number_format($bunchData[Sources::COL_QTY], 4),
+                number_format((float)$bunchData[Sources::COL_QTY], 4),
                 $bunchData[Sources::COL_STATUS]
             );
         }
@@ -571,9 +570,9 @@ class SourcesTest extends TestCase
      * @param string $behavior
      * @return Sources
      */
-    private function getImporter(string $behavior): Sources
+    private function getImporter(string $behavior, $path): Sources
     {
-        $pathToFile = __DIR__ . '/_files/sample.csv';
+        $pathToFile = __DIR__ . $path;
         $importer = Bootstrap::getObjectManager()->create(Sources::class);
         $directory = $this->filesystem->getDirectoryWrite(DirectoryList::ROOT);
         $source = Bootstrap::getObjectManager()->create(
