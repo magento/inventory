@@ -121,9 +121,9 @@ class Sources extends AbstractEntity
                     $deleteRowIds[] = ['row_delete'];
                 }
             }
-            $newRows = array_merge([], ...$newRows);
-            $updateRows = array_merge([], ...$updateRows);
-            $deleteRowIds = array_merge([], ...$deleteRowIds);
+            $newRows = count($newRows);
+            $updateRows = count($updateRows);
+            $deleteRowIds = count($deleteRowIds);
             $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
             $command->execute($bunch);
         }

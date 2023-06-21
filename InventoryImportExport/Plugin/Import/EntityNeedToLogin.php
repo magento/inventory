@@ -14,7 +14,7 @@ use Magento\ImportExport\Model\Import\EntityInterface;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class AbstractEntityNeedToLogin
+class EntityNeedToLogin
 {
     /**
      * Need to log in import history

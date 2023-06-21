@@ -9,19 +9,18 @@ namespace Magento\InventoryImportExport\Test\Unit\Plugin\Import;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use Magento\ImportExport\Model\Import\EntityInterface;
-use Magento\InventoryImportExport\Plugin\Import\AbstractEntityNeedToLogin;
+use Magento\InventoryImportExport\Plugin\Import\EntityNeedToLogin;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Assigning products to default source
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class AbstractEntityNeedToLoginTest extends TestCase
+class EntityNeedToLoginTest extends TestCase
 {
     /**
-     * @var AbstractEntityNeedToLogin
+     * @var EntityNeedToLogin
      */
     private $plugin;
 
@@ -42,13 +41,13 @@ class AbstractEntityNeedToLoginTest extends TestCase
             ->getMock();
 
         $this->objectManagerHelper = new ObjectManagerHelper($this);
-        $this->plugin = $this->objectManagerHelper->getObject(AbstractEntityNeedToLogin::class);
+        $this->plugin = $this->objectManagerHelper->getObject(EntityNeedToLogin::class);
     }
 
     /**
      * Test for method afterIsNeedToLogInHistory()
      *
-     * @covers \Magento\InventoryImportExport\Plugin\Import\AbstractEntityNeedToLogin::afterIsNeedToLogInHistory
+     * @covers \Magento\InventoryImportExport\Plugin\Import\EntityNeedToLogin::afterIsNeedToLogInHistory
      */
     public function testAfterIsNeedToLogInHistory()
     {
