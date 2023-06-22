@@ -10,7 +10,7 @@ namespace Magento\InventoryCatalogSearch\Plugin\InventoryIndexer\Indexer\SourceI
 use Magento\CatalogSearch\Model\Indexer\Fulltext\Processor;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Model\ResourceModel\GetProductIdsBySourceItemIds;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatusesCached;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 
 /**
@@ -29,9 +29,9 @@ class FulltextIndexUpdater
     private $productIdsBySourceItemIds;
 
     /**
-     * @var GetSalableStatuses
+     * @var GetSalableStatusesCached
      */
-    private $getSalableStatuses;
+    private $getSalableStatusesCached;
 
     /**
      * @var GetProductsIdsToProcess
@@ -41,18 +41,18 @@ class FulltextIndexUpdater
     /**
      * @param Processor $fulltextIndexProcessor
      * @param GetProductIdsBySourceItemIds $productIdsBySourceItemIds
-     * @param GetSalableStatuses $getSalableStatuses
+     * @param GetSalableStatusesCached $getSalableStatusesCached
      * @param GetProductsIdsToProcess $getProductsIdsToProcess
      */
     public function __construct(
         Processor $fulltextIndexProcessor,
         GetProductIdsBySourceItemIds $productIdsBySourceItemIds,
-        GetSalableStatuses $getSalableStatuses,
+        GetSalableStatusesCached $getSalableStatusesCached,
         GetProductsIdsToProcess $getProductsIdsToProcess
     ) {
         $this->fulltextIndexProcessor = $fulltextIndexProcessor;
         $this->productIdsBySourceItemIds = $productIdsBySourceItemIds;
-        $this->getSalableStatuses = $getSalableStatuses;
+        $this->getSalableStatusesCached = $getSalableStatusesCached;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
     }
 
@@ -69,9 +69,9 @@ class FulltextIndexUpdater
         callable $proceed,
         array $sourceItemIds
     ) {
-        $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $beforeSalableList = $this->getSalableStatusesCached->execute($sourceItemIds, 'before');
         $proceed($sourceItemIds);
-        $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $afterSalableList = $this->getSalableStatusesCached->execute($sourceItemIds, 'after');
         $productsIdsToProcess = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
         if (!empty($productsIdsToProcess)) {
             $this->fulltextIndexProcessor->reindexList($productsIdsToProcess, true);
@@ -91,9 +91,9 @@ class FulltextIndexUpdater
         callable $proceed,
         int $sourceItemId
     ) {
-        $beforeSalableList = $this->getSalableStatuses->execute([$sourceItemId]);
+        $beforeSalableList = $this->getSalableStatusesCached->execute([$sourceItemId], 'before');
         $proceed($sourceItemId);
-        $afterSalableList = $this->getSalableStatuses->execute([$sourceItemId]);
+        $afterSalableList = $this->getSalableStatusesCached->execute([$sourceItemId], 'after');
         $productsIdsToProcess = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
         if (!empty($productsIdsToProcess)) {
             $this->fulltextIndexProcessor->reindexList($productsIdsToProcess, true);

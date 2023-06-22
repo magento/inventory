@@ -12,9 +12,9 @@ use Magento\Framework\Indexer\IndexerInterface;
 use Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\CacheFlush;
 use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatusesCached;
 use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -42,9 +42,9 @@ class CacheFlushTest extends TestCase
     private $flushCategoryByCategoryIds;
 
     /**
-     * @var GetSalableStatuses|MockObject
+     * @var GetSalableStatusesCached|MockObject
      */
-    private $getSalableStatuses;
+    private $getSalableStatusesCached;
 
     /**
      * @var GetProductsIdsToProcess|MockObject
@@ -90,7 +90,7 @@ class CacheFlushTest extends TestCase
         $this->flushCategoryByCategoryIds = $this->getMockBuilder(FlushCacheByCategoryIds::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->getSalableStatuses = $this->getMockBuilder(GetSalableStatuses::class)
+        $this->getSalableStatusesCached = $this->getMockBuilder(GetSalableStatusesCached::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->getProductsIdsToProcess = $this->getMockBuilder(GetProductsIdsToProcess::class)
@@ -108,7 +108,7 @@ class CacheFlushTest extends TestCase
             $this->flushCacheByIds,
             $this->getCategoryIdsByProductIds,
             $this->flushCategoryByCategoryIds,
-            $this->getSalableStatuses,
+            $this->getSalableStatusesCached,
             $this->getProductsIdsToProcess,
             $this->indexerRegistry
         );
@@ -136,9 +136,9 @@ class CacheFlushTest extends TestCase
         $this->indexer->expects($this->any())
             ->method('isScheduled')
             ->willReturn(true);
-        $this->getSalableStatuses->expects($this->exactly(2))
+        $this->getSalableStatusesCached->expects($this->exactly(2))
             ->method('execute')
-            ->with($sourceItemIds)
+            ->withConsecutive([$sourceItemIds, 'before'], [$sourceItemIds, 'after'])
             ->willReturnOnConsecutiveCalls(
                 $beforeSalableList,
                 $afterSalableList

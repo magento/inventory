@@ -10,9 +10,9 @@ namespace Magento\InventoryCache\Plugin\InventoryIndexer\Indexer\SourceItem\Stra
 use Magento\Framework\Indexer\IndexerRegistry;
 use Magento\InventoryCache\Model\FlushCacheByCategoryIds;
 use Magento\InventoryCache\Model\FlushCacheByProductIds;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatusesCached;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
 use Magento\InventoryIndexer\Model\ResourceModel\GetCategoryIdsByProductIds;
 use Magento\InventoryIndexer\Indexer\InventoryIndexer;
 
@@ -32,9 +32,9 @@ class CacheFlush
     private $getCategoryIdsByProductIds;
 
     /**
-     * @var GetSalableStatuses
+     * @var GetSalableStatusesCached
      */
-    private $getSalableStatuses;
+    private $getSalableStatusesCached;
 
     /**
      * @var FlushCacheByCategoryIds
@@ -55,7 +55,7 @@ class CacheFlush
      * @param FlushCacheByProductIds $flushCacheByIds
      * @param GetCategoryIdsByProductIds $getCategoryIdsByProductIds
      * @param FlushCacheByCategoryIds $flushCategoryByCategoryIds
-     * @param GetSalableStatuses $getSalableStatuses
+     * @param GetSalableStatusesCached $getSalableStatusesCached
      * @param GetProductsIdsToProcess $getProductsIdsToProcess
      * @param IndexerRegistry $indexerRegistry
      */
@@ -63,14 +63,14 @@ class CacheFlush
         FlushCacheByProductIds $flushCacheByIds,
         GetCategoryIdsByProductIds $getCategoryIdsByProductIds,
         FlushCacheByCategoryIds $flushCategoryByCategoryIds,
-        GetSalableStatuses $getSalableStatuses,
+        GetSalableStatusesCached $getSalableStatusesCached,
         GetProductsIdsToProcess $getProductsIdsToProcess,
         IndexerRegistry $indexerRegistry
     ) {
         $this->flushCacheByIds = $flushCacheByIds;
         $this->getCategoryIdsByProductIds = $getCategoryIdsByProductIds;
         $this->flushCategoryByCategoryIds = $flushCategoryByCategoryIds;
-        $this->getSalableStatuses = $getSalableStatuses;
+        $this->getSalableStatusesCached = $getSalableStatusesCached;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
         $this->indexerRegistry = $indexerRegistry;
     }
@@ -87,9 +87,9 @@ class CacheFlush
      */
     public function aroundExecuteList(Sync $subject, callable $proceed, array $sourceItemIds) : void
     {
-        $beforeSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $beforeSalableList = $this->getSalableStatusesCached->execute($sourceItemIds, 'before');
         $proceed($sourceItemIds);
-        $afterSalableList = $this->getSalableStatuses->execute($sourceItemIds);
+        $afterSalableList = $this->getSalableStatusesCached->execute($sourceItemIds, 'after');
         $forceDefaultProcessing = !$this->indexerRegistry->get(InventoryIndexer::INDEXER_ID)->isScheduled();
         $productsIdsToFlush = $this->getProductsIdsToProcess->execute(
             $beforeSalableList,

@@ -11,7 +11,7 @@ use Magento\Catalog\Model\Indexer\Product\Price\Processor;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatusesCached;
 use Magento\InventoryIndexer\Model\ResourceModel\GetSourceCodesBySourceItemIds;
 
 /**
@@ -35,9 +35,9 @@ class PriceIndexUpdater
     private $defaultSourceProvider;
 
     /**
-     * @var GetSalableStatuses
+     * @var GetSalableStatusesCached
      */
-    private $getSalableStatuses;
+    private $getSalableStatusesCached;
 
     /**
      * @var GetProductsIdsToProcess
@@ -48,20 +48,20 @@ class PriceIndexUpdater
      * @param Processor $priceIndexProcessor
      * @param GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds
      * @param DefaultSourceProviderInterface $defaultSourceProvider
-     * @param GetSalableStatuses $getSalableStatuses
+     * @param GetSalableStatusesCached $getSalableStatusesCached
      * @param GetProductsIdsToProcess $getProductsIdsToProcess
      */
     public function __construct(
         Processor $priceIndexProcessor,
         GetSourceCodesBySourceItemIds $getSourceCodesBySourceItemIds,
         DefaultSourceProviderInterface $defaultSourceProvider,
-        GetSalableStatuses $getSalableStatuses,
+        GetSalableStatusesCached $getSalableStatusesCached,
         GetProductsIdsToProcess $getProductsIdsToProcess
     ) {
         $this->priceIndexProcessor = $priceIndexProcessor;
         $this->getSourceCodesBySourceItemIds = $getSourceCodesBySourceItemIds;
         $this->defaultSourceProvider = $defaultSourceProvider;
-        $this->getSalableStatuses = $getSalableStatuses;
+        $this->getSalableStatusesCached = $getSalableStatusesCached;
         $this->getProductsIdsToProcess = $getProductsIdsToProcess;
     }
 
@@ -83,9 +83,9 @@ class PriceIndexUpdater
                 $customSourceItemIds[] = $sourceItemId;
             }
         }
-        $beforeSalableList = $this->getSalableStatuses->execute($customSourceItemIds);
+        $beforeSalableList = $this->getSalableStatusesCached->execute($customSourceItemIds, 'before');
         $proceed($sourceItemIds);
-        $afterSalableList = $this->getSalableStatuses->execute($customSourceItemIds);
+        $afterSalableList = $this->getSalableStatusesCached->execute($customSourceItemIds, 'after');
 
         $productsIdsToReindex = $this->getProductsIdsToProcess->execute($beforeSalableList, $afterSalableList);
         if (!empty($productsIdsToReindex)) {

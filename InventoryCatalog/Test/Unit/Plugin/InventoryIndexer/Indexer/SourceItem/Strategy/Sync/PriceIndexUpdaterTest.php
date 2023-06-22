@@ -10,7 +10,7 @@ namespace Magento\InventoryCatalog\Test\Unit\Plugin\InventoryIndexer\Indexer\Sou
 use Magento\Catalog\Model\Indexer\Product\Price\Processor;
 use Magento\InventoryCatalog\Plugin\InventoryIndexer\Indexer\SourceItem\Strategy\Sync\PriceIndexUpdater;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
-use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatuses;
+use Magento\InventoryIndexer\Indexer\SourceItem\GetSalableStatusesCached;
 use Magento\InventoryIndexer\Indexer\SourceItem\Strategy\Sync;
 use Magento\InventoryIndexer\Model\GetProductsIdsToProcess;
 use Magento\InventoryIndexer\Model\ResourceModel\GetSourceCodesBySourceItemIds;
@@ -35,9 +35,9 @@ class PriceIndexUpdaterTest extends TestCase
     private $defaultSourceProvider;
 
     /**
-     * @var GetSalableStatuses|MockObject
+     * @var GetSalableStatusesCached|MockObject
      */
-    private $getSalableStatuses;
+    private $getSalableStatusesCached;
 
     /**
      * @var GetProductsIdsToProcess|MockObject
@@ -78,7 +78,7 @@ class PriceIndexUpdaterTest extends TestCase
             ->getMock();
         $this->defaultSourceProvider = $this->getMockBuilder(DefaultSourceProviderInterface::class)
             ->getMockForAbstractClass();
-        $this->getSalableStatuses = $this->getMockBuilder(GetSalableStatuses::class)
+        $this->getSalableStatusesCached = $this->getMockBuilder(GetSalableStatusesCached::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->getProductsIdsToProcess = $this->getMockBuilder(GetProductsIdsToProcess::class)
@@ -88,11 +88,11 @@ class PriceIndexUpdaterTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->priceIndexUpdater = new priceIndexUpdater(
+        $this->priceIndexUpdater = new PriceIndexUpdater(
             $this->priceIndexProcessor,
             $this->getSourceCodesBySourceItemIds,
             $this->defaultSourceProvider,
-            $this->getSalableStatuses,
+            $this->getSalableStatusesCached,
             $this->getProductsIdsToProcess
         );
     }
@@ -120,7 +120,7 @@ class PriceIndexUpdaterTest extends TestCase
             ->method('execute')
             ->with($sourceItemIds)
             ->willReturn($sourceItemIds);
-        $this->getSalableStatuses->expects($this->exactly(2))
+        $this->getSalableStatusesCached->expects($this->exactly(2))
             ->method('execute')
             ->willReturnOnConsecutiveCalls(
                 $beforeSalableList,
