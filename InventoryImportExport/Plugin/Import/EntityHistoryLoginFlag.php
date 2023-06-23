@@ -28,7 +28,6 @@ class EntityHistoryLoginFlag
      * @param EntityInterface $subject
      * @param mixed $result
      * @return bool
-     *
      */
     public function afterIsNeedToLogInHistory(
         EntityInterface $subject,
