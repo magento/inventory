@@ -25,13 +25,9 @@ class EntityHistoryLoginFlag
     /**
      * After plugin Import to import Stock Data to Source Items
      *
-     * @param EntityInterface $subject
-     * @param mixed $result
      * @return bool
      */
     public function afterIsNeedToLogInHistory(
-        EntityInterface $subject,
-        mixed $result
     ): bool {
         return $this->logInHistory;
     }
