@@ -104,45 +104,26 @@ class Sources extends AbstractEntity
         $command = $this->getCommandByBehavior($this->getBehavior());
 
         while ($bunch = $this->_dataSourceModel->getNextUniqueBunch($this->getIds())) {
-            $newRows = [];
-            $updateRows = [];
-            $deleteRowIds = [];
             foreach ($bunch as $rowData) {
                 if ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_APPEND) {
                     $sourceCodes = $this->getSourceCodesBySkus->execute([$rowData['sku']]);
                     if (in_array($rowData['source_code'], $sourceCodes)) {
-                        $updateRows[] = ['row_update'];
+                        $this->countItemsUpdated ++;
                     } else {
-                        $newRows[] = ['row_new'];
+                        $this->countItemsCreated ++;
                     }
                 } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_REPLACE) {
-                    $updateRows[] = ['row_update'];
+                    $this->countItemsUpdated ++;
                 } elseif ($this->getBehavior() == \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE) {
-                    $deleteRowIds[] = ['row_delete'];
+                    $this->countItemsDeleted ++;
                 }
             }
-            $this->updateItemsCounterStats($newRows, $updateRows, $deleteRowIds);
             $command->execute($bunch);
         }
 
         return true;
     }
 
-    /**
-     * Update proceed items counter
-     *
-     * @param array $created
-     * @param array $updated
-     * @param array $deleted
-     * @return $this
-     */
-    protected function updateItemsCounterStats(array $created = [], array $updated = [], array $deleted = []): static
-    {
-        $this->countItemsCreated += count($created);
-        $this->countItemsUpdated += count($updated);
-        $this->countItemsDeleted += count($deleted);
-        return $this;
-    }
     /**
      * To fetch command by behavior
      *

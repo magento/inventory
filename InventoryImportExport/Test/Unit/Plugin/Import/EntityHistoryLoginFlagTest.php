@@ -9,7 +9,7 @@ namespace Magento\InventoryImportExport\Test\Unit\Plugin\Import;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use Magento\ImportExport\Model\Import\EntityInterface;
-use Magento\InventoryImportExport\Plugin\Import\EntityNeedToLogin;
+use Magento\InventoryImportExport\Plugin\Import\EntityHistoryLoginFlag;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -17,10 +17,10 @@ use PHPUnit\Framework\TestCase;
  * Assigning products to default source
  *
  */
-class EntityNeedToLoginTest extends TestCase
+class EntityHistoryLoginFlagTest extends TestCase
 {
     /**
-     * @var EntityNeedToLogin
+     * @var EntityHistoryLoginFlag
      */
     private $plugin;
 
@@ -41,13 +41,13 @@ class EntityNeedToLoginTest extends TestCase
             ->getMock();
 
         $this->objectManagerHelper = new ObjectManagerHelper($this);
-        $this->plugin = $this->objectManagerHelper->getObject(EntityNeedToLogin::class);
+        $this->plugin = $this->objectManagerHelper->getObject(EntityHistoryLoginFlag::class);
     }
 
     /**
      * Test for method afterIsNeedToLogInHistory()
      *
-     * @covers \Magento\InventoryImportExport\Plugin\Import\EntityNeedToLogin::afterIsNeedToLogInHistory
+     * @covers \Magento\InventoryImportExport\Plugin\Import\EntityHistoryLoginFlag::afterIsNeedToLogInHistory
      */
     public function testAfterIsNeedToLogInHistory()
     {

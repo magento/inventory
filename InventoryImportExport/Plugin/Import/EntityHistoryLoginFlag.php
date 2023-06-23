@@ -12,9 +12,8 @@ use Magento\ImportExport\Model\Import\EntityInterface;
 /**
  * Assigning products to default source
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EntityNeedToLogin
+class EntityHistoryLoginFlag
 {
     /**
      * Need to log in import history
@@ -30,7 +29,6 @@ class EntityNeedToLogin
      * @param mixed $result
      * @return bool
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterIsNeedToLogInHistory(
         EntityInterface $subject,
