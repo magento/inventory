@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Plugin\Import;
 
-use Magento\ImportExport\Model\Import\EntityInterface;
-
 /**
  * Assigning products to default source
  *
@@ -27,8 +25,8 @@ class EntityHistoryLoginFlag
      *
      * @return bool
      */
-    public function afterIsNeedToLogInHistory(
-    ): bool {
+    public function afterIsNeedToLogInHistory(): bool
+    {
         return $this->logInHistory;
     }
 }
