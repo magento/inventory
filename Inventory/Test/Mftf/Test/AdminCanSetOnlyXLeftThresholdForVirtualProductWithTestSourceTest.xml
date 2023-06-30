@@ -85,7 +85,7 @@
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
 
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 

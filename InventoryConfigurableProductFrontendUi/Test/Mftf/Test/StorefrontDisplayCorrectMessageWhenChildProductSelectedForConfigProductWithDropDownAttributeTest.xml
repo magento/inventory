@@ -18,6 +18,8 @@
             <severity value="MAJOR"/>
             <group value="catalog"/>
             <group value="configurableProduct"/>
+            <group value="msi"/>
+            <group value="single_mode"/>
         </annotations>
 
         <before>

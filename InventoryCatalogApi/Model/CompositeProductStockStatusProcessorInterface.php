@@ -15,8 +15,8 @@ interface CompositeProductStockStatusProcessorInterface
     /**
      * Update provided products parent products stock status
      *
-     * @param array $productIds
+     * @param array $skus
      * @return void
      */
-    public function execute(array $productIds): void;
+    public function execute(array $skus): void;
 }

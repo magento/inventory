@@ -120,6 +120,8 @@
                 type="Magento\InventoryCatalog\Model\BulkPartialInventoryTransfer"/>
     <preference for="Magento\InventoryCatalogApi\Api\Data\PartialInventoryTransferItemInterface"
                 type="Magento\InventoryCatalog\Model\PartialInventoryTransferItem"/>
+    <preference for="Magento\InventoryCatalogApi\Model\SortableBySaleabilityInterface"
+                type="Magento\InventoryCatalog\Model\ResourceModel\SortableBySaleabilityProvider"/>
 
     <type name="\Magento\InventoryCatalogApi\Model\BulkSourceAssignValidatorChain">
         <arguments>
@@ -159,7 +161,7 @@
     <!-- Negative Min Quantity Threshold for Backorders -->
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter">
         <plugin name="allow_negative_min_qty"
-                type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\AllowNegativeMinQtyPlugin"/>
+                type="Magento\InventoryCatalog\Plugin\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter\StockDataFilterPlugin"/>
     </type>
     <type name="Magento\CatalogInventory\Api\Data\StockItemInterface">
         <plugin name="adapt_min_qty_to_backorders"
@@ -193,7 +195,7 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\Catalog\Block\Product\ProductList\Toolbar">
-        <plugin name="update_toolbar_count" type="Magento\InventoryCatalog\Plugin\Catalog\Block\ProductList\UpdateToolbarCount"/>
+    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+        <plugin name="outOfStockSorting" type="Magento\InventoryCatalog\Plugin\Catalog\Model\ResourceModel\Product\CollectionPlugin"/>
     </type>
 </config>

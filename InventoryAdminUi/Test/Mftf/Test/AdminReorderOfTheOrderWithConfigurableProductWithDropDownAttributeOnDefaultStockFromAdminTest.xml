@@ -111,7 +111,7 @@
         </actionGroup>
 
         <!-- Create order -->
-        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
+        <actionGroup ref="AdminNavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrder">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
         <actionGroup ref="AdminFilterProductInCreateOrderActionGroup" stepKey="filterConfigProduct">

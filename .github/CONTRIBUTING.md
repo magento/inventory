@@ -2,7 +2,7 @@
 
 Contributions to the Magento Inventory codebase are done using the fork & pull model.
 This contribution model has contributors maintaining their own fork of the Magento Inventory repository.
-The forked repository is then used to submit a request to the base repository to “pull” a set of changes.
+The forked repository is then used to submit a request to the base repository to "pull" a set of changes.
 For more information on pull requests please refer to [GitHub Help](https://help.github.com/articles/about-pull-requests/).
 
 Contributions can take the form of new components or features, changes to existing features, tests, documentation (such as developer guides, user guides, examples, or specifications), bug fixes or optimizations.
@@ -15,7 +15,7 @@ For more detailed information on contribution please read our [beginners guide](
 
 ## Contribution requirements
 
-1. Contributions must adhere to the [Magento coding standards](https://devdocs.magento.com/guides/v2.4/coding-standards/bk-coding-standards.html).
+1. Contributions must adhere to the [Magento coding standards](https://developer.adobe.com/commerce/php/coding-standards/).
 1. Pull requests (PRs) must be accompanied by a meaningful description of their purpose. Comprehensive descriptions increase the chances of a pull request being merged quickly and without additional clarification requests.
 1. Commits must be accompanied by meaningful commit messages. Please see the [Magento Inventory Pull Request Template](https://github.com/magento/inventory/blob/1.1-develop/.github/PULL_REQUEST_TEMPLATE.md) for more information.
 1. PRs which include bug fixes must be accompanied with a step-by-step description of how to reproduce the bug.
@@ -33,7 +33,7 @@ This will allow you to collaborate with the Magento 2 development team, fork the
 1. Search current [listed issues](https://github.com/magento/inventory/issues) (open or closed) for similar proposals of intended contribution before starting work on a new contribution.
 2. Review the [Contributor License Agreement](https://opensource.adobe.com/cla.html) if this is your first time contributing.
 3. Create and test your work.
-4. Fork the Magento Inventory repository according to the [Fork a Repository instructions](https://devdocs.magento.com/guides/v2.4/contributor-guide/contributing.html#fork) and when you are ready to send us a pull request – follow the [Create a Pull Request instructions](https://devdocs.magento.com/guides/v2.4/contributor-guide/contributing.html#pull_request).
+4. Fork the Magento Inventory repository according to the [Fork a Repository instructions](https://developer.adobe.com/commerce/contributor/guides/code-contributions/) and when you are ready to send us a pull request – follow the [Create a Pull Request instructions](https://developer.adobe.com/commerce/contributor/guides/code-contributions/).
 5. Once your contribution is received the Magento Inventory development team will review the contribution and collaborate with you as needed.
 
 ## Code of Conduct
