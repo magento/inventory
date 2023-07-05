@@ -8,13 +8,22 @@ declare(strict_types=1);
 namespace Magento\InventoryConfiguration\Model\LegacyStockItem;
 
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
+use Magento\Framework\ObjectManager\ResetAfterRequestInterface;
 
-class CacheStorage
+class CacheStorage implements ResetAfterRequestInterface
 {
     /**
      * @var array
      */
     private $cachedItems = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function _resetState(): void
+    {
+        $this->cachedItems = [];
+    }
 
     /**
      * Save item to cache
