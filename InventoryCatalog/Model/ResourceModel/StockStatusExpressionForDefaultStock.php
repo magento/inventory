@@ -46,7 +46,7 @@ class StockStatusExpressionForDefaultStock implements ExpressionInterface
         $isInStockExpression = $connection->getCheckSql(
             'cisi.is_in_stock = 0',
             0,
-            $connection->getCheckSql('css.stock_status IS NOT NULL', 'csi.is_in_stock', $stockItemInStockField)
+            $connection->getCheckSql('css.stock_status IS NOT NULL', 'cisi.is_in_stock', $stockItemInStockField)
         );
 
         if ($isManageStock) {
