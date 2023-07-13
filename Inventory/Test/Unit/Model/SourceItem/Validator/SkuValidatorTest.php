@@ -25,6 +25,16 @@ class SkuValidatorTest extends TestCase
     private $validationResultFactory;
 
     /**
+     * @var NotAnEmptyString
+     */
+    private $notAnEmptyString;
+
+    /**
+     * @var NoWhitespaceInString
+     */
+    private $noWhitespaceInString;
+
+    /**
      * @var SourceItem|MockObject
      */
     private $sourceItemMock;

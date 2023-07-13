@@ -59,8 +59,7 @@ class SkuValidator implements SourceItemValidatorInterface
             $this->notAnEmptyString->execute(SourceItemInterface::SKU, (string)$value),
             $this->noWhitespaceInString->execute(SourceItemInterface::SKU, $value)
         ];
-        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
-
+        $errors = array_merge(...$errors);
         return $this->validationResultFactory->create(['errors' => $errors]);
     }
 }
