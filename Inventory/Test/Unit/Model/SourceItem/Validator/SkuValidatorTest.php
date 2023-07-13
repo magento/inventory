@@ -95,7 +95,7 @@ class SkuValidatorTest extends TestCase
         $this->sourceItemMock->expects($this->atLeastOnce())->method('getSku')
         ->willReturn($source['sku']);
         $errors = [$source['execute']];
-        $errors = !empty($errors) ? array_merge(...$errors) : $errors;
+        $errors = array_merge(...$errors);
         $this->noWhitespaceInString->method('execute')->willReturn($source['execute']);
             $this->validationResultFactory->method('create')->with(
                 ['errors' => $errors]
