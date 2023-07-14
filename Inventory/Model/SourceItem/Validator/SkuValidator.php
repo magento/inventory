@@ -9,8 +9,8 @@ namespace Magento\Inventory\Model\SourceItem\Validator;
 
 use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
+use Magento\Inventory\Model\Validators\NoSpaceBeforeAndAfterString;
 use Magento\Inventory\Model\Validators\NotAnEmptyString;
-use Magento\Inventory\Model\Validators\NoWhitespaceInString;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Model\SourceItemValidatorInterface;
 
@@ -30,23 +30,23 @@ class SkuValidator implements SourceItemValidatorInterface
     private $notAnEmptyString;
 
     /**
-     * @var NoWhitespaceInString
+     * @var NoSpaceBeforeAndAfterString
      */
-    private $noWhitespaceInString;
+    private $noSpaceBeforeAndAfterString;
 
     /**
      * @param ValidationResultFactory $validationResultFactory
      * @param NotAnEmptyString $notAnEmptyString
-     * @param NoWhitespaceInString $noWhitespaceInString
+     * @param NoSpaceBeforeAndAfterString $noSpaceBeforeAndAfterString
      */
     public function __construct(
         ValidationResultFactory $validationResultFactory,
         NotAnEmptyString $notAnEmptyString,
-        NoWhitespaceInString $noWhitespaceInString
+        NoSpaceBeforeAndAfterString $noSpaceBeforeAndAfterString
     ) {
         $this->validationResultFactory = $validationResultFactory;
         $this->notAnEmptyString = $notAnEmptyString;
-        $this->noWhitespaceInString = $noWhitespaceInString;
+        $this->noSpaceBeforeAndAfterString = $noSpaceBeforeAndAfterString;
     }
 
     /**
@@ -57,7 +57,7 @@ class SkuValidator implements SourceItemValidatorInterface
         $value = $source->getSku();
         $errors = [
             $this->notAnEmptyString->execute(SourceItemInterface::SKU, (string)$value),
-            $this->noWhitespaceInString->execute(SourceItemInterface::SKU, (string)$value)
+            $this->noSpaceBeforeAndAfterString->execute(SourceItemInterface::SKU, (string)$value)
         ];
         $errors = array_merge(...$errors);
         return $this->validationResultFactory->create(['errors' => $errors]);

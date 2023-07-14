@@ -12,8 +12,8 @@ use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Inventory\Model\SourceItem;
 use Magento\Inventory\Model\SourceItem\Validator\SkuValidator;
+use Magento\Inventory\Model\Validators\NoSpaceBeforeAndAfterString;
 use Magento\Inventory\Model\Validators\NotAnEmptyString;
-use Magento\Inventory\Model\Validators\NoWhitespaceInString;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -30,9 +30,9 @@ class SkuValidatorTest extends TestCase
     private $notAnEmptyString;
 
     /**
-     * @var NoWhitespaceInString
+     * @var NoSpaceBeforeAndAfterString
      */
-    private $noWhitespaceInString;
+    private $noSpaceBeforeAndAfterString;
 
     /**
      * @var SourceItem|MockObject
@@ -48,13 +48,13 @@ class SkuValidatorTest extends TestCase
     {
         $this->validationResultFactory = $this->createMock(ValidationResultFactory::class);
         $this->notAnEmptyString = $this->createMock(NotAnEmptyString::class);
-        $this->noWhitespaceInString = $this->createMock(NoWhitespaceInString::class);
+        $this->noSpaceBeforeAndAfterString = $this->createMock(NoSpaceBeforeAndAfterString::class);
         $this->sourceItemMock = $this->getMockBuilder(SourceItem::class)->disableOriginalConstructor()
             ->onlyMethods(['getSku', 'getSourceCode', 'getQuantity', 'getStatus', 'getData', 'setData'])->getMock();
         $this->skuValidator = new SkuValidator(
             $this->validationResultFactory,
             $this->notAnEmptyString,
-            $this->noWhitespaceInString
+            $this->noSpaceBeforeAndAfterString
         );
     }
 
@@ -96,7 +96,7 @@ class SkuValidatorTest extends TestCase
         ->willReturn($source['sku']);
         $errors = [$source['execute']];
         $errors = array_merge(...$errors);
-        $this->noWhitespaceInString->method('execute')->willReturn($source['execute']);
+        $this->noSpaceBeforeAndAfterString->method('execute')->willReturn($source['execute']);
             $this->validationResultFactory->method('create')->with(
                 ['errors' => $errors]
             )->willReturn(new ValidationResult($errors));
