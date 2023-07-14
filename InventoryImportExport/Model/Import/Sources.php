@@ -90,7 +90,7 @@ class Sources extends AbstractEntity
     protected function _importData()
     {
         $command = $this->getCommandByBehavior($this->getBehavior());
-        while ($bunch = $this->_dataSourceModel->getNextBunch()) {
+        while ($bunch = $this->_dataSourceModel->getNextUniqueBunch($this->getIds())) {
             $command->execute($bunch);
         }
 
