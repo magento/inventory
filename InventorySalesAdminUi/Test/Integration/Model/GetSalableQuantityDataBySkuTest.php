@@ -7,7 +7,22 @@ declare(strict_types=1);
 
 namespace Magento\InventorySalesAdminUi\Test\Integration\Model;
 
+use Magento\Catalog\Test\Fixture\Product as ProductFixture;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\InventoryApi\Test\Fixture\Source as SourceFixture;
+use Magento\InventoryApi\Test\Fixture\SourceItems as SourceItemsFixture;
+use Magento\InventoryApi\Test\Fixture\Stock as StockFixture;
+use Magento\InventoryApi\Test\Fixture\StockSourceLinks as StockSourceLinksFixture;
+use Magento\InventoryConfigurationApi\Exception\SkuIsNotAssignedToStockException;
 use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
+use Magento\InventorySalesApi\Test\Fixture\StockSalesChannels as StockSalesChannelsFixture;
+use Magento\TestFramework\Fixture\AppIsolation;
+use Magento\TestFramework\Fixture\DataFixture;
+use Magento\TestFramework\Fixture\DataFixtureStorage;
+use Magento\TestFramework\Fixture\DataFixtureStorageManager;
+use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -25,12 +40,18 @@ class GetSalableQuantityDataBySkuTest extends TestCase
     private $getSalableQuantityDataBySku;
 
     /**
+     * @var DataFixtureStorage
+     */
+    private $fixtures;
+
+    /**
      * @inheritdoc
      */
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->fixtures = DataFixtureStorageManager::getStorage();
         $this->getSalableQuantityDataBySku = Bootstrap::getObjectManager()->get(GetSalableQuantityDataBySku::class);
     }
 
@@ -152,5 +173,48 @@ class GetSalableQuantityDataBySkuTest extends TestCase
 
         $salableData = $this->getSalableQuantityDataBySku->execute($sku);
         self::assertEquals($expectedSalableData, $salableData);
+    }
+
+    /**
+     * For non-default sources, the salable quantity should permit up to an 8-digit value, just as the default source.
+     *
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws SkuIsNotAssignedToStockException
+     * @return void
+     */
+    #[
+        DbIsolation(false),
+        AppIsolation(true),
+        DataFixture(SourceFixture::class, as: 'source2'),
+        DataFixture(StockFixture::class, as: 'stock2'),
+        DataFixture(
+            StockSourceLinksFixture::class,
+            [
+                ['stock_id' => '$stock2.stock_id$', 'source_code' => '$source2.source_code$'],
+            ]
+        ),
+        DataFixture(
+            StockSalesChannelsFixture::class,
+            ['stock_id' => '$stock2.stock_id$', 'sales_channels' => ['base']]
+        ),
+
+        DataFixture(ProductFixture::class, ['sku' => 'simple1'], 'p1'),
+        DataFixture(
+            SourceItemsFixture::class,
+            [
+                ['sku' => '$p1.sku$', 'source_code' => 'default', 'quantity' => 12345678],
+                ['sku' => '$p1.sku$', 'source_code' => '$source2.source_code$', 'quantity' => 12345678],
+            ]
+        ),
+    ]
+    public function testSalableQuantityForMaxAllowedDigits(): void
+    {
+        $product = $this->fixtures->get('p1');
+        $salableData = $this->getSalableQuantityDataBySku->execute($product->getSku());
+        foreach ($salableData as $data) {
+            $this->assertEquals(12345678, (int)$data['qty']);
+        }
     }
 }
