@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminValidateInventorySourcesShouldUnassigned">
+    <test name="AdminValidateInventorySourcesShouldUnassigned" deprecated="This test is a duplicate. Here is the test that does the same a little bit more: AdminMassActionUnAssignAllProductSourcesFromSimpleProductTest.">
         <annotations>
             <features value="Unassign source from product"/>
             <stories value="Unassign source from product"/>
@@ -17,6 +17,11 @@
             <severity value="MAJOR"/>
             <testCaseId value="AC-2869"/>
             <group value="cloud"/>
+            <group value="msi"/>
+            <group value="multi_mode"/>
+            <skip>
+                <issueId value="DUPLICATE" />
+            </skip>
         </annotations>
         <before>
             <!--Login to Admin-->
