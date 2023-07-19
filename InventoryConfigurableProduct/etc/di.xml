@@ -39,6 +39,8 @@
     <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
         <plugin name="inventory_catalog_add_qty_to_legacy_stock_configurable"
                 type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\StockRegistry\SetQtyToLegacyStock"/>
+        <plugin name="inventory_stockupdate_legacy_stock_configurable"
+                type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Api\StockRegistry\UpdateLegacyStockStatusForConfigurableProduct"/>
     </type>
     <type name="Magento\CatalogInventory\Model\ResourceModel\Stock\Item">
         <plugin name="after_update_stock_item_for_new_configurable_product"
