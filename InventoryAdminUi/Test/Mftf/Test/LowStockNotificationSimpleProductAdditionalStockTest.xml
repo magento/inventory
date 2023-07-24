@@ -48,7 +48,7 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="additionalStock" stepKey="deleteAdditionalStock"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <magentoCLI command="cron:run  --group=index --bootstrap=standaloneProcessStarted=1" stepKey="reindex"/>
         </after>
 
         <!--Assign created product to additional stock.-->
