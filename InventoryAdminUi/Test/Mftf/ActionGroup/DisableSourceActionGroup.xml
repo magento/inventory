@@ -14,6 +14,7 @@
         </arguments>
         <comment userInput="Disable Source" stepKey="DisableSourceComment"/>
         <amOnPage url="{{AdminManageSourcePage.url}}" stepKey="navigateToSourceList"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.CancelGridColumns}}" stepKey="closeGridColumnsPopupIfPresent"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}"
                           dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true"
                           stepKey="clearSourcesFilter"/>
