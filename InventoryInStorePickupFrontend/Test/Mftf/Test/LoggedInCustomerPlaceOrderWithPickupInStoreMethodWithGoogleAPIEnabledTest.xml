@@ -25,7 +25,7 @@
             <!--Enable Distance Provider for Distance Based SSA to online-->
             <magentoCLI command="config:set {{OnlineDistanceProviderForDistanceBasedSSA.path}} {{OnlineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOnline"/>
 
-            <!--Clean chache and reindex-->
+            <!--Clean cache and reindex-->
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
 
@@ -38,6 +38,8 @@
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
+            <!--Logout from customer account-->
+            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="logoutStorefront"/>
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
@@ -62,7 +64,7 @@
         <conditionalClick stepKey="expandGoogledistanceProvider" selector="{{InventoryConfigSection.GoogleDistanceProvidedTab}}" dependentSelector="{{InventoryConfigSection.GoogleDistanceProvidedTabExpanded}}" visible="true"/>
         <fillField selector="{{InventoryConfigSection.GoogleDistanceProvided}}" userInput="AIzaSyD7QOaF7rcGVZQwrbG7AYNnFLwyuhGpQBU" stepKey="fillGoogleDistanceProvider"/>
         <click selector="{{ContentManagementSection.Save}}" stepKey="clickSaveConfig"/>
-        <!--Clean chache and reindex-->
+        <!--Clean cache and reindex-->
         <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
         <magentoCLI command="cache:flush" stepKey="cleanCache"/>
 
