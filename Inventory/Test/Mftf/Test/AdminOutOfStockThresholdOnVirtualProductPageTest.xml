@@ -71,7 +71,9 @@
         <see selector="{{AdminOrderDetailsMessagesSection.successMessage}}" userInput="You created the order." stepKey="seeSuccessMessage"/>
 
         <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex2"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock2"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterDisableManageStock2">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <amOnPage url="/$$createProduct1.product[sku]$$.html" stepKey="amOnProductPage2"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad2"/>

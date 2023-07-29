@@ -23,7 +23,9 @@
             <!--Revert 'Notify Quantity Bellow' configuration-->
             <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 0" stepKey="setLowStockNotification" after="deleteProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertConfiguration"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertConfiguration"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertConfiguration">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <remove keyForRemoval="uncheckNotifyQtyUseDefault"/>
@@ -31,6 +33,8 @@
         <!--Set 'Notify Quantity Bellow' to 95-->
         <magentoCLI command="config:set cataloginventory/item_options/notify_stock_qty 95" stepKey="setLowStockNotification" before="navigateToLowStockReportPageBeforeApplyCustomNotifyQtyForProduct"/>
         <magentoCLI command="indexer:reindex" stepKey="performReindexAfterSetConfiguration"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterSetConfiguration"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterSetConfiguration">
+            <argument name="tags" value=""/>
+        </actionGroup>
     </test>
 </tests>

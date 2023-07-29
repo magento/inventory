@@ -39,7 +39,9 @@
             <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{defaultProductQty.value}}" stepKey="setQuantity"/>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="product" stepKey="deleteProduct" before="disableSource"/>

@@ -56,7 +56,9 @@
         <magentoCLI command="config:set cataloginventory/item_options/backorders 2" stepKey="fillBackordersConfigValue"/>
         <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
         <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
          <!--Assign source to product, and save the product-->
         <amOnPage url="{{AdminProductEditPage.url($$product.id$$)}}" stepKey="openProductEditPage"/>
@@ -188,7 +190,9 @@
             <magentoCLI command="config:set cataloginventory/item_options/backorders 0" stepKey="fillDefaultBackordersConfigValue1"/>
             <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment1"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig1"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig1"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig1">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <!--Delete the created products and catagory.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>

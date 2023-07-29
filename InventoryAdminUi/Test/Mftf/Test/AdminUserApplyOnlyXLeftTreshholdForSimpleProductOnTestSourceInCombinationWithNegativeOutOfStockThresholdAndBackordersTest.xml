@@ -101,7 +101,9 @@
         <actionGroup ref="OrderSelectFlatRateShippingActionGroup" stepKey="selectFlatRate"/>
         <actionGroup ref="AdminSubmitOrderActionGroup" stepKey="submitOrder"/>
 
-        <magentoCLI command="cache:flush" stepKey="flushCache2"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache2">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openFirstProductPage">
             <argument name="productUrl" value="$$simpleProduct.custom_attributes[url_key]$$"/>

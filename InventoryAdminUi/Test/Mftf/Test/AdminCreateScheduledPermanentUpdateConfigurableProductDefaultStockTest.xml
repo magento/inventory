@@ -54,7 +54,9 @@
             <!--Create source.-->
             <createData entity="FullSource1" stepKey="source"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="configurableChildProduct" stepKey="deleteConfigurableChildProduct" before="deleteConfigurableProduct"/>

@@ -42,7 +42,9 @@
 
             <comment userInput="Perform reindex and cache flush after assign default stock to main website." stepKey="reindexCacheFlushAfterAssignDefaultStockToMainWebsite"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="category"/>

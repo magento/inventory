@@ -45,7 +45,9 @@
             <!--Revert 'Out of Stock' configuration.-->
             <magentoCLI command="config:set {{RevertOutOfStockThreshold.path}} {{RevertOutOfStockThreshold.value}}" stepKey="revertOutOfStockThreshold"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cacheFlush">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -76,7 +78,9 @@
         <!--Set out of stock threshold greater than product quantity.-->
         <magentoCLI command="config:set {{SetOutOfStockThreshold.path}} {{SetOutOfStockThreshold.value}}" stepKey="setOutOfStockThreshold"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cacheFlush">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is absent on category page.-->
         <actionGroup ref="AssertStorefrontProductAbsentOnCategoryPageActionGroup" stepKey="verifyProductIsAbsentOnCategoryPage">
             <argument name="categoryUrlKey" value="$$category.url_key$$"/>

@@ -82,7 +82,9 @@
 
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseProductForm"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <comment userInput="Disable created source." stepKey="disableCreatedSourceComment"/>

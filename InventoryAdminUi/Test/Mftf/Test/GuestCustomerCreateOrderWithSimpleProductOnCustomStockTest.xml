@@ -42,7 +42,9 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
 
         <after>
@@ -66,7 +68,9 @@
             </actionGroup>
             <deleteData createDataKey="CustomStockMainWebsite" stepKey="deleteStock"/>
             <magentoCLI command="indexer:reindex" stepKey="runIndexerReindex" />
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
 

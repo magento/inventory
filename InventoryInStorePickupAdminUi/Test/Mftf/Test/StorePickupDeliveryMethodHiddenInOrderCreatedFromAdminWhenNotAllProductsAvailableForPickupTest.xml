@@ -25,9 +25,11 @@
             <!--Set Distance Provider for Distance Based SSA to offline-->
             <magentoCLI command="config:set {{OfflineDistanceProviderForDistanceBasedSSA.path}} {{OfflineDistanceProviderForDistanceBasedSSA.value}}" stepKey="setDistanceProviderToOffline"/>
 
-            <!--Clean chache and reindex-->
+            <!--Clean cache and reindex-->
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="CulverStorePickupEnabledSource2" stepKey="createSource1"/>
             <createData entity="FullSource1" stepKey="testSource"/>
@@ -60,9 +62,11 @@
         </after>
         <magentoCLI command="inventory-geonames:import us" stepKey="downloadOfflineTables"/>
 
-        <!--Clean chache and reindex-->
+        <!--Clean cache and reindex-->
         <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="AdminGoToStockGridFilterResultsByInputEditStock"
                      stepKey="goToStockGridFilterResultsByInputEditStock1">

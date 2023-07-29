@@ -30,7 +30,9 @@
             </createData>
             <!-- Enable *Free Shipping* -->
             <createData entity="FreeShippingMethodsSettingConfig" stepKey="freeShippingMethodsSettingConfig"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminPanel"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">
                 <requiredEntity createDataKey="simpleCategory"/>

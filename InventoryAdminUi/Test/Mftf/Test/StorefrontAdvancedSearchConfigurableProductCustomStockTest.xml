@@ -57,7 +57,9 @@
             <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="setProductStockStatus"/>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!-- Delete configurable product -->

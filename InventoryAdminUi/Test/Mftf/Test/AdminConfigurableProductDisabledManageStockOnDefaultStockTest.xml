@@ -31,7 +31,9 @@
 
             <comment userInput="Perform reindex and cache flush after save stock related config." stepKey="reindexCacheFlushComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
         </after>
 
@@ -134,7 +136,9 @@
 
         <comment userInput="Perform reindex and cache flush after disable 'Mange Stock' configuration config." stepKey="reindexCacheFlushAfterDisableManageStockComment"/>
         <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterDisableManageStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <comment userInput="Check, configurable product back to category page and has 'In Stock' status on product view page." stepKey="checkConfigurableProductBackOnStorefront"/>
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsBackToCategoryPage">

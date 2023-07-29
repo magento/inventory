@@ -23,7 +23,9 @@
             <remove keyForRemoval="assignMainWebsiteToDefaultStock"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="additionalStock" before="createSource"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Assign Default Stock to Default Website.-->

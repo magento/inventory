@@ -27,7 +27,9 @@
             <!--Enable 'Mange Stock' in configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Create test data.-->
             <createData entity="_defaultCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="simpleProduct">
@@ -51,7 +53,9 @@
             <!--Enable "Manage Stock" in configuration.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
                 <argument name="stockName" value="{{_defaultStock.name}}"/>
@@ -100,7 +104,9 @@
         <!--Disable "Manage Stock" in configuration.-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify product is visible storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyBundleProduct"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyBundleProduct"/>

@@ -58,7 +58,9 @@
             </actionGroup>
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Clean up created data.-->

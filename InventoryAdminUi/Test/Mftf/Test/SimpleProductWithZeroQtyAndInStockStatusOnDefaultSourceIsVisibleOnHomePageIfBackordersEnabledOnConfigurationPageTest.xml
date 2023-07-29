@@ -63,7 +63,9 @@
         <!-- Configure Backorder  'Allow Qty Below 0 and Notify Customer'  enabled in Configuration -->
         <magentoCLI command="config:set {{CatalogInventoryItemOptionsBackordersEnable.path}} 2" stepKey="setConfigAllowBackordersNotifyCustomer"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!--Open category subcategory by direct URL. Verify simple product is visible on it. -->
         <actionGroup ref="OpenProductFromCategoryPageActionGroup" stepKey="openProductFromSubCategory2">

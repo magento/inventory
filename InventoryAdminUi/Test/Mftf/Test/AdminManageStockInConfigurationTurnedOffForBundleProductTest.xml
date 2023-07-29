@@ -65,7 +65,9 @@
             <!--Turn on Manage Stock.-->
             <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableManageStock"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Delete test data.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="bundleProduct" stepKey="deleteBundleProduct"/>
@@ -86,7 +88,9 @@
         <!-- Turn off Manage Stock-->
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!-- Check product is visible on Storefront-->
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="verifyProductVisibleOnStorefront">
             <argument name="category" value="$category$"/>

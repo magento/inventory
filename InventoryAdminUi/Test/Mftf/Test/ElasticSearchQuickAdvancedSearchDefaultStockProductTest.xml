@@ -51,7 +51,9 @@
 
             <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
             <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
-            <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
+            <actionGroup ref="CliCacheCleanActionGroup" stepKey="cleanCacheAfterElasticSearchEnable">
+                <argument name="tags" value="full_page"/>
+            </actionGroup>
         </before>
         <after>
             <!--Disable created test source.-->
@@ -69,7 +71,9 @@
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
 
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterElasticSearchDisable">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>
         <!--Quick search created product.-->

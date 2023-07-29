@@ -48,7 +48,9 @@
             <!--Revert 'Out of Stock' configuration.-->
             <magentoCLI command="config:set {{RevertOutOfStockThreshold.path}} {{RevertOutOfStockThreshold.value}}" stepKey="revertOutOfStockThreshold"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cacheFlush">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -79,7 +81,9 @@
         <!--Set out of stock threshold greater the product quantity to emulate product decreasing quantity during checkout process.-->
         <magentoCLI command="config:set {{SetOutOfStockThreshold.path}} {{minimalProductQty.value}}" stepKey="setOutOfStockThreshold"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="cacheFlush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cacheFlush">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Try to place order with not enough product quantity.-->
         <actionGroup ref="StorefrontMultishippingPlaceOrderActionGroup" stepKey="placeOrder"/>
         <see selector="{{StorefrontProductPageSection.errorMsg}}" userInput="Some of the products are out of stock." stepKey="verifyErrorMessage"/>

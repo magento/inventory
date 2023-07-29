@@ -72,7 +72,9 @@
             <deleteData createDataKey="createCategory1" stepKey="deleteCategory"/>
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </after>
 
         <!-- Assign product to custom website -->

@@ -37,7 +37,9 @@
             </createData>
             <!--Reindex and flush cache-->
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Login to backend-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
         </before>

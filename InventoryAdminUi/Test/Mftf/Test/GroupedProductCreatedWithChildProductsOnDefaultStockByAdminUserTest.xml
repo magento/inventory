@@ -98,7 +98,9 @@
             <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseGroupedProduct"/>
             <!-- Reindex and Flush Magento as sources and stocks were updated for products-->
             <magentoCLI stepKey="reindex" command="indexer:reindex"/>
-            <magentoCLI stepKey="flushCache" command="cache:flush"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created data-->
@@ -147,7 +149,9 @@
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
         <!-- Reindex and flush cache as updating status-->
         <magentoCLI stepKey="reindex" command="indexer:reindex"/>
-        <magentoCLI stepKey="flushCache" command="cache:flush"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory2">
             <argument name="categoryName" value="$$createCategory.name$$"/>

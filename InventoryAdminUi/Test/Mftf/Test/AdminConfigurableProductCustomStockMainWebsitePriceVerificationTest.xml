@@ -157,7 +157,9 @@
         </actionGroup>
         <!-- Run full reindex and clear caches -->
         <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
         <!--Verify configurable product price on storefront.-->
         <amOnPage url="{{StorefrontCategoryPage.url($$category.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryPageToVerifyPriceChanged"/>
         <waitForPageLoad stepKey="waitForCategoryPageLoadToVerifyPriceChanged"/>

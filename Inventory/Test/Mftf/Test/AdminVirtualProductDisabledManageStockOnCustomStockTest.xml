@@ -37,7 +37,9 @@
                 <requiredEntity createDataKey="customSource1"/>
             </createData>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
         <after>
@@ -97,7 +99,9 @@
 
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="magentoCLI1"/>
         <magentoCLI command="indexer:reindex" stepKey="performReindexAfterDisableManageStock"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterDisableManageStock"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterDisableManageStock">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <actionGroup ref="AssertProductInStorefrontCategoryPage" stepKey="checkConfigurableIsPresentOnCategoryPage2">
             <argument name="category" value="$$createCategory$$"/>

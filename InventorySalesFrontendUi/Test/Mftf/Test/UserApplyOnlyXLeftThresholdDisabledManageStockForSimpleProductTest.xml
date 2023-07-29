@@ -24,7 +24,9 @@
 
             <comment userInput="Perform reindex and cache flush after fill 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="SimpleProduct" stepKey="createSimpleProductForDisabledManageStock">
@@ -44,7 +46,9 @@
 
             <comment userInput="Perform reindex and cache flush after revert 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>

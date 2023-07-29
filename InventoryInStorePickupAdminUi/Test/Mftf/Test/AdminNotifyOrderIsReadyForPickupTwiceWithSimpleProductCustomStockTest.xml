@@ -25,7 +25,9 @@
             <!--Download tables for 'US'-->
             <magentoCLI command="{{ImportTables.path}} {{USTable.value}}" stepKey="downloadTables"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
             <!--Create test data.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="CulverStorePickupEnabledSource" stepKey="culverSource"/>

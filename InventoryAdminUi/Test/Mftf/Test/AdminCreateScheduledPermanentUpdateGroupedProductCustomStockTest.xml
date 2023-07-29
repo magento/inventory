@@ -57,7 +57,9 @@
                 <argument name="categoryName" value="$createCategory.name$"/>
             </actionGroup>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <deleteData createDataKey="product" stepKey="deleteVirtualProduct" before="deleteGroupedProduct"/>

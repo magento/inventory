@@ -25,7 +25,9 @@
 
             <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="_minimalSource" stepKey="createSource"/>
             <createData entity="BasicMsiStock1" stepKey="createStock"/>
@@ -73,7 +75,9 @@
 
             <comment userInput="Perform reindex and cache flush after revert 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertBackordersConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertBackordersConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertBackordersConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <comment userInput="Disable created source." stepKey="disableCreatedSourceComment"/>
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedSource">

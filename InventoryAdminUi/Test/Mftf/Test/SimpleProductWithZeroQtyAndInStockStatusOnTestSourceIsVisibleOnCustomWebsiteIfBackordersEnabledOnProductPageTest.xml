@@ -49,7 +49,9 @@
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
             <magentoCLI command="indexer:reindex" stepKey="reindex" after="assignStockToAdditionalWebsite"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache" after="reindex"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="reindex">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Delete created website.-->

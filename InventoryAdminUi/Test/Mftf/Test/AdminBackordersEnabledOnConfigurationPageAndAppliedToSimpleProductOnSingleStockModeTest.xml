@@ -25,7 +25,9 @@
 
             <comment userInput="Perform reindex and cache flush after fill 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillBackordersConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillBackordersConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillBackordersConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="SimpleProduct" stepKey="createProduct">
@@ -53,7 +55,9 @@
 
             <comment userInput="Perform reindex and cache flush after revert 'Backorders' configuration config." stepKey="reindexCacheFlushAfterFillBackordersConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertBackordersConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertBackordersConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertBackordersConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>

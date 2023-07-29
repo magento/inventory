@@ -69,7 +69,9 @@
             <fillField selector="{{AdminProductSourcesGrid.rowQty('3')}}" userInput="5" stepKey="setUASource1Quantity"/>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct"/>
             <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-            <magentoCLI command="cache:flush" stepKey="flushCache"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache">
+                <argument name="tags" value=""/>
+            </actionGroup>
         </before>
         <after>
             <!--Disable created sources.-->

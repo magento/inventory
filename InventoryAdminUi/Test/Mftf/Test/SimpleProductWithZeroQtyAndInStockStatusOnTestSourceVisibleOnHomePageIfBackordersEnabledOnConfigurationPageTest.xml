@@ -44,6 +44,8 @@
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="0" stepKey="setProductQuantity" after="assignTestSourceToCreatedProduct"/>
         <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndClose" after="setProductQuantity"/>
         <magentoCLI command="indexer:reindex" stepKey="reindex" after="saveAndClose"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache" after="reindex"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="flushCache" after="reindex">
+            <argument name="tags" value=""/>
+        </actionGroup>
     </test>
 </tests>

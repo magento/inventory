@@ -89,7 +89,9 @@
         <!-- Step5 Create New Customer -->
         <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
         <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCache"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCache">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <!-- Step6 Create Order for Virtual Product -->
         <actionGroup ref="AdminCreateNewOrderForVirtualProductActionGroup" stepKey="createOrderForVirtualProduct">

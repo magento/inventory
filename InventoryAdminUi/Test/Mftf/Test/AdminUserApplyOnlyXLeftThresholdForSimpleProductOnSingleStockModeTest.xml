@@ -26,7 +26,9 @@
 
             <comment userInput="Perform reindex and cache flush after fill 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
             <createData entity="SimpleProduct" stepKey="createSimpleProduct">
@@ -54,7 +56,9 @@
 
             <comment userInput="Perform reindex and cache flush after revert 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
             <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
-            <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterRevertThresholdConfig">
+                <argument name="tags" value=""/>
+            </actionGroup>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
@@ -91,7 +95,9 @@
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 
         <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
-        <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
+        <actionGroup ref="CliCacheFlushActionGroup" stepKey="cleanCacheAfterFillThresholdConfig">
+            <argument name="tags" value=""/>
+        </actionGroup>
 
         <comment userInput="Verify that message 'Only 500 left' appeared on product page on frontend." stepKey="verifyMessageIsDisplayedComment"/>
         <amOnPage url="{{StorefrontCategoryPage.url($$createCategory.custom_attributes[url_key]$$)}}" stepKey="navigateToCategoryForVerifyMessage"/>
