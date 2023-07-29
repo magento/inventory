@@ -29,7 +29,9 @@
             <createData entity="VirtualProduct" stepKey="product"/>
             <createData entity="MsiCustomer1" stepKey="customer"/>
             <!--Perform reindex and flash cache.-->
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Assign Default Stock to Default Website.-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
@@ -47,7 +49,9 @@
             <!--Revert "Only X Left".-->
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertOnlyXLeftConfig"/>
             <!--Perform reindex and flush cache.-->
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
             <!--Remove test data.-->
             <deleteData createDataKey="product" stepKey="deleteProduct"/>

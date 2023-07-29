@@ -127,7 +127,9 @@
         <magentoCLI command="config:set {{TurnOffManageStockConfig.path}} {{TurnOffManageStockConfig.value}}" stepKey="disableManageStock"/>
 
         <comment userInput="Perform reindex and cache flush after save stock related config." stepKey="reindexAndCacheFlushAfterStockConfigurationSaved"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterConfigurationIsSaved"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterConfigurationIsSaved">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfterConfigurationIsSaved"/>
 
         <comment userInput="Check, product presents on category page after 'Manage Stock' has been disabled." stepKey="checkProductIsBackToCategoryPageComment"/>

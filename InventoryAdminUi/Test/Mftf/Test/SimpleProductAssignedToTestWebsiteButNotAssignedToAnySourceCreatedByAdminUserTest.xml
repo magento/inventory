@@ -32,7 +32,9 @@
             <actionGroup ref="AdminSetWebsiteAsDefaultActionGroup" stepKey="SetTheMainWebsiteAsDefault">
                 <argument name="WebsiteName" value="Main Website"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindexForResettingTheMainWebsite"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForResettingTheMainWebsite">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminDeleteStockActionGroup" stepKey="deleteCreatedStock">
                 <argument name="stockName" value="Test Stock 1"/>
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
@@ -48,7 +50,9 @@
             <actionGroup ref="AdminDeleteWebsiteActionGroup" stepKey="deleteWebsite">
                 <argument name="websiteName" value="{{customWebsite.name}}"/>
             </actionGroup>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -74,7 +78,9 @@
         <magentoCLI command="config:set {{StorefrontEnableAddStoreCodeToUrls.path}} {{StorefrontEnableAddStoreCodeToUrls.value}}" stepKey="setAddStoreCodeToUrlsToYes"/>
 
         <!-- Step6 perform re-indexing and cache flush -->
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="flushCache"/>
 
         <!-- Step7 and 8 Create New Source -->
@@ -116,7 +122,9 @@
             <argument name="WebsiteName" value="{{customWebsite.name}}"/>
         </actionGroup>
 
-        <magentoCLI command="indexer:reindex" stepKey="reindexPostSwitchingToTestWebsite"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostSwitchingToTestWebsite">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="flushCachePostSwitchingToTestWebsite"/>
 
         <!-- Step16.2 Navigate to Test website  -->

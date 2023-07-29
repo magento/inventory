@@ -36,7 +36,9 @@
                 <requiredEntity createDataKey="customSource"/>
             </createData>
             <!--Reindex and flush cache-->
-            <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCache"/>
             <!--Login to backend-->
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
@@ -57,7 +59,9 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <!--Delete product-->
             <deleteData createDataKey="simpleProduct" stepKey="deleteProduct"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
         </after>
         <!--Open product edit page-->
         <amOnPage url="{{AdminProductEditPage.url($$simpleProduct.id$$)}}" stepKey="openProductEditPageToAssignSource"/>

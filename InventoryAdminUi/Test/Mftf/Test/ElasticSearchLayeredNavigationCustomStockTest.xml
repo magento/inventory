@@ -79,8 +79,10 @@
             </actionGroup>
             <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveEditedSimpleProduct2"/>
 
-            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
-            <magentoCLI command="indexer:reindex" arguments="catalogsearch_fulltext" stepKey="performReindexAfterElasticSearchEnable"/>
+            <comment userInput="BIC workaround" stepKey="reindexInvalidatedIndices"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterElasticSearchEnable">
+                <argument name="indices" value="catalogsearch_fulltext"/>
+            </actionGroup>
             <magentoCLI command="cache:clean" arguments="full_page" stepKey="cleanCacheAfterElasticSearchEnable"/>
         </before>
         <after>
@@ -106,7 +108,9 @@
             <deleteData createDataKey="simpleProduct2" stepKey="deleteProduct2"/>
             <deleteData createDataKey="customStock" stepKey="deleteCustomStock"/>
 
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterElasticSearchDisable"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterElasticSearchDisable">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterElasticSearchDisable"/>
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutOfAdmin1"/>
         </after>

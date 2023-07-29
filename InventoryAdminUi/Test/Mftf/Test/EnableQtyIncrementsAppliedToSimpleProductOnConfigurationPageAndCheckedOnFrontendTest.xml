@@ -51,7 +51,9 @@
         <deleteData createDataKey="category" stepKey="deleteCategory"/>
         <deleteData createDataKey="product" stepKey="deleteProduct"/>
         <deleteData createDataKey="additionalStock" stepKey="deleteStock"/>
-        <magentoCron groups="index" stepKey="reindex"/>
+          <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+              <argument name="indices" value=""/>
+          </actionGroup>
         <magentoCLI command="config:set {{SetQtyIncrements.path}} 0" stepKey="setQtyIncrements" />
         <magentoCLI command="config:set {{DisableQtyIncrements.path}} {{DisableQtyIncrements.value}}" stepKey="enableQtyIncrements"/>
       </after>

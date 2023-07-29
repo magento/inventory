@@ -45,7 +45,9 @@
             <argument name="assignSource" value="$$createTestSource1.source[name]$$"/>
             <argument name="stockName" value="Test Stock 1"/>
         </actionGroup>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCache"/>
 
         <!-- Step3 Create SubCategory to the default category-->

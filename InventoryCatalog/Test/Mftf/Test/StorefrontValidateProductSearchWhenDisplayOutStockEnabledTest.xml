@@ -52,7 +52,9 @@
     <see selector="{{AdminProductFormSection.successMessage}}" userInput="You saved the product." stepKey="seeAssertVirtualProductSuccessMessage"/>
 
     <!-- Do reindex because product has been edited, and configurations changed -->
-    <magentoCLI command="indexer:reindex" stepKey="performReindex1"/>
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex1">
+          <argument name="indices" value=""/>
+      </actionGroup>
     <magentoCLI command="cache:flush" stepKey="cleanCache1"/>
 
     <!-- Check the product is not displayed in the front end after the search -->
@@ -66,7 +68,9 @@
     <!-- Set Display Out of Stock to YES -->
     <actionGroup ref="DisplayOutOfStockProductActionGroup" stepKey="displayOutOfStockProduct"/>
     <!-- Do reindex because again the configuration changed -->
-    <magentoCLI command="indexer:reindex" stepKey="performReindex2"/>
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex2">
+          <argument name="indices" value=""/>
+      </actionGroup>
     <magentoCLI command="cache:flush" stepKey="cleanCache2"/>
 
     <!-- Check the product is displayed in the front end after the search without any errors -->

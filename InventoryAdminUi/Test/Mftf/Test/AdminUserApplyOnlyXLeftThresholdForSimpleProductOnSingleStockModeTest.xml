@@ -25,7 +25,9 @@
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 500" stepKey="fillConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after fill 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory"/>
@@ -53,7 +55,9 @@
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertConfigValue"/>
 
             <comment userInput="Perform reindex and cache flush after revert 'Only X left Threshold' configuration config." stepKey="reindexCacheFlushAfterFillThresholdConfigComment"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
 
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
@@ -90,7 +94,9 @@
         <comment userInput="BIC workaround" stepKey="waitUntilOrderPlaced"/>
         <see selector="{{CheckoutSuccessMainSection.success}}" userInput="Your order number is:" stepKey="checkOrderPlaceSuccessMessage"/>
 
-        <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillThresholdConfig">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
 
         <comment userInput="Verify that message 'Only 500 left' appeared on product page on frontend." stepKey="verifyMessageIsDisplayedComment"/>

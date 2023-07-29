@@ -115,7 +115,9 @@
             <click selector="{{AdminNewWebsiteActionsSection.setAsDefault}}" stepKey="setNewWebsiteAsDefault"/>
             <click selector="{{AdminNewWebsiteActionsSection.saveWebsite}}" stepKey="clickSaveNewWebsite"/>
             <!-- Flush and Reindex as making changes in website-->
-            <magentoCLI stepKey="reindex" command="indexer:reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI stepKey="flushCache" command="cache:flush"/>
         </before>
         <after>
@@ -144,7 +146,9 @@
             <!--Disable all sources-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="deleteSource"/>
             <actionGroup ref="ResetWebUrlOptionsActionGroup" stepKey="resetUrlOption"/>
-            <magentoCron groups="index" stepKey="reindex"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <!--Admin logout-->
             <actionGroup ref="AdminLogoutActionGroup" stepKey="adminLogout"/>
         </after>
@@ -160,7 +164,9 @@
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectStockStatus1"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct2"/>
         <!-- Flush and Reindex as updating stock status of product-->
-        <magentoCLI stepKey="reindex" command="indexer:reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI stepKey="flushCache" command="cache:flush"/>
         <!-- Go to storefront and assert the grouped product-->
         <actionGroup ref="StorefrontOpenHomePageActionGroup" stepKey="goToStoreFront2"/>

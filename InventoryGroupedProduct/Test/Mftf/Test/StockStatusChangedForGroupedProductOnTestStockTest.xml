@@ -118,7 +118,9 @@
         </actionGroup>
         <waitForPageLoad stepKey="waitForProductFilterToLoad"/>
         <see selector="{{AdminProductGridSection.table}}" userInput="$$createVirtualProduct.name$$" stepKey="seeVirtualProduct"/>
-        <magentoCLI stepKey="reindex" command="indexer:reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI stepKey="flushCache" command="cache:flush"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="openEnabledCategory">
             <argument name="categoryName" value="$$category.name$$"/>
@@ -128,7 +130,9 @@
         <waitForPageLoad stepKey="waitForProductEditPageLoad"/>
         <selectOption selector="{{AdminProductFormSection.productStockStatus}}" userInput="In Stock" stepKey="selectInStock"/>
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveGroupedProduct"/>
-        <magentoCLI stepKey="reindexer" command="indexer:reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexer">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI stepKey="cacheFlush" command="cache:flush"/>
         <actionGroup ref="StorefrontGoToCategoryPageActionGroup" stepKey="againOpenEnabledCategory">
             <argument name="categoryName" value="$$category.name$$"/>

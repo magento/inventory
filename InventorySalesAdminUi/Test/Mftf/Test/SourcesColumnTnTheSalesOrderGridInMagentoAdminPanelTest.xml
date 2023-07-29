@@ -51,8 +51,10 @@
          <deleteData createDataKey="category" stepKey="deleteCategory"/>
          <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
 
-         <!--Clean chache and reindex-->
-         <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+         <!--Clean cache and reindex-->
+         <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+             <argument name="indices" value=""/>
+         </actionGroup>
          <magentoCLI command="cache:flush" stepKey="cleanCache"/>
 
          <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>

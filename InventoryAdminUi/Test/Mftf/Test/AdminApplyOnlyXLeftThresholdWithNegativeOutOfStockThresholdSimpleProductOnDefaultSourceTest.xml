@@ -22,7 +22,9 @@
         <before>
             <!--Set "Only X Threshold" in config.-->
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 5" stepKey="setOnlyXThreshold"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterFillThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterFillThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterFillThresholdConfig"/>
             <!--Create customer.-->
             <createData entity="Msi_US_Customer" stepKey="customer"/>
@@ -49,7 +51,9 @@
             <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
             <!--Revert 'Only X Left' configuration.-->
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 0" stepKey="revertConfigValue"/>
-            <magentoCLI command="indexer:reindex" stepKey="performReindexAfterRevertThresholdConfig"/>
+            <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindexAfterRevertThresholdConfig">
+                <argument name="indices" value=""/>
+            </actionGroup>
             <magentoCLI command="cache:flush" stepKey="cleanCacheAfterRevertThresholdConfig"/>
             <!--Delete test data.-->
             <deleteData createDataKey="category" stepKey="deleteCategory"/>

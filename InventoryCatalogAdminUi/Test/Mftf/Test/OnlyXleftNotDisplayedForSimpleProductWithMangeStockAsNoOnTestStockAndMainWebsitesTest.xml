@@ -27,7 +27,9 @@
         <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
       </actionGroup>
       <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 5" stepKey="setStockThresholdValueTo5"/>
-      <magentoCLI stepKey="reindexPostSettingTheMainWebsiteToDefaultStock" command="indexer:reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostSettingTheMainWebsiteToDefaultStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
       <magentoCLI stepKey="flushCachePostSettingTheMainWebsiteToDefaultStock" command="cache:flush"/>
     </before>
     <after>
@@ -42,7 +44,9 @@
       </actionGroup>
       <deleteData createDataKey="createStock" stepKey="deleteStock"/>
       <magentoCLI command="config:set {{CatalogInventoryOptionsOnlyXleftThreshold.path}} {{CatalogInventoryOptionsOnlyXleftThreshold.value}}" stepKey="removedStockThresholdQty"/>
-      <magentoCLI stepKey="reindexAfterDeletingTheStock" command="indexer:reindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexAfterDeletingTheStock">
+            <argument name="indices" value=""/>
+        </actionGroup>
       <magentoCLI stepKey="flushCacheAfterDeletingTheStock" command="cache:flush"/>
     </after>
 
@@ -78,7 +82,9 @@
     <fillField  userInput="2" selector="{{AdminProductFormSection.assignedSourcesQty}}" stepKey="setQtyForAssignedSources"/>
     <click selector="{{AdminProductFormSection.save}}" stepKey="clickOnSaveButton"/>
     <see userInput="You saved the product." stepKey="saveSuccessfulForManageStockAsYes"/>
-    <magentoCLI stepKey="reindexPostAssigningTheSource" command="indexer:reindex"/>
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexPostAssigningTheSource">
+          <argument name="indices" value=""/>
+      </actionGroup>
     <magentoCLI stepKey="flushCachePostAssigningTheSource" command="cache:flush"/>
     <!-- Verify with Manage Stock set as Yes for the product -->
     <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPage">
@@ -100,7 +106,9 @@
     <click selector="{{AdminProductFormAdvancedInventorySection.doneButton}}" stepKey="clickOnAdvancedInventoryDoneButton"/>
     <click selector="{{AdminProductFormSection.save}}" stepKey="clickOnSaveButtonPostSettingManageStockAsNo"/>
     <see userInput="You saved the product." stepKey="saveSuccessfulForManageStockAsNo"/>
-    <magentoCLI stepKey="reindexForSettingManageStockAsNo" command="indexer:reindex"/>
+      <actionGroup ref="CliIndexerReindexActionGroup" stepKey="reindexForSettingManageStockAsNo">
+          <argument name="indices" value=""/>
+      </actionGroup>
     <magentoCLI stepKey="flushCacheForSettingManageStockAsNo" command="cache:flush"/>
     <!-- Verify with Manage Stock set as No for the product -->
     <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openProductPageOnStorefrontForManageStockAsNo">

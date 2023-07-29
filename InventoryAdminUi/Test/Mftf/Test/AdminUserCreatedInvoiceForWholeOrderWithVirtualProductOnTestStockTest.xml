@@ -88,7 +88,9 @@
 
         <!-- Step5 Create New Customer -->
         <createData entity="Simple_US_Customer" stepKey="createCustomer1"/>
-        <magentoCLI command="indexer:reindex" stepKey="performReindex"/>
+        <actionGroup ref="CliIndexerReindexActionGroup" stepKey="performReindex">
+            <argument name="indices" value=""/>
+        </actionGroup>
         <magentoCLI command="cache:flush" stepKey="cleanCache"/>
 
         <!-- Step6 Create Order for Virtual Product -->
