@@ -25,7 +25,7 @@ class NoSpaceBeforeAndAfterString
 
         $trimValue = trim($value);
         if ($trimValue !== $value) {
-            $errors[] = __('"%field" can not contain whitespaces.', ['field' => $fieldName]);
+            $errors[] = __('"%field" can not contain leading or trailing spaces.', ['field' => $fieldName]);
         }
 
         return $errors;
