@@ -74,8 +74,17 @@ class IsFulfillable
                 if ($item->getHasChildren()) {
                     continue;
                 }
-                if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
-                    return false;
+                $product = $item->getProduct();
+                $extensionAttributes = $product->getExtensionAttributes();
+                $stockItem = $extensionAttributes->getStockItem();
+                if (!$stockItem->getManageStock()) {
+                    $source = $this->sourceRepository->get($sourceCode);
+                    return $stockItem->getIsInStock() === (bool)SourceItemInterface::STATUS_IN_STOCK &&
+                        $source->isEnabled();
+                } else {
+                    if (!$this->isItemFulfillable($item->getSku(), $sourceCode, (float)$item->getQtyOrdered())) {
+                        return false;
+                    }
                 }
             }
         }
