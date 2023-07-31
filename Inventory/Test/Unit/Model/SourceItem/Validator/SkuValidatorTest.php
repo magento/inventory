@@ -78,7 +78,7 @@ class SkuValidatorTest extends TestCase
                     "sku" => "4444454      ",
                     "quantity" => 30,
                     "status" => 1,
-                    "execute" => [new Phrase('"%field" can not contain whitespaces.', ['sku'])],
+                    "execute" => [new Phrase('"%field" can not contain leading or trailing spaces.', ['sku'])],
                     "is_string_whitespace" => 1
                 ]
             ]
@@ -103,7 +103,7 @@ class SkuValidatorTest extends TestCase
         $result = $this->skuValidator->validate($this->sourceItemMock);
         if ($source['is_string_whitespace']) {
             foreach ($result->getErrors() as $error) {
-                $this->assertEquals('"%field" can not contain whitespaces.', $error->getText());
+                $this->assertEquals('"%field" can not contain leading or trailing spaces.', $error->getText());
             }
         } else {
             $this->assertEmpty($result->getErrors());

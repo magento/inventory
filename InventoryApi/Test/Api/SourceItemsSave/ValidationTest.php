@@ -207,7 +207,7 @@ class ValidationTest extends WebapiAbstract
                             ],
                         ],
                         [
-                            'message' => '"%field" can not contain whitespaces.',
+                            'message' => '"%field" can not contain leading or trailing spaces.',
                             'parameters' => [
                                 'field' => SourceItemInterface::SKU,
                             ],
