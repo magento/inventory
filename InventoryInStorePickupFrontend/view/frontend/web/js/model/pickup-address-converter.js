@@ -40,6 +40,15 @@ define(['underscore'], function (_) {
                     },
 
                     /**
+                     * Returns if address editing is allowed.
+                     *
+                     * @return {Boolean}
+                     */
+                    isEditable: function () {
+                        return false;
+                    },
+
+                    /**
                      * Returns address type
                      *
                      * @return {String}
